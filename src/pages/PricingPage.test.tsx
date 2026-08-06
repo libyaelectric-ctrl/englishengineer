@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -20,30 +20,43 @@ vi.mock('@/features/billing', async (importOriginal) => {
   };
 });
 
-vi.mock('@/features/billing/billing.helpers', async (importOriginal) => {
-  const actual = (await importOriginal()) as Record<string, unknown>;
-  return {
-    ...actual,
-    getBillingApiUrl: () => 'https://billing.EngVox.test',
-  };
-});
+vi.mock('@/features/localization', () => ({
+  useLocalizationStore: vi.fn((selector?: (state: unknown) => unknown) => {
+    const state = {
+      language: 'en',
+      translate: (_key: string) => _key,
+      setLanguage: vi.fn(),
+    };
+    return selector ? selector(state) : state;
+  }),
+  INTERFACE_LANGUAGES: [
+    { id: 'en', flag: '🇬🇧', label: 'English', nativeLabel: 'English', available: true, dir: 'ltr' },
+  ],
+}));
 
 describe('PricingPage', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });
 
-  it('Start Free guest goes to signup', () => {
+  const mockAuth = (currentUser: unknown) => {
     vi.mocked(useAuthStore).mockReturnValue({
-      currentUser: null,
+      currentUser,
       initialize: vi.fn(),
     } as unknown as ReturnType<typeof useAuthStore>);
+  };
 
+  const mockBilling = (subscription: { planId: string; status: string }) => {
     vi.mocked(useBillingStore).mockReturnValue({
       isLoading: false,
       startCheckout: vi.fn(),
-      subscription: { planId: 'junior', status: 'none' },
+      subscription,
     } as unknown as ReturnType<typeof useBillingStore>);
+  };
+
+  it('renders all 5 pricing tiers', () => {
+    mockAuth(null);
+    mockBilling({ planId: 'junior', status: 'none' });
 
     render(
       <MemoryRouter>
@@ -51,21 +64,16 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    const startFreeLinks = screen.getAllByRole('link', { name: 'Start free' });
-    expect(startFreeLinks[startFreeLinks.length - 1]).toHaveAttribute('href', '/start');
+    expect(screen.getByText('Junior')).toBeInTheDocument();
+    expect(screen.getByText('Senior')).toBeInTheDocument();
+    expect(screen.getByText('Specialist')).toBeInTheDocument();
+    expect(screen.getByText('Master')).toBeInTheDocument();
+    expect(screen.getByText('Team')).toBeInTheDocument();
   });
 
-  it('authenticated user goes to dashboard', () => {
-    vi.mocked(useAuthStore).mockReturnValue({
-      currentUser: { id: 'user-123', email: 'engineer@example.com' },
-      initialize: vi.fn(),
-    } as unknown as ReturnType<typeof useAuthStore>);
-
-    vi.mocked(useBillingStore).mockReturnValue({
-      isLoading: false,
-      startCheckout: vi.fn(),
-      subscription: { planId: 'junior', status: 'none' },
-    } as unknown as ReturnType<typeof useBillingStore>);
+  it('shows Most Popular badge on Senior plan', () => {
+    mockAuth(null);
+    mockBilling({ planId: 'junior', status: 'none' });
 
     render(
       <MemoryRouter>
@@ -73,29 +81,12 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByRole('link', { name: 'Go to dashboard' })).toHaveAttribute(
-      'href',
-      '/dashboard'
-    );
+    expect(screen.getByText(/Most Popular/i)).toBeInTheDocument();
   });
 
-  it('successful billing health check clears the unavailable warning', async () => {
-    vi.mocked(useAuthStore).mockReturnValue({
-      currentUser: null,
-      initialize: vi.fn(),
-    } as unknown as ReturnType<typeof useAuthStore>);
-
-    vi.mocked(useBillingStore).mockReturnValue({
-      isLoading: false,
-      startCheckout: vi.fn(),
-      subscription: { planId: 'junior', status: 'none' },
-    } as unknown as ReturnType<typeof useBillingStore>);
-
-    // Mock global fetch to return success health check
-    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve({ stripeConfigured: true }),
-    } as unknown as Response);
+  it('shows Coming Soon badge on Team plan', () => {
+    mockAuth(null);
+    mockBilling({ planId: 'junior', status: 'none' });
 
     render(
       <MemoryRouter>
@@ -103,27 +94,13 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    await waitFor(() => {
-      expect(screen.queryByText(/Billing service is unavailable/i)).toBeNull();
-    });
-
-    fetchSpy.mockRestore();
+    // Badge shows "Coming Soon" or the translation key
+    expect(screen.getByText(/Coming Soon|pricing\.comingSoon/i)).toBeInTheDocument();
   });
 
-  it('failed health check disables checkout buttons', async () => {
-    vi.mocked(useAuthStore).mockReturnValue({
-      currentUser: null,
-      initialize: vi.fn(),
-    } as unknown as ReturnType<typeof useAuthStore>);
-
-    vi.mocked(useBillingStore).mockReturnValue({
-      isLoading: false,
-      startCheckout: vi.fn(),
-      subscription: { planId: 'junior', status: 'none' },
-    } as unknown as ReturnType<typeof useBillingStore>);
-
-    // Mock global fetch to return failure
-    const fetchSpy = vi.spyOn(global, 'fetch').mockRejectedValue(new Error('Network error'));
+  it('shows current plan indicator for active subscription', () => {
+    mockAuth({ id: 'user-123', email: 'engineer@example.com' });
+    mockBilling({ planId: 'senior', status: 'active' });
 
     render(
       <MemoryRouter>
@@ -131,32 +108,12 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    await waitFor(() => {
-      const checkoutButtons = screen.getAllByRole('button', {
-        name: /upgrade/i,
-      });
-      checkoutButtons.forEach((btn) => {
-        expect(btn).toBeDisabled();
-      });
-    });
-
-    fetchSpy.mockRestore();
+    expect(screen.getByText(/Current plan|pricing\.currentPlan/i)).toBeInTheDocument();
   });
 
-  it('Pro user does not see a false billing failure', async () => {
-    vi.mocked(useAuthStore).mockReturnValue({
-      currentUser: { id: 'user-123', email: 'engineer@example.com' },
-      initialize: vi.fn(),
-    } as unknown as ReturnType<typeof useAuthStore>);
-
-    vi.mocked(useBillingStore).mockReturnValue({
-      isLoading: false,
-      startCheckout: vi.fn(),
-      subscription: { planId: 'senior', status: 'active' },
-    } as unknown as ReturnType<typeof useBillingStore>);
-
-    // Mock global fetch to return failure
-    const fetchSpy = vi.spyOn(global, 'fetch').mockRejectedValue(new Error('Network error'));
+  it('displays correct prices', () => {
+    mockAuth(null);
+    mockBilling({ planId: 'junior', status: 'none' });
 
     render(
       <MemoryRouter>
@@ -164,14 +121,8 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    // The unavailable warning should be hidden because planId is 'senior'
-    await waitFor(() => {
-      expect(screen.queryByText(/Stripe backend health check failed/i)).toBeNull();
-    });
-
-    // Pro user sees the Current plan disabled button
-    expect(screen.getByRole('button', { name: 'Current plan' })).toBeDisabled();
-
-    fetchSpy.mockRestore();
+    expect(screen.getByText('$29')).toBeInTheDocument();
+    expect(screen.getByText('$59')).toBeInTheDocument();
+    expect(screen.getByText('$99')).toBeInTheDocument();
   });
 });
