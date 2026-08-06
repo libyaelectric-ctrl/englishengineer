@@ -1,88 +1,73 @@
+```
+# Dependencies
 node_modules/
-build/
-dist/
-.next/
-.npm-cache/
-.vite/
-.git/
-coverage/
-.DS_Store
-*.log
-test-results/
-playwright-report/
-.playwright-cli/
-.vercel-tmp/
-__pycache__/
-*.zip
+**/node_modules/
 
-# Environment files
+# Build outputs
+dist/
+build/
+coverage/
+htmlcov/
+target/
+
+# Python specific
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.py~
+.Python
+env/
+venv/
+.venv/
+.ENV
 .env
 .env.local
-.env.*.local
-.env.vercel.*
-!.env.example
-!.scripts/.env.example
-!scripts/.env.example
-backend/.env
-backend/.env.local
-backend/.env.*.local
-backend/.env.production
+.env.*
+**/.env
+**/.env.*
 
-# IDE
+# Logs
+*.log
+
+# IDE files
 .vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
 
-# AI agent working data
-.mimocode/
-.agents/
+# OS files
+.DS_Store
+Thumbs.db
 
-# Vercel
-.vercel
+# Testing
+.mypy_cache/
+.pytest_cache/
+coverage.xml
+*.coverage
 
-# Backup files
-*.bak
-
-# Other
-.aider*
-stryker-results/
-FULL_CODEBASE.txt
-mimogorev.md
-mimola.md
-mimoyenibu.md
-MimoCan.md
-MimoCep.md
-storybook-static
-
-# ESLint output files
-eslint_output.json
-eslint-out.json
-eslint-output.json
-eslint_complexity.json
-lint-output.txt
-
-# Temporary notes
-Usta-Faz2.txt
-
-eslint_output_max1.json
-eslint_output_src.json
-tests/browser/visual-regression.spec.ts-snapshots/
-
-# Madde 3 - specific files that should not be committed
-*.docx
-*.xlsx
-~$*
-gece.png
-.gunduz.png
-.gnndz.txt
-bundle-report.html
-.env.staging
-
-# One-time analysis outputs
-analysis_output/
-*.py
-!.env.example
-!scripts/.env.example
-!scripts/translate-vocabulary-nllb.py
-!scripts/translate-grammar-deepl.py
-!scripts/requirements-translations.txt
-.env*
-!scripts/.env.example
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+```

@@ -105,11 +105,13 @@ export const createSupabaseBillingRepository = (
     }
     const response = await fetchImpl(url, { ...init, headers: headersObj });
     if (!response.ok) {
-      const _bodyText = '';
       try {
-        bodyText = await response.text();
-      } catch (readErr: unknown) {
+        const bodyText = await response.text();
         logger.warn('Billing repo error body', {
+          body: bodyText,
+        });
+      } catch (readErr: unknown) {
+        logger.warn('Billing repo error reading body', {
           error: readErr instanceof Error ? readErr.message : String(readErr),
         });
       }
