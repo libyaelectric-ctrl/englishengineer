@@ -1,3 +1,5 @@
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+
 export const PRODUCT_ANALYTICS_EVENT_NAMES = [
   'signup_started',
   'signup_completed',
@@ -38,6 +40,7 @@ export interface ProductAnalyticsMetadata {
   skill?: ProductAnalyticsSkill;
   missionId?: string;
   plan?: 'junior' | 'senior' | 'specialist' | 'master' | 'team';
+  discipline?: EngineeringDiscipline;
   subscriptionStatus?:
     'none' | 'trialing' | 'active' | 'past_due' | 'canceled' | 'incomplete' | 'enterprise_pending';
   source?: 'user' | 'system' | 'checkout_return';

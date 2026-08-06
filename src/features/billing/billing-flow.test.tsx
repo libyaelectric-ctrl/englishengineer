@@ -60,11 +60,11 @@ describe('Billing Checkout Flow', () => {
 
     // Wait for the health check to run and UI to update
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Upgrade to Pro' })).toBeEnabled();
+      expect(screen.getByRole('button', { name: 'Upgrade to Senior' })).toBeEnabled();
     });
 
     const pricingButton = screen.getByRole('button', {
-      name: 'Upgrade to Pro',
+      name: 'Upgrade to Senior',
     });
     fireEvent.click(pricingButton);
 
