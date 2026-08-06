@@ -23,6 +23,7 @@ import {
 
 import { useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization';
+import { ContentPreview } from './ContentPreview';
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Building2,
@@ -109,6 +110,8 @@ export const BranchLockStep = ({
             </span>
           </div>
         </div>
+
+        <ContentPreview discipline={discipline} />
       </section>
     );
   }

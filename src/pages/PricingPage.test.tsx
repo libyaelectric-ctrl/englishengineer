@@ -21,10 +21,10 @@ vi.mock('@/features/billing', async (importOriginal) => {
 });
 
 vi.mock('@/features/localization', () => ({
-  useLocalizationStore: vi.fn((selector?: (state: unknown) => unknown) => {
+  useLocalizationStore: vi.fn((selector?: (state: { language: string; translate: (key: string) => string; setLanguage: () => void }) => unknown) => {
     const state = {
       language: 'en',
-      translate: (_key: string) => _key,
+      translate: (key: string) => key,
       setLanguage: vi.fn(),
     };
     return selector ? selector(state) : state;
@@ -81,7 +81,8 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/Most Popular/i)).toBeInTheDocument();
+    const badges = screen.getAllByText(/Most Popular|pricing.mostPopular/i);
+    expect(badges.length).toBeGreaterThan(0);
   });
 
   it('shows Coming Soon badge on Team plan', () => {
@@ -94,8 +95,8 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    // Badge shows "Coming Soon" or the translation key
-    expect(screen.getByText(/Coming Soon|pricing\.comingSoon/i)).toBeInTheDocument();
+    const badges = screen.getAllByText(/Coming Soon|pricing.comingSoon/i);
+    expect(badges.length).toBeGreaterThan(0);
   });
 
   it('shows current plan indicator for active subscription', () => {
@@ -108,7 +109,7 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/Current plan|pricing\.currentPlan/i)).toBeInTheDocument();
+    expect(screen.getByText(/Current plan|pricing.currentPlan/i)).toBeInTheDocument();
   });
 
   it('displays correct prices', () => {

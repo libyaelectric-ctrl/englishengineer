@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type { Discipline } from '@/shared/services/content-aggregator.service';
 import { ContentAggregatorService } from '@/shared/services/content-aggregator.service';
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
