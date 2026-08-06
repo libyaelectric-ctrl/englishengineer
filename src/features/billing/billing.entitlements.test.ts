@@ -46,25 +46,25 @@ describe('billing entitlements', () => {
     expect(canViewAdvancedAnalytics(proSubscription).allowed).toBe(true);
   });
 
-  it('enforces free AI Coach daily limit', () => {
-    expect(canUseAICoach(createFreeSubscription(), 1)).toMatchObject({
+  it('enforces junior AI Coach daily limit', () => {
+    expect(canUseAICoach(createFreeSubscription(), 3)).toMatchObject({
       allowed: false,
       requiredPlan: 'senior',
     });
   });
 
-  it('enforces Pro AI Coach daily limit', () => {
-    expect(canUseAICoach(proSubscription, 5).allowed).toBe(true);
-    expect(canUseAICoach(proSubscription, 10).allowed).toBe(false);
+  it('enforces senior AI Coach daily limit', () => {
+    expect(canUseAICoach(proSubscription, 10).allowed).toBe(true);
+    expect(canUseAICoach(proSubscription, 15).allowed).toBe(false);
   });
 
-  it('blocks mission creation for free users', () => {
-    expect(canCreateMission(createFreeSubscription()).allowed).toBe(false);
+  it('allows mission creation for junior users', () => {
+    expect(canCreateMission(createFreeSubscription()).allowed).toBe(true);
   });
 
   it('formats plan limits for display', () => {
-    expect(getPlanLimitLabel(createFreeSubscription(), 'dailyAICoachRequests')).toBe('1');
-    expect(getPlanLimitLabel(proSubscription, 'dailyAICoachRequests')).toBe('10');
+    expect(getPlanLimitLabel(createFreeSubscription(), 'dailyAICoachRequests')).toBe('3');
+    expect(getPlanLimitLabel(proSubscription, 'dailyAICoachRequests')).toBe('15');
   });
 
   it('keeps project workspace behind the Project entitlement', () => {

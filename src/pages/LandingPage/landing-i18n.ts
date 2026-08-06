@@ -53,6 +53,26 @@ export interface LandingTranslations {
   finalCtaTitleHighlight?: string;
   finalCtaSub?: string;
   finalCtaNote?: string;
+  // Onboarding (new flow)
+  branchLocked?: string;
+  branchLockedDesc?: string;
+  yourWordPool?: string;
+  wordPoolFormula?: string;
+  lockWarning1?: string;
+  lockWarning1Desc?: string;
+  selectedDiscipline?: string;
+  confirmLock?: string;
+  placementComplete?: string;
+  recommendedStart?: string;
+  placementConfidence?: string;
+  placementProgress?: string;
+  placementProgressDesc?: string;
+  back?: string;
+  next?: string;
+  finish?: string;
+  stepOf?: string;
+  goals?: string;
+  goalsDesc?: string;
 }
 
 export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslations> = {
@@ -109,6 +129,26 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     finalCtaTitleHighlight: 'Buradan Başlıyor',
     finalCtaSub: 'Mesleğinizi seçin, arayüz dilinizi belirleyin ve profesyonel mühendislik İngilizcesini geliştirmeye bugün başlayın.',
     finalCtaNote: 'Ücretsiz plan mevcut · Kredi kartı gerektirmez · İptal serbest',
+    // Onboarding (new flow)
+    branchLocked: 'Dal Kilitlendi',
+    branchLockedDesc: 'Bu seçim kalıcıdır. Sonradan değiştirilemez.',
+    yourWordPool: 'Kelime Havuzunuz',
+    wordPoolFormula: 'Kelime havuzunuz: GENERAL + ENGINEERING + [SEÇİLEN DAL] formülüne göre.',
+    lockWarning1: 'Bu Seçim Kalıcıdır',
+    lockWarning1Desc: 'Dalınızı seçtikten sonra değiştiremezsiniz. Kelime havuzunuz bu dala göre şekillenecektir.',
+    selectedDiscipline: 'Seçili Dal',
+    confirmLock: 'Anladım, Kilitle',
+    placementComplete: 'Yerleştirme Tamamlandı',
+    recommendedStart: 'Önerilen Başlangıç',
+    placementConfidence: 'Güven Seviyesi',
+    placementProgress: 'İlerleme',
+    placementProgressDesc: 'Soru',
+    back: 'Geri',
+    next: 'İleri',
+    finish: 'Bitir',
+    stepOf: 'Adım',
+    goals: 'Hedefler',
+    goalsDesc: 'Hangi becerileri geliştirmek istiyorsunuz?',
   },
   en: {
     heroBadge: 'EngineerOS • 10 Engineering Disciplines × 15 Languages',

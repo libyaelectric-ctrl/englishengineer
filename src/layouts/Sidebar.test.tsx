@@ -67,7 +67,7 @@ describe('Sidebar', () => {
 
   it('renders billing plan name', () => {
     renderSidebar();
-    expect(screen.getByText('pro plan')).toBeInTheDocument();
+    expect(screen.getByText('senior plan')).toBeInTheDocument();
   });
 
   it('renders sign out button', () => {

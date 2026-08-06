@@ -1,6 +1,6 @@
 import { ArrowLeft, ArrowRight, Compass } from 'lucide-react';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -13,42 +13,39 @@ import type {
   SupportedInterfaceLanguage,
   TranslationKey,
 } from '@/features/localization/localization.types';
-import { PlacementService } from '@/features/placement';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
-import type { SelfReportedCefr, SkillName } from '@/features/profile/profile.types';
+import type { CommunicationGoal, SkillName } from '@/features/profile/profile.types';
 
-import { DisciplineStep } from './steps/DisciplineStep';
+import { BranchLockStep } from './steps/BranchLockStep';
+import { GoalsStep } from './steps/GoalsStep';
 import { LanguageStep } from './steps/LanguageStep';
-import { LevelStep } from './steps/LevelStep';
+import { PlacementStep } from './steps/PlacementStep';
 import { PlanStep } from './steps/PlanStep';
 
-const STEPS = ['discipline', 'language', 'level', 'plan'] as const;
+const STEPS = ['language', 'branch', 'placement', 'goal', 'package'] as const;
 type Step = (typeof STEPS)[number];
 
 const labels: Record<Step, TranslationKey> = {
-  discipline: 'onboarding.yourDiscipline',
   language: 'onboarding.interfaceLanguage',
-  level: 'onboarding.startingPoint',
-  plan: 'onboarding.plan',
+  branch: 'onboarding.yourDiscipline',
+  placement: 'onboarding.startingPoint',
+  goal: 'onboarding.goals',
+  package: 'onboarding.plan',
 };
 
 const parseStep = (pathname: string): Step => {
   const routeStep = pathname.split('/').at(-1);
-  return STEPS.includes(routeStep as Step) ? (routeStep as Step) : 'discipline';
+  return STEPS.includes(routeStep as Step) ? (routeStep as Step) : 'language';
 };
 
 const OnboardingFooter = ({
   index,
-  save,
-  isLiteMode,
-  exploreLiteAtA1,
-  continueFlow,
+  onContinue,
+  canContinue,
 }: {
   index: number;
-  save: () => void;
-  isLiteMode: boolean;
-  exploreLiteAtA1: () => void;
-  continueFlow: () => void;
+  onContinue: () => void;
+  canContinue: boolean;
 }) => {
   const { translate } = useLocalizationStore();
 
@@ -57,7 +54,6 @@ const OnboardingFooter = ({
       {index > 0 ? (
         <Link
           to={`/onboarding/${STEPS[index - 1]}`}
-          onClick={() => save()}
           className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-medium text-foreground transition-colors hover:bg-surface"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -66,27 +62,17 @@ const OnboardingFooter = ({
       ) : (
         <span />
       )}
-      <div className="flex flex-wrap items-center justify-end gap-2">
-        {isLiteMode && (
-          <button
-            type="button"
-            onClick={exploreLiteAtA1}
-            className="min-h-11 rounded-lg px-3 text-sm font-medium text-muted-copy hover:bg-surface"
-          >
-            {translate('onboarding.exploreA1')}
-          </button>
-        )}
-        <button
-          type="button"
-          onClick={continueFlow}
-          className="public-primary-action min-w-0 px-4 sm:px-5 rounded-lg font-medium"
-        >
-          {index === STEPS.length - 1
-            ? translate('onboarding.continuePlacement')
-            : translate('onboarding.continue')}
-          <ArrowRight className="h-4 w-4" />
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={onContinue}
+        disabled={!canContinue}
+        className="public-primary-action min-w-0 px-4 sm:px-5 rounded-lg font-medium disabled:opacity-50"
+      >
+        {index === STEPS.length - 1
+          ? (translate('onboarding.finish') ?? 'Finish')
+          : (translate('onboarding.continue') ?? 'Continue')}
+        <ArrowRight className="h-4 w-4" />
+      </button>
     </footer>
   );
 };
@@ -94,36 +80,45 @@ const OnboardingFooter = ({
 const OnboardingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { translate } = useLocalizationStore();
+  const { translate, setLanguage } = useLocalizationStore();
   const currentUser = useAuthStore((state) => state.currentUser);
   const userId = currentUser?.id ?? 'local-user';
   const initial = useMemo(() => LearningProfileRepository.getProfile(userId), [userId]);
   const step = parseStep(location.pathname);
   const index = STEPS.indexOf(step);
 
-  const [discipline, setDiscipline] = useState<EngineeringDiscipline>(initial.discipline);
-  const [interfaceLanguage, setInterfaceLanguage] = useState<SupportedInterfaceLanguage>(
+  const [interfaceLanguage, setInterfaceLanguageState] = useState<SupportedInterfaceLanguage>(
     initial.interfaceLanguage as SupportedInterfaceLanguage
   );
-  const [selfReportedCefr, setSelfReportedCefr] = useState<SelfReportedCefr>(
-    initial.selfReportedCefr
-  );
+  const [discipline, setDiscipline] = useState<EngineeringDiscipline>(initial.discipline);
+  const [branchLockConfirmations, setBranchLockConfirmations] = useState(0);
+  const [communicationGoals, setCommunicationGoals] = useState<CommunicationGoal[]>(initial.communicationGoals);
+  const [learningFocus, setLearningFocus] = useState<SkillName[]>(initial.learningFocus);
+  const [careerGoal, setCareerGoal] = useState(initial.careerGoal);
+
   type PlanId = 'junior' | 'senior' | 'specialist' | 'master' | 'team';
   const [selectedPlan, setSelectedPlan] = useState<PlanId>(
     (['junior', 'senior', 'specialist', 'master', 'team'].includes(initial.selectedPlan as string)
       ? initial.selectedPlan as PlanId
       : 'junior')
   );
-  const isLiteMode = new URLSearchParams(location.search).get('mode') === 'lite';
+
+  useEffect(() => {
+    if (interfaceLanguage !== initial.interfaceLanguage) {
+      setLanguage(interfaceLanguage);
+    }
+  }, [interfaceLanguage, initial.interfaceLanguage, setLanguage]);
 
   const save = (complete = false) => {
     LearningProfileRepository.updatePreferences(userId, {
       discipline,
       professionalTrack: discipline as never,
       interfaceLanguage: interfaceLanguage as never,
-      selfReportedCefr,
+      communicationGoals,
+      learningFocus,
+      careerGoal,
       selectedPlan,
-      learningFocus: [] as SkillName[],
+      branchLockConfirmations,
       onboardingCompleted: complete,
     });
   };
@@ -133,12 +128,10 @@ const OnboardingPage = () => {
   };
 
   const navigateFinal = () => {
-    ProductAnalyticsService.track('onboarding_completed', '/onboarding/plan', {
-      metadata: { plan: selectedPlan, source: 'user' },
+    ProductAnalyticsService.track('onboarding_completed', '/onboarding/package', {
+      metadata: { plan: selectedPlan, discipline, source: 'user' },
     });
-    navigate(initial.placementCompleted ? '/curriculum' : '/placement', {
-      replace: true,
-    });
+    navigate('/curriculum', { replace: true });
   };
 
   const continueFlow = () => {
@@ -151,22 +144,42 @@ const OnboardingPage = () => {
     navigateFinal();
   };
 
-  const exploreLiteAtA1 = () => {
-    save(true);
-    PlacementService.startAtA1(userId);
-    navigate('/curriculum', { replace: true });
-  };
+  const canContinue = (() => {
+    if (step === 'language') return !!interfaceLanguage;
+    if (step === 'branch') return !!discipline && branchLockConfirmations >= 2;
+    if (step === 'placement') return true;
+    if (step === 'goal') return true;
+    if (step === 'package') return !!selectedPlan;
+    return true;
+  })();
 
   const StepContent = () => {
-    if (step === 'discipline') {
-      return <DisciplineStep discipline={discipline} setDiscipline={setDiscipline} />;
-    }
     if (step === 'language') {
-      return <LanguageStep language={interfaceLanguage} setLanguage={setInterfaceLanguage} />;
+      return <LanguageStep language={interfaceLanguage} setLanguage={setInterfaceLanguageState} />;
     }
-    if (step === 'level') {
+    if (step === 'branch') {
       return (
-        <LevelStep selfReportedCefr={selfReportedCefr} setSelfReportedCefr={setSelfReportedCefr} />
+        <BranchLockStep
+          discipline={discipline}
+          setDiscipline={setDiscipline}
+          branchLockConfirmations={branchLockConfirmations}
+          setBranchLockConfirmations={setBranchLockConfirmations}
+        />
+      );
+    }
+    if (step === 'placement') {
+      return <PlacementStep onComplete={continueFlow} />;
+    }
+    if (step === 'goal') {
+      return (
+        <GoalsStep
+          communicationGoals={communicationGoals}
+          setCommunicationGoals={setCommunicationGoals}
+          learningFocus={learningFocus}
+          setLearningFocus={setLearningFocus}
+          careerGoal={careerGoal}
+          setCareerGoal={setCareerGoal}
+        />
       );
     }
     return <PlanStep selectedPlan={selectedPlan} setSelectedPlan={setSelectedPlan} />;
@@ -187,7 +200,7 @@ const OnboardingPage = () => {
               </h1>
             </div>
           </div>
-          <ol className="mt-5 grid grid-cols-4 gap-2" aria-label="Onboarding progress">
+          <ol className="mt-5 grid grid-cols-5 gap-2" aria-label="Onboarding progress">
             {STEPS.map((item, itemIndex) => (
               <li
                 key={item}
@@ -218,10 +231,8 @@ const OnboardingPage = () => {
 
         <OnboardingFooter
           index={index}
-          save={save}
-          isLiteMode={isLiteMode}
-          exploreLiteAtA1={exploreLiteAtA1}
-          continueFlow={continueFlow}
+          onContinue={continueFlow}
+          canContinue={canContinue}
         />
       </section>
     </main>
