@@ -219,6 +219,9 @@ export type TranslationKey =
   | 'dashboard.cefrMatched'
   | 'dashboard.wordsCount'
   | 'dashboard.disciplineBadge'
+  | 'dashboard.myDiscipline'
+  | 'dashboard.locked'
+  | 'dashboard.words'
   // Curriculum
   | 'curriculum.continueLearning'
   | 'curriculum.buildFirstTask'

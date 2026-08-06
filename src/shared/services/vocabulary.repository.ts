@@ -66,6 +66,11 @@ export const VocabularyRepository = {
     return (await loadAll()).filter((term) => term.domain.toLowerCase() === domain.toLowerCase());
   },
 
+  async getVocabularyByDomains(domains: string[]): Promise<VocabularyTerm[]> {
+    const lowerDomains = domains.map((d) => d.toLowerCase());
+    return (await loadAll()).filter((term) => lowerDomains.includes(term.domain.toLowerCase()));
+  },
+
   async getVocabularyByContentDomain(contentDomain: string): Promise<VocabularyTerm[]> {
     return (await loadAll()).filter(
       (term) => term.contentDomain.toLowerCase() === contentDomain.toLowerCase()

@@ -12,13 +12,16 @@ export const VocabularyEngine = {
     level: CefrLevel,
     domain?: string,
     contentDomain?: string,
-    lifeContext?: string
+    lifeContext?: string,
+    domains?: string[]
   ): Promise<VocabularyTerm[]> {
     const terms = await VocabularyRepository.getVocabularyByLevel(level);
+    const activeDomains = domains && domains.length > 0 ? domains : domain ? [domain] : undefined;
     return terms.filter(
       (term) =>
         this.validateVocabularyEligibility(term, skill, level) &&
-        (!domain || term.domain.toLowerCase() === domain.toLowerCase()) &&
+        (!activeDomains ||
+          activeDomains.some((d) => term.domain.toLowerCase() === d.toLowerCase())) &&
         (!contentDomain || term.contentDomain.toLowerCase() === contentDomain.toLowerCase()) &&
         (!lifeContext || term.lifeContext.toLowerCase() === lifeContext.toLowerCase())
     );
