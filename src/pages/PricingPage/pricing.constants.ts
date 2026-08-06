@@ -7,30 +7,30 @@ export const ACTIVE_PLANS = COMMERCIAL_PLAN_CATALOG.filter((plan) =>
 );
 
 export const ACCESS_BADGES: Record<string, string> = {
-  free: 'ACCESS-LVL-00',
-  pro: 'ACCESS-LVL-01',
-  project: 'ACCESS-LVL-02',
-  exec: 'ACCESS-LVL-03',
-  private: 'SECURE-PRIVATE',
+  junior: 'ACCESS-LVL-00',
+  senior: 'ACCESS-LVL-01',
+  specialist: 'ACCESS-LVL-02',
+  master: 'ACCESS-LVL-03',
+  team: 'ENTERPRISE',
 };
 
 export const BASE_USD_MAP: Record<string, { monthly: number; annual: number }> = {
-  free: { monthly: 0, annual: 0 },
-  pro: { monthly: 29, annual: 23 },
-  project: { monthly: 59, annual: 47 },
-  exec: { monthly: 99, annual: 79 },
-  private: { monthly: 999, annual: 799 },
+  junior: { monthly: 29, annual: 23 },
+  senior: { monthly: 59, annual: 47 },
+  specialist: { monthly: 79, annual: 63 },
+  master: { monthly: 99, annual: 79 },
+  team: { monthly: 999, annual: 799 },
 };
 
-export const HIGHLIGHTED_PLANS = new Set(['senior', 'specialist']);
+export const HIGHLIGHTED_PLANS = new Set(['senior']);
 
 export const PLAN_BADGES: Record<string, { icon: typeof Sparkles; label: string; color: string }> =
   {
-    pro: { icon: Sparkles, label: 'Popular', color: 'bg-primary' },
-    project: {
+    senior: { icon: Sparkles, label: 'Most Popular', color: 'bg-primary' },
+    team: {
       icon: Building2,
-      label: 'Engineering Teams',
-      color: 'bg-blue-600',
+      label: 'Coming Soon',
+      color: 'bg-slate-500',
     },
   };
 

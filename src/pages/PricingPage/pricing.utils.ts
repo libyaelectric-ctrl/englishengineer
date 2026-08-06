@@ -7,7 +7,7 @@ export const getErrorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;
 
 export const isPlanUnavailable = (plan: CommercialPlanPreview) =>
-  plan.id === 'master' || plan.id === 'team';
+  plan.id === 'team';
 
 export const getAccessBadge = (id: string): string => ACCESS_BADGES[id] ?? 'ACCESS-LVL-01';
 

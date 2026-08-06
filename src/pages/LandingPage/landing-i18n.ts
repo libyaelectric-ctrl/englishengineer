@@ -48,6 +48,19 @@ export interface LandingTranslations {
   pricingFeature?: string;
   pricingYear?: string;
   pricingMonth?: string;
+  // Pricing feature labels
+  placementTest?: string;
+  learningHub?: string;
+  progress?: string;
+  vocabularyPricing?: string;
+  grammarPricing?: string;
+  translator?: string;
+  readingPricing?: string;
+  writingPricing?: string;
+  speakingPricing?: string;
+  listening?: string;
+  tool?: string;
+  aiCopilot?: string;
   finalCtaBadge?: string;
   finalCtaTitle?: string;
   finalCtaTitleHighlight?: string;
@@ -124,6 +137,18 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     pricingFeature: 'Özellik',
     pricingYear: 'yıl',
     pricingMonth: 'ay',
+    placementTest: 'Yerleştirme Testi',
+    learningHub: 'Öğrenme Merkezi',
+    progress: 'İlerleme',
+    vocabularyPricing: 'Kelime',
+    grammarPricing: 'Dilbilgisi',
+    translator: 'Çevirmen',
+    readingPricing: 'Okuma',
+    writingPricing: 'Yazma',
+    speakingPricing: 'Konuşma',
+    listening: 'Dinleme',
+    tool: 'Araç',
+    aiCopilot: 'AI Asistanı',
     finalCtaBadge: '15 Dil · 10 Dal · Bir Platform',
     finalCtaTitle: 'Mühendislik Sesiniz',
     finalCtaTitleHighlight: 'Buradan Başlıyor',
@@ -198,6 +223,18 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     pricingFeature: 'Feature',
     pricingYear: 'yr',
     pricingMonth: 'mo',
+    placementTest: 'Placement Test',
+    learningHub: 'Learning Hub',
+    progress: 'Progress',
+    vocabularyPricing: 'Vocabulary',
+    grammarPricing: 'Grammar',
+    translator: 'Translator',
+    readingPricing: 'Reading',
+    writingPricing: 'Writing',
+    speakingPricing: 'Speaking',
+    listening: 'Listening',
+    tool: 'Tool',
+    aiCopilot: 'AI Copilot',
     finalCtaBadge: '15 Languages · 10 Disciplines · One Platform',
     finalCtaTitle: 'Your Engineering Voice Starts',
     finalCtaTitleHighlight: 'Here',

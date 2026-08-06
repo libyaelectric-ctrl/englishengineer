@@ -1,44 +1,14 @@
+import { Check, Globe, X } from 'lucide-react';
+
 import { useState } from 'react';
-import { Check, X, Globe } from 'lucide-react';
-import { Link } from 'react-router-dom';
+
 import { motion } from 'motion/react';
+
 import { CurrencyConfig } from '@/features/billing';
-import { getLandingTranslations } from './landing-i18n';
 import { useLocalizationStore } from '@/features/localization';
-
-type PackageId = 'junior' | 'senior' | 'specialist' | 'master' | 'team';
-
-interface PackageInfo {
-  id: PackageId;
-  name: string;
-  price: number;
-  description: string;
-  highlighted: boolean;
-  comingSoon: boolean;
-}
-
-const PACKAGES: PackageInfo[] = [
-  { id: 'junior', name: 'Junior', price: 29, description: 'Essential learning core for daily practice.', highlighted: false, comingSoon: false },
-  { id: 'senior', name: 'Senior', price: 59, description: 'Expand to reading, writing, and translation.', highlighted: true, comingSoon: false },
-  { id: 'specialist', name: 'Specialist', price: 79, description: 'Add speaking and listening practice.', highlighted: false, comingSoon: false },
-  { id: 'master', name: 'Master', price: 99, description: 'Full access including tools and AI copilot.', highlighted: false, comingSoon: false },
-  { id: 'team', name: 'Team', price: 999, description: 'Enterprise solution for engineering teams.', highlighted: false, comingSoon: true },
-];
-
-const MODULES: Array<{ key: string; label: string; tiers: Record<PackageId, boolean | string> }> = [
-  { key: 'placement', label: 'Placement Test', tiers: { junior: true, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
-  { key: 'learningHub', label: 'Learning Hub', tiers: { junior: true, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
-  { key: 'progress', label: 'Progress Tracking', tiers: { junior: true, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
-  { key: 'vocabulary', label: 'Vocabulary', tiers: { junior: true, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
-  { key: 'grammar', label: 'Grammar', tiers: { junior: true, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
-  { key: 'translator', label: 'Translator', tiers: { junior: false, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
-  { key: 'reading', label: 'Reading', tiers: { junior: false, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
-  { key: 'writing', label: 'Writing', tiers: { junior: false, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
-  { key: 'speaking', label: 'Speaking', tiers: { junior: false, senior: false, specialist: true, master: true, team: 'Coming Soon' } },
-  { key: 'listening', label: 'Listening', tiers: { junior: false, senior: false, specialist: true, master: true, team: 'Coming Soon' } },
-  { key: 'tools', label: 'Tool', tiers: { junior: false, senior: false, specialist: false, master: true, team: 'Coming Soon' } },
-  { key: 'aiCopilot', label: 'AI Copilot', tiers: { junior: false, senior: false, specialist: false, master: true, team: 'Coming Soon' } },
-];
+import { PricingCard } from '@/components/ui/PricingCard';
+import { PRICING_TIERS, PRICING_FEATURE_ORDER } from '@/shared/data/pricing.data';
+import { getLandingTranslations } from './landing-i18n';
 
 export function PricingSection() {
   const language = useLocalizationStore((s) => s.language);
@@ -46,12 +16,27 @@ export function PricingSection() {
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [isAnnual, setIsAnnual] = useState(false);
 
-  const tp = (key: keyof typeof t, fallback: string) => t[key] ?? fallback;
+  const moduleLabels: Record<string, string> = {
+    'Placement Test': t.placementTest ?? 'Placement Test',
+    'Learning Hub': t.learningHub ?? 'Learning Hub',
+    'Progress': t.progress ?? 'Progress',
+    'Vocabulary': t.vocabularyPricing ?? 'Vocabulary',
+    'Grammar': t.grammarPricing ?? 'Grammar',
+    'Translator': t.translator ?? 'Translator',
+    'Reading': t.readingPricing ?? 'Reading',
+    'Writing': t.writingPricing ?? 'Writing',
+    'Speaking': t.speakingPricing ?? 'Speaking',
+    'Listening': t.listening ?? 'Listening',
+    'Tool': t.tool ?? 'Tool',
+    'AI Copilot': t.aiCopilot ?? 'AI Copilot',
+  };
 
-  const formatPrice = (usd: number) => {
-    if (usd === 0) return tp('pricingFree' as keyof typeof t, 'junior');
-    const annual = isAnnual ? Math.round(usd * 0.8) : usd;
-    return CurrencyConfig.formatPrice(annual, selectedCurrency);
+  const getFeatureValue = (tierId: string, featureName: string): boolean | string => {
+    const tier = PRICING_TIERS.find((t) => t.id === tierId);
+    if (!tier) return false;
+    if (tier.comingSoon) return 'Coming Soon';
+    const feature = tier.features.find((f) => f.name === featureName);
+    return feature?.included ?? false;
   };
 
   return (
@@ -105,42 +90,26 @@ export function PricingSection() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-12">
-          {PACKAGES.map((pkg, idx) => (
+          {PRICING_TIERS.map((tier, idx) => (
             <motion.div
-              key={pkg.id}
+              key={tier.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: idx * 0.08 }}
-              className={`relative rounded-2xl p-5 border flex flex-col ${pkg.highlighted ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 ring-2 ring-blue-500/20 scale-[1.03]' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800'} ${pkg.comingSoon ? 'opacity-70' : ''}`}
             >
-              {pkg.highlighted && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] bg-blue-600 text-white px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
-                  {t.pricingMostPopular ?? 'Most Popular'}
-                </span>
-              )}
-              {pkg.comingSoon && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] bg-slate-500 text-white px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
-                  {t.pricingComingSoon ?? 'Coming Soon'}
-                </span>
-              )}
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">{pkg.name}</h3>
-              <div className="mt-2 mb-3">
-                <span className="text-3xl font-extrabold text-slate-900 dark:text-white font-mono">
-                  {formatPrice(pkg.price)}
-                </span>
-                {pkg.price > 0 && (
-                  <span className="text-xs text-slate-500">/{isAnnual ? (t.pricingYear ?? 'yr') : (t.pricingMonth ?? 'mo')}</span>
-                )}
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 flex-1">{pkg.description}</p>
-              <Link
-                to={pkg.comingSoon ? '#' : `/onboarding?plan=${pkg.id}`}
-                onClick={(e) => pkg.comingSoon && e.preventDefault()}
-                className={`block w-full rounded-lg px-3 py-2 text-center text-xs font-bold transition-all ${pkg.comingSoon ? 'bg-slate-300 dark:bg-slate-600 text-slate-500 cursor-not-allowed' : pkg.highlighted ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-md' : 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-slate-800'}`}
-              >
-                {pkg.comingSoon ? (t.pricingNotifyMe ?? 'Notify Me') : (t.pricingGetStarted ?? 'Get Started')}
-              </Link>
+              <PricingCard
+                tier={tier}
+                isAnnual={isAnnual}
+                currency={selectedCurrency}
+                variant="landing"
+                onSelect={(tierId) => {
+                  const tier = PRICING_TIERS.find((t) => t.id === tierId);
+                  if (tier && !tier.comingSoon) {
+                    window.location.href = `/onboarding?plan=${tierId}`;
+                  }
+                }}
+              />
             </motion.div>
           ))}
         </div>
@@ -149,20 +118,26 @@ export function PricingSection() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200 dark:border-slate-700">
-                <th className="text-left py-3 pr-4 font-semibold text-slate-600 dark:text-slate-400 w-1/3">{t.pricingFeature ?? 'Feature'}</th>
-                {PACKAGES.map((pkg) => (
-                  <th key={pkg.id} className="py-3 px-2 text-center font-bold text-slate-900 dark:text-white text-xs">{pkg.name}</th>
+                <th className="text-left py-3 pr-4 font-semibold text-slate-600 dark:text-slate-400 w-1/3">
+                  {t.pricingFeature ?? 'Feature'}
+                </th>
+                {PRICING_TIERS.map((tier) => (
+                  <th key={tier.id} className="py-3 px-2 text-center font-bold text-slate-900 dark:text-white text-xs">
+                    {tier.name}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {MODULES.map((mod) => (
-                <tr key={mod.key} className="border-b border-slate-100 dark:border-slate-800">
-                  <td className="py-3 pr-4 text-slate-700 dark:text-slate-300">{mod.label}</td>
-                  {PACKAGES.map((pkg) => {
-                    const value = mod.tiers[pkg.id];
+              {PRICING_FEATURE_ORDER.map((featureName) => (
+                <tr key={featureName} className="border-b border-slate-100 dark:border-slate-800">
+                  <td className="py-3 pr-4 text-slate-700 dark:text-slate-300">
+                    {moduleLabels[featureName] ?? featureName}
+                  </td>
+                  {PRICING_TIERS.map((tier) => {
+                    const value = getFeatureValue(tier.id, featureName);
                     return (
-                      <td key={pkg.id} className="py-3 px-2 text-center">
+                      <td key={tier.id} className="py-3 px-2 text-center">
                         {value === true ? (
                           <Check className="w-4 h-4 text-emerald-500 mx-auto" />
                         ) : value === false ? (

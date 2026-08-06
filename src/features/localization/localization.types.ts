@@ -107,6 +107,16 @@ export type TranslationKey =
   | 'pricing.addons'
   | 'pricing.monthly'
   | 'pricing.annual'
+  | 'pricing.mostPopular'
+  | 'pricing.comingSoon'
+  | 'pricing.perMonth'
+  | 'pricing.perMonthAnnual'
+  | 'pricing.getStarted'
+  | 'pricing.choosePlan'
+  | 'pricing.loading'
+  | 'pricing.backHome'
+  | 'pricing.subtitle'
+  | 'pricing.save20'
   // Learning Hub
   | 'learningHub.title'
   // Grammar
