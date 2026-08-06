@@ -1,7 +1,6 @@
 import type { LearningDataSkill } from '@/core/learning/spaced-repetition.types';
 
 import type { CefrBand } from '@/shared/types/domain.types';
-
 import { getBaseCefrLevel, getNextCefrBand } from '@/shared/utils/profile.utils';
 
 import type { VocabularyTerm } from '../../types/vocabulary.types';
@@ -65,11 +64,9 @@ export const selectVocabularyLearningSet = (
   const preferred = eligible.filter((term) => options.preferredDomains?.includes(term.domain));
 
   const seen = new Set<string>();
-  const ordered = [...due, ...preferred, ...current, ...stretch, ...remaining].filter((term) => {
+  return [...due, ...preferred, ...current, ...stretch, ...remaining].filter((term) => {
     if (seen.has(term.id)) return false;
     seen.add(term.id);
     return true;
   });
-  const offset = Math.max(0, options.offset ?? 0);
-  return ordered.slice(offset, offset + 9);
 };

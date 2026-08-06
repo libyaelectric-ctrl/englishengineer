@@ -88,7 +88,6 @@ export const VocabularyService = {
   },
 
   getDueEntries(
-    limit = 12,
     allowedEntries: VocabularyEntry[] = getVocabularyEntries() ?? []
   ): VocabularyEntry[] {
     const state = this.getState();
@@ -101,13 +100,11 @@ export const VocabularyService = {
       .sort(sortByNextReview)
       .map((reviewState) => reviewState.wordId);
 
-    const seededIds =
-      dueIds.length > 0 ? dueIds : allowedEntries.slice(0, limit).map((entry) => entry.id);
+    const seededIds = dueIds.length > 0 ? dueIds : allowedEntries.map((entry) => entry.id);
 
     return seededIds
       .map((id) => this.getEntryById(id))
-      .filter((entry): entry is VocabularyEntry => Boolean(entry))
-      .slice(0, limit);
+      .filter((entry): entry is VocabularyEntry => Boolean(entry));
   },
 
   submitReview(answers: VocabularyAnswer[]): VocabularyEvaluationResult {

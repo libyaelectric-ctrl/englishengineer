@@ -83,8 +83,8 @@ describe('Session Optimizer', () => {
         w1: makeProgress({ isWeak: true }),
         w2: makeProgress({ isLeech: true, correctReviews: 1, wrongReviews: 3 }),
       };
-      const result = prioritizeWords(['w1', 'w2'], progressMap, new Date(), 1);
-      expect(result).toHaveLength(1);
+      const result = prioritizeWords(['w1', 'w2'], progressMap, new Date());
+      expect(result.length).toBeGreaterThanOrEqual(1);
     });
   });
 

@@ -55,7 +55,7 @@ const getA1Entries = (): VocabularyEntry[] =>
 export const useVocabularyStore = create<VocabularyStoreState & VocabularyStoreActions>(
   (set, get) => ({
     entries: VocabularyService.getEntries(),
-    activeEntries: VocabularyService.getDueEntries(12, getA1Entries()),
+    activeEntries: VocabularyService.getDueEntries(getA1Entries()),
     mode: 'flashcards',
     responses: {},
     startedAt: Date.now(),
@@ -70,7 +70,7 @@ export const useVocabularyStore = create<VocabularyStoreState & VocabularyStoreA
       const state: VocabularyState = VocabularyService.getState();
       set({
         entries: VocabularyService.getEntries(),
-        activeEntries: VocabularyService.getDueEntries(12, getA1Entries()),
+        activeEntries: VocabularyService.getDueEntries(getA1Entries()),
         responses: {},
         startedAt: Date.now(),
         evaluationResult: null,
@@ -90,7 +90,7 @@ export const useVocabularyStore = create<VocabularyStoreState & VocabularyStoreA
 
     loadReviewSession: (allowedEntries) => {
       set({
-        activeEntries: VocabularyService.getDueEntries(12, allowedEntries),
+        activeEntries: VocabularyService.getDueEntries(allowedEntries),
         responses: {},
         startedAt: Date.now(),
         evaluationResult: null,
@@ -137,7 +137,7 @@ export const useVocabularyStore = create<VocabularyStoreState & VocabularyStoreA
     resetVocabularyProgress: () => {
       VocabularyService.resetVocabularyState();
       set({
-        activeEntries: VocabularyService.getDueEntries(12, getA1Entries()),
+        activeEntries: VocabularyService.getDueEntries(getA1Entries()),
         responses: {},
         startedAt: Date.now(),
         evaluationResult: null,

@@ -224,9 +224,9 @@ export const MarketplaceService = {
     return Array.from(new Set(MOCK_CONTENT.map((c) => c.category)));
   },
 
-  getPopularContent(limit: number = 5): MarketplaceContent[] {
-    return MOCK_CONTENT.filter((c) => c.isPublished)
-      .sort((a, b) => b.downloadCount - a.downloadCount)
-      .slice(0, limit);
+  getPopularContent(): MarketplaceContent[] {
+    return MOCK_CONTENT.filter((c) => c.isPublished).sort(
+      (a, b) => b.downloadCount - a.downloadCount
+    );
   },
 };
