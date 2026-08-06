@@ -699,6 +699,9 @@ export type TranslationKey =
   | 'onboarding.timezone'
   | 'onboarding.detected'
   | 'onboarding.terms'
+  | 'onboarding.contentReady'
+  | 'onboarding.items'
+  | 'onboarding.includesGeneral'
   // Beta Onboarding
   | 'beta.title'
   | 'beta.subtitle'

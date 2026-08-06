@@ -30,7 +30,7 @@ export interface ContentPool {
 const BASE_DOMAINS = ['general', 'engineering'] as const;
 
 export const ContentAggregatorService = {
-  async buildContentPool(discipline: Discipline, cefrLevel?: CefrLevel): Promise<ContentPool> {
+  async buildContentPool(discipline: Discipline, _cefrLevel?: CefrLevel): Promise<ContentPool> {
     const domains = [...BASE_DOMAINS, discipline];
 
     const allTerms = await VocabularyRepository.getVocabularyByDomains(domains);
