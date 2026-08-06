@@ -29,11 +29,28 @@ export interface ContentPool {
 
 const BASE_DOMAINS = ['general', 'engineering'] as const;
 
+const uniqueByKey = <T extends { id: string }>(items: T[]): T[] => {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    if (seen.has(item.id)) return false;
+    seen.add(item.id);
+    return true;
+  });
+};
+
 export const ContentAggregatorService = {
   async buildContentPool(discipline: Discipline, _cefrLevel?: CefrLevel): Promise<ContentPool> {
     const domains = [...BASE_DOMAINS, discipline];
 
-    const allTerms = await VocabularyRepository.getVocabularyByDomains(domains);
+    let allTerms: VocabularyTerm[] = [];
+
+    try {
+      allTerms = await VocabularyRepository.getVocabularyByDomains(domains);
+    } catch {
+      allTerms = await VocabularyRepository.getVocabularyByDomains([...BASE_DOMAINS]);
+    }
+
+    allTerms = uniqueByKey(allTerms);
 
     const vocabulary: VocabularyTerm[] = [];
     const readings: VocabularyTerm[] = [];

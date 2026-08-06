@@ -199,4 +199,21 @@ export const getAnnualSavings = (tier: PricingTier): number => {
   return Math.round(((tier.monthlyPrice - tier.annualPrice) / tier.monthlyPrice) * 100);
 };
 
+export const getRecommendedPlan = (totalItemCount: number): string => {
+  if (totalItemCount >= 4500) return 'master';
+  if (totalItemCount >= 4000) return 'specialist';
+  if (totalItemCount >= 3000) return 'senior';
+  return 'junior';
+};
+
+export const getDynamicPricingMessage = (tier: PricingTier, totalItemCount: number): string | null => {
+  if (totalItemCount >= 4500 && tier.id === 'master') {
+    return 'Best value for your extensive content library';
+  }
+  if (totalItemCount >= 4000 && tier.id === 'specialist') {
+    return 'Recommended for your content size';
+  }
+  return null;
+};
+
 import { CurrencyConfig } from '@/features/billing/currency.config';
