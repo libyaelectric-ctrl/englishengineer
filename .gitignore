@@ -1,4 +1,7 @@
+```
+# Dependencies
 node_modules/
+**/node_modules/
 build/
 dist/
 .next/
@@ -16,28 +19,49 @@ __pycache__/
 data/translations/results/
 *.zip
 
-# Environment files
+# Build outputs
+dist/
+build/
+coverage/
+htmlcov/
+target/
+
+# Python specific
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.py~
+.Python
+env/
+venv/
+.venv/
+.ENV
 .env
 .env.local
-.env.*.local
-.env.vercel.*
-!.env.example
-!.scripts/.env.example
-!scripts/.env.example
-backend/.env
-backend/.env.local
-backend/.env.*.local
-backend/.env.production
+.env.*
+**/.env
+**/.env.*
 
-# IDE
+# Logs
+*.log
+
+# IDE files
 .vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
 
-# AI agent working data
-.mimocode/
-.agents/
+# OS files
+.DS_Store
+Thumbs.db
 
-# Vercel
-.vercel
+# Testing
+.mypy_cache/
+.pytest_cache/
+coverage.xml
+*.coverage
 
 # Backup files
 *.bak
@@ -94,3 +118,28 @@ qa-report/
 
 # Local opencode tool config (machine-specific)
 opencode.json
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+```

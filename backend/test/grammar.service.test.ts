@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-
 import { ProgressBodySchema } from '../src/validation.js';
 
 interface GrammarRecord {
