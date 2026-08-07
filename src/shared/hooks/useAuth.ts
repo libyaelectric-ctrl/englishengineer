@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
+// Basit ve derlenebilir bir mock auth hook'u
 export const useAuth = () => {
-  // Ger�ek auth gelene kadar sahte kullan�c�
-  const [user, setUser] = useState<any>({
+  // Kullan�lmayan setter'lar� ve useEffect'i kald�rd�k
+  const user = {
     id: '1',
-    name: 'Misafir',
+    name: 'M�hendis',
     discipline: 'general',
     onboardingCompleted: true,
-  });
-  const [loading, setLoading] = useState(false);
+    language: 'tr',
+  };
+  const loading = false;
+
   return { user, loading };
 };
