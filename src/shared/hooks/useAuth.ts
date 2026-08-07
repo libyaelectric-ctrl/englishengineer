@@ -1,15 +1,17 @@
 import { useState } from 'react';
 
-// Basit ve derlenebilir bir mock auth hook'u
+// Basitle�tirilmi� Auth Hook'u (Build hatas� vermemesi i�in)
 export const useAuth = () => {
-  // Kullan�lmayan setter'lar� ve useEffect'i kald�rd�k
-  const user = {
+  // Ger�ek uygulamada buras� Context veya API'den gelir
+  const [user] = useState({
     id: '1',
     name: 'M�hendis',
     discipline: 'general',
     onboardingCompleted: true,
     language: 'tr',
-  };
+  });
+
+  // Loading state'i sabit false olarak d�n�yoruz (�imdilik)
   const loading = false;
 
   return { user, loading };

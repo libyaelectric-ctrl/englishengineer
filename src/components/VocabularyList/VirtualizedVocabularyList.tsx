@@ -1,6 +1,6 @@
-// Named import olarak �ekiyoruz
+// D�zeltme 1: Named import kullan�yoruz
 import { AutoSizer } from 'react-virtualized-auto-sizer';
-// List olarak �ekiyoruz, FixedSizeList bazen versiyon fark� yaratabilir
+// D�zeltme 2: FixedSizeList'i 'List' olarak import ediyoruz
 import { FixedSizeList as List } from 'react-window';
 
 import React from 'react';
@@ -34,13 +34,12 @@ const Row = ({ index, style, data }: any) => {
 
 export const VirtualizedVocabularyList: React.FC<Props> = ({ items }) => {
   if (!items || items.length === 0) {
-    return (
-      <div className="p-10 text-center text-gray-500">Kelime listesi bo� veya y�kleniyor...</div>
-    );
+    return <div className="p-10 text-center text-gray-500">Hen�z i�erik yok.</div>;
   }
 
   return (
     <div className="h-[600px] w-full bg-white rounded-lg shadow-sm border">
+      {/* D�zeltme 3: AutoSizer children fonksiyonunu do�ru kurguluyoruz */}
       <AutoSizer>
         {({ height, width }) => (
           <List
