@@ -1,15 +1,15 @@
 import { useState } from 'react';
 
-// Ge�ici mock veri - Ger�ek auth entegrasyonu sonras� g�ncellenecek
+// Geï¿½ici mock veri - Gerï¿½ek auth entegrasyonu sonrasï¿½ gï¿½ncellenecek
 export const useAuth = () => {
   const [user] = useState({
     id: '1',
-    name: 'M�hendis',
+    name: 'Mï¿½hendis',
     discipline: 'civil_engineering',
     onboardingCompleted: true,
     language: 'tr',
   });
 
-  // Loading state'i �imdilik false d�n�yoruz
+  // Loading state'i ï¿½imdilik false dï¿½nï¿½yoruz
   return { user, loading: false };
 };
