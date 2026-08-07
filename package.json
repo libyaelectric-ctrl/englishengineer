@@ -65,7 +65,9 @@
     "react-error-boundary": "^6.1.2",
     "react-router": "^8.3.0",
     "react-router-dom": "^7.18.2",
+    "react-virtualized-auto-sizer": "^2.0.3",
     "react-virtuoso": "^4.18.10",
+    "react-window": "^2.3.0",
     "tailwind-merge": "^3.6.0",
     "zustand": "^5.0.14"
   },
