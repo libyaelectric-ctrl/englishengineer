@@ -1,18 +1,15 @@
 import { useState } from 'react';
 
-// Basitle�tirilmi� Auth Hook'u (Build hatas� vermemesi i�in)
+// Ge�ici mock veri - Ger�ek auth entegrasyonu sonras� g�ncellenecek
 export const useAuth = () => {
-  // Ger�ek uygulamada buras� Context veya API'den gelir
   const [user] = useState({
     id: '1',
     name: 'M�hendis',
-    discipline: 'general',
+    discipline: 'civil_engineering',
     onboardingCompleted: true,
     language: 'tr',
   });
 
-  // Loading state'i sabit false olarak d�n�yoruz (�imdilik)
-  const loading = false;
-
-  return { user, loading };
+  // Loading state'i �imdilik false d�n�yoruz
+  return { user, loading: false };
 };
