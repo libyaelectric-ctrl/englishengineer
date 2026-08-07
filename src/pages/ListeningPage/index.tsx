@@ -1,4 +1,4 @@
-﻿import {
+import {
   CheckCircle2,
   FileText,
   Gauge,
@@ -183,7 +183,7 @@ const WorkspaceView = ({
           Back to tasks
         </Button>
         <span className="text-sm font-bold text-muted-copy uppercase tracking-wider">
-          {currentMission.cefrLevel} · {currentMission.missionType}
+          {currentMission.cefrLevel} � {currentMission.missionType}
         </span>
       </div>
 
@@ -415,7 +415,7 @@ const ListeningPage = () => {
 
   return (
     <div className="min-h-screen bg-background pb-16 text-foreground space-y-6 animate-in fade-in duration-300">
-      {/* Sticky header — clean, rigid */}
+      {/* Sticky header � clean, rigid */}
       <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
         <div className="flex items-center gap-3">
           <h1 className="text-base font-bold tracking-tight text-foreground">Listening</h1>
