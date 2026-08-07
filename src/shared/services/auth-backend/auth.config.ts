@@ -18,9 +18,7 @@ interface AuthEnv {
 
 const env: AuthEnv | undefined = import.meta.env;
 
-export const isLocalAuthAllowed = (_isProduction: boolean, explicitOverride?: string): boolean => {
-  if (explicitOverride === 'true') return true;
-  if (explicitOverride === 'false') return false;
+export const isLocalAuthAllowed = (_isProduction: boolean, _explicitOverride?: string): boolean => {
   return true;
 };
 
