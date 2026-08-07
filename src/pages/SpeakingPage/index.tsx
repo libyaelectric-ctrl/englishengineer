@@ -1,4 +1,4 @@
-import { FileText, MessageSquareText, Mic, RotateCcw, ShieldCheck, Trophy } from 'lucide-react';
+﻿import { FileText, MessageSquareText, Mic, RotateCcw, ShieldCheck, Trophy } from 'lucide-react';
 
 import type { JSX } from 'react';
 import { Suspense, lazy, useState } from 'react';
