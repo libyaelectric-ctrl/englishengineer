@@ -1,4 +1,4 @@
-﻿import { FileText, MessageSquareText, Mic, RotateCcw, ShieldCheck, Trophy } from 'lucide-react';
+import { FileText, MessageSquareText, Mic, RotateCcw, ShieldCheck, Trophy } from 'lucide-react';
 
 import type { JSX } from 'react';
 import { Suspense, lazy, useState } from 'react';
@@ -113,7 +113,7 @@ const RoleplayTab = () => {
               subtitle={activeMission.description}
               icon={MessageSquareText}
               headerActions={
-                <StatusBadge label={`${SPEAKING_MVP_MODE} · No microphone required`} tone="info" />
+                <StatusBadge label={`${SPEAKING_MVP_MODE} � No microphone required`} tone="info" />
               }
             >
               <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-5 shadow-sm">
@@ -207,7 +207,7 @@ const RoleplayTab = () => {
                     </Button>
                   </div>
                   <p className="mt-4 text-xs font-bold text-muted-copy uppercase tracking-wider">
-                    Microphone required: No · AI required: No
+                    Microphone required: No � AI required: No
                   </p>
                 </>
               ) : (

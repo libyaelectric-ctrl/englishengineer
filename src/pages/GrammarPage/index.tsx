@@ -1,4 +1,4 @@
-﻿import { PageContainer } from '@/shared/components/PageContainer';
+import { PageContainer } from '@/shared/components/PageContainer';
 
 import { useGrammarStore } from '@/features/grammar';
 
