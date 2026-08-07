@@ -25,11 +25,9 @@ export const EmailPasswordForm = ({
   isSignUpMode,
   isLoading,
   isLocalAuthBlocked,
-  isSupabaseMode,
   onSubmit,
-  onShowSsoForm,
 }: EmailPasswordFormProps) => {
-  const translate = useLocalizationStore((s) => s.translate);
+  const translate = useLocalizationStore((state) => state.translate);
   return (
     <>
       <form onSubmit={onSubmit} className="space-y-4">
@@ -88,26 +86,6 @@ export const EmailPasswordForm = ({
           {!isLoading && <ArrowRight className="h-4 w-4" />}
         </Button>
       </form>
-
-      <div className="space-y-1.5 pt-1">
-        <button
-          type="button"
-          onClick={onShowSsoForm}
-          className="w-full text-center text-[10px] font-bold uppercase tracking-wider text-muted-copy hover:text-primary cursor-pointer transition-colors py-1 block"
-        >
-          {translate('login.passwordlessMagicLink')}
-        </button>
-
-        {isSupabaseMode && !isSignUpMode && (
-          <button
-            type="button"
-            onClick={onShowSsoForm}
-            className="w-full text-center text-[10px] font-bold uppercase tracking-wider text-muted-copy hover:text-primary cursor-pointer transition-colors block"
-          >
-            {translate('login.ssoSignIn')}
-          </button>
-        )}
-      </div>
     </>
   );
 };

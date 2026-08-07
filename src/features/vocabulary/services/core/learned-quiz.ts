@@ -1,6 +1,6 @@
 import { repairVocabularyText } from './vocabulary.menu';
 
-export const LEARNED_QUIZ_MINIMUM = 100;
+export const LEARNED_QUIZ_MINIMUM = 0;
 export const LEARNED_QUIZ_SIZE = 10;
 
 const normalizeQuizText = (value: string): string =>

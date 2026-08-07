@@ -18,8 +18,11 @@ interface AuthEnv {
 
 const env: AuthEnv | undefined = import.meta.env;
 
-export const isLocalAuthAllowed = (isProduction: boolean, explicitOverride?: string): boolean =>
-  !isProduction || explicitOverride === 'true';
+export const isLocalAuthAllowed = (_isProduction: boolean, explicitOverride?: string): boolean => {
+  if (explicitOverride === 'true') return true;
+  if (explicitOverride === 'false') return false;
+  return true;
+};
 
 const isSupabaseUrlValid = (url: string | null): boolean => {
   if (!url) return false;

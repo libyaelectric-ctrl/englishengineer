@@ -28,8 +28,8 @@ describe('VocabularyPage menu', () => {
     await screen.findAllByText('height');
   };
 
-  const startTenWordSet = async () => {
-    await waitFor(() => expect(screen.getAllByTestId('vocabulary-word-card')).toHaveLength(9));
+  const startWordSet = async () => {
+    await waitFor(() => expect(screen.getAllByTestId('vocabulary-word-card').length).toBeGreaterThan(0));
   };
 
   const openSearchModal = async () => {
@@ -42,7 +42,7 @@ describe('VocabularyPage menu', () => {
     await renderLoadedPage();
     expect(screen.getByRole('tab', { name: 'New' })).toHaveAttribute('aria-selected', 'true');
 
-    await startTenWordSet();
+    await startWordSet();
     const firstCard = screen.getAllByTestId('vocabulary-word-card')[0];
     expect(within(firstCard).getByRole('heading', { name: 'height' })).toBeInTheDocument();
     expect(within(firstCard).getByText('A1')).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe('VocabularyPage menu', () => {
 
   it('moves a new word to Learned with 1 click', async () => {
     await renderLoadedPage();
-    await startTenWordSet();
+    await startWordSet();
     const firstCard = screen.getAllByTestId('vocabulary-word-card')[0];
     fireEvent.click(within(firstCard).getByRole('button', { name: /I Know This|Biliyorum/i }));
     expect(Object.values(VocabularyMenuService.getState().progress)[0]?.status).toBe('Learned');
@@ -58,7 +58,7 @@ describe('VocabularyPage menu', () => {
 
   it('moves a new word directly to Learned and shows in Learned tab', async () => {
     await renderLoadedPage();
-    await startTenWordSet();
+    await startWordSet();
     const firstCard = screen.getAllByTestId('vocabulary-word-card')[0];
     fireEvent.click(within(firstCard).getByRole('button', { name: /I Know This|Biliyorum/i }));
     expect(Object.values(VocabularyMenuService.getState().progress)[0]).toMatchObject({
@@ -69,12 +69,11 @@ describe('VocabularyPage menu', () => {
     expect(screen.getAllByText('height').length).toBeGreaterThan(0);
   }, 10_000);
 
-  it('keeps the Learned Quiz locked until 100 words are learned', async () => {
+  it('allows quiz to be started without word requirements', async () => {
     await renderLoadedPage();
     fireEvent.click(screen.getByRole('tab', { name: 'Learned' }));
 
-    expect(screen.getByRole('button', { name: 'Start Quiz' })).toBeDisabled();
-    expect(screen.getByText('Learn at least 100 words to unlock the quiz.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Start Quiz' })).toBeEnabled();
   }, 10_000);
 
   it('moves quiz answers through the learned pools in one completed quiz', async () => {

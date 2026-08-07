@@ -1,7 +1,6 @@
 import {
   ArrowRight,
   Bot,
-  Building,
   Building2,
   CheckCircle2,
   Code2,
@@ -9,11 +8,9 @@ import {
   Factory,
   FlaskConical,
   HardHat,
-  HelpCircle,
   Play,
   ShieldAlert,
   ShieldCheck,
-  Sparkles,
   Wrench,
   Zap,
 } from 'lucide-react';
@@ -24,7 +21,6 @@ import { Link } from 'react-router-dom';
 
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
-import { logger } from '@/shared/logger';
 
 import { useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization/localization.types';
@@ -33,12 +29,8 @@ import { Footer } from '@/pages/LandingPage/Footer';
 import { Navbar } from '@/pages/LandingPage/Navbar';
 
 import { EmailPasswordForm } from './EmailPasswordForm';
-import { GuidedSpotlightTour } from './GuidedSpotlightTour';
-import { MagicLinkAuthModal } from './MagicLinkAuthModal';
 import { SSOForm } from './SSOForm';
-import { SecuritySessionsModal } from './SecuritySessionsModal';
 import { SocialLoginButtons } from './SocialLoginButtons';
-import { WorkspaceSwitcherModal } from './WorkspaceSwitcherModal';
 import { useLoginHandlers } from './useLoginHandlers';
 
 const DISCIPLINE_ICONS: Record<EngineeringDiscipline, React.ElementType> = {
@@ -64,11 +56,6 @@ const DISCIPLINES = ENGINEERING_DISCIPLINES.map((id) => ({
 const LoginPage = () => {
   const h = useLoginHandlers();
   const translate = useLocalizationStore((state) => state.translate);
-
-  const [securityOpen, setSecurityOpen] = useState(false);
-  const [workspaceOpen, setWorkspaceOpen] = useState(false);
-  const [magicLinkOpen, setMagicLinkOpen] = useState(false);
-  const [tourOpen, setTourOpen] = useState(false);
 
   const [selectedDiscipline, setSelectedDiscipline] = useState<string | null>(() => {
     return localStorage.getItem('preselected_discipline');
@@ -277,83 +264,20 @@ const LoginPage = () => {
               )}
 
               {/* Section 3 Interactive Auth Toolset Toolbar (Items 21-30) */}
-              <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1 border-t border-border-soft/60">
+              {/* Back to Home */}
+              <div className="text-center">
                 <Link
-                  to="/onboarding"
-                  className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-primary hover:border-primary/40 transition cursor-pointer"
+                  to="/"
+                  className="inline-flex items-center gap-1 text-[10px] font-bold text-primary hover:underline"
                 >
-                  <Sparkles className="h-2.5 w-2.5" /> {translate('login.onboarding')}
+                  <span>{translate('login.backToHome')}</span>
                 </Link>
-                <button
-                  type="button"
-                  onClick={() => setWorkspaceOpen(true)}
-                  className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-foreground hover:border-primary/40 transition cursor-pointer"
-                >
-                  <Building className="h-2.5 w-2.5 text-primary" />{' '}
-                  {translate('login.workspaceSwitcher')}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSecurityOpen(true)}
-                  className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-foreground hover:border-primary/40 transition cursor-pointer"
-                >
-                  <ShieldCheck className="h-2.5 w-2.5 text-emerald-500" />{' '}
-                  {translate('login.security2fa')}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setMagicLinkOpen(true)}
-                  className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-foreground hover:border-primary/40 transition cursor-pointer"
-                >
-                  <Zap className="h-2.5 w-2.5 text-amber-500" /> {translate('login.magicLink')}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTourOpen(true)}
-                  className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-primary hover:border-primary/40 transition cursor-pointer"
-                >
-                  <HelpCircle className="h-2.5 w-2.5" /> {translate('login.guidedTour')}
-                </button>
-              </div>
-
-              {/* Terms & Privacy & Back to Home */}
-              <div className="text-center space-y-1">
-                <p className="text-[9px] text-muted-copy leading-relaxed">
-                  {translate('login.termsPrivacy')}
-                </p>
-                <div className="pt-0.5">
-                  <Link
-                    to="/"
-                    className="inline-flex items-center gap-1 text-[10px] font-bold text-primary hover:underline"
-                  >
-                    <span>{translate('login.backToHome')}</span>
-                  </Link>
-                </div>
               </div>
             </div>
           </div>
         </div>
       </main>
 
-      <SecuritySessionsModal isOpen={securityOpen} onClose={() => setSecurityOpen(false)} />
-
-      <WorkspaceSwitcherModal
-        isOpen={workspaceOpen}
-        onClose={() => setWorkspaceOpen(false)}
-        onSelectWorkspace={(wsName) => {
-          logger.i('Switched to workspace:', wsName);
-        }}
-      />
-
-      <MagicLinkAuthModal
-        isOpen={magicLinkOpen}
-        onClose={() => setMagicLinkOpen(false)}
-        initialEmail={h.email}
-      />
-
-      <GuidedSpotlightTour isOpen={tourOpen} onClose={() => setTourOpen(false)} />
-
-      {/* Fixed Bottom Footer */}
       <Footer className="fixed bottom-0 inset-x-0 z-50" />
     </div>
   );
