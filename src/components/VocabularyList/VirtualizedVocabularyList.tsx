@@ -1,7 +1,7 @@
 // Do�ru import: AutoSizer default de�il, named export olarak al�nmal�
-import AutoSizer from 'react-virtualized-auto-sizer';
+import { AutoSizer } from 'react-virtualized-auto-sizer';
 // Do�ru import: FixedSizeList named export
-import { FixedSizeList } from 'react-window';
+import { FixedSizeList as List } from 'react-window';
 
 import React from 'react';
 
@@ -38,7 +38,7 @@ export const VirtualizedVocabularyList: React.FC<Props> = ({ items }) => {
     <div className="h-[600px] w-full bg-white rounded-lg shadow-sm border">
       <AutoSizer>
         {({ height, width }: { height: number; width: number }) => (
-          <FixedSizeList
+          <List
             height={height}
             width={width}
             itemCount={items.length}
@@ -46,7 +46,7 @@ export const VirtualizedVocabularyList: React.FC<Props> = ({ items }) => {
             itemData={{ items }}
           >
             {Row}
-          </FixedSizeList>
+          </List>
         )}
       </AutoSizer>
     </div>
