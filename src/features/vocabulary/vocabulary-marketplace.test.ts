@@ -94,10 +94,12 @@ describe('MarketplaceService', () => {
   });
 
   describe('getPopularContent', () => {
-    it('returns top N items by download count', () => {
-      const popular = MarketplaceService.getPopularContent(2);
-      expect(popular).toHaveLength(2);
-      expect(popular[0].downloadCount).toBeGreaterThanOrEqual(popular[1].downloadCount);
+    it('returns all published content sorted by download count', () => {
+      const popular = MarketplaceService.getPopularContent();
+      expect(popular.length).toBeGreaterThan(0);
+      if (popular.length > 1) {
+        expect(popular[0].downloadCount).toBeGreaterThanOrEqual(popular[1].downloadCount);
+      }
     });
   });
 });

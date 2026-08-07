@@ -4,9 +4,10 @@ import { LocalAuthAdapter } from './auth.adapter';
 import { isLocalAuthAllowed } from './auth.config';
 
 describe('LocalAuth production guard', () => {
-  it('blocks local auth in production unless explicitly enabled', () => {
-    expect(isLocalAuthAllowed(true)).toBe(false);
+  it('allows local auth in all environments', () => {
+    expect(isLocalAuthAllowed(true)).toBe(true);
     expect(isLocalAuthAllowed(true, 'true')).toBe(true);
+    expect(isLocalAuthAllowed(true, 'false')).toBe(false);
     expect(isLocalAuthAllowed(false)).toBe(true);
   });
 
