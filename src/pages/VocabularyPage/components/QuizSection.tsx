@@ -5,7 +5,8 @@ import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { logger } from '@/shared/logger';
 
-import { useLocalizationStore } from '@/features/localization';
+import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
+import { useLocalizationStore, INTERFACE_LANGUAGES } from '@/features/localization';
 import {
   VocabularyMenuService,
   type VocabularyMenuState,
@@ -37,6 +38,9 @@ const learnedWordIds = (menuState: VocabularyMenuState): string[] =>
 
 export const QuizSection = ({ menuState }: QuizSectionProps) => {
   const translate = useLocalizationStore((s) => s.translate);
+  const language = useLocalizationStore((s) => s.language);
+  const resolveMeaning = useTermMeaningResolver(language);
+  const langLabel = INTERFACE_LANGUAGES.find((l) => l.id === language)?.nativeLabel || language;
   const [quizWords, setQuizWords] = useState<VocabularyTerm[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isStarting, setIsStarting] = useState(false);
@@ -89,7 +93,7 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
       const answer = answers[word.id] ?? '';
       if (!answer.trim()) {
         kept.push(word.id);
-      } else if (isTurkishQuizAnswerCorrect(answer, word.turkishMeaning)) {
+      } else if (isTurkishQuizAnswerCorrect(answer, resolveMeaning(word.term, word))) {
         mastered.push(word.id);
       } else {
         struggling.push(word.id);
@@ -186,7 +190,7 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
                   {repairVocabularyText(word.term)}
                 </p>
                 <p className="mt-1 text-sm text-muted-copy">
-                  {translate('vocabulary.typeTurkishMeaning')}
+                  Type {langLabel} meaning...
                 </p>
                 <input
                   ref={(element) => {

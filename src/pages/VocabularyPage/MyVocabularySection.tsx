@@ -5,6 +5,7 @@ import { SectionCard } from '@/shared/components/SectionCard';
 
 import { useLocalizationStore } from '@/features/localization';
 import { MyVocabularyWord, VocabularyMenuService } from '@/features/vocabulary';
+import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
 
 interface MyVocabularySectionProps {
   myVocabulary: MyVocabularyWord[];
@@ -50,6 +51,9 @@ const WordCard = ({
   onArchive: (id: string) => void;
 }) => {
   const s = STATUS_STYLES[status || 'new'] || STATUS_STYLES.new;
+  const language = useLocalizationStore((state) => state.language);
+  const resolveMeaning = useTermMeaningResolver(language);
+  const meaning = resolveMeaning(word.term, { turkishMeaning: word.turkishMeaning });
   return (
     <div
       className={`rounded-[4px] border p-4 shadow-sm hover:shadow-md transition-all duration-300 ${status === 'struggling' ? 'border-red-300 dark:border-red-700' : 'border-border-soft bg-surface'}`}
@@ -64,8 +68,8 @@ const WordCard = ({
               {s.emoji} {s.label}
             </span>
           </div>
-          {word.turkishMeaning && (
-            <p className="mt-1 text-xs text-muted-copy">{word.turkishMeaning}</p>
+          {meaning && (
+            <p className="mt-1 text-xs text-muted-copy">{meaning}</p>
           )}
         </div>
         <button
