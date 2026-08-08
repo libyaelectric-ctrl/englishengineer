@@ -4,6 +4,8 @@ import { FormEvent } from 'react';
 
 import { Button } from '@/shared/components/Button';
 
+import { useLocalizationStore, INTERFACE_LANGUAGES } from '@/features/localization';
+
 import {
   type VocabularyMenuProgress,
   type VocabularyTerm,
@@ -72,45 +74,50 @@ export const QuizForm = ({
   onSetKnowThisCheck: _onSetKnowThisCheck,
   onSubmit,
   onLearn,
-}: QuizFormProps) => (
-  <form onSubmit={onSubmit} className="mt-4 space-y-2">
-    <Button
-      type="button"
-      className="w-full rounded-[4px] bg-primary hover:bg-primary/90 text-white font-bold"
-      onClick={() => onLearn?.(term)}
-    >
-      <CheckCircle2 className="h-4 w-4 mr-1.5" /> I Know This
-    </Button>
-    <div className="relative pt-1 text-center">
-      <span className="text-[10px] text-muted-copy uppercase tracking-wider font-semibold">
-        or Test Meaning
-      </span>
-    </div>
-    <label className="block text-xs font-bold text-foreground">
-      Turkish meaning
-      <input
-        value={answer}
-        disabled={quizResult !== null}
-        onChange={(event) => onAnswerChange(event.target.value)}
-        className="mt-1 min-h-10 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-primary"
-        placeholder="Type Turkish meaning..."
-      />
-    </label>
-    <Button
-      type="submit"
-      variant="outline"
-      className="w-full rounded-[4px]"
-      disabled={!answer.trim()}
-    >
-      Check Answer
-    </Button>
-    {quizResult !== null && (
-      <p className={`text-xs font-bold mt-1 ${quizResult ? 'text-emerald-600' : 'text-rose-600'}`}>
-        {quizResult ? 'Correct — Moved to Learned pool.' : 'Incorrect — Added to Weak Words.'}
-      </p>
-    )}
-  </form>
-);
+}: QuizFormProps) => {
+  const language = useLocalizationStore((s) => s.language);
+  const langLabel = INTERFACE_LANGUAGES.find((l) => l.id === language)?.nativeLabel || language;
+
+  return (
+    <form onSubmit={onSubmit} className="mt-4 space-y-2">
+      <Button
+        type="button"
+        className="w-full rounded-[4px] bg-primary hover:bg-primary/90 text-white font-bold"
+        onClick={() => onLearn?.(term)}
+      >
+        <CheckCircle2 className="h-4 w-4 mr-1.5" /> I Know This
+      </Button>
+      <div className="relative pt-1 text-center">
+        <span className="text-[10px] text-muted-copy uppercase tracking-wider font-semibold">
+          or Test Meaning
+        </span>
+      </div>
+      <label className="block text-xs font-bold text-foreground">
+        {langLabel} meaning
+        <input
+          value={answer}
+          disabled={quizResult !== null}
+          onChange={(event) => onAnswerChange(event.target.value)}
+          className="mt-1 min-h-10 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-primary"
+          placeholder={`Type ${langLabel} meaning...`}
+        />
+      </label>
+      <Button
+        type="submit"
+        variant="outline"
+        className="w-full rounded-[4px]"
+        disabled={!answer.trim()}
+      >
+        Check Answer
+      </Button>
+      {quizResult !== null && (
+        <p className={`text-xs font-bold mt-1 ${quizResult ? 'text-emerald-600' : 'text-rose-600'}`}>
+          {quizResult ? 'Correct — Moved to Learned pool.' : 'Incorrect — Added to Weak Words.'}
+        </p>
+      )}
+    </form>
+  );
+};
 
 interface ReviewActionsProps {
   term: VocabularyTerm;

@@ -7,6 +7,7 @@ import { SectionCard } from '@/shared/components/SectionCard';
 import { playSound } from '@/shared/utils/sound';
 
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
+import { useLocalizationStore, INTERFACE_LANGUAGES } from '@/features/localization';
 import type { VocabularyMenuState, VocabularyTerm } from '@/features/vocabulary';
 
 import type { VocabularyUIState } from '../VocabularyPageReducer';
@@ -44,6 +45,8 @@ export function SearchResultsSection({
   onAddCustomWord,
 }: SearchResultsSectionProps) {
   const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
+  const language = useLocalizationStore((s) => s.language);
+  const langLabel = INTERFACE_LANGUAGES.find((l) => l.id === language)?.nativeLabel || language;
 
   if (!hasSearched) return null;
 
@@ -118,7 +121,7 @@ export function SearchResultsSection({
               />
             </label>
             <label className="text-sm font-semibold">
-              Turkish meaning
+              {langLabel} meaning
               <input
                 required
                 value={customDraft.turkishMeaning}
