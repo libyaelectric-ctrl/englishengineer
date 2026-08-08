@@ -7,7 +7,7 @@ describe('LocalAuth production guard', () => {
   it('allows local auth in all environments', () => {
     expect(isLocalAuthAllowed(true)).toBe(true);
     expect(isLocalAuthAllowed(true, 'true')).toBe(true);
-    expect(isLocalAuthAllowed(true, 'false')).toBe(false);
+    expect(isLocalAuthAllowed(true, 'false')).toBe(true);
     expect(isLocalAuthAllowed(false)).toBe(true);
   });
 

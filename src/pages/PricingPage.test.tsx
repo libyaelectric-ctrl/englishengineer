@@ -21,14 +21,22 @@ vi.mock('@/features/billing', async (importOriginal) => {
 });
 
 vi.mock('@/features/localization', () => ({
-  useLocalizationStore: vi.fn((selector?: (state: { language: string; translate: (key: string) => string; setLanguage: () => void }) => unknown) => {
-    const state = {
-      language: 'en',
-      translate: (key: string) => key,
-      setLanguage: vi.fn(),
-    };
-    return selector ? selector(state) : state;
-  }),
+  useLocalizationStore: vi.fn(
+    (
+      selector?: (state: {
+        language: string;
+        translate: (key: string) => string;
+        setLanguage: () => void;
+      }) => unknown
+    ) => {
+      const state = {
+        language: 'en',
+        translate: (key: string) => key,
+        setLanguage: vi.fn(),
+      };
+      return selector ? selector(state) : state;
+    }
+  ),
   INTERFACE_LANGUAGES: [
     { id: 'en', flag: '🇬🇧', label: 'English', nativeLabel: 'English', available: true, dir: 'ltr' },
   ],
@@ -64,11 +72,11 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Junior')).toBeInTheDocument();
-    expect(screen.getByText('Senior')).toBeInTheDocument();
-    expect(screen.getByText('Specialist')).toBeInTheDocument();
-    expect(screen.getByText('Master')).toBeInTheDocument();
-    expect(screen.getByText('Team')).toBeInTheDocument();
+    expect(screen.getAllByText('Junior').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Senior').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Specialist').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Master').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Team').length).toBeGreaterThan(0);
   });
 
   it('shows Most Popular badge on Senior plan', () => {

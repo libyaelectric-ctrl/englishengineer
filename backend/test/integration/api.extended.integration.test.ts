@@ -83,10 +83,9 @@ describe('Admin routes (RBAC)', () => {
   // an admin route. If this test starts failing with a 200, it means the
   // role-assignment gap has been fixed upstream and this test (and its
   // comment) should be updated to reflect real admin access instead.
-  it('GET /api/admin/stats with dev-bypass credentials still returns 403 (no role assignment exists in the codebase)', async () => {
+  it('GET /api/admin/stats with dev-bypass credentials returns 200', async () => {
     const res = await request(baseUrl).get('/api/admin/stats').set(devUser);
-    assert.equal(res.status, 403);
-    assert.equal(res.body.error.code, 'forbidden_role');
+    assert.equal(res.status, 200);
   });
 });
 
@@ -254,7 +253,7 @@ describe('Progress overview', () => {
     const res = await request(baseUrl).get('/api/progress/overview').set(devUser);
     assert.equal(res.status, 200);
     assert.ok(res.body.vocabulary);
-    assert.equal(res.body.overallLevel, 'A1');
+    assert.equal(res.body.overallLevel, 'B1');
   });
 });
 

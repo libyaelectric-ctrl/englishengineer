@@ -1,9 +1,19 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
 
 import ProfilePage from './ProfilePage';
+
+const queryClient = new QueryClient();
+
+const renderWithProviders = (ui: React.ReactNode) =>
+  render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>{ui}</MemoryRouter>
+    </QueryClientProvider>
+  );
 
 const mockState = {
   activeSection: 'overview',
@@ -66,41 +76,25 @@ describe('ProfilePage', () => {
   });
 
   it('renders user name in header', () => {
-    render(
-      <MemoryRouter>
-        <ProfilePage />
-      </MemoryRouter>
-    );
+    renderWithProviders(<ProfilePage />);
 
     expect(screen.getAllByText('Ali').length).toBeGreaterThan(0);
   });
 
   it('shows profession label', () => {
-    render(
-      <MemoryRouter>
-        <ProfilePage />
-      </MemoryRouter>
-    );
+    renderWithProviders(<ProfilePage />);
 
     expect(screen.getByText(/Engineering Professional/i)).toBeTruthy();
   });
 
   it('displays profile completion percentage', () => {
-    render(
-      <MemoryRouter>
-        <ProfilePage />
-      </MemoryRouter>
-    );
+    renderWithProviders(<ProfilePage />);
 
     expect(screen.getByText(/Profile Completion: 65%/)).toBeTruthy();
   });
 
   it('renders overview description', () => {
-    render(
-      <MemoryRouter>
-        <ProfilePage />
-      </MemoryRouter>
-    );
+    renderWithProviders(<ProfilePage />);
 
     expect(screen.getByText(/Manage your professional profile/)).toBeTruthy();
   });
