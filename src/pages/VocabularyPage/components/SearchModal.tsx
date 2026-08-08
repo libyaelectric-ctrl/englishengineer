@@ -4,6 +4,9 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useRef } from 'react';
 
 import type { VocabularyTerm } from '@/features/vocabulary';
+import { useLocalizationStore } from '@/features/localization';
+import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
+import { repairVocabularyText } from '@/features/vocabulary';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -27,6 +30,8 @@ export function SearchModal({
   onSelectResult,
 }: SearchModalProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const language = useLocalizationStore((s) => s.language);
+  const resolveMeaning = useTermMeaningResolver(language);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -34,111 +39,97 @@ export function SearchModal({
     return () => clearTimeout(timer);
   }, [isOpen]);
 
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    if (isOpen) {
-      window.addEventListener('keydown', handleEscape);
-      return () => window.removeEventListener('keydown', handleEscape);
-    }
-  }, [isOpen, onClose]);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    void onSearch(searchInput);
+    if (!searchInput.trim()) return;
+    void onSearch(searchInput.trim());
   };
+
+  if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      {isOpen && (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs"
+        onClick={onClose}
+      >
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 pt-20 px-4"
-          onClick={onClose}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          className="w-full max-w-lg rounded-xl border border-border-soft bg-surface p-5 shadow-xl"
+          onClick={(e) => e.stopPropagation()}
         >
-          <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className="w-full max-w-lg rounded-[8px] border border-border-soft bg-surface shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-border-soft px-4 py-3">
-              <h3 className="text-sm font-bold text-foreground">Search Vocabulary</h3>
+          <div className="flex items-center justify-between border-b border-border-soft pb-3">
+            <h3 className="text-sm font-bold text-foreground">Search Vocabulary</h3>
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-muted-copy hover:text-foreground cursor-pointer"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          <form onSubmit={handleSearch} className="mt-4">
+            <div className="relative">
+              <input
+                ref={inputRef}
+                type="text"
+                value={searchInput}
+                onChange={(e) => onSearchInputChange(e.target.value)}
+                placeholder="Type a word in English or your language..."
+                className="w-full rounded-md border border-border-soft bg-surface px-3 py-2 text-sm text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+                autoFocus
+              />
               <button
-                type="button"
-                onClick={onClose}
-                className="flex h-7 w-7 items-center justify-center rounded-[4px] text-muted-copy hover:text-foreground hover:bg-surface-hover cursor-pointer"
-                aria-label="Close search"
+                type="submit"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded bg-primary px-2.5 py-1 text-xs font-bold text-white cursor-pointer"
               >
-                <X className="h-4 w-4" />
+                <Search className="h-3.5 w-3.5" />
               </button>
             </div>
+          </form>
 
-            {/* Search input */}
-            <form onSubmit={handleSubmit} className="p-4">
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy" />
-                <input
-                  ref={inputRef}
-                  value={searchInput}
-                  onChange={(e) => onSearchInputChange(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      void onSearch(searchInput);
-                    }
-                  }}
-                  className="w-full rounded-[4px] border border-border-soft bg-background pl-10 pr-4 py-3 text-sm text-foreground outline-none focus:border-primary"
-                  placeholder="Type a word to search..."
-                  aria-label="Search vocabulary"
-                />
-              </div>
-            </form>
-
-            {/* Results */}
-            {hasSearched && (
-              <div className="border-t border-border-soft px-4 pb-4">
-                {searchResults && searchResults.length > 0 ? (
-                  <div className="mt-3 space-y-1 max-h-80 overflow-y-auto">
-                    <p className="text-[10px] text-muted-copy mb-2">
-                      {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} found
-                    </p>
-                    {searchResults.map((term) => (
-                      <button
-                        key={term.id}
-                        type="button"
-                        onClick={() => {
-                          onSelectResult?.(term);
-                          onClose();
-                        }}
-                        className="w-full flex items-center justify-between rounded-[4px] px-3 py-2 text-left hover:bg-surface-hover transition-colors cursor-pointer"
-                      >
-                        <div>
-                          <span className="text-sm font-semibold text-foreground">{term.term}</span>
-                          <span className="ml-2 text-xs text-muted-copy">
-                            {term.turkishMeaning}
-                          </span>
-                        </div>
-                        <span className="text-[10px] text-muted-copy">{term.cefrLevel}</span>
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="mt-3 text-xs text-muted-copy text-center">
-                    No results found for "{searchInput}"
+          {hasSearched && (
+            <div className="mt-4 max-h-60 overflow-y-auto">
+              {searchResults && searchResults.length > 0 ? (
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-muted-copy uppercase tracking-wider mb-2">
+                    {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} found
                   </p>
-                )}
-              </div>
-            )}
-          </motion.div>
+                  {searchResults.map((term) => (
+                    <button
+                      key={term.id}
+                      type="button"
+                      onClick={() => {
+                        onSelectResult?.(term);
+                        onClose();
+                      }}
+                      className="w-full flex items-center justify-between rounded-[4px] px-3 py-2 text-left hover:bg-surface-hover transition-colors cursor-pointer"
+                    >
+                      <div>
+                        <span className="text-sm font-semibold text-foreground">{term.term}</span>
+                        <span className="ml-2 text-xs text-muted-copy">
+                          {repairVocabularyText(resolveMeaning(term.term, term))}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-muted-copy">{term.cefrLevel}</span>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-3 text-xs text-muted-copy text-center">
+                  No results found for &quot;{searchInput}&quot;
+                </p>
+              )}
+            </div>
+          )}
         </motion.div>
-      )}
+      </motion.div>
     </AnimatePresence>
   );
 }
