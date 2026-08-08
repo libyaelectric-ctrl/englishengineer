@@ -453,7 +453,7 @@ test('checkout rejects a mismatched body user and accepts the authenticated user
     {
       ...productionAuthEnvironment,
       STRIPE_SECRET_KEY: 'sk_test_value',
-      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+      STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
     },
     { stripeClient }
   );
@@ -462,7 +462,7 @@ test('checkout rejects a mismatched body user and accepts the authenticated user
     email: 'engineer@example.com',
     successUrl: 'https://app.example/success',
     cancelUrl: 'https://app.example/cancel',
-    planId: 'pro',
+    planId: 'junior',
   };
   const rejected = await fetch(`${url}/api/billing/create-checkout-session`, {
     method: 'POST',
@@ -794,7 +794,7 @@ test('checkout route permits request with valid Supabase token', async () => {
       SUPABASE_URL: 'https://example.supabase.co',
       SUPABASE_ANON_KEY: 'anon-key',
       STRIPE_SECRET_KEY: 'sk_test_value',
-      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+      STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
     },
     { fetchImpl, stripeClient }
   );
@@ -810,7 +810,7 @@ test('checkout route permits request with valid Supabase token', async () => {
       email: 'engineer@example.com',
       successUrl: 'https://example.com/success',
       cancelUrl: 'https://example.com/cancel',
-      planId: 'pro',
+      planId: 'junior',
     }),
   });
   assert.equal(response.status, 200);

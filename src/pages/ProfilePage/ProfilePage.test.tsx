@@ -1,9 +1,12 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import { describe, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
 
 import ProfilePage from './index';
+
+const queryClient = new QueryClient();
 
 vi.mock('./useProfilePage', () => ({
   useProfilePage: vi.fn(() => ({
@@ -81,9 +84,11 @@ vi.mock('@/features/profile/profile.preferences', () => ({
 describe('ProfilePage', () => {
   it('renders without crashing', () => {
     render(
-      <MemoryRouter initialEntries={['/profile']}>
-        <ProfilePage />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={['/profile']}>
+          <ProfilePage />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
   });
 });

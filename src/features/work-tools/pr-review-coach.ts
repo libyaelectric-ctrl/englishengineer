@@ -105,11 +105,13 @@ export const PRReviewCoachService = {
 
       const text = response.text.replace('AI REFINEMENT:\n', '').trim();
 
+      const structured = response.structuredResult as
+        { toneFeedback?: string; strengths?: string[] } | undefined;
+
       return {
         polishedText: text,
-        toneAnalysis:
-          response.structuredResult?.toneFeedback || 'AI-powered tone analysis applied.',
-        keyChanges: response.structuredResult?.strengths?.slice(0, 3) || [
+        toneAnalysis: structured?.toneFeedback || 'AI-powered tone analysis applied.',
+        keyChanges: structured?.strengths?.slice(0, 3) || [
           'Softened tone',
           'Added constructive framing',
           'Maintained technical intent',
