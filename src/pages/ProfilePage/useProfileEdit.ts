@@ -112,10 +112,10 @@ export const useProfileEdit = (
         (editDiscipline as UserLearningProfile['professionalTrack']) || ENGINEERING_DISCIPLINES[0],
       electricalSubdomain:
         (editSubdomain as UserLearningProfile['electricalSubdomain']) || 'low-voltage',
-      industryId: (editIndustry as UserLearningProfile['industryId']) || null,
       interfaceLanguage: editLang,
       communicationGoals: editGoals as UserLearningProfile['communicationGoals'],
     });
+    useLocalizationStore.getState().setLanguage(editLang as any);
   };
 
   const handleSaveProfile = async (event: React.FormEvent) => {
