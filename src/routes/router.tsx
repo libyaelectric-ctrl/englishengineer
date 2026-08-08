@@ -36,6 +36,7 @@ const Progress = lazy(() => import('@/pages/ProgressPage'));
 const NotFound = lazy(() => import('@/pages/NotFoundPage'));
 const Login = lazy(() => import('@/pages/LoginPage'));
 const Onboarding = lazy(() => import('@/pages/OnboardingPage'));
+const Welcome = lazy(() => import('@/pages/WelcomePage'));
 
 const Landing = lazy(() => import('@/pages/LandingPage'));
 const Pricing = lazy(() => import('@/pages/PricingPage'));
@@ -120,6 +121,10 @@ export const router = createBrowserRouter([
       {
         path: 'onboarding/:step',
         element: withSuspense(Onboarding),
+      },
+      {
+        path: 'welcome',
+        element: withSuspense(Welcome),
       },
 
       {
