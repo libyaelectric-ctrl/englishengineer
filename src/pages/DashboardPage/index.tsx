@@ -89,27 +89,9 @@ export const DashboardPage: React.FC = () => {
             <p className="text-lg font-semibold text-foreground mt-1">A1</p>
           </div>
         </div>
-
-        <div className="rounded-xl border border-border-soft bg-surface p-6">
-          <h2 className="text-lg font-bold text-foreground mb-2">
-            {translate('dashboard.startHere')}
-          </h2>
-          <p className="text-sm text-muted-copy mb-4">{translate('dashboard.continueLesson')}</p>
-          <div className="flex gap-3">
-            
-            <button
-              onClick={() => navigate('/vocabulary')}
-              className="rounded-lg border border-border-soft px-4 py-2 text-sm font-semibold text-foreground cursor-pointer hover:bg-surface-hover"
-            >
-              {translate('vocabulary.title')}
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
 };
 
 export default DashboardPage;
-
-
