@@ -11,6 +11,9 @@ import { StatusBadge } from '@/shared/components/StatusBadge';
 import { LevelContentFilter } from '@/features/level-system';
 import { SPEAKING_MVP_MODE } from '@/features/speaking';
 import { DefenseSimulator } from '@/features/speaking/simulator/DefenseSimulator';
+import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { useAuthStore } from '@/features/auth';
 
 import {
   EvaluationScores,
@@ -269,6 +272,9 @@ const SpeakingPage = () => {
   const { MAX_VOICE_MINUTES, voiceMinutesUsedThisMonth, scoreResult, setScoreResult } =
     useSpeakingPage();
 
+  const currentUser = useAuthStore((s) => s.currentUser);
+  const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
+
   return (
     <div className="mx-auto max-w-5xl space-y-6 pt-12 sm:pt-0 text-foreground relative z-10 font-sans pb-16 animate-in fade-in duration-300">
       {/* Speaking sticky header */}
@@ -309,6 +315,8 @@ const SpeakingPage = () => {
           )}
         </div>
       </div>
+
+      <PersonalAIPanel discipline={userDiscipline} cefrLevel={currentUser?.targetLevel} userName={currentUser?.displayName} />
 
       <Suspense
         fallback={

@@ -15,6 +15,9 @@ import {
 } from '@/features/level-system';
 import { type WritingCorrection, type WritingEvaluationResult } from '@/features/writing';
 import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
+import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { useAuthStore } from '@/features/auth';
 
 import { MissionListTab } from './components/MissionListTab';
 import { WorkspaceTab } from './components/WorkspaceTab';
@@ -319,6 +322,9 @@ const WritingPage = () => {
     resetAllWritingProgress,
   } = useWritingPage();
 
+  const currentUser = useAuthStore((s) => s.currentUser);
+  const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
+
   if (!currentMission) {
     return (
       <EmptyMissionView
@@ -341,11 +347,14 @@ const WritingPage = () => {
       />
 
       {showStatsBar && (
-        <StatsBar
-          finishedCount={finishedCount}
-          missionsLength={missions.length}
-          bestScoreAvg={bestScoreAvg}
-        />
+        <>
+          <PersonalAIPanel discipline={userDiscipline} cefrLevel={currentLevel} />
+          <StatsBar
+            finishedCount={finishedCount}
+            missionsLength={missions.length}
+            bestScoreAvg={bestScoreAvg}
+          />
+        </>
       )}
 
       <WritingMainContent
