@@ -106,16 +106,22 @@ export const PRReviewCoachService = {
       const text = response.text.replace('AI REFINEMENT:\n', '').trim();
 
       const structured = response.structuredResult as
-        { toneFeedback?: string; strengths?: string[] } | undefined;
+        | { toneFeedback?: string; strengths?: string[] }
+        | undefined;
+
+      const toneFeedback =
+        typeof structured?.toneFeedback === 'string'
+          ? structured.toneFeedback
+          : 'AI-powered tone analysis applied.';
+
+      const keyChanges = Array.isArray(structured?.strengths)
+        ? structured.strengths.slice(0, 3)
+        : ['Softened tone', 'Added constructive framing', 'Maintained technical intent'];
 
       return {
         polishedText: text,
-        toneAnalysis: structured?.toneFeedback || 'AI-powered tone analysis applied.',
-        keyChanges: structured?.strengths?.slice(0, 3) || [
-          'Softened tone',
-          'Added constructive framing',
-          'Maintained technical intent',
-        ],
+        toneAnalysis: toneFeedback,
+        keyChanges,
         isAiPowered: true,
       };
     } catch (e) {

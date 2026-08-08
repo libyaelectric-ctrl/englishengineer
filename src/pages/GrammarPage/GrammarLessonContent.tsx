@@ -10,6 +10,7 @@ import {
   GrammarTeacherService,
   getGrammarReviewReason,
 } from '@/features/grammar';
+import { useGrammarTranslation } from '@/features/ai/useGrammarTranslation';
 
 import { ExportPanel } from './GrammarLessonContent/ExportPanel';
 import { InteractiveDrillPanel } from './GrammarLessonContent/InteractiveDrillPanel';
@@ -69,6 +70,20 @@ export const GrammarLessonContent = ({
   const [chatInput, setChatInput] = useState('');
   const [isTalking, setIsTalking] = useState(false);
 
+  const ruleForTranslation = selectedRule
+    ? {
+        id: selectedRule.id,
+        title: selectedRule.title,
+        explanation: selectedRule.explanation,
+        structure: selectedRule.structure,
+        engineeringUseCase: selectedRule.engineeringUseCase,
+        turkishExplanation: selectedRule.turkishExplanation,
+      }
+    : null;
+
+  const { translation: grammarTranslation, language: grammarLanguage } =
+    useGrammarTranslation(ruleForTranslation, { enableAiFallback: true });
+
   useEffect(() => {
     setMessages([
       {
@@ -118,13 +133,22 @@ export const GrammarLessonContent = ({
       <LinkedVocabularySection linkedVocabulary={linkedVocabulary} />
 
       <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
-        <SectionHeading title="Teacher Explanation" />
+        <SectionHeading
+          title={grammarTranslation?.title ? `Teacher Explanation — ${grammarTranslation.title}` : 'Teacher Explanation'}
+        />
         <p className="mt-2 text-xs leading-relaxed">
           {compact(selectedRule.explanation, selectedRule.definition)}
         </p>
-        <p className="mt-2 rounded-[4px] border border-border-soft bg-background p-3 text-xs leading-relaxed text-muted-copy">
-          Turkish speaker note: {selectedRule.turkishExplanation}
-        </p>
+        {grammarTranslation && grammarLanguage !== 'en' && (
+          <p className="mt-2 rounded-[4px] border border-primary/25 bg-primary/5 p-3 text-xs leading-relaxed text-primary">
+            {grammarLanguage === 'tr' ? 'Türkçe açıklama:' : `${grammarLanguage.toUpperCase()} açıklama:`} {grammarTranslation.explanation}
+          </p>
+        )}
+        {grammarLanguage === 'tr' && (
+          <p className="mt-2 rounded-[4px] border border-border-soft bg-background p-3 text-xs leading-relaxed text-muted-copy">
+            Turkish speaker note: {selectedRule.turkishExplanation}
+          </p>
+        )}
       </div>
 
       <div className="grid gap-3 md:grid-cols-2">
