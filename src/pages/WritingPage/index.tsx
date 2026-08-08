@@ -7,14 +7,12 @@ import { Link } from 'react-router-dom';
 import { MetricCard } from '@/shared/components/MetricCard';
 import { PageContainer } from '@/shared/components/PageContainer';
 
-import { _useGrammarStore } from '@/features/grammar';
 import {
   type CefrLevel,
   type ContentLevelFilter,
   EmptyLevelState,
   LevelContentFilter,
 } from '@/features/level-system';
-import { _useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
 import { type WritingCorrection, type WritingEvaluationResult } from '@/features/writing';
 import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
 
@@ -321,7 +319,6 @@ const WritingPage = () => {
     resetAllWritingProgress,
   } = useWritingPage();
 
-
   if (!currentMission) {
     return (
       <EmptyMissionView
@@ -390,4 +387,3 @@ const WritingPage = () => {
 };
 
 export default WritingPage;
-

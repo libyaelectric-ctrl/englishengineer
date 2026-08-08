@@ -1,6 +1,5 @@
 import { BookOpen, FileText, GraduationCap } from 'lucide-react';
 
-import { useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 
 import { Link } from 'react-router-dom';
@@ -9,7 +8,6 @@ import { Button } from '@/shared/components/Button';
 import { MetricCard } from '@/shared/components/MetricCard';
 import { PageContainer } from '@/shared/components/PageContainer';
 
-import { _useGrammarStore } from '@/features/grammar';
 import {
   type CefrLevel,
   type ContentLevelFilter,
@@ -17,7 +15,6 @@ import {
   LevelContentFilter,
 } from '@/features/level-system';
 import type { VocabularyItem } from '@/features/reading';
-import { _useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
 
 import { ReadingMissionCard } from './ReadingMissionCard';
 import { ReadingWorkspace } from './ReadingWorkspace';
@@ -211,11 +208,6 @@ const WorkspaceTabContent = ({
 };
 
 const ReadingPage = () => {
-  const vocabStats = _useVocabularyStore((s) => s.stats);
-  const grammarStats = _useGrammarStore((s) => s.stats);
-  const _vocabLearned = vocabStats.learned + vocabStats.mastered;
-  const _grammarLearned = grammarStats.learned + grammarStats.mastered;
-
   const {
     missions,
     answers,
@@ -249,7 +241,6 @@ const ReadingPage = () => {
     handleBackToMissions,
     moveMission,
   } = useReadingPage();
-
 
   if (!currentMission) {
     return (
@@ -321,4 +312,3 @@ const ReadingPage = () => {
 };
 
 export default ReadingPage;
-
