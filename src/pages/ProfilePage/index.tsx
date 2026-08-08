@@ -234,7 +234,11 @@ const ProfilePage = () => {
         />
       )}
 
-      {activeSection === 'progress' && <ProgressOverviewTab />}
+      {/* Progress Section */}
+      <div className="mt-10 pt-8 border-t border-border-soft">
+        <h2 className="text-xl font-bold text-foreground mb-6">Progress</h2>
+        <ProgressOverviewTab />
+      </div>
     </div>
   );
 };
