@@ -28,6 +28,7 @@ import type { EngineeringDiscipline } from '@/shared/constants/engineering-disci
 import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
+import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 const DISCIPLINE_ICONS: Record<EngineeringDiscipline, React.ElementType> = {
   architecture: Building2,
@@ -73,7 +74,11 @@ export const WelcomeScreen = () => {
       setLanguage(selectedLanguage);
       await updateProfile({
         engineeringDiscipline: selectedDiscipline,
+      });
+      LearningProfileRepository.updatePreferences(currentUser.id, {
+        discipline: selectedDiscipline,
         onboardingCompleted: true,
+        interfaceLanguage: selectedLanguage as any,
       });
       useLearningStore.getState().resetAll();
       navigate('/curriculum', { replace: true });

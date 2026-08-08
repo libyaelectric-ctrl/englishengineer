@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +8,7 @@ import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
 
 import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
+import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
@@ -15,7 +16,6 @@ export const DashboardPage: React.FC = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
   const translate = useLocalizationStore((state) => state.translate);
-  const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -23,12 +23,12 @@ export const DashboardPage: React.FC = () => {
       return;
     }
 
-    if (
-      !isLoading &&
-      currentUser &&
-      (!currentUser.engineeringDiscipline || !currentUser.onboardingCompleted)
-    ) {
-      setShowWelcome(true);
+    if (!isLoading && currentUser) {
+      const userId = currentUser.id || 'local-user';
+      const profile = LearningProfileRepository.getProfile(userId);
+      if (!currentUser.engineeringDiscipline || !profile.onboardingCompleted) {
+        navigate('/welcome', { replace: true });
+      }
     }
   }, [currentUser, isAuthenticated, isLoading, navigate]);
 
@@ -43,13 +43,13 @@ export const DashboardPage: React.FC = () => {
     );
   }
 
-  if (showWelcome || !currentUser?.engineeringDiscipline) {
-    navigate('/welcome', { replace: true });
+  if (!currentUser?.engineeringDiscipline) {
     return null;
   }
 
   const discipline = currentUser.engineeringDiscipline;
   const meta = DISCIPLINE_META[discipline as keyof typeof DISCIPLINE_META];
+  const learningState = useLearningStore.getState();
 
   return (
     <div className="min-h-screen bg-background">
@@ -80,7 +80,8 @@ export const DashboardPage: React.FC = () => {
           <div className="rounded-xl border border-border-soft bg-surface p-4">
             <p className="text-xs text-muted-copy">{translate('curriculum.active')}</p>
             <p className="text-lg font-semibold text-foreground mt-1">
-              {useLearningStore.getState().activeQueue?.length || 0} {translate('curriculum.items')}
+              {learningState.missions?.filter((m) => m.status === 'active').length || 0}{' '}
+              {translate('curriculum.items')}
             </p>
           </div>
           <div className="rounded-xl border border-border-soft bg-surface p-4">
