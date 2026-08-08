@@ -78,6 +78,8 @@ export const GrammarLessonContent = ({
         structure: selectedRule.structure,
         engineeringUseCase: selectedRule.engineeringUseCase,
         turkishExplanation: selectedRule.turkishExplanation,
+        badExampleTurkishExplanation: selectedRule.badExampleTurkishExplanation,
+        examples: selectedRule.examples,
       }
     : null;
 
@@ -127,7 +129,7 @@ export const GrammarLessonContent = ({
       <LessonBlock
         icon={Target}
         title="Lesson Objective"
-        body={`Practice how to "${selectedRule.languageFunction.toLowerCase()}" in an engineering context: "${selectedRule.engineeringUseCase}" using the structure "${selectedRule.structure}".`}
+        body={`Practice how to "${selectedRule.languageFunction.toLowerCase()}" in an engineering context: "${grammarTranslation?.engineeringUseCase ?? selectedRule.engineeringUseCase}" using the structure "${selectedRule.structure}".`}
       />
 
       <LinkedVocabularySection linkedVocabulary={linkedVocabulary} />
@@ -177,7 +179,7 @@ export const GrammarLessonContent = ({
           subtitle="Read the pattern before you try to produce it."
         />
         <div className="mt-2 grid gap-2">
-          {selectedRule.examples.map((example, index) => (
+          {(grammarTranslation?.examples ?? selectedRule.examples).map((example, index) => (
             <div
               key={`${example.english}-${index}`}
               className="rounded-[4px] border border-border-soft bg-background p-3"
@@ -191,7 +193,7 @@ export const GrammarLessonContent = ({
 
       <div className="rounded-[4px] border border-rose-200 bg-rose-50 p-4">
         <p className="text-[11px] font-bold uppercase tracking-wide text-rose-700">
-          Common Turkish Mistake
+          Common Mistake
         </p>
         <div className="mt-2 grid gap-2 md:grid-cols-2">
           <div>
@@ -199,7 +201,9 @@ export const GrammarLessonContent = ({
               {selectedRule.badExampleEnglish}
             </p>
             <p className="mt-1 break-words text-xs leading-relaxed text-rose-800">
-              {selectedRule.badExampleTurkishExplanation || selectedRule.commonMistakes}
+              {grammarLanguage !== 'en' && grammarTranslation?.badExampleTurkishExplanation
+                ? grammarTranslation.badExampleTurkishExplanation
+                : selectedRule.badExampleTurkishExplanation || selectedRule.commonMistakes}
             </p>
           </div>
           <div className="rounded-[4px] border border-success/30 bg-surface p-3 shadow-sm">

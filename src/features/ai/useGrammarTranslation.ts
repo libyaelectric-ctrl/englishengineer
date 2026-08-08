@@ -3,29 +3,76 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLocalizationStore } from '@/features/localization';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 
-import { loadVocabularyTranslations, getTermTranslation } from '@/shared/services/vocabulary-translation.service';
+import type { GrammarExample } from '@/features/grammar/grammar.types';
 
 export interface GrammarTranslation {
   title: string;
   explanation: string;
   structure: string;
   engineeringUseCase: string;
+  badExampleTurkishExplanation: string;
+  examples: GrammarExample[];
   language: SupportedInterfaceLanguage;
 }
 
-const translationCache = new Map<string, GrammarTranslation>();
+export interface GrammarTranslationSource {
+  id: string;
+  title: string;
+  explanation: string;
+  structure: string;
+  engineeringUseCase: string;
+  turkishExplanation: string;
+  badExampleTurkishExplanation?: string;
+  examples: GrammarExample[];
+}
 
-const buildCacheKey = (ruleId: string, language: string) => `grammar:${ruleId}:${language}`;
+const memoryCache = new Map<string, GrammarTranslation>();
+const LS_PREFIX = 'engvox_grammar_tr:';
+
+const buildCacheKey = (ruleId: string, language: string) => `${ruleId}:${language}`;
+
+const loadPersisted = (ruleId: string, language: string): GrammarTranslation | null => {
+  try {
+    const raw = localStorage.getItem(LS_PREFIX + buildCacheKey(ruleId, language));
+    return raw ? (JSON.parse(raw) as GrammarTranslation) : null;
+  } catch {
+    return null;
+  }
+};
+
+const persist = (ruleId: string, language: string, value: GrammarTranslation): void => {
+  try {
+    localStorage.setItem(LS_PREFIX + buildCacheKey(ruleId, language), JSON.stringify(value));
+  } catch {
+    // localStorage full or unavailable — ignore
+  }
+};
+
+const toEnglishTranslation = (
+  rule: GrammarTranslationSource,
+  language: SupportedInterfaceLanguage
+): GrammarTranslation => ({
+  title: rule.title,
+  explanation: rule.explanation,
+  structure: rule.structure,
+  engineeringUseCase: rule.engineeringUseCase,
+  badExampleTurkishExplanation: rule.badExampleTurkishExplanation ?? '',
+  examples: rule.examples,
+  language,
+});
+
+const toTurkishTranslation = (rule: GrammarTranslationSource): GrammarTranslation => ({
+  title: rule.title,
+  explanation: rule.turkishExplanation || rule.explanation,
+  structure: rule.structure,
+  engineeringUseCase: rule.engineeringUseCase,
+  badExampleTurkishExplanation: rule.badExampleTurkishExplanation ?? '',
+  examples: rule.examples,
+  language: 'tr',
+});
 
 export const useGrammarTranslation = (
-  rule: {
-    id: string;
-    title: string;
-    explanation: string;
-    structure: string;
-    engineeringUseCase: string;
-    turkishExplanation: string;
-  } | null,
+  rule: GrammarTranslationSource | null,
   options: { enableAiFallback?: boolean } = {}
 ) => {
   const language = useLocalizationStore((s) => s.language);
@@ -39,41 +86,23 @@ export const useGrammarTranslation = (
     }
 
     if (language === 'en') {
-      setTranslation({
-        title: rule.title,
-        explanation: rule.explanation,
-        structure: rule.structure,
-        engineeringUseCase: rule.engineeringUseCase,
-        language,
-      });
+      setTranslation(toEnglishTranslation(rule, language));
       return;
     }
 
     if (language === 'tr') {
-      setTranslation({
-        title: rule.title,
-        explanation: rule.turkishExplanation || rule.explanation,
-        structure: rule.structure,
-        engineeringUseCase: rule.engineeringUseCase,
-        language,
-      });
+      setTranslation(toTurkishTranslation(rule));
       return;
     }
 
-    const cacheKey = buildCacheKey(rule.id, language);
-    const cached = translationCache.get(cacheKey);
+    const cached = memoryCache.get(buildCacheKey(rule.id, language)) ?? loadPersisted(rule.id, language);
     if (cached) {
       setTranslation(cached);
       return;
     }
 
-    setTranslation({
-      title: rule.title,
-      explanation: rule.explanation,
-      structure: rule.structure,
-      engineeringUseCase: rule.engineeringUseCase,
-      language,
-    });
+    // Show English content immediately, then translate via AI in the background.
+    setTranslation(toEnglishTranslation(rule, language));
 
     if (!options.enableAiFallback) return;
 
@@ -82,19 +111,38 @@ export const useGrammarTranslation = (
 
     void (async () => {
       try {
-        await loadVocabularyTranslations();
-        const titleTr = getTermTranslation(rule.title, language);
-        if (titleTr?.meaning && active) {
-          const next: GrammarTranslation = {
-            title: titleTr.meaning,
-            explanation: rule.explanation,
-            structure: rule.structure,
-            engineeringUseCase: rule.engineeringUseCase,
-            language,
-          };
-          translationCache.set(cacheKey, next);
-          setTranslation(next);
-        }
+        const { PersonalAIService } = await import('@/features/ai/personal-ai.service');
+        if (!PersonalAIService.isConfigured) return;
+
+        const [explanation, engineeringUseCase, badExampleNote, translatedExamples] =
+          await Promise.all([
+            PersonalAIService.translate(rule.explanation, language),
+            PersonalAIService.translate(rule.engineeringUseCase, language),
+            PersonalAIService.translate(rule.badExampleTurkishExplanation ?? '', language),
+            Promise.all(
+              (rule.examples ?? []).map(async (ex): Promise<GrammarExample> => {
+                const native = await PersonalAIService.translate(ex.english, language);
+                return { english: ex.english, turkish: native };
+              })
+            ),
+          ]);
+
+        if (!active) return;
+
+        const next: GrammarTranslation = {
+          title: rule.title,
+          explanation,
+          structure: rule.structure,
+          engineeringUseCase,
+          badExampleTurkishExplanation: badExampleNote,
+          examples: translatedExamples,
+          language,
+        };
+        memoryCache.set(buildCacheKey(rule.id, language), next);
+        persist(rule.id, language, next);
+        setTranslation(next);
+      } catch {
+        // Keep the English fallback on failure.
       } finally {
         if (active) setIsTranslating(false);
       }
