@@ -6,18 +6,15 @@ import { Link } from 'react-router-dom';
 
 import { MetricCard } from '@/shared/components/MetricCard';
 import { PageContainer } from '@/shared/components/PageContainer';
-import { SkillLockedState } from '@/shared/components/SkillLockedState';
-import { GRAMMAR_THRESHOLD, VOCAB_THRESHOLD } from '@/shared/constants/progression-thresholds';
-import { isProgressionBypassed } from '@/shared/utils/progression-lock.helpers';
 
-import { useGrammarStore } from '@/features/grammar';
+import { _useGrammarStore } from '@/features/grammar';
 import {
   type CefrLevel,
   type ContentLevelFilter,
   EmptyLevelState,
   LevelContentFilter,
 } from '@/features/level-system';
-import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
+import { _useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
 import { type WritingCorrection, type WritingEvaluationResult } from '@/features/writing';
 import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
 
@@ -288,14 +285,6 @@ const WritingMainContent = ({
 
 const WritingPage = () => {
   const [subTab, setSubTab] = useState<'missions' | 'field-docs'>('missions');
-  const vocabStats = useVocabularyStore((s) => s.stats);
-  const grammarStats = useGrammarStore((s) => s.stats);
-  const vocabLearned = vocabStats.learned + vocabStats.mastered;
-  const grammarLearned = grammarStats.learned + grammarStats.mastered;
-  const [bypassUnlocked, setBypassUnlocked] = useState(() => isProgressionBypassed());
-
-  const canAccess =
-    bypassUnlocked || (vocabLearned >= VOCAB_THRESHOLD && grammarLearned >= GRAMMAR_THRESHOLD);
 
   const {
     missions,
@@ -332,22 +321,6 @@ const WritingPage = () => {
     resetAllWritingProgress,
   } = useWritingPage();
 
-  if (!canAccess) {
-    return (
-      <SkillLockedState
-        skillName="Writing"
-        prerequisites={[
-          { label: 'Vocabulary', done: vocabLearned, threshold: VOCAB_THRESHOLD },
-          { label: 'Grammar', done: grammarLearned, threshold: GRAMMAR_THRESHOLD },
-        ]}
-        navigationLinks={[
-          { label: 'Vocabulary', route: '/vocabulary' },
-          { label: 'Grammar', route: '/grammar' },
-        ]}
-        onUnlocked={() => setBypassUnlocked(true)}
-      />
-    );
-  }
 
   if (!currentMission) {
     return (
@@ -417,3 +390,4 @@ const WritingPage = () => {
 };
 
 export default WritingPage;
+

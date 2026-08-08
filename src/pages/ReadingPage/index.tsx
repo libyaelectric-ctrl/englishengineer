@@ -8,11 +8,8 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/shared/components/Button';
 import { MetricCard } from '@/shared/components/MetricCard';
 import { PageContainer } from '@/shared/components/PageContainer';
-import { SkillLockedState } from '@/shared/components/SkillLockedState';
-import { GRAMMAR_THRESHOLD, VOCAB_THRESHOLD } from '@/shared/constants/progression-thresholds';
-import { isProgressionBypassed } from '@/shared/utils/progression-lock.helpers';
 
-import { useGrammarStore } from '@/features/grammar';
+import { _useGrammarStore } from '@/features/grammar';
 import {
   type CefrLevel,
   type ContentLevelFilter,
@@ -20,7 +17,7 @@ import {
   LevelContentFilter,
 } from '@/features/level-system';
 import type { VocabularyItem } from '@/features/reading';
-import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
+import { _useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
 
 import { ReadingMissionCard } from './ReadingMissionCard';
 import { ReadingWorkspace } from './ReadingWorkspace';
@@ -214,18 +211,10 @@ const WorkspaceTabContent = ({
 };
 
 const ReadingPage = () => {
-  const vocabStats = useVocabularyStore((s) => s.stats);
-  const grammarStats = useGrammarStore((s) => s.stats);
-  const vocabLearned = vocabStats.learned + vocabStats.mastered;
-  const grammarLearned = grammarStats.learned + grammarStats.mastered;
-
-  const [bypassUnlocked, setBypassUnlocked] = useState(() => isProgressionBypassed());
-  const [previewMode, setPreviewMode] = useState(false);
-
-  const canAccess =
-    bypassUnlocked ||
-    previewMode ||
-    (vocabLearned >= VOCAB_THRESHOLD && grammarLearned >= GRAMMAR_THRESHOLD);
+  const vocabStats = _useVocabularyStore((s) => s.stats);
+  const grammarStats = _useGrammarStore((s) => s.stats);
+  const _vocabLearned = vocabStats.learned + vocabStats.mastered;
+  const _grammarLearned = grammarStats.learned + grammarStats.mastered;
 
   const {
     missions,
@@ -261,23 +250,6 @@ const ReadingPage = () => {
     moveMission,
   } = useReadingPage();
 
-  if (!canAccess) {
-    return (
-      <SkillLockedState
-        skillName="Reading"
-        prerequisites={[
-          { label: 'Vocabulary', done: vocabLearned, threshold: VOCAB_THRESHOLD },
-          { label: 'Grammar', done: grammarLearned, threshold: GRAMMAR_THRESHOLD },
-        ]}
-        navigationLinks={[
-          { label: 'Vocabulary', route: '/vocabulary' },
-          { label: 'Grammar', route: '/grammar' },
-        ]}
-        onPreview={() => setPreviewMode(true)}
-        onUnlocked={() => setBypassUnlocked(true)}
-      />
-    );
-  }
 
   if (!currentMission) {
     return (
@@ -349,3 +321,4 @@ const ReadingPage = () => {
 };
 
 export default ReadingPage;
+
