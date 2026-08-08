@@ -236,25 +236,25 @@ const ProfilePage = () => {
   );
 };
 
-    
-      {/* Progress B�l�m� (Eski Overview) */}
-      <div className="mt-8 pt-8 border-t border-gray-200">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">�lerleme Durumu</h2>
-        <div className="bg-white rounded-lg shadow p-6">
-          <p className="text-gray-600">Burada genel ilerleme istatistikleri yer alacak.</p>
-          {/* �lerleme �ubuklar� ve detaylar buraya gelecek */}
-          <div className="mt-4 space-y-4">
-            <div>
-              <div className="flex justify-between mb-1">
-                <span className="text-sm font-medium text-blue-700">Kelime Bilgisi</span>
-                <span className="text-sm font-medium text-blue-700">%0</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div className="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
-              </div>
-            </div>
-          </div>
+{
+  /* Progress B�l�m� (Eski Overview) */
+}
+<div className="mt-8 pt-8 border-t border-gray-200">
+  <h2 className="text-xl font-bold text-gray-900 mb-4">�lerleme Durumu</h2>
+  <div className="bg-white rounded-lg shadow p-6">
+    <p className="text-gray-600">Burada genel ilerleme istatistikleri yer alacak.</p>
+    {/* �lerleme �ubuklar� ve detaylar buraya gelecek */}
+    <div className="mt-4 space-y-4">
+      <div>
+        <div className="flex justify-between mb-1">
+          <span className="text-sm font-medium text-blue-700">Kelime Bilgisi</span>
+          <span className="text-sm font-medium text-blue-700">%0</span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2.5">
+          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: '0%' }}></div>
         </div>
       </div>
+    </div>
+  </div>
+</div>;
 export default ProfilePage;
-

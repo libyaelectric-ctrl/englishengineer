@@ -9,10 +9,8 @@ import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 
 import { LevelContentFilter } from '@/features/level-system';
-import { useReadingStore } from '@/features/reading';
 import { SPEAKING_MVP_MODE } from '@/features/speaking';
 import { DefenseSimulator } from '@/features/speaking/simulator/DefenseSimulator';
-import { useWritingStore } from '@/features/writing/writing.store';
 
 import {
   EvaluationScores,
@@ -267,12 +265,9 @@ const SpeakingTabContent = ({ tab }: { tab: SpeakingTab }) => {
 };
 
 const SpeakingPage = () => {
-  const _readingCompletedMissions = useReadingStore((s) => s.completedMissions);
-  const _writingCompletedMissions = useWritingStore((s) => s.completedMissions);
   const [speakingTab, setSpeakingTab] = useState<SpeakingTab>('roleplay');
   const { MAX_VOICE_MINUTES, voiceMinutesUsedThisMonth, scoreResult, setScoreResult } =
     useSpeakingPage();
-
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 pt-12 sm:pt-0 text-foreground relative z-10 font-sans pb-16 animate-in fade-in duration-300">
@@ -337,4 +332,3 @@ const SpeakingPage = () => {
 };
 
 export default SpeakingPage;
-

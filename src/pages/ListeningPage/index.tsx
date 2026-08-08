@@ -30,8 +30,6 @@ import {
   type ListeningEvaluationResult,
   type ListeningMission,
 } from '@/features/listening/listening.types';
-import { useReadingStore } from '@/features/reading';
-import { useWritingStore } from '@/features/writing/writing.store';
 
 type Question = {
   id: string;
@@ -364,7 +362,6 @@ const ListeningPage = () => {
     visibleMissions.find((mission) => mission.id === selectedMissionId) ?? visibleMissions[0];
 
   useEffect(() => initializeStore(), [initializeStore]);
-
 
   if (!currentMission) {
     return (
