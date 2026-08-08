@@ -96,12 +96,7 @@ export const DashboardPage: React.FC = () => {
           </h2>
           <p className="text-sm text-muted-copy mb-4">{translate('dashboard.continueLesson')}</p>
           <div className="flex gap-3">
-            <button
-              onClick={() => navigate('/curriculum')}
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground cursor-pointer"
-            >
-              {translate('curriculum.continueLearning')}
-            </button>
+            
             <button
               onClick={() => navigate('/vocabulary')}
               className="rounded-lg border border-border-soft px-4 py-2 text-sm font-semibold text-foreground cursor-pointer hover:bg-surface-hover"
@@ -116,3 +111,5 @@ export const DashboardPage: React.FC = () => {
 };
 
 export default DashboardPage;
+
+

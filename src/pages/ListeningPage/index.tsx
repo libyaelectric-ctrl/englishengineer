@@ -12,9 +12,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
-import { SkillLockedState } from '@/shared/components/SkillLockedState';
-import { READING_THRESHOLD, WRITING_THRESHOLD } from '@/shared/constants/progression-thresholds';
-import { isProgressionBypassed } from '@/shared/utils/progression-lock.helpers';
 
 import {
   type ContentLevelFilter,
@@ -332,19 +329,6 @@ const WorkspaceView = ({
 };
 
 const ListeningPage = () => {
-  const readingCompletedMissions = useReadingStore((s) => s.completedMissions);
-  const writingCompletedMissions = useWritingStore((s) => s.completedMissions);
-  const readingDone = Object.keys(readingCompletedMissions || {}).length;
-  const writingDone = Object.keys(writingCompletedMissions || {}).length;
-
-  const [bypassUnlocked, setBypassUnlocked] = useState(() => isProgressionBypassed());
-  const [previewMode, setPreviewMode] = useState(false);
-
-  const canAccess =
-    bypassUnlocked ||
-    previewMode ||
-    (readingDone >= READING_THRESHOLD && writingDone >= WRITING_THRESHOLD);
-
   const missions = useListeningMissionsStore((s) => s.missions);
   const selectedMissionId = useListeningMissionsStore((s) => s.selectedMissionId);
   const answers = useListeningMissionsStore((s) => s.answers);
@@ -381,19 +365,6 @@ const ListeningPage = () => {
 
   useEffect(() => initializeStore(), [initializeStore]);
 
-  if (!canAccess) {
-    return (
-      <SkillLockedState
-        skillName="Listening"
-        prerequisites={[
-          { label: 'Reading', done: readingDone, threshold: READING_THRESHOLD },
-          { label: 'Writing', done: writingDone, threshold: WRITING_THRESHOLD },
-        ]}
-        onPreview={() => setPreviewMode(true)}
-        onUnlocked={() => setBypassUnlocked(true)}
-      />
-    );
-  }
 
   if (!currentMission) {
     return (
