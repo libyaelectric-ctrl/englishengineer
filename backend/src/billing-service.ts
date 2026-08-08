@@ -39,44 +39,38 @@ interface PlanMeta {
 }
 
 const PLAN_META: Record<string, PlanMeta> = {
-  pro: {
-    unitAmount: 1900,
-    nickname: 'Pro Monthly',
-    productName: 'EngineerOS Pro',
+  junior: {
+    unitAmount: 2900,
+    nickname: 'Junior Monthly',
+    productName: 'EngVox Junior',
   },
-  project: {
-    unitAmount: 3900,
-    nickname: 'Project Monthly',
-    productName: 'EngineerOS Project',
-  },
-  max: {
+  senior: {
     unitAmount: 5900,
-    nickname: 'Max Monthly',
-    productName: 'EngineerOS Max',
+    nickname: 'Senior Monthly',
+    productName: 'EngVox Senior',
   },
-  exec: {
+  specialist: {
+    unitAmount: 7900,
+    nickname: 'Specialist Monthly',
+    productName: 'EngVox Specialist',
+  },
+  master: {
     unitAmount: 9900,
-    nickname: 'Exec Monthly',
-    productName: 'EngineerOS Exec',
-  },
-  private: {
-    unitAmount: 99900,
-    nickname: 'Private Monthly',
-    productName: 'EngineerOS Private',
+    nickname: 'Master Monthly',
+    productName: 'EngVox Master',
   },
   team: {
-    unitAmount: 1900,
+    unitAmount: 99900,
     nickname: 'Team Monthly',
-    productName: 'EngineerOS Team',
+    productName: 'EngVox Team',
   },
 };
 
 const PLAN_PRICE_CONFIG: Record<string, string> = {
-  pro: 'priceProMonthly',
-  project: 'priceProjectMonthly',
-  max: 'priceMaxMonthly',
-  exec: 'priceExecMonthly',
-  private: 'pricePrivateMonthly',
+  junior: 'priceJuniorMonthly',
+  senior: 'priceSeniorMonthly',
+  specialist: 'priceSpecialistMonthly',
+  master: 'priceMasterMonthly',
   team: 'priceTeamMonthly',
 };
 

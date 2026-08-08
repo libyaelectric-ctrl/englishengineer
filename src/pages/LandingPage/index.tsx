@@ -2,17 +2,17 @@ import { useEffect } from 'react';
 
 import { PageMetadata } from '@/shared/components/PageMetadata';
 import { logger } from '@/shared/logger';
+
 import { ProductAnalyticsService } from '@/features/analytics';
 
-import { Navbar } from './Navbar';
-import { WowHeroSection } from './WowHeroSection';
-import { SocialProofMarquee } from './SocialProofMarquee';
 import { DisciplinesGrid } from './DisciplinesGrid';
 import { DuolingoWorkflowSection } from './DuolingoWorkflowSection';
-import { TestimonialsSection } from './TestimonialsSection';
-import { PricingSection } from './PricingSection';
 import { FinalCTA } from './FinalCTA';
 import { Footer } from './Footer';
+import { Navbar } from './Navbar';
+import { SocialProofMarquee } from './SocialProofMarquee';
+import { TestimonialsSection } from './TestimonialsSection';
+import { WowHeroSection } from './WowHeroSection';
 import { STRUCTURED_DATA } from './constants';
 
 const LandingPage = () => {
@@ -39,7 +39,6 @@ const LandingPage = () => {
       <DisciplinesGrid />
       <DuolingoWorkflowSection />
       <TestimonialsSection />
-      <PricingSection />
       <FinalCTA />
       <Footer />
     </main>
