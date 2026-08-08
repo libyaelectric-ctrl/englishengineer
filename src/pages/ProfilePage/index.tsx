@@ -7,6 +7,7 @@ import { useLocalizationStore } from '@/features/localization';
 import { LearningProfileRepository } from '@/features/profile';
 import { PROFESSIONS } from '@/features/profile/profile.preferences';
 
+import { ProgressOverviewTab } from '../ProgressPage/ProgressOverviewTab';
 import { LanguageDisciplineSection } from './LanguageDisciplineSection';
 import { LearningPreferencesSection } from './LearningPreferencesSection';
 import { ProfileOverviewSection } from './ProfileOverviewSection';
@@ -232,6 +233,8 @@ const ProfilePage = () => {
           locked={disciplineLocked}
         />
       )}
+
+      {activeSection === 'progress' && <ProgressOverviewTab />}
     </div>
   );
 };
