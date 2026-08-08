@@ -30,6 +30,10 @@ export const createMockAIProvider = (examples: MockExample[]): AIProvider => ({
     createMockResponse(examples, request),
   analyzeProgress: (request: AIRequest): Promise<AIResponse> =>
     createMockResponse(examples, request),
+  translate: (request: AIRequest): Promise<AIResponse> =>
+    createMockTranslateResponse(request),
+  generateContent: (request: AIRequest): Promise<AIResponse> =>
+    createMockContentResponse(request),
 });
 
 const createMockResponse = async (
@@ -233,3 +237,78 @@ const formatMockCoachText = (result: AICoachResult): string =>
     `Recommended next task\n${result.recommendedNextTask}`,
     `Estimated CEFR impact\n${result.estimatedCefrImpact}`,
   ].join('\n\n');
+
+const createMockTranslateResponse = async (request: AIRequest): Promise<AIResponse> => {
+  const startedAt = performance.now();
+  await new Promise((resolve) => window.setTimeout(resolve, 200));
+  return {
+    text: `[Mock Çeviri] ${request.prompt.trim().slice(0, 80)}`,
+    providerStatus: MOCK_STATUS,
+    metadata: {
+      contractVersion: '2026-06-26.v1',
+      requestId: 'mock-translate',
+      operation: 'translate',
+      durationMs: Math.round(performance.now() - startedAt),
+      success: true,
+      retryCount: 0,
+    },
+  };
+};
+
+const createMockContentResponse = async (request: AIRequest): Promise<AIResponse> => {
+  const startedAt = performance.now();
+  await new Promise((resolve) => window.setTimeout(resolve, 300));
+  const discipline = request.context?.discipline || 'general engineering';
+  const structuredResult = {
+    vocabulary: [
+      { term: 'submittal', translation: 'teslim belge', definition: 'Document submitted for approval', example: 'The submittal was approved by the consultant.', exampleTranslation: 'Teslim belgesi danışman tarafından onaylandı.', cefrLevel: 'B1', domain: discipline },
+      { term: 'commissioning', translation: 'devreye alma', definition: 'Process of testing and verifying systems', example: 'Commissioning will start next week.', exampleTranslation: 'Devreye alma haftaya başlayacak.', cefrLevel: 'B2', domain: discipline },
+      { term: 'variation', translation: 'değişiklik', definition: 'A change to the original scope of work', example: 'The variation was approved by the client.', exampleTranslation: 'Değişiklik müşteri tarafından onaylandı.', cefrLevel: 'B2', domain: discipline },
+    ],
+    reading: {
+      title: 'Site Progress Report',
+      titleTranslation: 'Saha İlerleme Raporu',
+      passage: 'The concrete pouring for Block A was completed on schedule. The contractor submitted the test cylinders for 7-day strength testing. The consultant reviewed the submittals and raised two RFIs regarding the reinforcement details.',
+      passageTranslation: 'A Blok beton dökümü zamanlamasına tamamlandı. Yüklenici 7 güçlük dayanım testi için test silindirlerini teslim etti. Danışman teslim belgelerini gözden geçirdi ve donatı detaylarıyla ilgili iki RFI açtı.',
+      questions: [
+        { question: 'What was completed on schedule?', questionTranslation: 'Zamanlamasına ne tamamlandı?', answer: 'The concrete pouring for Block A' },
+        { question: 'How many RFIs were raised?', questionTranslation: 'Kaç RFI açıldı?', answer: 'Two RFIs' },
+      ],
+    },
+    writing: {
+      prompt: 'Write a formal site progress email to the client',
+      promptTranslation: 'Müşteriye resmi saha ilerleme e-postası yazın',
+      modelResponse: 'Dear Mr. Smith, I am pleased to inform you that the concrete pouring for Block A was completed on schedule on Monday. The test cylinders have been submitted to the approved laboratory for 7-day strength testing.',
+      modelResponseTranslation: 'Sayın Smith, A Blok beton dökümünün Pazartesi günü zamanlamasına tamamlandığını bildirmekten memnuniyet duyarım. Test silindirleri 7 günlük dayanım testi için onaylanan laboratuvara teslim edilmiştir.',
+    },
+    speaking: {
+      scenario: 'Site meeting with the client representative',
+      scenarioTranslation: 'Müşteri temsilcisiyle saha toplantısı',
+      prompts: [
+        { role: 'You', text: 'Good morning. I would like to present this weeks progress.', textTranslation: 'Günaydın. Bu haftanın ilerlemesini sunmak istiyorum.' },
+        { role: 'Partner', text: 'Thank you. Can you elaborate on the delay in Block B?', textTranslation: 'Teşekkürler. B Bloktaki gecikmeyi açıklar mısınız?' },
+      ],
+    },
+    listening: {
+      script: 'The contractor has reported that the delivery of the electrical panels has been delayed by one week due to supply chain issues. The revised delivery date is next Friday. The project team is evaluating the impact on the commissioning schedule.',
+      scriptTranslation: 'Yüklenici, elektrik panolarının tedarik sorunları nedeniyle bir hafta ertelendiğini bildirdi. Yeni teslimat tariki gelecek Cuma. Proje ekibi devreye alma takvimindeki etkiyi değerlendiriyor.',
+      questions: [
+        { question: 'How long is the delay?', questionTranslation: 'Gecikme ne kadar?', answer: 'One week' },
+        { question: 'What is being evaluated?', questionTranslation: 'Ne değerlendiriliyor?', answer: 'The impact on the commissioning schedule' },
+      ],
+    },
+  };
+  return {
+    text: `Mock lesson content generated for ${discipline}`,
+    providerStatus: MOCK_STATUS,
+    structuredResult,
+    metadata: {
+      contractVersion: '2026-06-26.v1',
+      requestId: 'mock-content',
+      operation: 'generateContent',
+      durationMs: Math.round(performance.now() - startedAt),
+      success: true,
+      retryCount: 0,
+    },
+  };
+};

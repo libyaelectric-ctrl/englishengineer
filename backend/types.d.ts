@@ -33,12 +33,16 @@ export interface StripeConfig {
   configured: boolean;
   secretKey: string | null;
   webhookSecret: string | null;
-  priceProMonthly: string | null;
-  priceProjectMonthly: string | null;
-  priceMaxMonthly: string | null;
-  priceExecMonthly: string | null;
-  pricePrivateMonthly: string | null;
-  priceTeamMonthly: string | null;
+  priceJuniorMonthly?: string | null;
+  priceSeniorMonthly?: string | null;
+  priceSpecialistMonthly?: string | null;
+  priceMasterMonthly?: string | null;
+  priceProMonthly?: string | null;
+  priceProjectMonthly?: string | null;
+  priceMaxMonthly?: string | null;
+  priceExecMonthly?: string | null;
+  pricePrivateMonthly?: string | null;
+  priceTeamMonthly?: string | null;
   environment: RuntimeEnvironment;
   allowMemoryRepository: boolean;
   eventCacheTtlMs: number;
@@ -123,7 +127,12 @@ export interface ApiResponse<T> {
 // --- AI ---
 
 export type AiOperation =
-  'analyzeProgress' | 'evaluateEngineeringEnglish' | 'analyzeText' | 'generatePractice';
+  | 'analyzeProgress'
+  | 'evaluateEngineeringEnglish'
+  | 'analyzeText'
+  | 'generatePractice'
+  | 'translate'
+  | 'generateContent';
 
 export interface AiRequestBody {
   prompt: string;

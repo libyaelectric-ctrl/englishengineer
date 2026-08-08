@@ -8,15 +8,27 @@ const PAID_MONTHLY_LIMIT = 300;
 const FREE_PERIOD_MS = 24 * 60 * 60 * 1000;
 const PAID_PERIOD_MS = 30 * 24 * 60 * 60 * 1000;
 
+const PLAN_LIMITS: Record<string, { daily: number | null; monthly: number }> = {
+  free: { daily: FREE_DAILY_LIMIT, monthly: 0 },
+  junior: { daily: null, monthly: 50 },
+  senior: { daily: null, monthly: 150 },
+  specialist: { daily: null, monthly: 300 },
+  master: { daily: null, monthly: 600 },
+  team: { daily: null, monthly: 1500 },
+};
+
 interface PlanLimits {
   max: number;
   windowMs: number;
 }
 
-const getLimitForPlan = (planId: string): PlanLimits => ({
-  max: planId === 'free' ? FREE_DAILY_LIMIT : PAID_MONTHLY_LIMIT,
-  windowMs: planId === 'free' ? FREE_PERIOD_MS : PAID_PERIOD_MS,
-});
+const getLimitForPlan = (planId: string): PlanLimits => {
+  const limits = PLAN_LIMITS[planId] ?? { daily: null, monthly: PAID_MONTHLY_LIMIT };
+  if (limits.daily !== null) {
+    return { max: limits.daily, windowMs: FREE_PERIOD_MS };
+  }
+  return { max: limits.monthly, windowMs: PAID_PERIOD_MS };
+};
 
 interface AiLedgerSession {
   modeId?: string;
@@ -140,10 +152,9 @@ interface PlanLimitInfo {
 
 const _getAiPlanLimits = (): Record<string, PlanLimitInfo> => ({
   free: { daily: FREE_DAILY_LIMIT, monthly: null },
-  pro: { daily: null, monthly: PAID_MONTHLY_LIMIT },
-  project: { daily: null, monthly: PAID_MONTHLY_LIMIT },
-  max: { daily: null, monthly: PAID_MONTHLY_LIMIT },
-  exec: { daily: null, monthly: PAID_MONTHLY_LIMIT },
-  private: { daily: null, monthly: PAID_MONTHLY_LIMIT },
-  team: { daily: null, monthly: PAID_MONTHLY_LIMIT },
+  junior: { daily: null, monthly: 50 },
+  senior: { daily: null, monthly: 150 },
+  specialist: { daily: null, monthly: 300 },
+  master: { daily: null, monthly: 600 },
+  team: { daily: null, monthly: 1500 },
 });

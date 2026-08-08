@@ -7,7 +7,9 @@ export type AIOperation =
   | 'generatePractice'
   | 'evaluateEngineeringEnglish'
   | 'generateStudyPlan'
-  | 'analyzeProgress';
+  | 'analyzeProgress'
+  | 'translate'
+  | 'generateContent';
 
 export type AICoachModeId =
   | 'site_report_writer'
@@ -143,7 +145,7 @@ export interface AIResponseMetadata {
 export interface AIResponse {
   text: string;
   providerStatus: AIProviderStatus;
-  structuredResult?: AICoachResult;
+  structuredResult?: AICoachResult | Record<string, unknown>;
   metadata?: AIResponseMetadata;
 }
 
@@ -171,4 +173,6 @@ export interface AIProvider {
   evaluateEngineeringEnglish: (request: AIRequest) => Promise<AIResponse>;
   generateStudyPlan: (request: AIRequest) => Promise<AIResponse>;
   analyzeProgress: (request: AIRequest) => Promise<AIResponse>;
+  translate: (request: AIRequest) => Promise<AIResponse>;
+  generateContent: (request: AIRequest) => Promise<AIResponse>;
 }

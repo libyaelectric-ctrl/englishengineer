@@ -20,7 +20,39 @@ export const AI_ROUTES: Record<string, string> = {
   '/api/ai/writing-review': 'evaluateEngineeringEnglish',
   '/api/ai/assessment-feedback': 'analyzeText',
   '/api/ai/roleplay': 'generatePractice',
+  '/api/ai/translate': 'translate',
+  '/api/ai/generate-content': 'generateContent',
 };
+
+const PLAN_AI_LIMITS: Record<string, { daily: number | null; monthly: number }> = {
+  free: { daily: 3, monthly: 0 },
+  junior: { daily: null, monthly: 50 },
+  senior: { daily: null, monthly: 150 },
+  specialist: { daily: null, monthly: 300 },
+  master: { daily: null, monthly: 600 },
+  team: { daily: null, monthly: 1500 },
+};
+
+const DEFAULT_PLAN_LIMITS: { daily: number | null; monthly: number } = { daily: 3, monthly: 0 };
+
+const getPlanLimits = (planId: string) => PLAN_AI_LIMITS[planId] ?? DEFAULT_PLAN_LIMITS;
+
+const resolvePlanId = (
+  subscription: SubscriptionSnapshot | null,
+  configured: boolean
+): string => {
+  if (!configured || !subscription) return 'free';
+  const status = subscription.status;
+  if (status !== 'active' && status !== 'trialing') return 'free';
+  const planId = subscription.planId;
+  if (planId === 'free' || planId === 'lite' || planId === 'pro') {
+    return planId === 'pro' ? 'junior' : 'free';
+  }
+  return planId;
+};
+
+const AI_WINDOW_MS = 24 * 60 * 60 * 1000;
+const AI_MONTH_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 
 const isBypassUser = (userId: string): boolean => {
   if (process.env.NODE_ENV === 'production') return false;
@@ -34,47 +66,68 @@ const checkCostLimits = (userId: string) => {
     throw new ApiError(429, 'user_rate_limit_exceeded', limits.reason ?? 'Rate limit exceeded.');
 };
 
-const isLimitReached = (planId: string, count: number) =>
-  planId === 'free' ? count >= 3 : count >= 300;
+const isLimitReached = (planId: string, count: number) => {
+  const limits = getPlanLimits(planId);
+  if (limits.daily !== null) return count >= limits.daily;
+  return count >= limits.monthly;
+};
 
 const throwLimitError = (planId: string): never => {
-  const free = planId === 'free';
+  const limits = getPlanLimits(planId);
+  const isFree = planId === 'free';
   throw new ApiError(
     429,
-    free ? 'free_ai_coach_limit_exceeded' : 'monthly_ai_credit_limit_exceeded',
-    free
-      ? 'Free plan accounts are limited to 3 AI Coach requests per day. Please upgrade to Pro.'
-      : 'Monthly AI credit limit reached (300/300). Please contact support or upgrade.'
+    isFree ? 'free_ai_coach_limit_exceeded' : 'monthly_ai_credit_limit_exceeded',
+    isFree
+      ? `Free plan is limited to ${limits.daily} AI requests per day. Upgrade for more.`
+      : `Monthly AI credit limit reached (${limits.monthly}). Upgrade your plan or buy top-up credits.`
   );
+};
+
+const getWindowMs = (planId: string) => {
+  const limits = getPlanLimits(planId);
+  return limits.daily !== null ? AI_WINDOW_MS : AI_MONTH_WINDOW_MS;
+};
+
+const countRequestsInWindow = async (
+  ledger: { countRecentRequests: (userId: string, planId: string) => Promise<number> },
+  userId: string,
+  planId: string,
+  windowMs: number
+): Promise<number> => {
+  void windowMs;
+  return ledger.countRecentRequests(userId, planId);
 };
 
 const checkRateLimits = async (
   userId: string,
-  planId: string,
   ledger: {
     countRecentRequests: (userId: string, planId: string) => Promise<number>;
   },
-  billingRepository: SubscriptionRepository | null
+  billingRepository: SubscriptionRepository | null,
+  configured: boolean
 ): Promise<{
   count: number;
   useTopup: boolean;
   subscription: SubscriptionSnapshot | null;
   topupCredits: number;
+  planId: string;
 }> => {
   checkCostLimits(userId);
-  const count = await ledger.countRecentRequests(userId, planId);
-  if (!isLimitReached(planId, count))
-    return { count, useTopup: false, subscription: null, topupCredits: 0 };
-
   const subscription = billingRepository
     ? await billingRepository.getSubscriptionStatus(userId)
     : null;
+  const planId = resolvePlanId(subscription, configured);
+  const windowMs = getWindowMs(planId);
+  const count = await countRequestsInWindow(ledger, userId, planId, windowMs);
+  if (!isLimitReached(planId, count))
+    return { count, useTopup: false, subscription: subscription ?? null, topupCredits: 0, planId };
+
   const topupCredits = subscription?.topupCredits ?? 0;
-  if (topupCredits > 0) return { count, useTopup: true, subscription, topupCredits };
+  if (topupCredits > 0) return { count, useTopup: true, subscription, topupCredits, planId };
 
   throwLimitError(planId);
-  // Unreachable — throwLimitError always throws, but TS needs an explicit return path
-  return { count, useTopup: false, subscription: null, topupCredits: 0 };
+  return { count, useTopup: false, subscription: null, topupCredits: 0, planId };
 };
 
 const decrementTopup = async (
@@ -131,6 +184,7 @@ export const registerAIRoutes = (
   _fetchImpl: typeof fetch = fetch
 ): void => {
   const ledger = createAiLedger(config as unknown as Parameters<typeof createAiLedger>[0]);
+  const configured = Boolean(config.stripe && (config.stripe as Record<string, unknown>).configured);
 
   const validateOperation = (body: Record<string, unknown>, defaultOp: string) => {
     if (body?.operation !== undefined && body.operation !== defaultOp) {
@@ -143,8 +197,8 @@ export const registerAIRoutes = (
   };
 
   const resolveRateLimits = async (userId: string, bypass: boolean) => {
-    if (bypass) return { useTopup: false, subscription: null, topupCredits: 0 };
-    return checkRateLimits(userId, 'free', ledger, billingRepository);
+    if (bypass) return { useTopup: false, subscription: null, topupCredits: 0, planId: 'free' };
+    return checkRateLimits(userId, ledger, billingRepository, configured);
   };
 
   const logUsage = (
