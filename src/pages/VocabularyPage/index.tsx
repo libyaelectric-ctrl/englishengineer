@@ -2,6 +2,8 @@
 
 import { SectionCard } from '@/shared/components/SectionCard';
 
+import { useAuthStore } from '@/features/auth';
+import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
 import { useLocalizationStore } from '@/features/localization';
 
 import { MasteredHeatmap } from './components/MasteredHeatmap';
@@ -12,8 +14,12 @@ import { VocabularyHeader } from './components/VocabularyHeader';
 import { WordSetSection } from './components/WordSetSection';
 import { useVocabularyPage } from './hooks/useVocabularyPage';
 
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+
 const VocabularyPage = () => {
   const translate = useLocalizationStore((s) => s.translate);
+  const currentUser = useAuthStore((s) => s.currentUser);
+  const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
   const {
     vocabularyLevel,
     loadError,
@@ -78,6 +84,8 @@ const VocabularyPage = () => {
       />
 
       <div className="pt-4 space-y-4 pb-20">
+        <PersonalAIPanel discipline={userDiscipline} cefrLevel={vocabularyLevel} userName={currentUser?.displayName} />
+
         <SearchModal
           isOpen={showSearchModal}
           onClose={closeSearchModal}

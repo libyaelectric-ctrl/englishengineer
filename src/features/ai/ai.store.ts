@@ -57,22 +57,32 @@ export interface AIUsageSummary {
   recentSession: AICoachSession | null;
 }
 
+const isCoachResult = (
+  value: AICoachResult | Record<string, unknown> | undefined
+): value is AICoachResult => {
+  if (!value || typeof value !== 'object') return false;
+  const v = value as Record<string, unknown>;
+  return typeof v.summary === 'string' && Array.isArray(v.strengths) && Array.isArray(v.weaknesses);
+};
+
 const buildResultOrFallback = (
   response: Awaited<ReturnType<typeof AIService.run>>,
   context: ReturnType<typeof buildCoachContext>
 ): AICoachResult =>
-  response.structuredResult || {
-    summary: response.text,
-    strengths: ['Coach response completed.'],
-    weaknesses: ['Backend response did not include a structured result.'],
-    corrections: [],
-    nativeRewrite: response.text,
-    technicalVocabulary: [],
-    recommendedNextTask: context.recommendedFocus,
-    estimatedCefrImpact: `Continue toward ${context.targetLevel}.`,
-    suggestedActions: ['Run another coach session with a clearer prompt.'],
-    focusArea: context.recommendedFocus,
-  };
+  isCoachResult(response.structuredResult)
+    ? response.structuredResult
+    : {
+        summary: response.text,
+        strengths: ['Coach response completed.'],
+        weaknesses: ['Backend response did not include a structured result.'],
+        corrections: [],
+        nativeRewrite: response.text,
+        technicalVocabulary: [],
+        recommendedNextTask: context.recommendedFocus,
+        estimatedCefrImpact: `Continue toward ${context.targetLevel}.`,
+        suggestedActions: ['Run another coach session with a clearer prompt.'],
+        focusArea: context.recommendedFocus,
+      };
 
 const buildSessionList = (
   mode: ReturnType<typeof getCoachModeById>,

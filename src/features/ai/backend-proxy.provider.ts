@@ -73,14 +73,16 @@ const ROUTE_BY_OPERATION: Record<AIOperation, string> = {
   evaluateEngineeringEnglish: 'writing-review',
   generateStudyPlan: 'coach',
   analyzeProgress: 'coach',
+  translate: 'translate',
+  generateContent: 'generate-content',
 };
 
 const resolveProxyEndpoint = (proxyUrl: string, operation: AIOperation): string => {
   const route = ROUTE_BY_OPERATION[operation];
   const withoutTrailingSlash = proxyUrl.replace(/\/$/, '');
-  if (/\/(coach|writing-review|assessment-feedback|roleplay)$/.test(withoutTrailingSlash)) {
+  if (/\/(coach|writing-review|assessment-feedback|roleplay|translate|generate-content)$/.test(withoutTrailingSlash)) {
     return withoutTrailingSlash.replace(
-      /\/(coach|writing-review|assessment-feedback|roleplay)$/,
+      /\/(coach|writing-review|assessment-feedback|roleplay|translate|generate-content)$/,
       `/${route}`
     );
   }
@@ -398,5 +400,8 @@ export const createBackendProxyProvider = (proxyUrl: string | null): AIProvider 
       callProxy('generateStudyPlan', request),
     analyzeProgress: (request: AIRequest): Promise<AIResponse> =>
       callProxy('analyzeProgress', request),
+    translate: (request: AIRequest): Promise<AIResponse> => callProxy('translate', request),
+    generateContent: (request: AIRequest): Promise<AIResponse> =>
+      callProxy('generateContent', request),
   };
 };

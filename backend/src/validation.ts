@@ -10,6 +10,8 @@ const AI_OPERATIONS = [
   'evaluateEngineeringEnglish',
   'analyzeText',
   'generatePractice',
+  'translate',
+  'generateContent',
 ] as const;
 
 export const AiRequestBodySchema = z.object({

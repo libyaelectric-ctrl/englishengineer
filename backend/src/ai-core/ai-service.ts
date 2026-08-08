@@ -4,6 +4,7 @@ import type { AiConfig } from '../../types.js';
 import { ApiError } from '../errors.js';
 import { logger } from '../logger.js';
 import {
+  getContentGenerationInstructionAsync,
   getCustomPracticePrompt,
   getJsonStructureInstructionAsync,
 } from '../prompts/prompt-loader.js';
@@ -12,10 +13,10 @@ import type { ProviderConfig } from './providers.js';
 
 export const AI_CONTRACT_VERSION = '2026-06-26.v1';
 
-const isEvaluationOperation = (operation: string, body: AiRequestBody) =>
-  (['analyzeProgress', 'evaluateEngineeringEnglish', 'analyzeText'] as string[]).includes(
-    operation
-  ) && body?.context !== undefined;
+const JSON_OPERATIONS = ['analyzeProgress', 'evaluateEngineeringEnglish', 'analyzeText', 'generateContent'];
+
+const isStructuredOperation = (operation: string, body: AiRequestBody) =>
+  JSON_OPERATIONS.includes(operation) && (operation === 'generateContent' || body?.context !== undefined);
 
 const isCustomPracticeRequest = (prompt: string) => {
   const lower = prompt.toLowerCase();
@@ -32,11 +33,15 @@ const isCustomPracticeRequest = (prompt: string) => {
 const buildPrompt = async (
   prompt: string,
   body: AiRequestBody,
-  evaluation: boolean
+  structured: boolean,
+  operation: string
 ): Promise<string> => {
   let finalPrompt = prompt;
-  if (evaluation) {
-    const instruction = await getJsonStructureInstructionAsync();
+  if (structured) {
+    const instruction =
+      operation === 'generateContent'
+        ? await getContentGenerationInstructionAsync()
+        : await getJsonStructureInstructionAsync();
     finalPrompt = `${prompt}\n\n${instruction}`;
   }
   if (isCustomPracticeRequest(prompt) && body?.context) {
@@ -140,18 +145,18 @@ export const createAIService = (config: AiConfig, fetchImpl: typeof fetch = fetc
       };
     }
 
-    const evaluation = isEvaluationOperation(operation, body);
-    const finalPrompt = await buildPrompt(prompt, body, evaluation);
+    const structured = isStructuredOperation(operation, body);
+    const finalPrompt = await buildPrompt(prompt, body, structured, operation);
 
     const text = await withTimeout(
-      (signal) => callProvider(config, finalPrompt, signal, fetchImpl, evaluation),
+      (signal) => callProvider(config, finalPrompt, signal, fetchImpl, structured),
       config.timeoutMs
     );
 
     let structuredResult: Record<string, unknown> | null = null;
     let responseText = text;
 
-    if (evaluation) {
+    if (structured) {
       const parsed = parseEvaluationResponse(text);
       structuredResult = parsed.structured;
       responseText = parsed.responseText;

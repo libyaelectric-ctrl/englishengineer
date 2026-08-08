@@ -29,8 +29,8 @@ const loadPrompt = (filename: string): string => {
   return content;
 };
 
-export const getJsonStructureInstructionAsync = async (): Promise<string> => {
-  const cacheKey = 'db:json-structure';
+const loadPromptFromDb = async (key: string, fallbackFilename: string): Promise<string> => {
+  const cacheKey = `db:${key}`;
   if (cache.has(cacheKey)) return cache.get(cacheKey)!;
 
   const client = getSupabaseClient();
@@ -39,18 +39,18 @@ export const getJsonStructureInstructionAsync = async (): Promise<string> => {
       const { data, error } = await client
         .from('ai_prompts')
         .select('content')
-        .eq('key', 'json-structure')
+        .eq('key', key)
         .single();
 
       const row = data as { content?: string } | null;
       if (!error && row?.content) {
         const content = row.content.trim();
         cache.set(cacheKey, content);
-        logger.info('[PromptLoader] Loaded JSON structure instruction from database');
+        logger.info(`[PromptLoader] Loaded ${key} instruction from database`);
         return content;
       } else if (error) {
         logger.warn(
-          '[PromptLoader] Failed to query dynamic prompt from database, falling back to local file',
+          `[PromptLoader] Failed to query dynamic prompt ${key} from database, falling back to local file`,
           {
             error: error.message,
           }
@@ -58,7 +58,7 @@ export const getJsonStructureInstructionAsync = async (): Promise<string> => {
       }
     } catch (err: unknown) {
       logger.warn(
-        '[PromptLoader] Database connection error fetching prompt, falling back to local file',
+        `[PromptLoader] Database connection error fetching prompt ${key}, falling back to local file`,
         {
           error: err instanceof Error ? err.message : String(err),
         }
@@ -66,8 +66,14 @@ export const getJsonStructureInstructionAsync = async (): Promise<string> => {
     }
   }
 
-  return loadPrompt('json-structure.md');
+  return loadPrompt(fallbackFilename);
 };
+
+export const getJsonStructureInstructionAsync = (): Promise<string> =>
+  loadPromptFromDb('json-structure', 'json-structure.md');
+
+export const getContentGenerationInstructionAsync = (): Promise<string> =>
+  loadPromptFromDb('content-generation', 'content-structure.md');
 
 interface PracticeContext {
   recentMistakes?: Array<{
