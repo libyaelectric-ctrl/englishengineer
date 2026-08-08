@@ -63,13 +63,9 @@ export const useLoginHandlers = () => {
             email: `demo.${provider}@engvox.io`,
           },
         });
-        const { LearningProfileRepository } = await import('@/features/profile/profile.repository');
-        LearningProfileRepository.updatePreferences(loggedUser.id, {
-          onboardingCompleted: true,
-        });
       }
       setSocialLoading(null);
-      navigate(from, { replace: true });
+      navigate('/welcome', { replace: true });
     } catch (err: unknown) {
       setSocialLoading(null);
       setError(getErrorMessage(err, `Failed to sign in with ${provider}`));
@@ -114,14 +110,7 @@ export const useLoginHandlers = () => {
       setError(null);
       useLearningStore.getState().resetAll();
       await demoLogin();
-      const loggedUser = useAuthStore.getState().currentUser;
-      if (loggedUser) {
-        const { LearningProfileRepository } = await import('@/features/profile/profile.repository');
-        LearningProfileRepository.updatePreferences(loggedUser.id, {
-          onboardingCompleted: true,
-        });
-      }
-      navigate(from, { replace: true });
+      navigate('/welcome', { replace: true });
     } catch (err: unknown) {
       setError(getErrorMessage(err, 'Failed to initialize demo'));
     }
@@ -197,10 +186,11 @@ export const useLoginHandlers = () => {
         ProductAnalyticsService.track('signup_completed', '/login', {
           metadata: { source: 'system' },
         });
+        navigate('/welcome', { replace: true });
       } else {
         await login(derivedDisplayName, email.trim(), password);
+        navigate(from, { replace: true });
       }
-      navigate(from, { replace: true });
     } catch (err: unknown) {
       const msg = getErrorMessage(err, 'Sign-in failed.');
       if (

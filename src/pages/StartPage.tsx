@@ -32,7 +32,7 @@ const StartPage = () => {
   const startLite = async () => {
     useLearningStore.getState().resetAll();
     await demoLogin();
-    navigate('/onboarding?mode=lite', { replace: true });
+    navigate('/welcome', { replace: true });
   };
 
   return (
