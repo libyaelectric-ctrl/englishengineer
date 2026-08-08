@@ -26,6 +26,9 @@ import {
 import { useListeningMissionsStore } from '@/features/listening';
 import { AudioPlayer } from '@/features/listening/AudioPlayer';
 import { PLAYBACK_SPEEDS } from '@/features/listening/listening.constants';
+import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { useAuthStore } from '@/features/auth';
 import {
   type ListeningEvaluationResult,
   type ListeningMission,
@@ -361,6 +364,9 @@ const ListeningPage = () => {
   const currentMission =
     visibleMissions.find((mission) => mission.id === selectedMissionId) ?? visibleMissions[0];
 
+  const currentUser = useAuthStore((s) => s.currentUser);
+  const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
+
   useEffect(() => initializeStore(), [initializeStore]);
 
   if (!currentMission) {
@@ -402,6 +408,7 @@ const ListeningPage = () => {
         </div>
       </div>
       <div className="space-y-6 pt-4">
+        <PersonalAIPanel discipline={userDiscipline} cefrLevel={currentLevel} userName={currentUser?.displayName} />
         <LevelContentFilter
           value={levelFilter}
           currentLevel={currentLevel}

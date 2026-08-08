@@ -15,6 +15,9 @@ import {
   LevelContentFilter,
 } from '@/features/level-system';
 import type { VocabularyItem } from '@/features/reading';
+import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { useAuthStore } from '@/features/auth';
 
 import { ReadingMissionCard } from './ReadingMissionCard';
 import { ReadingWorkspace } from './ReadingWorkspace';
@@ -54,6 +57,7 @@ const MissionsTabContent = ({
   toggleBookmark,
   handleLaunchMission,
   resetAllReadingProgress,
+  discipline,
 }: {
   levelFilter: ContentLevelFilter;
   currentLevel: CefrLevel;
@@ -66,8 +70,10 @@ const MissionsTabContent = ({
   toggleBookmark: (id: string) => void;
   handleLaunchMission: (missionId: string) => void;
   resetAllReadingProgress: () => void;
+  discipline: EngineeringDiscipline | null;
 }) => (
   <>
+    <PersonalAIPanel discipline={discipline} cefrLevel={currentLevel} userName={undefined} />
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <MetricCard
         label="Current Level"
@@ -208,6 +214,9 @@ const WorkspaceTabContent = ({
 };
 
 const ReadingPage = () => {
+  const currentUser = useAuthStore((s) => s.currentUser);
+  const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
+
   const {
     missions,
     answers,
@@ -284,6 +293,7 @@ const ReadingPage = () => {
           toggleBookmark={toggleBookmark}
           handleLaunchMission={handleLaunchMission}
           resetAllReadingProgress={resetAllReadingProgress}
+          discipline={userDiscipline}
         />
       )}
 
