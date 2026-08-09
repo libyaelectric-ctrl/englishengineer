@@ -26,7 +26,7 @@ import {
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { useAuthStore } from '@/features/auth';
-import { useLocalizationStore, INTERFACE_LANGUAGES } from '@/features/localization';
+import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
@@ -42,8 +42,6 @@ const DISCIPLINE_ICONS: Record<EngineeringDiscipline, React.ElementType> = {
   mechatronics: Bot,
   software: Code2,
 };
-
-
 
 export const WelcomeScreen = () => {
   const navigate = useNavigate();
@@ -145,12 +143,12 @@ export const WelcomeScreen = () => {
             </div>
 
             <div className="text-center mb-4">
-              <p className="text-xs text-muted-copy">İngilizce her dilde sabit olarak mevcuttur</p>
-              <p className="text-xs text-muted-copy mt-1">English is available in all languages</p>
+              <p className="text-xs text-muted-copy">İngilizce sabit hedef dildir</p>
+              <p className="text-xs text-muted-copy mt-1">English is the fixed target language</p>
             </div>
 
             <div className="grid grid-cols-3 gap-3 max-h-[400px] overflow-y-auto">
-              {INTERFACE_LANGUAGES.filter((l) => l.available).map((lang) => {
+              {INTERFACE_LANGUAGES.filter((l) => l.available && l.id !== 'en').map((lang) => {
                 const isSelected = selectedLanguage === lang.id;
                 return (
                   <button
