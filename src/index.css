@@ -29,6 +29,9 @@
   --radius-input: 4px;
   --radius-card: 4px;
   --radius-dialog: 4px;
+  --shadow-card: 0 8px 22px rgba(15, 23, 42, 0.06);
+  --shadow-pop: 0 18px 50px rgba(15, 23, 42, 0.12);
+  --shadow-dialog: 0 30px 90px rgba(15, 23, 42, 0.22);
 }
 
 .dark,
@@ -59,6 +62,9 @@
   --color-sidebar-bg: #1c1f26;
   --color-sidebar-border: rgba(51, 102, 204, 0.24);
   --color-sidebar-inner-border: rgba(51, 102, 204, 0.15);
+  --shadow-card: 0 8px 22px rgba(0, 0, 0, 0.4);
+  --shadow-pop: 0 18px 50px rgba(0, 0, 0, 0.5);
+  --shadow-dialog: 0 30px 90px rgba(0, 0, 0, 0.6);
 }
 
 @theme {
@@ -92,6 +98,9 @@
   --radius-input: var(--radius-input);
   --radius-card: var(--radius-card);
   --radius-dialog: var(--radius-dialog);
+  --shadow-card: var(--shadow-card);
+  --shadow-pop: var(--shadow-pop);
+  --shadow-dialog: var(--shadow-dialog);
 }
 
 html {

@@ -60,7 +60,7 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
                 className={`flex items-center justify-center rounded-[var(--radius-card)] w-7 h-7 text-base leading-none border transition-all cursor-pointer select-none ${
                   language === lang.id
                     ? 'bg-primary/15 border-primary ring-1 ring-primary/60 -translate-y-0.5 shadow-md'
-                    : 'bg-surface border-border-soft opacity-60 hover:opacity-100 hover:-translate-y-0.5 hover:shadow-md shadow-[0_1px_2px_rgba(0,0,0,0.12)]'
+                    : 'bg-surface border-border-soft opacity-60 hover:opacity-100 hover:-translate-y-0.5 hover:shadow-md shadow-[var(--shadow-card)]'
                 }`}
               >
                 {lang.flag}
