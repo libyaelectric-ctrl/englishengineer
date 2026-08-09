@@ -14,7 +14,7 @@ export const LanguageStep = ({ language, setLanguage }: LanguageStepProps) => {
       <h2 className="text-xl font-medium">{translate('onboarding.selectLanguage')}</h2>
       <p className="mt-2 text-sm text-muted-copy">{translate('onboarding.languageDesc')}</p>
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        {INTERFACE_LANGUAGES.map((lang) => {
+        {INTERFACE_LANGUAGES.filter((lang) => lang.id !== 'en').map((lang) => {
           const isSelected = language === lang.id;
           return (
             <button

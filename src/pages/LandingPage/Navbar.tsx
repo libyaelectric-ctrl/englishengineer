@@ -22,6 +22,8 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
   const { language, setLanguage, translate } = useLocalizationStore();
   const [langOpen, setLangOpen] = useState(false);
   const currentLang = INTERFACE_LANGUAGES.find((l) => l.id === language);
+  const englishLanguage = INTERFACE_LANGUAGES.find((l) => l.id === 'en');
+  const otherLanguages = INTERFACE_LANGUAGES.filter((l) => l.id !== 'en');
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border-soft glass shadow-sm">
@@ -48,7 +50,7 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
 
           {/* ── Language Flags: inline raised row (md+), compact popover on small screens ── */}
           <div className="hidden md:flex items-center gap-1 lg:gap-1.5 shrink-0 mx-3 lg:mx-6">
-            {INTERFACE_LANGUAGES.map((lang) => (
+            {otherLanguages.map((lang) => (
               <button
                 key={lang.id}
                 type="button"
@@ -64,6 +66,17 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
                 {lang.flag}
               </button>
             ))}
+            <ArrowRight className="mx-1 h-3 w-3 shrink-0 text-primary" aria-hidden="true" />
+            {englishLanguage && (
+              <div
+                title="English"
+                aria-label="English (EN), fixed target language"
+                className="flex h-7 shrink-0 items-center gap-1 rounded-md border border-primary bg-primary/15 px-1.5 text-[10px] font-bold leading-none ring-1 ring-primary/60 select-none"
+              >
+                <span className="text-base">{englishLanguage.flag}</span>
+                <span>EN</span>
+              </div>
+            )}
           </div>
 
           {/* Mobile fallback: compact language popover */}
@@ -76,11 +89,12 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
               className="flex items-center gap-1 rounded border border-border-soft bg-surface px-1.5 py-1 text-base leading-none transition-colors hover:border-primary/40 cursor-pointer"
             >
               <span>{currentLang?.flag ?? '🌐'}</span>
+              {currentLang?.id === 'en' && <span className="text-[8px] font-bold">EN</span>}
               <ChevronDown className="h-3 w-3 text-muted-copy" />
             </button>
             {langOpen && (
               <div className="absolute left-0 top-full mt-1.5 z-50 grid grid-cols-5 gap-0.5 rounded-lg border border-border-soft bg-background p-1.5 shadow-xl">
-                {INTERFACE_LANGUAGES.map((lang) => (
+                {otherLanguages.map((lang) => (
                   <button
                     key={lang.id}
                     type="button"
@@ -96,7 +110,10 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
                         : 'opacity-50 hover:opacity-100 hover:bg-surface'
                     }`}
                   >
-                    {lang.flag}
+                    <span className="flex flex-col items-center gap-0.5">
+                      <span>{lang.flag}</span>
+                      <span className="text-[8px] font-bold uppercase leading-none">{lang.id}</span>
+                    </span>
                   </button>
                 ))}
               </div>

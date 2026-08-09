@@ -120,6 +120,20 @@ const PricingPage = () => {
           </p>
         )}
 
+        <div className="mx-auto mb-8 max-w-sm rounded-2xl border-2 border-primary/40 bg-surface p-5 text-center shadow-sm">
+          <p className="text-sm font-semibold text-foreground">Free</p>
+          <p className="mt-2 text-3xl font-extrabold tracking-tight text-foreground">$0</p>
+          <p className="mt-1 text-xs leading-relaxed text-muted-copy">
+            Start with core vocabulary and grammar practice. No checkout required.
+          </p>
+          <Link
+            to="/welcome"
+            className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary/95"
+          >
+            {translate('pricing.getStarted') ?? 'Start Free'}
+          </Link>
+        </div>
+
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-12">
           {PRICING_TIERS.map((tier, idx) => (
             <motion.div
