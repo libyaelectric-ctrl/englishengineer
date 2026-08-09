@@ -8,10 +8,11 @@ import { useLearningStore } from '@/core/learning';
 
 import { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 import { filterMissionsByDiscipline } from '@/shared/constants/mission-discipline-map';
+import { GrammarTransferService } from '@/shared/services/grammar-transfer.service';
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { storage } from '@/shared/storage';
 
-import { GrammarTransferService } from '@/shared/services/grammar-transfer.service';
+import { AIService } from '@/features/ai';
 import { VocabularyService } from '@/features/vocabulary';
 
 import { WRITING_MISSIONS } from './writing.data';
@@ -30,6 +31,67 @@ const DEFAULT_STATE: WritingState = {
   completedMissions: {},
   lastSelectedMissionId: 'writing_a1_simple_site_update',
   history: [],
+};
+
+// Optional backend AI layer: sends the student draft to the AI evaluation
+// endpoint and merges the returned feedback into the local result. When the
+// backend is not configured or the call fails, the local evaluation is used
+// unchanged so the offline-first flow is never blocked.
+const buildAiFeedback = async (mission: WritingMission, draft: string) => {
+  try {
+    const prompt = [
+      'Evaluate this engineering student written response.',
+      `Task: ${mission.task || mission.description}`,
+      `Discipline: ${mission.discipline}`,
+      `CEFR level: ${mission.cefrLevel}`,
+      "Student's submission:",
+      '"""',
+      draft,
+      '"""',
+      'Provide concise strengths, weaknesses, and overall feedback for an engineering context.',
+    ].join('\n');
+
+    const response = await AIService.run([], 'evaluateEngineeringEnglish', {
+      modeId: 'writing_reviewer',
+      modeName: 'Writing Reviewer',
+      prompt,
+      context: {
+        userName: 'the learner',
+        role: 'engineer',
+        discipline: mission.discipline,
+        targetLevel: mission.cefrLevel,
+        xp: 0,
+        level: 1,
+        elo: 1000,
+        streak: 0,
+        averageScore: 0,
+        completedMissions: 0,
+        totalMissions: 0,
+        weakSkills: [],
+        strongSkills: [],
+        recentActivities: [],
+        weakVocabulary: [],
+        wordsLearned: 0,
+        vocabularyRetention: 0,
+        recommendedFocus: 'Writing',
+      },
+    });
+
+    const structured = response.structuredResult as {
+      strengths?: string[];
+      weaknesses?: string[];
+      summary?: string;
+    } | null;
+
+    if (!structured) return null;
+    return {
+      strengths: structured.strengths || [],
+      weaknesses: structured.weaknesses || [],
+      summary: structured.summary || '',
+    };
+  } catch {
+    return null;
+  }
 };
 
 export const WritingService = {
@@ -108,6 +170,32 @@ export const WritingService = {
           correction.fix
         );
       });
+
+    // 1b. Optional backend AI feedback merged into the local result. Fire and
+    // forget so the offline-first submission is never delayed or blocked.
+    void buildAiFeedback(mission, submission.finalDraft).then((ai) => {
+      if (!ai) return;
+      if (ai.strengths.length > 0) {
+        evaluation.strengths = [...new Set([...evaluation.strengths, ...ai.strengths.slice(0, 3)])];
+      }
+      if (ai.weaknesses.length > 0) {
+        evaluation.weaknesses = [
+          ...new Set([...evaluation.weaknesses, ...ai.weaknesses.slice(0, 3)]),
+        ];
+      }
+      if (ai.summary) {
+        evaluation.feedback = ai.summary;
+      }
+      // Persist the enriched evaluation back into history.
+      const state = this.getState();
+      const entry = state.history.find(
+        (h) => h.missionId === mission.id && h.evaluation === evaluation
+      );
+      if (entry) {
+        entry.evaluation = evaluation;
+        this.saveState(state);
+      }
+    });
 
     // 2. Load writing state
     const state = this.getState();
