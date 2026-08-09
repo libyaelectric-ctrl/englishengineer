@@ -1,10 +1,22 @@
-import { Lock, BookOpen, PenTool, Headphones, Mic2, BookMarked, Languages, ArrowRight, RefreshCw, AlertCircle } from 'lucide-react';
+import {
+  AlertCircle,
+  ArrowRight,
+  BookMarked,
+  BookOpen,
+  Headphones,
+  Languages,
+  Lock,
+  Mic2,
+  PenTool,
+  RefreshCw,
+} from 'lucide-react';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
 import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
+import { getDisciplineIcon } from '@/shared/icons/registry';
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 
 import { useLocalizationStore } from '@/features/localization';
@@ -29,33 +41,66 @@ const MODULE_BUTTONS: Array<{
   route: string;
   color: string;
 }> = [
-  { key: 'vocabulary', labelKey: 'nav.vocabulary', icon: BookMarked, route: '/vocabulary', color: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-500/20' },
-  { key: 'grammar', labelKey: 'nav.grammar', icon: Languages, route: '/grammar', color: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-500/20' },
-  { key: 'reading', labelKey: 'nav.reading', icon: BookOpen, route: '/reading', color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/20' },
-  { key: 'writing', labelKey: 'nav.writing', icon: PenTool, route: '/writing', color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-500/20' },
-  { key: 'listening', labelKey: 'nav.listening', icon: Headphones, route: '/listening', color: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-500/20' },
-  { key: 'speaking', labelKey: 'nav.speaking', icon: Mic2, route: '/speaking', color: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-500/20' },
+  {
+    key: 'vocabulary',
+    labelKey: 'nav.vocabulary',
+    icon: BookMarked,
+    route: '/vocabulary',
+    color:
+      'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-500/20',
+  },
+  {
+    key: 'grammar',
+    labelKey: 'nav.grammar',
+    icon: Languages,
+    route: '/grammar',
+    color:
+      'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-500/20',
+  },
+  {
+    key: 'reading',
+    labelKey: 'nav.reading',
+    icon: BookOpen,
+    route: '/reading',
+    color:
+      'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/20',
+  },
+  {
+    key: 'writing',
+    labelKey: 'nav.writing',
+    icon: PenTool,
+    route: '/writing',
+    color:
+      'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-500/20',
+  },
+  {
+    key: 'listening',
+    labelKey: 'nav.listening',
+    icon: Headphones,
+    route: '/listening',
+    color:
+      'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-500/20',
+  },
+  {
+    key: 'speaking',
+    labelKey: 'nav.speaking',
+    icon: Mic2,
+    route: '/speaking',
+    color:
+      'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-500/20',
+  },
 ];
-
-const DISCIPLINE_EMOJI: Record<string, string> = {
-  architecture: '🏛️',
-  chemical: '⚗️',
-  civil: '🏗️',
-  electrical: '⚡',
-  electronics: '🔌',
-  hse: '🦺',
-  industrial: '🏭',
-  mechanical: '⚙️',
-  mechatronics: '🤖',
-  software: '💻',
-};
 
 const SkeletonBlock = ({ className }: { className: string }) => (
   <div className={`animate-pulse rounded bg-surface-hover ${className}`} />
 );
 
 const DisciplineCardSkeleton = () => (
-  <div className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm space-y-4" aria-busy="true" aria-label="Loading discipline card">
+  <div
+    className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm space-y-4"
+    aria-busy="true"
+    aria-label="Loading discipline card"
+  >
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
         <SkeletonBlock className="h-10 w-10 rounded-lg" />
@@ -82,8 +127,12 @@ const DisciplineCardError = ({ onRetry }: { onRetry: () => void }) => {
       <div className="flex items-center gap-3 text-error">
         <AlertCircle className="h-5 w-5 shrink-0" />
         <div className="flex-1">
-          <p className="text-sm font-bold">{translate('dashboard.disciplineError') ?? 'Unable to load discipline'}</p>
-          <p className="text-[10px] text-error/70 mt-0.5">{translate('dashboard.disciplineErrorDesc') ?? 'Please try again'}</p>
+          <p className="text-sm font-bold">
+            {translate('dashboard.disciplineError') ?? 'Unable to load discipline'}
+          </p>
+          <p className="text-[10px] text-error/70 mt-0.5">
+            {translate('dashboard.disciplineErrorDesc') ?? 'Please try again'}
+          </p>
         </div>
         <button
           type="button"
@@ -129,10 +178,18 @@ const DisciplineCardEmpty = ({ disciplineLabel }: { disciplineLabel: string }) =
   );
 };
 
-export const DisciplineCard = ({ discipline, isLocked, isLoading = false }: DisciplineCardProps) => {
+export const DisciplineCard = ({
+  discipline,
+  isLocked,
+  isLoading = false,
+}: DisciplineCardProps) => {
   const translate = useLocalizationStore((s) => s.translate);
   const meta = DISCIPLINE_META[discipline as keyof typeof DISCIPLINE_META];
-  const [state, setState] = useState<DisciplineCardState>({ wordCount: 0, hasContent: true, error: false });
+  const [state, setState] = useState<DisciplineCardState>({
+    wordCount: 0,
+    hasContent: true,
+    error: false,
+  });
 
   const loadDisciplineData = async () => {
     try {
@@ -157,18 +214,24 @@ export const DisciplineCard = ({ discipline, isLocked, isLoading = false }: Disc
   if (isLoading) return <DisciplineCardSkeleton />;
   if (state.error) return <DisciplineCardError onRetry={loadDisciplineData} />;
   if (!state.hasContent && discipline !== 'general') {
-    return <DisciplineCardEmpty disciplineLabel={meta?.labelKey ? translate(meta.labelKey as TranslationKey) : discipline} />;
+    return (
+      <DisciplineCardEmpty
+        disciplineLabel={meta?.labelKey ? translate(meta.labelKey as TranslationKey) : discipline}
+      />
+    );
   }
 
   const totalWords = (meta?.wordCount ?? 0) + 3400;
-  const progressPercent = state.wordCount > 0 ? Math.min(100, Math.round((state.wordCount / totalWords) * 100)) : 0;
+  const progressPercent =
+    state.wordCount > 0 ? Math.min(100, Math.round((state.wordCount / totalWords) * 100)) : 0;
+  const DisciplineIcon = getDisciplineIcon(discipline);
 
   return (
     <div className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 border border-blue-200 dark:border-blue-500/20">
-            <span className="text-xl">{DISCIPLINE_EMOJI[discipline] ?? '🔧'}</span>
+            <DisciplineIcon className="h-5 w-5 text-primary" aria-hidden="true" />
           </div>
           <div>
             <p className="text-[10px] font-bold text-muted-copy uppercase tracking-wider">
@@ -182,7 +245,9 @@ export const DisciplineCard = ({ discipline, isLocked, isLoading = false }: Disc
         {isLocked && (
           <div className="flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-emerald-600 dark:text-emerald-400">
             <Lock className="h-3 w-3" />
-            <span className="text-[10px] font-bold">{translate('dashboard.locked') ?? 'Locked'}</span>
+            <span className="text-[10px] font-bold">
+              {translate('dashboard.locked') ?? 'Locked'}
+            </span>
           </div>
         )}
       </div>
@@ -211,7 +276,8 @@ export const DisciplineCard = ({ discipline, isLocked, isLoading = false }: Disc
           />
         </div>
         <p className="text-[9px] text-muted-copy">
-          {progressPercent}% {translate('dashboard.loaded') ?? 'loaded'} ({state.wordCount.toLocaleString()} {translate('dashboard.terms') ?? 'terms'})
+          {progressPercent}% {translate('dashboard.loaded') ?? 'loaded'} (
+          {state.wordCount.toLocaleString()} {translate('dashboard.terms') ?? 'terms'})
         </p>
       </div>
 

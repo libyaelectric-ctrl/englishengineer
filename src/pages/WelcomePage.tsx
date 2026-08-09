@@ -1,17 +1,4 @@
-import {
-  ArrowRight,
-  Bot,
-  Building2,
-  Code2,
-  Cpu,
-  Factory,
-  FlaskConical,
-  Globe,
-  HardHat,
-  ShieldCheck,
-  Wrench,
-  Zap,
-} from 'lucide-react';
+import { ArrowRight, Globe } from 'lucide-react';
 
 import { useState } from 'react';
 
@@ -24,24 +11,12 @@ import {
   ENGINEERING_DISCIPLINES,
 } from '@/shared/constants/engineering-disciplines';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { getDisciplineIcon } from '@/shared/icons/registry';
 
 import { useAuthStore } from '@/features/auth';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
-
-const DISCIPLINE_ICONS: Record<EngineeringDiscipline, React.ElementType> = {
-  architecture: Building2,
-  chemical: FlaskConical,
-  civil: HardHat,
-  electrical: Zap,
-  electronics: Cpu,
-  hse: ShieldCheck,
-  industrial: Factory,
-  mechanical: Wrench,
-  mechatronics: Bot,
-  software: Code2,
-};
 
 export const WelcomeScreen = () => {
   const navigate = useNavigate();
@@ -94,14 +69,14 @@ export const WelcomeScreen = () => {
 
             <div className="grid grid-cols-2 gap-3">
               {ENGINEERING_DISCIPLINES.map((id) => {
-                const Icon = DISCIPLINE_ICONS[id];
+                const Icon = getDisciplineIcon(id);
                 const meta = DISCIPLINE_META[id];
                 const isSelected = selectedDiscipline === id;
                 return (
                   <button
                     key={id}
                     onClick={() => handleDisciplineSelect(id)}
-                    className={`flex items-center gap-3 rounded-xl border p-4 text-left transition-all cursor-pointer ${
+                    className={`flex items-center gap-3 rounded-[4px] border p-4 text-left transition-all cursor-pointer ${
                       isSelected
                         ? 'border-primary bg-primary/5 text-primary shadow-sm'
                         : 'border-border-soft bg-surface hover:border-primary/50'
@@ -128,7 +103,7 @@ export const WelcomeScreen = () => {
             <button
               onClick={handleContinueToLanguage}
               disabled={!selectedDiscipline}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all"
+              className="w-full flex items-center justify-center gap-2 rounded-[4px] bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all"
             >
               Devam Et
               <ArrowRight className="h-4 w-4" />
@@ -154,7 +129,7 @@ export const WelcomeScreen = () => {
                   <button
                     key={lang.id}
                     onClick={() => setSelectedLanguage(lang.id as SupportedInterfaceLanguage)}
-                    className={`flex flex-col items-center justify-center gap-2 rounded-xl border p-4 text-center transition-all cursor-pointer ${
+                    className={`flex flex-col items-center justify-center gap-2 rounded-[4px] border p-4 text-center transition-all cursor-pointer ${
                       isSelected
                         ? 'border-primary bg-primary/5 text-primary shadow-sm'
                         : 'border-border-soft bg-surface hover:border-primary/50'
@@ -174,13 +149,13 @@ export const WelcomeScreen = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => setStep('discipline')}
-                className="flex-1 rounded-xl border border-border-soft bg-surface py-3 text-sm font-semibold text-foreground cursor-pointer transition-all hover:bg-surface-hover"
+                className="flex-1 rounded-[4px] border border-border-soft bg-surface py-3 text-sm font-semibold text-foreground cursor-pointer transition-all hover:bg-surface-hover"
               >
                 Geri
               </button>
               <button
                 onClick={handleFinish}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground cursor-pointer transition-all"
+                className="flex-1 flex items-center justify-center gap-2 rounded-[4px] bg-primary py-3 text-sm font-semibold text-primary-foreground cursor-pointer transition-all"
               >
                 Başla
                 <ArrowRight className="h-4 w-4" />

@@ -1,7 +1,9 @@
 import { BookMarked } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { Virtuoso } from 'react-virtuoso';
 
 import { SectionCard } from '@/shared/components/SectionCard';
+import { getIcon } from '@/shared/icons/registry';
 
 import { useLocalizationStore } from '@/features/localization';
 import { MyVocabularyWord, VocabularyMenuService } from '@/features/vocabulary';
@@ -14,32 +16,33 @@ interface MyVocabularySectionProps {
 
 const COL_COUNT = 3;
 
-const STATUS_STYLES: Record<string, { bg: string; text: string; label: string; emoji: string }> = {
-  new: {
-    bg: 'bg-gray-100 dark:bg-gray-800',
-    text: 'text-gray-600 dark:text-gray-400',
-    label: 'New',
-    emoji: '',
-  },
-  learned: {
-    bg: 'bg-green-100 dark:bg-green-900/30',
-    text: 'text-green-700 dark:text-green-400',
-    label: 'Learned',
-    emoji: '',
-  },
-  mastered: {
-    bg: 'bg-yellow-100 dark:bg-yellow-900/30',
-    text: 'text-yellow-700 dark:text-yellow-400',
-    label: 'Mastered',
-    emoji: '⭐',
-  },
-  struggling: {
-    bg: 'bg-red-100 dark:bg-red-900/30',
-    text: 'text-red-700 dark:text-red-400',
-    label: 'Struggling',
-    emoji: '🔴',
-  },
-};
+const STATUS_STYLES: Record<string, { bg: string; text: string; label: string; Icon: LucideIcon }> =
+  {
+    new: {
+      bg: 'bg-gray-100 dark:bg-gray-800',
+      text: 'text-gray-600 dark:text-gray-400',
+      label: 'New',
+      Icon: getIcon('circle') ?? BookMarked,
+    },
+    learned: {
+      bg: 'bg-green-100 dark:bg-green-900/30',
+      text: 'text-green-700 dark:text-green-400',
+      label: 'Learned',
+      Icon: getIcon('check-circle') ?? BookMarked,
+    },
+    mastered: {
+      bg: 'bg-yellow-100 dark:bg-yellow-900/30',
+      text: 'text-yellow-700 dark:text-yellow-400',
+      label: 'Mastered',
+      Icon: getIcon('star') ?? BookMarked,
+    },
+    struggling: {
+      bg: 'bg-red-100 dark:bg-red-900/30',
+      text: 'text-red-700 dark:text-red-400',
+      label: 'Struggling',
+      Icon: getIcon('alert-circle') ?? BookMarked,
+    },
+  };
 
 const WordCard = ({
   word,
@@ -51,6 +54,7 @@ const WordCard = ({
   onArchive: (id: string) => void;
 }) => {
   const s = STATUS_STYLES[status || 'new'] || STATUS_STYLES.new;
+  const ArchiveIcon = getIcon('archive') ?? BookMarked;
   const language = useLocalizationStore((state) => state.language);
   const resolveMeaning = useTermMeaningResolver(language);
   const meaning = resolveMeaning(word.term, { turkishMeaning: word.turkishMeaning });
@@ -65,26 +69,18 @@ const WordCard = ({
             <span
               className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold ${s.bg} ${s.text}`}
             >
-              {s.emoji} {s.label}
+              <s.Icon className="h-3 w-3" aria-hidden="true" />
+              {s.label}
             </span>
           </div>
-          {meaning && (
-            <p className="mt-1 text-xs text-muted-copy">{meaning}</p>
-          )}
+          {meaning && <p className="mt-1 text-xs text-muted-copy">{meaning}</p>}
         </div>
         <button
           onClick={() => onArchive(word.id)}
           className="text-muted-copy hover:text-error transition-colors cursor-pointer"
           aria-label="Archive word"
         >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
-            />
-          </svg>
+          <ArchiveIcon className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
     </div>

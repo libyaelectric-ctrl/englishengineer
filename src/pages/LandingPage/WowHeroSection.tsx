@@ -1,8 +1,14 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Sparkles, ArrowRight, ShieldCheck, Globe, CheckCircle2, TrendingUp } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Globe, ShieldCheck, Sparkles, TrendingUp } from 'lucide-react';
 import { motion } from 'motion/react';
+
+import React from 'react';
+
+import { Link } from 'react-router-dom';
+
+import { getIcon } from '@/shared/icons/registry';
+
 import { useLocalizationStore } from '@/features/localization';
+
 import { getLandingTranslations } from './landing-i18n';
 
 export const WowHeroSection: React.FC = () => {
@@ -28,7 +34,6 @@ export const WowHeroSection: React.FC = () => {
       />
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
-
         {/* Top badge */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
@@ -97,10 +102,22 @@ export const WowHeroSection: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.45 }}
           className="mt-8 flex flex-wrap items-center justify-center gap-5 text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium"
         >
-          <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-500" />{t.badgeNoCard}</span>
-          <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-blue-500" />{t.badgeLockGuarantee}</span>
-          <span className="flex items-center gap-1.5"><Globe className="w-4 h-4 text-violet-500" />{t.badgeLanguages}</span>
-          <span className="flex items-center gap-1.5"><TrendingUp className="w-4 h-4 text-amber-500" />C1 Mastery Track</span>
+          <span className="flex items-center gap-1.5">
+            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            {t.badgeNoCard}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <ShieldCheck className="w-4 h-4 text-blue-500" />
+            {t.badgeLockGuarantee}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Globe className="w-4 h-4 text-violet-500" />
+            {t.badgeLanguages}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <TrendingUp className="w-4 h-4 text-amber-500" />
+            C1 Mastery Track
+          </span>
         </motion.div>
 
         {/* Floating metric cards */}
@@ -111,22 +128,33 @@ export const WowHeroSection: React.FC = () => {
           className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto"
         >
           {[
-            { label: 'Engineering Disciplines', value: '10', icon: '🏗️' },
-            { label: 'Interface Languages', value: '15', icon: '🌍' },
-            { label: 'Technical Terms', value: '27K+', icon: '📚' },
-            { label: 'CEFR Levels', value: 'A1–C2', icon: '🎯' },
+            { label: 'Engineering Disciplines', value: '10', icon: 'building' },
+            { label: 'Interface Languages', value: '15', icon: 'globe' },
+            { label: 'Technical Terms', value: '27K+', icon: 'library' },
+            { label: 'CEFR Levels', value: 'A1–C2', icon: 'target' },
           ].map((m) => (
             <div
               key={m.label}
-              className="flex flex-col items-center gap-1.5 p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/8 shadow-sm"
+              className="flex flex-col items-center gap-1.5 rounded-[4px] border border-slate-100 bg-white p-4 shadow-sm dark:border-white/8 dark:bg-white/5"
             >
-              <span className="text-2xl">{m.icon}</span>
-              <span className="text-xl font-extrabold text-slate-900 dark:text-white">{m.value}</span>
-              <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium text-center leading-tight">{m.label}</span>
+              {(() => {
+                const MetricIcon = getIcon(m.icon);
+                return MetricIcon ? (
+                  <MetricIcon
+                    className="h-6 w-6 text-blue-600 dark:text-blue-400"
+                    aria-hidden="true"
+                  />
+                ) : null;
+              })()}
+              <span className="text-xl font-extrabold text-slate-900 dark:text-white">
+                {m.value}
+              </span>
+              <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium text-center leading-tight">
+                {m.label}
+              </span>
             </div>
           ))}
         </motion.div>
-
       </div>
     </section>
   );
