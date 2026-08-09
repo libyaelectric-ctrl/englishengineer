@@ -511,7 +511,7 @@ const registerRoutes = (
   registerAdminRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, limiters.global);
 
   registerProgressRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
-  registerReadingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
+  registerReadingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, aiService);
   registerWritingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, aiService);
   registerListeningRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
   registerSpeakingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
