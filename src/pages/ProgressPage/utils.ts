@@ -3,6 +3,7 @@ import { BookMarked, BookOpen, Headphones, Languages, MessageSquare, PenTool } f
 import { useEffect, useState } from 'react';
 
 import { RANK_THRESHOLDS } from '@/shared/constants/elo.constants';
+import { getRankIcon } from '@/shared/icons/registry';
 
 export const SKILLS = [
   {
@@ -95,30 +96,30 @@ export const getRank = (elo: number) => {
   if (elo >= RANK_THRESHOLDS.GRANDMASTER)
     return {
       label: 'Grandmaster',
-      icon: '👑',
+      icon: getRankIcon('grandmaster'),
       color: 'text-yellow-600 bg-yellow-50 border-yellow-200',
     };
   if (elo >= RANK_THRESHOLDS.DIAMOND)
     return {
       label: 'Diamond',
-      icon: '💎',
+      icon: getRankIcon('diamond'),
       color: 'text-cyan-600 bg-cyan-50 border-cyan-200',
     };
   if (elo >= RANK_THRESHOLDS.PLATINUM)
     return {
       label: 'Platinum',
-      icon: '🏆',
+      icon: getRankIcon('platinum'),
       color: 'text-indigo-600 bg-indigo-50 border-indigo-200',
     };
   if (elo >= RANK_THRESHOLDS.GOLD)
     return {
       label: 'Gold',
-      icon: '🥇',
+      icon: getRankIcon('gold'),
       color: 'text-amber-600 bg-amber-50 border-amber-200',
     };
   return {
     label: 'Silver',
-    icon: '🥈',
+    icon: getRankIcon('silver'),
     color: 'text-slate-600 bg-slate-50 border-slate-200',
   };
 };

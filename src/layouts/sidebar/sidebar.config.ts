@@ -1,3 +1,5 @@
+import type { LucideIcon } from 'lucide-react';
+
 import { ReactNode } from 'react';
 
 export interface SidebarStat {
@@ -15,7 +17,7 @@ export interface SidebarProgress {
 }
 
 export interface SidebarAction {
-  icon: string;
+  icon: LucideIcon;
   label: string;
   onClick: () => void;
   variant?: 'default' | 'primary' | 'warning';

@@ -17,7 +17,7 @@ interface ScenarioMeta {
 const SCENARIOS: ScenarioMeta[] = [
   {
     id: 'client',
-    title: '6. 🎙️ Client Defense Simulator',
+    title: 'Client Defense Simulator',
     subtitle: 'Defend schedule delays & budget overruns to tough client PMs',
     badge: 'Client PM',
     aiPrompt:
@@ -26,7 +26,7 @@ const SCENARIOS: ScenarioMeta[] = [
   },
   {
     id: 'toolbox',
-    title: '7. 🏗️ Toolbox Talk Practice',
+    title: 'Toolbox Talk Practice',
     subtitle: 'Deliver a 3-minute oral safety briefing to site workers',
     badge: 'HSE Briefing',
     aiPrompt:
@@ -35,7 +35,7 @@ const SCENARIOS: ScenarioMeta[] = [
   },
   {
     id: 'fidic',
-    title: '8. ⚖️ FIDIC Arbitration Board',
+    title: 'FIDIC Arbitration Board',
     subtitle: 'Oral claim presentation under FIDIC Sub-Clause 20.1',
     badge: 'Arbitration',
     aiPrompt:
@@ -44,7 +44,7 @@ const SCENARIOS: ScenarioMeta[] = [
   },
   {
     id: 'subcontractor',
-    title: '9. 🤝 Subcontractor Negotiation',
+    title: 'Subcontractor Negotiation',
     subtitle: 'Negotiate price pushbacks and manpower mobilization',
     badge: 'Commercial',
     aiPrompt:
@@ -53,7 +53,7 @@ const SCENARIOS: ScenarioMeta[] = [
   },
   {
     id: 'presentation',
-    title: '10. 📊 Technical Q&A Defense',
+    title: 'Technical Q&A Defense',
     subtitle: 'Defend engineering slide deck to technical directors',
     badge: 'Boardroom',
     aiPrompt:

@@ -1,3 +1,5 @@
+import type { LucideIcon } from 'lucide-react';
+
 import React, { useState } from 'react';
 
 import { cn } from '@/shared/utils/cn';
@@ -111,12 +113,12 @@ export function Progress({
 }
 
 export function Action({
-  icon,
+  icon: Icon,
   label,
   onClick,
   variant = 'default',
 }: {
-  icon: string;
+  icon: LucideIcon;
   label: string;
   onClick: () => void;
   variant?: string;
@@ -134,7 +136,7 @@ export function Action({
         v[variant as keyof typeof v] || v.default
       )}
     >
-      <span>{icon}</span>
+      <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
       <span className="flex-1 text-left">{label}</span>
       <svg className="h-3 w-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

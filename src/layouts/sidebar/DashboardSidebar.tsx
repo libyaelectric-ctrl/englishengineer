@@ -1,3 +1,5 @@
+import { Bot, Globe, Target, Users, Zap } from 'lucide-react';
+
 import { useNavigate } from 'react-router-dom';
 
 import { useAuthStore } from '@/features/auth';
@@ -62,17 +64,21 @@ export function DashboardSidebar() {
       <Section title="Quick Actions">
         <div className="space-y-1.5">
           <Action
-            icon="⚡"
+            icon={Zap}
             label="Command Palette (Cmd+K)"
             onClick={() =>
               window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))
             }
             variant="primary"
           />
-          <Action icon="🌐" label="Instant Translator" onClick={() => navigate('/translator')} />
-          <Action icon="🎯" label="Placement Level Test" onClick={() => navigate('/placement')} />
-          <Action icon="🤖" label="AI Copilot & Tools" onClick={() => navigate('/tools')} />
-          <Action icon="👥" label="Team Management" onClick={() => navigate('/team')} />
+          <Action icon={Globe} label="Instant Translator" onClick={() => navigate('/translator')} />
+          <Action
+            icon={Target}
+            label="Placement Level Test"
+            onClick={() => navigate('/placement')}
+          />
+          <Action icon={Bot} label="AI Copilot & Tools" onClick={() => navigate('/tools')} />
+          <Action icon={Users} label="Team Management" onClick={() => navigate('/team')} />
         </div>
       </Section>
     </>

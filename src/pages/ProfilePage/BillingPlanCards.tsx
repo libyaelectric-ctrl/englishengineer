@@ -1,3 +1,5 @@
+import { Mic } from 'lucide-react';
+
 import { ProgressBar } from '@/shared/components/ProgressBar';
 
 import type { SubscriptionSnapshot } from '@/features/billing';
@@ -94,7 +96,7 @@ const VoiceMinutesCard = ({
   <div className="col-span-full space-y-1.5 mt-1">
     <div className="flex justify-between text-xs">
       <span className="font-bold text-foreground flex items-center gap-1.5">
-        🎙️ Monthly Voice Minutes
+        <Mic className="h-3.5 w-3.5 text-primary" aria-hidden="true" /> Monthly Voice Minutes
       </span>
       <span className="font-bold text-foreground">
         {planId === 'master' ? `${voiceMinutesUsed} / 300 min` : 'Unlimited'}

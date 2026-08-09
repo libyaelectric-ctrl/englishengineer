@@ -1,4 +1,4 @@
-import { Brain, Layers, type LucideIcon, Network, Zap } from 'lucide-react';
+import { Brain, Flame, Layers, type LucideIcon, Network, Zap } from 'lucide-react';
 import { motion } from 'motion/react';
 
 import { type GraphNode } from '@/pages/CurriculumPage/curriculum-data';
@@ -27,7 +27,7 @@ export const SkillSidebar = ({
   highestSkill: { label: string; icon: LucideIcon };
   lowestSkill: { label: string; icon: LucideIcon };
   totalCEFR: string;
-  rank: { icon: string; label: string; color: string };
+  rank: { icon: LucideIcon; label: string; color: string };
   selectedGraphNode: GraphNode | null;
   setSelectedGraphNode: (node: GraphNode | null) => void;
 }) => {
@@ -36,7 +36,7 @@ export const SkillSidebar = ({
       <div className="rounded-xl border border-primary/25 bg-surface/80 p-4 shadow-sm mb-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
-            <span className="text-amber-500">🔥</span> 7 Day Active Streak
+            <Flame className="h-3.5 w-3.5 text-amber-500" aria-hidden="true" /> 7 Day Active Streak
           </div>
           <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
             Top 10% Active
@@ -95,8 +95,8 @@ export const SkillSidebar = ({
           </div>
           <div className="flex items-center justify-between text-xs font-medium">
             <span className="text-muted-copy">Rank</span>
-            <span className="font-bold text-foreground">
-              {rank.icon} {rank.label}
+            <span className="inline-flex items-center gap-1 font-bold text-foreground">
+              <rank.icon className="h-3.5 w-3.5" aria-hidden="true" /> {rank.label}
             </span>
           </div>
         </div>
