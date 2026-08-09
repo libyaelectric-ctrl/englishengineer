@@ -4,7 +4,7 @@ import type {
   TranslationKey,
 } from './localization.types';
 
-export const INTERFACE_LANGUAGES: InterfaceLanguageOption[] = [
+const LANGUAGE_OPTIONS: InterfaceLanguageOption[] = [
   { id: 'en', label: 'English', nativeLabel: 'English', available: true, flag: '🇬🇧' },
   { id: 'tr', label: 'Turkish', nativeLabel: 'Türkçe', available: true, flag: '🇹🇷' },
   { id: 'ar', label: 'Arabic', nativeLabel: 'العربية', available: true, flag: '🇸🇦', dir: 'rtl' },
@@ -21,6 +21,10 @@ export const INTERFACE_LANGUAGES: InterfaceLanguageOption[] = [
   { id: 'id', label: 'Indonesian', nativeLabel: 'Bahasa Indonesia', available: true, flag: '🇮🇩' },
   { id: 'nl', label: 'Dutch', nativeLabel: 'Nederlands', available: true, flag: '🇳🇱' },
 ];
+
+export const INTERFACE_LANGUAGES: InterfaceLanguageOption[] = LANGUAGE_OPTIONS.slice().sort(
+  (a, b) => a.label.localeCompare(b.label, 'en')
+);
 
 export const AVAILABLE_INTERFACE_LANGUAGES = INTERFACE_LANGUAGES.filter(
   (
