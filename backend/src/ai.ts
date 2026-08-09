@@ -37,6 +37,8 @@ const DEFAULT_PLAN_LIMITS: { daily: number | null; monthly: number } = { daily: 
 
 const getPlanLimits = (planId: string) => PLAN_AI_LIMITS[planId] ?? DEFAULT_PLAN_LIMITS;
 
+export { getPlanLimits };
+
 const resolvePlanId = (
   subscription: SubscriptionSnapshot | null,
   configured: boolean
@@ -66,11 +68,15 @@ const checkCostLimits = (userId: string) => {
     throw new ApiError(429, 'user_rate_limit_exceeded', limits.reason ?? 'Rate limit exceeded.');
 };
 
+export { checkCostLimits };
+
 const isLimitReached = (planId: string, count: number) => {
   const limits = getPlanLimits(planId);
   if (limits.daily !== null) return count >= limits.daily;
   return count >= limits.monthly;
 };
+
+export { isLimitReached };
 
 const throwLimitError = (planId: string): never => {
   const limits = getPlanLimits(planId);
@@ -88,6 +94,8 @@ const getWindowMs = (planId: string) => {
   const limits = getPlanLimits(planId);
   return limits.daily !== null ? AI_WINDOW_MS : AI_MONTH_WINDOW_MS;
 };
+
+export { getWindowMs };
 
 const countRequestsInWindow = async (
   ledger: { countRecentRequests: (userId: string, planId: string) => Promise<number> },

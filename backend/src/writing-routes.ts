@@ -1,8 +1,12 @@
 import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
 import { randomUUID } from 'node:crypto';
 
+import { checkCostLimits, createAIService } from './ai.js';
 import { ApiError } from './errors.js';
+import { CircuitBreaker } from './utils/circuit-breaker.js';
 import { WritingSubmitBodySchema, validateBody } from './validation.js';
+
+type AiService = ReturnType<typeof createAIService>;
 
 interface WritingPrompt {
   id: string;
@@ -105,6 +109,14 @@ const WRITING_PROMPTS: WritingPrompt[] = [
 // Per-user submission store
 const submissionStore = new Map<string, WritingSubmission[]>();
 
+const writingCircuitBreaker = new CircuitBreaker('WritingAI', 5, 30000);
+
+// Rate limiting: reuse the same per-user cost limiter as the AI routes so a
+// writing submit is never an unbounded AI spend vector.
+const enforceAiLimits = (userId: string): void => {
+  checkCostLimits(userId);
+};
+
 function getUserSubmissions(userId: string): WritingSubmission[] {
   if (!submissionStore.has(userId)) {
     submissionStore.set(userId, []);
@@ -133,7 +145,63 @@ function fallbackGrade(
   return { score, grammarScore, vocabularyScore, coherenceScore, structureScore, feedback };
 }
 
-export const registerWritingRoutes = (app: Express, requireBackendAuth: RequestHandler): void => {
+// Maps the structured AI evaluation (json-structure.md schema) onto the
+// existing WritingSubmission score shape. The AI reports clarity/tone which
+// have no direct backend counterpart, so clarity feeds coherenceScore and the
+// tone/overall figures are combined into structureScore.
+function mapAiScores(
+  structured: Record<string, unknown>,
+  text: string
+): Omit<WritingSubmission, 'id' | 'promptId' | 'text' | 'submittedAt' | 'status'> {
+  const raw = (structured.overallScore ?? {}) as Record<string, unknown>;
+  const clamp = (v: unknown): number => {
+    const n = typeof v === 'number' ? v : Number(v);
+    if (!Number.isFinite(n)) return 0;
+    return Math.max(0, Math.min(100, Math.round(n)));
+  };
+  const grammarScore = clamp(raw.grammar);
+  const vocabularyScore = clamp(raw.vocabulary);
+  const clarity = clamp(raw.clarity);
+  const tone = clamp(raw.tone);
+  const overall = clamp(raw.overall);
+  // clarity maps onto the existing coherence slot; structure is derived from
+  // the average of tone and overall since the JSON schema has no structure field.
+  const coherenceScore = clarity > 0 ? clarity : fallbackGrade(text).coherenceScore;
+  const structureScore =
+    tone > 0 && overall > 0
+      ? Math.round((tone + overall) / 2)
+      : fallbackGrade(text).structureScore;
+  const score = overall > 0 ? overall : fallbackGrade(text).score;
+
+  const feedback: Record<string, string> = {};
+  const weaknesses = Array.isArray(structured.weaknesses)
+    ? (structured.weaknesses as unknown[]).filter((w): w is string => typeof w === 'string')
+    : [];
+  if (weaknesses.length > 0) feedback.grammar = weaknesses.slice(0, 2).join(' ');
+  const corrections = Array.isArray(structured.corrections)
+    ? (structured.corrections as unknown[]).filter(
+        (c): c is { original: unknown } => typeof c === 'object' && c !== null
+      )
+    : [];
+  if (corrections.length > 0) {
+    feedback.vocabulary = `Suggested correction: ${(corrections[0] as { original: unknown }).original}`;
+  }
+  const grammarNotes = Array.isArray(structured.grammarNotes)
+    ? (structured.grammarNotes as unknown[]).filter((n): n is { rule: unknown } => typeof n === 'object' && n !== null)
+    : [];
+  if (grammarNotes.length > 0 && !feedback.grammar) {
+    feedback.grammar = `Rule: ${(grammarNotes[0] as { rule: unknown }).rule}`;
+  }
+  if (score >= 85) feedback.overall = 'Excellent work. Keep practicing at this level.';
+
+  return { score, grammarScore, vocabularyScore, coherenceScore, structureScore, feedback };
+}
+
+export const registerWritingRoutes = (
+  app: Express,
+  requireBackendAuth: RequestHandler,
+  aiService: AiService
+): void => {
   app.get(
     '/api/writing/prompts',
     requireBackendAuth,
@@ -168,17 +236,51 @@ export const registerWritingRoutes = (app: Express, requireBackendAuth: RequestH
         const userId = request.auth?.userId;
         if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
+        enforceAiLimits(userId);
+
         const { promptId, content } = request.validatedBody as {
           promptId?: string;
           content?: string;
         };
-        const evaluation = fallbackGrade(content ?? '');
+        const text = content ?? '';
+        const prompt = WRITING_PROMPTS.find((p) => p.id === promptId);
+
+        let evaluation: Omit<
+          WritingSubmission,
+          'id' | 'promptId' | 'text' | 'submittedAt' | 'status'
+        >;
+
+        try {
+          const aiPrompt = prompt
+            ? `Evaluate this engineering student's written response.\nTask: "${prompt.prompt}" (word limit: ${prompt.wordLimit})\nStudent's submission:\n"""\n${text}\n"""`
+            : `Evaluate this engineering student's written response.\nStudent's submission:\n"""\n${text}\n"""`;
+
+          const aiResult = await writingCircuitBreaker.execute(() =>
+            aiService.complete('evaluateEngineeringEnglish', {
+              prompt: aiPrompt,
+              context: {},
+            })
+          );
+
+          // If AI is running in mock mode or returned no structured result,
+          // fall back to the deterministic heuristic grader so users never
+          // receive an empty or broken response.
+          if (aiResult.mockMode || !aiResult.structuredResult) {
+            evaluation = fallbackGrade(text);
+          } else {
+            evaluation = mapAiScores(aiResult.structuredResult, text);
+          }
+        } catch {
+          // Timeout, circuit open, provider error, ... -> heuristic fallback.
+          evaluation = fallbackGrade(text);
+        }
+
         const submissionId = randomUUID();
 
         const submission: WritingSubmission = {
           id: submissionId,
           promptId: promptId ?? 'unknown',
-          text: content ?? '',
+          text,
           score: evaluation.score,
           grammarScore: evaluation.grammarScore,
           vocabularyScore: evaluation.vocabularyScore,
