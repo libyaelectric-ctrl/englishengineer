@@ -22,7 +22,7 @@ import { LanguageStep } from './steps/LanguageStep';
 import { PlacementStep } from './steps/PlacementStep';
 import { PlanStep } from './steps/PlanStep';
 
-const STEPS = ['language', 'branch', 'placement', 'goal', 'package'] as const;
+const STEPS = ['branch', 'language', 'placement', 'goal', 'package'] as const;
 type Step = (typeof STEPS)[number];
 
 const labels: Record<Step, TranslationKey> = {
@@ -35,7 +35,7 @@ const labels: Record<Step, TranslationKey> = {
 
 const parseStep = (pathname: string): Step => {
   const routeStep = pathname.split('/').at(-1);
-  return STEPS.includes(routeStep as Step) ? (routeStep as Step) : 'language';
+  return STEPS.includes(routeStep as Step) ? (routeStep as Step) : 'branch';
 };
 
 const OnboardingFooter = ({
