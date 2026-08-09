@@ -168,7 +168,7 @@ const LoginPage = () => {
                   <button
                     type="button"
                     onClick={() => h.isSignUpMode && h.toggleSignUpMode()}
-                    className={`rounded-md px-3.5 py-1 font-bold transition-all cursor-pointer text-xs ${
+                    className={`rounded-[var(--radius-card)] px-3.5 py-1 font-bold transition-all cursor-pointer text-xs ${
                       !h.isSignUpMode
                         ? 'bg-primary text-primary-foreground shadow-sm'
                         : 'text-muted-copy hover:text-foreground'
@@ -179,7 +179,7 @@ const LoginPage = () => {
                   <button
                     type="button"
                     onClick={() => !h.isSignUpMode && h.toggleSignUpMode()}
-                    className={`rounded-md px-3.5 py-1 font-bold transition-all cursor-pointer text-xs ${
+                    className={`rounded-[var(--radius-card)] px-3.5 py-1 font-bold transition-all cursor-pointer text-xs ${
                       h.isSignUpMode
                         ? 'bg-primary text-primary-foreground shadow-sm'
                         : 'text-muted-copy hover:text-foreground'

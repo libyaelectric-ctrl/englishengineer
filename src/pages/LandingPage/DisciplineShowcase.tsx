@@ -215,7 +215,7 @@ export function DisciplineShowcase() {
                     {DISCIPLINE_SCENARIOS[activeTab].map((s) => (
                       <div
                         key={s}
-                        className="flex items-center gap-2 rounded-md bg-surface/80 border border-border-soft p-2 text-xs font-medium text-foreground"
+                        className="flex items-center gap-2 rounded-[var(--radius-card)] bg-surface/80 border border-border-soft p-2 text-xs font-medium text-foreground"
                       >
                         <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
                         <span className="truncate">{s}</span>
@@ -290,7 +290,7 @@ export function DisciplineShowcase() {
                   </p>
                   <Link
                     to="/signup"
-                    className="w-full inline-flex items-center justify-center gap-1.5 rounded-md bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow transition-all hover:bg-primary/95"
+                    className="w-full inline-flex items-center justify-center gap-1.5 rounded-[var(--radius-card)] bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow transition-all hover:bg-primary/95"
                   >
                     <span>{translate('landing.startFree')}</span>
                     <ArrowUpRight className="h-3.5 w-3.5" />

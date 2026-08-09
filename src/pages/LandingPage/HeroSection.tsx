@@ -103,7 +103,7 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
                       setDemoInput(p.raw);
                       handleRunAnalysis(p);
                     }}
-                    className={`rounded-md px-2.5 py-1 text-[11px] font-bold transition-all cursor-pointer border ${
+                    className={`rounded-[var(--radius-card)] px-2.5 py-1 text-[11px] font-bold transition-all cursor-pointer border ${
                       activePresetIndex === idx
                         ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                         : 'bg-background border-border-soft text-muted-copy hover:text-foreground hover:border-primary/40'

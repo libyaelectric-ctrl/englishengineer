@@ -178,7 +178,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
                       setInputText(sample.text);
                       setAnalysisResult(null);
                     }}
-                    className="rounded-md bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[10px] font-bold text-primary hover:bg-primary/20 transition cursor-pointer"
+                    className="rounded-[var(--radius-card)] bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[10px] font-bold text-primary hover:bg-primary/20 transition cursor-pointer"
                   >
                     {translate(sample.loadKey)}
                   </button>
