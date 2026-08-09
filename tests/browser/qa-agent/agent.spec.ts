@@ -3,14 +3,14 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import {
+  type QaFinding,
+  type QaPageReport,
   attachErrorCollectors,
   findOverflow,
   renderMarkdown,
   scanAccessibility,
   scanDeadControls,
   scanEmptyState,
-  type QaFinding,
-  type QaPageReport,
 } from './qa-helpers';
 
 const REPORT_DIR = resolve('qa-report');
@@ -80,7 +80,12 @@ async function auditPage(
 
   const a11y = await scanAccessibility(page);
   for (const issue of a11y) {
-    findings.push({ severity: 'warning', category: 'accessibility', message: issue, url: page.url() });
+    findings.push({
+      severity: 'warning',
+      category: 'accessibility',
+      message: issue,
+      url: page.url(),
+    });
   }
 
   const dead = await scanDeadControls(page);
@@ -141,11 +146,15 @@ test.describe('QA Agent — insan gibi sayfa sayfa denetim', () => {
     await test.step('Demo girişi', async () => {
       const collector = attachErrorCollectors(page);
       await page.goto('/login', { waitUntil: 'domcontentloaded', timeout: 30000 });
-      const demoBtn = page.getByRole('button', { name: /launch instant demo|try demo|demo/i }).first();
+      const demoBtn = page
+        .getByRole('button', { name: /launch instant demo|try demo|demo/i })
+        .first();
       if (await demoBtn.isVisible()) {
         await demoBtn.click();
       }
-      await page.waitForURL(/\/dashboard|\/welcome|\/curriculum/, { timeout: 20000 }).catch(() => {});
+      await page
+        .waitForURL(/\/dashboard|\/welcome|\/curriculum/, { timeout: 20000 })
+        .catch(() => {});
       await page.waitForTimeout(1500);
       const current = new URL(page.url()).pathname;
       const report = await auditPage(page, current, true);
@@ -184,7 +193,10 @@ test.describe('QA Agent — insan gibi sayfa sayfa denetim', () => {
       const isDisabled = await continueBtn.isDisabled().catch(() => true);
       if (isDisabled) {
         // Kullanıcı önce bir dal seçmek zorunda.
-        const branch = page.locator('button').filter({ hasText: /civil|mechanical|electrical/i }).first();
+        const branch = page
+          .locator('button')
+          .filter({ hasText: /civil|mechanical|electrical/i })
+          .first();
         if (await branch.isVisible()) {
           await branch.click();
           await page.waitForTimeout(400);
@@ -208,16 +220,74 @@ test.describe('QA Agent — insan gibi sayfa sayfa denetim', () => {
       }
     });
 
-    // C2. Vocabulary arama: inputa yazıp sonuç görmek.
+    // C2. Vocabulary arama: Search butonu -> modal -> inputa yazıp sonuç görmek.
     await test.step('Vocabulary arama', async () => {
+      // Vocabulary ürün sayfası olduğu için önce demo girişi gerekir.
+      await page.goto('/login', { waitUntil: 'domcontentloaded' });
+      const demoBtn = page
+        .getByRole('button', { name: /launch instant demo|try demo|demo/i })
+        .first();
+      if (await demoBtn.isVisible().catch(() => false)) {
+        await demoBtn.click();
+      }
+      await page
+        .waitForURL(/\/dashboard|\/welcome|\/curriculum/, { timeout: 20000 })
+        .catch(() => {});
+      await page.waitForTimeout(800);
       await page.goto('/vocabulary', { waitUntil: 'domcontentloaded' });
-      await page.waitForTimeout(1000);
-      const search = page.locator('input[type="search"], input[placeholder*="earch"], input[placeholder*="ara"]').first();
-      if (await search.isVisible().catch(() => false)) {
-        await search.fill('pump');
-        await page.waitForTimeout(800);
-        const results = await page.evaluate(() => document.body.innerText.length);
-        if (results < 30) {
+      await page.waitForTimeout(1200);
+      // Demo oturumu yeni context'te welcome'a düşer; bazen auth tam oturmadan
+      // ürün sayfasına gidilince login'e döner. Login'e düştüysek tekrar dene.
+      if (new URL(page.url()).pathname === '/login') {
+        const demoBtn2 = page
+          .getByRole('button', { name: /launch instant demo|try demo|demo/i })
+          .first();
+        if (await demoBtn2.isVisible().catch(() => false)) {
+          await demoBtn2.click();
+        }
+        await page
+          .waitForURL(/\/dashboard|\/welcome|\/curriculum/, { timeout: 20000 })
+          .catch(() => {});
+        await page.goto('/vocabulary', { waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(1200);
+      }
+      // Arama bir modal üzerinden açılır: "Search vocabulary" butonu -> input.
+      const searchBtn = page.getByTitle('Search vocabulary');
+      let searchVisible = false;
+      try {
+        await searchBtn.waitFor({ state: 'visible', timeout: 5000 });
+        searchVisible = true;
+      } catch {
+        searchVisible = false;
+      }
+      if (searchVisible) {
+        await searchBtn.click();
+        await page.waitForTimeout(600);
+        const modalInput = page
+          .locator(
+            'input[type="search"], input[placeholder*="Type a word" i], input[placeholder*="earch" i], input[placeholder*="ara" i]'
+          )
+          .first();
+        if (await modalInput.isVisible().catch(() => false)) {
+          await modalInput.fill('pump');
+          await page.waitForTimeout(800);
+          const results = await page.evaluate(() => document.body.innerText.length);
+          if (results < 30) {
+            reports.push({
+              route: '/vocabulary',
+              title: 'Vocabulary arama',
+              findings: [
+                {
+                  severity: 'warning',
+                  category: 'form',
+                  message: 'Arama sonrası sayfa içeriği çok az görünüyor, muhtemelen sonuç yok.',
+                  url: page.url(),
+                },
+              ],
+              checkedAt: new Date().toISOString(),
+            });
+          }
+        } else {
           reports.push({
             route: '/vocabulary',
             title: 'Vocabulary arama',
@@ -225,7 +295,7 @@ test.describe('QA Agent — insan gibi sayfa sayfa denetim', () => {
               {
                 severity: 'warning',
                 category: 'form',
-                message: 'Arama sonrası sayfa içeriği çok az görünüyor, muhtemelen sonuç yok.',
+                message: 'Search butonu modal açtı ama içinde arama inputu bulunamadı.',
                 url: page.url(),
               },
             ],
@@ -240,7 +310,7 @@ test.describe('QA Agent — insan gibi sayfa sayfa denetim', () => {
             {
               severity: 'improvement',
               category: 'form',
-              message: 'Sayfada arama inputu bulunamadı.',
+              message: 'Sayfada "Search vocabulary" butonu bulunamadı.',
               url: page.url(),
             },
           ],
@@ -249,18 +319,23 @@ test.describe('QA Agent — insan gibi sayfa sayfa denetim', () => {
       }
     });
 
-    // C3. Login form validation: boş submit denemesi.
+    // C3. Login form validation: boş submit denemesi -> native veya React uyarı.
     await test.step('Login form validation', async () => {
       await page.goto('/login', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(600);
       const submitBtn = page.getByRole('button', { name: /sign in|log in|giriş/i }).first();
       if (await submitBtn.isVisible().catch(() => false)) {
         await submitBtn.click();
-        await page.waitForTimeout(500);
+        await page.waitForTimeout(600);
         const hasValidation = await page.evaluate(() => {
+          // Native HTML5 validation marka required/boş alanlar invalid olur.
+          const invalidNative = document.querySelectorAll('input:invalid').length;
           const invalid = document.querySelectorAll('[aria-invalid="true"]');
-          const errText = (document.body.innerText || '').match(/required|geçerli|zorunlu|invalid|hatal/i);
-          return invalid.length > 0 || Boolean(errText);
+          const errText = (document.body.innerText || '').match(
+            /required|geçerli|zorunlu|invalid|hatal|fill in|eksik|alan/i
+          );
+          const alertBox = document.querySelector('[role="alert"]');
+          return invalidNative > 0 || invalid.length > 0 || Boolean(errText) || Boolean(alertBox);
         });
         if (!hasValidation) {
           reports.push({

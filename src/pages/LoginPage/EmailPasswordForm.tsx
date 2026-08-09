@@ -40,6 +40,8 @@ export const EmailPasswordForm = ({
             <input
               type="email"
               value={email}
+              required
+              aria-required="true"
               onChange={(e) => onEmailChange(e.target.value)}
               className="h-12 w-full rounded-[4px] border border-border-soft bg-surface pl-10 pr-4 text-sm text-foreground placeholder:text-muted-copy/50 outline-none focus:border-primary focus:ring-1 focus:ring-primary/10 transition-colors font-bold shadow-sm"
               placeholder="you@example.com"
@@ -66,6 +68,9 @@ export const EmailPasswordForm = ({
             <input
               type="password"
               value={password}
+              required
+              aria-required="true"
+              minLength={6}
               onChange={(e) => onPasswordChange(e.target.value)}
               className="h-12 w-full rounded-[4px] border border-border-soft bg-surface pl-10 pr-4 text-sm text-foreground placeholder:text-muted-copy/50 outline-none focus:border-primary focus:ring-1 focus:ring-primary/10 transition-colors font-bold shadow-sm"
               placeholder="••••••••"
