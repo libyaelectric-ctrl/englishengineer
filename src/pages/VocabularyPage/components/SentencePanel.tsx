@@ -1,8 +1,10 @@
 import { ChevronDown, Sparkles } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 import { useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
+import { getIcon } from '@/shared/icons/registry';
 
 import { type SentenceExample, SentenceGeneratorService } from '@/features/vocabulary';
 
@@ -13,10 +15,17 @@ interface SentencePanelProps {
 }
 
 const CONTEXT_LABELS: Record<string, string> = {
-  workplace: '🏢 Workplace',
-  technical: '⚙️ Technical',
-  daily: '💬 Daily',
-  formal: '📋 Formal',
+  workplace: 'Workplace',
+  technical: 'Technical',
+  daily: 'Daily',
+  formal: 'Formal',
+};
+
+const CONTEXT_ICONS: Record<string, LucideIcon> = {
+  workplace: (getIcon('building') ?? Sparkles) as LucideIcon,
+  technical: (getIcon('settings') ?? Sparkles) as LucideIcon,
+  daily: (getIcon('message') ?? Sparkles) as LucideIcon,
+  formal: (getIcon('clipboard-check') ?? Sparkles) as LucideIcon,
 };
 
 const DIFFICULTY_COLORS: Record<string, string> = {
@@ -58,7 +67,13 @@ export function SentencePanel({ word, partOfSpeech, meaning }: SentencePanelProp
           {sentences.map((s, i) => (
             <div key={i} className="rounded-[4px] border border-border-soft bg-surface p-2.5">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-bold text-muted-copy">
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-muted-copy">
+                  {(() => {
+                    const ContextIcon = CONTEXT_ICONS[s.context];
+                    return ContextIcon ? (
+                      <ContextIcon className="h-3 w-3" aria-hidden="true" />
+                    ) : null;
+                  })()}
                   {CONTEXT_LABELS[s.context] ?? s.context}
                 </span>
                 <span

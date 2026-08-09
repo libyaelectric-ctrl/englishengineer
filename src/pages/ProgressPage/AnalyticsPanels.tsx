@@ -1,3 +1,5 @@
+import { Zap } from 'lucide-react';
+
 import { Link } from 'react-router-dom';
 
 import { ProgressBar } from '@/shared/components/ProgressBar';
@@ -272,8 +274,8 @@ const DimensionCardsGrid = ({
 const QuickWorkoutBanner = () => (
   <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
     <div className="flex items-center gap-3">
-      <div className="rounded-lg bg-primary/10 px-2.5 py-1 text-primary font-bold text-[10px] uppercase tracking-wider">
-        ⚡ Quick Workout
+      <div className="inline-flex items-center gap-1 rounded-lg bg-primary/10 px-2.5 py-1 text-primary font-bold text-[10px] uppercase tracking-wider">
+        <Zap className="h-3 w-3" aria-hidden="true" /> Quick Workout
       </div>
       <div>
         <p className="text-xs font-bold text-foreground">

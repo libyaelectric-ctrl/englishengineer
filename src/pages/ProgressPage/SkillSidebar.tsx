@@ -1,4 +1,4 @@
-import { Brain, Layers, type LucideIcon, Network } from 'lucide-react';
+import { Brain, Layers, type LucideIcon, Network, Zap } from 'lucide-react';
 import { motion } from 'motion/react';
 
 import { type GraphNode } from '@/pages/CurriculumPage/curriculum-data';
@@ -52,7 +52,9 @@ export const SkillSidebar = ({
           </div>
         </div>
         <div className="pt-2 border-t border-border-soft/60 flex items-center justify-between text-[10px] font-medium text-muted-copy">
-          <span>⚡ Weekly Focus:</span>
+          <span className="inline-flex items-center gap-1">
+            <Zap className="h-3 w-3 text-primary" aria-hidden="true" /> Weekly Focus:
+          </span>
           <span className="font-bold text-foreground">Technical PRs & Reports</span>
         </div>
       </div>

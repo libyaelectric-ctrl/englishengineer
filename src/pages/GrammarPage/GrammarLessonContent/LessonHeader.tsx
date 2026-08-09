@@ -89,7 +89,12 @@ export const LessonHeader = ({
           <span
             className={`shrink-0 whitespace-nowrap rounded-[4px] border font-bold px-3 py-1 text-[10px] uppercase tracking-wider ${badgeStyle}`}
           >
-            {selectedStatus === 'Mastered' && '⭐ '}
+            {selectedStatus === 'Mastered' && (
+              <Star
+                className="mr-1 inline h-3 w-3 fill-amber-400 text-amber-400"
+                aria-hidden="true"
+              />
+            )}
             {selectedStatus}
           </span>
           {hint && (
