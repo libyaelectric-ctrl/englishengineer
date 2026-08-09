@@ -69,7 +69,7 @@ export const LandingPage = () => {
 
           <div className="flex items-center gap-3">
             {/* Source languages flow toward fixed English output. */}
-            <div className="hidden items-center gap-1 overflow-x-auto sm:flex">
+            <div className="hidden items-center gap-1 lg:flex">
               {otherLanguages.map((l) => (
                 <button
                   key={l.id}
@@ -104,8 +104,8 @@ export const LandingPage = () => {
               )}
             </div>
 
-            {/* Mobile language selector */}
-            <div className="relative sm:hidden">
+            {/* Compact language selector (below lg) */}
+            <div className="relative lg:hidden">
               <button
                 onClick={() => setLangOpen(!langOpen)}
                 className="flex h-8 min-w-8 items-center justify-center gap-0.5 rounded-[var(--radius-card)] border border-[var(--color-border-soft)] px-1"
