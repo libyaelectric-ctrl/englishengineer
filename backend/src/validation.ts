@@ -137,6 +137,12 @@ export const ReadingScoreBodySchema = z.object({
   score: z.number().int().min(0).max(100),
 });
 
+export const ReadingGenerateBodySchema = z.object({
+  discipline: z.string().trim().min(1).max(100).optional(),
+  level: z.string().trim().min(1).max(20).optional(),
+  targetLanguage: z.string().trim().min(1).max(10).optional(),
+});
+
 const formatZodError = (error: z.ZodError) => {
   return error.issues.map((i) => ({
     path: i.path.join('.'),

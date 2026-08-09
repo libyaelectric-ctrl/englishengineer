@@ -1,7 +1,13 @@
 import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
+import { randomUUID } from 'node:crypto';
 
+import { checkCostLimits, createAIService } from './ai.js';
+import { getOrSet } from './cache/redis-cache.service.js';
 import { ApiError } from './errors.js';
-import { ReadingScoreBodySchema, validateBody } from './validation.js';
+import { CircuitBreaker } from './utils/circuit-breaker.js';
+import { ReadingGenerateBodySchema, ReadingScoreBodySchema, validateBody } from './validation.js';
+
+type AiService = ReturnType<typeof createAIService>;
 
 interface ReadingItem {
   id: string;
@@ -98,6 +104,37 @@ const READING_ITEMS: ReadingItem[] = [
 // Per-user progress store: userId -> Map<contentId, {score, category}>
 const progressStore = new Map<string, Map<string, { score: number; category: string }>>();
 
+const readingCircuitBreaker = new CircuitBreaker('ReadingAI', 5, 30000);
+
+// 24h TTL for AI-generated passages so repeat requests reuse the cache instead
+// of burning another AI call.
+const READING_GENERATE_TTL_SECONDS = 24 * 60 * 60;
+
+const enforceAiLimits = (userId: string): void => {
+  checkCostLimits(userId);
+};
+
+// Maps the `reading` block produced by the content-structure.md schema onto
+// the existing ReadingItem shape used by the static feed.
+function mapGeneratedReading(
+  structured: Record<string, unknown>,
+  discipline: string,
+  level: string
+): ReadingItem | null {
+  const reading = (structured.reading ?? {}) as Record<string, unknown>;
+  const title = typeof reading.title === 'string' ? reading.title : '';
+  const passage = typeof reading.passage === 'string' ? reading.passage : '';
+  if (!title || !passage) return null;
+  return {
+    id: `ai-${randomUUID()}`,
+    title,
+    category: discipline,
+    level,
+    text: passage,
+    wordCount: passage.split(/\s+/).filter(Boolean).length,
+  };
+}
+
 function getUserProgress(userId: string): Map<string, { score: number; category: string }> {
   if (!progressStore.has(userId)) {
     progressStore.set(userId, new Map());
@@ -105,7 +142,103 @@ function getUserProgress(userId: string): Map<string, { score: number; category:
   return progressStore.get(userId)!;
 }
 
-export const registerReadingRoutes = (app: Express, requireBackendAuth: RequestHandler): void => {
+export const registerReadingRoutes = (
+  app: Express,
+  requireBackendAuth: RequestHandler,
+  aiService: AiService
+): void => {
+  app.post(
+    '/api/reading/generate',
+    requireBackendAuth,
+    validateBody(ReadingGenerateBodySchema),
+    async (request: Request, response: Response, next: NextFunction) => {
+      try {
+        const userId = request.auth?.userId;
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+
+        enforceAiLimits(userId);
+
+        const { discipline, level, targetLanguage } = request.validatedBody as {
+          discipline?: string;
+          level?: string;
+          targetLanguage?: string;
+        };
+
+        // Discipline is required to scope the generated passage. When omitted
+        // we cannot know the user's field, so the client must provide it.
+        const resolvedDiscipline = discipline?.trim() || 'general';
+        const resolvedLevel = level?.trim() || 'B2';
+        const resolvedTargetLanguage = targetLanguage?.trim() || 'en';
+
+        // Unknown disciplines cannot be matched to a static fallback, so they
+        // are rejected instead of silently returning unrelated content.
+        if (
+          resolvedDiscipline !== 'general' &&
+          !READING_ITEMS.some((i) => i.category === resolvedDiscipline)
+        ) {
+          throw new ApiError(
+            400,
+            'invalid_discipline',
+            `Unsupported engineering discipline: ${resolvedDiscipline}`
+          );
+        }
+
+        const cacheKey = `reading:ai:${resolvedDiscipline}:${resolvedLevel}:${resolvedTargetLanguage}`;
+
+        const { value: item } = await getOrSet<ReadingItem>(
+          cacheKey,
+          READING_GENERATE_TTL_SECONDS,
+          async () => {
+            const prompt = [
+              'Generate a complete, personalized engineering English lesson.',
+              `Discipline: ${resolvedDiscipline}`,
+              `Target language for translations/explanations: ${resolvedTargetLanguage}`,
+              `CEFR level: ${resolvedLevel}`,
+              'Focus skill: reading',
+              'Engineering context: realistic site, project, and office scenarios.',
+              'Return ONLY a valid JSON object matching the content structure.',
+            ].join('\n');
+
+            const aiResult = await readingCircuitBreaker.execute(() =>
+              aiService.complete('generateContent', {
+                prompt,
+                context: {
+                  discipline: resolvedDiscipline,
+                  targetLevel: resolvedLevel,
+                },
+              })
+            );
+
+            // AI in mock mode or unparseable result -> fall back to a static
+            // reading item filtered by discipline so the user still gets content.
+            if (aiResult.mockMode || !aiResult.structuredResult) {
+              const fallback = READING_ITEMS.find(
+                (i) => i.category === resolvedDiscipline
+              );
+              if (fallback) return fallback;
+              return READING_ITEMS[0];
+            }
+
+            return (
+              mapGeneratedReading(aiResult.structuredResult, resolvedDiscipline, resolvedLevel) ??
+              READING_ITEMS[0]
+            );
+          }
+        );
+
+        response.json({
+          success: true,
+          item,
+          source: item.id.startsWith('ai-') ? 'ai-generated' : 'static',
+          discipline: resolvedDiscipline,
+          level: resolvedLevel,
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+
   app.get(
     '/api/reading/feed',
     requireBackendAuth,

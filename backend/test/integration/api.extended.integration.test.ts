@@ -155,6 +155,42 @@ describe('Reading endpoints', () => {
     const res = await request(baseUrl).get('/api/reading/stats').set(devUser);
     assert.equal(res.status, 200);
   });
+
+  it('POST /api/reading/generate returns static fallback content in mock AI mode', async () => {
+    const res = await request(baseUrl)
+      .post('/api/reading/generate')
+      .set(devUser)
+      .send({ discipline: 'mechanical', level: 'B2' });
+    assert.equal(res.status, 200);
+    assert.equal(res.body.success, true);
+    assert.ok(res.body.item);
+    assert.equal(typeof res.body.item.title, 'string');
+    assert.ok(res.body.item.title.length > 0);
+  });
+
+  it('POST /api/reading/generate reuses the cache on the second identical call', async () => {
+    const first = await request(baseUrl)
+      .post('/api/reading/generate')
+      .set(devUser)
+      .send({ discipline: 'civil', level: 'B1' });
+    const second = await request(baseUrl)
+      .post('/api/reading/generate')
+      .set(devUser)
+      .send({ discipline: 'civil', level: 'B1' });
+    assert.equal(first.status, 200);
+    assert.equal(second.status, 200);
+    // In-memory cache must return the exact same item for an identical key.
+    assert.equal(first.body.item.id, second.body.item.id);
+  });
+
+  it('POST /api/reading/generate returns 400 for an unknown discipline', async () => {
+    const res = await request(baseUrl)
+      .post('/api/reading/generate')
+      .set(devUser)
+      .send({ discipline: 'alchemy', level: 'B2' });
+    assert.equal(res.status, 400);
+    assert.equal(res.body.error.code, 'invalid_discipline');
+  });
 });
 
 describe('Writing endpoints', () => {
