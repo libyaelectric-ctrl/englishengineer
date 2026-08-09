@@ -1,8 +1,9 @@
 import { Check, Sparkles } from 'lucide-react';
 
-import { useLocalizationStore } from '@/features/localization';
 import type { PricingTier } from '@/shared/data/pricing.data';
 import { formatPrice } from '@/shared/data/pricing.data';
+
+import { useLocalizationStore } from '@/features/localization';
 
 interface PricingCardProps {
   tier: PricingTier;
@@ -28,15 +29,15 @@ export const PricingCard = ({
   const isVariantLanding = variant === 'landing';
 
   const cardClasses = isVariantLanding
-    ? `relative flex flex-col justify-between rounded-xl p-5 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
+    ? `relative flex flex-col justify-between rounded-2xl p-5 bg-surface transition-all duration-300 hover:border-primary/40 hover:shadow-lg ${
         tier.popular
           ? 'border-2 border-primary shadow-xl scale-[1.03]'
-          : 'border border-border-soft'
+          : 'border border-[var(--color-border-soft)]'
       }`
-    : `relative flex flex-col justify-between rounded-xl p-4 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
+    : `relative flex flex-col justify-between rounded-2xl p-4 bg-[var(--surface)] transition-all duration-300 hover:border-primary/40 hover:shadow-lg ${
         tier.popular
           ? 'border-2 border-primary shadow-xl scale-[1.01]'
-          : 'border border-soft'
+          : 'border border-[var(--color-border-soft)]'
       }`;
 
   const handleClick = () => {
@@ -76,8 +77,8 @@ export const PricingCard = ({
             </span>
             <span className="text-xs text-muted-copy">
               {isAnnual
-                ? translate('pricing.perMonthAnnual') ?? '/mo (billed yearly)'
-                : translate('pricing.perMonth') ?? '/mo'}
+                ? (translate('pricing.perMonthAnnual') ?? '/mo (billed yearly)')
+                : (translate('pricing.perMonth') ?? '/mo')}
             </span>
           </div>
 
@@ -125,10 +126,10 @@ export const PricingCard = ({
               }`}
             >
               {isLoading
-                ? translate('pricing.loading') ?? 'Loading...'
+                ? (translate('pricing.loading') ?? 'Loading...')
                 : onSelect
                   ? `${translate('pricing.getStarted') ?? 'Get Started'} - ${formatPrice(price, currency)}`
-                  : translate('pricing.choosePlan') ?? 'Choose Plan'}
+                  : (translate('pricing.choosePlan') ?? 'Choose Plan')}
             </button>
           )}
         </div>

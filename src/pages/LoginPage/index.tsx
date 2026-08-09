@@ -81,7 +81,7 @@ const LoginPage = () => {
       {/* Background Ambient Motion Orbs & Technical Grid */}
       <div className="pointer-events-none absolute -top-10 left-10 h-[450px] w-[450px] rounded-full bg-gradient-to-tr from-primary/35 via-blue-500/25 to-indigo-500/35 blur-3xl opacity-75 animate-ambient-glow" />
       <div className="pointer-events-none absolute -bottom-10 right-10 h-[450px] w-[450px] rounded-full bg-gradient-to-br from-indigo-500/30 via-cyan-500/25 to-primary/35 blur-3xl opacity-75 animate-ambient-glow" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.04)_1px,transparent_1px)] bg-[size:24px_24px]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.04)_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
 
       {/* Fixed Top Navbar with Try Demo Action */}
       <Navbar onDemoClick={h.handleDemoSubmit} />
@@ -95,7 +95,8 @@ const LoginPage = () => {
             {/* Left Column: Pre-select Engineering Discipline */}
             <div className="w-full rounded-2xl border border-border-soft bg-surface/90 backdrop-blur-xl p-4.5 shadow-xl hover:border-border-hover transition-colors h-full flex flex-col justify-between relative light-sweep-container overflow-hidden">
               <div className="text-center space-y-0.5">
-                <span className="inline-flex items-center gap-1 rounded-full bg-soft px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary border border-border-soft">
+                <span className="group inline-flex items-center gap-1.5 rounded-full bg-soft px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-primary border border-border-soft">
+                  <Zap className="h-3 w-3" />
                   {translate('login.preSelection')}
                 </span>
                 <h2 className="text-sm font-bold text-foreground leading-none">
