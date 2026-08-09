@@ -343,6 +343,10 @@ export type TranslationKey =
   | 'vocabulary.learnedSet'
   | 'vocabulary.masteredSet'
   | 'vocabulary.strugglingSet'
+  | 'vocabulary.cardEnglishExample'
+  | 'vocabulary.cardNativeTranslation'
+  | 'vocabulary.cardFront'
+  | 'vocabulary.typeMeaning'
   // Common (extended)
   | 'common.privacy'
   | 'common.terms'

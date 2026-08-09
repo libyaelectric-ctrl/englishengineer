@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react';
 
 import { logger } from '@/shared/logger';
 
+import { useLocalizationStore } from '@/features/localization';
 import {
   PronunciationService,
   type VocabularyMenuProgress,
   type VocabularyTerm,
   repairVocabularyText,
 } from '@/features/vocabulary';
+import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
 
 interface WordCardHeaderProps {
   term: VocabularyTerm;
@@ -19,6 +21,9 @@ interface WordCardHeaderProps {
 }
 
 export const WordCardHeader = ({ term, showAnswer, status }: WordCardHeaderProps) => {
+  const language = useLocalizationStore((s) => s.language);
+  const resolveMeaning = useTermMeaningResolver(language);
+  const meaning = resolveMeaning(term.term, term);
   const [isStarred, setIsStarred] = useState(false);
   const phonetic = PronunciationService.getPhonetic(term.term) || `/${term.term.toLowerCase()}/`;
 
@@ -67,7 +72,7 @@ export const WordCardHeader = ({ term, showAnswer, status }: WordCardHeaderProps
         </div>
         <p className="text-[11px] font-mono text-muted-copy font-semibold">{phonetic}</p>
         {showAnswer && (
-          <p className="mt-1 font-bold text-primary">{repairVocabularyText(term.turkishMeaning)}</p>
+          <p className="mt-1 font-bold text-primary">{repairVocabularyText(meaning)}</p>
         )}
       </div>
       <div className="flex flex-wrap items-center justify-end gap-1.5">
