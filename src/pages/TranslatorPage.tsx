@@ -183,7 +183,7 @@ const SourceInputPanel: React.FC<{
     <button
       type="submit"
       disabled={isTranslating || !hasInput}
-      className="w-full py-3 rounded-[var(--radius-card)] bg-primary text-primary-foreground text-xs font-extrabold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-2 mt-3"
+      className="w-full py-3 rounded-[var(--radius-card)] bg-primary text-primary-foreground text-xs font-extrabold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-2 mt-3"
     >
       <Zap className="h-4 w-4" /> {isTranslating ? 'Translating...' : 'Translate Text Now'}
     </button>

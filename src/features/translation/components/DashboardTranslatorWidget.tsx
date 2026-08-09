@@ -167,7 +167,7 @@ const TranslationGrid = ({
           type="button"
           onClick={onClear}
           disabled={!inputText}
-          className="text-[10px] text-muted-copy hover:text-rose-500 font-bold transition-colors cursor-pointer flex items-center gap-1 disabled:opacity-30"
+          className="text-[10px] text-muted-copy hover:text-rose-500 font-bold transition-colors cursor-pointer flex items-center gap-1 disabled:cursor-not-allowed disabled:opacity-30"
         >
           <RotateCcw className="h-3 w-3" /> Clear
         </button>
@@ -184,7 +184,7 @@ const TranslationGrid = ({
         <button
           type="submit"
           disabled={isTranslating || !inputText.trim()}
-          className="w-full py-2 rounded-[var(--radius-card)] bg-primary text-primary-foreground text-xs font-bold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-1.5"
+          className="w-full py-2 rounded-[var(--radius-card)] bg-primary text-primary-foreground text-xs font-bold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-1.5"
         >
           <Zap className="h-3.5 w-3.5" /> Translate Now
         </button>

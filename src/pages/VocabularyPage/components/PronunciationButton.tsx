@@ -33,7 +33,7 @@ export function PronunciationButton({ word, className = '' }: PronunciationButto
         type="button"
         onClick={handlePronounce}
         disabled={playing}
-        className="flex h-7 w-7 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground cursor-pointer disabled:opacity-50"
+        className="flex h-7 w-7 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
         aria-label={`Pronounce ${word}`}
       >
         {playing ? (

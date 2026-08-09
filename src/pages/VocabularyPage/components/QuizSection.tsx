@@ -5,8 +5,7 @@ import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { logger } from '@/shared/logger';
 
-import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
-import { useLocalizationStore, INTERFACE_LANGUAGES } from '@/features/localization';
+import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import {
   VocabularyMenuService,
   type VocabularyMenuState,
@@ -20,6 +19,7 @@ import {
   isTurkishQuizAnswerCorrect,
   selectRandomQuizItems,
 } from '@/features/vocabulary/services/core/learned-quiz';
+import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
 
 interface QuizSectionProps {
   menuState: VocabularyMenuState;
@@ -189,9 +189,7 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
                 <p className="mt-2 text-xl font-semibold text-foreground">
                   {repairVocabularyText(word.term)}
                 </p>
-                <p className="mt-1 text-sm text-muted-copy">
-                  Type {langLabel} meaning...
-                </p>
+                <p className="mt-1 text-sm text-muted-copy">Type {langLabel} meaning...</p>
                 <input
                   ref={(element) => {
                     inputRefs.current[index] = element;

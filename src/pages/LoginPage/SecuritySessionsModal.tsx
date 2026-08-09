@@ -201,7 +201,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
             <button
               type="submit"
               disabled={totpCode.length !== 6}
-              className="w-full h-10 rounded-[var(--radius-card)] bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-500 transition disabled:opacity-50 cursor-pointer"
+              className="w-full h-10 rounded-[var(--radius-card)] bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-500 transition disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
             >
               {translate('login.securityVerify')}
             </button>

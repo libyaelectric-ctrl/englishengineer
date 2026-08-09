@@ -103,7 +103,7 @@ export const MagicLinkAuthModal = ({
             <button
               type="submit"
               disabled={loading || !email}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-card)] bg-primary hover:bg-primary-hover text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-md transition disabled:opacity-50 cursor-pointer"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-card)] bg-primary hover:bg-primary-hover text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-md transition disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
             >
               {loading ? translate('login.magicLinkSending') : translate('login.magicLinkSend')}
               {!loading && <ArrowRight className="h-4 w-4" />}

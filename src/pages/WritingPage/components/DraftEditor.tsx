@@ -163,7 +163,7 @@ Tell me what you want to write or paste a sentence you want to improve!`,
             window.speechSynthesis.speak(u);
           }}
           disabled={!draft.trim()}
-          className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:bg-surface-hover disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-sm"
+          className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-sm"
         >
           <Volume2 className="h-3.5 w-3.5" /> Read Aloud
         </button>

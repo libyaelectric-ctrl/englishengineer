@@ -93,7 +93,7 @@ export const PlacementStep = ({ onComplete }: PlacementStepProps) => {
           type="button"
           onClick={previous}
           disabled={currentIndex === 0}
-          className="rounded-[var(--radius-card)] border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 disabled:opacity-40 hover:bg-surface"
+          className="rounded-[var(--radius-card)] border border-slate-200 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 disabled:cursor-not-allowed disabled:opacity-40 hover:bg-surface"
         >
           {translate('onboarding.back') ?? 'Back'}
         </button>

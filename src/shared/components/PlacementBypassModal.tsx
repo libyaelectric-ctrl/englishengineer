@@ -142,7 +142,7 @@ export const PlacementBypassModal = ({
               type="button"
               disabled={selectedOption === null}
               onClick={handlePassQuiz}
-              className="w-full py-2.5 rounded-[var(--radius-card)] bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover disabled:opacity-50 transition cursor-pointer shadow-md"
+              className="w-full py-2.5 rounded-[var(--radius-card)] bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50 transition cursor-pointer shadow-md"
             >
               Submit & Unlock All Skills
             </button>

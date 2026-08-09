@@ -90,7 +90,7 @@ export const PersonalAIPanel = ({
         <button
           onClick={generateLesson}
           disabled={isGenerating || !discipline}
-          className="w-full flex items-center justify-center gap-2 rounded-[var(--radius-card)] bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50 cursor-pointer transition-all hover:bg-primary/90"
+          className="w-full flex items-center justify-center gap-2 rounded-[var(--radius-card)] bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer transition-all hover:bg-primary/90"
         >
           <Sparkles className="h-4 w-4" />
           {isGenerating ? 'Üretiliyor...' : 'Ders Üret'}

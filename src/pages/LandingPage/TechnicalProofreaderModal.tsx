@@ -231,7 +231,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
               <button
                 type="submit"
                 disabled={isAnalyzing || !inputText.trim()}
-                className="flex h-10 w-full items-center justify-center gap-2 rounded-[var(--radius-card)] bg-primary hover:bg-primary-hover text-xs font-bold text-primary-foreground shadow-md transition cursor-pointer disabled:opacity-50"
+                className="flex h-10 w-full items-center justify-center gap-2 rounded-[var(--radius-card)] bg-primary hover:bg-primary-hover text-xs font-bold text-primary-foreground shadow-md transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isAnalyzing ? (
                   <span>Analyzing ASTM / FIDIC Terminology & Grammatical Precision...</span>
