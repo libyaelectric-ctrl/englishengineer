@@ -44,11 +44,20 @@ export const resolveTermMeaning = (
   language: string
 ): string => {
   const entry = cache?.[term.toLowerCase()];
-  const primary = language === 'en' ? undefined : entry?.[language]?.meaning;
-  if (primary) return primary;
-  const turkishFromCorpus = language === 'tr' ? undefined : entry?.tr?.meaning;
-  if (turkishFromCorpus) return turkishFromCorpus;
-  if (source.turkishMeaning) return source.turkishMeaning;
+
+  // 1. Try the corpus entry for the selected language (skip for English)
+  if (language !== 'en') {
+    const primary = entry?.[language]?.meaning;
+    if (primary) return primary;
+  }
+
+  // 2. Turkish users: use the built-in turkishMeaning field
+  if (language === 'tr') {
+    if (source.turkishMeaning) return source.turkishMeaning;
+  }
+
+  // 3. For all other languages (de, ar, es, fr, etc.): show the English definition
+  //    Do NOT fall back to Turkish — that would be confusing and incorrect.
   return source.definition || term;
 };
 

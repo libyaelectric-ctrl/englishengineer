@@ -1,11 +1,13 @@
 import { ChevronDown } from 'lucide-react';
 import { Volume2 } from 'lucide-react';
 
+import { useLocalizationStore } from '@/features/localization';
 import {
   PronunciationService,
   type VocabularyTerm,
   repairVocabularyText,
 } from '@/features/vocabulary';
+import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
 
 import { SentencePanel } from './SentencePanel';
 
@@ -16,6 +18,10 @@ interface WordCardDetailsProps {
 }
 
 export const WordCardDetails = ({ term, showDetails, onToggle }: WordCardDetailsProps) => {
+  const language = useLocalizationStore((s) => s.language);
+  const resolveMeaning = useTermMeaningResolver(language);
+  const meaning = resolveMeaning(term.term, term);
+
   return (
     <div className="mt-3 rounded-[4px] border border-border-soft bg-surface/60 p-3 text-xs text-muted-copy shadow-sm">
       <button
@@ -31,17 +37,17 @@ export const WordCardDetails = ({ term, showDetails, onToggle }: WordCardDetails
       </button>
       {showDetails && (
         <>
-          {/* Turkish meaning - same size as English word */}
+          {/* Meaning in selected language */}
           <div className="mt-4 mb-3 flex items-center justify-between">
             <p className="text-xl font-bold text-foreground">
-              {repairVocabularyText(term.turkishMeaning)}
+              {repairVocabularyText(meaning)}
             </p>
             <button
               type="button"
-              onClick={() => PronunciationService.speak(term.turkishMeaning)}
+              onClick={() => PronunciationService.speak(meaning)}
               className="flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:bg-surface-hover hover:text-foreground cursor-pointer"
-              aria-label={`Listen to Turkish meaning`}
-              title="Listen to Turkish meaning"
+              aria-label="Listen to translation"
+              title="Listen to translation"
             >
               <Volume2 className="h-4 w-4" />
             </button>
@@ -63,7 +69,7 @@ export const WordCardDetails = ({ term, showDetails, onToggle }: WordCardDetails
           <SentencePanel
             word={term.term}
             partOfSpeech={term.partOfSpeech}
-            meaning={term.turkishMeaning}
+            meaning={meaning}
           />
         </>
       )}

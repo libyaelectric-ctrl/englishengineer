@@ -13,6 +13,7 @@ import {
 } from '@/features/vocabulary';
 import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
 
+
 import { WordCardDetails } from './WordCardDetails';
 import { WordCardHeader } from './WordCardHeader';
 import {
@@ -26,10 +27,10 @@ import {
 
 export type VocabularySetMode = 'Quiz' | 'Review' | 'View';
 
-const normalizeAnswer = (value: string): string =>
+const normalizeAnswer = (value: string, locale?: string): string =>
   repairVocabularyText(value)
     .trim()
-    .toLocaleLowerCase('tr-TR')
+    .toLocaleLowerCase(locale || 'en')
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '');
 
@@ -43,9 +44,9 @@ interface WordCardProps {
   onFlip: () => void;
 }
 
-const checkQuizAnswer = (answer: string, turkishMeaning: string): boolean => {
-  const expected = normalizeAnswer(turkishMeaning);
-  const response = normalizeAnswer(answer);
+const checkQuizAnswer = (answer: string, nativeMeaning: string, locale?: string): boolean => {
+  const expected = normalizeAnswer(nativeMeaning, locale);
+  const response = normalizeAnswer(answer, locale);
   const alternatives = expected.split('/').map((item) => item.trim());
   return alternatives.some((item) => response === item || expected === response);
 };
@@ -166,6 +167,7 @@ export const WordCard = ({
   onFlip,
 }: WordCardProps) => {
   const language = useLocalizationStore((s) => s.language);
+  const translate = useLocalizationStore((s) => s.translate);
   const resolveMeaning = useTermMeaningResolver(language);
   const [answer, setAnswer] = useState('');
   const [quizResult, setQuizResult] = useState<boolean | null>(null);
@@ -174,13 +176,15 @@ export const WordCard = ({
 
   const status = progress?.status ?? 'New';
   const showAnswer = mode !== 'Quiz' || quizResult !== null;
+  const resolvedMeaning = resolveMeaning(term.term, term);
+  // Locale string for answer normalization (e.g. 'tr-TR', 'de-DE')
+  const locale = language === 'tr' ? 'tr-TR' : language === 'de' ? 'de-DE' : 'en';
 
   const submitQuiz = (event: FormEvent) => {
     event.preventDefault();
     if (!answer.trim() || quizResult !== null) return;
-    const correct =
-      checkQuizAnswer(answer, resolveMeaning(term.term, term)) ||
-      checkQuizAnswer(answer, term.turkishMeaning);
+    // Accept the resolved meaning for the user's chosen language
+    const correct = checkQuizAnswer(answer, resolvedMeaning, locale);
     setQuizResult(correct);
     if (correct) {
       playSound('success');
@@ -252,23 +256,25 @@ export const WordCard = ({
 
             <div className="text-center py-2">
               <h2 className="text-2xl font-black text-foreground tracking-tight">
-                {repairVocabularyText(resolveMeaning(term.term, term))}
+                {repairVocabularyText(resolvedMeaning)}
               </h2>
               <p className="text-xs font-mono text-muted-copy mt-1 font-semibold">{term.term}</p>
             </div>
 
             <div className="space-y-2 rounded-lg bg-surface/80 p-3 border border-border-soft text-xs leading-relaxed">
               <p className="font-semibold text-foreground">
-                📌 <span className="font-bold text-primary">İngilizce Örnek:</span>{' '}
+                📌 <span className="font-bold text-primary">{translate('vocabulary.cardEnglishExample')}</span>{' '}
                 {repairVocabularyText(term.exampleSentence)}
               </p>
-              <p className="font-medium text-muted-copy border-t border-border-soft/60 pt-1.5">
-                🇹🇷{' '}
-                <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                  Türkçe Çevirisi:
-                </span>{' '}
-                {repairVocabularyText(term.turkishExample)}
-              </p>
+              {language === 'tr' && (
+                <p className="font-medium text-muted-copy border-t border-border-soft/60 pt-1.5">
+                  🇹🇷{' '}
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                    {translate('vocabulary.cardNativeTranslation')}
+                  </span>{' '}
+                  {repairVocabularyText(term.turkishExample)}
+                </p>
+              )}
             </div>
           </div>
 
@@ -282,7 +288,7 @@ export const WordCard = ({
               className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-extrabold text-white shadow hover:bg-primary/90 transition-all cursor-pointer"
             >
               <RotateCw className="h-3.5 w-3.5" />
-              <span>Kartın Ön Yüzü</span>
+              <span>{translate('vocabulary.cardFront')}</span>
             </button>
           </div>
         </div>

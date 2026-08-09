@@ -3,11 +3,13 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
 import {
   PronunciationService,
   type VocabularyTerm,
   repairVocabularyText,
 } from '@/features/vocabulary';
+import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
 
 interface LearnedCardProps {
   term: VocabularyTerm;
@@ -16,6 +18,9 @@ interface LearnedCardProps {
 
 export function LearnedCard({ term, index }: LearnedCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const language = useLocalizationStore((s) => s.language);
+  const resolveMeaning = useTermMeaningResolver(language);
+  const meaning = resolveMeaning(term.term, term);
 
   return (
     <motion.div
@@ -44,11 +49,11 @@ export function LearnedCard({ term, index }: LearnedCardProps) {
                 <h4 className="text-lg font-bold text-foreground">
                   {repairVocabularyText(term.term)}
                 </h4>
-                <p className="text-[10px] text-muted-copy">{term.turkishMeaning}</p>
+                <p className="text-[10px] text-muted-copy">{repairVocabularyText(meaning)}</p>
               </div>
               <button
                 type="button"
-                onClick={() => PronunciationService.speak(term.turkishMeaning)}
+                onClick={() => PronunciationService.speak(meaning)}
                 className="flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:bg-surface-hover hover:text-foreground cursor-pointer"
                 aria-label={`Listen to ${term.term}`}
               >
@@ -72,7 +77,7 @@ export function LearnedCard({ term, index }: LearnedCardProps) {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                PronunciationService.speak(term.turkishMeaning);
+                PronunciationService.speak(meaning);
               }}
               className="flex h-6 w-6 items-center justify-center rounded text-muted-copy hover:text-foreground transition-colors cursor-pointer"
               aria-label={`Listen to ${term.term}`}
