@@ -67,7 +67,7 @@ export const BetaFeedbackWidget = () => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="feedback-title"
-            className="w-[min(92vw,400px)] rounded-[20px] border border-border-soft bg-surface p-5 shadow-[0_24px_70px_rgba(15,23,42,0.18)]"
+            className="w-[min(92vw,400px)] rounded-[20px] border border-border-soft bg-surface p-5 shadow-[var(--shadow-dialog)]"
           >
             <div className="flex items-center justify-between gap-3">
               <p
@@ -141,7 +141,7 @@ export const BetaFeedbackWidget = () => {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="fixed top-16 lg:top-auto bottom-auto lg:bottom-5 right-3 lg:right-5 z-40 flex h-10 w-10 items-center justify-center rounded-[12px] border border-primary bg-primary text-white shadow-[0_10px_24px_rgba(59,113,143,0.14)] transition-all hover:-translate-y-px hover:border-primary-hover hover:bg-primary-hover"
+          className="fixed top-16 lg:top-auto bottom-auto lg:bottom-5 right-3 lg:right-5 z-40 flex h-10 w-10 items-center justify-center rounded-[12px] border border-primary bg-primary text-white shadow-[var(--shadow-pop)] transition-all hover:-translate-y-px hover:border-primary-hover hover:bg-primary-hover"
           aria-label="Open closed beta feedback"
           title={LocalizationService.translate('feedback.open', language)}
         >

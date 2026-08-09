@@ -8,9 +8,9 @@ import {
   type EngineeringDiscipline,
 } from '@/shared/constants/engineering-disciplines';
 import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
+import { ProductAnalyticsService } from '@/shared/services/product-analytics.service';
 import type { ProfessionId } from '@/shared/types/domain.types';
 
-import { ProductAnalyticsService } from '@/shared/services/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization/localization.types';
@@ -135,7 +135,7 @@ export const BetaOnboarding = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-foreground/35 p-3 backdrop-blur-sm sm:items-center sm:p-4">
-      <div className="my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-3xl overflow-y-auto rounded-[20px] border border-border-soft bg-surface p-4 shadow-[0_30px_90px_rgba(15,23,42,0.22)] sm:max-h-[calc(100dvh-2rem)] sm:p-6">
+      <div className="my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-3xl overflow-y-auto rounded-[20px] border border-border-soft bg-surface p-4 shadow-[var(--shadow-dialog)] sm:max-h-[calc(100dvh-2rem)] sm:p-6">
         <div className="flex items-start gap-4">
           <div className="rounded-[14px] border border-blue-200 bg-blue-50 p-3 text-blue-700">
             <CheckCircle2 className="h-5 w-5" />
