@@ -42,7 +42,7 @@ export function SalesChatModal() {
           className="flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-xs font-bold text-primary-foreground shadow-2xl hover:scale-105 transition-all cursor-pointer border border-white/20 light-sweep-container"
         >
           <MessageSquare className="h-4 w-4 text-emerald-300 animate-pulse" />
-          <span>{translate('landing.salesChatTitle')} 💬</span>
+          <span>{translate('landing.salesChatTitle')}</span>
         </button>
       </div>
 

@@ -6,9 +6,11 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  GraduationCap,
   HelpCircle,
   Info,
   Send,
+  User,
 } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
@@ -281,8 +283,9 @@ What questions do you have about this passage?`,
 
             {/* AI Reading Companion */}
             <div className="space-y-3 rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
-              <h5 className="text-xs font-bold uppercase text-foreground tracking-wider flex items-center gap-1.5">
-                <span>AI Reading Companion 🎓</span>
+              <h5 className="inline-flex items-center gap-1.5 text-xs font-bold uppercase text-foreground tracking-wider">
+                <GraduationCap className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                AI Reading Companion
               </h5>
               <div className="flex max-h-60 min-h-24 flex-col gap-2.5 overflow-y-auto rounded-[4px] border border-border-soft bg-background p-2.5">
                 {messages.map((msg, i) => (
@@ -296,15 +299,23 @@ What questions do you have about this passage?`,
                     )}
                   >
                     <p className="font-bold text-[10px] uppercase opacity-60 mb-0.5">
-                      {msg.role === 'assistant' ? 'AI Mentor 🎓' : 'You 💻'}
+                      {msg.role === 'assistant' ? (
+                        <span className="inline-flex items-center gap-1">
+                          <GraduationCap className="h-3 w-3" aria-hidden="true" /> AI Mentor
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1">
+                          <User className="h-3 w-3" aria-hidden="true" /> You
+                        </span>
+                      )}
                     </p>
                     <p className="whitespace-pre-wrap">{msg.content}</p>
                   </div>
                 ))}
                 {isTalking && (
                   <div className="flex flex-col max-w-[85%] rounded-[4px] p-2.5 text-xs bg-primary/5 text-foreground border border-primary/10 mr-auto animate-pulse">
-                    <p className="font-bold text-[10px] uppercase opacity-60 mb-0.5">
-                      AI Mentor 🎓
+                    <p className="inline-flex items-center gap-1 font-bold text-[10px] uppercase opacity-60 mb-0.5">
+                      <GraduationCap className="h-3 w-3" aria-hidden="true" /> AI Mentor
                     </p>
                     <p>Typing response...</p>
                   </div>

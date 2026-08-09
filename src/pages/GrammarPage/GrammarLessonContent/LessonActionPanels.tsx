@@ -1,4 +1,4 @@
-import { Send } from 'lucide-react';
+import { GraduationCap, Send, User } from 'lucide-react';
 
 import { Button } from '@/shared/components/Button';
 import { cn } from '@/shared/utils/cn';
@@ -37,14 +37,24 @@ export const ChatPanel = ({
           )}
         >
           <p className="font-bold text-[10px] uppercase opacity-60 mb-1">
-            {msg.role === 'assistant' ? 'AI Teacher 🎓' : 'You 💻'}
+            {msg.role === 'assistant' ? (
+              <span className="inline-flex items-center gap-1">
+                <GraduationCap className="h-3 w-3" aria-hidden="true" /> AI Teacher
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1">
+                <User className="h-3 w-3" aria-hidden="true" /> You
+              </span>
+            )}
           </p>
           <p className="whitespace-pre-wrap">{msg.content}</p>
         </div>
       ))}
       {isTalking && (
         <div className="flex flex-col max-w-[85%] rounded-[4px] p-3 text-xs bg-primary/5 text-foreground border border-primary/10 mr-auto animate-pulse">
-          <p className="font-bold text-[10px] uppercase opacity-60 mb-1">AI Teacher 🎓</p>
+          <p className="inline-flex items-center gap-1 font-bold text-[10px] uppercase opacity-60 mb-1">
+            <GraduationCap className="h-3 w-3" aria-hidden="true" /> AI Teacher
+          </p>
           <p>Thinking and explaining...</p>
         </div>
       )}

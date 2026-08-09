@@ -1,4 +1,4 @@
-import { AlertTriangle, PenTool, Send, Volume2 } from 'lucide-react';
+import { AlertTriangle, GraduationCap, PenTool, Send, User, Volume2 } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
@@ -32,8 +32,9 @@ const messageRoleClass = (role: string) =>
     ? 'bg-primary/5 text-foreground border border-primary/10 mr-auto'
     : 'bg-foreground text-background ml-auto';
 
-const messageRoleLabel = (role: string) =>
-  role === 'assistant' ? 'AI Coach \u{1F393}' : 'You \u{1F4BB}';
+const messageRoleLabel = (role: string) => (role === 'assistant' ? 'AI Coach' : 'You');
+
+const messageRoleIcon = (role: string) => (role === 'assistant' ? GraduationCap : User);
 
 export const DraftEditor = ({
   title,
@@ -176,8 +177,9 @@ Tell me what you want to write or paste a sentence you want to improve!`,
 
         {/* AI Writing Coach Chat */}
         <div className="mt-4 border-t border-border-soft pt-4">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-foreground">
-            AI Writing Coach 🎓
+          <h4 className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-foreground">
+            <GraduationCap className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+            AI Writing Coach
           </h4>
           <div className="mt-2 flex max-h-60 min-h-24 flex-col gap-2.5 overflow-y-auto rounded-[4px] border border-border-soft bg-background p-2.5">
             {messages.map((msg, i) => (
@@ -188,7 +190,11 @@ Tell me what you want to write or paste a sentence you want to improve!`,
                   messageRoleClass(msg.role)
                 )}
               >
-                <p className="font-bold text-[10px] uppercase opacity-60 mb-0.5">
+                <p className="inline-flex items-center gap-1 font-bold text-[10px] uppercase opacity-60 mb-0.5">
+                  {(() => {
+                    const RoleIcon = messageRoleIcon(msg.role);
+                    return <RoleIcon className="h-3 w-3" aria-hidden="true" />;
+                  })()}
                   {messageRoleLabel(msg.role)}
                 </p>
                 <p className="whitespace-pre-wrap">{msg.content}</p>
@@ -196,7 +202,9 @@ Tell me what you want to write or paste a sentence you want to improve!`,
             ))}
             {isTalking && (
               <div className="flex flex-col max-w-[85%] rounded-[4px] p-2.5 text-xs bg-primary/5 text-foreground border border-primary/10 mr-auto animate-pulse">
-                <p className="font-bold text-[10px] uppercase opacity-60 mb-0.5">AI Coach 🎓</p>
+                <p className="inline-flex items-center gap-1 font-bold text-[10px] uppercase opacity-60 mb-0.5">
+                  <GraduationCap className="h-3 w-3" aria-hidden="true" /> AI Coach
+                </p>
                 <p>Analyzing draft and context...</p>
               </div>
             )}

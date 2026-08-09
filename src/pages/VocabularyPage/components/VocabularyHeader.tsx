@@ -1,7 +1,9 @@
 import { Search, Volume2, VolumeX } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
+import { getIcon } from '@/shared/icons/registry';
 import { getSoundMuted, toggleSoundMuted } from '@/shared/utils/sound';
 
 import { useLocalizationStore } from '@/features/localization';
@@ -11,6 +13,14 @@ import type {
   VocabularySearchFilters,
   VocabularyTerm,
 } from '@/features/vocabulary';
+
+const DOMAIN_FILTERS: Array<{ label: string; icon: string }> = [
+  { label: 'Civil', icon: 'building' },
+  { label: 'Electrical', icon: 'zap' },
+  { label: 'Software', icon: 'monitor' },
+  { label: 'Mechanical', icon: 'settings' },
+  { label: 'Safety', icon: 'shield-check' },
+];
 
 const TABS = ['New', 'Learned', 'Mastered', 'Struggling'] as const;
 const TAB_LABELS = {
@@ -160,23 +170,23 @@ export function VocabularyHeader({
           {translate('vocabulary.domain')}:
         </span>
         {[
-          translate('vocabulary.allDomains'),
-          '🏗️ Civil',
-          '⚡ Electrical',
-          '💻 Software',
-          '⚙️ Mechanical',
-          '📋 Safety',
+          { label: translate('vocabulary.allDomains'), Icon: null },
+          ...DOMAIN_FILTERS.map((f) => ({
+            label: f.label,
+            Icon: (getIcon(f.icon) ?? Search) as LucideIcon,
+          })),
         ].map((domain, idx) => (
           <button
-            key={domain}
+            key={domain.label}
             type="button"
-            className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[10px] font-bold transition-all cursor-pointer ${
               idx === 0
                 ? 'border-primary/40 bg-primary/10 text-primary'
                 : 'border-border-soft bg-surface text-muted-copy hover:border-primary/30 hover:text-foreground'
             }`}
           >
-            {domain}
+            {domain.Icon && <domain.Icon className="h-3 w-3" aria-hidden="true" />}
+            {domain.label}
           </button>
         ))}
       </div>

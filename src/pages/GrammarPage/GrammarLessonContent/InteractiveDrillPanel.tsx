@@ -1,3 +1,6 @@
+import { PenLine, Search, Shuffle, Target } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
 import { useState } from 'react';
 
 import { cn } from '@/shared/utils/cn';
@@ -7,9 +10,15 @@ import type { Rule } from './types';
 type DrillMode = 'fill_blank' | 'correction' | 'reordering';
 
 const DRILL_LABELS: Record<DrillMode, string> = {
-  fill_blank: '✏️ Fill in the Blank',
-  correction: '🔍 Error Correction',
-  reordering: '🔀 Word Reordering',
+  fill_blank: 'Fill in the Blank',
+  correction: 'Error Correction',
+  reordering: 'Word Reordering',
+};
+
+const DRILL_ICONS: Record<DrillMode, LucideIcon> = {
+  fill_blank: PenLine,
+  correction: Search,
+  reordering: Shuffle,
 };
 
 export const InteractiveDrillPanel = ({ selectedRule }: { selectedRule: Rule }) => {
@@ -83,25 +92,29 @@ export const InteractiveDrillPanel = ({ selectedRule }: { selectedRule: Rule }) 
 
   return (
     <div className="rounded-[4px] border border-primary/20 bg-surface p-4 shadow-sm space-y-3">
-      <p className="text-[11px] font-bold uppercase tracking-wider text-primary">
-        🎯 Interactive Drills
+      <p className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-primary">
+        <Target className="h-3.5 w-3.5" aria-hidden="true" /> Interactive Drills
       </p>
       <div className="flex flex-wrap gap-2">
-        {(Object.keys(DRILL_LABELS) as DrillMode[]).map((mode) => (
-          <button
-            key={mode}
-            type="button"
-            onClick={() => openDrill(mode)}
-            className={cn(
-              'rounded-[4px] border px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer',
-              activeDrill === mode
-                ? 'border-primary bg-primary text-white'
-                : 'border-border-soft bg-background text-muted-copy hover:border-primary/40 hover:text-primary'
-            )}
-          >
-            {DRILL_LABELS[mode]}
-          </button>
-        ))}
+        {(Object.keys(DRILL_LABELS) as DrillMode[]).map((mode) => {
+          const DrillIcon = DRILL_ICONS[mode];
+          return (
+            <button
+              key={mode}
+              type="button"
+              onClick={() => openDrill(mode)}
+              className={cn(
+                'rounded-[4px] border px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer inline-flex items-center gap-1.5',
+                activeDrill === mode
+                  ? 'border-primary bg-primary text-white'
+                  : 'border-border-soft bg-background text-muted-copy hover:border-primary/40 hover:text-primary'
+              )}
+            >
+              <DrillIcon className="h-3 w-3" aria-hidden="true" />
+              {DRILL_LABELS[mode]}
+            </button>
+          );
+        })}
       </div>
 
       {activeDrill === 'fill_blank' && (

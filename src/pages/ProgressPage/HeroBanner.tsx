@@ -1,3 +1,4 @@
+import { Target } from 'lucide-react';
 import { motion } from 'motion/react';
 
 import { MAX_ELO, MIN_ELO } from '@/shared/constants/elo.constants';
@@ -61,7 +62,8 @@ export const HeroBanner = ({
               CEFR {totalCEFR}
             </span>
             <span className="inline-flex items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-              🎯 Target: C1 Senior Tech Lead / Offshore Pitch Ready
+              <Target className="h-3 w-3" aria-hidden="true" />
+              Target: C1 Senior Tech Lead / Offshore Pitch Ready
             </span>
           </div>
           <h2 className="text-xl font-bold text-foreground mb-1">Engineering Mastery Level</h2>
