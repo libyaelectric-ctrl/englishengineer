@@ -1,14 +1,19 @@
+import { ArrowUpRight, Check, ChevronRight, Lock } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+
 import React, { useState } from 'react';
-import { Lock, ArrowUpRight, Check, ChevronRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+
 import { Link } from 'react-router-dom';
+
+import { getDisciplineIcon } from '@/shared/icons/registry';
+
 import { useLocalizationStore } from '@/features/localization';
+
 import { getLandingTranslations } from './landing-i18n';
 
 interface BranchInfo {
   id: string;
   name: string;
-  emoji: string;
   termCount: string;
   sampleTerms: string[];
   description: string;
@@ -19,7 +24,6 @@ const BRANCHES: BranchInfo[] = [
   {
     id: 'civil',
     name: 'Civil Engineering',
-    emoji: '🏗️',
     termCount: '1,840+',
     sampleTerms: ['Reinforcement Cage', 'Formwork Stripping', 'Load Bearing Slab'],
     description: 'Site management, reinforced concrete, FIDIC contracts, and structural design.',
@@ -28,7 +32,6 @@ const BRANCHES: BranchInfo[] = [
   {
     id: 'electrical',
     name: 'Electrical Engineering',
-    emoji: '⚡',
     termCount: '1,620+',
     sampleTerms: ['High Voltage Switchgear', 'Busbar Trunking', 'Short-Circuit Capacity'],
     description: 'Substation engineering, power distribution, transformers, and automation.',
@@ -37,7 +40,6 @@ const BRANCHES: BranchInfo[] = [
   {
     id: 'electronics',
     name: 'Electronics Engineering',
-    emoji: '🔌',
     termCount: '1,510+',
     sampleTerms: ['Signal Conditioning', 'Impedance Matching', 'PCB Layout Routing'],
     description: 'Embedded systems, microcontrollers, PCB design, and signal processing.',
@@ -46,7 +48,6 @@ const BRANCHES: BranchInfo[] = [
   {
     id: 'mechanical',
     name: 'Mechanical Engineering',
-    emoji: '⚙️',
     termCount: '1,950+',
     sampleTerms: ['HVAC Ducting', 'Thermodynamic Cycle', 'Hydraulic Actuator'],
     description: 'Thermodynamics, fluid mechanics, HVAC, CAD modeling, and manufacturing.',
@@ -55,7 +56,6 @@ const BRANCHES: BranchInfo[] = [
   {
     id: 'mechatronics',
     name: 'Mechatronics',
-    emoji: '🤖',
     termCount: '1,420+',
     sampleTerms: ['PID Controller Tuning', 'Servo Motor Drive', 'PLCs & Kinematics'],
     description: 'Robotics, sensor fusion, industrial automation, and electromechanical drives.',
@@ -64,7 +64,6 @@ const BRANCHES: BranchInfo[] = [
   {
     id: 'software',
     name: 'Software Engineering',
-    emoji: '💻',
     termCount: '2,100+',
     sampleTerms: ['Asynchronous Pipeline', 'Microservices Mesh', 'CI/CD Deployment'],
     description: 'System architecture, cloud infrastructure, API security, and code reviews.',
@@ -73,7 +72,6 @@ const BRANCHES: BranchInfo[] = [
   {
     id: 'architecture',
     name: 'Architecture',
-    emoji: '🏛️',
     termCount: '1,380+',
     sampleTerms: ['BIM Execution Plan', 'Facade Cladding', 'Spatial Circulation'],
     description: 'BIM, facade engineering, interior architecture, and conceptual design.',
@@ -82,7 +80,6 @@ const BRANCHES: BranchInfo[] = [
   {
     id: 'chemical',
     name: 'Chemical Engineering',
-    emoji: '⚗️',
     termCount: '1,290+',
     sampleTerms: ['Distillation Column', 'Catalytic Cracking', 'Mass Transfer'],
     description: 'Process engineering, reactor design, petrochemicals, and separation.',
@@ -91,7 +88,6 @@ const BRANCHES: BranchInfo[] = [
   {
     id: 'industrial',
     name: 'Industrial Engineering',
-    emoji: '🏭',
     termCount: '1,470+',
     sampleTerms: ['Supply Chain Bottleneck', 'Lean Six Sigma', 'OEE Optimization'],
     description: 'Supply chain, lean manufacturing, operations research, and quality.',
@@ -100,7 +96,6 @@ const BRANCHES: BranchInfo[] = [
   {
     id: 'hse',
     name: 'HSE & Safety',
-    emoji: '🦺',
     termCount: '1,150+',
     sampleTerms: ['HAZOP Analysis', 'Permit to Work', 'LOTO Safety Procedure'],
     description: 'Site safety, OSHA/ISO compliance, risk assessment, and environmental.',
@@ -134,7 +129,6 @@ export const DisciplinesGrid: React.FC = () => {
       <div className="absolute inset-0 pointer-events-none opacity-[0.025] bg-[radial-gradient(#6366f1_1px,transparent_1px)] [background-size:32px_32px]" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -173,8 +167,17 @@ export const DisciplinesGrid: React.FC = () => {
                     : `border-slate-200 dark:border-slate-800 ${colorMap[b.color] ?? ''}`
                 }`}
               >
-                {/* emoji */}
-                <span className="text-3xl block mb-3">{b.emoji}</span>
+                <span className="mb-3 inline-flex rounded border border-slate-200 bg-slate-100 p-2 dark:border-slate-800 dark:bg-slate-950">
+                  {(() => {
+                    const DisciplineIcon = getDisciplineIcon(b.id);
+                    return (
+                      <DisciplineIcon
+                        className="h-5 w-5 text-blue-600 dark:text-blue-400"
+                        aria-hidden="true"
+                      />
+                    );
+                  })()}
+                </span>
 
                 {/* name */}
                 <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
@@ -201,7 +204,10 @@ export const DisciplinesGrid: React.FC = () => {
                       </p>
                       <div className="mt-2 flex flex-wrap gap-1">
                         {b.sampleTerms.map((term) => (
-                          <span key={term} className="text-[9px] px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/20 font-medium">
+                          <span
+                            key={term}
+                            className="text-[9px] px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/20 font-medium"
+                          >
                             {term}
                           </span>
                         ))}
@@ -240,7 +246,9 @@ export const DisciplinesGrid: React.FC = () => {
               <Check className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white">{t.disciplinesFormulaTitle}</h4>
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                {t.disciplinesFormulaTitle}
+              </h4>
               <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
                 {t.disciplinesFormulaDesc}
               </p>

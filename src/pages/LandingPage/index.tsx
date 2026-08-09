@@ -17,25 +17,13 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
+import { getDisciplineIcon } from '@/shared/icons/registry';
 
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 import { useTheme } from '@/features/theme/ThemeProvider';
 
 import { getLandingTranslations } from './landing-i18n';
-
-const DISCIPLINE_ICONS: Record<string, string> = {
-  architecture: '🏛️',
-  chemical: '⚗️',
-  civil: '🌉',
-  electrical: '⚡',
-  electronics: '🔌',
-  hse: '🦺',
-  industrial: '🏭',
-  mechanical: '⚙️',
-  mechatronics: '🤖',
-  software: '💻',
-};
 
 const FEATURES = [
   { icon: BookOpen, key: 'vocabulary', color: 'blue' },
@@ -108,7 +96,7 @@ export const LandingPage = () => {
                 <div
                   title="English"
                   aria-label="English (EN), fixed target language"
-                  className="flex h-8 shrink-0 items-center gap-1 rounded-lg border border-[var(--color-primary)] bg-[var(--color-primary)]/15 px-1.5 text-xs font-bold leading-none ring-1 ring-[var(--color-primary)]/60 select-none"
+                  className="flex h-8 shrink-0 items-center gap-1 rounded-[var(--radius-card)] border border-[var(--color-primary)] bg-[var(--color-primary)]/15 px-1.5 text-xs font-bold leading-none ring-1 ring-[var(--color-primary)]/60 select-none"
                 >
                   <span className="text-base">{englishLanguage.flag}</span>
                   <span>EN</span>
@@ -120,14 +108,14 @@ export const LandingPage = () => {
             <div className="relative sm:hidden">
               <button
                 onClick={() => setLangOpen(!langOpen)}
-                className="flex h-8 min-w-8 items-center justify-center gap-0.5 rounded-lg border border-[var(--color-border-soft)] px-1"
+                className="flex h-8 min-w-8 items-center justify-center gap-0.5 rounded-[var(--radius-card)] border border-[var(--color-border-soft)] px-1"
                 aria-label="Change interface language"
               >
                 <span className="text-base leading-none">{langLabelFlag}</span>
                 {language === 'en' && <span className="text-[8px] font-bold">EN</span>}
               </button>
               {langOpen && (
-                <div className="absolute right-0 top-full mt-2 grid grid-cols-5 gap-0.5 rounded-xl border border-[var(--color-border-soft)] bg-[var(--surface)] p-1 shadow-xl">
+                <div className="absolute right-0 top-full mt-2 grid grid-cols-5 gap-0.5 rounded-[var(--radius-card)] border border-[var(--color-border-soft)] bg-[var(--surface)] p-1 shadow-xl">
                   {otherLanguages.map((l) => (
                     <button
                       key={l.id}
@@ -138,7 +126,7 @@ export const LandingPage = () => {
                           .setLanguage(l.id as SupportedInterfaceLanguage);
                         setLangOpen(false);
                       }}
-                      className={`flex h-9 w-8 items-center justify-center rounded-lg text-base leading-none transition-all ${
+                      className={`flex h-9 w-8 items-center justify-center rounded-[var(--radius-card)] text-base leading-none transition-all ${
                         l.id === language
                           ? 'bg-[var(--color-primary)] text-white'
                           : 'hover:bg-[var(--color-surface-hover)]'
@@ -157,7 +145,7 @@ export const LandingPage = () => {
             {/* Theme toggle */}
             <button
               onClick={toggleTheme}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-border-soft)] hover:border-[var(--color-primary)] transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-card)] border border-[var(--color-border-soft)] hover:border-[var(--color-primary)] transition-colors"
               aria-label="Toggle theme"
             >
               {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
@@ -165,14 +153,14 @@ export const LandingPage = () => {
 
             <Link
               to="/pricing"
-              className="hidden rounded-lg px-3 py-2 text-sm font-semibold text-[var(--color-muted-copy)] transition-colors hover:text-[var(--color-primary)] sm:inline-flex"
+              className="hidden rounded-[var(--radius-card)] px-3 py-2 text-sm font-semibold text-[var(--color-muted-copy)] transition-colors hover:text-[var(--color-primary)] sm:inline-flex"
             >
               Pricing
             </Link>
 
             <Link
               to="/welcome"
-              className="hidden sm:flex items-center gap-1.5 rounded-lg bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)] transition-colors"
+              className="hidden sm:flex items-center gap-1.5 rounded-[var(--radius-card)] bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--color-primary-hover)] transition-colors"
             >
               {t.ctaStartFree}
               <ArrowRight className="h-3.5 w-3.5" />
@@ -185,7 +173,7 @@ export const LandingPage = () => {
       <section className="relative overflow-hidden py-20 md:py-28">
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-primary)]/5 to-transparent" />
         <div className="relative mx-auto max-w-4xl px-4 text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--color-primary)]/20 bg-[var(--color-primary)]/5 px-4 py-1.5 text-xs font-semibold text-[var(--color-primary)]">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-[var(--radius-card)] border border-[var(--color-primary)]/20 bg-[var(--color-primary)]/5 px-4 py-1.5 text-xs font-semibold text-[var(--color-primary)]">
             <Sparkles className="h-3.5 w-3.5" />
             {t.heroBadge}
           </div>
@@ -205,14 +193,14 @@ export const LandingPage = () => {
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               to="/welcome"
-              className="flex items-center gap-2 rounded-xl bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-white shadow-lg hover:bg-[var(--color-primary-hover)] transition-all"
+              className="flex items-center gap-2 rounded-[var(--radius-card)] bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-white shadow-lg hover:bg-[var(--color-primary-hover)] transition-all"
             >
               {t.ctaSelectBranch}
               <ArrowRight className="h-4 w-4" />
             </Link>
             <a
               href="#pricing"
-              className="flex items-center gap-2 rounded-xl border border-[var(--color-border-soft)] px-6 py-3 text-sm font-semibold hover:border-[var(--color-primary)] transition-colors"
+              className="flex items-center gap-2 rounded-[var(--radius-card)] border border-[var(--color-border-soft)] px-6 py-3 text-sm font-semibold hover:border-[var(--color-primary)] transition-colors"
             >
               {t.ctaViewPlans}
             </a>
@@ -270,9 +258,17 @@ export const LandingPage = () => {
             {ENGINEERING_DISCIPLINES.map((id) => (
               <div
                 key={id}
-                className="flex flex-col items-center gap-2 rounded-xl border border-[var(--color-border-soft)] bg-[var(--background)] p-4 text-center transition-all hover:border-[var(--color-primary)]/40"
+                className="flex flex-col items-center gap-2 rounded-[var(--radius-card)] border border-[var(--color-border-soft)] bg-[var(--background)] p-4 text-center transition-all hover:border-[var(--color-primary)]/40"
               >
-                <span className="text-2xl">{DISCIPLINE_ICONS[id] || '🔧'}</span>
+                {(() => {
+                  const DisciplineIcon = getDisciplineIcon(id);
+                  return (
+                    <DisciplineIcon
+                      className="h-6 w-6 text-[var(--color-primary)]"
+                      aria-hidden="true"
+                    />
+                  );
+                })()}
                 <span className="text-xs font-semibold capitalize">{id}</span>
               </div>
             ))}
@@ -282,7 +278,7 @@ export const LandingPage = () => {
             {FEATURES.map(({ icon: Icon, key, color }) => (
               <div
                 key={key}
-                className="flex items-center gap-2 rounded-xl border border-[var(--color-border-soft)] bg-[var(--background)] px-3 py-2.5 transition-colors hover:border-[var(--color-primary)]/40"
+                className="flex items-center gap-2 rounded-[var(--radius-card)] border border-[var(--color-border-soft)] bg-[var(--background)] px-3 py-2.5 transition-colors hover:border-[var(--color-primary)]/40"
               >
                 <span className={`inline-flex shrink-0 rounded-lg bg-${color}-500/10 p-1.5`}>
                   <Icon className={`h-4 w-4 text-${color}-500`} />
@@ -330,7 +326,7 @@ export const LandingPage = () => {
           <h2 className="text-center text-3xl font-bold">{t.pricingTitle}</h2>
           <p className="mt-2 text-center text-[var(--color-muted-copy)]">{t.pricingSubtitle}</p>
 
-          <div className="mx-auto mt-8 max-w-sm rounded-2xl border-2 border-[var(--color-primary)]/40 bg-[var(--background)] p-5 text-center shadow-sm">
+          <div className="mx-auto mt-8 max-w-sm rounded-[var(--radius-card)] border-2 border-[var(--color-primary)]/40 bg-[var(--background)] p-5 text-center shadow-sm">
             <p className="text-sm font-semibold">Free</p>
             <p className="mt-2 text-3xl font-bold">$0</p>
             <p className="mt-1 text-xs text-[var(--color-muted-copy)]">
@@ -338,7 +334,7 @@ export const LandingPage = () => {
             </p>
             <Link
               to="/welcome"
-              className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-lg bg-[var(--color-primary)] py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-primary-hover)]"
+              className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-[var(--radius-card)] bg-[var(--color-primary)] py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-primary-hover)]"
             >
               {t.pricingStartFree}
               <ArrowRight className="h-3.5 w-3.5" />
@@ -349,14 +345,14 @@ export const LandingPage = () => {
             {PRICING_TIERS.map(({ id, price, popular }) => (
               <div
                 key={id}
-                className={`relative rounded-2xl border bg-[var(--background)] p-5 transition-all ${
+                className={`relative rounded-[var(--radius-card)] border bg-[var(--background)] p-5 transition-all ${
                   popular
                     ? 'border-[var(--color-primary)] shadow-lg'
                     : 'border-[var(--color-border-soft)] hover:border-[var(--color-primary)]/40'
                 }`}
               >
                 {popular && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[var(--color-primary)] px-3 py-1 text-xs font-bold text-white">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-[var(--radius-card)] bg-[var(--color-primary)] px-3 py-1 text-xs font-bold text-white">
                     {t.pricingMostPopular}
                   </span>
                 )}
