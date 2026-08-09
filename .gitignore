@@ -91,3 +91,4 @@ analysis_output/
 
 public/data/*.json
 public/audio/*.mp3
+qa-report/
