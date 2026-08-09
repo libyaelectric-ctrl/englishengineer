@@ -57,7 +57,7 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
                 title={lang.nativeLabel}
                 aria-label={`Switch to ${lang.label}`}
                 onClick={() => setLanguage(lang.id as SupportedInterfaceLanguage)}
-                className={`flex items-center justify-center rounded-md w-7 h-7 text-base leading-none border transition-all cursor-pointer select-none ${
+                className={`flex items-center justify-center rounded-[var(--radius-card)] w-7 h-7 text-base leading-none border transition-all cursor-pointer select-none ${
                   language === lang.id
                     ? 'bg-primary/15 border-primary ring-1 ring-primary/60 -translate-y-0.5 shadow-md'
                     : 'bg-surface border-border-soft opacity-60 hover:opacity-100 hover:-translate-y-0.5 hover:shadow-md shadow-[0_1px_2px_rgba(0,0,0,0.12)]'
@@ -71,7 +71,7 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
               <div
                 title="English"
                 aria-label="English (EN), fixed target language"
-                className="flex h-7 shrink-0 items-center gap-1 rounded-md border border-primary bg-primary/15 px-1.5 text-[10px] font-bold leading-none ring-1 ring-primary/60 select-none"
+                className="flex h-7 shrink-0 items-center gap-1 rounded-[var(--radius-card)] border border-primary bg-primary/15 px-1.5 text-[10px] font-bold leading-none ring-1 ring-primary/60 select-none"
               >
                 <span className="text-base">{englishLanguage.flag}</span>
                 <span>EN</span>

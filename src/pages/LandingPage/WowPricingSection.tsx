@@ -194,7 +194,7 @@ export const WowPricingSection: React.FC = () => {
               }`}
             >
               <span>Yıllık Ödeme</span>
-              <span className="px-2 py-0.5 rounded-md bg-emerald-500 text-slate-950 text-[10px] font-extrabold uppercase tracking-wider">
+              <span className="px-2 py-0.5 rounded-[var(--radius-card)] bg-emerald-500 text-slate-950 text-[10px] font-extrabold uppercase tracking-wider">
                 %25 İskonto
               </span>
             </button>

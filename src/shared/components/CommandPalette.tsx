@@ -178,7 +178,7 @@ export const CommandPalette = () => {
               <div className="flex items-center gap-1">
                 <button
                   onClick={toggleTheme}
-                  className="rounded-md p-1.5 text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground"
+                  className="rounded-[var(--radius-card)] p-1.5 text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground"
                   aria-label="Toggle theme"
                   title="Toggle dark/light mode"
                 >

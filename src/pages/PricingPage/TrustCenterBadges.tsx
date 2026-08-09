@@ -23,14 +23,14 @@ export const TrustCenterBadges = ({
             <button
               type="button"
               onClick={onOpenSecurityWhitepaper}
-              className="inline-flex items-center gap-1 rounded-md bg-soft border border-border-soft px-3 py-1 text-xs font-bold text-primary hover:border-primary/40 transition cursor-pointer"
+              className="inline-flex items-center gap-1 rounded-[var(--radius-card)] bg-soft border border-border-soft px-3 py-1 text-xs font-bold text-primary hover:border-primary/40 transition cursor-pointer"
             >
               <FileCheck2 className="h-3.5 w-3.5 text-primary" /> Security Whitepaper (PDF)
             </button>
             <button
               type="button"
               onClick={onOpenSlaMatrix}
-              className="inline-flex items-center gap-1 rounded-md bg-soft border border-border-soft px-3 py-1 text-xs font-bold text-emerald-600 hover:border-emerald-500/40 transition cursor-pointer"
+              className="inline-flex items-center gap-1 rounded-[var(--radius-card)] bg-soft border border-border-soft px-3 py-1 text-xs font-bold text-emerald-600 hover:border-emerald-500/40 transition cursor-pointer"
             >
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" /> 99.9% SLA Matrix
             </button>

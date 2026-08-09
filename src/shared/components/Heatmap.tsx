@@ -66,7 +66,7 @@ export const Heatmap = memo(({ sessions }: HeatmapProps) => {
               title={`${day.toLocaleDateString()}: ${Math.round(score)} XP`}
               aria-label={`${day.toLocaleDateString()}: ${Math.round(score)} XP earned`}
               className={cn(
-                'h-6 w-6 rounded-sm shrink-0 transition-all cursor-crosshair hover:scale-110',
+                'h-6 w-6 rounded-[var(--radius-card)] shrink-0 transition-all cursor-crosshair hover:scale-110',
                 levelClass,
                 i === HEATMAP_DAYS - 1 && 'ring-2 ring-primary ring-offset-1 ring-offset-background'
               )}

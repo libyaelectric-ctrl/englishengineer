@@ -178,7 +178,7 @@ const LegalPage = ({ document = 'privacy' }: { document?: LegalDocument }) => {
               <button
                 key={docId}
                 onClick={() => setActiveDoc(docId)}
-                className={`rounded-md px-3 py-1 text-xs font-semibold capitalize transition-all cursor-pointer ${
+                className={`rounded-[var(--radius-card)] px-3 py-1 text-xs font-semibold capitalize transition-all cursor-pointer ${
                   activeDoc === docId
                     ? 'bg-primary text-primary-foreground shadow-sm'
                     : 'text-muted-copy hover:text-foreground hover:bg-background/50'

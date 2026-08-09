@@ -98,7 +98,7 @@ const WordCardFront: React.FC<WordCardFrontProps> = ({
       <WordCardHeader term={term} showAnswer={showAnswer} status={status} progress={progress} />
       {mode === 'Review' && progress && <ReviewReasonBanner term={term} progress={progress} />}
       {status === 'Learned' && mode === 'Quiz' && (
-        <div className="inline-flex items-center gap-1.5 rounded-md border border-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+        <div className="inline-flex items-center gap-1.5 rounded-[var(--radius-card)] border border-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-300">
           <CheckCircle2 className="h-4 w-4" /> Added to Learned List
         </div>
       )}
@@ -127,7 +127,7 @@ const WordCardFront: React.FC<WordCardFrontProps> = ({
                 playSound('ding');
                 onLearn?.(term);
               }}
-              className="w-full rounded-md bg-primary px-3 py-2 text-xs font-bold text-white shadow hover:bg-primary/90 transition-all cursor-pointer"
+              className="w-full rounded-[var(--radius-card)] bg-primary px-3 py-2 text-xs font-bold text-white shadow hover:bg-primary/90 transition-all cursor-pointer"
             >
               I Know This
             </button>

@@ -112,7 +112,7 @@ const WordAnalysisCard = ({
             {wordAnalysis.alternativeMeanings.map((alt) => (
               <span
                 key={alt}
-                className="rounded-md bg-surface border border-border-soft px-2 py-0.5 text-[11px] font-semibold text-foreground"
+                className="rounded-[var(--radius-card)] bg-surface border border-border-soft px-2 py-0.5 text-[11px] font-semibold text-foreground"
               >
                 {alt}
               </span>

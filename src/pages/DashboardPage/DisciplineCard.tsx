@@ -258,13 +258,13 @@ export const DisciplineCard = ({
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex flex-wrap gap-1.5">
-            <span className="rounded-md bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 px-2 py-0.5 text-[10px] font-medium text-blue-600 dark:text-blue-400">
+            <span className="rounded-[var(--radius-card)] bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 px-2 py-0.5 text-[10px] font-medium text-blue-600 dark:text-blue-400">
               General
             </span>
-            <span className="rounded-md bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20 px-2 py-0.5 text-[10px] font-medium text-indigo-600 dark:text-indigo-400">
+            <span className="rounded-[var(--radius-card)] bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20 px-2 py-0.5 text-[10px] font-medium text-indigo-600 dark:text-indigo-400">
               Engineering
             </span>
-            <span className="rounded-md bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 px-2 py-0.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
+            <span className="rounded-[var(--radius-card)] bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 px-2 py-0.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
               {meta?.labelKey ? translate(meta.labelKey as TranslationKey) : discipline}
             </span>
           </div>

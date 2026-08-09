@@ -100,7 +100,7 @@ const PRReviewCoachDemo = ({
                   setInput(sample);
                   setResult(null);
                 }}
-                className="rounded-md border border-border-soft bg-surface-hover px-2 py-1 text-xs text-muted-copy transition-colors hover:border-border-hover hover:text-foreground"
+                className="rounded-[var(--radius-card)] border border-border-soft bg-surface-hover px-2 py-1 text-xs text-muted-copy transition-colors hover:border-border-hover hover:text-foreground"
               >
                 Sample {i + 1}
               </button>
