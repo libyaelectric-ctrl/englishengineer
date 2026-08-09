@@ -29,12 +29,12 @@ export const PricingCard = ({
   const isVariantLanding = variant === 'landing';
 
   const cardClasses = isVariantLanding
-    ? `relative flex flex-col justify-between rounded-xl p-5 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
+    ? `relative flex flex-col justify-between rounded-[var(--radius-card)] p-5 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
         tier.popular
           ? 'border-2 border-primary shadow-xl scale-[1.03]'
           : 'border border-border-soft'
       }`
-    : `relative flex flex-col justify-between rounded-xl p-4 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
+    : `relative flex flex-col justify-between rounded-[var(--radius-card)] p-4 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
         tier.popular ? 'border-2 border-primary shadow-xl scale-[1.01]' : 'border border-soft'
       }`;
 
@@ -104,12 +104,12 @@ export const PricingCard = ({
             <button
               type="button"
               disabled
-              className="w-full rounded-lg border border-border-soft bg-surface px-4 py-2.5 text-xs font-bold text-muted-copy cursor-not-allowed"
+              className="w-full rounded-[var(--radius-card)] border border-border-soft bg-surface px-4 py-2.5 text-xs font-bold text-muted-copy cursor-not-allowed"
             >
               {translate('pricing.comingSoon') ?? 'Coming Soon'}
             </button>
           ) : isCurrentPlan ? (
-            <span className="block w-full rounded-lg border border-success/30 bg-success/10 px-4 py-2.5 text-center text-xs font-bold text-success">
+            <span className="block w-full rounded-[var(--radius-card)] border border-success/30 bg-success/10 px-4 py-2.5 text-center text-xs font-bold text-success">
               {translate('pricing.currentPlan') ?? 'Current plan'}
             </span>
           ) : (
@@ -117,7 +117,7 @@ export const PricingCard = ({
               type="button"
               onClick={handleClick}
               disabled={isLoading}
-              className={`w-full rounded-lg px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition-all shadow-sm ${
+              className={`w-full rounded-[var(--radius-card)] px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition-all shadow-sm ${
                 tier.popular
                   ? 'bg-primary text-white hover:bg-primary/95'
                   : 'bg-surface text-foreground border border-border-soft hover:bg-surface-hover'

@@ -10,10 +10,10 @@ export const DailyPracticeStreakWidget = () => {
   const progressPct = Math.round((currentMins / targetMins) * 100);
 
   return (
-    <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 backdrop-blur-md p-4 shadow-lg space-y-3 relative light-sweep-container overflow-hidden">
+    <div className="rounded-[var(--radius-card)] border border-amber-500/30 bg-amber-500/5 backdrop-blur-md p-4 shadow-lg space-y-3 relative light-sweep-container overflow-hidden">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/20 text-amber-500 font-bold border border-amber-500/40">
+          <div className="flex h-7 w-7 items-center justify-center rounded-[var(--radius-card)] bg-amber-500/20 text-amber-500 font-bold border border-amber-500/40">
             <Flame className="h-4 w-4 fill-amber-500 animate-bounce" />
           </div>
           <div>

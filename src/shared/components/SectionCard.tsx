@@ -21,7 +21,7 @@ export const SectionCard = memo<SectionCardProps>(
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-soft pb-4">
           <div className="flex items-center gap-3">
             {Icon && (
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-hover text-foreground">
+              <div className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-card)] bg-surface-hover text-foreground">
                 <Icon className="h-4 w-4" />
               </div>
             )}

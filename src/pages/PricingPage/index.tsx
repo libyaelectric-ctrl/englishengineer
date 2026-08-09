@@ -75,7 +75,7 @@ const PricingPage = () => {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
-          <div className="flex items-center gap-2 bg-surface p-1 rounded-lg border border-border-soft">
+          <div className="flex items-center gap-2 bg-surface p-1 rounded-[var(--radius-card)] border border-border-soft">
             <button
               type="button"
               onClick={() => setIsAnnual(false)}
@@ -95,7 +95,7 @@ const PricingPage = () => {
             </button>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-surface px-2.5 py-1.5 rounded-lg border border-border-soft">
+          <div className="flex items-center gap-1.5 bg-surface px-2.5 py-1.5 rounded-[var(--radius-card)] border border-border-soft">
             <Globe className="h-3.5 w-3.5 text-blue-500" />
             <select
               value={selectedCurrency}
@@ -113,14 +113,14 @@ const PricingPage = () => {
 
         {checkoutError && (
           <p
-            className="mx-auto mb-6 max-w-xl rounded-xl border border-error/30 bg-error/10 px-4 py-2 text-xs text-error font-bold text-center"
+            className="mx-auto mb-6 max-w-xl rounded-[var(--radius-card)] border border-error/30 bg-error/10 px-4 py-2 text-xs text-error font-bold text-center"
             role="alert"
           >
             {checkoutError}
           </p>
         )}
 
-        <div className="mx-auto mb-8 max-w-sm rounded-2xl border-2 border-primary/40 bg-surface p-5 text-center shadow-sm">
+        <div className="mx-auto mb-8 max-w-sm rounded-[var(--radius-card)] border-2 border-primary/40 bg-surface p-5 text-center shadow-sm">
           <p className="text-sm font-semibold text-foreground">Free</p>
           <p className="mt-2 text-3xl font-extrabold tracking-tight text-foreground">$0</p>
           <p className="mt-1 text-xs leading-relaxed text-muted-copy">
@@ -128,7 +128,7 @@ const PricingPage = () => {
           </p>
           <Link
             to="/welcome"
-            className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary/95"
+            className="mt-4 inline-flex w-full items-center justify-center rounded-[var(--radius-card)] bg-primary px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary/95"
           >
             {translate('pricing.getStarted') ?? 'Start Free'}
           </Link>

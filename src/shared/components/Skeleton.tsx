@@ -13,7 +13,7 @@ export const Skeleton = React.memo(({ className = '', count = 1, style }: Skelet
         <div
           key={i}
           style={style}
-          className={`animate-pulse rounded-lg bg-surface-hover ${className}`}
+          className={`animate-pulse rounded-[var(--radius-card)] bg-surface-hover ${className}`}
         />
       ))}
     </>
@@ -22,7 +22,7 @@ export const Skeleton = React.memo(({ className = '', count = 1, style }: Skelet
 Skeleton.displayName = 'Skeleton';
 
 export const SkeletonCard = () => (
-  <div className="rounded-xl border border-border-soft bg-surface p-4 space-y-3">
+  <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-4 space-y-3">
     <Skeleton className="h-4 w-1/3" />
     <Skeleton className="h-3 w-2/3" />
     <Skeleton className="h-8 w-full" />

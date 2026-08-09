@@ -47,7 +47,7 @@ const InterviewSimulatorDemo = ({ initialState }: { initialState?: InterviewStat
                 setSelectedType('system-design');
                 setState('interview');
               }}
-              className="group rounded-xl border border-border-soft bg-surface-hover p-6 text-left transition-all hover:border-primary/40 hover:bg-primary/5"
+              className="group rounded-[var(--radius-card)] border border-border-soft bg-surface-hover p-6 text-left transition-all hover:border-primary/40 hover:bg-primary/5"
             >
               <Layers className="h-8 w-8 text-primary" />
               <h3 className="mt-3 text-lg font-semibold text-foreground">System Design</h3>
@@ -67,7 +67,7 @@ const InterviewSimulatorDemo = ({ initialState }: { initialState?: InterviewStat
                 setSelectedType('coding');
                 setState('interview');
               }}
-              className="group rounded-xl border border-border-soft bg-surface-hover p-6 text-left transition-all hover:border-primary/40 hover:bg-primary/5"
+              className="group rounded-[var(--radius-card)] border border-border-soft bg-surface-hover p-6 text-left transition-all hover:border-primary/40 hover:bg-primary/5"
             >
               <Code className="h-8 w-8 text-primary" />
               <h3 className="mt-3 text-lg font-semibold text-foreground">Coding Interview</h3>
@@ -118,7 +118,7 @@ const InterviewSimulatorDemo = ({ initialState }: { initialState?: InterviewStat
           }
         >
           <div className="space-y-6">
-            <div className="rounded-xl border border-primary/20 bg-primary/5 p-6 text-center">
+            <div className="rounded-[var(--radius-card)] border border-primary/20 bg-primary/5 p-6 text-center">
               <p className="text-sm font-medium text-primary">Overall Score</p>
               <p className="mt-2 text-4xl font-bold text-foreground">
                 {overallScore}
@@ -130,7 +130,10 @@ const InterviewSimulatorDemo = ({ initialState }: { initialState?: InterviewStat
             </div>
 
             {scores.map((score, i) => (
-              <div key={i} className="rounded-lg border border-border-soft bg-surface-hover p-4">
+              <div
+                key={i}
+                className="rounded-[var(--radius-card)] border border-border-soft bg-surface-hover p-4"
+              >
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-xs font-medium text-muted-copy">Question {i + 1}</p>
@@ -193,7 +196,7 @@ const InterviewSimulatorDemo = ({ initialState }: { initialState?: InterviewStat
         <div className="space-y-5">
           <ProgressBar value={33} color="primary" showValue />
 
-          <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
+          <div className="rounded-[var(--radius-card)] border border-primary/20 bg-primary/5 p-5">
             <p className="text-xs font-medium uppercase text-primary">
               MEDIUM · scalability, api-design
             </p>
@@ -212,7 +215,7 @@ const InterviewSimulatorDemo = ({ initialState }: { initialState?: InterviewStat
             </p>
             <textarea
               id="answer-textarea"
-              className="mt-3 min-h-40 w-full resize-y rounded-lg border border-border-soft bg-surface-hover px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10"
+              className="mt-3 min-h-40 w-full resize-y rounded-[var(--radius-card)] border border-border-soft bg-surface-hover px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10"
               placeholder="Type your answer here, or click the microphone to speak..."
             />
           </div>

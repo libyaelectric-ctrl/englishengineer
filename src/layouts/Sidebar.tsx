@@ -110,7 +110,7 @@ export const Sidebar = () => {
                 >
                   <span className="text-sm leading-none">{currentLangOption.flag}</span>
                 </button>
-                <div className="absolute left-0 top-full mt-1 hidden group-hover:flex flex-col rounded-lg border border-border-soft bg-surface p-1.5 shadow-xl min-w-[160px] max-h-[320px] overflow-y-auto z-50 animate-in fade-in duration-150">
+                <div className="absolute left-0 top-full mt-1 hidden group-hover:flex flex-col rounded-[var(--radius-card)] border border-border-soft bg-surface p-1.5 shadow-xl min-w-[160px] max-h-[320px] overflow-y-auto z-50 animate-in fade-in duration-150">
                   {dashboardLanguages.map((lang) => (
                     <button
                       key={lang.id}

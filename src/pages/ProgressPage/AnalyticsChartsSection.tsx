@@ -29,7 +29,7 @@ export const AnalyticsChartsSection = ({
       subtitle="Derived from existing learning, vocabulary, achievement, and AI Coach state"
       icon={BarChart3}
       headerActions={
-        <div className="flex flex-wrap sm:flex-nowrap gap-1 rounded-lg border border-primary/25 bg-surface p-1 shadow-sm max-w-full overflow-x-auto">
+        <div className="flex flex-wrap sm:flex-nowrap gap-1 rounded-[var(--radius-card)] border border-primary/25 bg-surface p-1 shadow-sm max-w-full overflow-x-auto">
           {chartTabs.map((tab) => (
             <button
               key={tab.id}

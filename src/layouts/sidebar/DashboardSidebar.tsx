@@ -34,7 +34,7 @@ export function DashboardSidebar() {
           <Progress value={isFree ? 33 : 10} max={100} color="var(--color-primary)" />
           <button
             onClick={() => navigate('/billing')}
-            className="mt-3 w-full cursor-pointer rounded-lg bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-all border border-primary/20"
+            className="mt-3 w-full cursor-pointer rounded-[var(--radius-card)] bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-all border border-primary/20"
           >
             {isFree ? 'Upgrade to Pro' : 'Manage Subscription'}
           </button>

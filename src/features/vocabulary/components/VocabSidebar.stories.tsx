@@ -40,7 +40,7 @@ const VocabLevelGrid = ({ mastered }: { mastered: number }) => {
         return (
           <div
             key={lvl.id}
-            className={`flex flex-col p-2 rounded-lg border transition-all ${
+            className={`flex flex-col p-2 rounded-[var(--radius-card)] border transition-all ${
               isActive
                 ? 'border-primary bg-primary/5 shadow-sm'
                 : isCompleted
@@ -82,7 +82,7 @@ const VocabSidebarDemo = ({ mastered }: { mastered: number }) => {
   const total = mastered + learning + newWords;
 
   return (
-    <div className="w-72 space-y-4 rounded-xl border border-border-soft bg-surface p-4">
+    <div className="w-72 space-y-4 rounded-[var(--radius-card)] border border-border-soft bg-surface p-4">
       <div>
         <h3 className="text-sm font-semibold text-foreground">Vocabulary</h3>
         <p className="mt-1 text-xs text-muted-copy">
@@ -140,13 +140,13 @@ const VocabSidebarDemo = ({ mastered }: { mastered: number }) => {
       <div className="space-y-2">
         <button
           type="button"
-          className="w-full rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-left text-xs font-medium text-amber-700 transition-colors hover:bg-amber-100"
+          className="w-full rounded-[var(--radius-card)] border border-amber-300 bg-amber-50 px-3 py-2 text-left text-xs font-medium text-amber-700 transition-colors hover:bg-amber-100"
         >
           ⏰ Review {dueToday} due words
         </button>
         <button
           type="button"
-          className="w-full rounded-lg border border-border-soft bg-surface-hover px-3 py-2 text-left text-xs font-medium text-muted-copy transition-colors hover:text-foreground"
+          className="w-full rounded-[var(--radius-card)] border border-border-soft bg-surface-hover px-3 py-2 text-left text-xs font-medium text-muted-copy transition-colors hover:text-foreground"
         >
           ➕ Add custom word
         </button>

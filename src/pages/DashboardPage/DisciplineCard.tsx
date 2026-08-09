@@ -97,13 +97,13 @@ const SkeletonBlock = ({ className }: { className: string }) => (
 
 const DisciplineCardSkeleton = () => (
   <div
-    className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm space-y-4"
+    className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-5 shadow-sm space-y-4"
     aria-busy="true"
     aria-label="Loading discipline card"
   >
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <SkeletonBlock className="h-10 w-10 rounded-lg" />
+        <SkeletonBlock className="h-10 w-10 rounded-[var(--radius-card)]" />
         <div className="space-y-2">
           <SkeletonBlock className="h-3 w-20" />
           <SkeletonBlock className="h-4 w-28" />
@@ -111,10 +111,10 @@ const DisciplineCardSkeleton = () => (
       </div>
       <SkeletonBlock className="h-5 w-16 rounded-full" />
     </div>
-    <SkeletonBlock className="h-12 w-full rounded-lg" />
+    <SkeletonBlock className="h-12 w-full rounded-[var(--radius-card)]" />
     <div className="grid grid-cols-3 gap-2">
       {Array.from({ length: 6 }).map((_, i) => (
-        <SkeletonBlock key={i} className="h-16 w-full rounded-lg" />
+        <SkeletonBlock key={i} className="h-16 w-full rounded-[var(--radius-card)]" />
       ))}
     </div>
   </div>
@@ -123,7 +123,10 @@ const DisciplineCardSkeleton = () => (
 const DisciplineCardError = ({ onRetry }: { onRetry: () => void }) => {
   const translate = useLocalizationStore((s) => s.translate);
   return (
-    <div className="rounded-xl border border-error/20 bg-error/5 p-5 shadow-sm" role="alert">
+    <div
+      className="rounded-[var(--radius-card)] border border-error/20 bg-error/5 p-5 shadow-sm"
+      role="alert"
+    >
       <div className="flex items-center gap-3 text-error">
         <AlertCircle className="h-5 w-5 shrink-0" />
         <div className="flex-1">
@@ -137,7 +140,7 @@ const DisciplineCardError = ({ onRetry }: { onRetry: () => void }) => {
         <button
           type="button"
           onClick={onRetry}
-          className="flex items-center gap-1 rounded-lg border border-error/30 bg-surface px-3 py-1.5 text-[10px] font-bold text-error hover:bg-error/10 transition-colors"
+          className="flex items-center gap-1 rounded-[var(--radius-card)] border border-error/30 bg-surface px-3 py-1.5 text-[10px] font-bold text-error hover:bg-error/10 transition-colors"
         >
           <RefreshCw className="h-3 w-3" />
           {translate('dashboard.retry') ?? 'Retry'}
@@ -150,9 +153,9 @@ const DisciplineCardError = ({ onRetry }: { onRetry: () => void }) => {
 const DisciplineCardEmpty = ({ disciplineLabel }: { disciplineLabel: string }) => {
   const translate = useLocalizationStore((s) => s.translate);
   return (
-    <div className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm space-y-4">
+    <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-5 shadow-sm space-y-4">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
+        <div className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-card)] bg-slate-100 dark:bg-slate-800">
           <BookOpen className="h-5 w-5 text-muted-copy" />
         </div>
         <div>
@@ -162,13 +165,13 @@ const DisciplineCardEmpty = ({ disciplineLabel }: { disciplineLabel: string }) =
           <p className="text-sm font-bold text-foreground">{disciplineLabel}</p>
         </div>
       </div>
-      <div className="rounded-lg border border-amber-200 dark:border-amber-500/20 bg-amber-50 dark:bg-amber-500/5 p-4 text-center">
+      <div className="rounded-[var(--radius-card)] border border-amber-200 dark:border-amber-500/20 bg-amber-50 dark:bg-amber-500/5 p-4 text-center">
         <p className="text-xs font-medium text-amber-700 dark:text-amber-300">
           {translate('dashboard.noContentYet') ?? 'No content yet for this discipline'}
         </p>
         <Link
           to="/vocabulary"
-          className="mt-2 inline-flex items-center gap-1 rounded-lg bg-amber-500 hover:bg-amber-600 px-3 py-1.5 text-[10px] font-bold text-white transition-colors"
+          className="mt-2 inline-flex items-center gap-1 rounded-[var(--radius-card)] bg-amber-500 hover:bg-amber-600 px-3 py-1.5 text-[10px] font-bold text-white transition-colors"
         >
           {translate('dashboard.goToGeneral') ?? 'Go to General Words'}
           <ArrowRight className="h-3 w-3" />
@@ -227,10 +230,10 @@ export const DisciplineCard = ({
   const DisciplineIcon = getDisciplineIcon(discipline);
 
   return (
-    <div className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm space-y-4">
+    <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-5 shadow-sm space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 border border-blue-200 dark:border-blue-500/20">
+          <div className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-card)] bg-blue-500/10 border border-blue-200 dark:border-blue-500/20">
             <DisciplineIcon className="h-5 w-5 text-primary" aria-hidden="true" />
           </div>
           <div>
@@ -286,7 +289,7 @@ export const DisciplineCard = ({
           <Link
             key={mod.key}
             to={mod.route}
-            className={`flex flex-col items-center gap-1.5 rounded-lg border p-3 transition-all hover:shadow-sm hover:scale-[1.02] ${mod.color}`}
+            className={`flex flex-col items-center gap-1.5 rounded-[var(--radius-card)] border p-3 transition-all hover:shadow-sm hover:scale-[1.02] ${mod.color}`}
           >
             <mod.icon className="h-5 w-5" />
             <span className="text-[10px] font-semibold text-center leading-tight">

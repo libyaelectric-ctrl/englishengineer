@@ -34,10 +34,7 @@ export function WorkflowSection() {
   const activeStep = WORKFLOW[activeStepIndex];
 
   return (
-    <section
-      id="workflow"
-      className="bg-surface px-6 py-7 md:px-12 md:py-8"
-    >
+    <section id="workflow" className="bg-surface px-6 py-7 md:px-12 md:py-8">
       <div className="mx-auto max-w-7xl">
         {/* Compact Single Row Header */}
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border-soft pb-4">
@@ -62,7 +59,7 @@ export function WorkflowSection() {
               <button
                 key={item.titleKey}
                 onClick={() => setActiveStepIndex(index)}
-                className={`p-3.5 rounded-lg border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                className={`p-3.5 rounded-[var(--radius-card)] border text-left transition-all cursor-pointer flex flex-col justify-between ${
                   isActive
                     ? 'bg-primary text-primary-foreground border-primary shadow-lg scale-[1.01]'
                     : 'bg-background text-muted-copy hover:text-foreground border-border-soft hover:border-primary/50'
@@ -95,7 +92,7 @@ export function WorkflowSection() {
 
         {/* Dynamic Detail Card for Active Step */}
         <AnimatedSection delay={80}>
-          <div className="rounded-xl border border-border-soft bg-background p-5 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="rounded-[var(--radius-card)] border border-border-soft bg-background p-5 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="space-y-1.5 max-w-3xl">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-primary font-mono bg-soft border border-border-soft px-2 py-0.5 rounded">
@@ -110,7 +107,7 @@ export function WorkflowSection() {
               </p>
             </div>
 
-            <div className="rounded-lg bg-surface border border-border-soft p-4 flex items-center gap-3 shrink-0">
+            <div className="rounded-[var(--radius-card)] bg-surface border border-border-soft p-4 flex items-center gap-3 shrink-0">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-soft text-primary border border-border-soft">
                 {activeStepIndex === 0 ? (
                   <Layers className="h-5 w-5" />

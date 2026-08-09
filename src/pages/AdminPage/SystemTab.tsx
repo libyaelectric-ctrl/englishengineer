@@ -17,7 +17,7 @@ export const SystemTab = ({ systemLogs }: SystemTabProps) => {
   return (
     <SectionCard title="System Diagnostics" icon={Activity}>
       <div className="space-y-4">
-        <div className="rounded-xl bg-surface-hover/50 p-4 border border-border-soft">
+        <div className="rounded-[var(--radius-card)] bg-surface-hover/50 p-4 border border-border-soft">
           <h3 className="text-sm font-semibold text-foreground">Active Configuration State</h3>
           <div className="mt-3 grid gap-3 text-xs sm:grid-cols-2">
             <div className="flex justify-between border-b border-border-soft pb-1">
@@ -43,7 +43,7 @@ export const SystemTab = ({ systemLogs }: SystemTabProps) => {
           <h3 className="text-xs font-bold text-muted-copy uppercase tracking-wider mb-2">
             Live System Log Output
           </h3>
-          <div className="rounded-xl bg-primary/5 p-4 font-mono text-[10px] text-primary space-y-1 max-h-48 overflow-y-auto">
+          <div className="rounded-[var(--radius-card)] bg-primary/5 p-4 font-mono text-[10px] text-primary space-y-1 max-h-48 overflow-y-auto">
             {systemLogs.map((log) => (
               <p key={log.id}>
                 <span className="opacity-50">[{log.time}]</span>{' '}

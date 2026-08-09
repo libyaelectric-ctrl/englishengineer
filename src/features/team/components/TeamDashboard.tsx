@@ -47,7 +47,7 @@ export const TeamDashboard: FC = () => {
       >
         <div className="space-y-6">
           {source === 'demo' && (
-            <div className="flex gap-3 rounded-xl border border-warning bg-warning p-4 text-sm text-warning">
+            <div className="flex gap-3 rounded-[var(--radius-card)] border border-warning bg-warning p-4 text-sm text-warning">
               <ShieldAlert className="h-5 w-5 shrink-0" />
               <p>
                 <strong>Demo team data.</strong> These names, metrics and invitations are fictional

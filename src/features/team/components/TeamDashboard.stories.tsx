@@ -54,15 +54,15 @@ export const StatsGrid = () => {
 
   return (
     <div className="grid gap-4 sm:grid-cols-3">
-      <div className="rounded-xl border border-border-soft bg-surface p-4">
+      <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-4">
         <p className="text-xs font-medium uppercase text-muted-copy">Team Members</p>
         <p className="mt-1 text-2xl font-bold text-foreground">{DEMO_MEMBERS.length}</p>
       </div>
-      <div className="rounded-xl border border-border-soft bg-surface p-4">
+      <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-4">
         <p className="text-xs font-medium uppercase text-muted-copy">Total Words Learned</p>
         <p className="mt-1 text-2xl font-bold text-foreground">{totalWords}</p>
       </div>
-      <div className="rounded-xl border border-border-soft bg-surface p-4">
+      <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-4">
         <p className="text-xs font-medium uppercase text-muted-copy">Average Score</p>
         <p className="mt-1 text-2xl font-bold text-foreground">{avgScore}%</p>
       </div>
@@ -109,7 +109,7 @@ const TeamDashboardDemo = ({ showDemoWarning }: { showDemoWarning?: boolean }) =
       </header>
 
       {showDemoWarning && (
-        <div className="flex gap-3 rounded-xl border border-warning bg-warning p-4 text-sm text-warning">
+        <div className="flex gap-3 rounded-[var(--radius-card)] border border-warning bg-warning p-4 text-sm text-warning">
           <ShieldAlert className="h-5 w-5 shrink-0" />
           <p>
             <strong>Demo team data.</strong> These names, metrics and invitations are fictional and
@@ -120,7 +120,7 @@ const TeamDashboardDemo = ({ showDemoWarning }: { showDemoWarning?: boolean }) =
 
       <StatsGrid />
 
-      <div className="rounded-xl border border-border-soft bg-surface">
+      <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface">
         <div className="border-b border-border-soft px-4 py-3">
           <h2 className="text-sm font-semibold text-foreground">Team Members</h2>
         </div>

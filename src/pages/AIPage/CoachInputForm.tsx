@@ -282,7 +282,7 @@ export const CoachInputForm = ({
   onFileUpload,
   onNavigate,
 }: CoachInputFormProps) => (
-  <div className="rounded-xl border border-primary/25 bg-surface/80 p-3.5 shadow-sm space-y-3 font-sans">
+  <div className="rounded-[var(--radius-card)] border border-primary/25 bg-surface/80 p-3.5 shadow-sm space-y-3 font-sans">
     <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-border-soft/60">
       <div className="flex items-center gap-2">
         <Terminal className="h-4 w-4 text-primary" />

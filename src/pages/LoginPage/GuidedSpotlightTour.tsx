@@ -51,7 +51,7 @@ export const GuidedSpotlightTour = ({ isOpen, onClose }: GuidedSpotlightTourProp
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in">
-      <div className="w-full max-w-sm rounded-2xl border border-primary/40 bg-surface/95 p-5 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden">
+      <div className="w-full max-w-sm rounded-[var(--radius-card)] border border-primary/40 bg-surface/95 p-5 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden">
         {/* Step Indicator Header */}
         <div className="flex items-center justify-between">
           <span className="text-[10px] font-extrabold uppercase tracking-wider text-primary font-mono bg-primary/10 border border-primary/20 px-2 py-0.5 rounded">
@@ -87,7 +87,7 @@ export const GuidedSpotlightTour = ({ isOpen, onClose }: GuidedSpotlightTourProp
           <button
             type="button"
             onClick={handleNext}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition shadow-md cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded-[var(--radius-card)] bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition shadow-md cursor-pointer"
           >
             <span>{isLast ? translate('login.tourGetStarted') : translate('login.tourNext')}</span>
             {isLast ? (

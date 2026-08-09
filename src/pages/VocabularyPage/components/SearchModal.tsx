@@ -3,10 +3,10 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { useEffect, useRef } from 'react';
 
-import type { VocabularyTerm } from '@/features/vocabulary';
 import { useLocalizationStore } from '@/features/localization';
-import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
+import type { VocabularyTerm } from '@/features/vocabulary';
 import { repairVocabularyText } from '@/features/vocabulary';
+import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -60,7 +60,7 @@ export function SearchModal({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="w-full max-w-lg rounded-xl border border-border-soft bg-surface p-5 shadow-xl"
+          className="w-full max-w-lg rounded-[var(--radius-card)] border border-border-soft bg-surface p-5 shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between border-b border-border-soft pb-3">

@@ -9,7 +9,7 @@ export const CefrProgressMeterCard = () => {
   const progressPct = 82;
 
   return (
-    <div className="rounded-2xl border border-primary/25 bg-surface/90 backdrop-blur-md p-4 shadow-xl space-y-3 relative light-sweep-container overflow-hidden">
+    <div className="rounded-[var(--radius-card)] border border-primary/25 bg-surface/90 backdrop-blur-md p-4 shadow-xl space-y-3 relative light-sweep-container overflow-hidden">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <TrendingUp className="h-4 w-4 text-emerald-500" />
@@ -22,7 +22,7 @@ export const CefrProgressMeterCard = () => {
         </span>
       </div>
 
-      <div className="flex items-center gap-4 bg-background/80 rounded-xl p-3 border border-border-soft">
+      <div className="flex items-center gap-4 bg-background/80 rounded-[var(--radius-card)] p-3 border border-border-soft">
         {/* Circular Progress Ring */}
         <div className="relative flex h-16 w-16 shrink-0 items-center justify-center">
           <svg className="h-full w-full transform -rotate-90" viewBox="0 0 36 36">

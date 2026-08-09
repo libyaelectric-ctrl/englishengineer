@@ -105,7 +105,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
         role="dialog"
         aria-modal="true"
         aria-label="Security and active sessions"
-        className="w-full max-w-lg rounded-2xl border border-primary/30 bg-surface/95 p-5 shadow-2xl space-y-5 relative light-sweep-container overflow-hidden focus:outline-none"
+        className="w-full max-w-lg rounded-[var(--radius-card)] border border-primary/30 bg-surface/95 p-5 shadow-2xl space-y-5 relative light-sweep-container overflow-hidden focus:outline-none"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border-soft pb-3">
@@ -127,14 +127,14 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
 
         {/* Notice Alert */}
         {revokedNotice && (
-          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-2.5 text-xs text-emerald-600 font-bold flex items-center gap-2">
+          <div className="rounded-[var(--radius-card)] border border-emerald-500/30 bg-emerald-500/10 p-2.5 text-xs text-emerald-600 font-bold flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 shrink-0" />
             <span>{revokedNotice}</span>
           </div>
         )}
 
         {/* ITEM 27: 2FA TOTP Toggle */}
-        <div className="rounded-xl border border-border-soft bg-background/80 p-3.5 flex items-center justify-between gap-3">
+        <div className="rounded-[var(--radius-card)] border border-border-soft bg-background/80 p-3.5 flex items-center justify-between gap-3">
           <div className="space-y-0.5">
             <div className="text-xs font-bold text-foreground flex items-center gap-1.5 font-mono">
               <KeyRound className="h-3.5 w-3.5 text-primary" />{' '}
@@ -145,7 +145,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
           <button
             type="button"
             onClick={handleToggle2FA}
-            className={`rounded-lg px-3 py-1.5 text-xs font-bold transition cursor-pointer shrink-0 border ${
+            className={`rounded-[var(--radius-card)] px-3 py-1.5 text-xs font-bold transition cursor-pointer shrink-0 border ${
               twoFactorEnabled
                 ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-600'
                 : 'bg-primary border-primary text-primary-foreground hover:bg-primary-hover'
@@ -161,7 +161,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
         {showQrModal && (
           <form
             onSubmit={handleConfirm2FA}
-            className="rounded-xl border border-primary/40 bg-primary/5 p-4 space-y-3 animate-in fade-in"
+            className="rounded-[var(--radius-card)] border border-primary/40 bg-primary/5 p-4 space-y-3 animate-in fade-in"
           >
             <div className="text-xs font-bold text-primary flex items-center justify-between">
               <span>{translate('login.securityQrTitle')}</span>
@@ -174,7 +174,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
                 <X className="h-3.5 w-3.5" />
               </button>
             </div>
-            <div className="flex items-center justify-center p-3 bg-white rounded-lg border w-36 h-36 mx-auto">
+            <div className="flex items-center justify-center p-3 bg-white rounded-[var(--radius-card)] border w-36 h-36 mx-auto">
               <div className="text-[10px] font-mono font-bold text-black text-center leading-tight">
                 [QR CODE PLACEHOLDER]
                 <br />
@@ -194,14 +194,14 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
                 maxLength={6}
                 value={totpCode}
                 onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, ''))}
-                className="w-full h-10 rounded-lg border border-border-soft bg-background text-center font-mono text-base font-bold text-foreground focus:border-primary outline-none"
+                className="w-full h-10 rounded-[var(--radius-card)] border border-border-soft bg-background text-center font-mono text-base font-bold text-foreground focus:border-primary outline-none"
                 placeholder="123456"
               />
             </div>
             <button
               type="submit"
               disabled={totpCode.length !== 6}
-              className="w-full h-10 rounded-lg bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-500 transition disabled:opacity-50 cursor-pointer"
+              className="w-full h-10 rounded-[var(--radius-card)] bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-500 transition disabled:opacity-50 cursor-pointer"
             >
               {translate('login.securityVerify')}
             </button>
@@ -229,7 +229,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
             {sessions.map((s) => (
               <div
                 key={s.id}
-                className={`flex items-center justify-between rounded-xl border p-2.5 text-xs transition ${
+                className={`flex items-center justify-between rounded-[var(--radius-card)] border p-2.5 text-xs transition ${
                   s.isCurrent
                     ? 'border-primary/40 bg-primary/5'
                     : 'border-border-soft bg-background/60'

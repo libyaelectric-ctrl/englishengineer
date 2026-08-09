@@ -39,7 +39,7 @@ export const PlacementBypassModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in">
-      <div className="w-full max-w-md rounded-2xl border border-primary/40 bg-surface/95 p-6 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden">
+      <div className="w-full max-w-md rounded-[var(--radius-card)] border border-primary/40 bg-surface/95 p-6 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden">
         <div className="flex items-center justify-between border-b border-border-soft pb-3">
           <div className="flex items-center gap-2">
             <KeyRound className="h-5 w-5 text-primary" />
@@ -68,7 +68,7 @@ export const PlacementBypassModal = ({
               <button
                 type="button"
                 onClick={() => setQuizStep('quiz')}
-                className="w-full flex items-center justify-between rounded-xl border border-primary/30 bg-primary/10 p-3 hover:bg-primary/20 text-left transition cursor-pointer"
+                className="w-full flex items-center justify-between rounded-[var(--radius-card)] border border-primary/30 bg-primary/10 p-3 hover:bg-primary/20 text-left transition cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
                   <Award className="h-5 w-5 text-primary shrink-0" />
@@ -85,7 +85,7 @@ export const PlacementBypassModal = ({
               <button
                 type="button"
                 onClick={handleInstantBypass}
-                className="w-full flex items-center justify-between rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 hover:bg-emerald-500/20 text-left transition cursor-pointer"
+                className="w-full flex items-center justify-between rounded-[var(--radius-card)] border border-emerald-500/30 bg-emerald-500/10 p-3 hover:bg-emerald-500/20 text-left transition cursor-pointer"
               >
                 <div className="flex items-center gap-2.5">
                   <Zap className="h-5 w-5 text-emerald-500 shrink-0" />
@@ -127,7 +127,7 @@ export const PlacementBypassModal = ({
                   key={opt}
                   type="button"
                   onClick={() => setSelectedOption(i)}
-                  className={`w-full rounded-xl border p-2.5 text-left text-xs font-medium transition cursor-pointer ${
+                  className={`w-full rounded-[var(--radius-card)] border p-2.5 text-left text-xs font-medium transition cursor-pointer ${
                     selectedOption === i
                       ? 'border-primary bg-primary/10 text-primary font-bold shadow-sm'
                       : 'border-border-soft bg-background hover:border-primary/40'
@@ -142,7 +142,7 @@ export const PlacementBypassModal = ({
               type="button"
               disabled={selectedOption === null}
               onClick={handlePassQuiz}
-              className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover disabled:opacity-50 transition cursor-pointer shadow-md"
+              className="w-full py-2.5 rounded-[var(--radius-card)] bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover disabled:opacity-50 transition cursor-pointer shadow-md"
             >
               Submit & Unlock All Skills
             </button>

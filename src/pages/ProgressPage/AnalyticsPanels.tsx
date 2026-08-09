@@ -114,7 +114,7 @@ const getDimensionsToDisplay = (isPending: boolean, profile: AssessmentProfile) 
     : profile.dimensionScores;
 
 const PendingBaselineBanner = () => (
-  <div className="rounded-xl border border-primary/30 bg-primary/5 p-5 shadow-sm">
+  <div className="rounded-[var(--radius-card)] border border-primary/30 bg-primary/5 p-5 shadow-sm">
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div>
         <p className="text-xs font-bold text-primary uppercase tracking-wider">
@@ -127,7 +127,7 @@ const PendingBaselineBanner = () => (
       </div>
       <Link
         to="/vocabulary"
-        className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary-hover transition-colors"
+        className="shrink-0 inline-flex items-center gap-1.5 rounded-[var(--radius-card)] bg-primary px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary-hover transition-colors"
       >
         Start Diagnostic
       </Link>
@@ -157,7 +157,7 @@ const DisclaimerBox = ({
   disclaimer: string | null;
   explanation: string | null;
 }) => (
-  <div className="rounded-xl border border-primary/20 bg-surface/80 p-4 shadow-sm">
+  <div className="rounded-[var(--radius-card)] border border-primary/20 bg-surface/80 p-4 shadow-sm">
     <p className="text-xs font-bold text-primary">
       {disclaimer || 'Engineering Communication Standards & CEFR Mapping'}
     </p>
@@ -193,7 +193,7 @@ const DimensionTag = ({
   return (
     <span
       key={d.dimensionId}
-      className={`rounded-lg border px-2.5 py-1 text-[10px] font-mono uppercase font-bold ${color}`}
+      className={`rounded-[var(--radius-card)] border px-2.5 py-1 text-[10px] font-mono uppercase font-bold ${color}`}
     >
       {d.label} {d.score}%
     </span>
@@ -202,7 +202,7 @@ const DimensionTag = ({
 
 const StrengthWeaknessPanel = ({ profile }: { profile: AssessmentProfile }) => (
   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-    <div className="rounded-xl border border-success/20 bg-success/5 p-5 shadow-sm">
+    <div className="rounded-[var(--radius-card)] border border-success/20 bg-success/5 p-5 shadow-sm">
       <p className="text-[10px] font-mono text-success uppercase tracking-widest font-bold">
         Strongest Dimensions
       </p>
@@ -212,7 +212,7 @@ const StrengthWeaknessPanel = ({ profile }: { profile: AssessmentProfile }) => (
         ))}
       </div>
     </div>
-    <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-5 shadow-sm">
+    <div className="rounded-[var(--radius-card)] border border-rose-500/20 bg-rose-500/5 p-5 shadow-sm">
       <p className="text-[10px] font-mono text-error uppercase tracking-widest font-bold">
         Priority Improvement Areas
       </p>
@@ -237,7 +237,7 @@ const DimensionCard = ({
 }) => (
   <div
     key={dimension.dimensionId}
-    className="rounded-xl border border-primary/20 bg-surface p-4 shadow-sm hover:border-primary/40 transition-colors"
+    className="rounded-[var(--radius-card)] border border-primary/20 bg-surface p-4 shadow-sm hover:border-primary/40 transition-colors"
   >
     <div className="flex items-center justify-between gap-3">
       <p className="text-xs font-bold text-foreground">{dimension.label}</p>
@@ -272,9 +272,9 @@ const DimensionCardsGrid = ({
 );
 
 const QuickWorkoutBanner = () => (
-  <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+  <div className="rounded-[var(--radius-card)] border border-primary/30 bg-primary/5 p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
     <div className="flex items-center gap-3">
-      <div className="inline-flex items-center gap-1 rounded-lg bg-primary/10 px-2.5 py-1 text-primary font-bold text-[10px] uppercase tracking-wider">
+      <div className="inline-flex items-center gap-1 rounded-[var(--radius-card)] bg-primary/10 px-2.5 py-1 text-primary font-bold text-[10px] uppercase tracking-wider">
         <Zap className="h-3 w-3" aria-hidden="true" /> Quick Workout
       </div>
       <div>
@@ -288,7 +288,7 @@ const QuickWorkoutBanner = () => (
     </div>
     <Link
       to="/speaking"
-      className="shrink-0 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary-hover transition-colors cursor-pointer"
+      className="shrink-0 rounded-[var(--radius-card)] bg-primary px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary-hover transition-colors cursor-pointer"
     >
       🚀 Start 3-min Workout
     </Link>

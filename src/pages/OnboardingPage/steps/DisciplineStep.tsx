@@ -62,7 +62,7 @@ export const DisciplineStep = ({ discipline, setDiscipline }: DisciplineStepProp
               }`}
             >
               <div
-                className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
+                className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-card)] ${
                   isSelected ? 'bg-primary/10 text-primary' : 'bg-surface-hover text-muted-copy'
                 }`}
               >

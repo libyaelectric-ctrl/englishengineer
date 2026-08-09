@@ -78,7 +78,7 @@ export const LandingPage = () => {
                   onClick={() =>
                     useLocalizationStore.getState().setLanguage(l.id as SupportedInterfaceLanguage)
                   }
-                  className={`flex h-8 w-8 items-center justify-center rounded-lg border text-base leading-none transition-all select-none ${
+                  className={`flex h-8 w-8 items-center justify-center rounded-[var(--radius-card)] border text-base leading-none transition-all select-none ${
                     l.id === language
                       ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/15 ring-1 ring-primary/60 shadow-md'
                       : 'border-[var(--color-border-soft)] opacity-60 hover:opacity-100 hover:border-[var(--color-primary)]/50 hover:-translate-y-0.5'
@@ -280,7 +280,9 @@ export const LandingPage = () => {
                 key={key}
                 className="flex items-center gap-2 rounded-[var(--radius-card)] border border-[var(--color-border-soft)] bg-[var(--background)] px-3 py-2.5 transition-colors hover:border-[var(--color-primary)]/40"
               >
-                <span className={`inline-flex shrink-0 rounded-lg bg-${color}-500/10 p-1.5`}>
+                <span
+                  className={`inline-flex shrink-0 rounded-[var(--radius-card)] bg-${color}-500/10 p-1.5`}
+                >
                   <Icon className={`h-4 w-4 text-${color}-500`} />
                 </span>
                 <span className="text-xs font-semibold capitalize">{key}</span>
@@ -365,7 +367,7 @@ export const LandingPage = () => {
                 </p>
                 <Link
                   to="/welcome"
-                  className={`mt-4 flex w-full items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-semibold transition-colors ${
+                  className={`mt-4 flex w-full items-center justify-center gap-1.5 rounded-[var(--radius-card)] py-2 text-sm font-semibold transition-colors ${
                     popular
                       ? 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)]'
                       : 'border border-[var(--color-border-soft)] hover:border-[var(--color-primary)]'
@@ -398,7 +400,10 @@ export const LandingPage = () => {
                 a: '15 interface languages including EN, TR, DE, AR, ES, FR, PT, RU, ZH, JA, IT, VI, PL, ID, NL.',
               },
             ].map((item, i) => (
-              <div key={i} className="rounded-xl border border-[var(--color-border-soft)]">
+              <div
+                key={i}
+                className="rounded-[var(--radius-card)] border border-[var(--color-border-soft)]"
+              >
                 <button
                   onClick={() => setFaqOpen(faqOpen === i ? null : i)}
                   className="flex w-full items-center justify-between px-5 py-4 text-left font-semibold"

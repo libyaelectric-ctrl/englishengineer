@@ -159,7 +159,7 @@ export const DefenseSimulator = () => {
                 setEvaluation(null);
                 setUserSpeechText('');
               }}
-              className={`flex flex-col items-start p-4 rounded-xl border text-left transition-all cursor-pointer ${
+              className={`flex flex-col items-start p-4 rounded-[var(--radius-card)] border text-left transition-all cursor-pointer ${
                 isActive
                   ? 'border-primary bg-primary/5 shadow-md ring-1 ring-primary'
                   : 'border-border-soft bg-surface hover:bg-surface-hover hover:border-border-hover'
@@ -167,7 +167,7 @@ export const DefenseSimulator = () => {
             >
               <div className="flex w-full items-center justify-between">
                 <span
-                  className={`p-2 rounded-lg ${
+                  className={`p-2 rounded-[var(--radius-card)] ${
                     isActive ? 'bg-primary text-white' : 'bg-surface-hover text-muted-copy'
                   }`}
                 >
@@ -187,9 +187,9 @@ export const DefenseSimulator = () => {
       </div>
 
       {/* AI Interviewer Roleplay Stage */}
-      <div className="rounded-2xl border border-border-soft bg-surface p-6 shadow-sm space-y-6">
+      <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-6 shadow-sm space-y-6">
         {/* AI Question Banner */}
-        <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 space-y-2">
+        <div className="rounded-[var(--radius-card)] border border-primary/30 bg-primary/5 p-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-primary">
               AI Roleplay Prompt ({scenario.badge})
@@ -203,14 +203,14 @@ export const DefenseSimulator = () => {
         </div>
 
         {/* Recording Controls & Live Audio Visualizer */}
-        <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-border-soft rounded-xl bg-background/50 space-y-4">
+        <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-border-soft rounded-[var(--radius-card)] bg-background/50 space-y-4">
           <div className="flex items-center gap-3">
             {!isRecording ? (
               <button
                 type="button"
                 onClick={handleStartRecording}
                 aria-label="Start recording audio defense answer"
-                className="flex items-center gap-2 rounded-xl bg-red-600 hover:bg-red-500 text-white px-6 py-3 text-xs font-extrabold transition-all shadow-md cursor-pointer"
+                className="flex items-center gap-2 rounded-[var(--radius-card)] bg-red-600 hover:bg-red-500 text-white px-6 py-3 text-xs font-extrabold transition-all shadow-md cursor-pointer"
               >
                 <Mic className="h-4 w-4 animate-pulse" />
                 <span>Start Audio Defense Answer</span>
@@ -220,7 +220,7 @@ export const DefenseSimulator = () => {
                 type="button"
                 onClick={handleStopRecording}
                 aria-label="Stop recording and evaluate response"
-                className="flex items-center gap-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white px-6 py-3 text-xs font-extrabold transition-all cursor-pointer"
+                className="flex items-center gap-2 rounded-[var(--radius-card)] bg-zinc-800 hover:bg-zinc-700 text-white px-6 py-3 text-xs font-extrabold transition-all cursor-pointer"
               >
                 <Mic className="h-4 w-4 text-red-500 animate-ping" />
                 <span>Stop & Evaluate Response</span>
@@ -237,7 +237,7 @@ export const DefenseSimulator = () => {
 
         {/* Evaluation Output */}
         {evaluation && (
-          <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/10 p-5 space-y-3 animate-in fade-in duration-300">
+          <div className="rounded-[var(--radius-card)] border border-emerald-500/30 bg-emerald-950/10 p-5 space-y-3 animate-in fade-in duration-300">
             <div className="flex items-center justify-between border-b border-emerald-500/20 pb-3">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5 text-emerald-400" />
@@ -252,7 +252,7 @@ export const DefenseSimulator = () => {
               <span className="text-[10px] font-bold uppercase text-muted-copy">
                 Transcribed Audio Answer:
               </span>
-              <p className="text-xs font-mono text-foreground italic bg-background p-2.5 rounded-lg border border-border-soft">
+              <p className="text-xs font-mono text-foreground italic bg-background p-2.5 rounded-[var(--radius-card)] border border-border-soft">
                 "{userSpeechText}"
               </p>
             </div>

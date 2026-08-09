@@ -86,10 +86,10 @@ export const PdfSpecExtractor = () => {
   }, [extractedTerms]);
 
   return (
-    <div className="rounded-2xl border border-border-soft bg-surface p-6 shadow-sm space-y-6">
+    <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-6 shadow-sm space-y-6">
       <div className="flex items-center justify-between border-b border-border-soft pb-4">
         <div className="flex items-center gap-2.5">
-          <span className="p-2 rounded-xl bg-primary/10 text-primary">
+          <span className="p-2 rounded-[var(--radius-card)] bg-primary/10 text-primary">
             <FileCode className="h-5 w-5" />
           </span>
           <div>
@@ -105,7 +105,7 @@ export const PdfSpecExtractor = () => {
       </div>
 
       {/* PDF Upload Dropzone */}
-      <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-border-soft rounded-2xl bg-background/50 hover:bg-surface-hover transition-colors cursor-pointer text-center space-y-3 relative">
+      <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-border-soft rounded-[var(--radius-card)] bg-background/50 hover:bg-surface-hover transition-colors cursor-pointer text-center space-y-3 relative">
         <input
           type="file"
           accept=".pdf,.txt,.docx"
@@ -145,7 +145,7 @@ export const PdfSpecExtractor = () => {
             <button
               type="button"
               onClick={handleCopyFlashcards}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border-soft bg-background px-3 py-1.5 text-xs font-bold text-foreground hover:bg-surface-hover transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 rounded-[var(--radius-card)] border border-border-soft bg-background px-3 py-1.5 text-xs font-bold text-foreground hover:bg-surface-hover transition-colors cursor-pointer"
             >
               {copied ? (
                 <>
@@ -165,7 +165,7 @@ export const PdfSpecExtractor = () => {
             {extractedTerms.map((term, idx) => (
               <div
                 key={idx}
-                className="rounded-xl border border-border-soft bg-background p-4 space-y-2 hover:border-primary/40 transition-all shadow-sm"
+                className="rounded-[var(--radius-card)] border border-border-soft bg-background p-4 space-y-2 hover:border-primary/40 transition-all shadow-sm"
               >
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-extrabold text-foreground">{term.word}</h4>

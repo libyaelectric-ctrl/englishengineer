@@ -54,7 +54,7 @@ const OnboardingFooter = ({
       {index > 0 ? (
         <Link
           to={`/onboarding/${STEPS[index - 1]}`}
-          className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-medium text-foreground transition-colors hover:bg-surface"
+          className="inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-card)] px-3 text-sm font-medium text-foreground transition-colors hover:bg-surface"
         >
           <ArrowLeft className="h-4 w-4" />
           {translate('onboarding.back')}
@@ -66,7 +66,7 @@ const OnboardingFooter = ({
         type="button"
         onClick={onContinue}
         disabled={!canContinue}
-        className="public-primary-action min-w-0 px-4 sm:px-5 rounded-lg font-medium disabled:opacity-50"
+        className="public-primary-action min-w-0 px-4 sm:px-5 rounded-[var(--radius-card)] font-medium disabled:opacity-50"
       >
         {index === STEPS.length - 1
           ? (translate('onboarding.finish') ?? 'Finish')
@@ -189,7 +189,7 @@ const OnboardingPage = () => {
 
   return (
     <main className="mx-auto max-w-5xl py-3 sm:py-6">
-      <section className="overflow-hidden rounded-xl border border-border-soft bg-surface">
+      <section className="overflow-hidden rounded-[var(--radius-card)] border border-border-soft bg-surface">
         <header className="border-b border-border-soft bg-surface-hover px-5 py-5 sm:px-7">
           <div className="flex items-start gap-3 sm:items-center">
             <Compass className="h-5 w-5 text-primary" />

@@ -10,7 +10,7 @@ export const WritingModelAnswer = ({
   if (!hasSubmitted) return null;
   return (
     <section aria-label="Model answer" className="space-y-3">
-      <div className="rounded-xl border border-sky-500/20 bg-primary/50/5 p-5">
+      <div className="rounded-[var(--radius-card)] border border-sky-500/20 bg-primary/50/5 p-5">
         <h3 className="text-sm font-black text-sky-300">Model answer</h3>
         <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-muted-copy">
           {modelAnswer || 'No model answer is available for this task.'}

@@ -36,7 +36,7 @@ export const KeyboardShortcutsModal = ({ isOpen, onClose }: KeyboardShortcutsMod
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-in fade-in">
-      <div className="w-full max-w-md rounded-2xl border border-primary/30 bg-surface/95 p-5 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden">
+      <div className="w-full max-w-md rounded-[var(--radius-card)] border border-primary/30 bg-surface/95 p-5 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden">
         <div className="flex items-center justify-between border-b border-border-soft pb-3">
           <div className="flex items-center gap-2">
             <Keyboard className="h-5 w-5 text-primary" />
@@ -57,7 +57,7 @@ export const KeyboardShortcutsModal = ({ isOpen, onClose }: KeyboardShortcutsMod
           {SHORTCUTS.map((s) => (
             <div
               key={s.key}
-              className="flex items-center justify-between rounded-xl border border-border-soft bg-background/80 p-2.5 text-xs font-medium"
+              className="flex items-center justify-between rounded-[var(--radius-card)] border border-border-soft bg-background/80 p-2.5 text-xs font-medium"
             >
               <span className="text-foreground">{translate(s.desc)}</span>
               <kbd className="rounded bg-primary/10 border border-primary/20 px-2 py-0.5 font-mono text-[10px] font-bold text-primary shadow-xs">

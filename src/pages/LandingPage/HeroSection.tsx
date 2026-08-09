@@ -1,6 +1,5 @@
 import { ArrowRight, CheckCircle2, Sparkles, Volume2 } from 'lucide-react';
 
-
 import { useEffect, useState } from 'react';
 
 import { useLocalizationStore } from '@/features/localization';
@@ -79,11 +78,10 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}
       >
-
         {/* 2 Equal Columns: Left (Try AI Coach Sandbox) & Right (AI Coach Visual Processor) */}
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch relative z-10">
           {/* Left Column: ITEM 1 Interactive "Try AI Coach" Canlı Mini Demo Box */}
-          <div className="w-full h-full flex flex-col justify-between rounded-2xl border border-primary/25 bg-surface/90 backdrop-blur-md p-5 shadow-2xl relative light-sweep-container overflow-hidden">
+          <div className="w-full h-full flex flex-col justify-between rounded-[var(--radius-card)] border border-primary/25 bg-surface/90 backdrop-blur-md p-5 shadow-2xl relative light-sweep-container overflow-hidden">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-extrabold uppercase tracking-wider text-primary flex items-center gap-1.5 font-mono">
@@ -131,14 +129,14 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
                   type="text"
                   value={demoInput}
                   onChange={(e) => setDemoInput(e.target.value)}
-                  className="flex-1 rounded-lg border border-border-soft bg-background px-3 py-2 text-xs text-foreground font-medium focus:border-primary focus:outline-none shadow-inner"
+                  className="flex-1 rounded-[var(--radius-card)] border border-border-soft bg-background px-3 py-2 text-xs text-foreground font-medium focus:border-primary focus:outline-none shadow-inner"
                   placeholder={translate('landing.demoInputPlaceholder')}
                 />
                 <button
                   type="button"
                   onClick={() => handleRunAnalysis()}
                   disabled={isAnalyzing}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition shadow-md cursor-pointer shrink-0"
+                  className="inline-flex items-center gap-1.5 rounded-[var(--radius-card)] bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition shadow-md cursor-pointer shrink-0"
                 >
                   <span>
                     {isAnalyzing
@@ -151,7 +149,7 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
 
               {/* Analysis Result Box */}
               {analysisResult && (
-                <div className="rounded-xl border border-emerald-500/35 bg-emerald-500/10 p-3 space-y-1.5 animate-fadeIn">
+                <div className="rounded-[var(--radius-card)] border border-emerald-500/35 bg-emerald-500/10 p-3 space-y-1.5 animate-fadeIn">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-bold text-emerald-600 flex items-center gap-1">
                       <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />{' '}
@@ -178,10 +176,10 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
           {/* Right Column: AI Coach Interactive Card & ITEM 7: Audio Waveform Visualizer */}
           <div className="w-full h-full relative group">
             {/* Rotating Ambient Light Ring */}
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-primary via-blue-500 to-indigo-600 blur-xl opacity-60 animate-spin-slow pointer-events-none group-hover:opacity-90 transition-opacity" />
+            <div className="absolute -inset-1 rounded-[var(--radius-card)] bg-gradient-to-r from-primary via-blue-500 to-indigo-600 blur-xl opacity-60 animate-spin-slow pointer-events-none group-hover:opacity-90 transition-opacity" />
 
-            <div className="relative rounded-2xl bg-gradient-to-br from-primary via-[#1a5fd4] to-[#3366cc] p-1 shadow-2xl h-full flex flex-col justify-between">
-              <div className="relative overflow-hidden rounded-xl bg-primary p-5 sm:p-6 light-sweep-container h-full flex flex-col justify-between">
+            <div className="relative rounded-[var(--radius-card)] bg-gradient-to-br from-primary via-[#1a5fd4] to-[#3366cc] p-1 shadow-2xl h-full flex flex-col justify-between">
+              <div className="relative overflow-hidden rounded-[var(--radius-card)] bg-primary p-5 sm:p-6 light-sweep-container h-full flex flex-col justify-between">
                 <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-white/10 animate-ambient-glow" />
                 <div className="absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-white/10 animate-ambient-glow" />
                 <div className="relative z-10 space-y-4 flex-1 flex flex-col justify-between">
@@ -209,7 +207,7 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
                         ).map((i) => (
                           <div
                             key={i.l}
-                            className="rounded-lg bg-white/10 p-2.5 text-center border border-white/10"
+                            className="rounded-[var(--radius-card)] bg-white/10 p-2.5 text-center border border-white/10"
                           >
                             <div className="text-[10px] text-white/70 font-medium uppercase tracking-wider">
                               {translate(i.l)}
@@ -226,9 +224,11 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
                     {HERO_STATS.map((s) => (
                       <div
                         key={s.labelEn}
-                        className="rounded-lg bg-white/10 border border-white/15 px-2 py-1.5 text-center"
+                        className="rounded-[var(--radius-card)] bg-white/10 border border-white/15 px-2 py-1.5 text-center"
                       >
-                        <div className="text-sm font-extrabold text-white leading-none">{s.value}</div>
+                        <div className="text-sm font-extrabold text-white leading-none">
+                          {s.value}
+                        </div>
                         <div className="text-[9px] text-white/70 font-medium uppercase tracking-wider mt-0.5 leading-tight">
                           {isTr ? s.labelTr : s.labelEn}
                         </div>
@@ -237,7 +237,7 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
                   </div>
 
                   {/* ITEM 7: Hero Waveform Audio Visualizer */}
-                  <div className="rounded-xl bg-black/25 p-3 border border-white/15 flex items-center justify-between gap-3">
+                  <div className="rounded-[var(--radius-card)] bg-black/25 p-3 border border-white/15 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2 text-white">
                       <Volume2 className="h-4 w-4 text-emerald-400 animate-pulse shrink-0" />
                       <span className="text-[10px] font-bold uppercase tracking-wider font-mono">

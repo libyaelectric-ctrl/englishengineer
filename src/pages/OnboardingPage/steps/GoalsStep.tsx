@@ -45,7 +45,7 @@ export const GoalsStep = ({
             type="button"
             key={item.id}
             onClick={() => toggle(item.id, communicationGoals, setCommunicationGoals)}
-            className={`flex min-h-11 items-center justify-between rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors ${communicationGoals.includes(item.id) ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border-soft bg-surface text-foreground hover:border-primary/20 hover:bg-surface-hover'}`}
+            className={`flex min-h-11 items-center justify-between rounded-[var(--radius-card)] border px-4 py-3 text-left text-sm font-medium transition-colors ${communicationGoals.includes(item.id) ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border-soft bg-surface text-foreground hover:border-primary/20 hover:bg-surface-hover'}`}
           >
             {item.label}
             {communicationGoals.includes(item.id) && <Check className="h-4 w-4" />}
@@ -59,7 +59,7 @@ export const GoalsStep = ({
             type="button"
             key={item.id}
             onClick={() => toggle(item.id, learningFocus, setLearningFocus)}
-            className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${learningFocus.includes(item.id) ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border-soft bg-surface text-foreground hover:border-primary/20 hover:bg-surface-hover'}`}
+            className={`rounded-[var(--radius-card)] border px-4 py-2 text-sm font-medium transition-colors ${learningFocus.includes(item.id) ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border-soft bg-surface text-foreground hover:border-primary/20 hover:bg-surface-hover'}`}
           >
             {translate(item.label)}
           </button>
@@ -70,7 +70,7 @@ export const GoalsStep = ({
         <select
           value={careerGoal}
           onChange={(event) => setCareerGoal(event.target.value)}
-          className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
+          className="premium-input mt-2 w-full px-3 py-3 rounded-[var(--radius-card)]"
         >
           <option value="">{translate('onboarding.selectOutcome')}</option>
           {CAREER_GOALS.map((goal) => (

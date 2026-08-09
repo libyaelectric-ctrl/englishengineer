@@ -41,7 +41,7 @@ export const ProfileStep = ({
           <select
             value={minutes}
             onChange={(event) => setMinutes(Number(event.target.value))}
-            className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
+            className="premium-input mt-2 w-full px-3 py-3 rounded-[var(--radius-card)]"
           >
             {DAILY_DURATION_OPTIONS.map((value) => (
               <option key={value} value={value}>
@@ -55,7 +55,7 @@ export const ProfileStep = ({
           <select
             value={taskCount}
             onChange={(event) => setTaskCount(Number(event.target.value))}
-            className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
+            className="premium-input mt-2 w-full px-3 py-3 rounded-[var(--radius-card)]"
           >
             {DAILY_TASK_COUNT_OPTIONS.map((value) => (
               <option key={value} value={value}>
@@ -69,7 +69,7 @@ export const ProfileStep = ({
           <select
             value={country}
             onChange={(event) => setCountry(event.target.value)}
-            className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
+            className="premium-input mt-2 w-full px-3 py-3 rounded-[var(--radius-card)]"
           >
             <option value="">{translate('onboarding.selectCountry')}</option>
             {COUNTRIES.map((value) => (
@@ -84,7 +84,7 @@ export const ProfileStep = ({
           <select
             value={TIMEZONES.includes(timezone as (typeof TIMEZONES)[number]) ? timezone : 'UTC'}
             onChange={(event) => setTimezone(event.target.value)}
-            className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
+            className="premium-input mt-2 w-full px-3 py-3 rounded-[var(--radius-card)]"
           >
             {TIMEZONES.map((value) => (
               <option key={value} value={value}>

@@ -411,7 +411,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
         />
       )}
 
-      <div className="flex flex-col gap-4 rounded-xl border border-primary/25 bg-surface/80 p-3 shadow-sm md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 rounded-[var(--radius-card)] border border-primary/25 bg-surface/80 p-3 shadow-sm md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap gap-2" role="tablist" aria-label="Work tool type">
           {TAB_ITEMS.map(([id, label, Icon]) => (
             <button

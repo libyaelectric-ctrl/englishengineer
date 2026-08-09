@@ -85,7 +85,7 @@ export function CefrQuizWidget() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-primary/20 bg-background p-5 md:p-6 shadow-xl max-w-3xl mx-auto light-sweep-container">
+        <div className="rounded-[var(--radius-card)] border border-primary/20 bg-background p-5 md:p-6 shadow-xl max-w-3xl mx-auto light-sweep-container">
           {!calculatedLevel ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between text-xs border-b border-border-soft pb-2">
@@ -111,7 +111,7 @@ export function CefrQuizWidget() {
                     role="radio"
                     aria-checked={false}
                     onClick={() => handleSelectOption(opt.level)}
-                    className="w-full text-left p-3 rounded-lg border border-border-soft bg-surface hover:border-primary/50 hover:bg-primary/5 transition-all text-xs font-medium text-foreground flex items-center justify-between group cursor-pointer"
+                    className="w-full text-left p-3 rounded-[var(--radius-card)] border border-border-soft bg-surface hover:border-primary/50 hover:bg-primary/5 transition-all text-xs font-medium text-foreground flex items-center justify-between group cursor-pointer"
                   >
                     <span>{translate(opt.text)}</span>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy group-hover:text-primary font-mono">
@@ -131,7 +131,7 @@ export function CefrQuizWidget() {
                 {translate('landing.cefrQuizResult')}
               </h3>
 
-              <div className="inline-block rounded-xl bg-primary text-primary-foreground px-6 py-2 text-base font-extrabold shadow-lg font-mono tracking-wider">
+              <div className="inline-block rounded-[var(--radius-card)] bg-primary text-primary-foreground px-6 py-2 text-base font-extrabold shadow-lg font-mono tracking-wider">
                 {calculatedLevel}
               </div>
 
@@ -139,7 +139,7 @@ export function CefrQuizWidget() {
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-border-soft bg-surface px-4 py-2 text-xs font-bold text-foreground hover:bg-surface-hover transition cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-[var(--radius-card)] border border-border-soft bg-surface px-4 py-2 text-xs font-bold text-foreground hover:bg-surface-hover transition cursor-pointer"
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
                   <span>{translate('landing.cefrQuizRetake')}</span>

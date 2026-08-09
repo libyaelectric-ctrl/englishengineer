@@ -36,7 +36,7 @@ const PlacementPage = () => {
   if (result) {
     return (
       <main className="mx-auto max-w-3xl py-4 sm:py-8">
-        <section className="rounded-xl border border-border-soft bg-surface p-6 sm:p-8">
+        <section className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-6 sm:p-8">
           <CheckCircle2 className="h-8 w-8 text-success" />
           <p className="mt-5 text-xs font-medium uppercase text-success">Placement complete</p>
           <h1 className="mt-2 text-3xl font-medium text-foreground">
@@ -48,17 +48,17 @@ const PlacementPage = () => {
             evidence.
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
+            <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface-hover p-4">
               <p className="text-xs font-medium text-muted-copy">Score</p>
               <p className="mt-1 text-2xl font-medium">{result.score}%</p>
             </div>
-            <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
+            <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface-hover p-4">
               <p className="text-xs font-medium text-muted-copy">Priority</p>
               <p className="mt-1 font-medium capitalize">
                 {result.priorityAreas[0] ?? 'Consolidation'}
               </p>
             </div>
-            <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
+            <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface-hover p-4">
               <p className="text-xs font-medium text-muted-copy">Evidence</p>
               <p className="mt-1 font-medium">Local rules</p>
             </div>
@@ -78,7 +78,7 @@ const PlacementPage = () => {
 
   return (
     <main className="mx-auto max-w-3xl py-4 sm:py-8">
-      <section className="overflow-hidden rounded-xl border border-border-soft bg-surface">
+      <section className="overflow-hidden rounded-[var(--radius-card)] border border-border-soft bg-surface">
         <header className="border-b border-border-soft bg-surface-hover p-5 sm:p-7">
           <div className="flex items-center gap-3">
             <ClipboardCheck className="h-5 w-5 text-primary" />

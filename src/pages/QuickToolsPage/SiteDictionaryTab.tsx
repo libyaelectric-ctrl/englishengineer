@@ -223,7 +223,7 @@ export const SiteDictionaryTab = () => {
           return (
             <Card
               key={item.id}
-              className="p-5 space-y-4 rounded-xl border border-primary/25 bg-surface/80 shadow-sm hover:border-primary/50 transition-all flex flex-col justify-between"
+              className="p-5 space-y-4 rounded-[var(--radius-card)] border border-primary/25 bg-surface/80 shadow-sm hover:border-primary/50 transition-all flex flex-col justify-between"
               hoverEffect={false}
             >
               <div>

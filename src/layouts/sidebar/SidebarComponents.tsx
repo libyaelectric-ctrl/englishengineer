@@ -54,7 +54,7 @@ export function Item({
       type="button"
       onClick={onClick}
       className={cn(
-        'flex w-full items-center justify-between rounded-lg px-3 py-1.5 text-xs transition-all duration-150 cursor-pointer',
+        'flex w-full items-center justify-between rounded-[var(--radius-card)] px-3 py-1.5 text-xs transition-all duration-150 cursor-pointer',
         active
           ? 'bg-foreground text-background font-medium'
           : 'text-muted-copy hover:bg-surface-hover hover:text-foreground hover:translate-x-0.5'
@@ -132,7 +132,7 @@ export function Action({
     <button
       onClick={onClick}
       className={cn(
-        'flex items-center gap-2 w-full rounded-lg border px-3 py-2 text-xs transition-all duration-150 cursor-pointer',
+        'flex items-center gap-2 w-full rounded-[var(--radius-card)] border px-3 py-2 text-xs transition-all duration-150 cursor-pointer',
         v[variant as keyof typeof v] || v.default
       )}
     >

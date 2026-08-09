@@ -56,7 +56,7 @@ export const SkillLockedState = ({
           <button
             type="button"
             onClick={() => setBypassModalOpen(true)}
-            className="w-full flex items-center justify-center gap-1.5 rounded-lg bg-primary/15 border border-primary/30 px-3 py-2 text-xs font-bold text-primary hover:bg-primary/25 transition cursor-pointer"
+            className="w-full flex items-center justify-center gap-1.5 rounded-[var(--radius-card)] bg-primary/15 border border-primary/30 px-3 py-2 text-xs font-bold text-primary hover:bg-primary/25 transition cursor-pointer"
           >
             <KeyRound className="h-4 w-4" />
             <span>Placement Test or Senior Engineer Bypass</span>

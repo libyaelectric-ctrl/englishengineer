@@ -21,7 +21,7 @@ export const LevelStep = ({ selfReportedCefr, setSelfReportedCefr }: LevelStepPr
             type="button"
             key={level}
             onClick={() => setSelfReportedCefr(level)}
-            className={`min-h-14 rounded-lg border text-sm font-medium transition-colors ${selfReportedCefr === level ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border-soft bg-surface text-foreground hover:border-primary/20 hover:bg-surface-hover'}`}
+            className={`min-h-14 rounded-[var(--radius-card)] border text-sm font-medium transition-colors ${selfReportedCefr === level ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border-soft bg-surface text-foreground hover:border-primary/20 hover:bg-surface-hover'}`}
           >
             {level === 'unknown' ? translate('onboarding.notSure') : level}
           </button>

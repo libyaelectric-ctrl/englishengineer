@@ -59,7 +59,7 @@ export const SearchInput = memo(
           onChange={(e) => handleChange(e.target.value)}
           placeholder={placeholder}
           aria-label={placeholder}
-          className="w-full rounded-lg border border-gray-200 bg-surface py-2 pl-10 pr-10 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full rounded-[var(--radius-card)] border border-gray-200 bg-surface py-2 pl-10 pr-10 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
         {query && (
           <button

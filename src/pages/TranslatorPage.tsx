@@ -67,14 +67,14 @@ const LanguageBar: React.FC<{
   setTargetLang: React.Dispatch<React.SetStateAction<SupportedLang>>;
   handleSwapLanguages: () => void;
 }> = ({ sourceLang, setSourceLang, targetLang, setTargetLang, handleSwapLanguages }) => (
-  <div className="flex flex-wrap items-center justify-between gap-3 bg-background p-3 rounded-xl border border-border-soft text-xs">
+  <div className="flex flex-wrap items-center justify-between gap-3 bg-background p-3 rounded-[var(--radius-card)] border border-border-soft text-xs">
     <div className="flex items-center gap-2">
       <Globe2 className="h-4 w-4 text-primary shrink-0" />
       <span className="font-bold text-muted-copy">From:</span>
       <select
         value={sourceLang}
         onChange={(e) => setSourceLang(e.target.value as SupportedLang)}
-        className="rounded-lg border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer"
+        className="rounded-[var(--radius-card)] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer"
       >
         <option value="auto">✨ Auto Detect</option>
         {SUPPORTED_LANGUAGES.map((lang) => (
@@ -88,7 +88,7 @@ const LanguageBar: React.FC<{
     <button
       type="button"
       onClick={handleSwapLanguages}
-      className="p-2 rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary transition-all cursor-pointer shadow-sm hover:scale-105"
+      className="p-2 rounded-[var(--radius-card)] border border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary transition-all cursor-pointer shadow-sm hover:scale-105"
       title="Swap Source ↔ Target Languages"
     >
       <ArrowLeftRight className="h-4 w-4" />
@@ -99,7 +99,7 @@ const LanguageBar: React.FC<{
       <select
         value={targetLang}
         onChange={(e) => setTargetLang(e.target.value as SupportedLang)}
-        className="rounded-lg border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer"
+        className="rounded-[var(--radius-card)] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer"
       >
         {SUPPORTED_LANGUAGES.map((lang) => (
           <option key={lang.code} value={lang.code}>
@@ -163,7 +163,7 @@ const SourceInputPanel: React.FC<{
     </button>
   ) : null;
   const quickCharsBar = quickChars ? (
-    <div className="mt-2 flex flex-wrap items-center gap-1.5 bg-background/50 p-2 rounded-lg border border-border-soft">
+    <div className="mt-2 flex flex-wrap items-center gap-1.5 bg-background/50 p-2 rounded-[var(--radius-card)] border border-border-soft">
       <span className="text-[10px] font-bold text-muted-copy flex items-center gap-1">
         <Keyboard className="h-3 w-3 text-primary" /> Hızlı Ekle:
       </span>
@@ -183,7 +183,7 @@ const SourceInputPanel: React.FC<{
     <button
       type="submit"
       disabled={isTranslating || !hasInput}
-      className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-xs font-extrabold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-2 mt-3"
+      className="w-full py-3 rounded-[var(--radius-card)] bg-primary text-primary-foreground text-xs font-extrabold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-2 mt-3"
     >
       <Zap className="h-4 w-4" /> {isTranslating ? 'Translating...' : 'Translate Text Now'}
     </button>
@@ -205,7 +205,7 @@ const SourceInputPanel: React.FC<{
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           placeholder={sourcePlaceholder}
-          className="w-full rounded-xl border border-border-soft bg-background p-4 text-xs text-foreground font-medium focus:border-primary outline-none transition-all leading-relaxed font-sans"
+          className="w-full rounded-[var(--radius-card)] border border-border-soft bg-background p-4 text-xs text-foreground font-medium focus:border-primary outline-none transition-all leading-relaxed font-sans"
         />
         {quickCharsBar}
       </div>
@@ -272,7 +272,7 @@ const OutputPanel: React.FC<{
     </button>
   ) : null;
   const translatingOverlay = isTranslating ? (
-    <div className="absolute inset-0 bg-background/60 backdrop-blur-[1px] rounded-xl flex items-center justify-center text-xs font-bold text-primary gap-2">
+    <div className="absolute inset-0 bg-background/60 backdrop-blur-[1px] rounded-[var(--radius-card)] flex items-center justify-center text-xs font-bold text-primary gap-2">
       <Sparkles className="h-4 w-4 animate-spin" /> Translating...
     </div>
   ) : null;
@@ -293,7 +293,7 @@ const OutputPanel: React.FC<{
           lang={targetLang}
           value={isTranslating ? 'Translating...' : translatedText}
           placeholder="Translated output will appear here automatically..."
-          className="w-full rounded-xl border border-border-soft bg-background p-4 text-xs text-foreground font-semibold focus:border-primary outline-none leading-relaxed font-sans"
+          className="w-full rounded-[var(--radius-card)] border border-border-soft bg-background p-4 text-xs text-foreground font-semibold focus:border-primary outline-none leading-relaxed font-sans"
         />
         {translatingOverlay}
       </div>
@@ -328,7 +328,7 @@ const WordAnalysisCard: React.FC<{
   ) : null;
 
   return (
-    <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 space-y-2 animate-in fade-in">
+    <div className="rounded-[var(--radius-card)] border border-emerald-500/30 bg-emerald-500/10 p-4 space-y-2 animate-in fade-in">
       <div className="flex items-center justify-between border-b border-emerald-500/20 pb-2">
         <div className="flex items-center gap-2">
           <BookOpen className="h-4 w-4 text-emerald-600" />
@@ -480,13 +480,13 @@ export const TranslatorPage = () => {
       />
 
       {/* Main Container Card - Full Width 6XL Spacing */}
-      <div className="rounded-2xl border border-primary/30 bg-surface/95 p-6 md:p-8 shadow-xl space-y-6 relative">
+      <div className="rounded-[var(--radius-card)] border border-primary/30 bg-surface/95 p-6 md:p-8 shadow-xl space-y-6 relative">
         {/* Attribution Badge & Live Translate Checkbox */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-soft pb-4">
           <div className="flex items-center gap-2 text-xs font-bold text-muted-copy">
             <Info className="h-4 w-4 text-primary shrink-0" />
             <span>Infrastructure Attribution:</span>
-            <span className="rounded-lg bg-primary/10 border border-primary/20 px-2.5 py-1 text-[10px] font-extrabold text-primary font-mono">
+            <span className="rounded-[var(--radius-card)] bg-primary/10 border border-primary/20 px-2.5 py-1 text-[10px] font-extrabold text-primary font-mono">
               Powered by Google GTX & Lingva Open-Source Engines
             </span>
           </div>

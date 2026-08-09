@@ -39,7 +39,7 @@ export const TrustCenterBadges = ({
 
         {/* Badges Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="rounded-xl border border-primary/20 bg-background/80 p-3.5 flex items-center gap-3">
+          <div className="rounded-[var(--radius-card)] border border-primary/20 bg-background/80 p-3.5 flex items-center gap-3">
             <Lock className="h-6 w-6 text-primary shrink-0" />
             <div>
               <div className="text-xs font-bold text-foreground">SOC-2 Type II Certified</div>
@@ -47,7 +47,7 @@ export const TrustCenterBadges = ({
             </div>
           </div>
 
-          <div className="rounded-xl border border-primary/20 bg-background/80 p-3.5 flex items-center gap-3">
+          <div className="rounded-[var(--radius-card)] border border-primary/20 bg-background/80 p-3.5 flex items-center gap-3">
             <Building2 className="h-6 w-6 text-primary shrink-0" />
             <div>
               <div className="text-xs font-bold text-foreground">FIDIC & ASTM Aligned</div>
@@ -55,7 +55,7 @@ export const TrustCenterBadges = ({
             </div>
           </div>
 
-          <div className="rounded-xl border border-primary/20 bg-background/80 p-3.5 flex items-center gap-3">
+          <div className="rounded-[var(--radius-card)] border border-primary/20 bg-background/80 p-3.5 flex items-center gap-3">
             <FileCheck2 className="h-6 w-6 text-emerald-500 shrink-0" />
             <div>
               <div className="text-xs font-bold text-foreground">GDPR & ISO 27001</div>
@@ -64,7 +64,7 @@ export const TrustCenterBadges = ({
           </div>
 
           {/* ITEM 40: Dedicated CSM Badge */}
-          <div className="rounded-xl border border-primary/20 bg-background/80 p-3.5 flex items-center gap-3">
+          <div className="rounded-[var(--radius-card)] border border-primary/20 bg-background/80 p-3.5 flex items-center gap-3">
             <UserCheck className="h-6 w-6 text-amber-500 shrink-0" />
             <div>
               <div className="text-xs font-bold text-foreground">Dedicated CSM & Training</div>

@@ -1,4 +1,5 @@
 import {
+  AlertTriangle,
   Bot,
   Building2,
   Code2,
@@ -6,9 +7,8 @@ import {
   Factory,
   FlaskConical,
   HardHat,
-  ShieldCheck,
-  AlertTriangle,
   Lock,
+  ShieldCheck,
   Wrench,
   Zap,
 } from 'lucide-react';
@@ -23,6 +23,7 @@ import {
 
 import { useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization';
+
 import { ContentPreview } from './ContentPreview';
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -75,7 +76,7 @@ export const BranchLockStep = ({
   if (phase === 'locked') {
     return (
       <section className="space-y-6">
-        <div className="flex items-center gap-3 rounded-xl border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 p-5">
+        <div className="flex items-center gap-3 rounded-[var(--radius-card)] border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 p-5">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20">
             <Lock className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
           </div>
@@ -84,14 +85,17 @@ export const BranchLockStep = ({
               {translate('onboarding.branchLocked') ?? 'Discipline Locked'}
             </p>
             <p className="text-xs text-emerald-700 dark:text-emerald-300">
-              {selectedMeta?.labelKey ? translate(selectedMeta.labelKey as TranslationKey) : discipline}
+              {selectedMeta?.labelKey
+                ? translate(selectedMeta.labelKey as TranslationKey)
+                : discipline}
               {' — '}
-              {translate('onboarding.branchLockedDesc') ?? 'You can change this later only via support.'}
+              {translate('onboarding.branchLockedDesc') ??
+                'You can change this later only via support.'}
             </p>
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+        <div className="rounded-[var(--radius-card)] border border-slate-200 dark:border-slate-700 p-5">
           <h3 className="text-sm font-medium text-slate-900 dark:text-white">
             {translate('onboarding.yourWordPool') ?? 'Your Word Pool'}
           </h3>
@@ -99,14 +103,16 @@ export const BranchLockStep = ({
             {translate('onboarding.wordPoolFormula') ?? 'Your vocabulary will always be:'}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
-            <span className="rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 px-3 py-1.5 text-xs font-medium text-blue-700 dark:text-blue-300">
+            <span className="rounded-[var(--radius-card)] bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 px-3 py-1.5 text-xs font-medium text-blue-700 dark:text-blue-300">
               General
             </span>
-            <span className="rounded-lg bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20 px-3 py-1.5 text-xs font-medium text-indigo-700 dark:text-indigo-300">
+            <span className="rounded-[var(--radius-card)] bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20 px-3 py-1.5 text-xs font-medium text-indigo-700 dark:text-indigo-300">
               Engineering
             </span>
-            <span className="rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300">
-              {selectedMeta?.labelKey ? translate(selectedMeta.labelKey as TranslationKey) : discipline}
+            <span className="rounded-[var(--radius-card)] bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+              {selectedMeta?.labelKey
+                ? translate(selectedMeta.labelKey as TranslationKey)
+                : discipline}
             </span>
           </div>
         </div>
@@ -119,7 +125,7 @@ export const BranchLockStep = ({
   if (phase === 'confirm-1') {
     return (
       <section className="space-y-6">
-        <div className="flex items-center gap-3 rounded-xl border border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 p-5">
+        <div className="flex items-center gap-3 rounded-[var(--radius-card)] border border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 p-5">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/20">
             <AlertTriangle className="h-6 w-6 text-amber-600 dark:text-amber-400" />
           </div>
@@ -134,12 +140,14 @@ export const BranchLockStep = ({
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+        <div className="rounded-[var(--radius-card)] border border-slate-200 dark:border-slate-700 p-5">
           <p className="text-sm text-slate-600 dark:text-slate-400">
             {translate('onboarding.selectedDiscipline') ?? 'Selected discipline:'}
           </p>
           <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white">
-            {selectedMeta?.labelKey ? translate(selectedMeta.labelKey as TranslationKey) : discipline}
+            {selectedMeta?.labelKey
+              ? translate(selectedMeta.labelKey as TranslationKey)
+              : discipline}
           </p>
         </div>
 
@@ -147,14 +155,14 @@ export const BranchLockStep = ({
           <button
             type="button"
             onClick={handleBack}
-            className="rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-surface"
+            className="rounded-[var(--radius-card)] border border-slate-200 dark:border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-surface"
           >
             {translate('onboarding.back') ?? 'Back'}
           </button>
           <button
             type="button"
             onClick={handleConfirm}
-            className="rounded-lg bg-amber-600 hover:bg-amber-500 px-6 py-2.5 text-sm font-bold text-white shadow-sm"
+            className="rounded-[var(--radius-card)] bg-amber-600 hover:bg-amber-500 px-6 py-2.5 text-sm font-bold text-white shadow-sm"
           >
             {translate('onboarding.confirmLock') ?? 'I understand, lock it'}
           </button>
@@ -184,14 +192,16 @@ export const BranchLockStep = ({
               }`}
             >
               <div
-                className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
+                className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-card)] ${
                   isSelected ? 'bg-primary/10 text-primary' : 'bg-surface-hover text-muted-copy'
                 }`}
               >
                 {IconComponent && <IconComponent className="h-5 w-5" />}
               </div>
               <div className="min-w-0">
-                <p className={`text-sm font-medium ${isSelected ? 'text-primary' : 'text-foreground'}`}>
+                <p
+                  className={`text-sm font-medium ${isSelected ? 'text-primary' : 'text-foreground'}`}
+                >
                   {translate(meta.labelKey as TranslationKey)}
                 </p>
                 <p className="mt-0.5 text-xs text-muted-copy">
