@@ -1,5 +1,6 @@
 import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
+import { Plus, RefreshCw } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
@@ -118,7 +119,7 @@ export function VocabSidebar() {
     ],
     actions: [
       {
-        icon: 'Review',
+        icon: RefreshCw,
         label: `Review ${summary.dueToday} due words`,
         onClick: () => {
           log('/vocabulary', 'review', `${summary.dueToday} due`);
@@ -127,7 +128,7 @@ export function VocabSidebar() {
         variant: 'warning',
       },
       {
-        icon: 'Add',
+        icon: Plus,
         label: 'Add custom word',
         onClick: () => {
           document.querySelector('input')?.scrollIntoView({ behavior: 'smooth' });

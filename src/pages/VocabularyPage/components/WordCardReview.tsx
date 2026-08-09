@@ -1,11 +1,10 @@
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, Trophy, XCircle } from 'lucide-react';
 
 import { FormEvent } from 'react';
 
 import { Button } from '@/shared/components/Button';
 
-import { useLocalizationStore, INTERFACE_LANGUAGES } from '@/features/localization';
-
+import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import {
   type VocabularyMenuProgress,
   type VocabularyTerm,
@@ -34,7 +33,7 @@ export const LearningReview = ({
 
 export const MasteredBadge = () => (
   <div className="mt-3 inline-flex items-center gap-1.5 rounded-[4px] border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 uppercase tracking-wider">
-    <span>🏆</span>
+    <Trophy className="h-4 w-4 text-emerald-600" aria-hidden="true" />
     Mastered (Added to Skill Pool)
   </div>
 );
@@ -111,7 +110,9 @@ export const QuizForm = ({
         Check Answer
       </Button>
       {quizResult !== null && (
-        <p className={`text-xs font-bold mt-1 ${quizResult ? 'text-emerald-600' : 'text-rose-600'}`}>
+        <p
+          className={`text-xs font-bold mt-1 ${quizResult ? 'text-emerald-600' : 'text-rose-600'}`}
+        >
           {quizResult ? 'Correct — Moved to Learned pool.' : 'Incorrect — Added to Weak Words.'}
         </p>
       )}

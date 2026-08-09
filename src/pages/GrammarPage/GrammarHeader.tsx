@@ -1,4 +1,4 @@
-import { Search } from 'lucide-react';
+import { Search, Trophy } from 'lucide-react';
 
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 
@@ -80,7 +80,7 @@ export const GrammarHeader = ({
               : 'border-border-soft bg-surface text-muted-copy opacity-75'
           }`}
         >
-          🏆 Quiz ({grammarLearned ?? 0}/2)
+          <Trophy className="h-3.5 w-3.5" aria-hidden="true" /> Quiz ({grammarLearned ?? 0}/2)
         </button>
 
         <div

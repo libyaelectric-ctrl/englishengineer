@@ -56,7 +56,7 @@ export const HeroBanner = ({
             <span
               className={`inline-flex items-center gap-1 rounded-lg border px-2.5 py-0.5 text-xs font-bold ${rank.color}`}
             >
-              {rank.icon} {rank.label}
+              <rank.icon className="h-3.5 w-3.5" aria-hidden="true" /> {rank.label}
             </span>
             <span className="inline-flex items-center rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
               CEFR {totalCEFR}

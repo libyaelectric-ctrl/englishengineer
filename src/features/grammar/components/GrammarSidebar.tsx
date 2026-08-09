@@ -1,5 +1,6 @@
 import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
+import { PenLine, RefreshCw } from 'lucide-react';
 import { useShallow } from 'zustand/shallow';
 
 import { useLearningStore } from '@/core/learning';
@@ -52,13 +53,13 @@ export function GrammarSidebar() {
     ],
     actions: [
       {
-        icon: '📝',
+        icon: PenLine,
         label: `Practice ${g.due} due rules`,
         onClick: () => log('/grammar', 'practice', `${g.due} due`),
         variant: 'warning',
       },
       {
-        icon: '🔄',
+        icon: RefreshCw,
         label: 'Review strong',
         onClick: () => log('/grammar', 'review', 'strong'),
       },

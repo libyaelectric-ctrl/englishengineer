@@ -7,6 +7,7 @@ import { useLearningStore } from '@/core/learning';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 import { MAX_ELO, MIN_ELO, RANK_THRESHOLDS } from '@/shared/constants/elo.constants';
+import { getRankIcon } from '@/shared/icons/registry';
 
 import { AnalyticsService, useAnalyticsStore } from '@/features/analytics';
 import { useAuthStore } from '@/features/auth';
@@ -79,34 +80,34 @@ export const ProgressOverviewTab = () => {
     if (elo >= RANK_THRESHOLDS.GRANDMASTER)
       return {
         label: 'Grandmaster',
-        icon: '👑',
+        icon: getRankIcon('grandmaster'),
         color:
           'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/40',
       };
     if (elo >= RANK_THRESHOLDS.DIAMOND)
       return {
         label: 'Diamond',
-        icon: '💎',
+        icon: getRankIcon('diamond'),
         color:
           'text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/30 border-sky-200 dark:border-sky-800/40',
       };
     if (elo >= RANK_THRESHOLDS.PLATINUM)
       return {
         label: 'Platinum',
-        icon: '🏆',
+        icon: getRankIcon('platinum'),
         color:
           'text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/30 border-violet-200 dark:border-violet-800/40',
       };
     if (elo >= RANK_THRESHOLDS.GOLD)
       return {
         label: 'Gold',
-        icon: '🥇',
+        icon: getRankIcon('gold'),
         color:
           'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200 dark:border-yellow-800/40',
       };
     return {
       label: 'Silver',
-      icon: '🥈',
+      icon: getRankIcon('silver'),
       color: 'text-muted-copy bg-surface-hover border-border-soft',
     };
   };
