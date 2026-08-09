@@ -163,13 +163,17 @@ describe('Writing endpoints', () => {
     assert.equal(res.status, 200);
   });
 
-  it('POST /api/writing/submit returns 200', async () => {
+  it('POST /api/writing/submit returns 200 with scores in 0-100 range (mock AI fallback)', async () => {
     const res = await request(baseUrl)
       .post('/api/writing/submit')
       .set(devUser)
       .send({ promptId: 'p1', content: 'Test submission' });
     assert.equal(res.status, 200);
     assert.equal(res.body.status, 'graded');
+    for (const key of ['score', 'grammarScore', 'vocabularyScore', 'coherenceScore', 'structureScore']) {
+      assert.equal(typeof res.body[key], 'number');
+      assert.ok(res.body[key] >= 0 && res.body[key] <= 100, `${key} out of range: ${res.body[key]}`);
+    }
   });
 
   it('GET /api/writing/stats returns 200', async () => {

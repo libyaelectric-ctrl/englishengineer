@@ -439,9 +439,11 @@ const registerRoutes = (
   const { requireBackendAuth, optionalBackendAuth } = backendAuth;
   const limiters = createAllRateLimiters(config, rateLimitStore);
 
+  const aiService = createAIService(config.ai, fetchImpl);
+
   registerAIRoutes(
     v1RouterAdapter as unknown as Express,
-    createAIService(config.ai, fetchImpl) as unknown as Parameters<typeof registerAIRoutes>[1],
+    aiService as unknown as Parameters<typeof registerAIRoutes>[1],
     requireBackendAuth,
     limiters.ai,
     billingRepository ??
@@ -510,7 +512,7 @@ const registerRoutes = (
 
   registerProgressRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
   registerReadingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
-  registerWritingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
+  registerWritingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, aiService);
   registerListeningRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
   registerSpeakingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
   // Serves audio uploaded via POST /api/speaking/audio-upload. Scoped to
