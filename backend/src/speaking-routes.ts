@@ -241,8 +241,8 @@ export const registerSpeakingRoutes = (app: Express, requireBackendAuth: Request
         const userId = request.auth?.userId;
         if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
-        const { promptId, audioUrl } = request.validatedBody as {
-          promptId?: string;
+        const { missionId, audioUrl } = request.validatedBody as {
+          missionId?: string;
           audioUrl?: string;
         };
         const scoring = mockScore();
@@ -250,7 +250,7 @@ export const registerSpeakingRoutes = (app: Express, requireBackendAuth: Request
 
         const submission: SpeakingSubmission = {
           id: submissionId,
-          promptId: promptId ?? 'unknown',
+          promptId: missionId ?? 'unknown',
           audioUrl: audioUrl ?? '',
           overallScore: scoring.overallScore,
           pronunciationScore: scoring.pronunciationScore,

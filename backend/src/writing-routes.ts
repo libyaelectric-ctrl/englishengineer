@@ -112,7 +112,7 @@ function getUserSubmissions(userId: string): WritingSubmission[] {
   return submissionStore.get(userId)!;
 }
 
-function mockGrade(
+function fallbackGrade(
   text: string
 ): Omit<WritingSubmission, 'id' | 'promptId' | 'text' | 'submittedAt' | 'status'> {
   const words = text.split(/\s+/).length;
@@ -168,14 +168,17 @@ export const registerWritingRoutes = (app: Express, requireBackendAuth: RequestH
         const userId = request.auth?.userId;
         if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
-        const { promptId, text } = request.validatedBody as { promptId?: string; text?: string };
-        const evaluation = mockGrade(text ?? '');
+        const { promptId, content } = request.validatedBody as {
+          promptId?: string;
+          content?: string;
+        };
+        const evaluation = fallbackGrade(content ?? '');
         const submissionId = randomUUID();
 
         const submission: WritingSubmission = {
           id: submissionId,
           promptId: promptId ?? 'unknown',
-          text: text ?? '',
+          text: content ?? '',
           score: evaluation.score,
           grammarScore: evaluation.grammarScore,
           vocabularyScore: evaluation.vocabularyScore,

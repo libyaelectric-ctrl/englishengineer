@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { _ApiError } from '../src/errors.js';
+
 
 interface LearningOverview {
   vocabulary: { total: number; learned: number; mastered: number; struggling: number };
