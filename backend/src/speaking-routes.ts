@@ -4,8 +4,12 @@ import { randomUUID } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
+import { checkCostLimits, createAIService } from './ai.js';
 import { ApiError } from './errors.js';
+import { CircuitBreaker } from './utils/circuit-breaker.js';
 import { SpeakingSubmitBodySchema, validateBody } from './validation.js';
+
+type AiService = ReturnType<typeof createAIService>;
 
 // Uploaded audio is stored under backend/uploads/speaking/<userId>/<uuid>.<ext>.
 // This is a minimal, safe local-disk implementation (Kademe 5.2). Moving this
@@ -125,6 +129,12 @@ const SPEAKING_PROMPTS: SpeakingPrompt[] = [
 // Per-user submission store
 const submissionStore = new Map<string, SpeakingSubmission[]>();
 
+const speakingCircuitBreaker = new CircuitBreaker('SpeakingAI', 5, 30000);
+
+const enforceAiLimits = (userId: string): void => {
+  checkCostLimits(userId);
+};
+
 function getUserSubmissions(userId: string): SpeakingSubmission[] {
   if (!submissionStore.has(userId)) {
     submissionStore.set(userId, []);
@@ -161,7 +171,55 @@ function mockScore(): Omit<
   };
 }
 
-export const registerSpeakingRoutes = (app: Express, requireBackendAuth: RequestHandler): void => {
+// Maps the structured AI evaluation onto the speaking score shape. Since no
+// speech audio is analysed here, pronunciation/fluency stay on the mock
+// heuristic until STT is added (TODO above).
+function mapTranscriptScores(
+  structured: Record<string, unknown>
+): Omit<SpeakingSubmission, 'id' | 'promptId' | 'audioUrl' | 'submittedAt' | 'status'> {
+  const mock = mockScore();
+  const raw = (structured.overallScore ?? {}) as Record<string, unknown>;
+  const clamp = (v: unknown): number => {
+    const n = typeof v === 'number' ? v : Number(v);
+    if (!Number.isFinite(n)) return 0;
+    return Math.max(0, Math.min(100, Math.round(n)));
+  };
+  const grammarScore = clamp(raw.grammar) || mock.grammarScore;
+  const vocabularyScore = clamp(raw.vocabulary) || mock.vocabularyScore;
+  const overallScore =
+    clamp(raw.overall) ||
+    Math.round((mock.pronunciationScore + mock.fluencyScore + grammarScore + vocabularyScore) / 4);
+
+  const feedback: Record<string, string> = {};
+  const weaknesses = Array.isArray(structured.weaknesses)
+    ? (structured.weaknesses as unknown[]).filter((w): w is string => typeof w === 'string')
+    : [];
+  if (weaknesses.length > 0) feedback.grammar = weaknesses.slice(0, 2).join(' ');
+  const corrections = Array.isArray(structured.corrections)
+    ? (structured.corrections as unknown[]).filter(
+        (c): c is { original: unknown } => typeof c === 'object' && c !== null
+      )
+    : [];
+  if (corrections.length > 0 && !feedback.grammar) {
+    feedback.vocabulary = `Suggested correction: ${(corrections[0] as { original: unknown }).original}`;
+  }
+  if (overallScore >= 85) feedback.overall = 'Great performance! Keep refining your delivery.';
+
+  return {
+    overallScore,
+    pronunciationScore: mock.pronunciationScore,
+    fluencyScore: mock.fluencyScore,
+    grammarScore,
+    vocabularyScore,
+    feedback,
+  };
+}
+
+export const registerSpeakingRoutes = (
+  app: Express,
+  requireBackendAuth: RequestHandler,
+  aiService: AiService
+): void => {
   // Raw audio body parser scoped ONLY to this route -- does not affect the
   // rest of the app's express.json() parsing.
   app.post(
@@ -241,11 +299,44 @@ export const registerSpeakingRoutes = (app: Express, requireBackendAuth: Request
         const userId = request.auth?.userId;
         if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
-        const { missionId, audioUrl } = request.validatedBody as {
+        const { missionId, audioUrl, transcript } = request.validatedBody as {
           missionId?: string;
           audioUrl?: string;
+          transcript?: string;
         };
-        const scoring = mockScore();
+
+        // TODO: STT entegrasyonu eklenene kadar pronunciation/fluency mock kalır.
+        // Transcript varsa gramer/kelime değerlendirmesi AI ile yapılır; transcript
+        // yoksa frontend transcript göndermezse eski mock skorlama devam eder.
+        let scoring: Omit<
+          SpeakingSubmission,
+          'id' | 'promptId' | 'audioUrl' | 'submittedAt' | 'status'
+        >;
+
+        if (transcript && transcript.trim().length > 0) {
+          enforceAiLimits(userId);
+          try {
+            const aiPrompt = `Evaluate this engineering student's spoken response transcript.\nTranscript:\n"""\n${transcript}\n"""\nProvide grammar and vocabulary feedback. Return ONLY a valid JSON object matching the structural analysis schema.`;
+            const aiResult = await speakingCircuitBreaker.execute(() =>
+              aiService.complete('evaluateEngineeringEnglish', {
+                prompt: aiPrompt,
+                context: {},
+              })
+            );
+
+            if (!aiResult.mockMode && aiResult.structuredResult) {
+              scoring = mapTranscriptScores(aiResult.structuredResult);
+            } else {
+              scoring = mockScore();
+            }
+          } catch {
+            scoring = mockScore();
+          }
+        } else {
+          // No transcript provided -> fall back to the original mock scoring.
+          scoring = mockScore();
+        }
+
         const submissionId = randomUUID();
 
         const submission: SpeakingSubmission = {

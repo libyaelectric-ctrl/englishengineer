@@ -514,7 +514,7 @@ const registerRoutes = (
   registerReadingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, aiService);
   registerWritingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, aiService);
   registerListeningRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
-  registerSpeakingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
+  registerSpeakingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, aiService);
   // Serves audio uploaded via POST /api/speaking/audio-upload. Scoped to
   // this one directory only, never the whole filesystem.
   app.use('/uploads/speaking', express.static(path.resolve(process.cwd(), 'uploads', 'speaking')));
