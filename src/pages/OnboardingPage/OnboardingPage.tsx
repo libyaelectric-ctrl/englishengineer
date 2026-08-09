@@ -66,7 +66,7 @@ const OnboardingFooter = ({
         type="button"
         onClick={onContinue}
         disabled={!canContinue}
-        className="public-primary-action min-w-0 px-4 sm:px-5 rounded-[var(--radius-card)] font-medium disabled:opacity-50"
+        className="public-primary-action min-w-0 px-4 sm:px-5 rounded-[var(--radius-card)] font-medium disabled:cursor-not-allowed disabled:opacity-50"
       >
         {index === STEPS.length - 1
           ? (translate('onboarding.finish') ?? 'Finish')

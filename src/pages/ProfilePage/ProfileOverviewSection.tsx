@@ -285,7 +285,7 @@ export const ProfileOverviewSection = ({
               <button
                 type="submit"
                 disabled={isSaving}
-                className="inline-flex items-center gap-1.5 rounded-[4px] bg-primary hover:bg-primary/90 border border-primary px-4 py-2 text-xs font-bold uppercase tracking-wider text-white cursor-pointer transition-colors disabled:opacity-50 shadow-sm"
+                className="inline-flex items-center gap-1.5 rounded-[4px] bg-primary hover:bg-primary/90 border border-primary px-4 py-2 text-xs font-bold uppercase tracking-wider text-white cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-50 shadow-sm"
               >
                 {isSaving ? 'Saving...' : 'Save Profile'}
               </button>

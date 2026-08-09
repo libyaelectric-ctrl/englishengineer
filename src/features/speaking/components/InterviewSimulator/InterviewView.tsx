@@ -82,7 +82,7 @@ export const InterviewView = ({
               value={currentAnswer}
               onChange={(e) => setCurrentAnswer(e.target.value)}
               disabled={isScoring}
-              className="mt-3 min-h-40 w-full resize-y rounded-[4px] border border-border-soft bg-surface px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10 disabled:opacity-50 font-bold placeholder-muted-copy shadow-sm"
+              className="mt-3 min-h-40 w-full resize-y rounded-[4px] border border-border-soft bg-surface px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10 disabled:cursor-not-allowed disabled:opacity-50 font-bold placeholder-muted-copy shadow-sm"
               placeholder={
                 isTimeUp
                   ? "Time's up! Submit your answer below."

@@ -103,7 +103,7 @@ export const WelcomeScreen = () => {
             <button
               onClick={handleContinueToLanguage}
               disabled={!selectedDiscipline}
-              className="w-full flex items-center justify-center gap-2 rounded-[4px] bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all"
+              className="w-full flex items-center justify-center gap-2 rounded-[4px] bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all"
             >
               Devam Et
               <ArrowRight className="h-4 w-4" />

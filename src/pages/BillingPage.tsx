@@ -84,7 +84,7 @@ export const BillingPage = () => {
           <button
             onClick={() => currentUser?.id && refreshBilling(currentUser.id)}
             disabled={isBillingLoading}
-            className="self-start sm:self-auto inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-background transition-all cursor-pointer shadow-sm disabled:opacity-50"
+            className="self-start sm:self-auto inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-background transition-all cursor-pointer shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isBillingLoading ? 'animate-spin' : ''}`} />
             Sync Status
