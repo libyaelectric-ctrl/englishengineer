@@ -152,7 +152,7 @@ export function DisciplineShowcase() {
               <button
                 key={id}
                 onClick={() => setActiveTab(id)}
-                className={`group/btn flex flex-col items-center justify-center rounded-lg p-3 text-center transition-all border cursor-pointer hover:shadow-md hover:scale-[1.02] ${
+                className={`group/btn flex flex-col items-center justify-center rounded-[var(--radius-card)] p-3 text-center transition-all border cursor-pointer hover:shadow-md hover:scale-[1.02] ${
                   isActive
                     ? 'bg-primary text-primary-foreground border-primary shadow-lg scale-[1.02]'
                     : 'bg-background text-muted-copy hover:text-foreground border-border-soft hover:border-primary/50'
@@ -184,9 +184,9 @@ export function DisciplineShowcase() {
 
         {/* Interactive Detail Panel */}
         <AnimatedSection delay={100} className="relative group">
-          <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-primary via-blue-500 to-indigo-600 blur-xl opacity-50 animate-spin-slow pointer-events-none group-hover:opacity-80 transition-opacity" />
+          <div className="absolute -inset-1 rounded-[var(--radius-card)] bg-gradient-to-r from-primary via-blue-500 to-indigo-600 blur-xl opacity-50 animate-spin-slow pointer-events-none group-hover:opacity-80 transition-opacity" />
 
-          <div className="relative rounded-xl border border-border-soft bg-background p-5 md:p-6 shadow-2xl transition-all duration-300 light-sweep-container overflow-hidden">
+          <div className="relative rounded-[var(--radius-card)] border border-border-soft bg-background p-5 md:p-6 shadow-2xl transition-all duration-300 light-sweep-container overflow-hidden">
             <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-primary/10 blur-2xl animate-ambient-glow pointer-events-none" />
             <div className="grid gap-6 lg:grid-cols-12 items-stretch relative z-10">
               {/* Left Column */}
@@ -228,7 +228,7 @@ export function DisciplineShowcase() {
               {/* Right Column */}
               <div className="lg:col-span-5 flex flex-col justify-between gap-3">
                 {/* Sample Term */}
-                <div className="rounded-lg bg-surface border border-border-soft p-3 space-y-2">
+                <div className="rounded-[var(--radius-card)] bg-surface border border-border-soft p-3 space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                       Sample Technical Term
@@ -275,7 +275,7 @@ export function DisciplineShowcase() {
                 </div>
 
                 {/* Practice CTA */}
-                <div className="rounded-lg bg-primary/5 border border-primary/20 p-4 text-center flex-1 flex flex-col justify-between items-center">
+                <div className="rounded-[var(--radius-card)] bg-primary/5 border border-primary/20 p-4 text-center flex-1 flex flex-col justify-between items-center">
                   <div className="flex items-center gap-2 mb-1">
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
                       <Icon className="h-3.5 w-3.5" />

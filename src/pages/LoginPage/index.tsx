@@ -93,7 +93,7 @@ const LoginPage = () => {
           <div className="absolute -inset-1.5 rounded-3xl bg-gradient-to-r from-primary via-blue-500 to-indigo-600 blur-xl opacity-50 animate-spin-slow pointer-events-none" />
           <div className="w-full h-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch py-3 relative z-10">
             {/* Left Column: Pre-select Engineering Discipline */}
-            <div className="w-full rounded-2xl border border-border-soft bg-surface/90 backdrop-blur-xl p-4.5 shadow-xl hover:border-border-hover transition-colors h-full flex flex-col justify-between relative light-sweep-container overflow-hidden">
+            <div className="w-full rounded-[var(--radius-card)] border border-border-soft bg-surface/90 backdrop-blur-xl p-4.5 shadow-xl hover:border-border-hover transition-colors h-full flex flex-col justify-between relative light-sweep-container overflow-hidden">
               <div className="text-center space-y-0.5">
                 <span className="group inline-flex items-center gap-1.5 rounded-full bg-soft px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-primary border border-border-soft">
                   <Zap className="h-3 w-3" />
@@ -115,7 +115,7 @@ const LoginPage = () => {
                     <button
                       key={d.id}
                       onClick={() => handleDisciplineSelect(d.id)}
-                      className={`flex items-center gap-2.5 rounded-lg border py-1 px-3 text-left transition-all cursor-pointer ${
+                      className={`flex items-center gap-2.5 rounded-[var(--radius-card)] border py-1 px-3 text-left transition-all cursor-pointer ${
                         isSelected
                           ? 'border-primary bg-primary/5 text-primary shadow-sm font-semibold'
                           : 'border-border-soft bg-background/50 text-foreground hover:border-primary/50'
@@ -144,7 +144,7 @@ const LoginPage = () => {
                 })}
               </div>
 
-              <div className="rounded-lg border border-border-soft bg-background/50 p-1.5 text-center">
+              <div className="rounded-[var(--radius-card)] border border-border-soft bg-background/50 p-1.5 text-center">
                 <p className="text-[10px] text-muted-copy leading-none font-semibold">
                   {selectedDiscipline ? (
                     <>
@@ -161,10 +161,10 @@ const LoginPage = () => {
             </div>
 
             {/* Right Column: Glassmorphic Auth Form */}
-            <div className="w-full rounded-2xl border border-border-soft bg-surface/90 backdrop-blur-xl p-4.5 shadow-xl hover:border-border-hover transition-colors h-full flex flex-col justify-between relative light-sweep-container overflow-hidden">
+            <div className="w-full rounded-[var(--radius-card)] border border-border-soft bg-surface/90 backdrop-blur-xl p-4.5 shadow-xl hover:border-border-hover transition-colors h-full flex flex-col justify-between relative light-sweep-container overflow-hidden">
               {/* Header / Mode Switcher */}
               <div className="text-center space-y-1">
-                <div className="inline-flex rounded-lg border border-border-soft bg-background p-1 text-xs mb-0.5">
+                <div className="inline-flex rounded-[var(--radius-card)] border border-border-soft bg-background p-1 text-xs mb-0.5">
                   <button
                     type="button"
                     onClick={() => h.isSignUpMode && h.toggleSignUpMode()}
@@ -203,7 +203,7 @@ const LoginPage = () => {
 
               {/* Error Notification Alert */}
               {h.error && (
-                <div className="flex items-start gap-2 rounded-lg border border-rose-500/30 bg-rose-500/10 p-2 text-xs text-rose-500 font-medium animate-in fade-in">
+                <div className="flex items-start gap-2 rounded-[var(--radius-card)] border border-rose-500/30 bg-rose-500/10 p-2 text-xs text-rose-500 font-medium animate-in fade-in">
                   <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                   <span>{h.error}</span>
                 </div>
@@ -247,7 +247,7 @@ const LoginPage = () => {
 
               {/* Instant Demo Preview Login */}
               {h.isLocalDemoMode && (
-                <div className="rounded-lg border border-primary/30 bg-primary/5 p-1.5 text-center space-y-0.5">
+                <div className="rounded-[var(--radius-card)] border border-primary/30 bg-primary/5 p-1.5 text-center space-y-0.5">
                   <button
                     type="button"
                     onClick={h.handleDemoSubmit}

@@ -39,7 +39,7 @@ const ToolsPage = () => {
       {activeTab === 'ai' && (
         <Suspense
           fallback={
-            <div className="h-64 animate-pulse rounded-xl border border-border-soft bg-surface-hover" />
+            <div className="h-64 animate-pulse rounded-[var(--radius-card)] border border-border-soft bg-surface-hover" />
           }
         >
           <AIPage embedded />

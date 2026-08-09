@@ -10,8 +10,8 @@ export const StreakFlameWidget = ({
   freezeAvailable = true,
 }: StreakFlameWidgetProps) => {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-primary/20 bg-gradient-to-r from-amber-500/10 via-primary/5 to-surface p-3.5 shadow-sm">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-500 shadow-inner">
+    <div className="flex items-center gap-3 rounded-[var(--radius-card)] border border-primary/20 bg-gradient-to-r from-amber-500/10 via-primary/5 to-surface p-3.5 shadow-sm">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-card)] bg-amber-500/20 text-amber-500 shadow-inner">
         <Flame className="h-6 w-6 animate-bounce" />
       </div>
       <div className="min-w-0 flex-1">

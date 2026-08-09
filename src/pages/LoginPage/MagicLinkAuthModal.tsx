@@ -34,7 +34,7 @@ export const MagicLinkAuthModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-in fade-in">
-      <div className="w-full max-w-md rounded-2xl border border-primary/30 bg-surface/95 p-5 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden">
+      <div className="w-full max-w-md rounded-[var(--radius-card)] border border-primary/30 bg-surface/95 p-5 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden">
         <div className="flex items-center justify-between border-b border-border-soft pb-3">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary animate-pulse" />
@@ -68,7 +68,7 @@ export const MagicLinkAuthModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="w-full h-10 rounded-lg bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover transition cursor-pointer"
+              className="w-full h-10 rounded-[var(--radius-card)] bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover transition cursor-pointer"
             >
               {translate('login.magicLinkDone')}
             </button>
@@ -94,7 +94,7 @@ export const MagicLinkAuthModal = ({
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 w-full rounded-lg border border-border-soft bg-surface pl-10 pr-4 text-sm text-foreground outline-none focus:border-primary font-bold shadow-sm"
+                  className="h-12 w-full rounded-[var(--radius-card)] border border-border-soft bg-surface pl-10 pr-4 text-sm text-foreground outline-none focus:border-primary font-bold shadow-sm"
                   placeholder="engineer@company.com"
                 />
               </div>
@@ -103,7 +103,7 @@ export const MagicLinkAuthModal = ({
             <button
               type="submit"
               disabled={loading || !email}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary hover:bg-primary-hover text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-md transition disabled:opacity-50 cursor-pointer"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-card)] bg-primary hover:bg-primary-hover text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-md transition disabled:opacity-50 cursor-pointer"
             >
               {loading ? translate('login.magicLinkSending') : translate('login.magicLinkSend')}
               {!loading && <ArrowRight className="h-4 w-4" />}

@@ -64,7 +64,7 @@ export const BulkLicenseAssign: FC<BulkLicenseAssignProps> = ({ onResult }) => {
             onChange={(e) => setEmailText(e.target.value)}
             rows={5}
             placeholder={'engineer1@company.com\nengineer2@company.com\nmanager@company.com'}
-            className="premium-input mt-2 w-full resize-none rounded-lg px-3 py-3 text-sm"
+            className="premium-input mt-2 w-full resize-none rounded-[var(--radius-card)] px-3 py-3 text-sm"
             disabled={isSubmitting}
           />
           {parsedEmails.length > 0 && (
@@ -83,7 +83,7 @@ export const BulkLicenseAssign: FC<BulkLicenseAssignProps> = ({ onResult }) => {
               id="bulk-role"
               value={role}
               onChange={(e) => setRole(e.target.value as Exclude<OrganizationRole, 'admin'>)}
-              className="premium-input mt-2 w-full rounded-lg px-3 py-3 text-sm"
+              className="premium-input mt-2 w-full rounded-[var(--radius-card)] px-3 py-3 text-sm"
               disabled={isSubmitting}
             >
               <option value="learner">Learner</option>
@@ -115,7 +115,7 @@ export const BulkLicenseAssign: FC<BulkLicenseAssignProps> = ({ onResult }) => {
         </div>
 
         {result && (
-          <div className="space-y-2 rounded-lg border border-border-soft p-4">
+          <div className="space-y-2 rounded-[var(--radius-card)] border border-border-soft p-4">
             {result.succeeded.length > 0 && (
               <div className="flex items-start gap-2 text-sm text-success">
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />

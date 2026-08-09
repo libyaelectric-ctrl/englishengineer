@@ -85,7 +85,7 @@ const PRReviewCoachDemo = ({
               id="review-comment-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="mt-3 min-h-32 w-full resize-y rounded-lg border border-border-soft bg-surface-hover px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10"
+              className="mt-3 min-h-32 w-full resize-y rounded-[var(--radius-card)] border border-border-soft bg-surface-hover px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10"
               placeholder="e.g., This code is terrible. Why did you write it this way? Fix it now."
             />
           </div>
@@ -139,7 +139,7 @@ const PRReviewCoachDemo = ({
           }
         >
           <div className="space-y-4">
-            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
+            <div className="rounded-[var(--radius-card)] border border-primary/20 bg-primary/5 p-4">
               <p className="text-xs font-medium text-primary">Original</p>
               <p className="mt-2 text-sm text-foreground line-through opacity-60">{input}</p>
             </div>
@@ -148,7 +148,7 @@ const PRReviewCoachDemo = ({
               <ArrowRight className="h-5 w-5 text-muted-copy" />
             </div>
 
-            <div className="rounded-lg border border-success/20 bg-success/5 p-4">
+            <div className="rounded-[var(--radius-card)] border border-success/20 bg-success/5 p-4">
               <p className="text-xs font-medium text-success">Professional Version</p>
               <p className="mt-2 text-sm leading-6 text-foreground whitespace-pre-wrap">
                 {result.polishedText}
@@ -156,7 +156,7 @@ const PRReviewCoachDemo = ({
             </div>
 
             {result.keyChanges.length > 0 && (
-              <div className="rounded-lg border border-border-soft bg-surface-hover p-4">
+              <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface-hover p-4">
                 <p className="text-xs font-medium text-muted-copy">Key Changes</p>
                 <ul className="mt-2 space-y-1">
                   {result.keyChanges.map((change, i) => (

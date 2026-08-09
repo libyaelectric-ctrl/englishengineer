@@ -33,7 +33,7 @@ export const SkillSidebar = ({
 }) => {
   return (
     <aside className="relative">
-      <div className="rounded-xl border border-primary/25 bg-surface/80 p-4 shadow-sm mb-4 space-y-3">
+      <div className="rounded-[var(--radius-card)] border border-primary/25 bg-surface/80 p-4 shadow-sm mb-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
             <Flame className="h-3.5 w-3.5 text-amber-500" aria-hidden="true" /> 7 Day Active Streak
@@ -59,7 +59,7 @@ export const SkillSidebar = ({
         </div>
       </div>
 
-      <div className="xl:sticky xl:top-16 space-y-0 border border-primary/25 bg-surface/80 rounded-xl shadow-sm overflow-hidden animate-in fade-in duration-300">
+      <div className="xl:sticky xl:top-16 space-y-0 border border-primary/25 bg-surface/80 rounded-[var(--radius-card)] shadow-sm overflow-hidden animate-in fade-in duration-300">
         <div className="px-4 pt-3 pb-2 border-b border-border-soft">
           <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-copy flex items-center gap-1.5">
             <Layers className="h-3 w-3" /> Skill Progress

@@ -28,7 +28,7 @@ export const InvoiceTaxManagerModal = ({ isOpen, onClose }: InvoiceTaxManagerMod
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in">
-      <div className="w-full max-w-md rounded-2xl border border-primary/30 bg-surface/95 p-5 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden">
+      <div className="w-full max-w-md rounded-[var(--radius-card)] border border-primary/30 bg-surface/95 p-5 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden">
         <div className="flex items-center justify-between border-b border-border-soft pb-3">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-primary" />
@@ -46,7 +46,7 @@ export const InvoiceTaxManagerModal = ({ isOpen, onClose }: InvoiceTaxManagerMod
         </div>
 
         {saved ? (
-          <div className="rounded-xl bg-emerald-500/15 border border-emerald-500/30 p-4 text-center text-xs font-bold text-emerald-600 space-y-2 animate-in fade-in">
+          <div className="rounded-[var(--radius-card)] bg-emerald-500/15 border border-emerald-500/30 p-4 text-center text-xs font-bold text-emerald-600 space-y-2 animate-in fade-in">
             <CheckCircle2 className="h-6 w-6 text-emerald-500 mx-auto" />
             <div>
               Tax ID & Billing details updated successfully. Automated monthly invoices will include
@@ -68,7 +68,7 @@ export const InvoiceTaxManagerModal = ({ isOpen, onClose }: InvoiceTaxManagerMod
                 type="text"
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
-                className="w-full h-10 rounded-lg border border-border-soft bg-background px-3 text-xs text-foreground font-bold focus:border-primary outline-none"
+                className="w-full h-10 rounded-[var(--radius-card)] border border-border-soft bg-background px-3 text-xs text-foreground font-bold focus:border-primary outline-none"
               />
             </div>
 
@@ -85,7 +85,7 @@ export const InvoiceTaxManagerModal = ({ isOpen, onClose }: InvoiceTaxManagerMod
                 type="text"
                 value={taxId}
                 onChange={(e) => setTaxId(e.target.value)}
-                className="w-full h-10 rounded-lg border border-border-soft bg-background px-3 text-xs text-foreground font-bold font-mono focus:border-primary outline-none"
+                className="w-full h-10 rounded-[var(--radius-card)] border border-border-soft bg-background px-3 text-xs text-foreground font-bold font-mono focus:border-primary outline-none"
               />
             </div>
 
@@ -101,7 +101,7 @@ export const InvoiceTaxManagerModal = ({ isOpen, onClose }: InvoiceTaxManagerMod
                 rows={2}
                 value={billingAddress}
                 onChange={(e) => setBillingAddress(e.target.value)}
-                className="w-full rounded-lg border border-border-soft bg-background p-2.5 text-xs text-foreground font-medium focus:border-primary outline-none"
+                className="w-full rounded-[var(--radius-card)] border border-border-soft bg-background p-2.5 text-xs text-foreground font-medium focus:border-primary outline-none"
               />
             </div>
 
@@ -116,7 +116,7 @@ export const InvoiceTaxManagerModal = ({ isOpen, onClose }: InvoiceTaxManagerMod
 
               <button
                 type="submit"
-                className="px-5 py-2 rounded-lg bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover transition cursor-pointer shadow-md"
+                className="px-5 py-2 rounded-[var(--radius-card)] bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover transition cursor-pointer shadow-md"
               >
                 Save Details
               </button>

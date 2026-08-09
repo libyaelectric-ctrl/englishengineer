@@ -81,7 +81,7 @@ export const DashboardPage: React.FC = () => {
     <div className="min-h-screen bg-[var(--background)]">
       <div className="mx-auto max-w-6xl p-6 space-y-6">
         {/* Header / Hero */}
-        <header className="relative overflow-hidden rounded-2xl border border-[var(--color-border-soft)] bg-[var(--surface)] p-6 sm:p-8">
+        <header className="relative overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-border-soft)] bg-[var(--surface)] p-6 sm:p-8">
           <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/5 to-transparent" />
           <div className="relative">
             <p className="text-sm font-semibold text-[var(--color-primary)]">
@@ -97,7 +97,7 @@ export const DashboardPage: React.FC = () => {
             </p>
             <Link
               to="/curriculum/today"
-              className="mt-5 inline-flex items-center gap-1.5 rounded-xl bg-[var(--color-primary)] px-5 py-2.5 text-sm font-bold text-white shadow-lg hover:bg-[var(--color-primary-hover)] transition-colors"
+              className="mt-5 inline-flex items-center gap-1.5 rounded-[var(--radius-card)] bg-[var(--color-primary)] px-5 py-2.5 text-sm font-bold text-white shadow-lg hover:bg-[var(--color-primary-hover)] transition-colors"
             >
               {translate('dashboard.startHere')}
               <ArrowRight className="h-3.5 w-3.5" />
@@ -110,9 +110,9 @@ export const DashboardPage: React.FC = () => {
           {stats.map(({ label, value, icon: Icon }) => (
             <div
               key={label}
-              className="rounded-2xl border border-[var(--color-border-soft)] bg-[var(--surface)] p-4 transition-all hover:border-[var(--color-primary)]/40 hover:shadow-lg"
+              className="rounded-[var(--radius-card)] border border-[var(--color-border-soft)] bg-[var(--surface)] p-4 transition-all hover:border-[var(--color-primary)]/40 hover:shadow-lg"
             >
-              <div className="mb-3 inline-flex rounded-xl bg-[var(--color-primary)]/10 p-2.5">
+              <div className="mb-3 inline-flex rounded-[var(--radius-card)] bg-[var(--color-primary)]/10 p-2.5">
                 <Icon className="h-5 w-5 text-[var(--color-primary)]" />
               </div>
               <p className="text-xs text-[var(--color-muted-copy)]">{label}</p>

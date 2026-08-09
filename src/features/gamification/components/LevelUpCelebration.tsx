@@ -62,7 +62,7 @@ export function LevelUpCelebration({
       }`}
     >
       <div
-        className={`flex flex-col items-center gap-3 rounded-2xl bg-surface px-10 py-8 shadow-2xl border border-primary/30 transition-all duration-300 ${
+        className={`flex flex-col items-center gap-3 rounded-[var(--radius-card)] bg-surface px-10 py-8 shadow-2xl border border-primary/30 transition-all duration-300 ${
           visible ? 'scale-100 translate-y-0' : 'scale-90 translate-y-2'
         }`}
       >

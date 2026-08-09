@@ -32,7 +32,7 @@ export const PricingHeader = ({
 
         <div className="flex flex-wrap items-center gap-3 shrink-0">
           {/* Currency Switcher */}
-          <div className="flex items-center gap-1.5 bg-surface px-3 py-1.5 rounded-xl border border-border-soft text-xs font-bold shadow-sm">
+          <div className="flex items-center gap-1.5 bg-surface px-3 py-1.5 rounded-[var(--radius-card)] border border-border-soft text-xs font-bold shadow-sm">
             <Globe className="h-4 w-4 text-primary" />
             <select
               value={selectedCurrency}
@@ -48,7 +48,7 @@ export const PricingHeader = ({
           </div>
 
           {/* Monthly / Annual Toggle */}
-          <div className="flex items-center gap-3 rounded-xl border border-border-soft bg-surface p-2 shadow-sm">
+          <div className="flex items-center gap-3 rounded-[var(--radius-card)] border border-border-soft bg-surface p-2 shadow-sm">
             <span
               className={`text-xs font-bold transition-colors ${!isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
             >

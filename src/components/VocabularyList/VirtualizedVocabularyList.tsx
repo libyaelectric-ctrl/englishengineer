@@ -19,7 +19,7 @@ export const VirtualizedVocabularyList: React.FC<Props> = ({ items }) => {
   // Basit map d�ng�s� (Virtualization kald�r�ld�, build hatas�n� �nlemek i�in)
   // Performans sorunu olursa ilerleme tekrar virtualization eklenecek.
   return (
-    <div className="w-full bg-white rounded-lg shadow-sm border max-h-[600px] overflow-y-auto">
+    <div className="w-full bg-white rounded-[var(--radius-card)] shadow-sm border max-h-[600px] overflow-y-auto">
       {items.map((item) => (
         <div
           key={item.id}

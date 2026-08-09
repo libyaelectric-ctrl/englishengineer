@@ -60,7 +60,7 @@ export const SkillRadarChart = ({ profile }: SkillRadarChartProps) => {
   const gridLevels = [0.25, 0.5, 0.75, 1.0];
 
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-border-soft bg-surface p-5 shadow-sm">
+    <div className="flex flex-col items-center rounded-[var(--radius-card)] border border-border-soft bg-surface p-5 shadow-sm">
       <div className="flex w-full items-center justify-between border-b border-border-soft pb-3 mb-2">
         <div>
           <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">

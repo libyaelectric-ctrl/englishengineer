@@ -79,7 +79,7 @@ export const ScoreFeedbackOverlay = React.memo(
           aria-label="Evaluation results"
           tabIndex={-1}
           data-testid="speaking-result-panel"
-          className="max-h-[calc(100vh-2rem)] w-full max-w-lg space-y-5 overflow-y-auto rounded-2xl border border-border-soft bg-surface p-6 shadow-xl"
+          className="max-h-[calc(100vh-2rem)] w-full max-w-lg space-y-5 overflow-y-auto rounded-[var(--radius-card)] border border-border-soft bg-surface p-6 shadow-xl"
         >
           {/* Header */}
           <div className="text-center space-y-2">
@@ -90,7 +90,7 @@ export const ScoreFeedbackOverlay = React.memo(
           </div>
 
           {/* Score */}
-          <div className="flex items-center justify-between rounded-xl border border-border-soft bg-surface p-5">
+          <div className="flex items-center justify-between rounded-[var(--radius-card)] border border-border-soft bg-surface p-5">
             <div>
               <p className="text-xs text-muted-copy">Total Score</p>
               <h4 className="mt-1 text-4xl font-bold text-foreground">
@@ -105,17 +105,17 @@ export const ScoreFeedbackOverlay = React.memo(
 
           {/* Rewards */}
           <div className="grid grid-cols-3 gap-3">
-            <div className="rounded-xl border border-border-soft bg-surface p-3 text-center">
+            <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-3 text-center">
               <Zap className="h-4 w-4 text-warning mx-auto" />
               <p className="mt-1 text-[10px] text-muted-copy">XP</p>
               <p className="text-sm font-bold text-foreground">+{result.xp}</p>
             </div>
-            <div className="rounded-xl border border-border-soft bg-surface p-3 text-center">
+            <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-3 text-center">
               <Coins className="h-4 w-4 text-warning mx-auto" />
               <p className="mt-1 text-[10px] text-muted-copy">Coins</p>
               <p className="text-sm font-bold text-foreground">+{result.coins}</p>
             </div>
-            <div className="rounded-xl border border-border-soft bg-surface p-3 text-center">
+            <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-3 text-center">
               <TrendingUp className="h-4 w-4 text-foreground mx-auto" />
               <p className="mt-1 text-[10px] text-muted-copy">ELO</p>
               <p

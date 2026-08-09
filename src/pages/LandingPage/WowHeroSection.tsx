@@ -82,14 +82,14 @@ export const WowHeroSection: React.FC = () => {
         >
           <Link
             to="/onboarding"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-base shadow-xl shadow-blue-500/20 hover:shadow-blue-500/35 transition-all duration-300 group"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-[var(--radius-card)] bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-base shadow-xl shadow-blue-500/20 hover:shadow-blue-500/35 transition-all duration-300 group"
           >
             <span>{t.ctaSelectBranch}</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link
             to="/pricing"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-white dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 font-semibold text-base border border-slate-200 dark:border-white/10 shadow-sm transition-all duration-200"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-[var(--radius-card)] bg-white dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 font-semibold text-base border border-slate-200 dark:border-white/10 shadow-sm transition-all duration-200"
           >
             <span>{t.ctaViewPlans}</span>
           </Link>

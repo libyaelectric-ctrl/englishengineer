@@ -13,7 +13,6 @@ import {
 } from '@/features/vocabulary';
 import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
 
-
 import { WordCardDetails } from './WordCardDetails';
 import { WordCardHeader } from './WordCardHeader';
 import {
@@ -92,7 +91,7 @@ const WordCardFront: React.FC<WordCardFrontProps> = ({
   onToggleFlip,
 }) => (
   <div
-    className={`absolute inset-0 flex min-h-0 flex-col justify-between overflow-hidden rounded-xl bg-surface/90 p-5 border border-primary/20 backdrop-blur-md ${getBorderClass(progress?.isWeak)}`}
+    className={`absolute inset-0 flex min-h-0 flex-col justify-between overflow-hidden rounded-[var(--radius-card)] bg-surface/90 p-5 border border-primary/20 backdrop-blur-md ${getBorderClass(progress?.isWeak)}`}
     style={{ backfaceVisibility: 'hidden' }}
   >
     <div className="min-h-0 space-y-4 overflow-y-auto pr-1">
@@ -202,11 +201,11 @@ export const WordCard = ({
   return (
     <article
       data-testid="vocabulary-word-card"
-      className="relative h-[430px] min-h-[430px] w-full overflow-hidden rounded-xl"
+      className="relative h-[430px] min-h-[430px] w-full overflow-hidden rounded-[var(--radius-card)]"
       style={{ perspective: '1200px' }}
     >
       <div
-        className="relative h-full w-full transition-transform duration-700 rounded-xl shadow-md hover:shadow-xl"
+        className="relative h-full w-full transition-transform duration-700 rounded-[var(--radius-card)] shadow-md hover:shadow-xl"
         style={{
           transformStyle: 'preserve-3d',
           transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
@@ -233,7 +232,7 @@ export const WordCard = ({
 
         {/* BACK FACE (180deg ROTATED PHYSICAL BACK) */}
         <div
-          className="absolute inset-0 flex min-h-0 flex-col justify-between overflow-hidden rounded-xl bg-gradient-to-br from-surface via-surface-hover to-primary/10 p-6 border-2 border-primary/40 shadow-2xl backdrop-blur-xl"
+          className="absolute inset-0 flex min-h-0 flex-col justify-between overflow-hidden rounded-[var(--radius-card)] bg-gradient-to-br from-surface via-surface-hover to-primary/10 p-6 border-2 border-primary/40 shadow-2xl backdrop-blur-xl"
           style={{
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
@@ -261,9 +260,12 @@ export const WordCard = ({
               <p className="text-xs font-mono text-muted-copy mt-1 font-semibold">{term.term}</p>
             </div>
 
-            <div className="space-y-2 rounded-lg bg-surface/80 p-3 border border-border-soft text-xs leading-relaxed">
+            <div className="space-y-2 rounded-[var(--radius-card)] bg-surface/80 p-3 border border-border-soft text-xs leading-relaxed">
               <p className="font-semibold text-foreground">
-                📌 <span className="font-bold text-primary">{translate('vocabulary.cardEnglishExample')}</span>{' '}
+                📌{' '}
+                <span className="font-bold text-primary">
+                  {translate('vocabulary.cardEnglishExample')}
+                </span>{' '}
                 {repairVocabularyText(term.exampleSentence)}
               </p>
               {language === 'tr' && (

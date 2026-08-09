@@ -1,13 +1,14 @@
+import { PricingCard } from '@/components/ui/PricingCard';
 import { Check, Globe, X } from 'lucide-react';
+import { motion } from 'motion/react';
 
 import { useState } from 'react';
 
-import { motion } from 'motion/react';
+import { PRICING_FEATURE_ORDER, PRICING_TIERS } from '@/shared/data/pricing.data';
 
 import { CurrencyConfig } from '@/features/billing';
 import { useLocalizationStore } from '@/features/localization';
-import { PricingCard } from '@/components/ui/PricingCard';
-import { PRICING_TIERS, PRICING_FEATURE_ORDER } from '@/shared/data/pricing.data';
+
 import { getLandingTranslations } from './landing-i18n';
 
 export function PricingSection() {
@@ -19,15 +20,15 @@ export function PricingSection() {
   const moduleLabels: Record<string, string> = {
     'Placement Test': t.placementTest ?? 'Placement Test',
     'Learning Hub': t.learningHub ?? 'Learning Hub',
-    'Progress': t.progress ?? 'Progress',
-    'Vocabulary': t.vocabularyPricing ?? 'Vocabulary',
-    'Grammar': t.grammarPricing ?? 'Grammar',
-    'Translator': t.translator ?? 'Translator',
-    'Reading': t.readingPricing ?? 'Reading',
-    'Writing': t.writingPricing ?? 'Writing',
-    'Speaking': t.speakingPricing ?? 'Speaking',
-    'Listening': t.listening ?? 'Listening',
-    'Tool': t.tool ?? 'Tool',
+    Progress: t.progress ?? 'Progress',
+    Vocabulary: t.vocabularyPricing ?? 'Vocabulary',
+    Grammar: t.grammarPricing ?? 'Grammar',
+    Translator: t.translator ?? 'Translator',
+    Reading: t.readingPricing ?? 'Reading',
+    Writing: t.writingPricing ?? 'Writing',
+    Speaking: t.speakingPricing ?? 'Speaking',
+    Listening: t.listening ?? 'Listening',
+    Tool: t.tool ?? 'Tool',
     'AI Copilot': t.aiCopilot ?? 'AI Copilot',
   };
 
@@ -50,12 +51,13 @@ export function PricingSection() {
             {t.pricingTitle ?? 'Simple, Transparent Pricing'}
           </h2>
           <p className="mt-4 text-slate-600 dark:text-slate-400 text-base sm:text-lg">
-            {t.pricingSubtitle ?? 'Choose your plan. Every plan includes your discipline-specific vocabulary pool.'}
+            {t.pricingSubtitle ??
+              'Choose your plan. Every plan includes your discipline-specific vocabulary pool.'}
           </p>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
-          <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+          <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-[var(--radius-card)]">
             <button
               type="button"
               onClick={() => setIsAnnual(false)}
@@ -69,11 +71,13 @@ export function PricingSection() {
               className={`px-3 py-1.5 rounded text-sm font-semibold transition-all flex items-center gap-1.5 ${isAnnual ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-500'}`}
             >
               <span>{t.pricingAnnual ?? 'Annual'}</span>
-              <span className="text-[10px] bg-emerald-500 text-white px-1.5 py-0.5 rounded font-mono">-{t.pricingSave20 ?? '20%'}</span>
+              <span className="text-[10px] bg-emerald-500 text-white px-1.5 py-0.5 rounded font-mono">
+                -{t.pricingSave20 ?? '20%'}
+              </span>
             </button>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-2.5 py-1.5 rounded-lg">
+          <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-2.5 py-1.5 rounded-[var(--radius-card)]">
             <Globe className="h-3.5 w-3.5 text-blue-500" />
             <select
               value={selectedCurrency}
@@ -122,7 +126,10 @@ export function PricingSection() {
                   {t.pricingFeature ?? 'Feature'}
                 </th>
                 {PRICING_TIERS.map((tier) => (
-                  <th key={tier.id} className="py-3 px-2 text-center font-bold text-slate-900 dark:text-white text-xs">
+                  <th
+                    key={tier.id}
+                    className="py-3 px-2 text-center font-bold text-slate-900 dark:text-white text-xs"
+                  >
                     {tier.name}
                   </th>
                 ))}

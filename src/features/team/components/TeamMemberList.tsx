@@ -82,7 +82,7 @@ export const TeamMemberList: FC<TeamMemberListProps> = ({ members, summaries }) 
             <Link
               key={member.id}
               to={`/team/members/${member.id}`}
-              className="group flex items-center gap-4 rounded-lg border border-border-soft p-4 transition-colors hover:border-primary/30 hover:bg-primary/5"
+              className="group flex items-center gap-4 rounded-[var(--radius-card)] border border-border-soft p-4 transition-colors hover:border-primary/30 hover:bg-primary/5"
             >
               <div
                 className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${getAvatarColor(member.displayName)}`}

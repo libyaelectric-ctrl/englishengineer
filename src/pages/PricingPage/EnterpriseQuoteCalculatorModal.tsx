@@ -21,7 +21,7 @@ const SeatCalculator = ({
   seats: number;
   setSeats: (value: number) => void;
 }) => (
-  <div className="space-y-2.5 rounded-xl border border-primary/20 bg-background/80 p-4">
+  <div className="space-y-2.5 rounded-[var(--radius-card)] border border-primary/20 bg-background/80 p-4">
     <div className="flex items-center justify-between">
       <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
         <Layers className="h-4 w-4 text-primary" /> Enterprise Engineering Seats
@@ -35,7 +35,7 @@ const SeatCalculator = ({
       step={5}
       value={seats}
       onChange={(e) => setSeats(Number(e.target.value))}
-      className="w-full h-2 rounded-lg accent-primary cursor-pointer"
+      className="w-full h-2 rounded-[var(--radius-card)] accent-primary cursor-pointer"
     />
     <div className="flex justify-between text-[10px] font-bold font-mono">
       <span className={seats >= 10 ? 'text-emerald-500' : 'text-muted-copy'}>10+ Seats (-15%)</span>
@@ -66,7 +66,7 @@ const RegionSelector = ({
           key={r.id}
           type="button"
           onClick={() => setSelectedRegion(r.id)}
-          className={`flex items-center gap-2 rounded-xl border p-2.5 text-left text-xs transition cursor-pointer ${
+          className={`flex items-center gap-2 rounded-[var(--radius-card)] border p-2.5 text-left text-xs transition cursor-pointer ${
             selectedRegion === r.id
               ? 'border-primary bg-primary/10 text-primary font-bold shadow-sm'
               : 'border-border-soft bg-background hover:border-primary/40'
@@ -101,7 +101,7 @@ const ServiceOptions = ({
           e.currentTarget.click();
         }
       }}
-      className={`rounded-xl border p-3 cursor-pointer transition ${
+      className={`rounded-[var(--radius-card)] border p-3 cursor-pointer transition ${
         dedicatedServer
           ? 'border-primary bg-primary/10 text-primary font-bold shadow-sm'
           : 'border-border-soft bg-background'
@@ -123,7 +123,7 @@ const ServiceOptions = ({
           e.currentTarget.click();
         }
       }}
-      className={`rounded-xl border p-3 cursor-pointer transition ${
+      className={`rounded-[var(--radius-card)] border p-3 cursor-pointer transition ${
         slaTier === '99.99'
           ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-600 font-bold shadow-sm'
           : 'border-border-soft bg-background'
@@ -170,7 +170,7 @@ export const EnterpriseQuoteCalculatorModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in">
-      <div className="w-full max-w-2xl rounded-2xl border border-primary/40 bg-surface/95 p-6 shadow-2xl space-y-6 relative light-sweep-container overflow-hidden max-h-[90vh] overflow-y-auto">
+      <div className="w-full max-w-2xl rounded-[var(--radius-card)] border border-primary/40 bg-surface/95 p-6 shadow-2xl space-y-6 relative light-sweep-container overflow-hidden max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between border-b border-border-soft pb-3">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary animate-pulse" />
@@ -208,7 +208,7 @@ export const EnterpriseQuoteCalculatorModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover transition cursor-pointer"
+              className="px-6 py-2.5 rounded-[var(--radius-card)] bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover transition cursor-pointer"
             >
               Done & Return to Pricing
             </button>
@@ -224,7 +224,7 @@ export const EnterpriseQuoteCalculatorModal = ({
               setSlaTier={setSlaTier}
             />
 
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 flex items-center justify-between">
+            <div className="rounded-[var(--radius-card)] border border-emerald-500/30 bg-emerald-500/10 p-3.5 flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                   Estimated Enterprise Total
@@ -252,12 +252,12 @@ export const EnterpriseQuoteCalculatorModal = ({
                   type="email"
                   value={companyEmail}
                   onChange={(e) => setCompanyEmail(e.target.value)}
-                  className="flex-1 rounded-lg border border-border-soft bg-background px-3 py-2 text-xs text-foreground font-bold focus:border-primary outline-none"
+                  className="flex-1 rounded-[var(--radius-card)] border border-border-soft bg-background px-3 py-2 text-xs text-foreground font-bold focus:border-primary outline-none"
                   placeholder="procurement@company.com"
                 />
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-5 py-2 text-xs font-bold text-primary-foreground hover:bg-primary-hover transition cursor-pointer shadow-md shrink-0"
+                  className="inline-flex items-center gap-1.5 rounded-[var(--radius-card)] bg-primary px-5 py-2 text-xs font-bold text-primary-foreground hover:bg-primary-hover transition cursor-pointer shadow-md shrink-0"
                 >
                   <span>Request PDF Proposal</span>
                   <ArrowRight className="h-3.5 w-3.5" />

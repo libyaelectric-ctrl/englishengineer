@@ -64,7 +64,7 @@ export function BeforeAfterCard() {
               key={item.category}
               type="button"
               onClick={() => setActiveIndex(idx)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all border cursor-pointer ${
+              className={`rounded-[var(--radius-card)] px-3 py-1.5 text-xs font-bold transition-all border cursor-pointer ${
                 activeIndex === idx
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-surface border-border-soft text-muted-copy hover:text-foreground hover:border-primary/40'
@@ -78,7 +78,7 @@ export function BeforeAfterCard() {
         {/* Side-by-Side Before & After Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
           {/* Before Card */}
-          <div className="rounded-xl border border-rose-500/30 bg-rose-500/5 p-4 flex flex-col justify-between space-y-3">
+          <div className="rounded-[var(--radius-card)] border border-rose-500/30 bg-rose-500/5 p-4 flex flex-col justify-between space-y-3">
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-rose-600 font-mono">
@@ -98,7 +98,7 @@ export function BeforeAfterCard() {
           </div>
 
           {/* After Card (EngVox AI Precision) */}
-          <div className="rounded-xl border border-emerald-500/40 bg-emerald-500/5 p-4 flex flex-col justify-between space-y-3 shadow-lg relative light-sweep-container overflow-hidden">
+          <div className="rounded-[var(--radius-card)] border border-emerald-500/40 bg-emerald-500/5 p-4 flex flex-col justify-between space-y-3 shadow-lg relative light-sweep-container overflow-hidden">
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600 font-mono">

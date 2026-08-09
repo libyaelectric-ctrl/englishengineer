@@ -42,7 +42,7 @@ function VocabLevelGrid({ mastered }: { mastered: number }) {
         return (
           <div
             key={level.id}
-            className={`flex flex-col rounded-lg border p-2 transition-all ${isActive ? 'border-primary bg-primary/5 shadow-sm' : isCompleted ? 'border-success/30 bg-success/5' : 'border-border-soft bg-surface-hover/50'}`}
+            className={`flex flex-col rounded-[var(--radius-card)] border p-2 transition-all ${isActive ? 'border-primary bg-primary/5 shadow-sm' : isCompleted ? 'border-success/30 bg-success/5' : 'border-border-soft bg-surface-hover/50'}`}
           >
             <div className="mb-2 flex items-center justify-between">
               <span

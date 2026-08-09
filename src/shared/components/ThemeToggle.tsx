@@ -10,7 +10,7 @@ export const ThemeToggle = () => {
       type="button"
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-      className="flex h-10 w-10 items-center justify-center rounded-xl border border-border-soft bg-background/80 text-foreground transition hover:bg-surface-hover hover:border-primary/40 cursor-pointer shadow-sm"
+      className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-card)] border border-border-soft bg-background/80 text-foreground transition hover:bg-surface-hover hover:border-primary/40 cursor-pointer shadow-sm"
       aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {theme === 'dark' ? (

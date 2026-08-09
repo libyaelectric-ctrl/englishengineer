@@ -1,8 +1,12 @@
-import React from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
+
+import React from 'react';
+
 import { Link } from 'react-router-dom';
+
 import { useLocalizationStore } from '@/features/localization';
+
 import { getLandingTranslations } from './landing-i18n';
 
 export const FinalCTA: React.FC = () => {
@@ -35,13 +39,14 @@ export const FinalCTA: React.FC = () => {
           </h2>
 
           <p className="mt-6 text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            {t.finalCtaSub ?? 'Select your discipline, choose your interface language, and start mastering professional engineering English today. No credit card required.'}
+            {t.finalCtaSub ??
+              'Select your discipline, choose your interface language, and start mastering professional engineering English today. No credit card required.'}
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               to="/onboarding"
-              className="w-full sm:w-auto px-10 py-5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-lg shadow-xl shadow-blue-500/25 transition-all duration-300 flex items-center justify-center gap-3 group"
+              className="w-full sm:w-auto px-10 py-5 rounded-[var(--radius-card)] bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-lg shadow-xl shadow-blue-500/25 transition-all duration-300 flex items-center justify-center gap-3 group"
             >
               <span>{t.ctaSelectBranch ?? 'Select Your Discipline'}</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -49,7 +54,7 @@ export const FinalCTA: React.FC = () => {
 
             <Link
               to="/pricing"
-              className="w-full sm:w-auto px-8 py-5 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-base border border-slate-200 dark:border-slate-700 shadow-sm transition-all duration-200 flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-5 rounded-[var(--radius-card)] bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-base border border-slate-200 dark:border-slate-700 shadow-sm transition-all duration-200 flex items-center justify-center gap-2"
             >
               {t.ctaViewPlans ?? 'View Plans'}
             </Link>

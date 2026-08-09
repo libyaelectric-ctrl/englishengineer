@@ -7,10 +7,7 @@ export function FeatureSection() {
   const translate = useLocalizationStore((s) => s.translate);
 
   return (
-    <section
-      id="features"
-      className="bg-background px-6 py-7 md:px-12 md:py-8"
-    >
+    <section id="features" className="bg-background px-6 py-7 md:px-12 md:py-8">
       <div className="mx-auto max-w-7xl">
         {/* Single Row Compact Header */}
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border-soft pb-4">
@@ -35,7 +32,7 @@ export function FeatureSection() {
               <AnimatedCard
                 key={feature.titleKey}
                 delay={index * 40}
-                className="p-4 bg-surface border border-border-soft shadow-sm rounded-lg hover:border-primary/50 transition-all light-sweep-container group hover:scale-[1.01] hover:shadow-md"
+                className="p-4 bg-surface border border-border-soft shadow-sm rounded-[var(--radius-card)] hover:border-primary/50 transition-all light-sweep-container group hover:scale-[1.01] hover:shadow-md"
               >
                 <div className="flex items-center gap-3 mb-2.5">
                   <div className="flex h-8 w-8 items-center justify-center rounded bg-soft text-primary border border-border-soft shrink-0">

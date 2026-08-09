@@ -22,7 +22,7 @@ export const TechnicalAudioPlayerWidget = () => {
   };
 
   return (
-    <div className="rounded-2xl border border-primary/25 bg-surface/90 backdrop-blur-md p-4 shadow-xl space-y-3 relative light-sweep-container overflow-hidden">
+    <div className="rounded-[var(--radius-card)] border border-primary/25 bg-surface/90 backdrop-blur-md p-4 shadow-xl space-y-3 relative light-sweep-container overflow-hidden">
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold uppercase tracking-wider text-primary font-mono flex items-center gap-1.5">
           <Volume2 className="h-4 w-4 text-primary animate-pulse" />{' '}
@@ -45,7 +45,7 @@ export const TechnicalAudioPlayerWidget = () => {
                 e.currentTarget.click();
               }
             }}
-            className={`flex items-center justify-between rounded-xl border p-2.5 transition cursor-pointer ${
+            className={`flex items-center justify-between rounded-[var(--radius-card)] border p-2.5 transition cursor-pointer ${
               activeIdx === idx && isPlaying
                 ? 'border-emerald-500/40 bg-emerald-500/10 shadow-sm'
                 : 'border-border-soft bg-background/80 hover:border-primary/40'
@@ -55,7 +55,7 @@ export const TechnicalAudioPlayerWidget = () => {
               <button
                 type="button"
                 aria-label="Play"
-                className={`flex h-7 w-7 items-center justify-center rounded-lg transition ${
+                className={`flex h-7 w-7 items-center justify-center rounded-[var(--radius-card)] transition ${
                   activeIdx === idx && isPlaying
                     ? 'bg-emerald-500 text-white animate-pulse'
                     : 'bg-primary/10 text-primary'

@@ -65,7 +65,7 @@ export function GrammarSidebar() {
       },
     ],
     custom: selectedRule ? (
-      <div className="rounded-lg bg-surface-hover p-3 border border-border-soft">
+      <div className="rounded-[var(--radius-card)] bg-surface-hover p-3 border border-border-soft">
         <p className="text-[10px] font-bold text-primary mb-1">
           LESSON {selectedRuleIndex + 1} OF {rules.length}
         </p>

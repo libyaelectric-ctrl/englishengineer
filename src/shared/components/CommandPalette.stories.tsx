@@ -47,7 +47,7 @@ const CommandPaletteDemo = ({ searchQuery }: { searchQuery?: string }) => {
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]">
       <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
-      <div className="relative w-full max-w-xl overflow-hidden rounded-xl border border-border-soft bg-surface shadow-2xl">
+      <div className="relative w-full max-w-xl overflow-hidden rounded-[var(--radius-card)] border border-border-soft bg-surface shadow-2xl">
         <div className="flex items-center border-b border-border-soft px-4">
           <svg
             className="h-5 w-5 shrink-0 text-muted-copy"
@@ -80,7 +80,7 @@ const CommandPaletteDemo = ({ searchQuery }: { searchQuery?: string }) => {
                 <button
                   key={cmd.id}
                   type="button"
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm text-muted-copy transition-colors hover:bg-surface-hover/50 hover:text-foreground"
+                  className="flex w-full items-center gap-3 rounded-[var(--radius-card)] px-3 py-2.5 text-left text-sm text-muted-copy transition-colors hover:bg-surface-hover/50 hover:text-foreground"
                 >
                   <span className="flex-1 truncate">{cmd.label}</span>
                 </button>

@@ -48,7 +48,7 @@ export function SalesChatModal() {
 
       {/* Sales Chat Modal */}
       {isOpen && (
-        <div className="fixed bottom-28 left-6 z-50 w-80 sm:w-96 rounded-xl border border-primary/30 bg-background/95 backdrop-blur-md p-4 shadow-2xl animate-fadeIn space-y-3">
+        <div className="fixed bottom-28 left-6 z-50 w-80 sm:w-96 rounded-[var(--radius-card)] border border-primary/30 bg-background/95 backdrop-blur-md p-4 shadow-2xl animate-fadeIn space-y-3">
           <div className="flex items-center justify-between border-b border-border-soft pb-2.5">
             <div className="flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-white">
@@ -77,7 +77,7 @@ export function SalesChatModal() {
             {messages.map((m, idx) => (
               <div
                 key={idx}
-                className={`p-2.5 rounded-lg max-w-[85%] leading-relaxed ${
+                className={`p-2.5 rounded-[var(--radius-card)] max-w-[85%] leading-relaxed ${
                   m.sender === 'user'
                     ? 'ml-auto bg-primary text-primary-foreground text-right'
                     : 'mr-auto bg-surface border border-border-soft text-foreground'

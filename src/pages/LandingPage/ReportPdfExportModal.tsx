@@ -42,7 +42,7 @@ export const ReportPdfExportModal = ({ isOpen, onClose }: ReportPdfExportModalPr
         role="dialog"
         aria-modal="true"
         aria-label="Technical report export"
-        className="w-full max-w-md rounded-2xl border border-primary/30 bg-surface/95 p-5 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden focus:outline-none"
+        className="w-full max-w-md rounded-[var(--radius-card)] border border-primary/30 bg-surface/95 p-5 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden focus:outline-none"
       >
         <div className="flex items-center justify-between border-b border-border-soft pb-3">
           <div className="flex items-center gap-2">
@@ -64,7 +64,7 @@ export const ReportPdfExportModal = ({ isOpen, onClose }: ReportPdfExportModalPr
         <p className="text-xs text-muted-copy leading-relaxed">{translate('landing.exportDesc')}</p>
 
         {exporting ? (
-          <div className="rounded-xl bg-emerald-500/15 border border-emerald-500/30 p-4 text-center text-xs font-bold text-emerald-600 flex items-center justify-center gap-2 animate-in fade-in">
+          <div className="rounded-[var(--radius-card)] bg-emerald-500/15 border border-emerald-500/30 p-4 text-center text-xs font-bold text-emerald-600 flex items-center justify-center gap-2 animate-in fade-in">
             <CheckCircle2 className="h-5 w-5 text-emerald-500" />
             <span>Exporting EngVox_Site_Report_2026.{exporting.toUpperCase()}...</span>
           </div>
@@ -73,7 +73,7 @@ export const ReportPdfExportModal = ({ isOpen, onClose }: ReportPdfExportModalPr
             <button
               type="button"
               onClick={() => handleExport('pdf')}
-              className="flex flex-col items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/10 p-4 hover:bg-primary/20 transition cursor-pointer"
+              className="flex flex-col items-center justify-center gap-2 rounded-[var(--radius-card)] border border-primary/30 bg-primary/10 p-4 hover:bg-primary/20 transition cursor-pointer"
             >
               <FileText className="h-8 w-8 text-primary" />
               <div className="text-xs font-bold text-foreground">
@@ -85,7 +85,7 @@ export const ReportPdfExportModal = ({ isOpen, onClose }: ReportPdfExportModalPr
             <button
               type="button"
               onClick={() => handleExport('docx')}
-              className="flex flex-col items-center justify-center gap-2 rounded-xl border border-blue-500/30 bg-blue-500/10 p-4 hover:bg-blue-500/20 transition cursor-pointer"
+              className="flex flex-col items-center justify-center gap-2 rounded-[var(--radius-card)] border border-blue-500/30 bg-blue-500/10 p-4 hover:bg-blue-500/20 transition cursor-pointer"
             >
               <FileSpreadsheet className="h-8 w-8 text-blue-500" />
               <div className="text-xs font-bold text-foreground">

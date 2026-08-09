@@ -44,7 +44,7 @@ export const WritingRealtimeFeedback = ({ draft }: WritingRealtimeFeedbackProps)
 
   if (!deferredDraft.trim()) {
     return (
-      <div className="rounded-xl border border-border-soft bg-surface-hover p-5 text-center">
+      <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface-hover p-5 text-center">
         <Sparkles className="mx-auto h-6 w-6 text-muted-copy mb-2" />
         <p className="text-xs text-muted-copy">Start writing to see real-time feedback</p>
       </div>
@@ -55,15 +55,15 @@ export const WritingRealtimeFeedback = ({ draft }: WritingRealtimeFeedbackProps)
     <div className="space-y-4">
       {/* Quick Stats */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="rounded-lg border border-border-soft bg-surface p-3 text-center">
+        <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-3 text-center">
           <p className="text-[10px] font-mono text-muted-copy uppercase">Words</p>
           <p className="text-lg font-bold text-foreground">{analysis.wordCount}</p>
         </div>
-        <div className="rounded-lg border border-border-soft bg-surface p-3 text-center">
+        <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-3 text-center">
           <p className="text-[10px] font-mono text-muted-copy uppercase">Sentences</p>
           <p className="text-lg font-bold text-foreground">{analysis.sentenceCount}</p>
         </div>
-        <div className="rounded-lg border border-border-soft bg-surface p-3 text-center">
+        <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-3 text-center">
           <p className="text-[10px] font-mono text-muted-copy uppercase">Readability</p>
           <p
             className={cn(
@@ -101,7 +101,10 @@ export const WritingRealtimeFeedback = ({ draft }: WritingRealtimeFeedbackProps)
             const config = severityConfig[suggestion.severity];
             const Icon = config.icon;
             return (
-              <div key={suggestion.id} className={cn('rounded-lg border p-3 text-xs', config.bg)}>
+              <div
+                key={suggestion.id}
+                className={cn('rounded-[var(--radius-card)] border p-3 text-xs', config.bg)}
+              >
                 <div className="flex items-start gap-2">
                   <Icon className={cn('h-3.5 w-3.5 mt-0.5 shrink-0', config.color)} />
                   <div className="min-w-0 flex-1">
@@ -133,7 +136,7 @@ export const WritingRealtimeFeedback = ({ draft }: WritingRealtimeFeedbackProps)
       )}
 
       {analysis.suggestions.length === 0 && draft.trim().length > 20 && (
-        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3 text-center">
+        <div className="rounded-[var(--radius-card)] border border-emerald-500/20 bg-emerald-500/5 p-3 text-center">
           <CheckCircle2 className="mx-auto h-4 w-4 text-emerald-500 mb-1" />
           <p className="text-xs text-emerald-500 font-medium">
             No issues detected — great writing!

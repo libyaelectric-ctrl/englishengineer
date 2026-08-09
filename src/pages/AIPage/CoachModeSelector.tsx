@@ -28,7 +28,7 @@ export const CoachModeSelector = ({
   onSetMode,
   onSetInput,
 }: CoachModeSelectorProps) => (
-  <div className="rounded-xl border border-primary/25 bg-surface/80 p-3.5 shadow-sm space-y-3">
+  <div className="rounded-[var(--radius-card)] border border-primary/25 bg-surface/80 p-3.5 shadow-sm space-y-3">
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
         <Brain className="h-4 w-4 text-primary" />

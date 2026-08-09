@@ -161,7 +161,7 @@ export const CommandPalette = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -8 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="relative w-full max-w-xl overflow-hidden rounded-xl border border-border-soft bg-surface shadow-2xl"
+            className="relative w-full max-w-xl overflow-hidden rounded-[var(--radius-card)] border border-border-soft bg-surface shadow-2xl"
           >
             <div className="flex items-center border-b border-border-soft px-4">
               <Search className="h-5 w-5 shrink-0 text-muted-copy" />
@@ -224,7 +224,7 @@ export const CommandPalette = () => {
                       onClick={() => execute(cmd.href)}
                       onMouseEnter={() => setSelectedIndex(globalIndex)}
                       className={cn(
-                        'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors',
+                        'flex w-full items-center gap-3 rounded-[var(--radius-card)] px-3 py-2.5 text-left text-sm transition-colors',
                         isSelected
                           ? 'bg-primary/5 font-medium text-primary'
                           : 'text-muted-copy hover:bg-surface-hover/50 hover:text-foreground',

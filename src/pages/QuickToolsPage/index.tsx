@@ -35,7 +35,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       )}
 
       <div
-        className="flex flex-wrap gap-2 rounded-xl border border-primary/25 bg-surface/80 p-3 shadow-sm font-sans"
+        className="flex flex-wrap gap-2 rounded-[var(--radius-card)] border border-primary/25 bg-surface/80 p-3 shadow-sm font-sans"
         role="tablist"
       >
         {(
@@ -52,7 +52,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
             type="button"
             aria-selected={tab === id}
             onClick={() => setTab(id)}
-            className={`flex shrink-0 items-center gap-1.5 rounded-lg border px-3.5 py-2 text-[10px] font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            className={`flex shrink-0 items-center gap-1.5 rounded-[var(--radius-card)] border px-3.5 py-2 text-[10px] font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
               tab === id
                 ? 'border-primary/40 bg-primary/10 text-primary shadow-sm'
                 : 'border-border-soft bg-surface text-muted-copy hover:text-foreground hover:bg-surface-hover hover:border-primary/30'

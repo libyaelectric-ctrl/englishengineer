@@ -1,8 +1,12 @@
-import React from 'react';
-import { ShieldCheck, Flame, Cpu, ArrowRight, Zap, Target } from 'lucide-react';
+import { ArrowRight, Cpu, Flame, ShieldCheck, Target, Zap } from 'lucide-react';
 import { motion } from 'motion/react';
+
+import React from 'react';
+
 import { Link } from 'react-router-dom';
+
 import { useLocalizationStore } from '@/features/localization';
+
 import { getLandingTranslations } from './landing-i18n';
 
 export const DuolingoWorkflowSection: React.FC = () => {
@@ -50,7 +54,6 @@ export const DuolingoWorkflowSection: React.FC = () => {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -89,14 +92,20 @@ export const DuolingoWorkflowSection: React.FC = () => {
               </span>
 
               <div className="relative">
-                <div className={`w-14 h-14 rounded-2xl border flex items-center justify-center mb-6 ${s.iconBg}`}>
+                <div
+                  className={`w-14 h-14 rounded-[var(--radius-card)] border flex items-center justify-center mb-6 ${s.iconBg}`}
+                >
                   {s.icon}
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">{s.title}</h3>
-                <p className="mt-3 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{s.desc}</p>
+                <p className="mt-3 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  {s.desc}
+                </p>
               </div>
 
-              <div className={`mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2 text-xs font-semibold ${s.badgeColor}`}>
+              <div
+                className={`mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2 text-xs font-semibold ${s.badgeColor}`}
+              >
                 <s.BadgeIcon className="w-4 h-4" />
                 <span>{s.badge}</span>
               </div>
@@ -114,7 +123,7 @@ export const DuolingoWorkflowSection: React.FC = () => {
         >
           <Link
             to="/onboarding"
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-base shadow-xl shadow-blue-500/20 hover:shadow-blue-500/35 transition-all duration-300 group"
+            className="inline-flex items-center gap-3 px-8 py-4 rounded-[var(--radius-card)] bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-base shadow-xl shadow-blue-500/20 hover:shadow-blue-500/35 transition-all duration-300 group"
           >
             <span>{t.ctaStartFree}</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

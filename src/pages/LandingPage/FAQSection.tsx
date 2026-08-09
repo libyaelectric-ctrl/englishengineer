@@ -39,7 +39,7 @@ export function FAQSection() {
             return (
               <AnimatedSection key={index} delay={index * 30}>
                 <div
-                  className={`rounded-lg border transition-all ${
+                  className={`rounded-[var(--radius-card)] border transition-all ${
                     isOpen
                       ? 'border-primary/60 bg-background shadow-md'
                       : 'border-border-soft bg-background hover:border-primary/30'

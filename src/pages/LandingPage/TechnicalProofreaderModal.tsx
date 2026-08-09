@@ -138,7 +138,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
         aria-modal="true"
         aria-label="Technical document proofreader"
         tabIndex={-1}
-        className="w-full max-w-3xl rounded-2xl border border-primary/40 bg-surface/95 p-5 sm:p-6 shadow-2xl relative light-sweep-container overflow-hidden max-h-[82vh] flex flex-col space-y-4"
+        className="w-full max-w-3xl rounded-[var(--radius-card)] border border-primary/40 bg-surface/95 p-5 sm:p-6 shadow-2xl relative light-sweep-container overflow-hidden max-h-[82vh] flex flex-col space-y-4"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border-soft pb-3 shrink-0">
@@ -195,12 +195,12 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
                 setAnalysisResult(null);
               }}
               placeholder={translate('landing.proofreaderPlaceholder')}
-              className="w-full rounded-xl border border-border-soft bg-background p-3 text-xs text-foreground font-medium focus:border-primary outline-none"
+              className="w-full rounded-[var(--radius-card)] border border-border-soft bg-background p-3 text-xs text-foreground font-medium focus:border-primary outline-none"
               required
             />
 
             {isLimitReached ? (
-              <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 space-y-3 animate-in fade-in">
+              <div className="rounded-[var(--radius-card)] border border-amber-500/40 bg-amber-500/10 p-4 space-y-3 animate-in fade-in">
                 <div className="flex items-center gap-2 text-xs font-bold text-amber-600">
                   <Lock className="h-4 w-4 shrink-0" />
                   <span>{translate('landing.proofreaderLimitReached')}</span>
@@ -221,7 +221,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
                       onClose();
                       navigate('/signup');
                     }}
-                    className="flex-1 py-2 rounded-xl bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover transition cursor-pointer shadow-md text-center"
+                    className="flex-1 py-2 rounded-[var(--radius-card)] bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover transition cursor-pointer shadow-md text-center"
                   >
                     Create Free Account / Go Pro ➔
                   </button>
@@ -231,7 +231,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
               <button
                 type="submit"
                 disabled={isAnalyzing || !inputText.trim()}
-                className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-hover text-xs font-bold text-primary-foreground shadow-md transition cursor-pointer disabled:opacity-50"
+                className="flex h-10 w-full items-center justify-center gap-2 rounded-[var(--radius-card)] bg-primary hover:bg-primary-hover text-xs font-bold text-primary-foreground shadow-md transition cursor-pointer disabled:opacity-50"
               >
                 {isAnalyzing ? (
                   <span>Analyzing ASTM / FIDIC Terminology & Grammatical Precision...</span>
@@ -250,7 +250,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
             <div className="space-y-4 animate-in fade-in pt-2 border-t border-border-soft">
               {/* Score Indicators */}
               <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 flex items-center justify-between">
+                <div className="rounded-[var(--radius-card)] border border-emerald-500/30 bg-emerald-500/10 p-3 flex items-center justify-between">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                       {translate('landing.proofreaderFormalityScore')}
@@ -262,7 +262,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
                   <CheckCircle2 className="h-6 w-6 text-emerald-500" />
                 </div>
 
-                <div className="rounded-xl border border-primary/30 bg-primary/10 p-3 flex items-center justify-between">
+                <div className="rounded-[var(--radius-card)] border border-primary/30 bg-primary/10 p-3 flex items-center justify-between">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                       {translate('landing.proofreaderPrecisionScore')}
@@ -286,7 +286,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
                     {analysisResult.issues.map((issue) => (
                       <div
                         key={issue.id}
-                        className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-3 text-xs space-y-1"
+                        className="rounded-[var(--radius-card)] border border-amber-500/30 bg-amber-500/5 p-3 text-xs space-y-1"
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-mono text-rose-500 line-through font-bold">
@@ -327,7 +327,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
                   </button>
                 </div>
 
-                <pre className="whitespace-pre-wrap font-mono text-xs text-foreground bg-background p-4 rounded-xl border border-emerald-500/30 leading-relaxed">
+                <pre className="whitespace-pre-wrap font-mono text-xs text-foreground bg-background p-4 rounded-[var(--radius-card)] border border-emerald-500/30 leading-relaxed">
                   {analysisResult.improvedText}
                 </pre>
               </div>

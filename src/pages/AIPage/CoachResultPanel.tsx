@@ -59,7 +59,7 @@ export const CoachResultPanel = ({
   const isBackend = providerStatus.state === 'backend-configured';
 
   return (
-    <div className="rounded-xl border border-primary/25 bg-surface/80 p-4 shadow-sm space-y-4 font-sans">
+    <div className="rounded-[var(--radius-card)] border border-primary/25 bg-surface/80 p-4 shadow-sm space-y-4 font-sans">
       <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-border-soft/60">
         <div className="flex items-center gap-2">
           <Cpu className="h-4 w-4 text-primary" />

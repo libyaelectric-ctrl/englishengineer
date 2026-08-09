@@ -39,7 +39,7 @@ export const RoleStep = ({
           <select
             value={professionalTrack}
             onChange={(event) => setProfessionalTrack(event.target.value as ProfessionalTrack)}
-            className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
+            className="premium-input mt-2 w-full px-3 py-3 rounded-[var(--radius-card)]"
           >
             {PROFESSIONAL_TRACKS.map((item) => (
               <option key={item.id} value={item.id} disabled={!item.available}>
@@ -54,7 +54,7 @@ export const RoleStep = ({
           <select
             value={electricalSubdomain}
             onChange={(event) => setElectricalSubdomain(event.target.value as ElectricalSubdomain)}
-            className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
+            className="premium-input mt-2 w-full px-3 py-3 rounded-[var(--radius-card)]"
           >
             {ELECTRICAL_SUBDOMAINS.map((item) => (
               <option key={item.id} value={item.id}>
@@ -68,7 +68,7 @@ export const RoleStep = ({
           <select
             value={industryId}
             onChange={(event) => setIndustryId(event.target.value as IndustryId)}
-            className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
+            className="premium-input mt-2 w-full px-3 py-3 rounded-[var(--radius-card)]"
           >
             <option value="">{translate('onboarding.selectIndustry')}</option>
             {INDUSTRIES.map((item) => (

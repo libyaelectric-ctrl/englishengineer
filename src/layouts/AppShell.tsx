@@ -26,7 +26,7 @@ export const AppShell: FC = () => {
     <div className="relative flex h-screen w-screen overflow-hidden bg-background text-foreground">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:p-4 focus:bg-primary focus:text-white focus:rounded-lg"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:p-4 focus:bg-primary focus:text-white focus:rounded-[var(--radius-card)]"
       >
         Skip to main content
       </a>
@@ -41,7 +41,7 @@ export const AppShell: FC = () => {
         <BetaAnalyticsTracker />
         <button
           onClick={toggleSidebar}
-          className="fixed left-2 top-2 z-50 cursor-pointer rounded-lg p-2 text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground lg:hidden"
+          className="fixed left-2 top-2 z-50 cursor-pointer rounded-[var(--radius-card)] p-2 text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground lg:hidden"
           aria-label="Toggle navigation sidebar"
         >
           <Menu className="h-5 w-5" />

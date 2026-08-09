@@ -7,9 +7,6 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 
 import { cn } from '@/shared/utils/cn';
 
-
-
-
 const links = [
   { label: 'Features', href: '/#features' },
   { label: 'Pricing', href: '/pricing' },
@@ -53,8 +50,6 @@ export const PublicLayout = () => {
 
   return (
     <div className="public-shell min-h-screen bg-transparent text-foreground relative pb-16">
-
-
       {/* Hide nav on landing and pricing pages - they have their own glass morphism nav */}
       {!hideNav && (
         <header className="sticky top-0 z-50 border-b border-border-soft bg-background/95 backdrop-blur-md">
@@ -64,7 +59,11 @@ export const PublicLayout = () => {
               className="flex items-center gap-3 rounded-[10px] py-1 pr-2 transition-colors hover:bg-surface-hover"
               aria-label="EngVox home"
             >
-              <img src="/brand/logo.webp" alt="EngVox" className="h-9 w-9 rounded-lg" />
+              <img
+                src="/brand/logo.webp"
+                alt="EngVox"
+                className="h-9 w-9 rounded-[var(--radius-card)]"
+              />
               <span>
                 <strong className="block text-sm text-foreground">EngVox</strong>
                 <span className="hidden text-[10px] font-semibold uppercase text-muted-copy sm:block">
@@ -160,8 +159,6 @@ export const PublicLayout = () => {
       <div id="public-content" tabIndex={-1}>
         <Outlet />
       </div>
-
-
 
       {/* Fixed Floating Back to Home Button on All Public Subpages */}
       <FloatingBackToHome />

@@ -161,7 +161,7 @@ export const DisciplinesGrid: React.FC = () => {
                 transition={{ duration: 0.4, delay: i * 0.05 }}
                 whileHover={{ y: -5, scale: 1.02 }}
                 onClick={() => setSelected(isSelected ? null : b.id)}
-                className={`group relative cursor-pointer rounded-2xl p-4 bg-slate-50 dark:bg-slate-950/70 border transition-all duration-300 shadow-sm hover:shadow-lg ${
+                className={`group relative cursor-pointer rounded-[var(--radius-card)] p-4 bg-slate-50 dark:bg-slate-950/70 border transition-all duration-300 shadow-sm hover:shadow-lg ${
                   isSelected
                     ? 'border-blue-500 ring-2 ring-blue-500/30 shadow-blue-500/10'
                     : `border-slate-200 dark:border-slate-800 ${colorMap[b.color] ?? ''}`
@@ -214,7 +214,7 @@ export const DisciplinesGrid: React.FC = () => {
                       </div>
                       <Link
                         to={`/onboarding?branch=${b.id}`}
-                        className="mt-3 w-full flex items-center justify-center gap-1 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-colors"
+                        className="mt-3 w-full flex items-center justify-center gap-1 py-2 rounded-[var(--radius-card)] bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-colors"
                       >
                         <Lock className="w-3 h-3" />
                         <span>{t.btnSelectBranch}</span>
@@ -239,10 +239,10 @@ export const DisciplinesGrid: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 border border-blue-100 dark:border-blue-900/60"
+          className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-[var(--radius-card)] bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 border border-blue-100 dark:border-blue-900/60"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/15 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-[var(--radius-card)] bg-blue-500/15 flex items-center justify-center shrink-0">
               <Check className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
@@ -256,7 +256,7 @@ export const DisciplinesGrid: React.FC = () => {
           </div>
           <Link
             to="/onboarding"
-            className="shrink-0 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold shadow-md transition-all"
+            className="shrink-0 px-5 py-2.5 rounded-[var(--radius-card)] bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold shadow-md transition-all"
           >
             {t.ctaSelectBranch}
           </Link>

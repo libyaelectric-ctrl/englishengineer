@@ -170,7 +170,7 @@ export function WordSetSection({
                     cardRefs.current[index] = el;
                   }}
                   tabIndex={-1}
-                  className={`outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl ${activeTab === 'Learned' ? '' : 'h-[430px]'}`}
+                  className={`outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-[var(--radius-card)] ${activeTab === 'Learned' ? '' : 'h-[430px]'}`}
                 >
                   {activeTab === 'Learned' ? (
                     <LearnedCard term={term} index={index} />

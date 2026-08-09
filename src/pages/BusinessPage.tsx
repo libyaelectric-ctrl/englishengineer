@@ -108,13 +108,13 @@ const BusinessPage = () => {
             <div className="pt-2 flex flex-wrap items-center gap-3">
               <Link
                 to="/signup"
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-xs font-bold text-primary-foreground shadow transition-all hover:bg-primary/95"
+                className="inline-flex items-center gap-2 rounded-[var(--radius-card)] bg-primary px-5 py-2.5 text-xs font-bold text-primary-foreground shadow transition-all hover:bg-primary/95"
               >
                 Explore Team Workspace <ArrowRight className="h-4 w-4" />
               </Link>
               <a
                 href="mailto:sales@englishengineer.vercel.app?subject=EngVox%20Enterprise%20Inquiry"
-                className="inline-flex items-center gap-2 rounded-lg bg-surface border border-border-soft px-5 py-2.5 text-xs font-bold text-foreground hover:bg-surface-hover transition-colors"
+                className="inline-flex items-center gap-2 rounded-[var(--radius-card)] bg-surface border border-border-soft px-5 py-2.5 text-xs font-bold text-foreground hover:bg-surface-hover transition-colors"
               >
                 <Mail className="h-4 w-4 text-primary" /> Contact Enterprise Sales
               </a>
@@ -135,7 +135,7 @@ const BusinessPage = () => {
 
           {/* Team Dashboard Preview Card */}
           <div className="lg:col-span-5 w-full">
-            <div className="rounded-xl border border-border-soft bg-surface p-5 shadow-xl">
+            <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-5 shadow-xl">
               <div className="flex items-center justify-between border-b border-border-soft pb-3 mb-4">
                 <div>
                   <h3 className="text-xs font-bold text-foreground">Team Readiness Dashboard</h3>
@@ -150,7 +150,7 @@ const BusinessPage = () => {
                 {PREVIEW_METRICS.map((m) => (
                   <div
                     key={m.label}
-                    className="rounded-lg border border-border-soft bg-background p-2.5 text-center"
+                    className="rounded-[var(--radius-card)] border border-border-soft bg-background p-2.5 text-center"
                   >
                     <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                       {m.label}
@@ -203,7 +203,7 @@ const BusinessPage = () => {
             return (
               <div
                 key={item.title}
-                className="rounded-lg border border-border-soft bg-surface p-4 shadow-sm hover:border-primary/40 transition-all"
+                className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-4 shadow-sm hover:border-primary/40 transition-all"
               >
                 <div className="flex items-center gap-2.5 mb-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded bg-soft text-primary border border-border-soft shrink-0">
@@ -243,9 +243,9 @@ const BusinessPage = () => {
             return (
               <div
                 key={b.title}
-                className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm hover:border-primary/40 transition-all"
+                className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-5 shadow-sm hover:border-primary/40 transition-all"
               >
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-soft text-primary border border-border-soft mb-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-card)] bg-soft text-primary border border-border-soft mb-3">
                   <Icon className="h-4.5 w-4.5" />
                 </div>
                 <h3 className="text-sm font-bold text-foreground mb-1.5">{b.title}</h3>

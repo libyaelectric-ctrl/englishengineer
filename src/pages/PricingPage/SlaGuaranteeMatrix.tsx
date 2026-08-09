@@ -34,7 +34,7 @@ export const SlaGuaranteeMatrix = ({ isOpen, onClose }: SlaGuaranteeMatrixProps)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in">
-      <div className="w-full max-w-2xl rounded-2xl border border-primary/30 bg-surface/95 p-6 shadow-2xl space-y-5 relative light-sweep-container overflow-hidden">
+      <div className="w-full max-w-2xl rounded-[var(--radius-card)] border border-primary/30 bg-surface/95 p-6 shadow-2xl space-y-5 relative light-sweep-container overflow-hidden">
         <div className="flex items-center justify-between border-b border-border-soft pb-3">
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-emerald-500" />
@@ -55,7 +55,7 @@ export const SlaGuaranteeMatrix = ({ isOpen, onClose }: SlaGuaranteeMatrixProps)
           {SLA_TIERS.map((t, i) => (
             <div
               key={t.tier}
-              className={`rounded-xl border p-4 space-y-3 ${
+              className={`rounded-[var(--radius-card)] border p-4 space-y-3 ${
                 i === 2
                   ? 'border-emerald-500/40 bg-emerald-500/10 shadow-lg'
                   : 'border-border-soft bg-background/80'
@@ -90,7 +90,7 @@ export const SlaGuaranteeMatrix = ({ isOpen, onClose }: SlaGuaranteeMatrixProps)
           <button
             type="button"
             onClick={onClose}
-            className="px-6 py-2 rounded-lg bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover transition cursor-pointer"
+            className="px-6 py-2 rounded-[var(--radius-card)] bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover transition cursor-pointer"
           >
             Close SLA Matrix
           </button>

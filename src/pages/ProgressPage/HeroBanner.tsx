@@ -23,7 +23,7 @@ export const HeroBanner = ({
   const eloNeeded = Math.max(0, eloForNext - totalElo);
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-primary/25 bg-surface/80 p-5 shadow-sm">
+    <div className="relative overflow-hidden rounded-[var(--radius-card)] border border-primary/25 bg-surface/80 p-5 shadow-sm">
       <div className="absolute top-0 right-0 -mt-20 -mr-20 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
       <div className="relative z-10 flex flex-col md:flex-row items-center gap-5">
         <div className="relative flex-shrink-0">
@@ -54,14 +54,14 @@ export const HeroBanner = ({
         <div className="flex-1 text-center md:text-left">
           <div className="flex flex-wrap items-center gap-2 justify-center md:justify-start mb-2">
             <span
-              className={`inline-flex items-center gap-1 rounded-lg border px-2.5 py-0.5 text-xs font-bold ${rank.color}`}
+              className={`inline-flex items-center gap-1 rounded-[var(--radius-card)] border px-2.5 py-0.5 text-xs font-bold ${rank.color}`}
             >
               <rank.icon className="h-3.5 w-3.5" aria-hidden="true" /> {rank.label}
             </span>
-            <span className="inline-flex items-center rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
+            <span className="inline-flex items-center rounded-[var(--radius-card)] border border-primary/25 bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
               CEFR {totalCEFR}
             </span>
-            <span className="inline-flex items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+            <span className="inline-flex items-center gap-1 rounded-[var(--radius-card)] border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
               <Target className="h-3 w-3" aria-hidden="true" />
               Target: C1 Senior Tech Lead / Offshore Pitch Ready
             </span>

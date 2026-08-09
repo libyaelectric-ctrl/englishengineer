@@ -132,7 +132,7 @@ export const FieldDocAssistant = () => {
                 setActiveType(tmpl.id);
                 setGeneratedLetter('');
               }}
-              className={`flex flex-col items-start p-4 rounded-xl border text-left transition-all cursor-pointer ${
+              className={`flex flex-col items-start p-4 rounded-[var(--radius-card)] border text-left transition-all cursor-pointer ${
                 isActive
                   ? 'border-primary bg-primary/5 shadow-md ring-1 ring-primary'
                   : 'border-border-soft bg-surface hover:bg-surface-hover hover:border-border-hover'
@@ -140,7 +140,7 @@ export const FieldDocAssistant = () => {
             >
               <div className="flex w-full items-center justify-between">
                 <span
-                  className={`p-2 rounded-lg ${
+                  className={`p-2 rounded-[var(--radius-card)] ${
                     isActive ? 'bg-primary text-white' : 'bg-surface-hover text-muted-copy'
                   }`}
                 >
@@ -163,7 +163,7 @@ export const FieldDocAssistant = () => {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         <form
           onSubmit={handleGenerate}
-          className="lg:col-span-5 rounded-2xl border border-border-soft bg-surface p-5 space-y-4 shadow-sm"
+          className="lg:col-span-5 rounded-[var(--radius-card)] border border-border-soft bg-surface p-5 space-y-4 shadow-sm"
         >
           <div className="flex items-center gap-2 border-b border-border-soft pb-3">
             <Sparkles className="h-4 w-4 text-primary" />
@@ -185,7 +185,7 @@ export const FieldDocAssistant = () => {
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
               placeholder="e.g. Metro Line Extension - Station 4"
-              className="w-full rounded-lg border border-border-soft bg-background px-3 py-2 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
+              className="w-full rounded-[var(--radius-card)] border border-border-soft bg-background px-3 py-2 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
             />
           </div>
 
@@ -202,7 +202,7 @@ export const FieldDocAssistant = () => {
               value={clauseRef}
               onChange={(e) => setClauseRef(e.target.value)}
               placeholder="e.g. FIDIC Sub-Clause 20.1 / Spec 15400"
-              className="w-full rounded-lg border border-border-soft bg-background px-3 py-2 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
+              className="w-full rounded-[var(--radius-card)] border border-border-soft bg-background px-3 py-2 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
             />
           </div>
 
@@ -219,7 +219,7 @@ export const FieldDocAssistant = () => {
               onChange={(e) => setConflictDetails(e.target.value)}
               rows={4}
               placeholder="Describe the clash, site condition, or NCR grounds in plain English..."
-              className="w-full rounded-lg border border-border-soft bg-background px-3 py-2 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
+              className="w-full rounded-[var(--radius-card)] border border-border-soft bg-background px-3 py-2 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
               required
             />
           </div>
@@ -241,7 +241,7 @@ export const FieldDocAssistant = () => {
         </form>
 
         {/* Generated Output Preview Box */}
-        <div className="lg:col-span-7 flex flex-col rounded-2xl border border-border-soft bg-surface p-5 shadow-sm min-h-[360px]">
+        <div className="lg:col-span-7 flex flex-col rounded-[var(--radius-card)] border border-border-soft bg-surface p-5 shadow-sm min-h-[360px]">
           <div className="flex items-center justify-between border-b border-border-soft pb-3 mb-3">
             <div className="flex items-center gap-2">
               <FileCheck2 className="h-4 w-4 text-emerald-500" />
@@ -253,7 +253,7 @@ export const FieldDocAssistant = () => {
               <button
                 type="button"
                 onClick={handleCopy}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border-soft bg-background px-3 py-1 text-xs font-bold text-foreground hover:bg-surface-hover transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 rounded-[var(--radius-card)] border border-border-soft bg-background px-3 py-1 text-xs font-bold text-foreground hover:bg-surface-hover transition-colors cursor-pointer"
               >
                 {copied ? (
                   <>
@@ -271,11 +271,11 @@ export const FieldDocAssistant = () => {
           </div>
 
           {generatedLetter ? (
-            <pre className="flex-1 overflow-y-auto whitespace-pre-wrap font-mono text-xs text-foreground bg-background p-4 rounded-xl border border-border-soft leading-relaxed">
+            <pre className="flex-1 overflow-y-auto whitespace-pre-wrap font-mono text-xs text-foreground bg-background p-4 rounded-[var(--radius-card)] border border-border-soft leading-relaxed">
               {generatedLetter}
             </pre>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-border-soft rounded-xl bg-background/50 text-muted-copy space-y-2">
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-border-soft rounded-[var(--radius-card)] bg-background/50 text-muted-copy space-y-2">
               <FileText className="h-8 w-8 text-muted-copy/60" />
               <p className="text-xs font-semibold">
                 Select a document template and enter technical details to draft your C1/C2 field

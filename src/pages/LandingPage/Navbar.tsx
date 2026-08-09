@@ -93,7 +93,7 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
               <ChevronDown className="h-3 w-3 text-muted-copy" />
             </button>
             {langOpen && (
-              <div className="absolute left-0 top-full mt-1.5 z-50 grid grid-cols-5 gap-0.5 rounded-lg border border-border-soft bg-background p-1.5 shadow-xl">
+              <div className="absolute left-0 top-full mt-1.5 z-50 grid grid-cols-5 gap-0.5 rounded-[var(--radius-card)] border border-border-soft bg-background p-1.5 shadow-xl">
                 {otherLanguages.map((lang) => (
                   <button
                     key={lang.id}

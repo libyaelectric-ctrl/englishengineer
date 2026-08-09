@@ -1,6 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-import { ContentAggregatorService, type Discipline } from '@/shared/services/content-aggregator.service';
+import {
+  ContentAggregatorService,
+  type Discipline,
+} from '@/shared/services/content-aggregator.service';
+
 import { useLocalizationStore } from '@/features/localization';
 
 interface ContentPreviewProps {
@@ -42,14 +46,14 @@ export const ContentPreview = ({ discipline }: ContentPreviewProps) => {
 
   if (isLoading) {
     return (
-      <div className="mt-4 p-4 rounded-lg border border-border-soft bg-surface-hover animate-pulse">
+      <div className="mt-4 p-4 rounded-[var(--radius-card)] border border-border-soft bg-surface-hover animate-pulse">
         <div className="h-4 w-32 bg-surface-hover rounded" />
       </div>
     );
   }
 
   return (
-    <div className="mt-4 p-4 rounded-lg border border-blue-200 dark:border-blue-500/30 bg-blue-50 dark:bg-blue-500/10">
+    <div className="mt-4 p-4 rounded-[var(--radius-card)] border border-blue-200 dark:border-blue-500/30 bg-blue-50 dark:bg-blue-500/10">
       <p className="text-sm font-bold text-blue-900 dark:text-blue-100">
         {translate('onboarding.contentReady') ?? 'Your content pool is ready:'}
       </p>
@@ -57,7 +61,8 @@ export const ContentPreview = ({ discipline }: ContentPreviewProps) => {
         {count?.toLocaleString() ?? '0'}+ {translate('onboarding.items') ?? 'items'}
       </p>
       <p className="mt-1 text-xs text-blue-600 dark:text-blue-400">
-        {translate('onboarding.includesGeneral') ?? 'Includes General English + Common Engineering +'}{' '}
+        {translate('onboarding.includesGeneral') ??
+          'Includes General English + Common Engineering +'}{' '}
         <span className="font-bold uppercase">{discipline}</span>
       </p>
     </div>

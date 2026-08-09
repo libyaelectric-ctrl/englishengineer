@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Check, X, Zap, ArrowRight, Lock, Clock } from 'lucide-react';
+import { ArrowRight, Check, Clock, Lock, X, Zap } from 'lucide-react';
 import { motion } from 'motion/react';
+
+import React, { useState } from 'react';
 
 interface PlanTier {
   id: string;
@@ -45,7 +46,7 @@ const PLANS: PlanTier[] = [
       listening: false,
       tool: false,
       aiCopilot: false,
-    }
+    },
   },
   {
     id: 'senior',
@@ -65,13 +66,14 @@ const PLANS: PlanTier[] = [
       listening: false,
       tool: false,
       aiCopilot: false,
-    }
+    },
   },
   {
     id: 'specialist',
     name: 'Specialist',
     monthlyPrice: 79,
-    description: 'Senior + Sesli Dinleme ve Konuşma modülleri ile uluslararası toplantılara hazırlık.',
+    description:
+      'Senior + Sesli Dinleme ve Konuşma modülleri ile uluslararası toplantılara hazırlık.',
     isPopular: true,
     badge: 'En Popüler',
     modules: {
@@ -87,7 +89,7 @@ const PLANS: PlanTier[] = [
       listening: true,
       tool: false,
       aiCopilot: false,
-    }
+    },
   },
   {
     id: 'master',
@@ -108,7 +110,7 @@ const PLANS: PlanTier[] = [
       listening: true,
       tool: true,
       aiCopilot: true,
-    }
+    },
   },
   {
     id: 'team',
@@ -130,8 +132,8 @@ const PLANS: PlanTier[] = [
       listening: true,
       tool: true,
       aiCopilot: true,
-    }
-  }
+    },
+  },
 ];
 
 const MODULE_NAMES: { key: keyof PlanTier['modules']; label: string }[] = [
@@ -167,23 +169,28 @@ export const WowPricingSection: React.FC = () => {
             </span>
           </h2>
           <p className="mt-4 text-slate-400 text-base sm:text-lg">
-            Hangi paketi alırsanız alın, kilitlediğiniz **mühendislik dalı kelime havuzunuz sabittir.** Üst paketler yeni modülleri (Reading, Speaking, AI Copilot...) açar.
+            Hangi paketi alırsanız alın, kilitlediğiniz **mühendislik dalı kelime havuzunuz
+            sabittir.** Üst paketler yeni modülleri (Reading, Speaking, AI Copilot...) açar.
           </p>
 
           {/* Monthly / Annual Toggle Switch */}
-          <div className="mt-10 inline-flex items-center gap-3 p-1.5 rounded-2xl bg-slate-950 border border-slate-800 shadow-inner">
+          <div className="mt-10 inline-flex items-center gap-3 p-1.5 rounded-[var(--radius-card)] bg-slate-950 border border-slate-800 shadow-inner">
             <button
               onClick={() => setIsAnnual(false)}
-              className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-                !isAnnual ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'
+              className={`px-5 py-2 rounded-[var(--radius-card)] text-xs sm:text-sm font-bold transition-all ${
+                !isAnnual
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               Aylık Ödeme
             </button>
             <button
               onClick={() => setIsAnnual(true)}
-              className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 ${
-                isAnnual ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'
+              className={`px-5 py-2 rounded-[var(--radius-card)] text-xs sm:text-sm font-bold transition-all flex items-center gap-2 ${
+                isAnnual
+                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <span>Yıllık Ödeme</span>
@@ -197,20 +204,18 @@ export const WowPricingSection: React.FC = () => {
         {/* Pricing Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
           {PLANS.map((plan) => {
-            const finalPrice = isAnnual 
-              ? Math.round(plan.monthlyPrice * 0.75) 
-              : plan.monthlyPrice;
+            const finalPrice = isAnnual ? Math.round(plan.monthlyPrice * 0.75) : plan.monthlyPrice;
 
             return (
               <motion.div
                 key={plan.id}
                 whileHover={{ y: -4 }}
                 className={`relative rounded-3xl p-6 bg-slate-950 border flex flex-col justify-between shadow-xl transition-all duration-300 ${
-                  plan.isPopular 
-                    ? 'border-indigo-500/80 ring-2 ring-indigo-500/30 bg-slate-950' 
+                  plan.isPopular
+                    ? 'border-indigo-500/80 ring-2 ring-indigo-500/30 bg-slate-950'
                     : plan.isComingSoon
-                    ? 'border-slate-800/80 opacity-75'
-                    : 'border-slate-800/90 hover:border-slate-700'
+                      ? 'border-slate-800/80 opacity-75'
+                      : 'border-slate-800/90 hover:border-slate-700'
                 }`}
               >
                 {/* Badge if Popular or Coming Soon */}
@@ -258,7 +263,13 @@ export const WowPricingSection: React.FC = () => {
                       const isIncluded = plan.modules[mod.key];
                       return (
                         <div key={mod.key} className="flex items-center justify-between text-xs">
-                          <span className={isIncluded ? 'text-slate-200 font-medium' : 'text-slate-400 line-through opacity-70'}>
+                          <span
+                            className={
+                              isIncluded
+                                ? 'text-slate-200 font-medium'
+                                : 'text-slate-400 line-through opacity-70'
+                            }
+                          >
                             {mod.label}
                           </span>
                           {isIncluded ? (
@@ -277,14 +288,14 @@ export const WowPricingSection: React.FC = () => {
                   {plan.isComingSoon ? (
                     <button
                       disabled
-                      className="w-full py-3 rounded-xl bg-slate-900 text-slate-400 font-semibold text-xs border border-slate-800 cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full py-3 rounded-[var(--radius-card)] bg-slate-900 text-slate-400 font-semibold text-xs border border-slate-800 cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       <Lock className="w-3.5 h-3.5" /> Bekleme Listesine Katıl
                     </button>
                   ) : (
                     <a
                       href={`/checkout?plan=${plan.id}&billing=${isAnnual ? 'annual' : 'monthly'}${isAnnual ? '&coupon=YEARLY25' : ''}`}
-                      className={`w-full py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md ${
+                      className={`w-full py-3 rounded-[var(--radius-card)] font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md ${
                         plan.isPopular
                           ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-blue-500/20'
                           : 'bg-slate-900 hover:bg-slate-800 text-white border border-slate-700'
@@ -302,7 +313,10 @@ export const WowPricingSection: React.FC = () => {
 
         {/* Trust Note */}
         <div className="mt-12 text-center text-xs text-slate-400 max-w-xl mx-auto flex items-center justify-center gap-2">
-          <span>🔒 256-bit SSL Şifreleme ile %100 Güvenli Ödeme • Dilediğiniz zaman tek tıkla iptal edebilirsiniz.</span>
+          <span>
+            🔒 256-bit SSL Şifreleme ile %100 Güvenli Ödeme • Dilediğiniz zaman tek tıkla iptal
+            edebilirsiniz.
+          </span>
         </div>
       </div>
     </section>

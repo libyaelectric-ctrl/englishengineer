@@ -6,7 +6,10 @@ import { Link } from 'react-router-dom';
 
 import { MetricCard } from '@/shared/components/MetricCard';
 import { PageContainer } from '@/shared/components/PageContainer';
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
+import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
+import { useAuthStore } from '@/features/auth';
 import {
   type CefrLevel,
   type ContentLevelFilter,
@@ -15,9 +18,6 @@ import {
 } from '@/features/level-system';
 import { type WritingCorrection, type WritingEvaluationResult } from '@/features/writing';
 import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
-import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
-import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
-import { useAuthStore } from '@/features/auth';
 
 import { MissionListTab } from './components/MissionListTab';
 import { WorkspaceTab } from './components/WorkspaceTab';
@@ -62,7 +62,7 @@ const SubTabSwitcher = ({
 
   return (
     <div
-      className="flex items-center gap-1.5 rounded-xl border border-border-soft bg-surface/90 p-1 shadow-sm"
+      className="flex items-center gap-1.5 rounded-[var(--radius-card)] border border-border-soft bg-surface/90 p-1 shadow-sm"
       role="tablist"
       aria-label="Writing mode"
     >
@@ -75,7 +75,7 @@ const SubTabSwitcher = ({
             role="tab"
             aria-selected={isActive}
             onClick={() => setSubTab(tab.key)}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--radius-card)] text-xs font-bold transition-all cursor-pointer ${
               isActive
                 ? 'bg-primary text-white shadow-sm'
                 : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'

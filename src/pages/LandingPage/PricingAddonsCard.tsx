@@ -48,7 +48,7 @@ export function PricingAddonsCard() {
   };
 
   return (
-    <div className="mt-8 rounded-xl border border-primary/20 bg-surface/80 p-5 shadow-lg">
+    <div className="mt-8 rounded-[var(--radius-card)] border border-primary/20 bg-surface/80 p-5 shadow-lg">
       <div className="mb-4 flex items-center justify-between border-b border-border-soft pb-2.5">
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary font-mono">
@@ -67,7 +67,7 @@ export function PricingAddonsCard() {
           return (
             <div
               key={addon.id}
-              className={`rounded-lg border p-3 flex flex-col justify-between space-y-2 transition-all ${
+              className={`rounded-[var(--radius-card)] border p-3 flex flex-col justify-between space-y-2 transition-all ${
                 isAdded
                   ? 'border-primary bg-primary/5 shadow-sm'
                   : 'border-border-soft bg-background hover:border-primary/40'

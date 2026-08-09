@@ -23,7 +23,7 @@ export const VoicePitchMeterWidget = () => {
   };
 
   return (
-    <div className="rounded-2xl border border-primary/30 bg-surface/90 backdrop-blur-md p-4 shadow-xl space-y-3 relative light-sweep-container overflow-hidden">
+    <div className="rounded-[var(--radius-card)] border border-primary/30 bg-surface/90 backdrop-blur-md p-4 shadow-xl space-y-3 relative light-sweep-container overflow-hidden">
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold uppercase tracking-wider text-primary font-mono flex items-center gap-1.5">
           <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />{' '}
@@ -34,7 +34,7 @@ export const VoicePitchMeterWidget = () => {
         </span>
       </div>
 
-      <div className="flex items-center gap-3 bg-background/80 rounded-xl p-3 border border-border-soft">
+      <div className="flex items-center gap-3 bg-background/80 rounded-[var(--radius-card)] p-3 border border-border-soft">
         <button
           type="button"
           onClick={handleToggleRecord}
@@ -79,7 +79,7 @@ export const VoicePitchMeterWidget = () => {
       </div>
 
       {score !== null && (
-        <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-2.5 flex items-center justify-between text-xs font-bold animate-in fade-in">
+        <div className="rounded-[var(--radius-card)] bg-emerald-500/10 border border-emerald-500/30 p-2.5 flex items-center justify-between text-xs font-bold animate-in fade-in">
           <span className="text-emerald-600 flex items-center gap-1.5">
             <CheckCircle2 className="h-4 w-4 text-emerald-500" />{' '}
             {translate('landing.voiceMeterAccuracy').replace('{score}', String(score))}

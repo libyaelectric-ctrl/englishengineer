@@ -173,7 +173,7 @@ const LegalPage = ({ document = 'privacy' }: { document?: LegalDocument }) => {
               EngVox Trust Center
             </span>
           </div>
-          <div className="flex flex-wrap items-center gap-1.5 rounded-lg bg-surface border border-border-soft p-1">
+          <div className="flex flex-wrap items-center gap-1.5 rounded-[var(--radius-card)] bg-surface border border-border-soft p-1">
             {(['privacy', 'terms', 'cookies', 'refund'] as LegalDocument[]).map((docId) => (
               <button
                 key={docId}
@@ -197,7 +197,7 @@ const LegalPage = ({ document = 'privacy' }: { document?: LegalDocument }) => {
         </div>
 
         {/* Document Header */}
-        <div className="rounded-xl border border-border-soft bg-surface p-6 sm:p-8 shadow-sm">
+        <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-6 sm:p-8 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-soft border border-border-soft px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
               <Lock className="h-3 w-3" />
@@ -237,7 +237,7 @@ const LegalPage = ({ document = 'privacy' }: { document?: LegalDocument }) => {
           {content.sections.map(([title, text]) => (
             <section
               key={title}
-              className="rounded-xl border border-border-soft bg-surface p-5 sm:p-6 shadow-sm hover:border-primary/30 transition-all"
+              className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-5 sm:p-6 shadow-sm hover:border-primary/30 transition-all"
             >
               <h2 className="text-base sm:text-lg font-bold text-foreground tracking-tight">
                 {title}

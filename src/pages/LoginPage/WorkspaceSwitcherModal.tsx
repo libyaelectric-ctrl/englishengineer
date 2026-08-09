@@ -81,7 +81,7 @@ export const WorkspaceSwitcherModal = ({
         role="dialog"
         aria-modal="true"
         aria-label="Switch project workspace"
-        className="w-full max-w-md rounded-2xl border border-primary/30 bg-surface/95 p-5 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden focus:outline-none"
+        className="w-full max-w-md rounded-[var(--radius-card)] border border-primary/30 bg-surface/95 p-5 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden focus:outline-none"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border-soft pb-3">
@@ -109,7 +109,7 @@ export const WorkspaceSwitcherModal = ({
               key={w.id}
               type="button"
               onClick={() => handleSelect(w)}
-              className={`w-full flex items-center justify-between rounded-xl border p-3 text-left transition cursor-pointer ${
+              className={`w-full flex items-center justify-between rounded-[var(--radius-card)] border p-3 text-left transition cursor-pointer ${
                 w.isCurrent
                   ? 'border-primary bg-primary/10 shadow-md'
                   : 'border-border-soft bg-background hover:border-primary/40'

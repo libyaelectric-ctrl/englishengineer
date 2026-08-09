@@ -56,7 +56,7 @@ const useDebouncedTranslation = (
 };
 
 const ErrorBanner = ({ message, onDismiss }: { message: string; onDismiss: () => void }) => (
-  <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs font-semibold text-amber-600 flex items-center justify-between">
+  <div className="rounded-[var(--radius-card)] border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs font-semibold text-amber-600 flex items-center justify-between">
     <span>⚠️ {message}</span>
     <span
       role="button"
@@ -81,7 +81,7 @@ const WordAnalysisCard = ({
 }) => {
   if (!wordAnalysis?.isSingleWord) return null;
   return (
-    <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 space-y-2 animate-in fade-in">
+    <div className="rounded-[var(--radius-card)] border border-emerald-500/30 bg-emerald-500/10 p-4 space-y-2 animate-in fade-in">
       <div className="flex items-center justify-between border-b border-emerald-500/20 pb-2">
         <div className="flex items-center gap-2">
           <BookOpen className="h-4 w-4 text-emerald-600" />
@@ -178,13 +178,13 @@ const TranslationGrid = ({
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
         placeholder="Type or paste English/Turkish technical text or single word..."
-        className="w-full rounded-xl border border-border-soft bg-background p-3 text-xs text-foreground font-medium focus:border-primary outline-none transition-all"
+        className="w-full rounded-[var(--radius-card)] border border-border-soft bg-background p-3 text-xs text-foreground font-medium focus:border-primary outline-none transition-all"
       />
       {!autoTranslateEnabled && (
         <button
           type="submit"
           disabled={isTranslating || !inputText.trim()}
-          className="w-full py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-1.5"
+          className="w-full py-2 rounded-[var(--radius-card)] bg-primary text-primary-foreground text-xs font-bold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-1.5"
         >
           <Zap className="h-3.5 w-3.5" /> Translate Now
         </button>
@@ -221,10 +221,10 @@ const TranslationGrid = ({
           readOnly
           value={isTranslating ? 'Translating...' : translatedText}
           placeholder="Translation will appear here instantly..."
-          className="w-full rounded-xl border border-border-soft bg-background p-3 text-xs text-foreground font-semibold focus:border-primary outline-none leading-relaxed"
+          className="w-full rounded-[var(--radius-card)] border border-border-soft bg-background p-3 text-xs text-foreground font-semibold focus:border-primary outline-none leading-relaxed"
         />
         {isTranslating && (
-          <div className="absolute inset-0 bg-background/60 backdrop-blur-[1px] rounded-xl flex items-center justify-center text-xs font-bold text-primary gap-2">
+          <div className="absolute inset-0 bg-background/60 backdrop-blur-[1px] rounded-[var(--radius-card)] flex items-center justify-center text-xs font-bold text-primary gap-2">
             <Sparkles className="h-4 w-4 animate-spin" /> Translating...
           </div>
         )}
@@ -251,14 +251,14 @@ const TranslatorForm = ({
   onClear,
 }: TranslatorFormProps) => (
   <>
-    <div className="flex items-center justify-between gap-3 bg-background p-2 rounded-xl border border-border-soft text-xs">
+    <div className="flex items-center justify-between gap-3 bg-background p-2 rounded-[var(--radius-card)] border border-border-soft text-xs">
       <div className="flex items-center gap-2">
         <Globe2 className="h-4 w-4 text-primary shrink-0" />
         <span className="font-bold text-muted-copy">From:</span>
         <select
           value={sourceLang}
           onChange={(e) => setSourceLang(e.target.value as 'auto' | 'en' | 'tr')}
-          className="rounded-lg border border-border-soft bg-surface px-2.5 py-1 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer"
+          className="rounded-[var(--radius-card)] border border-border-soft bg-surface px-2.5 py-1 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer"
         >
           <option value="auto">✨ Auto Detect</option>
           <option value="en">English (EN)</option>
@@ -268,7 +268,7 @@ const TranslatorForm = ({
       <button
         type="button"
         onClick={onSwapLanguages}
-        className="p-1.5 rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary transition-all cursor-pointer"
+        className="p-1.5 rounded-[var(--radius-card)] border border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary transition-all cursor-pointer"
         title="Swap English ↔ Türkçe"
       >
         <ArrowLeftRight className="h-4 w-4" />
@@ -278,7 +278,7 @@ const TranslatorForm = ({
         <select
           value={targetLang}
           onChange={(e) => setTargetLang(e.target.value as 'en' | 'tr')}
-          className="rounded-lg border border-border-soft bg-surface px-2.5 py-1 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer"
+          className="rounded-[var(--radius-card)] border border-border-soft bg-surface px-2.5 py-1 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer"
         >
           <option value="tr">Türkçe (TR)</option>
           <option value="en">English (EN)</option>
@@ -384,11 +384,11 @@ export const DashboardTranslatorWidget = () => {
   };
 
   return (
-    <div className="w-full rounded-2xl border border-primary/30 bg-surface/95 p-5 shadow-xl space-y-4 relative overflow-hidden transition-all duration-300">
+    <div className="w-full rounded-[var(--radius-card)] border border-primary/30 bg-surface/95 p-5 shadow-xl space-y-4 relative overflow-hidden transition-all duration-300">
       {/* Widget Header */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-soft pb-3">
         <div className="flex items-center gap-2">
-          <div className="p-2 rounded-lg bg-primary/10 text-primary border border-primary/20">
+          <div className="p-2 rounded-[var(--radius-card)] bg-primary/10 text-primary border border-primary/20">
             <Languages className="h-5 w-5" />
           </div>
           <div>

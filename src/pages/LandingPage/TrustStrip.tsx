@@ -9,7 +9,7 @@ export function TrustStrip() {
   return (
     <section className="bg-background px-4 sm:px-6 py-1.5">
       <div className="mx-auto max-w-7xl flex justify-center">
-        <div className="flex items-center gap-2 rounded-lg border border-border-soft bg-surface px-3 py-1 shadow-sm">
+        <div className="flex items-center gap-2 rounded-[var(--radius-card)] border border-border-soft bg-surface px-3 py-1 shadow-sm">
           <Brain className="h-3.5 w-3.5 text-primary" />
           <span className="text-sm font-extrabold text-foreground leading-none">
             {isTr ? '14.000+' : '14,000+'}

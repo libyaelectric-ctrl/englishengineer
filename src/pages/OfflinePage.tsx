@@ -95,11 +95,11 @@ const OfflinePage = () => {
             </p>
           </div>
         </div>
-        <p className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-foreground">
+        <p className="rounded-[var(--radius-card)] border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-foreground">
           Mock AI demo can show the workflow locally. Secure AI rewriting and coaching require a
           verified connected service and internet access.
         </p>
-        <p className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-foreground">
+        <p className="rounded-[var(--radius-card)] border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-foreground">
           Offline-ready content and local saved work are available. A fully installable offline app
           is not available yet.
         </p>
