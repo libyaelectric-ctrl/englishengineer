@@ -92,15 +92,17 @@ const OnboardingPage = () => {
   );
   const [discipline, setDiscipline] = useState<EngineeringDiscipline>(initial.discipline);
   const [branchLockConfirmations, setBranchLockConfirmations] = useState(0);
-  const [communicationGoals, setCommunicationGoals] = useState<CommunicationGoal[]>(initial.communicationGoals);
+  const [communicationGoals, setCommunicationGoals] = useState<CommunicationGoal[]>(
+    initial.communicationGoals
+  );
   const [learningFocus, setLearningFocus] = useState<SkillName[]>(initial.learningFocus);
   const [careerGoal, setCareerGoal] = useState(initial.careerGoal);
 
   type PlanId = 'junior' | 'senior' | 'specialist' | 'master' | 'team';
   const [selectedPlan, setSelectedPlan] = useState<PlanId>(
-    (['junior', 'senior', 'specialist', 'master', 'team'].includes(initial.selectedPlan as string)
-      ? initial.selectedPlan as PlanId
-      : 'junior')
+    ['junior', 'senior', 'specialist', 'master', 'team'].includes(initial.selectedPlan as string)
+      ? (initial.selectedPlan as PlanId)
+      : 'junior'
   );
 
   useEffect(() => {
@@ -145,7 +147,7 @@ const OnboardingPage = () => {
   };
 
   const canContinue = (() => {
-    if (step === 'language') return !!interfaceLanguage;
+    if (step === 'language') return !!interfaceLanguage && interfaceLanguage !== 'en';
     if (step === 'branch') return !!discipline && branchLockConfirmations >= 2;
     if (step === 'placement') return true;
     if (step === 'goal') return true;
@@ -229,11 +231,7 @@ const OnboardingPage = () => {
           <StepContent />
         </div>
 
-        <OnboardingFooter
-          index={index}
-          onContinue={continueFlow}
-          canContinue={canContinue}
-        />
+        <OnboardingFooter index={index} onContinue={continueFlow} canContinue={canContinue} />
       </section>
     </main>
   );

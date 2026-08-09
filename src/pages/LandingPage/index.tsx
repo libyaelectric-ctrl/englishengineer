@@ -66,6 +66,8 @@ export const LandingPage = () => {
   }, []);
 
   const langLabelFlag = INTERFACE_LANGUAGES.find((l) => l.id === language)?.flag || '🌐';
+  const englishLanguage = INTERFACE_LANGUAGES.find((l) => l.id === 'en');
+  const otherLanguages = INTERFACE_LANGUAGES.filter((l) => l.id !== 'en');
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] transition-colors duration-300">
@@ -78,9 +80,9 @@ export const LandingPage = () => {
           </Link>
 
           <div className="flex items-center gap-3">
-            {/* Language selector (inline flags) */}
-            <div className="hidden items-center gap-1 sm:flex">
-              {INTERFACE_LANGUAGES.map((l) => (
+            {/* Source languages flow toward fixed English output. */}
+            <div className="hidden items-center gap-1 overflow-x-auto sm:flex">
+              {otherLanguages.map((l) => (
                 <button
                   key={l.id}
                   title={l.nativeLabel}
@@ -94,23 +96,39 @@ export const LandingPage = () => {
                       : 'border-[var(--color-border-soft)] opacity-60 hover:opacity-100 hover:border-[var(--color-primary)]/50 hover:-translate-y-0.5'
                   }`}
                 >
-                  {l.flag}
+                  <span>{l.flag}</span>
+                  <span className="sr-only">{l.id.toUpperCase()}</span>
                 </button>
               ))}
+              <ArrowRight
+                className="mx-1 h-3.5 w-3.5 shrink-0 text-[var(--color-primary)]"
+                aria-hidden="true"
+              />
+              {englishLanguage && (
+                <div
+                  title="English"
+                  aria-label="English (EN), fixed target language"
+                  className="flex h-8 shrink-0 items-center gap-1 rounded-lg border border-[var(--color-primary)] bg-[var(--color-primary)]/15 px-1.5 text-xs font-bold leading-none ring-1 ring-[var(--color-primary)]/60 select-none"
+                >
+                  <span className="text-base">{englishLanguage.flag}</span>
+                  <span>EN</span>
+                </div>
+              )}
             </div>
 
             {/* Mobile language selector */}
             <div className="relative sm:hidden">
               <button
                 onClick={() => setLangOpen(!langOpen)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--color-border-soft)]"
+                className="flex h-8 min-w-8 items-center justify-center gap-0.5 rounded-lg border border-[var(--color-border-soft)] px-1"
                 aria-label="Change interface language"
               >
                 <span className="text-base leading-none">{langLabelFlag}</span>
+                {language === 'en' && <span className="text-[8px] font-bold">EN</span>}
               </button>
               {langOpen && (
                 <div className="absolute right-0 top-full mt-2 grid grid-cols-5 gap-0.5 rounded-xl border border-[var(--color-border-soft)] bg-[var(--surface)] p-1 shadow-xl">
-                  {INTERFACE_LANGUAGES.map((l) => (
+                  {otherLanguages.map((l) => (
                     <button
                       key={l.id}
                       title={l.nativeLabel}
@@ -120,13 +138,16 @@ export const LandingPage = () => {
                           .setLanguage(l.id as SupportedInterfaceLanguage);
                         setLangOpen(false);
                       }}
-                      className={`flex h-8 w-8 items-center justify-center rounded-lg text-base leading-none transition-all ${
+                      className={`flex h-9 w-8 items-center justify-center rounded-lg text-base leading-none transition-all ${
                         l.id === language
                           ? 'bg-[var(--color-primary)] text-white'
                           : 'hover:bg-[var(--color-surface-hover)]'
                       }`}
                     >
-                      {l.flag}
+                      <span className="flex flex-col items-center gap-0.5">
+                        <span>{l.flag}</span>
+                        <span className="text-[8px] font-bold uppercase leading-none">{l.id}</span>
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -141,6 +162,13 @@ export const LandingPage = () => {
             >
               {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
             </button>
+
+            <Link
+              to="/pricing"
+              className="hidden rounded-lg px-3 py-2 text-sm font-semibold text-[var(--color-muted-copy)] transition-colors hover:text-[var(--color-primary)] sm:inline-flex"
+            >
+              Pricing
+            </Link>
 
             <Link
               to="/welcome"
@@ -225,8 +253,8 @@ export const LandingPage = () => {
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-20">
+      {/* Disciplines and compact skill map */}
+      <section className="border-y border-[var(--color-border-soft)] bg-[var(--color-surface)] py-20">
         <div className="mx-auto max-w-6xl px-4">
           <div className="text-center">
             <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-primary)]">
@@ -238,29 +266,6 @@ export const LandingPage = () => {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map(({ icon: Icon, key, color }) => (
-              <div
-                key={key}
-                className="group rounded-2xl border border-[var(--color-border-soft)] bg-[var(--surface)] p-6 transition-all hover:border-[var(--color-primary)]/40 hover:shadow-lg"
-              >
-                <div className={`mb-4 inline-flex rounded-xl bg-${color}-500/10 p-3`}>
-                  <Icon className={`h-6 w-6 text-${color}-500`} />
-                </div>
-                <h3 className="font-bold capitalize">{key}</h3>
-                <p className="mt-1 text-sm text-[var(--color-muted-copy)]">
-                  {t.disciplinesFormulaDesc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Disciplines */}
-      <section className="border-y border-[var(--color-border-soft)] bg-[var(--color-surface)] py-20">
-        <div className="mx-auto max-w-6xl px-4">
-          <h2 className="text-center text-3xl font-bold">{t.disciplinesTitle}</h2>
           <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
             {ENGINEERING_DISCIPLINES.map((id) => (
               <div
@@ -269,6 +274,20 @@ export const LandingPage = () => {
               >
                 <span className="text-2xl">{DISCIPLINE_ICONS[id] || '🔧'}</span>
                 <span className="text-xs font-semibold capitalize">{id}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-6">
+            {FEATURES.map(({ icon: Icon, key, color }) => (
+              <div
+                key={key}
+                className="flex items-center gap-2 rounded-xl border border-[var(--color-border-soft)] bg-[var(--background)] px-3 py-2.5 transition-colors hover:border-[var(--color-primary)]/40"
+              >
+                <span className={`inline-flex shrink-0 rounded-lg bg-${color}-500/10 p-1.5`}>
+                  <Icon className={`h-4 w-4 text-${color}-500`} />
+                </span>
+                <span className="text-xs font-semibold capitalize">{key}</span>
               </div>
             ))}
           </div>
@@ -310,6 +329,21 @@ export const LandingPage = () => {
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-center text-3xl font-bold">{t.pricingTitle}</h2>
           <p className="mt-2 text-center text-[var(--color-muted-copy)]">{t.pricingSubtitle}</p>
+
+          <div className="mx-auto mt-8 max-w-sm rounded-2xl border-2 border-[var(--color-primary)]/40 bg-[var(--background)] p-5 text-center shadow-sm">
+            <p className="text-sm font-semibold">Free</p>
+            <p className="mt-2 text-3xl font-bold">$0</p>
+            <p className="mt-1 text-xs text-[var(--color-muted-copy)]">
+              Core vocabulary and grammar practice to start your engineering English path.
+            </p>
+            <Link
+              to="/welcome"
+              className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-lg bg-[var(--color-primary)] py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-primary-hover)]"
+            >
+              {t.pricingStartFree}
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
 
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {PRICING_TIERS.map(({ id, price, popular }) => (
@@ -384,22 +418,6 @@ export const LandingPage = () => {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="bg-[var(--color-primary)] py-16">
-        <div className="mx-auto max-w-3xl px-4 text-center text-white">
-          <h2 className="text-3xl font-bold">{t.finalCtaTitle}</h2>
-          <p className="mt-3 text-white/80">{t.finalCtaSub}</p>
-          <Link
-            to="/welcome"
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-bold text-[var(--color-primary)] shadow-lg hover:bg-white/90 transition-all"
-          >
-            {t.ctaStartFree}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <p className="mt-3 text-xs text-white/60">{t.finalCtaNote}</p>
         </div>
       </section>
 
