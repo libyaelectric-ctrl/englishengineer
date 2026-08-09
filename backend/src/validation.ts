@@ -124,6 +124,7 @@ export const ListeningScoreBodySchema = z.object({
 export const SpeakingSubmitBodySchema = z.object({
   missionId: z.string().min(1).max(100).optional(),
   audioUrl: z.string().url().optional(),
+  transcript: z.string().min(1).max(20_000).optional(),
 });
 
 // --- Writing Schemas ---
