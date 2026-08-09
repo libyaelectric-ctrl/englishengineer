@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react';
 import {
   ArrowRight,
   BookOpen,
   CheckCircle2,
   ChevronDown,
-  Globe,
   Headphones,
   Moon,
   PenTool,
@@ -13,13 +11,17 @@ import {
   Volume2,
   Zap,
 } from 'lucide-react';
+
+import { useEffect, useState } from 'react';
+
 import { Link } from 'react-router-dom';
 
-import { useTheme } from '@/features/theme/ThemeProvider';
-import { useLocalizationStore, INTERFACE_LANGUAGES } from '@/features/localization';
-import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
-
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
+
+import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
+import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
+import { useTheme } from '@/features/theme/ThemeProvider';
+
 import { getLandingTranslations } from './landing-i18n';
 
 const DISCIPLINE_ICONS: Record<string, string> = {
@@ -63,8 +65,7 @@ export const LandingPage = () => {
     document.title = 'EngineerOS — Professional Engineering English';
   }, []);
 
-  const langLabel =
-    INTERFACE_LANGUAGES.find((l) => l.id === language)?.nativeLabel || language;
+  const langLabelFlag = INTERFACE_LANGUAGES.find((l) => l.id === language)?.flag || '🌐';
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] transition-colors duration-300">
@@ -77,33 +78,55 @@ export const LandingPage = () => {
           </Link>
 
           <div className="flex items-center gap-3">
-            {/* Language selector */}
-            <div className="relative">
+            {/* Language selector (inline flags) */}
+            <div className="hidden items-center gap-1 sm:flex">
+              {INTERFACE_LANGUAGES.map((l) => (
+                <button
+                  key={l.id}
+                  title={l.nativeLabel}
+                  aria-label={`Switch to ${l.label}`}
+                  onClick={() =>
+                    useLocalizationStore.getState().setLanguage(l.id as SupportedInterfaceLanguage)
+                  }
+                  className={`flex h-8 w-8 items-center justify-center rounded-lg border text-base leading-none transition-all select-none ${
+                    l.id === language
+                      ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/15 ring-1 ring-primary/60 shadow-md'
+                      : 'border-[var(--color-border-soft)] opacity-60 hover:opacity-100 hover:border-[var(--color-primary)]/50 hover:-translate-y-0.5'
+                  }`}
+                >
+                  {l.flag}
+                </button>
+              ))}
+            </div>
+
+            {/* Mobile language selector */}
+            <div className="relative sm:hidden">
               <button
                 onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border-soft)] px-3 py-1.5 text-sm font-medium hover:border-[var(--color-primary)] transition-colors"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--color-border-soft)]"
+                aria-label="Change interface language"
               >
-                <Globe className="h-4 w-4" />
-                {langLabel}
-                <ChevronDown className="h-3 w-3" />
+                <span className="text-base leading-none">{langLabelFlag}</span>
               </button>
               {langOpen && (
-                <div className="absolute right-0 top-full mt-2 max-h-64 w-48 overflow-y-auto rounded-xl border border-[var(--color-border-soft)] bg-[var(--surface)] p-1 shadow-xl">
+                <div className="absolute right-0 top-full mt-2 grid grid-cols-5 gap-0.5 rounded-xl border border-[var(--color-border-soft)] bg-[var(--surface)] p-1 shadow-xl">
                   {INTERFACE_LANGUAGES.map((l) => (
                     <button
                       key={l.id}
+                      title={l.nativeLabel}
                       onClick={() => {
-                        useLocalizationStore.getState().setLanguage(l.id as SupportedInterfaceLanguage);
+                        useLocalizationStore
+                          .getState()
+                          .setLanguage(l.id as SupportedInterfaceLanguage);
                         setLangOpen(false);
                       }}
-                      className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${
+                      className={`flex h-8 w-8 items-center justify-center rounded-lg text-base leading-none transition-all ${
                         l.id === language
                           ? 'bg-[var(--color-primary)] text-white'
                           : 'hover:bg-[var(--color-surface-hover)]'
                       }`}
                     >
-                      <span>{l.flag}</span>
-                      <span>{l.nativeLabel}</span>
+                      {l.flag}
                     </button>
                   ))}
                 </div>
@@ -210,7 +233,9 @@ export const LandingPage = () => {
               {t.disciplinesHeaderBadge}
             </p>
             <h2 className="mt-2 text-3xl font-bold md:text-4xl">{t.disciplinesTitle}</h2>
-            <p className="mx-auto mt-3 max-w-2xl text-[var(--color-muted-copy)]">{t.disciplinesSub}</p>
+            <p className="mx-auto mt-3 max-w-2xl text-[var(--color-muted-copy)]">
+              {t.disciplinesSub}
+            </p>
           </div>
 
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -278,7 +303,10 @@ export const LandingPage = () => {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="border-y border-[var(--color-border-soft)] bg-[var(--color-surface)] py-20">
+      <section
+        id="pricing"
+        className="border-y border-[var(--color-border-soft)] bg-[var(--color-surface)] py-20"
+      >
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-center text-3xl font-bold">{t.pricingTitle}</h2>
           <p className="mt-2 text-center text-[var(--color-muted-copy)]">{t.pricingSubtitle}</p>
@@ -327,9 +355,18 @@ export const LandingPage = () => {
           <h2 className="text-center text-3xl font-bold">FAQ</h2>
           <div className="mt-8 space-y-3">
             {[
-              { q: 'Can I change my discipline later?', a: 'No — discipline selection is permanent to ensure a focused curriculum.' },
-              { q: 'Is there a free plan?', a: 'Yes — the Junior plan includes core learning modules with daily AI request allowances.' },
-              { q: 'Which languages are supported?', a: '15 interface languages including EN, TR, DE, AR, ES, FR, PT, RU, ZH, JA, IT, VI, PL, ID, NL.' },
+              {
+                q: 'Can I change my discipline later?',
+                a: 'No — discipline selection is permanent to ensure a focused curriculum.',
+              },
+              {
+                q: 'Is there a free plan?',
+                a: 'Yes — the Junior plan includes core learning modules with daily AI request allowances.',
+              },
+              {
+                q: 'Which languages are supported?',
+                a: '15 interface languages including EN, TR, DE, AR, ES, FR, PT, RU, ZH, JA, IT, VI, PL, ID, NL.',
+              },
             ].map((item, i) => (
               <div key={i} className="rounded-xl border border-[var(--color-border-soft)]">
                 <button
@@ -337,7 +374,9 @@ export const LandingPage = () => {
                   className="flex w-full items-center justify-between px-5 py-4 text-left font-semibold"
                 >
                   {item.q}
-                  <ChevronDown className={`h-4 w-4 transition-transform ${faqOpen === i ? 'rotate-180' : ''}`} />
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform ${faqOpen === i ? 'rotate-180' : ''}`}
+                  />
                 </button>
                 {faqOpen === i && (
                   <p className="px-5 pb-4 text-sm text-[var(--color-muted-copy)]">{item.a}</p>
@@ -369,8 +408,12 @@ export const LandingPage = () => {
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 text-sm text-[var(--color-muted-copy)] sm:flex-row">
           <p>© 2026 EngineerOS. All rights reserved.</p>
           <div className="flex gap-4">
-            <Link to="/pricing" className="hover:text-[var(--color-primary)]">Pricing</Link>
-            <Link to="/welcome" className="hover:text-[var(--color-primary)]">Get Started</Link>
+            <Link to="/pricing" className="hover:text-[var(--color-primary)]">
+              Pricing
+            </Link>
+            <Link to="/welcome" className="hover:text-[var(--color-primary)]">
+              Get Started
+            </Link>
           </div>
         </div>
       </footer>

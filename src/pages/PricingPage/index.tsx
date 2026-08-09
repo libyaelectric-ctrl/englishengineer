@@ -1,5 +1,5 @@
 import { PricingCard } from '@/components/ui/PricingCard';
-import { Check, Globe, Sparkles, X } from 'lucide-react';
+import { Check, Globe, X } from 'lucide-react';
 import { motion } from 'motion/react';
 
 import { useEffect, useState } from 'react';
@@ -63,34 +63,30 @@ const PricingPage = () => {
 
       <Navbar />
 
-      <section className="pt-28 sm:pt-32 pb-8 px-6 md:px-12 max-w-7xl mx-auto">
+      <section className="pt-20 sm:pt-24 pb-8 px-6 md:px-12 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--color-primary)]/20 bg-[var(--color-primary)]/5 px-4 py-1.5 text-xs font-semibold text-[var(--color-primary)]">
-            <Sparkles className="h-3.5 w-3.5" />
-            {translate('landing.pricingSubtitle') ?? 'Start free. Upgrade when ready.'}
-          </div>
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
             {translate('pricing.title') ?? 'Simple, Transparent Pricing'}
           </h1>
-          <p className="mt-4 text-[var(--color-muted-copy)] text-base sm:text-lg">
+          <p className="mt-4 text-slate-600 dark:text-slate-400 text-base sm:text-lg">
             {translate('pricing.subtitle') ??
               'Choose your plan. Every plan includes your discipline-specific vocabulary pool.'}
           </p>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
-          <div className="flex items-center gap-2 bg-surface p-1 rounded-lg border border-[var(--color-border-soft)]">
+          <div className="flex items-center gap-2 bg-surface p-1 rounded-lg border border-border-soft">
             <button
               type="button"
               onClick={() => setIsAnnual(false)}
-              className={`px-3 py-1.5 rounded text-sm font-semibold transition-all ${!isAnnual ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-muted-copy'}`}
+              className={`px-3 py-1.5 rounded text-sm font-semibold transition-all ${!isAnnual ? 'bg-primary text-white shadow-sm' : 'text-muted-copy'}`}
             >
               {translate('pricing.monthly') ?? 'Monthly'}
             </button>
             <button
               type="button"
               onClick={() => setIsAnnual(true)}
-              className={`px-3 py-1.5 rounded text-sm font-semibold transition-all flex items-center gap-1.5 ${isAnnual ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-muted-copy'}`}
+              className={`px-3 py-1.5 rounded text-sm font-semibold transition-all flex items-center gap-1.5 ${isAnnual ? 'bg-primary text-white shadow-sm' : 'text-muted-copy'}`}
             >
               <span>{translate('pricing.annual') ?? 'Annual'}</span>
               <span className="text-[10px] bg-emerald-500 text-white px-1.5 py-0.5 rounded font-mono">
@@ -99,12 +95,12 @@ const PricingPage = () => {
             </button>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-[var(--surface)] px-2.5 py-1.5 rounded-lg border border-[var(--color-border-soft)]">
+          <div className="flex items-center gap-1.5 bg-surface px-2.5 py-1.5 rounded-lg border border-border-soft">
             <Globe className="h-3.5 w-3.5 text-blue-500" />
             <select
               value={selectedCurrency}
               onChange={(e) => setSelectedCurrency(e.target.value)}
-              className="bg-transparent text-xs font-bold text-[var(--foreground)] focus:outline-none cursor-pointer"
+              className="bg-transparent text-xs font-bold text-foreground focus:outline-none cursor-pointer"
             >
               {CurrencyConfig.CURRENCIES.map((c) => (
                 <option key={c.code} value={c.code}>
@@ -187,8 +183,8 @@ const PricingPage = () => {
         </div>
       </section>
 
-      <section className="px-6 md:px-12 pt-8 pb-4 max-w-7xl mx-auto border-t border-[var(--color-border-soft)]">
-        <div className="flex items-center justify-between text-xs text-[var(--color-muted-copy)]">
+      <section className="px-6 md:px-12 pt-8 pb-4 max-w-7xl mx-auto border-t border-border-soft">
+        <div className="flex items-center justify-between text-xs text-muted-copy">
           <span>EngVox © 2026</span>
           <Link to="/" className="font-bold text-primary hover:underline">
             {translate('pricing.backHome') ?? 'Back to Home'}

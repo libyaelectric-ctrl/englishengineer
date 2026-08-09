@@ -29,15 +29,13 @@ export const PricingCard = ({
   const isVariantLanding = variant === 'landing';
 
   const cardClasses = isVariantLanding
-    ? `relative flex flex-col justify-between rounded-2xl p-5 bg-surface transition-all duration-300 hover:border-primary/40 hover:shadow-lg ${
+    ? `relative flex flex-col justify-between rounded-xl p-5 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
         tier.popular
           ? 'border-2 border-primary shadow-xl scale-[1.03]'
-          : 'border border-[var(--color-border-soft)]'
+          : 'border border-border-soft'
       }`
-    : `relative flex flex-col justify-between rounded-2xl p-4 bg-[var(--surface)] transition-all duration-300 hover:border-primary/40 hover:shadow-lg ${
-        tier.popular
-          ? 'border-2 border-primary shadow-xl scale-[1.01]'
-          : 'border border-[var(--color-border-soft)]'
+    : `relative flex flex-col justify-between rounded-xl p-4 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
+        tier.popular ? 'border-2 border-primary shadow-xl scale-[1.01]' : 'border border-soft'
       }`;
 
   const handleClick = () => {

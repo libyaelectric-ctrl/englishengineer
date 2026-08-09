@@ -30,6 +30,9 @@ export const Sidebar = () => {
   const { language, setLanguage } = useLocalizationStore();
   const currentLangOption =
     INTERFACE_LANGUAGES.find((l) => l.id === language) || INTERFACE_LANGUAGES[0];
+  const dashboardLanguages = INTERFACE_LANGUAGES.filter(
+    (l) => l.id === language || l.id === ('en' as SupportedInterfaceLanguage)
+  );
   const closeSidebarOnMobile = () => {
     if (window.innerWidth < 1024 && isSidebarOpen) {
       toggleSidebar();
@@ -108,7 +111,7 @@ export const Sidebar = () => {
                   <span className="text-sm leading-none">{currentLangOption.flag}</span>
                 </button>
                 <div className="absolute left-0 top-full mt-1 hidden group-hover:flex flex-col rounded-lg border border-border-soft bg-surface p-1.5 shadow-xl min-w-[160px] max-h-[320px] overflow-y-auto z-50 animate-in fade-in duration-150">
-                  {INTERFACE_LANGUAGES.map((lang) => (
+                  {dashboardLanguages.map((lang) => (
                     <button
                       key={lang.id}
                       onClick={() => setLanguage(lang.id as SupportedInterfaceLanguage)}

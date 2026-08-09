@@ -79,8 +79,8 @@ const LoginPage = () => {
   return (
     <div className="h-screen w-screen overflow-hidden bg-background text-foreground relative selection:bg-primary selection:text-primary-foreground">
       {/* Background Ambient Motion Orbs & Technical Grid */}
-      <div className="pointer-events-none absolute -top-10 left-10 h-[450px] w-[450px] rounded-full bg-gradient-to-tr from-primary/35 via-blue-500/25 to-indigo-500/35 blur-3xl opacity-75 animate-ambient-glow" />
-      <div className="pointer-events-none absolute -bottom-10 right-10 h-[450px] w-[450px] rounded-full bg-gradient-to-br from-indigo-500/30 via-cyan-500/25 to-primary/35 blur-3xl opacity-75 animate-ambient-glow" />
+      <div className="pointer-events-none absolute -top-10 left-10 h-[450px] w-[450px] rounded-full bg-gradient-to-tr from-[var(--color-primary)]/35 via-blue-500/25 to-indigo-500/35 blur-3xl opacity-75 animate-ambient-glow" />
+      <div className="pointer-events-none absolute -bottom-10 right-10 h-[450px] w-[450px] rounded-full bg-gradient-to-br from-indigo-500/30 via-cyan-500/25 to-[var(--color-primary)]/35 blur-3xl opacity-75 animate-ambient-glow" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.04)_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
 
       {/* Fixed Top Navbar with Try Demo Action */}
