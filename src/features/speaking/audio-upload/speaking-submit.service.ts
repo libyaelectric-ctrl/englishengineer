@@ -6,6 +6,7 @@ interface SpeakingSubmitResponse {
   success?: boolean;
   id?: string;
   overallScore?: number;
+  feedback?: Record<string, string>;
   status?: string;
 }
 

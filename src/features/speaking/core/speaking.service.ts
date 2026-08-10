@@ -8,7 +8,6 @@ import { filterMissionsByDiscipline } from '@/shared/constants/mission-disciplin
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { storage } from '@/shared/storage';
 
-import { AIService } from '@/features/ai';
 import { VocabularyService } from '@/features/vocabulary';
 
 import { getSpeakingHistoryDetails } from './speaking-mvp';
@@ -30,68 +29,13 @@ const DEFAULT_STATE: SpeakingState = {
   history: [],
 };
 
-// Optional backend AI layer: when a spoken transcript is available it is sent
-// to the AI evaluation endpoint and the returned grammar/vocabulary feedback is
-// merged into the local result. When the backend is not configured, the
-// transcript is empty, or the call fails, the local evaluation is used
-// unchanged so the offline-first flow is never blocked.
-const buildAiFeedback = async (mission: SpeakingMission, transcript: string) => {
-  if (!transcript.trim()) return null;
-  try {
-    const prompt = [
-      "Evaluate this engineering student's spoken response transcript.",
-      `Prompt: ${mission.promptText}`,
-      `Discipline: ${mission.discipline}`,
-      `CEFR level: ${mission.cefrLevel}`,
-      'Transcript:',
-      '"""',
-      transcript.slice(0, 2000),
-      '"""',
-      'Provide concise grammar and vocabulary feedback for an engineering context.',
-    ].join('\n');
-
-    const response = await AIService.run([], 'evaluateEngineeringEnglish', {
-      modeId: 'roleplay_simulator',
-      modeName: 'Roleplay Simulator',
-      prompt,
-      context: {
-        userName: 'the learner',
-        role: 'engineer',
-        discipline: mission.discipline,
-        targetLevel: mission.cefrLevel,
-        xp: 0,
-        level: 1,
-        elo: 1000,
-        streak: 0,
-        averageScore: 0,
-        completedMissions: 0,
-        totalMissions: 0,
-        weakSkills: [],
-        strongSkills: [],
-        recentActivities: [],
-        weakVocabulary: [],
-        wordsLearned: 0,
-        vocabularyRetention: 0,
-        recommendedFocus: 'Speaking',
-      },
-    });
-
-    const structured = response.structuredResult as {
-      strengths?: string[];
-      weaknesses?: string[];
-      summary?: string;
-    } | null;
-
-    if (!structured) return null;
-    return {
-      strengths: structured.strengths || [],
-      weaknesses: structured.weaknesses || [],
-      summary: structured.summary || '',
-    };
-  } catch {
-    return null;
-  }
-};
+// AI evaluation now happens once, server-side, via POST /api/speaking/submit
+// (see useSpeakingPage.submitRoleplay -> submitSpeakingToBackend). Previously
+// this module also called the AI proxy directly for the same transcript,
+// which meant every submission paid for two separate AI evaluations while
+// only the local one was ever shown to the user. SpeakingService.mergeBackendFeedback
+// below applies the backend's (already-paid-for) result to the local record
+// instead of making a second call.
 
 export const SpeakingService = {
   getState(): SpeakingState {
@@ -157,36 +101,6 @@ export const SpeakingService = {
       ...mission.syllabicTargets.map((target) => target.word),
     ]);
 
-    // Optional backend AI feedback merged into the local result. Fire and
-    // forget so the offline-first submission is never delayed or blocked.
-    void buildAiFeedback(mission, submission.transcript || submission.typedTranscript).then(
-      (ai) => {
-        if (!ai) return;
-        if (ai.strengths.length > 0) {
-          evaluation.strengths = [
-            ...new Set([...evaluation.strengths, ...ai.strengths.slice(0, 3)]),
-          ];
-        }
-        if (ai.weaknesses.length > 0) {
-          evaluation.weaknesses = [
-            ...new Set([...evaluation.weaknesses, ...ai.weaknesses.slice(0, 3)]),
-          ];
-        }
-        if (ai.summary) {
-          evaluation.feedback = ai.summary;
-        }
-        // Persist the enriched evaluation back into history.
-        const state = this.getState();
-        const entry = state.history.find(
-          (h) => h.missionId === mission.id && h.evaluation === evaluation
-        );
-        if (entry) {
-          entry.evaluation = evaluation;
-          this.saveState(state);
-        }
-      }
-    );
-
     const state = this.getState();
     const prevBest = state.completedMissions[mission.id] || 0;
     state.completedMissions[mission.id] = Math.max(prevBest, evaluation.finalScore);
@@ -247,6 +161,34 @@ export const SpeakingService = {
     const state = this.getState();
     state.lastSelectedMissionId = missionId;
     this.saveState(state);
+  },
+
+  /**
+   * Applies the backend's AI-derived feedback (from POST /api/speaking/submit)
+   * to the matching history entry. Call this once, after submitSubmission, from
+   * the async backend response handler -- do not also call the AI proxy
+   * directly from the client for the same submission (see note above).
+   */
+  mergeBackendFeedback(
+    mission: SpeakingMission,
+    evaluation: SpeakingEvaluationResult,
+    feedback: Record<string, string> | undefined
+  ): void {
+    if (!feedback) return;
+    const notes = Object.values(feedback).filter(Boolean);
+    if (notes.length === 0) return;
+
+    evaluation.weaknesses = [...new Set([...evaluation.weaknesses, ...notes.slice(0, 3)])];
+    evaluation.feedback = notes.join(' ');
+
+    const state = this.getState();
+    const entry = state.history.find(
+      (h) => h.missionId === mission.id && h.evaluation === evaluation
+    );
+    if (entry) {
+      entry.evaluation = evaluation;
+      this.saveState(state);
+    }
   },
 
   resetSpeakingState(): void {
