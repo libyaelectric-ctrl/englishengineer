@@ -1,26 +1,18 @@
 services:
   - type: web
-    name: englishengineer
-    runtime: node
-    plan: free
+    name: englishengineer-backend
+    runtime: docker
     rootDir: backend
-    buildCommand: npm install
-    startCommand: npx tsx server.js
+    dockerfilePath: ./Dockerfile
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 8080
+        value: "8080"
+      - key: SPEAKING_AUDIO_BUCKET
+        value: speaking-audio
       - key: APP_ORIGIN
-        sync: false
-      - key: APP_VERSION
-        value: 2.4.7
-      - key: AI_PROVIDER
-        value: gemini
-      - key: AI_MODEL
-        value: gemini-2.0-flash
-      - key: GEMINI_API_KEY
         sync: false
       - key: SUPABASE_URL
         sync: false
@@ -28,15 +20,13 @@ services:
         sync: false
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
-      - key: RATE_LIMIT_STORE
-        value: upstash
-      - key: UPSTASH_REDIS_REST_URL
+      - key: AI_PROVIDER
         sync: false
-      - key: UPSTASH_REDIS_REST_TOKEN
+      - key: AI_MODEL
         sync: false
-      - key: STRIPE_SECRET_KEY
+      - key: OPENAI_API_KEY
         sync: false
-      - key: STRIPE_WEBHOOK_SECRET
+      - key: GEMINI_API_KEY
         sync: false
-      - key: STRIPE_PRICE_PRO_MONTHLY
+      - key: ANTHROPIC_API_KEY
         sync: false
