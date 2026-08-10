@@ -77,4 +77,8 @@ export interface LearningState {
   grammarPool: string[];
   /** Mission IDs of completed speaking exercises — feeds Speaking content selection */
   speakingPool?: string[];
+  /** Duolingo-style hearts: starts at MAX_HEARTS, -1 per wrong quiz answer. */
+  hearts: number;
+  /** ISO timestamp of the moment hearts last hit 0, or null if not depleted. */
+  heartsDepletedAt: string | null;
 }

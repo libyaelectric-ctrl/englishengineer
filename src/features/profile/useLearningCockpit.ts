@@ -26,6 +26,8 @@ export const useLearningCockpit = (userId?: string | null) => {
       eloHistory: s.eloHistory,
       vocabularyPool: s.vocabularyPool,
       grammarPool: s.grammarPool,
+      hearts: s.hearts,
+      heartsDepletedAt: s.heartsDepletedAt,
     }))
   );
   const storedProfile = useMemo(

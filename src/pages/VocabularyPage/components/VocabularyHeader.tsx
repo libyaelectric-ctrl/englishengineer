@@ -3,6 +3,9 @@ import type { LucideIcon } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
+import { msUntilRefill } from '@/core/learning/learning.hearts';
+
+import { HeartsDisplay } from '@/shared/components/HeartsDisplay';
 import { getIcon } from '@/shared/icons/registry';
 import { getSoundMuted, toggleSoundMuted } from '@/shared/utils/sound';
 
@@ -49,6 +52,8 @@ interface VocabularyHeaderProps {
   onFilterChange?: (field: keyof VocabularySearchFilters, value: string) => void;
   onOpenSearch?: () => void;
   menuState: VocabularyMenuState;
+  hearts: number;
+  heartsDepletedAt: string | null;
 }
 
 export { TABS, TAB_LABELS };
@@ -77,6 +82,8 @@ export function VocabularyHeader({
   chooseTab,
   onOpenSearch,
   menuState,
+  hearts,
+  heartsDepletedAt,
 }: VocabularyHeaderProps) {
   const translate = useLocalizationStore((s) => s.translate);
   const [isSoundMuted, setIsSoundMuted] = useState(() => getSoundMuted());
@@ -106,6 +113,10 @@ export function VocabularyHeader({
           <SoundToggle
             isMuted={isSoundMuted}
             onToggle={() => setIsSoundMuted(toggleSoundMuted())}
+          />
+          <HeartsDisplay
+            hearts={hearts}
+            msUntilRefill={msUntilRefill(heartsDepletedAt, new Date())}
           />
           <div
             className="hidden items-center gap-2 rounded-[4px] border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-600 xl:flex dark:text-emerald-400"

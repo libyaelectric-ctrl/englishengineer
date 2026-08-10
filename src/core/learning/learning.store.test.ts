@@ -51,6 +51,8 @@ describe('learning.store', () => {
       vocabularyPool: [],
       grammarPool: [],
       speakingPool: [],
+      hearts: 5,
+      heartsDepletedAt: null,
     });
   });
 
@@ -234,6 +236,55 @@ describe('learning.store', () => {
 
       const result = calculateStreak(7, today.toISOString(), new Date());
       expect(result).toBe(7);
+    });
+  });
+
+  describe('hearts', () => {
+    it('starts at 5 by default', () => {
+      expect(useLearningStore.getState().hearts).toBe(5);
+      expect(useLearningStore.getState().heartsDepletedAt).toBeNull();
+    });
+
+    it('loseHeart decrements hearts by 1', () => {
+      useLearningStore.getState().loseHeart();
+      expect(useLearningStore.getState().hearts).toBe(4);
+    });
+
+    it('loseHeart stamps heartsDepletedAt once hearts reach 0', () => {
+      useLearningStore.setState({ hearts: 1, heartsDepletedAt: null });
+      useLearningStore.getState().loseHeart();
+      expect(useLearningStore.getState().hearts).toBe(0);
+      expect(useLearningStore.getState().heartsDepletedAt).not.toBeNull();
+    });
+
+    it('loseHeart is a no-op once already at 0', () => {
+      const depletedAt = new Date().toISOString();
+      useLearningStore.setState({ hearts: 0, heartsDepletedAt: depletedAt });
+      useLearningStore.getState().loseHeart();
+      expect(useLearningStore.getState().hearts).toBe(0);
+      expect(useLearningStore.getState().heartsDepletedAt).toBe(depletedAt);
+    });
+
+    it('checkHeartsRefill does nothing before the 24h window elapses', () => {
+      const depletedAt = new Date(Date.now() - 60 * 60 * 1000).toISOString(); // 1h ago
+      useLearningStore.setState({ hearts: 0, heartsDepletedAt: depletedAt });
+      useLearningStore.getState().checkHeartsRefill();
+      expect(useLearningStore.getState().hearts).toBe(0);
+    });
+
+    it('checkHeartsRefill refills to 5 once the 24h window has elapsed', () => {
+      const depletedAt = new Date(Date.now() - 25 * 60 * 60 * 1000).toISOString(); // 25h ago
+      useLearningStore.setState({ hearts: 0, heartsDepletedAt: depletedAt });
+      useLearningStore.getState().checkHeartsRefill();
+      expect(useLearningStore.getState().hearts).toBe(5);
+      expect(useLearningStore.getState().heartsDepletedAt).toBeNull();
+    });
+
+    it('resetAll resets hearts to 5', () => {
+      useLearningStore.setState({ hearts: 0, heartsDepletedAt: new Date().toISOString() });
+      useLearningStore.getState().resetAll();
+      expect(useLearningStore.getState().hearts).toBe(5);
+      expect(useLearningStore.getState().heartsDepletedAt).toBeNull();
     });
   });
 });
