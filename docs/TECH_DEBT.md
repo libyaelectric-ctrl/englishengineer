@@ -141,6 +141,22 @@ expensive setup into `beforeAll`; consider a trimmed/mock vocabulary fixture
 for unit tests instead of the full production dataset.
 **Found during:** 2026-08-10 repo audit (see `DENETIM_RAPORU.md`).
 
+### TD-017: Pre-existing failure — `navigation.e2e.test.tsx` `/dashboard renders` 🟡
+
+**File:** `src/e2e/navigation.e2e.test.tsx`
+**Issue:** The `/dashboard renders` test expects the text "Progress Cockpit" to
+appear on `DashboardPage` but the element is never found, timing out.
+Confirmed via `git stash` that this failure **pre-dates** the entitlement
+gating work in this same audit pass (TD-016 sibling finding) — it is not a
+regression from that change.
+**Impact:** One more red test in the full suite; makes `npm test` less
+trustworthy as a release gate until root-caused.
+**Effort:** Unknown — not yet investigated.
+**Action:** Determine whether "Progress Cockpit" copy still exists on
+`DashboardPage`, or whether this is another instance of stale E2E copy
+(same pattern as the landing-page tests fixed earlier in this audit).
+**Found during:** 2026-08-10 repo audit (see `DENETIM_RAPORU.md`).
+
 ## Tracking
 
 | ID     | Priority | Status      | Assigned | Due Date |
@@ -161,6 +177,7 @@ for unit tests instead of the full production dataset.
 | TD-014 | Low      | 🟡 Open     | TBD      | TBD      |
 | TD-015 | Low      | 🟡 Open     | TBD      | TBD      |
 | TD-016 | Medium   | 🟡 Open     | TBD      | TBD      |
+| TD-017 | Low      | 🟡 Open     | TBD      | TBD      |
 
 ## Stats
 
