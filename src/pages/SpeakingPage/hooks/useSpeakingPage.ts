@@ -102,7 +102,7 @@ export function useSpeakingPage() {
 
   useEffect(() => {
     if (recorder.status !== 'stopped' || !recorder.audioBlob || uploadedAudioUrl) return;
-    const base = AI_BACKEND_PROXY_CONFIG.proxyUrl?.replace(/\/api\/ai\/?$/, '') || '';
+    const base = AI_BACKEND_PROXY_CONFIG.proxyUrl?.replace(/\/api\/(?:v1\/)?ai\/?$/, '') || '';
     void uploadSpeakingAudio(recorder.audioBlob, { apiBaseUrl: base })
       .then((result) => setUploadedAudioUrl(result.audioUrl))
       .catch(() => setUploadedAudioUrl(null));
