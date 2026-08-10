@@ -84,7 +84,8 @@ Only availability is shown. No value, token, key or secret is written to this re
 | Command             | Exit code | Result |
 | ------------------- | --------: | ------ |
 | `npm run typecheck` |         0 | PASS   |
-| `npm test`          |         1 | FAIL   |
+| `npm test`          |         0 | PASS (165 files / 930 tests) |
+| `npm run build`      |         0 | PASS   |
 
 The external invocation required for this report is `npm run kademe8:verify`.
 
@@ -97,7 +98,8 @@ The external invocation required for this report is `npm run kademe8:verify`.
 
 ## Remaining Blockers
 
-- npm test exited with code 1.
+- Browser quality gate was not run in this verification.
+- The deployed backend health endpoint could not be verified because the documented Railway URL returns `404 Application not found`; the active Render service URL is not recorded in the repository.
 
 ## Next Decision
 
@@ -135,14 +137,14 @@ above to three isolated causes, none of which were product regressions:
    (`src/shared/services/vocabulary-translation.service.ts`) was correct and
    was left unchanged; the tests were corrected to match it.**
 
-**Result:** `npx vitest run` on the four previously-failing files now passes
-23/23. `npm run typecheck` passes with 0 errors (verified with an increased
-Node heap; this sandbox's default heap was insufficient to run `tsc` on the
-full codebase — not a code issue). The full 127-file suite was not run
-start-to-finish in this pass because of sandbox memory limits (`Killed` /
-OOM) rather than any test failure; re-running the full suite on a
-less-constrained machine (or in CI) is recommended before flipping
-`Production launch` / `Live billing` to ALLOWED.
+**Result:** The targeted previously-failing files pass 19/19. The full local
+suite passes 165 files and 930 tests. `npm run typecheck` and `npm run build`
+also pass with 0 errors. Frontend production availability was checked at
+`https://englishengineer.vercel.app` and returned HTTP 200. This report does
+not mark production launch or live billing as allowed because browser and
+backend staging evidence remain incomplete.
+
+Verification commit: `ecdb4c6a`.
 
 Also fixed in this pass (unrelated to `npm test`, but part of the same
 audit): a stale live URL in `docs/AI1_TASK_NEXT.md`, and pricing
