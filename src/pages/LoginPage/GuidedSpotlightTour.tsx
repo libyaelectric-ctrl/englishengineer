@@ -12,7 +12,7 @@ interface GuidedSpotlightTourProps {
 const TOUR_STEPS = [
   {
     title: 'Discipline Vocabulary Engine',
-    desc: 'Select your engineering field (Civil, Mechanical, Software, etc.) to load 5,000+ domain terms and ASTM/Eurocode specs.',
+    desc: 'Select your engineering field (Civil, Mechanical, Software, etc.) to load 14,199+ domain terms and ASTM/Eurocode specs.',
     target: 'Discipline Selector',
   },
   {

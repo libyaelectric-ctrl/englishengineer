@@ -235,7 +235,7 @@ export const LandingPage = () => {
             <p className="text-xs text-[var(--color-muted-copy)]">Languages</p>
           </div>
           <div>
-            <p className="text-2xl font-bold text-[var(--color-primary)]">5,000+</p>
+            <p className="text-2xl font-bold text-[var(--color-primary)]">14,199+</p>
             <p className="text-xs text-[var(--color-muted-copy)]">Technical Terms</p>
           </div>
         </div>
