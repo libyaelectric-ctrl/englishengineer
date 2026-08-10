@@ -26,7 +26,7 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
   const otherLanguages = INTERFACE_LANGUAGES.filter((l) => l.id !== 'en');
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-border-soft glass shadow-sm">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border-soft bg-background/95 backdrop-blur-md shadow-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex items-center gap-3 py-2 h-11">
           {/* ── Left: Logo ── */}

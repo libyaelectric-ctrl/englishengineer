@@ -87,10 +87,9 @@ export const PricingCard = ({
 
           <p className="text-xs text-muted-copy leading-relaxed min-h-[48px]">{tier.description}</p>
 
-          <div className="mt-4 min-h-[176px] space-y-2">
+          <div className="mt-4 space-y-2">
             {tier.features
               .filter((f) => f.included)
-              .slice(0, isVariantLanding ? 6 : undefined)
               .map((feature) => (
                 <div key={feature.name} className="flex items-center gap-2">
                   <Check className="h-3.5 w-3.5 shrink-0 text-primary" />
