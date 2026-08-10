@@ -29,6 +29,7 @@ interface ReadingStoreActions {
   submitCurrentMission: () => ReadingEvaluationResult;
   resetCurrentMission: () => void;
   resetAllReadingProgress: () => void;
+  addMission: (mission: ReadingMission) => void;
   getMissionsSortedByPoolRatio: (pool: KnowledgePoolEntry[]) => ReadingMission[];
 }
 
@@ -147,6 +148,14 @@ export const useReadingStore = create<ReadingStoreState & ReadingStoreActions>((
       history: state.history,
       completedMissions: state.completedMissions,
     });
+  },
+
+  addMission: (mission) => {
+    set((state) => ({
+      missions: state.missions.some((item) => item.id === mission.id)
+        ? state.missions
+        : [mission, ...state.missions],
+    }));
   },
 
   getMissionsSortedByPoolRatio: (pool) => {

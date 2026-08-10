@@ -10,12 +10,8 @@ import {
   filterContentByLevel,
   useSkillLevel,
 } from '@/features/level-system';
-import {
-  SPEAKING_MVP_MODE,
-  type SpeakingRoleplayCategory,
-  getSpeakingRoleplayCategory,
-  useSpeakingStore,
-} from '@/features/speaking';
+import { useSpeechRecognition } from '@/features/speaking/audio-upload/useSpeechRecognition';
+import { SPEAKING_MVP_MODE, type SpeakingRoleplayCategory, getSpeakingRoleplayCategory, useSpeakingStore } from '@/features/speaking';
 
 export type RoleplayFilter = 'All' | SpeakingRoleplayCategory;
 
@@ -81,6 +77,24 @@ export function useSpeakingPage() {
   const [roleplayFilter, setRoleplayFilter] = useState<RoleplayFilter>('All');
   const currentLevel = useSkillLevel('speaking').currentLevel;
 
+  // Real-time Web Speech API transcription (falls back to the previous
+  // simulated path when the browser does not support it).
+  const speech = useSpeechRecognition();
+  const { transcript: speechTranscript, averageConfidence, supported: speechSupported } = speech;
+
+  // Keep the store transcript in sync with what speech recognition produces.
+  useEffect(() => {
+    if (speechTranscript.trim()) {
+      setTypedTranscript(speechTranscript);
+    }
+  }, [speechTranscript, setTypedTranscript]);
+
+  // Real pronunciation signal: Web Speech confidence (0..1) maps to a 0-100
+  // score. When recognition is unsupported we keep the simulated path.
+  const effectivePronunciationScore = speechSupported
+    ? Math.round((averageConfidence || 0) * 100)
+    : pronunciationScore;
+
   // Computed values
   const visibleMissions = useMemo(
     () => filterContentByLevel(missions, currentLevel, levelFilter),
@@ -125,7 +139,32 @@ export function useSpeakingPage() {
     setRecordedAudio(null);
     setPronunciationScore(null);
     setPhonemeFeedback([]);
+    setTypedTranscript('');
 
+    if (speechSupported) {
+      // Real microphone -> Web Speech API transcription. The transcript fills
+      // in live via the effect above; pronunciation uses recognition confidence.
+      speech.start();
+      waveformTimerRef.current = setInterval(() => {
+        if (pauseRef.current) return;
+        setWaveformBars(Array.from({ length: 24 }, () => Math.random() * 48 + 8));
+      }, 120);
+      // Stop after a reasonable cap so the transcript is finalised.
+      recordingTimerRef.current = setTimeout(() => {
+        speech.stop();
+        if (waveformTimerRef.current) {
+          clearInterval(waveformTimerRef.current);
+          waveformTimerRef.current = null;
+        }
+        setWaveformBars(Array(24).fill(4));
+        setIsRecording(false);
+        setIsPaused(false);
+        setRecordedAudio('speech_recognition_capture');
+      }, 60000);
+      return;
+    }
+
+    // Fallback: simulated recording (no SpeechRecognition support).
     waveformTimerRef.current = setInterval(() => {
       if (pauseRef.current) return;
       setWaveformBars(Array.from({ length: 24 }, () => Math.random() * 48 + 8));
@@ -205,6 +244,7 @@ export function useSpeakingPage() {
   };
 
   const resetRecording = () => {
+    speech.reset();
     setIsRecording(false);
     setRecordedAudio(null);
     setPronunciationScore(null);
@@ -248,6 +288,9 @@ export function useSpeakingPage() {
     setIsPaused,
     recordedAudio,
     pronunciationScore,
+    effectivePronunciationScore,
+    speechStatus: speech.status,
+    speechSupported,
     phonemeFeedback,
     waveformBars,
     scoreResult,
