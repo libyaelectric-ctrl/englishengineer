@@ -1,5 +1,6 @@
-import { AI_BACKEND_PROXY_CONFIG } from '@/features/ai/ai.config';
 import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
+
+import { AI_BACKEND_PROXY_CONFIG } from '@/features/ai/ai.config';
 
 import type { ReadingMission, ReadingQuestion, VocabularyItem } from './reading.types';
 

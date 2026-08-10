@@ -7,13 +7,13 @@ import { Button } from '@/shared/components/Button';
 import { ScoreFeedbackOverlay } from '@/shared/components/ScoreFeedbackOverlay';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
+import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
+import { useAuthStore } from '@/features/auth';
 import { LevelContentFilter } from '@/features/level-system';
 import { SPEAKING_MVP_MODE } from '@/features/speaking';
 import { DefenseSimulator } from '@/features/speaking/simulator/DefenseSimulator';
-import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
-import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
-import { useAuthStore } from '@/features/auth';
 
 import {
   EvaluationScores,
@@ -316,7 +316,11 @@ const SpeakingPage = () => {
         </div>
       </div>
 
-      <PersonalAIPanel discipline={userDiscipline} cefrLevel={currentUser?.targetLevel} userName={currentUser?.displayName} />
+      <PersonalAIPanel
+        discipline={userDiscipline}
+        cefrLevel={currentUser?.targetLevel}
+        userName={currentUser?.displayName}
+      />
 
       <Suspense
         fallback={
