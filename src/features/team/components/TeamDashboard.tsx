@@ -42,8 +42,8 @@ export const TeamDashboard: FC = () => {
 
       <EntitlementGate
         feature="projectWorkspace"
-        title="Team management requires the Project plan"
-        description="Bulk license assignment, team analytics, and member performance require a Project plan."
+        title="Team management requires the Team plan"
+        description="Bulk license assignment, team analytics, and member performance require the Team plan."
       >
         <div className="space-y-6">
           {source === 'demo' && (
