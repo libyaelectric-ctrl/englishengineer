@@ -130,7 +130,7 @@ const PricingPage = () => {
         )}
 
         <div className="mx-auto mb-8 max-w-sm rounded-[var(--radius-card)] border-2 border-primary/40 bg-surface p-5 text-center shadow-sm">
-          <p className="text-sm font-semibold text-foreground">Free</p>
+            <p className="text-sm font-semibold text-foreground">{pricingCopy.freePlan}</p>
           <p className="mt-2 text-3xl font-extrabold tracking-tight text-foreground">$0</p>
             <p className="mt-1 text-xs leading-relaxed text-muted-copy">
               {publicCopy.freeDescription}
