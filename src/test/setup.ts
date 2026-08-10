@@ -1,11 +1,21 @@
 // Mock global fetch for local JSON seed files in Node/Vitest
-import fs from 'fs';
-import path from 'path';
 import { afterEach, vi } from 'vitest';
 
 import React from 'react';
 
 import { logger } from '@/shared/logger';
+
+type NodeFileSystem = {
+  readFileSync: (filePath: string, encoding: 'utf-8') => string;
+};
+type NodePath = { resolve: (...segments: string[]) => string };
+type NodeProcess = {
+  getBuiltinModule?: (name: string) => unknown;
+};
+
+const nodeProcess = (globalThis as typeof globalThis & { process?: NodeProcess }).process;
+const fs = nodeProcess?.getBuiltinModule?.('fs') as NodeFileSystem | undefined;
+const path = nodeProcess?.getBuiltinModule?.('path') as NodePath | undefined;
 
 let cleanupDom: (() => void) | undefined;
 if (typeof document !== 'undefined') {
@@ -60,8 +70,9 @@ globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise
   const urlStr = typeof input === 'string' ? input : input.toString();
   if (urlStr.startsWith('/data/vocabulary/') || urlStr.startsWith('/data/grammar/')) {
     const relativePath = urlStr.replace(/^\//, '');
-    const absolutePath = path.resolve(process.cwd(), 'public', relativePath);
+    const absolutePath = path?.resolve(process.cwd(), 'public', relativePath);
     try {
+      if (!absolutePath || !fs) throw new Error('Node file APIs are unavailable');
       const content = fs.readFileSync(absolutePath, 'utf-8');
       return {
         ok: true,

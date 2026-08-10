@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
+import { logger } from '@/shared/logger';
 
 /**
  * API Integration Smoke Tests
@@ -22,7 +23,7 @@ beforeAll(async () => {
     backendAvailable = false;
   }
   if (!backendAvailable) {
-    console.warn('Backend not available at localhost:8787 -- skipping integration smoke tests.');
+    logger.w('Backend not available at localhost:8787 -- skipping integration smoke tests.');
   }
 });
 

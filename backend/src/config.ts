@@ -19,9 +19,9 @@ export const createBackendConfig = (environment: Env = process.env): BackendConf
 
   return {
     port: toPositiveInteger(environment.PORT, 8787),
-    appOrigin: environment.APP_ORIGIN || 'http://localhost:5173',
+    appOrigin: environment.APP_ORIGIN || 'http://localhost:3000',
     environment: runtimeEnv,
-    version: environment.APP_VERSION || '2.4.7',
+    version: environment.APP_VERSION || '4.0.22',
     sentry: {
       dsn: hasText(environment.SENTRY_DSN) ? environment.SENTRY_DSN!.trim() : null,
       environment: runtimeEnv,

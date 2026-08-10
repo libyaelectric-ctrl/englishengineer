@@ -16,6 +16,7 @@ import { getDisciplineIcon } from '@/shared/icons/registry';
 import { useAuthStore } from '@/features/auth';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
+import type { TranslationKey } from '@/features/localization/localization.types';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 export const WelcomeScreen = () => {
@@ -48,7 +49,7 @@ export const WelcomeScreen = () => {
       LearningProfileRepository.updatePreferences(currentUser.id, {
         discipline: selectedDiscipline,
         onboardingCompleted: true,
-        interfaceLanguage: selectedLanguage as any,
+        interfaceLanguage: selectedLanguage,
       });
       useLearningStore.getState().resetAll();
       navigate('/curriculum', { replace: true });
@@ -89,10 +90,10 @@ export const WelcomeScreen = () => {
                       <p
                         className={`text-sm font-semibold truncate ${isSelected ? 'text-primary' : 'text-foreground'}`}
                       >
-                        {translate(meta.labelKey as any)}
+                        {translate(meta.labelKey as TranslationKey)}
                       </p>
                       <p className="text-xs text-muted-copy truncate">
-                        {translate(meta.descriptionKey as any)}
+                        {translate(meta.descriptionKey as TranslationKey)}
                       </p>
                     </div>
                   </button>

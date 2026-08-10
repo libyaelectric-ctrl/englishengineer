@@ -10,6 +10,7 @@ import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
 
 import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
+import type { TranslationKey } from '@/features/localization/localization.types';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 export const DashboardPage: React.FC = () => {
@@ -57,7 +58,7 @@ export const DashboardPage: React.FC = () => {
   const stats = [
     {
       label: translate('dashboard.myDiscipline'),
-      value: meta ? translate(meta.labelKey as any) : discipline,
+      value: meta ? translate(meta.labelKey as TranslationKey) : discipline,
       icon: BookOpen,
     },
     {
@@ -92,7 +93,7 @@ export const DashboardPage: React.FC = () => {
             </h1>
             <p className="mt-1 text-sm text-[var(--color-muted-copy)]">
               {meta
-                ? `${translate(meta.labelKey as any)} • ${translate(meta.descriptionKey as any)}`
+                ? `${translate(meta.labelKey as TranslationKey)} • ${translate(meta.descriptionKey as TranslationKey)}`
                 : discipline}
             </p>
             <Link

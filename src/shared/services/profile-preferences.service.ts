@@ -1,4 +1,8 @@
-import type { LearningGoal, ProfessionId, UserLearningProfile } from '@/shared/types/domain.types';
+import type {
+  LearningGoal,
+  ProfessionRoleId,
+  UserLearningProfile,
+} from '@/shared/types/domain.types';
 
 export const LEARNING_GOALS: Array<{
   id: LearningGoal;
@@ -25,7 +29,7 @@ export const LEARNING_GOALS: Array<{
 ];
 
 export const PROFESSIONS: Array<{
-  id: ProfessionId;
+  id: ProfessionRoleId;
   label: string;
   preferredDomains: string[];
 }> = [

@@ -87,7 +87,7 @@ const documents: Record<LegalDocument, DocumentContent> = {
       ],
       [
         '4. Subscription Billing, Upgrades & Stripe PCI-DSS Compliance',
-        'Paid subscriptions (Pro, Project, Exec, Private) are processed via Stripe in compliance with PCI-DSS Level 1 security. Subscriptions auto-renew monthly or annually based on your selected cadence. You may cancel auto-renewal at any time via your Billing settings with zero cancellation fees. Access remains active until the expiration of the current prepaid billing period.',
+        'Paid subscriptions (Junior, Senior, Specialist, Master, Team) are processed via Stripe in compliance with PCI-DSS Level 1 security. Subscriptions auto-renew monthly. You may cancel auto-renewal at any time via your Billing settings with zero cancellation fees. Access remains active until the expiration of the current prepaid billing period.',
       ],
       [
         '5. Fair Usage Policy & API Rate Controls',

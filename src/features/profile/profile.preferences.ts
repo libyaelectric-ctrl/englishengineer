@@ -1,4 +1,4 @@
-import type { LearningGoal, ProfessionId, UserLearningProfile } from './profile.types';
+import type { LearningGoal, ProfessionRoleId, UserLearningProfile } from './profile.types';
 
 export const LEARNING_GOALS: Array<{
   id: LearningGoal;
@@ -25,7 +25,7 @@ export const LEARNING_GOALS: Array<{
 ];
 
 export const PROFESSIONS: Array<{
-  id: ProfessionId;
+  id: ProfessionRoleId;
   label: string;
   preferredDomains: string[];
 }> = [

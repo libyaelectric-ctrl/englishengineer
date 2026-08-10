@@ -50,7 +50,7 @@
     "content:validate": "node scripts/verify-release.mjs"
   },
   "engines": {
-    "node": "\u003e=20.0.0"
+    "node": "\u003e=22.0.0"
   },
   "dependencies": {
     "@sentry/react": "^10.69.0",

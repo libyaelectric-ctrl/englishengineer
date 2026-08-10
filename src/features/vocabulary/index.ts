@@ -1,5 +1,4 @@
 export {
-  type VocabularyDiscipline,
   type VocabularyTrainingMode,
   type VocabularyWordStatus,
   type VocabularyWordSource,

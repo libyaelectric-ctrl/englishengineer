@@ -3,7 +3,7 @@ import { describe, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
 
-import BillingPage from '../BillingPage';
+import BillingPage from './index';
 
 vi.mock('@/features/auth', async (importOriginal) => ({
   ...(await importOriginal()),
@@ -44,11 +44,11 @@ vi.mock('@/features/profile', async (importOriginal) => ({
   })),
 }));
 
-vi.mock('./ProfilePage/BillingPlanCards', () => ({
+vi.mock('../ProfilePage/BillingPlanCards', () => ({
   BillingPlanCards: () => null,
 }));
 
-vi.mock('./ProfilePage/BillingUpgradeCTA', () => ({
+vi.mock('../ProfilePage/BillingUpgradeCTA', () => ({
   BillingUpgradeCTA: () => null,
 }));
 

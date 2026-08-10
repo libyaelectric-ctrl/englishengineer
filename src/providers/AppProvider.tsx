@@ -12,7 +12,6 @@ import { CloudSyncService, useAuthStore } from '@/features/auth';
 
 import { ErrorBoundaryProvider } from './ErrorBoundaryProvider';
 import { QueryProvider } from './QueryProvider';
-import { ThemeProvider } from './ThemeProvider';
 
 interface AppProviderProps {
   children: ReactNode;
@@ -69,7 +68,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <ErrorBoundaryProvider>
       <QueryProvider>
-        <ThemeProvider>{children}</ThemeProvider>
+        {children}
       </QueryProvider>
     </ErrorBoundaryProvider>
   );

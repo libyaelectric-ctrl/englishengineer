@@ -12,10 +12,10 @@ import { useParams } from 'react-router-dom';
 
 import { PageHeader } from '@/shared/components/PageHeader';
 
-import QuickToolsPage from './QuickToolsPage';
-import WorkToolsPage from './WorkToolsPage';
+import QuickToolsPage from '../QuickToolsPage';
+import WorkToolsPage from '../WorkToolsPage';
 
-const AIPage = lazy(() => import('./AIPage'));
+const AIPage = lazy(() => import('../AIPage'));
 
 type ToolsSection = 'work' | 'quick' | 'ai';
 

@@ -7,7 +7,7 @@ describe('observability readiness', () => {
   it('builds a safe frontend health contract', () => {
     const health = ObservabilityService.getHealthCheck({});
 
-    expect(health.appVersion).toBe('2.4.7');
+    expect(health.appVersion).toBe('4.0.22');
     expect(health.checks).toMatchObject({
       aiBackendConfigured: false,
       billingBackendConfigured: false,

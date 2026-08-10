@@ -45,27 +45,6 @@ if (typeof window !== 'undefined') {
   });
 }
 
-// Polyfill: Safari < 16 does not support requestIdleCallback
-if (typeof window !== 'undefined' && !('requestIdleCallback' in window)) {
-  (window as unknown as Record<string, unknown>).requestIdleCallback = (
-    cb: (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void,
-    options?: { timeout?: number }
-  ): number => {
-    const start = Date.now();
-    return window.setTimeout(() => {
-      cb({
-        didTimeout: false,
-        timeRemaining() {
-          return Math.max(0, 50 - (Date.now() - start));
-        },
-      });
-    }, options?.timeout ?? 1);
-  };
-  (window as unknown as Record<string, unknown>).cancelIdleCallback = (id: number): void => {
-    clearTimeout(id);
-  };
-}
-
 // Defer Sentry init to after first paint for faster initial load
 requestIdleCallback(() => ObservabilityService.init());
 
