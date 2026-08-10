@@ -17,6 +17,7 @@ import type { BillingPlanId } from '@/features/billing/billing.types';
 import { CurrencyConfig } from '@/features/billing/currency.config';
 import { useLocalizationStore } from '@/features/localization';
 
+import { Footer } from '@/pages/LandingPage/Footer';
 import { Navbar } from '@/pages/LandingPage/Navbar';
 
 const PricingPage = () => {
@@ -144,6 +145,7 @@ const PricingPage = () => {
           {PRICING_TIERS.map((tier, idx) => (
             <motion.div
               key={tier.id}
+              className="h-full"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -203,14 +205,7 @@ const PricingPage = () => {
         </div>
       </section>
 
-      <section className="px-6 md:px-12 pt-8 pb-4 max-w-7xl mx-auto border-t border-border-soft">
-        <div className="flex items-center justify-between text-xs text-muted-copy">
-          <span>EngVox © 2026</span>
-          <Link to="/" className="font-bold text-primary hover:underline">
-            {pricingCopy.backHome}
-          </Link>
-        </div>
-      </section>
+      <Footer className="fixed bottom-0 inset-x-0 z-50" />
     </main>
   );
 };

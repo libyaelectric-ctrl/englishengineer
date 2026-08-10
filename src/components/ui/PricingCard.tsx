@@ -32,12 +32,12 @@ export const PricingCard = ({
   const isTeam = tier.id === 'team';
 
   const cardClasses = isVariantLanding
-    ? `relative flex flex-col justify-between rounded-[var(--radius-card)] p-5 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
+    ? `relative flex h-full flex-col justify-between rounded-[var(--radius-card)] p-5 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
         tier.popular
           ? 'border-2 border-primary shadow-xl scale-[1.03]'
           : 'border border-border-soft'
       }`
-    : `relative flex flex-col justify-between rounded-[var(--radius-card)] p-4 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
+    : `relative flex h-full flex-col justify-between rounded-[var(--radius-card)] p-4 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
         tier.popular ? 'border-2 border-primary shadow-xl scale-[1.01]' : 'border border-soft'
       }`;
 
@@ -65,10 +65,12 @@ export const PricingCard = ({
         <div>
           <div className="flex items-start justify-between mb-3">
             <div>
-              <h3 className="text-lg font-extrabold text-foreground">{tier.name}</h3>
-              <span className="text-[10px] font-mono font-bold text-muted-copy bg-surface-hover px-1.5 py-0.5 rounded">
-                {tier.accessBadge}
-              </span>
+              <div className="min-h-[52px]">
+                <h3 className="text-lg font-extrabold text-foreground">{tier.name}</h3>
+                <span className="text-[10px] font-mono font-bold text-muted-copy bg-surface-hover px-1.5 py-0.5 rounded">
+                  {tier.accessBadge}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -83,9 +85,9 @@ export const PricingCard = ({
             </span>
           </div>
 
-          <p className="text-xs text-muted-copy leading-relaxed min-h-[32px]">{tier.description}</p>
+          <p className="text-xs text-muted-copy leading-relaxed min-h-[48px]">{tier.description}</p>
 
-          <div className="mt-4 space-y-2">
+          <div className="mt-4 min-h-[176px] space-y-2">
             {tier.features
               .filter((f) => f.included)
               .slice(0, isVariantLanding ? 6 : undefined)
