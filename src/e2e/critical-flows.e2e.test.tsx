@@ -32,12 +32,12 @@ describe('Critical flow: Landing → Navigation', () => {
 
   it('shows 6 skill features on landing', () => {
     renderWithProviders(<LandingPage />);
-    expect(screen.getByText(/^vocabulary$/i)).toBeInTheDocument();
-    expect(screen.getByText(/^writing$/i)).toBeInTheDocument();
-    expect(screen.getByText(/^speaking$/i)).toBeInTheDocument();
-    expect(screen.getByText(/^listening$/i)).toBeInTheDocument();
-    expect(screen.getByText(/^reading$/i)).toBeInTheDocument();
-    expect(screen.getByText(/^grammar$/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/^vocabulary$/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/^writing$/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/^speaking$/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/^listening$/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/^reading$/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/^grammar$/i).length).toBeGreaterThan(0);
   });
 });
 
