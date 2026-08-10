@@ -130,7 +130,7 @@ export const WowHeroSection: React.FC = () => {
           {[
             { label: 'Engineering Disciplines', value: '10', icon: 'building' },
             { label: 'Interface Languages', value: '15', icon: 'globe' },
-            { label: 'Technical Terms', value: '27K+', icon: 'library' },
+            { label: 'Technical Terms', value: '14,199+', icon: 'library' },
             { label: 'CEFR Levels', value: 'A1–C2', icon: 'target' },
           ].map((m) => (
             <div

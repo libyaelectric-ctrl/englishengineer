@@ -79,7 +79,7 @@ const documents: Record<LegalDocument, DocumentContent> = {
       ],
       [
         '2. Service Description & Engineering Scope',
-        'EngVox provides AI-driven technical English training, CEFR skill evaluations (A1-C2), FIDIC contract writing assistance, technical presentation panels, and 5,000+ domain-specific vocabulary modules across all 10 key engineering disciplines: Architecture, Chemical, Civil, Software Engineering, Electrical, Electronics, HSE, Industrial, Mechanical, and Mechatronics/Robotics.',
+        'EngVox provides AI-driven technical English training, CEFR skill evaluations (A1-C2), FIDIC contract writing assistance, technical presentation panels, and 14,199+ domain-specific vocabulary modules across all 10 key engineering disciplines: Architecture, Chemical, Civil, Software Engineering, Electrical, Electronics, HSE, Industrial, Mechanical, and Mechatronics/Robotics.',
       ],
       [
         '3. Account Governance & Security Standards',

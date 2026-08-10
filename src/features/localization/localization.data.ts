@@ -62,7 +62,7 @@ export const UI_TRANSLATIONS: Record<
     'landing.exportDocxDesc': 'Editable Microsoft Word',
     'discipline.civil.desc': 'Infrastructure & Structures',
     'landing.heroSubtitle':
-      'AI-powered oral defense coaching, FIDIC contract writing, technical presentations, and 5,000+ domain-specific terms — all offline-first.',
+      'AI-powered oral defense coaching, FIDIC contract writing, technical presentations, and 14,199+ domain-specific terms — all offline-first.',
     'beta.dataNotice':
       'Only essential beta fields are collected locally. You can use the product without connecting a production backend.',
     'discipline.mechatronics.desc': 'Automation, Control & Robotics',
@@ -697,7 +697,7 @@ export const UI_TRANSLATIONS: Record<
     'landing.navLogin': 'Log in',
     'landing.feature5Desc':
       'Personal feedback loops remember weak points and turn each attempt into a next action.',
-    'landing.audioPlayerTitle': '5,000+ Technical Terms Audio Player',
+    'landing.audioPlayerTitle': '14,199+ Technical Terms Audio Player',
     'curriculum.dbCompliant': 'DATABASE COMPLIANT',
     'onboarding.selectLanguage': 'Select your interface language',
     'landing.pricingPerMonth': '/month',
@@ -6342,7 +6342,7 @@ export const UI_TRANSLATIONS: Record<
     'onboarding.notSure': '我不确定',
     'landing.navLogin': '登录',
     'landing.feature5Desc': '个人反馈循环会记住薄弱环节，并将每次尝试转化为下一步行动。',
-    'landing.audioPlayerTitle': '5,000+ 个技术术语音频播放器',
+    'landing.audioPlayerTitle': '14,199+ 个技术术语音频播放器',
     'curriculum.dbCompliant': '数据库合规',
     'onboarding.selectLanguage': '请选择界面语言',
     'landing.pricingPerMonth': '/月',
