@@ -21,7 +21,7 @@ interface GeneratedReadingResponse {
 const resolveBackendBase = (): string | null => {
   const proxy = AI_BACKEND_PROXY_CONFIG.proxyUrl;
   if (!proxy) return null;
-  return proxy.replace(/\/api\/ai\/?$/, '');
+  return proxy.replace(/\/api\/(?:v1\/)?ai\/?$/, '');
 };
 
 const fallbackQuestion = (title: string): ReadingQuestion => ({

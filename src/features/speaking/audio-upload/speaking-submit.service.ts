@@ -11,7 +11,7 @@ interface SpeakingSubmitResponse {
 
 const resolveBackendBase = (): string | null => {
   const proxy = AI_BACKEND_PROXY_CONFIG.proxyUrl;
-  return proxy ? proxy.replace(/\/api\/ai\/?$/, '') : null;
+  return proxy ? proxy.replace(/\/api\/(?:v1\/)?ai\/?$/, '') : null;
 };
 
 export async function submitSpeakingToBackend(input: {
