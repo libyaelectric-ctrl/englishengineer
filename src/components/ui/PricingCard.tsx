@@ -2,9 +2,12 @@ import { Check, Sparkles } from 'lucide-react';
 
 import type { PricingTier } from '@/shared/data/pricing.data';
 import { formatPrice } from '@/shared/data/pricing.data';
+import { getPublicPageCopy, type PricingTierId } from '@/shared/data/public-page-copy';
 import { getPricingCopy } from '@/shared/data/pricing-copy';
 
 import { useLocalizationStore } from '@/features/localization';
+
+import { getLandingTranslations } from '@/pages/LandingPage/landing-i18n';
 
 interface PricingCardProps {
   tier: PricingTier;
@@ -27,9 +30,25 @@ export const PricingCard = ({
 }: PricingCardProps) => {
   const language = useLocalizationStore((s) => s.language);
   const copy = getPricingCopy(language);
+  const publicCopy = getPublicPageCopy(language);
+  const landingCopy = getLandingTranslations(language);
   const price = isAnnual ? tier.annualPrice : tier.monthlyPrice;
   const isVariantLanding = variant === 'landing';
   const isTeam = tier.id === 'team';
+  const featureLabels: Record<string, string | undefined> = {
+    'Placement Test': landingCopy.placementTest,
+    'Learning Hub': landingCopy.learningHub,
+    'Progress Tracking': landingCopy.progress,
+    Vocabulary: landingCopy.vocabularyPricing,
+    Grammar: landingCopy.grammarPricing,
+    Translator: landingCopy.translator,
+    Reading: landingCopy.readingPricing,
+    Writing: landingCopy.writingPricing,
+    Speaking: landingCopy.speakingPricing,
+    Listening: landingCopy.listening,
+    Tool: landingCopy.tool,
+    'AI Copilot': landingCopy.aiCopilot,
+  };
 
   const cardClasses = isVariantLanding
     ? `relative flex h-full min-h-[560px] sm:min-h-[520px] flex-col justify-between rounded-[var(--radius-card)] p-5 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
@@ -85,7 +104,9 @@ export const PricingCard = ({
             </span>
           </div>
 
-          <p className="text-xs text-muted-copy leading-relaxed min-h-[48px]">{tier.description}</p>
+          <p className="text-xs text-muted-copy leading-relaxed min-h-[48px]">
+            {publicCopy.tierDescriptions[tier.id as PricingTierId] ?? tier.description}
+          </p>
 
           <div className="mt-4 space-y-2">
             {tier.features
@@ -93,13 +114,20 @@ export const PricingCard = ({
               .map((feature) => (
                 <div key={feature.name} className="flex items-center gap-2">
                   <Check className="h-3.5 w-3.5 shrink-0 text-primary" />
-                  <span className="text-xs text-foreground font-medium">{feature.name}</span>
+                  <span className="text-xs text-foreground font-medium">
+                    {featureLabels[feature.name] ?? feature.name}
+                  </span>
                 </div>
               ))}
           </div>
 
           {tier.features.some((f) => !f.included) && isVariantLanding && (
-            <p className="mt-3 text-[10px] text-muted-copy">{tier.notIncluded}</p>
+            <p className="mt-3 text-[10px] text-muted-copy">
+              {tier.features
+                .filter((feature) => !feature.included)
+                .map((feature) => featureLabels[feature.name] ?? feature.name)
+                .join(', ')}
+            </p>
           )}
         </div>
 

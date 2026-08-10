@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
 import { getDisciplineIcon } from '@/shared/icons/registry';
+import { getPublicPageCopy } from '@/shared/data/public-page-copy';
 
 import { useLocalizationStore } from '@/features/localization';
 
@@ -33,8 +34,9 @@ const FEATURES = [
 ] as const;
 
 export const LandingPage = () => {
-  const language = useLocalizationStore((s) => s.language);
+  const { language, translate } = useLocalizationStore();
   const t = getLandingTranslations(language);
+  const publicCopy = getPublicPageCopy(language);
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
 
   useEffect(() => {
@@ -100,19 +102,19 @@ export const LandingPage = () => {
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-8 px-4 text-center">
           <div>
             <p className="text-2xl font-bold text-[var(--color-primary)]">1,420+</p>
-            <p className="text-xs text-[var(--color-muted-copy)]">Active Engineers</p>
+            <p className="text-xs text-[var(--color-muted-copy)]">{publicCopy.activeEngineers}</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-[var(--color-primary)]">10</p>
-            <p className="text-xs text-[var(--color-muted-copy)]">Disciplines</p>
+            <p className="text-xs text-[var(--color-muted-copy)]">{publicCopy.disciplines}</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-[var(--color-primary)]">15</p>
-            <p className="text-xs text-[var(--color-muted-copy)]">Languages</p>
+            <p className="text-xs text-[var(--color-muted-copy)]">{publicCopy.languages}</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-[var(--color-primary)]">14,199+</p>
-            <p className="text-xs text-[var(--color-muted-copy)]">Technical Terms</p>
+            <p className="text-xs text-[var(--color-muted-copy)]">{publicCopy.technicalTerms}</p>
           </div>
         </div>
       </section>
@@ -161,7 +163,19 @@ export const LandingPage = () => {
                 >
                   <Icon className={`h-4 w-4 text-${color}-500`} />
                 </span>
-                <span className="text-xs font-semibold capitalize">{key}</span>
+                <span className="text-xs font-semibold capitalize">
+                  {key === 'vocabulary'
+                    ? t.vocabularyPricing
+                    : key === 'reading'
+                      ? t.readingPricing
+                      : key === 'writing'
+                        ? t.writingPricing
+                        : key === 'speaking'
+                          ? t.speakingPricing
+                          : key === 'listening'
+                            ? t.listening
+                            : t.grammarPricing}
+                </span>
               </div>
             ))}
           </div>
@@ -200,22 +214,13 @@ export const LandingPage = () => {
       {/* FAQ */}
       <section className="py-20">
         <div className="mx-auto max-w-3xl px-4">
-          <h2 className="text-center text-3xl font-bold">FAQ</h2>
+          <h2 className="text-center text-3xl font-bold">{translate('landing.faqTitle')}</h2>
           <div className="mt-8 space-y-3">
             {[
-              {
-                q: 'Can I change my discipline later?',
-                a: 'No — discipline selection is permanent to ensure a focused curriculum.',
-              },
-              {
-                q: 'Is there a free plan?',
-                a: 'Yes — the Junior plan includes core learning modules with daily AI request allowances.',
-              },
-              {
-                q: 'Which languages are supported?',
-                a: '15 interface languages including EN, TR, DE, AR, ES, FR, PT, RU, ZH, JA, IT, VI, PL, ID, NL.',
-              },
-            ].map((item, i) => (
+              ['landing.faq1Q', 'landing.faq1A'],
+              ['landing.faq2Q', 'landing.faq2A'],
+              ['landing.faq5Q', 'landing.faq5A'],
+            ].map(([questionKey, answerKey], i) => (
               <div
                 key={i}
                 className="rounded-[var(--radius-card)] border border-[var(--color-border-soft)]"
@@ -224,13 +229,15 @@ export const LandingPage = () => {
                   onClick={() => setFaqOpen(faqOpen === i ? null : i)}
                   className="flex w-full items-center justify-between px-5 py-4 text-left font-semibold"
                 >
-                  {item.q}
+                  {translate(questionKey as Parameters<typeof translate>[0])}
                   <ChevronDown
                     className={`h-4 w-4 transition-transform ${faqOpen === i ? 'rotate-180' : ''}`}
                   />
                 </button>
                 {faqOpen === i && (
-                  <p className="px-5 pb-4 text-sm text-[var(--color-muted-copy)]">{item.a}</p>
+                  <p className="px-5 pb-4 text-sm text-[var(--color-muted-copy)]">
+                    {translate(answerKey as Parameters<typeof translate>[0])}
+                  </p>
                 )}
               </div>
             ))}

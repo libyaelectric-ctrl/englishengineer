@@ -1,6 +1,7 @@
 import { PRODUCT_VERSION } from '@/config/product.config';
-import { useAppStore } from '@/store/app.store';
 import { ArrowRight, ChevronDown, Moon, Sun } from 'lucide-react';
+
+import { useTheme } from '@/features/theme/ThemeProvider';
 
 import { useState } from 'react';
 
@@ -15,8 +16,7 @@ interface NavbarProps {
 }
 
 export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
-  const theme = useAppStore((s) => s.theme);
-  const setTheme = useAppStore((s) => s.setTheme);
+  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
   const { language, setLanguage, translate } = useLocalizationStore();
@@ -164,7 +164,7 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
 
             {/* Theme Toggle */}
             <button
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              onClick={toggleTheme}
               className="inline-flex h-7 w-7 items-center justify-center rounded border border-border-soft bg-background text-muted-copy hover:text-foreground transition-colors cursor-pointer"
               aria-label={
                 theme === 'dark'
