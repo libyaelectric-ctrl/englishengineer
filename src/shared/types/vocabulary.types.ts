@@ -1,17 +1,8 @@
 import { MissionDifficulty } from '@/core/learning';
 import type { LearningDataSkill } from '@/core/learning';
 
-import type {
-  EngineeringDiscipline,
-  VocabularyDomain,
-} from '@/shared/constants/engineering-disciplines';
+import type { VocabularyDomain } from '@/shared/constants/engineering-disciplines';
 import type { CefrLevel } from '@/shared/types/domain.types';
-
-/**
- * @deprecated Use `EngineeringDiscipline` from shared/constants/engineering-disciplines.
- * Kept for backwards compatibility. New code should use EngineeringDiscipline.
- */
-export type VocabularyDiscipline = EngineeringDiscipline;
 
 export type VocabularyTrainingMode =
   | 'flashcards'

@@ -1,7 +1,7 @@
 import { storage } from '@/shared/storage';
 import {
   type LearningGoal,
-  type ProfessionId,
+  type ProfessionRoleId,
   SKILL_NAMES,
   type SkillName,
   type SkillProfile,
@@ -122,7 +122,7 @@ export const LearningProfileRepository = {
     update: Partial<{
       goals: LearningGoal[];
       discipline: UserLearningProfile['discipline'];
-      professionId: ProfessionId | null;
+      professionId: ProfessionRoleId | null;
       industryId: UserLearningProfile['industryId'];
       communicationGoals: UserLearningProfile['communicationGoals'];
       selfReportedCefr: UserLearningProfile['selfReportedCefr'];

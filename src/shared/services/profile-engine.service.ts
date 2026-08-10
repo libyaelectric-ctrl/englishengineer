@@ -4,6 +4,7 @@ import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import { GrammarEngine } from '@/shared/services/grammar.engine';
 import { VocabularyEngine } from '@/shared/services/vocabulary.engine';
 import { VocabularyMenuService } from '@/shared/services/vocabulary-menu.service';
+import { logger } from '@/shared/logger';
 import type { CefrLevel } from '@/shared/types/domain.types';
 import { type EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 import {
@@ -66,7 +67,7 @@ export const getDisciplineDomains = async (
 
   if (!resolvedDiscipline || resolvedDiscipline === 'general') {
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[ProfileEngine] User ${userId} selected domains: [general, engineering] (no discipline)`);
+      logger.d(`[ProfileEngine] User ${userId} selected domains: [general, engineering] (no discipline)`);
     }
     return [...BASE_DOMAINS];
   }
@@ -76,19 +77,19 @@ export const getDisciplineDomains = async (
 
     if (disciplineTerms.length === 0) {
       if (process.env.NODE_ENV === 'development') {
-        console.log(`[ProfileEngine] User ${userId} selected domains: [general, engineering] (empty discipline: ${resolvedDiscipline})`);
+        logger.d(`[ProfileEngine] User ${userId} selected domains: [general, engineering] (empty discipline: ${resolvedDiscipline})`);
       }
       return [...BASE_DOMAINS];
     }
 
     const domains = [...BASE_DOMAINS, resolvedDiscipline];
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[ProfileEngine] User ${userId} selected domains: [${domains.join(', ')}]`);
+      logger.d(`[ProfileEngine] User ${userId} selected domains: [${domains.join(', ')}]`);
     }
     return domains;
   } catch {
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[ProfileEngine] User ${userId} selected domains: [general, engineering] (error fallback)`);
+      logger.d(`[ProfileEngine] User ${userId} selected domains: [general, engineering] (error fallback)`);
     }
     return [...BASE_DOMAINS];
   }

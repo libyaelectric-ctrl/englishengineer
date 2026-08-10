@@ -37,11 +37,6 @@ export interface StripeConfig {
   priceSeniorMonthly?: string | null;
   priceSpecialistMonthly?: string | null;
   priceMasterMonthly?: string | null;
-  priceProMonthly?: string | null;
-  priceProjectMonthly?: string | null;
-  priceMaxMonthly?: string | null;
-  priceExecMonthly?: string | null;
-  pricePrivateMonthly?: string | null;
   priceTeamMonthly?: string | null;
   environment: RuntimeEnvironment;
   allowMemoryRepository: boolean;

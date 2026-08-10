@@ -2,6 +2,7 @@
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { describe, expect, it } from 'vitest';
+import { logger } from '@/shared/logger';
 
 const SRC_DIR = join(process.cwd(), 'src');
 const FEATURES_DIR = join(SRC_DIR, 'features');
@@ -66,8 +67,8 @@ describe('Architecture Rules', () => {
     }
 
     // Document violations but don't fail â€” these are known technical debt
-    console.log(`\n[Architecture] Feature-to-feature import violations: ${violations.length}`);
-    console.log('See ARCHITECTURE.md for migration plan\n');
+    logger.i(`[Architecture] Feature-to-feature import violations: ${violations.length}`);
+    logger.i('See ARCHITECTURE.md for migration plan');
 
     // Expect violations to be documented and decreasing over time
     expect(violations.length).toBeLessThan(150);
@@ -98,8 +99,8 @@ describe('Architecture Rules', () => {
 
     checkDir(sharedPath);
 
-    console.log(`\n[Architecture] Shared-to-features violations: ${violations.length}`);
-    console.log('See ARCHITECTURE.md for migration plan\n');
+    logger.i(`[Architecture] Shared-to-features violations: ${violations.length}`);
+    logger.i('See ARCHITECTURE.md for migration plan');
 
     expect(violations.length).toBeLessThan(15);
   });

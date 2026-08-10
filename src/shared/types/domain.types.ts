@@ -13,11 +13,8 @@ export type SkillName = (typeof SKILL_NAMES)[number];
 export type SkillElo = number;
 export type LearningGoal = 'daily' | 'work' | 'engineering' | 'travel' | 'management';
 
-/**
- * @deprecated Use `EngineeringDiscipline` from engineering-disciplines.ts.
- * Kept for backwards compatibility during migration.
- */
-export type ProfessionId =
+/** Stable identifiers for the profile's selected professional role. */
+export type ProfessionRoleId =
   | 'electrical-engineer'
   | 'mechanical-engineer'
   | 'civil-engineer'
@@ -53,16 +50,28 @@ export type SelfReportedCefr = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'unknown';
  * Extended from 2 to 12 to support future language packs.
  */
 export type InterfaceLanguage =
-  'en' | 'tr' | 'ar' | 'es' | 'it' | 'fr' | 'de' | 'pt' | 'ru' | 'zh' | 'ja' | 'ko';
+  | 'en'
+  | 'tr'
+  | 'ar'
+  | 'es'
+  | 'it'
+  | 'fr'
+  | 'de'
+  | 'pt'
+  | 'ru'
+  | 'zh'
+  | 'ja'
+  | 'ko'
+  | 'vi'
+  | 'pl'
+  | 'id'
+  | 'nl';
 
 export type ExperienceLevel =
   'student' | 'early-career' | 'experienced' | 'lead-manager' | 'prefer-not-to-say';
 
-/**
- * @deprecated Use `EngineeringDiscipline` directly.
- * Kept for backwards compatibility during migration.
- */
-export type ProfessionalTrack =
+/** Stable identifiers for the legacy profile career-track field. */
+export type CareerTrackId =
   | 'electrical'
   | 'mechanical'
   | 'civil'
@@ -115,8 +124,8 @@ export interface UserLearningProfile {
   userId: string;
   skills: Record<SkillName, SkillProfile>;
   goals: LearningGoal[];
-  /** @deprecated Use `discipline` instead. */
-  professionId: ProfessionId | null;
+  /** Persisted profile key retained for existing local profiles. */
+  professionId: ProfessionRoleId | null;
   /** The user's selected engineering discipline. */
   discipline: EngineeringDiscipline;
   industryId: IndustryId | null;
@@ -124,8 +133,8 @@ export interface UserLearningProfile {
   selfReportedCefr: SelfReportedCefr;
   learningFocus: SkillName[];
   selectedPlan: 'junior' | 'senior' | 'specialist' | 'master' | 'team';
-  /** @deprecated Use `discipline` instead. */
-  professionalTrack: ProfessionalTrack;
+  /** Persisted profile key retained for existing local profiles. */
+  professionalTrack: CareerTrackId;
   electricalSubdomain: ElectricalSubdomain;
   experienceLevel: ExperienceLevel;
   careerGoal: string;

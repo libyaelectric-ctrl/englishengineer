@@ -45,12 +45,12 @@
 | **15 Dil Altyapısı** | ✅ Tam | `src/features/localization/localization.types.ts` |
 | **Billing/Stripe** | ✅ Tam | `src/features/billing/` |
 | **Auth/Supabase** | ✅ Tam | `src/features/auth/` |
-| **10 Branch JSON** | ✅ 7/10 | `data/{civil,electronics,hse,industrial,mechanical,mechatronics,software}.json` |
+| **10 Branch JSON** | ✅ 10/10 | `data/{architecture,chemical,civil,electrical,electronics,hse,industrial,mechanical,mechatronics,software}.json` |
 | **Onboarding Altyapısı** | ✅ Var | `src/pages/OnboardingPage/` |
 | **Placement/CEFR Test** | ✅ Var | `src/features/placement/` |
 
-### ⚠️ Eksik Olan (3 Branch JSON)
-`data/architecture.json`, `data/chemical.json`, `data/electrical.json` — oluşturulmalı.
+### ✅ Tüm Branch JSON'lar Tamamlandı
+`data/architecture.json`, `data/chemical.json`, `data/electrical.json` depoda mevcut ve doğrulama kapsamındadır.
 
 ---
 
@@ -58,10 +58,10 @@
 
 | # | Dal | Domain Key | Mevcut Veri |
 |---|---|---|---|
-| 1 | 🏛️ Mimarlık | `architecture` | ❌ Oluşturulacak |
-| 2 | ⚗️ Kimya Mühendisliği | `chemical` | ❌ Oluşturulacak |
+| 1 | 🏛️ Mimarlık | `architecture` | ✅ `architecture.json` |
+| 2 | ⚗️ Kimya Mühendisliği | `chemical` | ✅ `chemical.json` |
 | 3 | 🏗️ İnşaat Mühendisliği | `civil` | ✅ `civil.json` |
-| 4 | ⚡ Elektrik Mühendisliği | `electrical` | ❌ Oluşturulacak |
+| 4 | ⚡ Elektrik Mühendisliği | `electrical` | ✅ `electrical.json` |
 | 5 | 🔌 Elektronik Mühendisliği | `electronics` | ✅ `electronics.json` |
 | 6 | 🦺 HSE (İş Güvenliği) | `hse` | ✅ `hse.json` |
 | 7 | 🏭 Endüstri Mühendisliği | `industrial` | ✅ `industrial.json` |
@@ -123,11 +123,11 @@ Sistem, **modül/özellik bazlı kademeli erişim** modeline dayanıyor — her 
 ### 🔵 FAZ 0 — Veri & Domain Hazırlığı (Hafta 1)
 > **Hedef:** Tüm 10 branş verisini hazırla, domain routing altyapısını kur.
 
-#### 0.1 Eksik Branch JSON'larını Oluştur
+#### 0.1 Branch JSON Doğrulaması
 ```
-data/architecture.json  ← vocabulary-taxonomy.json'daki "architecture" tag'larından
-data/chemical.json      ← "chemical" tag'larından
-data/electrical.json    ← "electrical" tag'larından
+data/architecture.json  ← depoda mevcut; doğrulama kapsamına alındı
+data/chemical.json      ← depoda mevcut; doğrulama kapsamına alındı
+data/electrical.json    ← depoda mevcut; doğrulama kapsamına alındı
 ```
 
 **Kaynak:** `data/canonical/vocabulary/vocabulary.normalized.json` → domain='architecture/chemical/electrical' filtresi
@@ -378,9 +378,6 @@ UI: Kelime kartları (ana dilde çeviri + EN tanım + örnek)
 ### Yeni Dosyalar
 | Dosya | Amaç |
 |---|---|
-| `data/architecture.json` | Mimarlık branch kelime seti |
-| `data/chemical.json` | Kimya branch kelime seti |
-| `data/electrical.json` | Elektrik branch kelime seti |
 | `src/features/vocabulary/domain-package.config.ts` | 10 dal → domain mapping |
 | `src/features/billing/module-entitlement.service.ts` | Paket → modül yetki kontrolü (dal değil) |
 | `src/features/vocabulary/module-source.service.ts` | Modül → kelime havuzu kaynak eşlemesi (Faz 2.4) |

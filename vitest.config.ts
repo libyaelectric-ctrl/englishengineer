@@ -1,6 +1,10 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
+// React's test utilities require the development/test build even when the
+// shell that launches Vitest inherits NODE_ENV=production.
+process.env.NODE_ENV = 'test';
+
 const srcPath = fileURLToPath(new URL('./src', import.meta.url));
 
 export default defineConfig({

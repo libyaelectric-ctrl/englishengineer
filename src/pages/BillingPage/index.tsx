@@ -12,8 +12,8 @@ import { useBillingStore } from '@/features/billing';
 import { BillingStatusPanel } from '@/features/billing/BillingStatusPanel';
 import { useLearningCockpit } from '@/features/profile';
 
-import { BillingPlanCards } from './ProfilePage/BillingPlanCards';
-import { BillingUpgradeCTA } from './ProfilePage/BillingUpgradeCTA';
+import { BillingPlanCards } from '../ProfilePage/BillingPlanCards';
+import { BillingUpgradeCTA } from '../ProfilePage/BillingUpgradeCTA';
 
 export const BillingPage = () => {
   const { currentUser } = useAuthStore();

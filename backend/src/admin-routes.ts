@@ -30,7 +30,7 @@ export const registerAdminRoutes = (
           system: {
             uptime: process.uptime(),
             memoryUsage: process.memoryUsage(),
-            version: process.env.APP_VERSION || '2.4.7',
+            version: process.env.APP_VERSION || '4.0.22',
           },
         };
         res.json({ success: true, data: stats });

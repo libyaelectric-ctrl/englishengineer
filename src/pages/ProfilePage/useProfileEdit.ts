@@ -6,7 +6,7 @@ import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
 import {
   LearningProfileRepository,
-  type ProfessionId,
+  type ProfessionRoleId,
   type UserLearningProfile,
 } from '@/features/profile';
 
@@ -105,7 +105,7 @@ export const useProfileEdit = (
 
   const savePreferences = (userId: string) => {
     LearningProfileRepository.updatePreferences(userId, {
-      professionId: (editProfession as ProfessionId) || null,
+      professionId: (editProfession as ProfessionRoleId) || null,
       discipline:
         (editDiscipline as UserLearningProfile['discipline']) || ENGINEERING_DISCIPLINES[0],
       professionalTrack:
@@ -115,7 +115,7 @@ export const useProfileEdit = (
       interfaceLanguage: editLang,
       communicationGoals: editGoals as UserLearningProfile['communicationGoals'],
     });
-    useLocalizationStore.getState().setLanguage(editLang as any);
+    useLocalizationStore.getState().setLanguage(editLang);
   };
 
   const handleSaveProfile = async (event: React.FormEvent) => {

@@ -1,4 +1,4 @@
-export const PRODUCT_VERSION = '2.4.7';
+export const PRODUCT_VERSION = '4.0.22';
 
 // Exported for testing only - not used by production code
 export const PRODUCT_POSITIONING =

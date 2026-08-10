@@ -7,12 +7,12 @@ import {
 import type {
   ElectricalSubdomain,
   IndustryId,
-  ProfessionalTrack,
+  CareerTrackId,
 } from '@/features/profile/profile.types';
 
 type RoleStepProps = {
-  professionalTrack: ProfessionalTrack;
-  setProfessionalTrack: (t: ProfessionalTrack) => void;
+  professionalTrack: CareerTrackId;
+  setProfessionalTrack: (t: CareerTrackId) => void;
   electricalSubdomain: ElectricalSubdomain;
   setElectricalSubdomain: (e: ElectricalSubdomain) => void;
   industryId: IndustryId | '';
@@ -38,7 +38,7 @@ export const RoleStep = ({
           {translate('onboarding.professionalTrack')}
           <select
             value={professionalTrack}
-            onChange={(event) => setProfessionalTrack(event.target.value as ProfessionalTrack)}
+            onChange={(event) => setProfessionalTrack(event.target.value as CareerTrackId)}
             className="premium-input mt-2 w-full px-3 py-3 rounded-[var(--radius-card)]"
           >
             {PROFESSIONAL_TRACKS.map((item) => (

@@ -9,7 +9,7 @@ import {
 } from '@/shared/constants/engineering-disciplines';
 import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
 import { ProductAnalyticsService } from '@/shared/services/product-analytics.service';
-import type { ProfessionId } from '@/shared/types/domain.types';
+import type { ProfessionRoleId } from '@/shared/types/domain.types';
 
 import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
@@ -72,7 +72,7 @@ export const BetaOnboarding = () => {
   };
 
   const finishOnboarding = () => {
-    const professionByDiscipline: Record<EngineeringDiscipline, ProfessionId> = {
+    const professionByDiscipline: Record<EngineeringDiscipline, ProfessionRoleId> = {
       architecture: 'architect',
       chemical: 'other',
       civil: 'civil-engineer',
