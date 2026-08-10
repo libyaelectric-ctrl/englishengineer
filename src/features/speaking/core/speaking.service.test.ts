@@ -55,4 +55,69 @@ describe('SpeakingService', () => {
     expect(state.lastSelectedMissionId).toBe('speaking_a1_site_introduction');
     expect(state.completedMissions).toEqual({});
   });
+
+  describe('submitSubmission + mergeBackendFeedback', () => {
+    it('grades locally without making any network call (AI evaluation is server-side only)', () => {
+      const mission = SpeakingService.getMissions()[0];
+
+      const evaluation = SpeakingService.submitSubmission({
+        missionId: mission.id,
+        transcript: 'I check the site every morning for safety issues.',
+        typedTranscript: '',
+        timeSpentMinutes: 2,
+        recordingSeconds: 30,
+        usedSpeechRecognition: true,
+      });
+
+      expect(evaluation.missionId).toBe(mission.id);
+      expect(typeof evaluation.finalScore).toBe('number');
+
+      const state = SpeakingService.getState();
+      expect(state.history[0].evaluation).toEqual(evaluation);
+    });
+
+    it('merges backend feedback into the matching history entry', () => {
+      const mission = SpeakingService.getMissions()[0];
+
+      const evaluation = SpeakingService.submitSubmission({
+        missionId: mission.id,
+        transcript: 'I check the site every morning.',
+        typedTranscript: '',
+        timeSpentMinutes: 1,
+        recordingSeconds: 20,
+        usedSpeechRecognition: true,
+      });
+
+      SpeakingService.mergeBackendFeedback(mission, evaluation, {
+        grammar: 'Watch subject-verb agreement.',
+        vocabulary: 'Use more technical terms.',
+      });
+
+      expect(evaluation.weaknesses).toEqual(
+        expect.arrayContaining(['Watch subject-verb agreement.', 'Use more technical terms.'])
+      );
+      expect(evaluation.feedback).toBe('Watch subject-verb agreement. Use more technical terms.');
+
+      const state = SpeakingService.getState();
+      expect(state.history[0].evaluation.feedback).toBe(evaluation.feedback);
+    });
+
+    it('does nothing when backend feedback is undefined or empty', () => {
+      const mission = SpeakingService.getMissions()[0];
+      const evaluation = SpeakingService.submitSubmission({
+        missionId: mission.id,
+        transcript: 'A short response.',
+        typedTranscript: '',
+        timeSpentMinutes: 1,
+        recordingSeconds: 15,
+        usedSpeechRecognition: true,
+      });
+      const originalFeedback = evaluation.feedback;
+
+      SpeakingService.mergeBackendFeedback(mission, evaluation, undefined);
+      SpeakingService.mergeBackendFeedback(mission, evaluation, {});
+
+      expect(evaluation.feedback).toBe(originalFeedback);
+    });
+  });
 });

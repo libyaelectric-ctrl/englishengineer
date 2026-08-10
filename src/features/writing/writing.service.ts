@@ -12,9 +12,9 @@ import { GrammarTransferService } from '@/shared/services/grammar-transfer.servi
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { storage } from '@/shared/storage';
 
-import { AIService } from '@/features/ai';
 import { VocabularyService } from '@/features/vocabulary';
 
+import { submitWritingToBackend } from './writing-submit.service';
 import { WRITING_MISSIONS } from './writing.data';
 import { WritingEvaluator } from './writing.evaluator';
 import {
@@ -33,66 +33,12 @@ const DEFAULT_STATE: WritingState = {
   history: [],
 };
 
-// Optional backend AI layer: sends the student draft to the AI evaluation
-// endpoint and merges the returned feedback into the local result. When the
-// backend is not configured or the call fails, the local evaluation is used
-// unchanged so the offline-first flow is never blocked.
-const buildAiFeedback = async (mission: WritingMission, draft: string) => {
-  try {
-    const prompt = [
-      'Evaluate this engineering student written response.',
-      `Task: ${mission.task || mission.description}`,
-      `Discipline: ${mission.discipline}`,
-      `CEFR level: ${mission.cefrLevel}`,
-      "Student's submission:",
-      '"""',
-      draft,
-      '"""',
-      'Provide concise strengths, weaknesses, and overall feedback for an engineering context.',
-    ].join('\n');
-
-    const response = await AIService.run([], 'evaluateEngineeringEnglish', {
-      modeId: 'writing_reviewer',
-      modeName: 'Writing Reviewer',
-      prompt,
-      context: {
-        userName: 'the learner',
-        role: 'engineer',
-        discipline: mission.discipline,
-        targetLevel: mission.cefrLevel,
-        xp: 0,
-        level: 1,
-        elo: 1000,
-        streak: 0,
-        averageScore: 0,
-        completedMissions: 0,
-        totalMissions: 0,
-        weakSkills: [],
-        strongSkills: [],
-        recentActivities: [],
-        weakVocabulary: [],
-        wordsLearned: 0,
-        vocabularyRetention: 0,
-        recommendedFocus: 'Writing',
-      },
-    });
-
-    const structured = response.structuredResult as {
-      strengths?: string[];
-      weaknesses?: string[];
-      summary?: string;
-    } | null;
-
-    if (!structured) return null;
-    return {
-      strengths: structured.strengths || [],
-      weaknesses: structured.weaknesses || [],
-      summary: structured.summary || '',
-    };
-  } catch {
-    return null;
-  }
-};
+// AI evaluation happens once, server-side, via POST /api/writing/submit
+// (submitWritingToBackend below). Previously this module also called the AI
+// proxy directly from the client for the same draft, which meant every
+// submission paid for two separate AI evaluations while only the local one
+// was ever shown to the user (see the equivalent fix already applied to
+// Speaking, in speaking.service.ts).
 
 export const WritingService = {
   /**
@@ -171,32 +117,6 @@ export const WritingService = {
         );
       });
 
-    // 1b. Optional backend AI feedback merged into the local result. Fire and
-    // forget so the offline-first submission is never delayed or blocked.
-    void buildAiFeedback(mission, submission.finalDraft).then((ai) => {
-      if (!ai) return;
-      if (ai.strengths.length > 0) {
-        evaluation.strengths = [...new Set([...evaluation.strengths, ...ai.strengths.slice(0, 3)])];
-      }
-      if (ai.weaknesses.length > 0) {
-        evaluation.weaknesses = [
-          ...new Set([...evaluation.weaknesses, ...ai.weaknesses.slice(0, 3)]),
-        ];
-      }
-      if (ai.summary) {
-        evaluation.feedback = ai.summary;
-      }
-      // Persist the enriched evaluation back into history.
-      const state = this.getState();
-      const entry = state.history.find(
-        (h) => h.missionId === mission.id && h.evaluation === evaluation
-      );
-      if (entry) {
-        entry.evaluation = evaluation;
-        this.saveState(state);
-      }
-    });
-
     // 2. Load writing state
     const state = this.getState();
 
@@ -219,6 +139,16 @@ export const WritingService = {
 
     // 6. Persist writing state
     this.saveState(state);
+
+    // 6b. Single source of AI evaluation: submit the draft to the backend for
+    // real AI grading. Its feedback is merged into this same evaluation once
+    // it resolves; the offline-first local score/history above is never
+    // blocked waiting for it.
+    void submitWritingToBackend({ content: submission.finalDraft }).then((response) => {
+      if (response?.feedback) {
+        this.mergeBackendFeedback(mission, evaluation, response.feedback);
+      }
+    });
 
     // 7. Sync with global LearningStore to award XP, coins, and update ELO/achievements
     const learningStore = useLearningStore.getState();
@@ -243,6 +173,40 @@ export const WritingService = {
     void GrammarTransferService.recordWritingEvidence(mission, evaluation);
 
     return evaluation;
+  },
+
+  /**
+   * Applies the backend's AI-derived feedback (from POST /api/writing/submit)
+   * to the matching history entry. Call this once, after submitSubmission's
+   * local state has been saved -- do not also call the AI proxy directly from
+   * the client for the same submission (see note above).
+   */
+  mergeBackendFeedback(
+    mission: WritingMission,
+    evaluation: WritingEvaluationResult,
+    feedback: Record<string, string> | undefined
+  ): void {
+    if (!feedback) return;
+    const notes = Object.values(feedback).filter(Boolean);
+    if (notes.length === 0) return;
+
+    evaluation.weaknesses = [...new Set([...evaluation.weaknesses, ...notes.slice(0, 3)])];
+    evaluation.feedback = notes.join(' ');
+
+    // Matched by missionId only, not by object reference: getState() below
+    // deserializes state fresh from storage on every call, so a stored
+    // WritingHistoryEntry's `evaluation` is never the same object reference
+    // as the in-memory `evaluation` passed in here, even right after
+    // submitSubmission saved it. Since new entries are always unshifted to
+    // the front of history, matching on missionId picks the most recent
+    // submission for that mission -- correct in the common case of one
+    // in-flight AI merge per mission at a time.
+    const state = this.getState();
+    const entry = state.history.find((h) => h.missionId === mission.id);
+    if (entry) {
+      entry.evaluation = evaluation;
+      this.saveState(state);
+    }
   },
 
   /**

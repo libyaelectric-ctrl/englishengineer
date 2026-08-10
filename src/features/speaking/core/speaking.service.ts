@@ -181,10 +181,16 @@ export const SpeakingService = {
     evaluation.weaknesses = [...new Set([...evaluation.weaknesses, ...notes.slice(0, 3)])];
     evaluation.feedback = notes.join(' ');
 
+    // Matched by missionId only, not by object reference: getState() below
+    // deserializes state fresh from storage on every call, so a stored
+    // SpeakingHistoryEntry's `evaluation` is never the same object reference
+    // as the in-memory `evaluation` passed in here, even right after
+    // submitSubmission saved it. Since new entries are always unshifted to
+    // the front of history, matching on missionId picks the most recent
+    // submission for that mission -- correct in the common case of one
+    // in-flight AI merge per mission at a time.
     const state = this.getState();
-    const entry = state.history.find(
-      (h) => h.missionId === mission.id && h.evaluation === evaluation
-    );
+    const entry = state.history.find((h) => h.missionId === mission.id);
     if (entry) {
       entry.evaluation = evaluation;
       this.saveState(state);
