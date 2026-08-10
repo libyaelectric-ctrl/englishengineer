@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import type { ScoreResult } from '@/core/learning';
 
+import { AI_BACKEND_PROXY_CONFIG } from '@/features/ai/ai.config';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { canAccessFeature, useBillingStore } from '@/features/billing';
 import {
@@ -16,6 +17,9 @@ import {
   getSpeakingRoleplayCategory,
   useSpeakingStore,
 } from '@/features/speaking';
+import { uploadSpeakingAudio } from '@/features/speaking/audio-upload/speaking-audio-upload.service';
+import { submitSpeakingToBackend } from '@/features/speaking/audio-upload/speaking-submit.service';
+import { useMicRecorder } from '@/features/speaking/audio-upload/useMicRecorder';
 import { useSpeechRecognition } from '@/features/speaking/audio-upload/useSpeechRecognition';
 
 export type RoleplayFilter = 'All' | SpeakingRoleplayCategory;
@@ -85,6 +89,8 @@ export function useSpeakingPage() {
   // Real-time Web Speech API transcription (falls back to the previous
   // simulated path when the browser does not support it).
   const speech = useSpeechRecognition();
+  const recorder = useMicRecorder();
+  const [uploadedAudioUrl, setUploadedAudioUrl] = useState<string | null>(null);
   const { transcript: speechTranscript, averageConfidence, supported: speechSupported } = speech;
 
   // Keep the store transcript in sync with what speech recognition produces.
@@ -93,6 +99,14 @@ export function useSpeakingPage() {
       setTypedTranscript(speechTranscript);
     }
   }, [speechTranscript, setTypedTranscript]);
+
+  useEffect(() => {
+    if (recorder.status !== 'stopped' || !recorder.audioBlob || uploadedAudioUrl) return;
+    const base = AI_BACKEND_PROXY_CONFIG.proxyUrl?.replace(/\/api\/ai\/?$/, '') || '';
+    void uploadSpeakingAudio(recorder.audioBlob, { apiBaseUrl: base })
+      .then((result) => setUploadedAudioUrl(result.audioUrl))
+      .catch(() => setUploadedAudioUrl(null));
+  }, [recorder.audioBlob, recorder.status, uploadedAudioUrl]);
 
   // Real pronunciation signal: Web Speech confidence (0..1) maps to a 0-100
   // score. When recognition is unsupported we keep the simulated path.
@@ -142,9 +156,11 @@ export function useSpeakingPage() {
     setIsPaused(false);
     pauseRef.current = false;
     setRecordedAudio(null);
+    setUploadedAudioUrl(null);
     setPronunciationScore(null);
     setPhonemeFeedback([]);
     setTypedTranscript('');
+    void recorder.start();
 
     if (speechSupported) {
       // Real microphone -> Web Speech API transcription. The transcript fills
@@ -157,6 +173,7 @@ export function useSpeakingPage() {
       // Stop after a reasonable cap so the transcript is finalised.
       recordingTimerRef.current = setTimeout(() => {
         speech.stop();
+        recorder.stop();
         if (waveformTimerRef.current) {
           clearInterval(waveformTimerRef.current);
           waveformTimerRef.current = null;
@@ -177,6 +194,7 @@ export function useSpeakingPage() {
 
     // Simulate recording duration
     recordingTimerRef.current = setTimeout(() => {
+      recorder.stop();
       if (waveformTimerRef.current) {
         clearInterval(waveformTimerRef.current);
         waveformTimerRef.current = null;
@@ -211,6 +229,13 @@ export function useSpeakingPage() {
 
   const submitRoleplay = () => {
     const result = submitCurrentMission();
+    if (activeMission) {
+      void submitSpeakingToBackend({
+        missionId: activeMission.id,
+        transcript: typedTranscript,
+        audioUrl: uploadedAudioUrl || undefined,
+      });
+    }
     ProductAnalyticsService.track('speaking_roleplay_completed', '/speaking', {
       metadata: {
         skill: 'speaking',
@@ -250,6 +275,7 @@ export function useSpeakingPage() {
 
   const resetRecording = () => {
     speech.reset();
+    recorder.reset();
     setIsRecording(false);
     setRecordedAudio(null);
     setPronunciationScore(null);
