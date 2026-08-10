@@ -159,29 +159,33 @@ export const SpeakingService = {
 
     // Optional backend AI feedback merged into the local result. Fire and
     // forget so the offline-first submission is never delayed or blocked.
-    void buildAiFeedback(mission, submission.transcript).then((ai) => {
-      if (!ai) return;
-      if (ai.strengths.length > 0) {
-        evaluation.strengths = [...new Set([...evaluation.strengths, ...ai.strengths.slice(0, 3)])];
+    void buildAiFeedback(mission, submission.transcript || submission.typedTranscript).then(
+      (ai) => {
+        if (!ai) return;
+        if (ai.strengths.length > 0) {
+          evaluation.strengths = [
+            ...new Set([...evaluation.strengths, ...ai.strengths.slice(0, 3)]),
+          ];
+        }
+        if (ai.weaknesses.length > 0) {
+          evaluation.weaknesses = [
+            ...new Set([...evaluation.weaknesses, ...ai.weaknesses.slice(0, 3)]),
+          ];
+        }
+        if (ai.summary) {
+          evaluation.feedback = ai.summary;
+        }
+        // Persist the enriched evaluation back into history.
+        const state = this.getState();
+        const entry = state.history.find(
+          (h) => h.missionId === mission.id && h.evaluation === evaluation
+        );
+        if (entry) {
+          entry.evaluation = evaluation;
+          this.saveState(state);
+        }
       }
-      if (ai.weaknesses.length > 0) {
-        evaluation.weaknesses = [
-          ...new Set([...evaluation.weaknesses, ...ai.weaknesses.slice(0, 3)]),
-        ];
-      }
-      if (ai.summary) {
-        evaluation.feedback = ai.summary;
-      }
-      // Persist the enriched evaluation back into history.
-      const state = this.getState();
-      const entry = state.history.find(
-        (h) => h.missionId === mission.id && h.evaluation === evaluation
-      );
-      if (entry) {
-        entry.evaluation = evaluation;
-        this.saveState(state);
-      }
-    });
+    );
 
     const state = this.getState();
     const prevBest = state.completedMissions[mission.id] || 0;
