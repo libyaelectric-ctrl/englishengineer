@@ -86,6 +86,24 @@ export interface LandingTranslations {
   stepOf?: string;
   goals?: string;
   goalsDesc?: string;
+  // Discipline labels
+  disciplineArchitecture?: string;
+  disciplineChemical?: string;
+  disciplineCivil?: string;
+  disciplineElectrical?: string;
+  disciplineElectronics?: string;
+  disciplineHse?: string;
+  disciplineIndustrial?: string;
+  disciplineMechanical?: string;
+  disciplineMechatronics?: string;
+  disciplineSoftware?: string;
+  // Skill labels
+  skillVocabulary?: string;
+  skillReading?: string;
+  skillWriting?: string;
+  skillSpeaking?: string;
+  skillListening?: string;
+  skillGrammar?: string;
 }
 
 export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslations> = {
@@ -162,7 +180,25 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     finalCtaSub:
       'Mesleğinizi seçin, arayüz dilinizi belirleyin ve profesyonel mühendislik İngilizcesini geliştirmeye bugün başlayın.',
     finalCtaNote: 'Ücretsiz plan mevcut · Kredi kartı gerektirmez · İptal serbest',
-    // Onboarding (new flow)
+// Discipline labels
+  disciplineArchitecture: 'Mimarlık',
+  disciplineChemical: 'Kimya Mühendisliği',
+  disciplineCivil: 'İnşaat Mühendisliği',
+  disciplineElectrical: 'Elektrik Mühendisliği',
+  disciplineElectronics: 'Elektronik Mühendisliği',
+  disciplineHse: 'İSG / HSE',
+  disciplineIndustrial: 'Endüstri Mühendisliği',
+  disciplineMechanical: 'Makine Mühendisliği',
+  disciplineMechatronics: 'Mekatronik Mühendisliği',
+  disciplineSoftware: 'Yazılım Mühendisliği',
+  // Skill labels
+  skillVocabulary: 'Kelime',
+  skillReading: 'Okuma',
+  skillWriting: 'Yazma',
+  skillSpeaking: 'Konuşma',
+  skillListening: 'Dinleme',
+  skillGrammar: 'Dilbilgisi',
+  // Onboarding (new flow)
     branchLocked: 'Dal Kilitlendi',
     branchLockedDesc: 'Bu seçim kalıcıdır. Sonradan değiştirilemez.',
     yourWordPool: 'Kelime Havuzunuz',
@@ -258,6 +294,24 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     finalCtaSub:
       'Select your discipline, choose your interface language, and start mastering professional engineering English today.',
     finalCtaNote: 'Free plan available · No credit card · Cancel anytime',
+    // Discipline labels
+    disciplineArchitecture: 'Architecture',
+    disciplineChemical: 'Chemical Engineering',
+    disciplineCivil: 'Civil Engineering',
+    disciplineElectrical: 'Electrical Engineering',
+    disciplineElectronics: 'Electronics Engineering',
+    disciplineHse: 'HSE',
+    disciplineIndustrial: 'Industrial Engineering',
+    disciplineMechanical: 'Mechanical Engineering',
+    disciplineMechatronics: 'Mechatronics Engineering',
+    disciplineSoftware: 'Software Engineering',
+    // Skill labels
+    skillVocabulary: 'Vocabulary',
+    skillReading: 'Reading',
+    skillWriting: 'Writing',
+    skillSpeaking: 'Speaking',
+    skillListening: 'Listening',
+    skillGrammar: 'Grammar',
   },
   de: {
     heroBadge: 'EngineerOS • 10 Ingenieurdisziplinen × 15 Sprachen',
