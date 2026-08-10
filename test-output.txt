@@ -1,0 +1,263 @@
+﻿
+> engvox-frontend@4.0.22 test
+> vitest run --configLoader runner --reporter dot --exclude 'src/e2e/**' --exclude 'e2e/**' --exclude '.mimocode/**' --exclude 'tests/**' --exclude 'src/shared/tests/integration/**'
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90mC:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0[39m
+
+node.exe : [90mstderr[2m | src/pages/VocabularyPage.test.tsx
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([90mstderr[2m...ryPage.test.tsx:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/profile/profile.engine.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/ai/__tests__/ai.service.test.ts[2m > [22m[2mAIService[2m > [22m[2mfallback behavio
+r[2m > [22m[2mfalls back to mock when backend throws
+[22m[39m[WARN] [AIService] Provider failed, falling back to mock: Error: Network error
+    at C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/src/features/ai/__tests__/ai.service.test.ts:157:50
+    at Mock [90m(file:///C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/[39mnode_modules/[4m@vitest/spy[24m/dist
+/index.js:332:34[90m)[39m
+    at getActiveProvider (C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/src/features/ai/ai.service.ts:49:12)
+    at Object.getProvider (C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/src/features/ai/ai.service.ts:57:12)
+    at Object.run (C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/src/features/ai/ai.service.ts:98:27)
+    at C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/src/features/ai/__tests__/ai.service.test.ts:167:38
+    at [90mfile:///C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/[39mnode_modules/[4m@vitest/runner[24m/dist/ch
+unk-artifact.js:1903:20
+
+[90mstderr[2m | src/shared/components/accessibility.test.tsx[2m > [22m[2mComponent Accessibility[2m > [22m[2mTo
+ast[2m > [22m[2mannounces toast message
+[22m[39mAn update to ToastContainer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/w
+rap-tests-with-act
+
+[90mstderr[2m | src/features/vocabulary/services/core/vocabulary.database.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/translation/services/translation.service.test.ts[2m > [22m[2mTranslationService & Wor
+d Analysis[2m > [22m[2mfalls back to local dictionary for known technical terms when API fails
+[22m[39m[WARN] [TranslationService] Google GTX engine attempt failed [TypeError: fetch failed] {
+  [cause]: AggregateError: 
+  [90m    at internalConnectMultiple (node:net:1194:18)[39m
+  [90m    at afterConnectMultiple (node:net:1784:7)[39m {
+    code: [32m'ECONNREFUSED'[39m,
+    [errors]: [ [36m[Error][39m, [36m[Error][39m ]
+  }
+}
+
+[90mstderr[2m | src/pages/ToolsPage.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/ProfilePage.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/ListeningPage.test.tsx[2m > [22m[2mListening route module[2m > [22m[2mimports safely 
+without audio, microphone, TTS, or motion dependencies
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/DashboardPage.test.tsx[2m > [22m[2mDashboardPage[2m > [22m[2mmodule can be imported
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/ProfilePage/ProfilePage.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/layouts/AppShell.test.tsx[2m > [22m[2mAppShell[2m > [22m[2mrenders sidebar, main content ou
+tlet, and bottom navigation
+[22m[39mA suspended resource finished loading inside a test, but the event was not wrapped in act(...).
+
+When testing, code that resolves suspended data should be wrapped into act(...):
+
+act(() => {
+  /* finish loading suspended data */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/w
+rap-tests-with-act
+A suspended resource finished loading inside a test, but the event was not wrapped in act(...).
+
+When testing, code that resolves suspended data should be wrapped into act(...):
+
+act(() => {
+  /* finish loading suspended data */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/w
+rap-tests-with-act
+
+[90mstderr[2m | src/pages/GrammarPage.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/learning-intelligence/review-queue.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/GrammarPage/GrammarPage.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/learning-orchestrator/learning-orchestrator.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/learning-intelligence/knowledge-capture.service.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/vocabulary/services/core/vocabulary.selection.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/SpeakingPage/SpeakingPage.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/BillingPage/BillingPage.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/work-tools/components/ToolsSidebar.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/VocabularyPage/VocabularyPage.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/ListeningPage/ListeningPage.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/PlacementTestPage/PlacementTestPage.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/WritingPage/WritingPage.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/ReadingPage/ReadingPage.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/grammar/grammar.database.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/DashboardPage/DashboardPage.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/assessment/assessment.helpers.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/speaking/core/speaking.service.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/speaking/audio-upload/speaking-audio-upload.service.test.ts[2m > [22m[2muploadSpeakin
+gAudio[2m > [22m[2mfalls back to a generic error when the failure response has no JSON body
+[22m[39m[WARN] [SPEAKING] Failed to parse upload response Error: not json
+    at Object.json (C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/src/features/speaking/audio-upload/speaking-audio
+-upload.service.test.ts:65:15)
+    at uploadSpeakingAudio (C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/src/features/speaking/audio-upload/speaki
+ng-audio-upload.service.ts:57:27)
+
+[90mstderr[2m | src/features/writing/writing.service.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/listening/listening.stores.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/config/environment.config.test.ts[2m > [22m[2menvironment validation[2m > [22m[2maccepts lo
+cal development and real HTTPS service URLs
+[22m[39m[WARN] [ENV] isPlaceholderDomain failed TypeError: Invalid URL
+[90m    at new URL (node:internal/url:840:25)[39m
+    at isConfiguredPublicUrl (C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/src/config/environment.config.ts:51:17)
+    at C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/src/config/environment.config.test.ts:43:12
+    at [90mfile:///C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/[39mnode_modules/[4m@vitest/runner[24m/dist/ch
+unk-artifact.js:302:11
+    at [90mfile:///C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/[39mnode_modules/[4m@vitest/runner[24m/dist/ch
+unk-artifact.js:1903:26
+    at [90mfile:///C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/[39mnode_modules/[4m@vitest/runner[24m/dist/ch
+unk-artifact.js:2326:20
+    at new Promise (<anonymous>)
+    at runWithCancel [90m(file:///C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/[39mnode_modules/[4m@vitest/runn
+er[24m/dist/chunk-artifact.js:2323:10[90m)[39m
+    at [90mfile:///C:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0/[39mnode_modules/[4m@vitest/runner[24m/dist/ch
+unk-artifact.js:2305:20
+    at new Promise (<anonymous>) {
+  code: [32m'ERR_INVALID_URL'[39m,
+  input: [32m'not-a-url'[39m
+}
+
+[90mstderr[2m | src/pages/VocabularyPage/VocabularyPageReducer.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/learning-orchestrator/learning.integration.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/listening/listening.audio.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/vocabulary/vocabulary.integration.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/shared/services/profile-engine.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/grammar/grammar.bridge.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/gamification/gamification.service.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/feature-flags/store.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[31mx[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[31mx[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m[33m[39m[32m┬À[39m
+
+[31mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[39m[1m[41m Failed Tests 2 [49m[22m[31mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[39m
+
+[41m[1m FAIL [22m[49m src/core/architecture.test.ts[2m > [22mArchitecture Rules[2m > [22mshared components do n
+ot import from features
+[31m[1mAssertionError[22m: expected [ Array(1) ] to deeply equal [][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   ".\\shared\\components\\ThemeToggle.tsx imports from features",[39m
+[31m+ ][39m
+
+[36m [2mÔØ»[22m src/core/architecture.test.ts:[2m170:24[22m[39m
+    [90m168|[39m
+    [90m169|[39m     [34mcheckDir[39m(sharedComponentsPath)[33m;[39m
+    [90m170|[39m     [34mexpect[39m(violations)[33m.[39m[34mtoEqual[39m([])[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m171|[39m   })[33m;[39m
+    [90m172|[39m
+
+[31m[2mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/2]ÔÄ»[22m[39m
+
+[41m[1m FAIL [22m[49m src/pages/VocabularyPage.test.tsx[2m > [22mVocabularyPage menu[2m > [22madds an unknown t
+erm only to My Vocabulary
+[31m[1mError[22m: Test timed out in 10000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+[39m
+[36m [2mÔØ»[22m src/pages/VocabularyPage.test.tsx:[2m123:3[22m[39m
+    [90m121|[39m   }[33m,[39m [34m10_000[39m)[33m;[39m
+    [90m122|[39m
+    [90m123|[39m   [34mit[39m([32m'adds an unknown term only to My Vocabulary'[39m[33m,[39m [35masync[39m () 
+[33m=>[39m {
+    [90m   |[39m   [31m^[39m
+    [90m124|[39m     [35mawait[39m [34mrenderLoadedPage[39m()[33m;[39m
+    [90m125|[39m     [35mawait[39m [34mopenSearchModal[39m()[33m;[39m
+
+[31m[2mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[2/2]ÔÄ»[22m[39m
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m166 passed[39m[22m[90m (168)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m942 passed[39m[22m[90m (944)[39m
+[2m   Start at [22m 00:44:36
+[2m   Duration [22m 119.68s[2m (transform 34.68s, setup 26.92s, import 20.08s, tests 42.68s, environment 121.32s)[22m
+
