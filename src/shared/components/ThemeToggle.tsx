@@ -1,14 +1,14 @@
-import { useAppStore } from '@/store/app.store';
 import { Moon, Sun } from 'lucide-react';
 
+import { useTheme } from '@/features/theme/ThemeProvider';
+
 export const ThemeToggle = () => {
-  const theme = useAppStore((s) => s.theme);
-  const setTheme = useAppStore((s) => s.setTheme);
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <button
       type="button"
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      onClick={toggleTheme}
       title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
       className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-card)] border border-border-soft bg-background/80 text-foreground transition hover:bg-surface-hover hover:border-primary/40 cursor-pointer shadow-sm"
       aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}

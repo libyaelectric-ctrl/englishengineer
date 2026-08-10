@@ -1,5 +1,6 @@
-import { useAppStore } from '@/store/app.store';
 import { ArrowLeft, Menu, Moon, Sun, X } from 'lucide-react';
+
+import { useTheme } from '@/features/theme/ThemeProvider';
 
 import { useState } from 'react';
 
@@ -45,8 +46,7 @@ export const PublicLayout = () => {
   const isLanding = location.pathname === '/';
   const isPricing = location.pathname === '/pricing';
   const hideNav = isLanding || isPricing;
-  const theme = useAppStore((s) => s.theme);
-  const setTheme = useAppStore((s) => s.setTheme);
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className="public-shell min-h-screen bg-transparent text-foreground relative pb-16">
@@ -100,7 +100,7 @@ export const PublicLayout = () => {
             <div className="hidden items-center gap-2 md:flex">
               <button
                 type="button"
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                onClick={toggleTheme}
                 className="flex h-9 w-9 items-center justify-center rounded-[10px] border border-border-soft bg-surface text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground"
                 aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               >

@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { useState } from 'react';
 
 import { PRICING_FEATURE_ORDER, PRICING_TIERS } from '@/shared/data/pricing.data';
+import { getPublicPageCopy } from '@/shared/data/public-page-copy';
 
 import { CurrencyConfig } from '@/features/billing';
 import { useLocalizationStore } from '@/features/localization';
@@ -14,6 +15,7 @@ import { getLandingTranslations } from './landing-i18n';
 export function PricingSection() {
   const language = useLocalizationStore((s) => s.language);
   const t = getLandingTranslations(language);
+  const publicCopy = getPublicPageCopy(language);
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [isAnnual, setIsAnnual] = useState(false);
 
@@ -97,7 +99,7 @@ export function PricingSection() {
           <p className="text-sm font-semibold text-foreground">Free</p>
           <p className="mt-2 text-3xl font-extrabold tracking-tight text-foreground">$0</p>
           <p className="mt-1 text-xs leading-relaxed text-muted-copy">
-            Core vocabulary and grammar practice to start your engineering English path.
+            {publicCopy.freeDescription}
           </p>
         </div>
 

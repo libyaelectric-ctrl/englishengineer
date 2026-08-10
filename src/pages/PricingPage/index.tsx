@@ -8,6 +8,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { PageMetadata } from '@/shared/components/PageMetadata';
 import { PRICING_FEATURE_ORDER, PRICING_TIERS } from '@/shared/data/pricing.data';
+import { getPublicPageCopy } from '@/shared/data/public-page-copy';
 import { getPricingCopy } from '@/shared/data/pricing-copy';
 
 import { ProductAnalyticsService } from '@/features/analytics';
@@ -25,6 +26,7 @@ const PricingPage = () => {
   const location = useLocation();
   const language = useLocalizationStore((s) => s.language);
   const pricingCopy = getPricingCopy(language);
+  const publicCopy = getPublicPageCopy(language);
   const currentUser = useAuthStore((state) => state.currentUser);
   const { initialize: initializeAuth } = useAuthStore();
 
@@ -130,9 +132,9 @@ const PricingPage = () => {
         <div className="mx-auto mb-8 max-w-sm rounded-[var(--radius-card)] border-2 border-primary/40 bg-surface p-5 text-center shadow-sm">
           <p className="text-sm font-semibold text-foreground">Free</p>
           <p className="mt-2 text-3xl font-extrabold tracking-tight text-foreground">$0</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-copy">
-            Start with core vocabulary and grammar practice. No checkout required.
-          </p>
+            <p className="mt-1 text-xs leading-relaxed text-muted-copy">
+              {publicCopy.freeDescription}
+            </p>
           <Link
             to="/welcome"
             className="mt-4 inline-flex w-full items-center justify-center rounded-[var(--radius-card)] bg-primary px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary/95"
