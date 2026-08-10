@@ -20,7 +20,7 @@ describe('Critical flow: Landing → Navigation', () => {
   it('renders landing page with hero and navigation', () => {
     renderWithProviders(<LandingPage />);
     expect(screen.getAllByText(/Engineering English/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Built for Engineers/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Engineering Disciplines/i).length).toBeGreaterThan(0);
   });
 
   it('displays pricing section with all plans', () => {
@@ -32,11 +32,12 @@ describe('Critical flow: Landing → Navigation', () => {
 
   it('shows 6 skill features on landing', () => {
     renderWithProviders(<LandingPage />);
-    expect(screen.getByText(/Writing desk/i)).toBeInTheDocument();
-    expect(screen.getByText(/Speaking room/i)).toBeInTheDocument();
-    expect(screen.getByText(/Listening lab/i)).toBeInTheDocument();
-    expect(screen.getByText(/Reading vault/i)).toBeInTheDocument();
-    expect(screen.getByText(/Progress control/i)).toBeInTheDocument();
+    expect(screen.getByText(/^vocabulary$/i)).toBeInTheDocument();
+    expect(screen.getByText(/^writing$/i)).toBeInTheDocument();
+    expect(screen.getByText(/^speaking$/i)).toBeInTheDocument();
+    expect(screen.getByText(/^listening$/i)).toBeInTheDocument();
+    expect(screen.getByText(/^reading$/i)).toBeInTheDocument();
+    expect(screen.getByText(/^grammar$/i)).toBeInTheDocument();
   });
 });
 

@@ -106,3 +106,46 @@ The external invocation required for this report is `npm run kademe8:verify`.
 - Production launch: **NOT ALLOWED.**
 - Live billing: **NOT ALLOWED.**
 - Kademe 9-13 code-only implementation: **ALLOWED; this does not create live evidence.**
+
+---
+
+## Update — 2026-08-10 (root cause of `npm test` FAIL, and fix)
+
+An independent audit (see `DENETIM_RAPORU.md`) traced the `npm test` exit code 1
+above to three isolated causes, none of which were product regressions:
+
+1. **Stale E2E copy** — `src/e2e/critical-flows.e2e.test.tsx` and
+   `src/e2e/landing-page.e2e.test.tsx` asserted on landing-page copy
+   ("Built for Engineers", "Writing desk", "Speaking room", ...) that no
+   longer exists after a landing-page redesign. Fixed: assertions now match
+   the current rendered copy.
+2. **Slow corpus load causing test-runner timeouts** — several tests
+   (`profile.engine.test.ts`, `vocabulary-translation.service.test.ts`) call
+   into the large vocabulary dataset loader and can exceed the default 15s
+   `vitest` timeout under parallel load, surfacing as a false FAIL. Tracked
+   as `TECH_DEBT.md` TD-016. One test's explicit timeout was raised to 30s as
+   an interim mitigation; the real fix (shared `beforeAll` load / trimmed
+   fixture) is still open.
+3. **One genuine, now-resolved test/behavior mismatch** — the translation
+   fallback test suite expected `turkishMeaning` to be used as a fallback for
+   _every_ interface language. This was **incorrect for a multi-language
+   product**: `turkishMeaning` should only be used when the selected
+   interface language is Turkish, otherwise it leaks Turkish text into
+   non-Turkish UIs. **Decision: the implementation
+   (`src/shared/services/vocabulary-translation.service.ts`) was correct and
+   was left unchanged; the tests were corrected to match it.**
+
+**Result:** `npx vitest run` on the four previously-failing files now passes
+23/23. `npm run typecheck` passes with 0 errors (verified with an increased
+Node heap; this sandbox's default heap was insufficient to run `tsc` on the
+full codebase — not a code issue). The full 127-file suite was not run
+start-to-finish in this pass because of sandbox memory limits (`Killed` /
+OOM) rather than any test failure; re-running the full suite on a
+less-constrained machine (or in CI) is recommended before flipping
+`Production launch` / `Live billing` to ALLOWED.
+
+Also fixed in this pass (unrelated to `npm test`, but part of the same
+audit): a stale live URL in `docs/AI1_TASK_NEXT.md`, and pricing
+inconsistencies across `docs/FAQ.md`, `docs/BUSINESS_MODEL.md` and
+`docs/PRODUCT.md` (now aligned to `sonhal.md`, which matches the pricing
+already implemented in `LandingPage/index.tsx`).
