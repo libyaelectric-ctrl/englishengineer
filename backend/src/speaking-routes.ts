@@ -3,6 +3,7 @@ import type { Express, NextFunction, Request, RequestHandler, Response } from 'e
 import { randomUUID } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { createClient } from '@supabase/supabase-js';
 
 import { checkCostLimits, createAIService } from './ai.js';
 import { ApiError } from './errors.js';
@@ -27,6 +28,38 @@ const ALLOWED_AUDIO_TYPES: Record<string, string> = {
 };
 
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024; // 15MB, generous for a few minutes of speech
+const AUDIO_BUCKET = process.env.SPEAKING_AUDIO_BUCKET || 'speaking-audio';
+
+const uploadToSupabaseStorage = async (
+  userId: string,
+  fileName: string,
+  buffer: Buffer,
+  contentType: string
+): Promise<string | null> => {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !serviceRoleKey) return null;
+
+  const supabase = createClient(supabaseUrl, serviceRoleKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const storagePath = `${userId}/${fileName}`;
+  const { error } = await supabase.storage.from(AUDIO_BUCKET).upload(storagePath, buffer, {
+    contentType,
+    upsert: false,
+  });
+  if (error) {
+    throw new ApiError(502, 'audio_storage_failed', 'Audio could not be stored securely.');
+  }
+
+  const { data, error: signedUrlError } = await supabase.storage
+    .from(AUDIO_BUCKET)
+    .createSignedUrl(storagePath, 60 * 60);
+  if (signedUrlError || !data?.signedUrl) {
+    throw new ApiError(502, 'audio_url_failed', 'Audio was stored but its access URL failed.');
+  }
+  return data.signedUrl;
+};
 
 interface SpeakingPrompt {
   id: string;
@@ -251,19 +284,31 @@ export const registerSpeakingRoutes = (
           throw new ApiError(413, 'audio_too_large', `Audio exceeds ${MAX_AUDIO_BYTES} byte limit`);
         }
 
-        // userId is our own auth-derived value, never taken from a path/query
-        // param, so this directory segment is safe from traversal.
-        const userDir = path.join(UPLOAD_ROOT, userId);
-        await mkdir(userDir, { recursive: true });
-
         const fileId = randomUUID();
         const fileName = `${fileId}.${extension}`;
+        const storedUrl = await uploadToSupabaseStorage(userId, fileName, buffer, contentType);
+
+        if (storedUrl) {
+          response.status(201).json({
+            audioUrl: storedUrl,
+            sizeBytes: buffer.length,
+            uploadedAt: new Date().toISOString(),
+            storage: 'supabase',
+          });
+          return;
+        }
+
+        // Development fallback only: local disk is ephemeral on Render and
+        // must not be used as the production persistence layer.
+        const userDir = path.join(UPLOAD_ROOT, userId);
+        await mkdir(userDir, { recursive: true });
         await writeFile(path.join(userDir, fileName), buffer);
 
         response.status(201).json({
           audioUrl: `/uploads/speaking/${userId}/${fileName}`,
           sizeBytes: buffer.length,
           uploadedAt: new Date().toISOString(),
+          storage: 'local-fallback',
         });
       } catch (error) {
         next(error);
