@@ -9,7 +9,7 @@ import { BillingPlanId, BillingState, SubscriptionSnapshot } from './billing.typ
 interface BillingActions {
   initializeBilling: (userId: string | null) => Promise<void>;
   refreshBilling: (userId: string | null) => Promise<void>;
-  startCheckout: (userId: string, email: string, planId: BillingPlanId) => Promise<void>;
+  startCheckout: (userId: string, email: string, planId: BillingPlanId, billingInterval?: 'month' | 'year') => Promise<void>;
   openCustomerPortal: (userId: string) => Promise<void>;
   startTopupCheckout: (userId: string, email: string) => Promise<void>;
   setSubscription: (subscription: SubscriptionSnapshot) => void;
@@ -46,10 +46,10 @@ export const useBillingStore = create<BillingState & BillingActions>()(
       initializeBilling: async (userId) => fetchSubscription(set, userId, 'Billing initialization'),
       refreshBilling: async (userId) => fetchSubscription(set, userId, 'Billing refresh'),
 
-      startCheckout: async (userId, email, planId) => {
+      startCheckout: async (userId, email, planId, billingInterval = 'month') => {
         set({ isLoading: true, error: null });
         try {
-          await BillingService.startCheckout(userId, email, planId);
+          await BillingService.startCheckout(userId, email, planId, billingInterval);
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Checkout session failed.';
           set({ isLoading: false, error: message });

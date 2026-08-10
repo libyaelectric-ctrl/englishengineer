@@ -2,6 +2,7 @@ import type { LucideIcon } from 'lucide-react';
 
 import React, { useState } from 'react';
 
+import { ChevronDown } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 
 export function Section({
@@ -24,14 +25,10 @@ export function Section({
         <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-copy">
           {title}
         </h3>
-        <svg
+        <ChevronDown
           className={cn('h-3 w-3 text-muted-copy transition-transform', expanded && 'rotate-180')}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+          aria-hidden="true"
+        />
       </button>
       {expanded && <div className="px-4 pb-3">{children}</div>}
     </div>

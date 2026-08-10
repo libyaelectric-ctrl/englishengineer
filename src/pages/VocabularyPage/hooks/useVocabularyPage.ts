@@ -335,9 +335,9 @@ export function useVocabularyPage() {
     });
   };
 
-  const runSearch = async (event: FormEvent) => {
-    event.preventDefault();
-    const query = searchInput.trim();
+  const runSearch = async (input: FormEvent | string) => {
+    if (typeof input !== 'string') input.preventDefault();
+    const query = (typeof input === 'string' ? input : searchInput).trim();
     const hasFilter = Object.values(filters).some((value) => value && value !== 'All');
     if (!query && !hasFilter) {
       dispatchSearch({

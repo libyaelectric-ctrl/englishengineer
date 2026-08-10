@@ -1,9 +1,10 @@
 import type { Request } from 'express';
 
+import type { PlanId } from '../types.js';
 import { ApiError } from './errors.js';
 
 export interface SubscriptionSnapshot {
-  planId: string;
+  planId: PlanId;
   status: string;
   currentPeriodEnd: string | null;
   cancelAtPeriodEnd: boolean;

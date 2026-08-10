@@ -44,7 +44,7 @@ sequenceDiagram
     B->>R: Check rate limit
     R-->>B: Allowed
     B->>S: Get subscription status
-    S-->>B: { planId: 'pro', aiUsed: 5 }
+    S-->>B: { planId: 'junior', aiUsed: 5 }
     B->>B: Check AI quota
     B->>A: Send prompt
     A-->>B: AI response

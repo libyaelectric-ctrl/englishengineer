@@ -38,7 +38,7 @@ const ENV_REQUIREMENTS = [
   ['BILLING_REPOSITORY', 'backend', true],
   ['STRIPE_SECRET_KEY', 'backend', true],
   ['STRIPE_WEBHOOK_SECRET', 'backend', true],
-  ['STRIPE_PRICE_PRO_MONTHLY', 'backend', true],
+  ['STRIPE_PRICE_JUNIOR_MONTHLY', 'backend', true],
   ['AI_PROVIDER', 'backend', true],
   ['OPENAI_API_KEY', 'backend', false],
   ['ANTHROPIC_API_KEY', 'backend', false],
@@ -438,7 +438,7 @@ const verifyStripe = async (environment, authContext, evidence) => {
       body: JSON.stringify({
         userId: authContext.userA.id,
         email: authContext.emailA,
-        planId: 'pro',
+        planId: 'junior',
         successUrl: `${returnOrigin}/profile?billing=success`,
         cancelUrl: `${returnOrigin}/profile?billing=cancelled`,
       }),
@@ -512,7 +512,7 @@ const verifyStripe = async (environment, authContext, evidence) => {
           client_reference_id: authContext.userA.id,
           customer: stripeCustomerId,
           subscription: `sub_prc8_${randomUUID().replaceAll('-', '')}`,
-          metadata: { userId: authContext.userA.id, planId: 'pro' },
+          metadata: { userId: authContext.userA.id, planId: 'junior' },
         },
       },
     });

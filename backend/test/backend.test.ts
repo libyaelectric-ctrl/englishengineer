@@ -68,7 +68,7 @@ test('health never exposes secret values', async () => {
     AI_PROVIDER: 'openai',
     OPENAI_API_KEY: 'secret-ai-value',
     STRIPE_SECRET_KEY: 'secret-stripe-value',
-    STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+    STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
     SUPABASE_URL: 'https://example.supabase.co',
     SUPABASE_SERVICE_ROLE_KEY: 'secret-service-role',
   });
@@ -197,7 +197,7 @@ test('webhook rejects an invalid Stripe signature', async () => {
   const url = await start(
     {
       STRIPE_SECRET_KEY: 'sk_test_value',
-      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+      STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
       STRIPE_WEBHOOK_SECRET: 'whsec_test',
     },
     { stripeClient }
@@ -224,7 +224,7 @@ test('webhook idempotency marks duplicate events', async () => {
   const url = await start(
     {
       STRIPE_SECRET_KEY: 'sk_test_value',
-      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+      STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
       STRIPE_WEBHOOK_SECRET: 'whsec_test',
     },
     { stripeClient }
@@ -245,7 +245,7 @@ test('webhook idempotency marks duplicate events', async () => {
 
 test('subscription status can report active and payment-failed backend states', async () => {
   let snapshot = {
-    planId: 'pro',
+    planId: 'junior',
     status: 'active',
     currentPeriodEnd: null,
     cancelAtPeriodEnd: false,
@@ -265,7 +265,7 @@ test('subscription status can report active and payment-failed backend states', 
   const url = await start(
     {
       STRIPE_SECRET_KEY: 'sk_test_value',
-      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+      STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
     },
     { stripeClient, billingRepository: repository }
   );
@@ -420,7 +420,7 @@ test('billing derives ownership from authenticated identity', async () => {
     {
       ...productionAuthEnvironment,
       STRIPE_SECRET_KEY: 'sk_test_value',
-      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+      STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
     },
     { stripeClient: {}, billingRepository: repository }
   );
@@ -518,7 +518,7 @@ test('Stripe signature verification receives a raw Buffer', async () => {
   const url = await start(
     {
       STRIPE_SECRET_KEY: 'sk_test_value',
-      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+      STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
       STRIPE_WEBHOOK_SECRET: 'whsec_test',
     },
     { stripeClient }
@@ -671,7 +671,7 @@ test('billing status returns 200 Free/Lite when no subscription record exists', 
   const url = await start(
     {
       STRIPE_SECRET_KEY: 'sk_test_value',
-      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+      STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
     },
     { stripeClient: {}, billingRepository: repository }
   );
@@ -688,7 +688,7 @@ test('billing status returns 200 Pro when active Pro subscription exists in repo
   const repository = {
     async getSubscriptionStatus() {
       return {
-        planId: 'pro',
+        planId: 'junior',
         status: 'active',
         currentPeriodEnd: '2026-07-26T00:00:00.000Z',
         cancelAtPeriodEnd: false,
@@ -702,7 +702,7 @@ test('billing status returns 200 Pro when active Pro subscription exists in repo
   const url = await start(
     {
       STRIPE_SECRET_KEY: 'sk_test_value',
-      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+      STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
     },
     { stripeClient: {}, billingRepository: repository }
   );
@@ -711,7 +711,7 @@ test('billing status returns 200 Pro when active Pro subscription exists in repo
   });
   assert.equal(response.status, 200);
   const body = await response.json();
-  assert.equal(body.planId, 'pro');
+  assert.equal(body.planId, 'junior');
   assert.equal(body.status, 'active');
   assert.equal(body.stripeCustomerId, 'cus_123');
 });
@@ -725,7 +725,7 @@ test('billing status returns 503 BILLING_STATUS_UNAVAILABLE on repository infras
   const url = await start(
     {
       STRIPE_SECRET_KEY: 'sk_test_value',
-      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+      STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
     },
     { stripeClient: {}, billingRepository: repository }
   );
@@ -741,7 +741,7 @@ test('billing status returns 503 BILLING_STATUS_UNAVAILABLE on repository infras
 test('checkout returns 503 STRIPE_NOT_CONFIGURED when Stripe is not configured', async () => {
   const url = await start({
     STRIPE_SECRET_KEY: '',
-    STRIPE_PRICE_PRO_MONTHLY: '',
+    STRIPE_PRICE_JUNIOR_MONTHLY: '',
   });
   const response = await fetch(`${url}/api/billing/create-checkout-session`, {
     method: 'POST',
@@ -753,7 +753,7 @@ test('checkout returns 503 STRIPE_NOT_CONFIGURED when Stripe is not configured',
       email: 'engineer@example.com',
       successUrl: 'https://example.com/success',
       cancelUrl: 'https://example.com/cancel',
-      planId: 'pro',
+      planId: 'junior',
     }),
   });
   assert.equal(response.status, 503);
@@ -826,7 +826,7 @@ test('checkout route rejects request with missing authorization header', async (
       SUPABASE_URL: 'https://example.supabase.co',
       SUPABASE_ANON_KEY: 'anon-key',
       STRIPE_SECRET_KEY: 'sk_test_value',
-      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+      STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
     },
     { fetchImpl }
   );
@@ -841,7 +841,7 @@ test('checkout route rejects request with missing authorization header', async (
       email: 'engineer@example.com',
       successUrl: 'https://example.com/success',
       cancelUrl: 'https://example.com/cancel',
-      planId: 'pro',
+      planId: 'junior',
     }),
   });
   assert.equal(response.status, 401);
@@ -857,7 +857,7 @@ test('checkout route rejects request with invalid Supabase token', async () => {
       SUPABASE_URL: 'https://example.supabase.co',
       SUPABASE_ANON_KEY: 'anon-key',
       STRIPE_SECRET_KEY: 'sk_test_value',
-      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+      STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
     },
     { fetchImpl }
   );
@@ -873,7 +873,7 @@ test('checkout route rejects request with invalid Supabase token', async () => {
       email: 'engineer@example.com',
       successUrl: 'https://example.com/success',
       cancelUrl: 'https://example.com/cancel',
-      planId: 'pro',
+      planId: 'junior',
     }),
   });
   assert.equal(response.status, 401);
@@ -910,7 +910,7 @@ test('webhook logging on repository failure log error details but not secrets', 
         SUPABASE_URL: 'https://example.supabase.co',
         SUPABASE_ANON_KEY: 'anon-key',
         STRIPE_SECRET_KEY: 'sk_test_value',
-        STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+        STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
         STRIPE_WEBHOOK_SECRET: 'whsec_test',
       },
       {
@@ -982,7 +982,7 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
       SUPABASE_URL: 'https://example.supabase.co',
       SUPABASE_ANON_KEY: 'anon-key',
       STRIPE_SECRET_KEY: 'sk_test_value',
-      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+      STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
       STRIPE_WEBHOOK_SECRET: 'whsec_test',
     },
     {
@@ -1000,7 +1000,7 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
                   client_reference_id: 'owner-user',
                   metadata: {
                     userId: 'owner-user',
-                    planId: 'pro',
+                    planId: 'junior',
                   },
                 },
               },
@@ -1035,7 +1035,7 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
   });
   assert.equal(statusResponse.status, 200);
   const statusBody = await statusResponse.json();
-  assert.equal(statusBody.planId, 'pro');
+  assert.equal(statusBody.planId, 'junior');
   assert.equal(statusBody.status, 'active');
   assert.equal(statusBody.stripeCustomerId, 'cus_12345');
   assert.equal(statusBody.stripeSubscriptionId, 'sub_56789');

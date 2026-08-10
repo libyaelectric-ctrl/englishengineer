@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 import type { SubscriptionSnapshot } from './billing-helpers.js';
+import { normalizePlanId } from './billing-plan-migration.js';
 import { logger } from './logger.js';
 
 const assertConfigured = (config: {
@@ -29,7 +30,7 @@ interface SubscriptionRow {
 const mapSubscriptionRow = (row: SubscriptionRow | null): SubscriptionSnapshot | null =>
   row
     ? {
-        planId: row.plan_id,
+        planId: normalizePlanId(row.plan_id),
         status: row.status,
         currentPeriodEnd: row.current_period_end,
         cancelAtPeriodEnd: row.cancel_at_period_end,

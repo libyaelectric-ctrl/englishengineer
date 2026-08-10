@@ -8,6 +8,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { PageMetadata } from '@/shared/components/PageMetadata';
 import { PRICING_FEATURE_ORDER, PRICING_TIERS } from '@/shared/data/pricing.data';
+import { getPricingCopy } from '@/shared/data/pricing-copy';
 
 import { ProductAnalyticsService } from '@/features/analytics';
 import { useAuthStore } from '@/features/auth';
@@ -21,7 +22,8 @@ import { Navbar } from '@/pages/LandingPage/Navbar';
 const PricingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const translate = useLocalizationStore((s) => s.translate);
+  const language = useLocalizationStore((s) => s.language);
+  const pricingCopy = getPricingCopy(language);
   const currentUser = useAuthStore((state) => state.currentUser);
   const { initialize: initializeAuth } = useAuthStore();
 
@@ -48,7 +50,12 @@ const PricingPage = () => {
       return;
     }
     try {
-      await startCheckout(currentUser.id, currentUser.email, tierId as BillingPlanId);
+      await startCheckout(
+        currentUser.id,
+        currentUser.email,
+        tierId as BillingPlanId,
+        isAnnual ? 'year' : 'month'
+      );
     } catch (err: unknown) {
       setCheckoutError(err instanceof Error ? err.message : 'Checkout failed.');
     }
@@ -66,11 +73,10 @@ const PricingPage = () => {
       <section className="pt-20 sm:pt-24 pb-8 px-6 md:px-12 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-            {translate('pricing.title') ?? 'Simple, Transparent Pricing'}
+            {pricingCopy.title}
           </h1>
           <p className="mt-4 text-slate-600 dark:text-slate-400 text-base sm:text-lg">
-            {translate('pricing.subtitle') ??
-              'Choose your plan. Every plan includes your discipline-specific vocabulary pool.'}
+            {pricingCopy.subtitle}
           </p>
         </div>
 
@@ -81,16 +87,16 @@ const PricingPage = () => {
               onClick={() => setIsAnnual(false)}
               className={`px-3 py-1.5 rounded text-sm font-semibold transition-all ${!isAnnual ? 'bg-primary text-white shadow-sm' : 'text-muted-copy'}`}
             >
-              {translate('pricing.monthly') ?? 'Monthly'}
+              {pricingCopy.monthly}
             </button>
             <button
               type="button"
               onClick={() => setIsAnnual(true)}
               className={`px-3 py-1.5 rounded text-sm font-semibold transition-all flex items-center gap-1.5 ${isAnnual ? 'bg-primary text-white shadow-sm' : 'text-muted-copy'}`}
             >
-              <span>{translate('pricing.annual') ?? 'Annual'}</span>
+              <span>{pricingCopy.annual}</span>
               <span className="text-[10px] bg-emerald-500 text-white px-1.5 py-0.5 rounded font-mono">
-                -{translate('pricing.save20') ?? '20%'}
+                {pricingCopy.save20}
               </span>
             </button>
           </div>
@@ -130,7 +136,7 @@ const PricingPage = () => {
             to="/welcome"
             className="mt-4 inline-flex w-full items-center justify-center rounded-[var(--radius-card)] bg-primary px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary/95"
           >
-            {translate('pricing.getStarted') ?? 'Start Free'}
+            {pricingCopy.getStarted}
           </Link>
         </div>
 
@@ -201,7 +207,7 @@ const PricingPage = () => {
         <div className="flex items-center justify-between text-xs text-muted-copy">
           <span>EngVox © 2026</span>
           <Link to="/" className="font-bold text-primary hover:underline">
-            {translate('pricing.backHome') ?? 'Back to Home'}
+            {pricingCopy.backHome}
           </Link>
         </div>
       </section>

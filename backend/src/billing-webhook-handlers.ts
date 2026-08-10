@@ -1,5 +1,6 @@
 import { emptySubscription } from './billing-helpers.js';
 import type { SubscriptionSnapshot } from './billing-helpers.js';
+import { normalizePlanId } from './billing-plan-migration.js';
 
 interface WebhookObject {
   metadata?: Record<string, string>;
@@ -29,7 +30,7 @@ const buildCheckoutUpdate = (current: SubscriptionSnapshot, object: WebhookObjec
       topupCredits: (current.topupCredits || 0) + parseInt(meta.credits ?? '50', 10),
     };
   return {
-    planId: meta.planId ?? 'pro',
+    planId: normalizePlanId(meta.planId),
     status: 'active' as const,
     currentPeriodEnd: null,
     cancelAtPeriodEnd: false,
@@ -45,7 +46,7 @@ const buildSubscriptionUpdate = (
   currentPeriodEnd: string | null
 ) => ({
   ...current,
-  planId: object.metadata?.planId || current.planId || 'pro',
+  planId: normalizePlanId(object.metadata?.planId || current.planId),
   status: object.status || 'active',
   currentPeriodEnd: currentPeriodEnd || current.currentPeriodEnd,
   cancelAtPeriodEnd:

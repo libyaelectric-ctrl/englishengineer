@@ -63,6 +63,7 @@ export interface BillingSessionRequest {
   planId: BillingPlanId;
   successUrl: string;
   cancelUrl: string;
+  billingInterval?: 'month' | 'year';
 }
 
 export interface BillingPortalRequest {

@@ -77,6 +77,7 @@ export const BillingCheckoutBodySchema = z.object({
   successUrl: z.string().trim().min(1, 'Success URL is required.').url('Invalid URL.'),
   cancelUrl: z.string().trim().min(1, 'Cancel URL is required.').url('Invalid URL.'),
   planId: z.string().max(50).optional(),
+  billingInterval: z.enum(['month', 'year']).optional().default('month'),
 });
 
 export const BillingTopupBodySchema = z.object({

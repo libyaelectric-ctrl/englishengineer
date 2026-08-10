@@ -2,6 +2,7 @@ import { Check, Sparkles } from 'lucide-react';
 
 import type { PricingTier } from '@/shared/data/pricing.data';
 import { formatPrice } from '@/shared/data/pricing.data';
+import { getPricingCopy } from '@/shared/data/pricing-copy';
 
 import { useLocalizationStore } from '@/features/localization';
 
@@ -24,9 +25,11 @@ export const PricingCard = ({
   variant = 'pricing',
   onSelect,
 }: PricingCardProps) => {
-  const translate = useLocalizationStore((s) => s.translate);
+  const language = useLocalizationStore((s) => s.language);
+  const copy = getPricingCopy(language);
   const price = isAnnual ? tier.annualPrice : tier.monthlyPrice;
   const isVariantLanding = variant === 'landing';
+  const isTeam = tier.id === 'team';
 
   const cardClasses = isVariantLanding
     ? `relative flex flex-col justify-between rounded-[var(--radius-card)] p-5 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
@@ -48,13 +51,13 @@ export const PricingCard = ({
       {tier.popular && (
         <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-amber-500 to-primary text-white px-3 py-1 text-[10px] font-bold uppercase tracking-wider shadow-md flex items-center gap-1 z-20">
           <Sparkles className="h-3 w-3" />
-          {translate('pricing.mostPopular') ?? 'Most Popular'}
+          {copy.mostPopular}
         </span>
       )}
 
       {tier.comingSoon && (
         <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-slate-500 text-white px-3 py-1 text-[10px] font-bold uppercase tracking-wider shadow-md z-20">
-          {translate('pricing.comingSoon') ?? 'Coming Soon'}
+          {copy.comingSoon}
         </span>
       )}
 
@@ -71,12 +74,12 @@ export const PricingCard = ({
 
           <div className="flex items-baseline gap-1.5 mb-2">
             <span className="text-3xl font-extrabold tracking-tight text-foreground font-mono">
-              {formatPrice(price, currency)}
+              {isTeam ? '$$$$' : formatPrice(price, currency)}
             </span>
             <span className="text-xs text-muted-copy">
               {isAnnual
-                ? (translate('pricing.perMonthAnnual') ?? '/mo (billed yearly)')
-                : (translate('pricing.perMonth') ?? '/mo')}
+                ? copy.perMonthAnnual
+                : copy.perMonth}
             </span>
           </div>
 
@@ -100,17 +103,24 @@ export const PricingCard = ({
         </div>
 
         <div className="mt-4 pt-3 border-t border-border-soft">
-          {tier.comingSoon ? (
+          {isTeam ? (
+            <a
+              href="mailto:sales@engvox.io?subject=EngineerOS%20Team%20plan"
+              className="block w-full rounded-[var(--radius-card)] border border-border-soft bg-surface px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-foreground transition-colors hover:bg-surface-hover"
+            >
+              {copy.contactSales}
+            </a>
+          ) : tier.comingSoon ? (
             <button
               type="button"
               disabled
               className="w-full rounded-[var(--radius-card)] border border-border-soft bg-surface px-4 py-2.5 text-xs font-bold text-muted-copy cursor-not-allowed"
             >
-              {translate('pricing.comingSoon') ?? 'Coming Soon'}
+              {copy.comingSoon}
             </button>
           ) : isCurrentPlan ? (
             <span className="block w-full rounded-[var(--radius-card)] border border-success/30 bg-success/10 px-4 py-2.5 text-center text-xs font-bold text-success">
-              {translate('pricing.currentPlan') ?? 'Current plan'}
+              {copy.currentPlan}
             </span>
           ) : (
             <button
@@ -124,10 +134,10 @@ export const PricingCard = ({
               }`}
             >
               {isLoading
-                ? (translate('pricing.loading') ?? 'Loading...')
+                ? copy.loading
                 : onSelect
-                  ? `${translate('pricing.getStarted') ?? 'Get Started'} - ${formatPrice(price, currency)}`
-                  : (translate('pricing.choosePlan') ?? 'Choose Plan')}
+                  ? `${copy.getStarted} - ${formatPrice(price, currency)}`
+                  : copy.choosePlan}
             </button>
           )}
         </div>

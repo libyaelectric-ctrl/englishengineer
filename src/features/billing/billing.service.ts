@@ -79,7 +79,12 @@ export const BillingService = {
     }
   },
 
-  async startCheckout(userId: string, email: string, planId: BillingPlanId): Promise<void> {
+  async startCheckout(
+    userId: string,
+    email: string,
+    planId: BillingPlanId,
+    billingInterval: 'month' | 'year' = 'month'
+  ): Promise<void> {
     const provider = getProvider();
     if (!provider) {
       throw new AppError({
@@ -96,6 +101,7 @@ export const BillingService = {
         planId,
         successUrl: getReturnUrl('/billing?billing=success'),
         cancelUrl: getReturnUrl('/billing?billing=cancelled'),
+        billingInterval,
       });
 
       safeRedirect(response.url);

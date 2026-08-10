@@ -14,7 +14,7 @@ This document outlines how API keys and secrets are managed in production, and t
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase         | Railway env |
 | `STRIPE_SECRET_KEY`         | Stripe           | Railway env |
 | `STRIPE_WEBHOOK_SECRET`     | Stripe           | Railway env |
-| `STRIPE_PRICE_PRO_MONTHLY`  | Stripe           | Railway env |
+| `STRIPE_PRICE_JUNIOR_MONTHLY`  | Stripe           | Railway env |
 | `OPENAI_API_KEY`            | OpenAI           | Railway env |
 | `ANTHROPIC_API_KEY`         | Anthropic        | Railway env |
 | `GEMINI_API_KEY`            | Google AI        | Railway env |

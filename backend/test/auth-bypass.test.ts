@@ -77,7 +77,7 @@ test('demo engineer profiles are blocked from creating checkout sessions in the 
     NODE_ENV: 'development',
     ALLOW_INSECURE_DEV_AUTH: 'true',
     STRIPE_SECRET_KEY: 'sk_test_mock',
-    STRIPE_PRICE_PRO_MONTHLY: 'price_mock',
+    STRIPE_PRICE_JUNIOR_MONTHLY: 'price_mock',
   });
 
   const response = await fetch(`${url}/api/billing/create-checkout-session`, {
@@ -90,7 +90,7 @@ test('demo engineer profiles are blocked from creating checkout sessions in the 
       email: 'demo@engineer.com',
       successUrl: 'http://localhost:3000/success',
       cancelUrl: 'http://localhost:3000/cancel',
-      planId: 'pro',
+      planId: 'junior',
     }),
   });
 
@@ -104,7 +104,7 @@ test('demo engineer profiles are blocked from creating billing portal sessions i
     NODE_ENV: 'development',
     ALLOW_INSECURE_DEV_AUTH: 'true',
     STRIPE_SECRET_KEY: 'sk_test_mock',
-    STRIPE_PRICE_PRO_MONTHLY: 'price_mock',
+    STRIPE_PRICE_JUNIOR_MONTHLY: 'price_mock',
   });
 
   const response = await fetch(`${url}/api/billing/create-customer-portal-session`, {
