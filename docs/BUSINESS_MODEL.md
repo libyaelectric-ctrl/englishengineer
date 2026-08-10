@@ -8,11 +8,15 @@ EngVox helps engineers improve their professional English communication through 
 
 ### 1. Subscription Plans
 
-| Plan | Price       | Features                                      |
-| ---- | ----------- | --------------------------------------------- |
-| Free | $0          | 3 AI requests/day, basic vocabulary           |
-| Pro  | $15/mo      | Unlimited AI, advanced grammar, writing coach |
-| Team | $25/user/mo | Team analytics, admin dashboard, SSO          |
+> Source of truth: `sonhal.md` (2026-08-05, based on `Paketler.xlsx`). Cumulative module access per tier.
+
+| Plan       | Price   | Features                                                    |
+| ---------- | ------- | ----------------------------------------------------------- |
+| Junior     | $29/mo  | Placement Test, Learning Hub, Progress, Vocabulary, Grammar |
+| Senior     | $59/mo  | Junior + Translator, Reading, Writing                       |
+| Specialist | $79/mo  | Senior + Speaking, Listening                                |
+| Master     | $99/mo  | Specialist + Tool, AI Copilot (full access)                 |
+| Team       | $999/mo | Coming soon — not yet active                                |
 
 ### 2. Enterprise
 

@@ -10,11 +10,13 @@ Target users:
 - Engineers working on hospitals, data centers, infrastructure, construction, oil and gas, and international projects
 - Professionals preparing for stronger technical English in reports, emails, meetings, inspections, and handover communication
 
-Plan structure:
+Plan structure (source of truth: `sonhal.md`, module-based cumulative tiers):
 
-- Free: local-first learning modules with limits and mock/local fallbacks
-- Pro: intended for unlimited modules, AI Coach, advanced analytics, and full gamification once backend billing is live
-- Team: future-ready for company groups, team analytics, and managed deployment
+- Junior ($29/mo): Placement Test, Learning Hub, Progress, Vocabulary, Grammar
+- Senior ($59/mo): Junior + Translator, Reading, Writing
+- Specialist ($79/mo): Senior + Speaking, Listening
+- Master ($99/mo): Specialist + Tool, AI Copilot — full access
+- Team ($999/mo): future-ready for company groups, team analytics, and managed deployment — coming soon, not yet active
 
 Privacy and AI usage:
 
@@ -38,7 +40,8 @@ Billing limitation:
 - Electrical onboarding uses electrical subdomains rather than mixing unrelated
   engineering disciplines. The selection changes work context, never CEFR
   difficulty.
-- Pricing presents Free, Starter, Core, Pro and Team commercial previews.
+- Pricing presents Junior, Senior, Specialist, Master and Team commercial
+  previews (source of truth: `sonhal.md`, module-based cumulative tiers).
   **Paid checkout is disabled until Kademe 8 staging evidence passes.**
 - Free sponsor-placement readiness is disabled by default and excludes active
   tasks, primary actions and mobile navigation. Paid plans are ad-free.

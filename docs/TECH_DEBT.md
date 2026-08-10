@@ -123,6 +123,24 @@ This document tracks known technical debt items that should be addressed in futu
 **Effort:** 3-4 days
 **Action:** Implement A/B testing framework
 
+### TD-016: Slow test — `profile.engine.test.ts` 🟡
+
+**File:** `src/features/profile/profile.engine.test.ts`
+**Issue:** The `generates skill-specific daily missions` test takes ~13-15s to run
+(and a related test in the same file is similarly slow). In isolation the test
+passes, but under the full parallel `vitest run` suite it sometimes exceeds the
+timeout and gets reported as FAIL, which incorrectly looks like a real
+regression. Suspected cause: the large vocabulary dataset (`data/*.json`) is
+being loaded/parsed synchronously on every test run instead of once in a
+shared `beforeAll`.
+**Impact:** False negatives in CI, slows down the whole test suite, makes
+`npm test` results unreliable as a release gate.
+**Effort:** 0.5-1 day
+**Action:** Profile the test to confirm the vocabulary-load bottleneck; move
+expensive setup into `beforeAll`; consider a trimmed/mock vocabulary fixture
+for unit tests instead of the full production dataset.
+**Found during:** 2026-08-10 repo audit (see `DENETIM_RAPORU.md`).
+
 ## Tracking
 
 | ID     | Priority | Status      | Assigned | Due Date |
@@ -142,6 +160,7 @@ This document tracks known technical debt items that should be addressed in futu
 | TD-013 | Low      | 🟡 Open     | TBD      | TBD      |
 | TD-014 | Low      | 🟡 Open     | TBD      | TBD      |
 | TD-015 | Low      | 🟡 Open     | TBD      | TBD      |
+| TD-016 | Medium   | 🟡 Open     | TBD      | TBD      |
 
 ## Stats
 

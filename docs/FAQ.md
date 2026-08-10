@@ -12,7 +12,7 @@
 
 ### Q3: Is EngineerOS free?
 
-**A:** EngineerOS has a **Free** tier with basic features. **Pro** ($20/month) unlocks AI coaching and advanced analytics. **Team** ($50/user/month) adds workspace management and admin controls.
+**A:** Pricing follows a module-based tier system (source of truth: `sonhal.md`): **Junior** ($29/mo — Placement Test, Learning Hub, Progress, Vocabulary, Grammar), **Senior** ($59/mo — adds Translator, Reading, Writing), **Specialist** ($79/mo — adds Speaking, Listening), **Master** ($99/mo — adds Tool, AI Copilot, full access), and **Team** ($999/mo — coming soon). Paid checkout remains disabled until Kademe 8 staging evidence passes (see `docs/PRC_Kademe_8_Live_Service_Evidence_Report.md`).
 
 ### Q4: Can I use EngineerOS offline?
 

@@ -3,7 +3,7 @@
 ## Durum özeti
 
 P1 (A1+A2, 3.020 kelime) **TAMAMLANDI** — 14 dilin tamamında %100 (3.020/3.020).
-Canlıda: https://englishengineer-engineer-os.vercel.app
+Canlıda: https://englishengineer.vercel.app
 
 - GÖREV 1 (chunk-011 finali) kapatıldı; teslim gerekmez.
 - Kalan tek iş: **GÖREV 2 — P2**.
