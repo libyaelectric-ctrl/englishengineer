@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "tsx watch server.js",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "start": "node dist/server.js",
     "test": "cross-env NODE_ENV=test tsx --test",
     "typecheck": "tsc --noEmit"
