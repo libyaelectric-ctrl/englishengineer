@@ -8,8 +8,8 @@ import { filterMissionsByDiscipline } from '@/shared/constants/mission-disciplin
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { storage } from '@/shared/storage';
 
-import { VocabularyService } from '@/features/vocabulary';
 import { AIService } from '@/features/ai';
+import { VocabularyService } from '@/features/vocabulary';
 
 import { getSpeakingHistoryDetails } from './speaking-mvp';
 import { SPEAKING_MISSIONS } from './speaking.data';

@@ -131,7 +131,8 @@ function mapGeneratedReading(
     .filter((q): q is Record<string, unknown> => typeof q === 'object' && q !== null)
     .map((q) => ({
       question: typeof q.question === 'string' ? q.question : '',
-      questionTranslation: typeof q.questionTranslation === 'string' ? q.questionTranslation : undefined,
+      questionTranslation:
+        typeof q.questionTranslation === 'string' ? q.questionTranslation : undefined,
       answer: typeof q.answer === 'string' ? q.answer : '',
     }))
     .filter((q) => q.question && q.answer);
@@ -222,9 +223,7 @@ export const registerReadingRoutes = (
             // AI in mock mode or unparseable result -> fall back to a static
             // reading item filtered by discipline so the user still gets content.
             if (aiResult.mockMode || !aiResult.structuredResult) {
-              const fallback = READING_ITEMS.find(
-                (i) => i.category === resolvedDiscipline
-              );
+              const fallback = READING_ITEMS.find((i) => i.category === resolvedDiscipline);
               if (fallback) return fallback;
               return READING_ITEMS[0];
             }

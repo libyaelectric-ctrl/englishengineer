@@ -7,7 +7,10 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/shared/components/Button';
 import { MetricCard } from '@/shared/components/MetricCard';
 import { PageContainer } from '@/shared/components/PageContainer';
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
+import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
+import { useAuthStore } from '@/features/auth';
 import {
   type CefrLevel,
   type ContentLevelFilter,
@@ -15,9 +18,6 @@ import {
   LevelContentFilter,
 } from '@/features/level-system';
 import type { VocabularyItem } from '@/features/reading';
-import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
-import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
-import { useAuthStore } from '@/features/auth';
 
 import { ReadingMissionCard } from './ReadingMissionCard';
 import { ReadingWorkspace } from './ReadingWorkspace';

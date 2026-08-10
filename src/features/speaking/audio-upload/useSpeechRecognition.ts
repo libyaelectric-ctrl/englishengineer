@@ -1,11 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-export type SpeechRecognitionStatus =
-  | 'idle'
-  | 'listening'
-  | 'unsupported'
-  | 'error'
-  | 'stopped';
+export type SpeechRecognitionStatus = 'idle' | 'listening' | 'unsupported' | 'error' | 'stopped';
 
 export interface SpeechRecognitionResult {
   status: SpeechRecognitionStatus;
@@ -122,7 +117,9 @@ export function useSpeechRecognition(): SpeechRecognitionResult {
       const e = event as { error?: string };
       if (e?.error === 'no-speech' || e?.error === 'aborted') return;
       setStatus('error');
-      setErrorMessage(e?.error ? `Speech recognition error: ${e.error}` : 'Speech recognition failed.');
+      setErrorMessage(
+        e?.error ? `Speech recognition error: ${e.error}` : 'Speech recognition failed.'
+      );
     };
 
     recognition.onend = () => {

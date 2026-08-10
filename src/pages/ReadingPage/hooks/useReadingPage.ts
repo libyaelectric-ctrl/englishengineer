@@ -5,6 +5,7 @@ import { useLearningStore } from '@/core/learning';
 import { logger } from '@/shared/logger';
 import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
 
+import { useAuthStore } from '@/features/auth';
 import {
   ContentLevelFilter,
   DEFAULT_CONTENT_LEVEL_FILTER,
@@ -13,7 +14,6 @@ import {
 } from '@/features/level-system';
 import { VocabularyItem, useReadingStore } from '@/features/reading';
 import { generateReadingMission } from '@/features/reading/reading-ai.service';
-import { useAuthStore } from '@/features/auth';
 
 export function useReadingPage() {
   const {
