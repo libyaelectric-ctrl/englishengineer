@@ -39,7 +39,7 @@ export const DashboardPage: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
         <div className="text-center">
           <div className="h-8 w-8 mx-auto mb-4 animate-spin rounded-full border-2 border-[var(--color-primary)] border-t-transparent" />
-          <p className="text-[var(--color-muted-copy)]">Yükleniyor...</p>
+          <p className="text-[var(--color-muted-copy)]">{translate('common.loading')}</p>
         </div>
       </div>
     );

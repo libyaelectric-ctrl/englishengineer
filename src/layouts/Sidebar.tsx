@@ -17,6 +17,48 @@ import type { SupportedInterfaceLanguage } from '@/features/localization/localiz
 
 import { Navigation } from './Navigation';
 
+const SIDEBAR_COPY = {
+  en: {
+    billing: 'Billing & Plan',
+    workspaceStatus: 'Workspace status',
+    noAlerts: 'No unread system alerts',
+    ready: 'Ready',
+    learningQueue: 'Learning queue is ready',
+    continueQueue: 'Continue from your current independent skill levels.',
+    localProtection: 'Local progress protection',
+    checkSync: 'Check cloud-sync and account status before changing devices.',
+    signOut: 'Sign Out',
+    close: 'Close navigation',
+    notifications: 'View system notifications',
+  },
+  tr: {
+    billing: 'Faturalandırma ve Plan',
+    workspaceStatus: 'Çalışma alanı durumu',
+    noAlerts: 'Okunmamış sistem bildirimi yok',
+    ready: 'Hazır',
+    learningQueue: 'Öğrenme kuyruğu hazır',
+    continueQueue: 'Mevcut bağımsız beceri seviyelerinden devam edin.',
+    localProtection: 'Yerel ilerleme koruması',
+    checkSync: 'Cihaz değiştirmeden önce bulut eşitleme ve hesap durumunu kontrol edin.',
+    signOut: 'Çıkış Yap',
+    close: 'Gezinmeyi kapat',
+    notifications: 'Sistem bildirimlerini görüntüle',
+  },
+  de: {
+    billing: 'Abrechnung und Plan',
+    workspaceStatus: 'Arbeitsbereichstatus',
+    noAlerts: 'Keine ungelesenen Systemmeldungen',
+    ready: 'Bereit',
+    learningQueue: 'Lernwarteschlange ist bereit',
+    continueQueue: 'Mit deinen unabhängigen Kompetenzstufen fortfahren.',
+    localProtection: 'Schutz des lokalen Fortschritts',
+    checkSync: 'Cloud-Synchronisierung und Kontostatus vor einem Gerätewechsel prüfen.',
+    signOut: 'Abmelden',
+    close: 'Navigation schließen',
+    notifications: 'Systembenachrichtigungen anzeigen',
+  },
+} as const;
+
 export const Sidebar = () => {
   const { isSidebarOpen, toggleSidebar } = useAppStore(
     useShallow((s) => ({ isSidebarOpen: s.isSidebarOpen, toggleSidebar: s.toggleSidebar }))
@@ -39,6 +81,7 @@ export const Sidebar = () => {
     }
   };
   const planName = subscription?.planId || 'junior';
+  const copy = SIDEBAR_COPY[language as keyof typeof SIDEBAR_COPY] ?? SIDEBAR_COPY.en;
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const notificationsRef = useRef<HTMLDivElement>(null);
 
@@ -131,7 +174,7 @@ export const Sidebar = () => {
               <button
                 onClick={toggleSidebar}
                 className="cursor-pointer rounded-[4px] p-1.5 text-muted-copy hover:bg-surface-hover hover:text-foreground lg:hidden"
-                aria-label="Close navigation"
+                aria-label={copy.close}
               >
                 <X className="h-4 w-4" />
               </button>
@@ -156,7 +199,7 @@ export const Sidebar = () => {
                 className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface px-3 text-left transition-all hover:border-primary hover:bg-primary/5 shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground"
               >
                 <Wallet className="h-5 w-5 shrink-0 text-muted-copy" />
-                <span className="flex-1 truncate">Billing & Plan</span>
+                <span className="flex-1 truncate">{copy.billing}</span>
               </button>
 
               {/* Alarm Bell */}
@@ -164,7 +207,7 @@ export const Sidebar = () => {
                 <button
                   type="button"
                   className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface px-3 text-left transition-all hover:border-border-hover hover:bg-surface-hover shadow-sm"
-                  aria-label="View system notifications"
+                  aria-label={copy.notifications}
                   aria-expanded={notificationsOpen}
                   onClick={() => setNotificationsOpen((open) => !open)}
                 >
@@ -188,14 +231,14 @@ export const Sidebar = () => {
                     <div className="flex items-center justify-between border-b border-border-soft px-4 py-3">
                       <div>
                         <p className="text-xs font-bold text-foreground uppercase tracking-wider">
-                          Workspace status
+                          {copy.workspaceStatus}
                         </p>
                         <p className="mt-0.5 text-xs text-muted-copy font-medium">
-                          No unread system alerts
+                          {copy.noAlerts}
                         </p>
                       </div>
                       <span className="rounded-[4px] bg-success/10 px-2 py-0.5 text-[10px] font-bold text-success uppercase tracking-wider">
-                        Ready
+                        {copy.ready}
                       </span>
                     </div>
                     <button
@@ -212,10 +255,10 @@ export const Sidebar = () => {
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block text-xs font-bold text-foreground uppercase tracking-wider">
-                          Learning queue is ready
+                          {copy.learningQueue}
                         </span>
                         <span className="mt-0.5 block text-xs text-muted-copy font-medium">
-                          Continue from your current independent skill levels.
+                          {copy.continueQueue}
                         </span>
                       </span>
                       <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-copy transition-transform group-hover:translate-x-0.5" />
@@ -234,10 +277,10 @@ export const Sidebar = () => {
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block text-xs font-bold text-foreground uppercase tracking-wider">
-                          Local progress protection
+                          {copy.localProtection}
                         </span>
                         <span className="mt-0.5 block text-xs text-muted-copy font-medium">
-                          Check cloud-sync and account status before changing devices.
+                          {copy.checkSync}
                         </span>
                       </span>
                       <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-copy transition-transform group-hover:translate-x-0.5" />
@@ -251,7 +294,7 @@ export const Sidebar = () => {
                 className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface px-3 text-left transition-all hover:border-border-hover hover:bg-surface-hover shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground"
               >
                 <LogOut className="h-5 w-5 shrink-0 text-muted-copy" />
-                <span className="flex-1">Sign Out</span>
+                <span className="flex-1">{copy.signOut}</span>
               </button>
             </div>
           )}
