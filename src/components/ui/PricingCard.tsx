@@ -32,12 +32,12 @@ export const PricingCard = ({
   const isTeam = tier.id === 'team';
 
   const cardClasses = isVariantLanding
-    ? `relative flex h-full flex-col justify-between rounded-[var(--radius-card)] p-5 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
+    ? `relative flex h-full min-h-[560px] sm:min-h-[520px] flex-col justify-between rounded-[var(--radius-card)] p-5 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
         tier.popular
-          ? 'border-2 border-primary shadow-xl scale-[1.03]'
+          ? 'border-2 border-primary shadow-xl'
           : 'border border-border-soft'
       }`
-    : `relative flex h-full flex-col justify-between rounded-[var(--radius-card)] p-4 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
+    : `relative flex h-full min-h-[680px] sm:min-h-[620px] flex-col justify-between rounded-[var(--radius-card)] p-4 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
         tier.popular ? 'border-2 border-primary shadow-xl scale-[1.01]' : 'border border-soft'
       }`;
 
