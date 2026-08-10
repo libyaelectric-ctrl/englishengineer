@@ -132,27 +132,27 @@ export const LandingPage = () => {
             </p>
           </div>
 
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
-            {ENGINEERING_DISCIPLINES.map((id) => (
-              <div
-                key={id}
-                className="flex flex-col items-center gap-2 rounded-[var(--radius-card)] border border-[var(--color-border-soft)] bg-[var(--background)] p-4 text-center transition-all hover:border-[var(--color-primary)]/40"
-              >
-                {(() => {
-                  const DisciplineIcon = getDisciplineIcon(id);
-                  return (
-                    <DisciplineIcon
-                      className="h-6 w-6 text-[var(--color-primary)]"
-                      aria-hidden="true"
-                    />
-                  );
-                })()}
-                <span className="text-xs font-semibold capitalize">{id}</span>
+<div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+                {ENGINEERING_DISCIPLINES.map((id) => (
+                  <div
+                    key={id}
+                    className="flex flex-col items-center gap-2 rounded-[var(--radius-card)] border border-[var(--color-border-soft)] bg-[var(--background)] p-4 text-center transition-all hover:border-[var(--color-primary)]/40"
+                  >
+                    {(() => {
+                      const DisciplineIcon = getDisciplineIcon(id);
+                      return (
+                        <DisciplineIcon
+                          className="h-6 w-6 text-[var(--color-primary)]"
+                          aria-hidden="true"
+                        />
+                      );
+                    })()}
+                    <span className="text-xs font-semibold">{translate(`discipline.${id}` as Parameters<typeof translate>[0])}</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          <div className="mt-8 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-6">
+<div className="mt-8 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-6">
             {FEATURES.map(({ icon: Icon, key, color }) => (
               <div
                 key={key}
@@ -164,17 +164,7 @@ export const LandingPage = () => {
                   <Icon className={`h-4 w-4 text-${color}-500`} />
                 </span>
                 <span className="text-xs font-semibold capitalize">
-                  {key === 'vocabulary'
-                    ? t.vocabularyPricing
-                    : key === 'reading'
-                      ? t.readingPricing
-                      : key === 'writing'
-                        ? t.writingPricing
-                        : key === 'speaking'
-                          ? t.speakingPricing
-                          : key === 'listening'
-                            ? t.listening
-                            : t.grammarPricing}
+                  {translate(`nav.${key}` as Parameters<typeof translate>[0])}
                 </span>
               </div>
             ))}
