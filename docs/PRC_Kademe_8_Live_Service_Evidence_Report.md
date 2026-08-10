@@ -149,3 +149,38 @@ audit): a stale live URL in `docs/AI1_TASK_NEXT.md`, and pricing
 inconsistencies across `docs/FAQ.md`, `docs/BUSINESS_MODEL.md` and
 `docs/PRODUCT.md` (now aligned to `sonhal.md`, which matches the pricing
 already implemented in `LandingPage/index.tsx`).
+
+---
+
+## Update — 2026-08-10 (2): entitlement gating is a no-op — needs a product decision
+
+While verifying that `TeamPage`'s `EntitlementGate` actually blocks
+non-paying users, we traced the check down to
+`src/features/billing/billing.entitlements.ts` and found that
+**`canAccessFeature()` — the function `EntitlementGate` actually calls —
+unconditionally returns `{ allowed: true }` regardless of subscription or
+feature**. The same is true of `canUseAICoach`, `canCreateMission`,
+`canViewAdvancedAnalytics`, `canAccessProjectWorkspace`,
+`canAccessPersistentMemory`, `canAccessCustomScenario`,
+`canAccessLinkedInOptimization`, `canAccessPersistentAIAgent`, and
+`canAccessRealVoiceSpeaking` — every entitlement check in this file grants
+access "to all users" once a subscription is merely _active_ (including the
+free `junior` tier).
+
+This is confirmed intentional and covered by tests (e.g.
+`billing.entitlements.test.ts` → `'allows all features for all users'`), so
+it is **not a bug to silently "fix"** — it reads like a deliberate
+launch/beta decision to keep every feature open while billing enforcement is
+built out. However, it means the "Locked" / "Upgrade required" screens
+rendered by `EntitlementGate` (e.g. on `/team`, with text like _"Team
+management requires the Team plan"_) currently **never actually appear** for
+any active subscriber, paid or free — the UI implies a paywall that isn't
+enforced. Also renamed a stale `"Project plan"` label to `"Team plan"` in
+`TeamDashboard.tsx` and `LegalPage.tsx` to match the current `sonhal.md`
+tier names, independent of this gating issue.
+
+**Decision needed from the product owner before Kademe 9:** either (a)
+implement real per-plan entitlement checks in `billing.entitlements.ts`
+before launch, or (b) if "everything open" is intentional for this phase,
+update the UI copy (lock screens, `docs/FAQ.md`, `docs/BUSINESS_MODEL.md`)
+to stop implying features are plan-gated when they currently are not.

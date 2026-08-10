@@ -143,7 +143,7 @@ const documents: Record<LegalDocument, DocumentContent> = {
     sections: [
       [
         '1. 14-Day Money-Back Guarantee',
-        'New subscribers may request a full refund within 14 days of initial purchase if they are unsatisfied with the Pro or Project plans.',
+        'New subscribers may request a full refund within 14 days of initial purchase if they are unsatisfied with any paid plan (Junior, Senior, Specialist, Master, or Team).',
       ],
       [
         '2. Cancellation Process',
