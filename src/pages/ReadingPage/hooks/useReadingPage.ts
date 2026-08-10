@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLearningStore } from '@/core/learning';
 
 import { logger } from '@/shared/logger';
+import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
 
 import {
   ContentLevelFilter,
@@ -11,6 +12,8 @@ import {
   useSkillLevel,
 } from '@/features/level-system';
 import { VocabularyItem, useReadingStore } from '@/features/reading';
+import { generateReadingMission } from '@/features/reading/reading-ai.service';
+import { useAuthStore } from '@/features/auth';
 
 export function useReadingPage() {
   const {
@@ -29,10 +32,12 @@ export function useReadingPage() {
     submitCurrentMission,
     resetCurrentMission,
     resetAllReadingProgress,
+    addMission,
     getMissionsSortedByPoolRatio,
   } = useReadingStore();
 
   const [activeTab, setActiveTab] = useState<'missions' | 'workspace'>('missions');
+  const [aiMissionLoading, setAiMissionLoading] = useState(false);
   const [selectedWord, setSelectedWord] = useState<VocabularyItem | null>(null);
   const [userErrors, setUserErrors] = useState<Record<string, string>>({});
   const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(DEFAULT_CONTENT_LEVEL_FILTER);
@@ -57,6 +62,7 @@ export function useReadingPage() {
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const currentLevel = useSkillLevel('reading').currentLevel;
+  const currentUser = useAuthStore((state) => state.currentUser);
   const vocabularyPool = useLearningStore((s) => s.vocabularyPool);
 
   const poolEntries = useMemo(
@@ -78,6 +84,28 @@ export function useReadingPage() {
   useEffect(() => {
     initializeStore();
   }, [initializeStore]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const profile = LearningProfileRepository.getProfile(currentUser?.id ?? 'local-user');
+    const discipline = profile.discipline;
+    if (!discipline) return undefined;
+
+    setAiMissionLoading(true);
+    void generateReadingMission({ discipline, level: currentLevel, targetLanguage: 'en' })
+      .then((mission) => {
+        if (cancelled || !mission) return;
+        addMission(mission);
+        selectMission(mission.id);
+      })
+      .finally(() => {
+        if (!cancelled) setAiMissionLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [addMission, currentLevel, currentUser?.id, selectMission]);
 
   useEffect(() => {
     if (activeTab === 'workspace' && !evaluationResult) {
@@ -189,6 +217,7 @@ export function useReadingPage() {
     currentLevel,
     visibleMissions,
     currentMission,
+    aiMissionLoading,
     currentMissionIndex,
     finishedCount,
     bestScoreAvg,

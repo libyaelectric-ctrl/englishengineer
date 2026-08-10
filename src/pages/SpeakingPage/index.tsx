@@ -52,7 +52,7 @@ const RoleplayTab = () => {
     setIsPaused,
     pauseRef,
     recordedAudio,
-    pronunciationScore,
+    effectivePronunciationScore: pronunciationScore,
     phonemeFeedback,
     waveformBars,
     levelFilter,

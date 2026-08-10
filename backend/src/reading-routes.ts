@@ -16,6 +16,7 @@ interface ReadingItem {
   level: string;
   text: string;
   wordCount: number;
+  questions?: Array<{ question: string; questionTranslation?: string; answer: string }>;
 }
 
 const READING_ITEMS: ReadingItem[] = [
@@ -125,6 +126,15 @@ function mapGeneratedReading(
   const title = typeof reading.title === 'string' ? reading.title : '';
   const passage = typeof reading.passage === 'string' ? reading.passage : '';
   if (!title || !passage) return null;
+  const rawQuestions = Array.isArray(reading.questions) ? reading.questions : [];
+  const questions = rawQuestions
+    .filter((q): q is Record<string, unknown> => typeof q === 'object' && q !== null)
+    .map((q) => ({
+      question: typeof q.question === 'string' ? q.question : '',
+      questionTranslation: typeof q.questionTranslation === 'string' ? q.questionTranslation : undefined,
+      answer: typeof q.answer === 'string' ? q.answer : '',
+    }))
+    .filter((q) => q.question && q.answer);
   return {
     id: `ai-${randomUUID()}`,
     title,

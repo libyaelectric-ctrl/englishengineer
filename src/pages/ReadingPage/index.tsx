@@ -242,6 +242,7 @@ const ReadingPage = () => {
     visibleMissions,
     currentMission,
     currentMissionIndex,
+    aiMissionLoading,
     finishedCount,
     bestScoreAvg,
 
@@ -274,6 +275,11 @@ const ReadingPage = () => {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          {aiMissionLoading && (
+            <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
+              AI lesson loading...
+            </span>
+          )}
           <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy rounded-[4px] border border-border-soft bg-surface px-2.5 py-1">
             {finishedCount}/{missions.length} Completed
           </span>
