@@ -14,6 +14,7 @@ import {
 import {
   SPEAKING_MVP_MODE,
   type SpeakingRoleplayCategory,
+  SpeakingService,
   getSpeakingRoleplayCategory,
   useSpeakingStore,
 } from '@/features/speaking';
@@ -230,10 +231,19 @@ export function useSpeakingPage() {
   const submitRoleplay = () => {
     const result = submitCurrentMission();
     if (activeMission) {
+      // Single source of AI evaluation: the backend call below is the only
+      // AI request made for this submission (see speaking.service.ts note).
+      // Its feedback is merged into the just-created local result once it
+      // resolves; the offline-first local score/history is never blocked
+      // waiting for it.
       void submitSpeakingToBackend({
         missionId: activeMission.id,
         transcript: typedTranscript,
         audioUrl: uploadedAudioUrl || undefined,
+      }).then((response) => {
+        if (response?.feedback) {
+          SpeakingService.mergeBackendFeedback(activeMission, result, response.feedback);
+        }
       });
     }
     ProductAnalyticsService.track('speaking_roleplay_completed', '/speaking', {

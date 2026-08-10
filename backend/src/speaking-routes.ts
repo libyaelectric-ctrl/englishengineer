@@ -359,6 +359,7 @@ export const registerSpeakingRoutes = (
           success: true,
           id: submissionId,
           overallScore: scoring.overallScore,
+          feedback: scoring.feedback,
           status: 'graded' as const,
           submittedAt: submission.submittedAt,
         });
