@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
 
+import { useBillingStore } from '@/features/billing';
 import { useReadingStore } from '@/features/reading';
 import { useWritingStore } from '@/features/writing/writing.store';
 
@@ -113,6 +114,18 @@ describe('New Feature E2E: Interview Simulator on Speaking', () => {
     for (let i = 0; i < 6; i++) completedMissions[`mission_${i}`] = 80;
     useReadingStore.setState({ completedMissions });
     useWritingStore.setState({ completedMissions });
+    // Interview Simulator content requires 'realVoiceSpeaking' (Specialist+).
+    // Pin the plan explicitly so this suite doesn't depend on billing store
+    // state left over from other test files in the same run.
+    useBillingStore.getState().setSubscription({
+      planId: 'master',
+      status: 'active',
+      currentPeriodEnd: '2099-01-01T00:00:00.000Z',
+      cancelAtPeriodEnd: false,
+      stripeCustomerId: 'cus_test',
+      stripeSubscriptionId: 'sub_test',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+    });
   });
 
   it('Speaking page renders with Interview Simulator tab', () => {
@@ -182,6 +195,15 @@ describe('New Feature E2E: Interview Simulator on Speaking', () => {
 
 describe('New Feature E2E: Team Dashboard on Team page', () => {
   it('Team page renders Team Management heading', async () => {
+    useBillingStore.getState().setSubscription({
+      planId: 'master',
+      status: 'active',
+      currentPeriodEnd: '2099-01-01T00:00:00.000Z',
+      cancelAtPeriodEnd: false,
+      stripeCustomerId: 'cus_test',
+      stripeSubscriptionId: 'sub_test',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+    });
     renderWithRouter(<TeamPage />, ['/team']);
     await waitFor(() => {
       expect(screen.getAllByText('Team Management').length).toBeGreaterThanOrEqual(1);
@@ -189,6 +211,15 @@ describe('New Feature E2E: Team Dashboard on Team page', () => {
   });
 
   it('Team page shows admin panel badge', async () => {
+    useBillingStore.getState().setSubscription({
+      planId: 'master',
+      status: 'active',
+      currentPeriodEnd: '2099-01-01T00:00:00.000Z',
+      cancelAtPeriodEnd: false,
+      stripeCustomerId: 'cus_test',
+      stripeSubscriptionId: 'sub_test',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+    });
     renderWithRouter(<TeamPage />, ['/team']);
     await waitFor(() => {
       expect(screen.getByText(/Admin panel/i)).toBeInTheDocument();
@@ -196,16 +227,34 @@ describe('New Feature E2E: Team Dashboard on Team page', () => {
   });
 
   it('Team page shows team description', async () => {
+    useBillingStore.getState().setSubscription({
+      planId: 'master',
+      status: 'active',
+      currentPeriodEnd: '2099-01-01T00:00:00.000Z',
+      cancelAtPeriodEnd: false,
+      stripeCustomerId: 'cus_test',
+      stripeSubscriptionId: 'sub_test',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+    });
     renderWithRouter(<TeamPage />, ['/team']);
     await waitFor(() => {
       expect(screen.getByText(/Assign training licenses/i)).toBeInTheDocument();
     });
   });
 
-  it('Team page renders EntitlementGate', async () => {
+  it('Team page renders EntitlementGate for a Junior subscriber', async () => {
+    useBillingStore.getState().setSubscription({
+      planId: 'junior',
+      status: 'active',
+      currentPeriodEnd: '2099-01-01T00:00:00.000Z',
+      cancelAtPeriodEnd: false,
+      stripeCustomerId: 'cus_test',
+      stripeSubscriptionId: 'sub_test',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+    });
     renderWithRouter(<TeamPage />, ['/team']);
     await waitFor(() => {
-      expect(screen.getByText(/Team management requires the Project plan/i)).toBeInTheDocument();
+      expect(screen.getByText(/Team management requires the Team plan/i)).toBeInTheDocument();
     });
   });
 });
