@@ -8,7 +8,9 @@ import { getOrSet } from './cache/redis-cache.service.js';
 import { checkUserLimits } from './cost-tracker.js';
 import { ApiError } from './errors.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
+import { normalizePlanId } from './billing-plan-migration.js';
 import { CircuitBreaker } from './utils/circuit-breaker.js';
+import type { PlanId } from '../types.js';
 import { AiRequestBodySchema, validateBody } from './validation.js';
 
 export { createAIService, AI_CONTRACT_VERSION };
@@ -24,7 +26,7 @@ export const AI_ROUTES: Record<string, string> = {
   '/api/ai/generate-content': 'generateContent',
 };
 
-const PLAN_AI_LIMITS: Record<string, { daily: number | null; monthly: number }> = {
+const PLAN_AI_LIMITS: Record<PlanId, { daily: number | null; monthly: number }> = {
   free: { daily: 3, monthly: 0 },
   junior: { daily: null, monthly: 50 },
   senior: { daily: null, monthly: 150 },
@@ -35,22 +37,18 @@ const PLAN_AI_LIMITS: Record<string, { daily: number | null; monthly: number }> 
 
 const DEFAULT_PLAN_LIMITS: { daily: number | null; monthly: number } = { daily: 3, monthly: 0 };
 
-const getPlanLimits = (planId: string) => PLAN_AI_LIMITS[planId] ?? DEFAULT_PLAN_LIMITS;
+const getPlanLimits = (planId: PlanId) => PLAN_AI_LIMITS[planId] ?? DEFAULT_PLAN_LIMITS;
 
 export { getPlanLimits };
 
 const resolvePlanId = (
   subscription: SubscriptionSnapshot | null,
   configured: boolean
-): string => {
+): PlanId => {
   if (!configured || !subscription) return 'free';
   const status = subscription.status;
   if (status !== 'active' && status !== 'trialing') return 'free';
-  const planId = subscription.planId;
-  if (planId === 'free' || planId === 'lite' || planId === 'pro') {
-    return planId === 'pro' ? 'junior' : 'free';
-  }
-  return planId;
+  return normalizePlanId(subscription.planId);
 };
 
 const AI_WINDOW_MS = 24 * 60 * 60 * 1000;
@@ -70,7 +68,7 @@ const checkCostLimits = (userId: string) => {
 
 export { checkCostLimits };
 
-const isLimitReached = (planId: string, count: number) => {
+const isLimitReached = (planId: PlanId, count: number) => {
   const limits = getPlanLimits(planId);
   if (limits.daily !== null) return count >= limits.daily;
   return count >= limits.monthly;
@@ -78,7 +76,7 @@ const isLimitReached = (planId: string, count: number) => {
 
 export { isLimitReached };
 
-const throwLimitError = (planId: string): never => {
+const throwLimitError = (planId: PlanId): never => {
   const limits = getPlanLimits(planId);
   const isFree = planId === 'free';
   throw new ApiError(
@@ -90,7 +88,7 @@ const throwLimitError = (planId: string): never => {
   );
 };
 
-const getWindowMs = (planId: string) => {
+const getWindowMs = (planId: PlanId) => {
   const limits = getPlanLimits(planId);
   return limits.daily !== null ? AI_WINDOW_MS : AI_MONTH_WINDOW_MS;
 };
@@ -98,9 +96,9 @@ const getWindowMs = (planId: string) => {
 export { getWindowMs };
 
 const countRequestsInWindow = async (
-  ledger: { countRecentRequests: (userId: string, planId: string) => Promise<number> },
+  ledger: { countRecentRequests: (userId: string, planId: PlanId) => Promise<number> },
   userId: string,
-  planId: string,
+  planId: PlanId,
   windowMs: number
 ): Promise<number> => {
   void windowMs;
@@ -110,7 +108,7 @@ const countRequestsInWindow = async (
 const checkRateLimits = async (
   userId: string,
   ledger: {
-    countRecentRequests: (userId: string, planId: string) => Promise<number>;
+    countRecentRequests: (userId: string, planId: PlanId) => Promise<number>;
   },
   billingRepository: SubscriptionRepository | null,
   configured: boolean
@@ -119,7 +117,7 @@ const checkRateLimits = async (
   useTopup: boolean;
   subscription: SubscriptionSnapshot | null;
   topupCredits: number;
-  planId: string;
+  planId: PlanId;
 }> => {
   checkCostLimits(userId);
   const subscription = billingRepository

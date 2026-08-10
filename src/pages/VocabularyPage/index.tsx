@@ -45,6 +45,7 @@ const VocabularyPage = () => {
     learnWord,
     exportCSV,
     loadNextBatch,
+    runSearch,
     addCustomWord,
     filterOptions,
     dispatchUI,
@@ -70,9 +71,7 @@ const VocabularyPage = () => {
         filterOptions={filterOptions}
         chooseTab={chooseTab}
         onSearchInputChange={(input) => dispatchSearch({ type: 'SET_SEARCH_INPUT', input })}
-        onSearchSubmit={async (query: string) => {
-          dispatchSearch({ type: 'RUN_SEARCH', query });
-        }}
+        onSearchSubmit={runSearch}
         onFilterChange={(field, value) =>
           dispatchSearch({
             type: 'COMMIT_FILTERS',
@@ -89,9 +88,7 @@ const VocabularyPage = () => {
         <SearchModal
           isOpen={showSearchModal}
           onClose={closeSearchModal}
-          onSearch={async (query: string) => {
-            dispatchSearch({ type: 'RUN_SEARCH', query });
-          }}
+          onSearch={runSearch}
           searchInput={searchInput}
           onSearchInputChange={(input) => dispatchSearch({ type: 'SET_SEARCH_INPUT', input })}
           searchResults={searchResults}

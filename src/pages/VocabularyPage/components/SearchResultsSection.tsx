@@ -124,6 +124,7 @@ export function SearchResultsSection({
               {langLabel} meaning
               <input
                 required
+                aria-label="Turkish meaning"
                 value={customDraft.turkishMeaning}
                 onChange={(event) =>
                   onSetCustomDraft({

@@ -39,7 +39,7 @@ export function SearchModal({
     return () => clearTimeout(timer);
   }, [isOpen]);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
     if (!searchInput.trim()) return;
     void onSearch(searchInput.trim());
@@ -79,8 +79,12 @@ export function SearchModal({
               <input
                 ref={inputRef}
                 type="text"
+                aria-label="Search vocabulary"
                 value={searchInput}
                 onChange={(e) => onSearchInputChange(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSearch(e);
+                }}
                 placeholder="Type a word in English or your language..."
                 className="w-full rounded-[var(--radius-card)] border border-border-soft bg-surface px-3 py-2 text-sm text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
                 autoFocus

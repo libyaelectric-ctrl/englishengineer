@@ -68,7 +68,7 @@ The report never treats Stripe Dashboard/CLI delivery, provider-failure injectio
 | `BILLING_REPOSITORY`        | backend  | required    | OK           |
 | `STRIPE_SECRET_KEY`         | backend  | required    | OK           |
 | `STRIPE_WEBHOOK_SECRET`     | backend  | required    | OK           |
-| `STRIPE_PRICE_PRO_MONTHLY`  | backend  | required    | OK           |
+| `STRIPE_PRICE_JUNIOR_MONTHLY`  | backend  | required    | OK           |
 | `AI_PROVIDER`               | backend  | required    | OK           |
 | `OPENAI_API_KEY`            | backend  | optional    | MISSING      |
 | `ANTHROPIC_API_KEY`         | backend  | optional    | MISSING      |

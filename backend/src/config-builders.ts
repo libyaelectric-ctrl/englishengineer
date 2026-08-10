@@ -97,10 +97,7 @@ export const resolveAuth = (env: Env, runtimeEnv: RuntimeEnvironment): AuthConfi
 };
 
 export const resolveStripe = (env: Env, runtimeEnv: RuntimeEnvironment): StripeConfig => {
-  // Legacy STRIPE_PRICE_PRO_MONTHLY is accepted only for existing test/staging
-  // environments; new deployments must use STRIPE_PRICE_JUNIOR_MONTHLY.
-  const juniorPrice =
-    trimEnv(env.STRIPE_PRICE_JUNIOR_MONTHLY) || trimEnv(env.STRIPE_PRICE_PRO_MONTHLY);
+  const juniorPrice = trimEnv(env.STRIPE_PRICE_JUNIOR_MONTHLY);
   const hasPrice = hasText(juniorPrice);
   const configured = hasText(env.STRIPE_SECRET_KEY) && hasPrice;
   const supabaseConfigured = [env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY].every(hasText);
@@ -123,6 +120,11 @@ export const resolveStripe = (env: Env, runtimeEnv: RuntimeEnvironment): StripeC
     priceSpecialistMonthly: trimEnv(env.STRIPE_PRICE_SPECIALIST_MONTHLY),
     priceMasterMonthly: trimEnv(env.STRIPE_PRICE_MASTER_MONTHLY),
     priceTeamMonthly: trimEnv(env.STRIPE_PRICE_TEAM_MONTHLY),
+    priceJuniorAnnual: trimEnv(env.STRIPE_PRICE_JUNIOR_ANNUAL),
+    priceSeniorAnnual: trimEnv(env.STRIPE_PRICE_SENIOR_ANNUAL),
+    priceSpecialistAnnual: trimEnv(env.STRIPE_PRICE_SPECIALIST_ANNUAL),
+    priceMasterAnnual: trimEnv(env.STRIPE_PRICE_MASTER_ANNUAL),
+    priceTeamAnnual: trimEnv(env.STRIPE_PRICE_TEAM_ANNUAL),
     environment: runtimeEnv,
     allowMemoryRepository:
       runtimeEnv !== 'production' || isTrue(env.ALLOW_MEMORY_BILLING_REPOSITORY),

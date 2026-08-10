@@ -2,6 +2,58 @@ import type { ReadingMission } from './reading.types';
 
 export const MEP_READING_MISSIONS: ReadingMission[] = [
   {
+    id: 'mep_a2_pipe_support_check',
+    title: 'Pipe Support Installation Notice',
+    description: 'Read a short site notice about checking pipe support spacing and installation.',
+    discipline: 'MEP Coordination',
+    cefrLevel: 'A2',
+    difficulty: 'Beginner',
+    estimatedMinutes: 6,
+    passageText: 'SITE NOTICE. All pipefitters: check pipe support spacing on the chilled water lines. The drawing shows supports every 2.4 meters for 100mm pipe. Do not exceed this spacing. Each support must have a rubber liner between the pipe and the clamp. Tighten bolts to the correct torque. Do not use wire or rope as temporary supports. All supports must be fixed to the building structure, not to other pipes. Inspection is on Thursday. Failed supports must be fixed before insulation starts.',
+    vocabulary: [
+      { term: 'pipe support', definition: 'A hanger or bracket that holds a pipe in position.', context: 'Check pipe support spacing on the chilled water lines.', turkishTranslation: 'boru desteği' },
+      { term: 'spacing', definition: 'The distance between two supports.', context: 'The drawing shows supports every 2.4 meters.', turkishTranslation: 'aralık' },
+      { term: 'rubber liner', definition: 'A rubber sheet placed between pipe and clamp to prevent vibration and damage.', context: 'Each support must have a rubber liner between the pipe and the clamp.', turkishTranslation: 'kauçuk astar' },
+      { term: 'torque', definition: 'The tightening force applied to a bolt.', context: 'Tighten bolts to the correct torque.', turkishTranslation: 'tork' },
+      { term: 'insulation', definition: 'Material wrapped around pipes to prevent heat loss or gain.', context: 'Failed supports must be fixed before insulation starts.', turkishTranslation: 'izolasyon' },
+    ],
+    questions: [
+      { id: 'mep_a2_q1', type: 'multiple_choice', questionText: 'What is the maximum support spacing for 100mm chilled water pipe?', choices: ['A) 1.2 meters', 'B) 2.4 meters', 'C) 3.0 meters', 'D) 4.8 meters'], correctAnswer: 'B', explanation: 'The drawing shows supports every 2.4 meters for 100mm pipe.' },
+      { id: 'mep_a2_q2', type: 'true_false', questionText: 'Wire or rope can be used as temporary pipe supports.', correctAnswer: 'false', explanation: 'The notice says "Do not use wire or rope as temporary supports."' },
+      { id: 'mep_a2_q3', type: 'keyword_answer', questionText: 'What must be placed between the pipe and the clamp?', keywords: ['rubber liner', 'liner', 'rubber'], correctAnswer: 'a rubber liner', explanation: 'Each support must have a rubber liner between the pipe and the clamp.' },
+    ],
+    xpReward: 40,
+    coinReward: 15,
+    eloReward: 12,
+    sourceMetadata: { origin: 'EngVox original', author: 'AI Content Generation', schemaVersion: 1 },
+  },
+  {
+    id: 'mep_b1_valve_schedule',
+    title: 'Valve Schedule Review',
+    description: 'Read a valve schedule and identify specifications for chilled water system valves.',
+    discipline: 'MEP Coordination',
+    cefrLevel: 'B1',
+    difficulty: 'Intermediate',
+    estimatedMinutes: 9,
+    passageText: 'VALVE SCHEDULE — CHW SYSTEM, Rev 2. Tag: V-CHW-045. Type: Butterfly valve, lugged, PN16. Size: DN100. Body: Ductile iron, epoxy coated. Disc: Stainless steel 316. Seat: EPDM. Operator: Gear operator with handwheel. Location: AHU-03 supply branch, Plant Room B. Function: Isolation and balancing. Test pressure: 16 bar. Tag: V-CHW-046. Type: Ball valve, full bore, PN25. Size: DN50. Body: Bronze. Ball: Stainless steel 316. Seat: PTFE. Operator: Lever. Location: FCU-12 return, Level 4. Function: Isolation. Test pressure: 25 bar. All valves must have stainless steel ID tags welded to the body. Certificates to QA/QC before installation.',
+    vocabulary: [
+      { term: 'butterfly valve', definition: 'A valve with a rotating disc that controls flow, used for large pipe sizes.', context: 'Type: Butterfly valve, lugged, PN16.', turkishTranslation: 'kelebek vana' },
+      { term: 'ball valve', definition: 'A valve with a rotating ball that has a hole through it for on/off control.', context: 'Type: Ball valve, full bore, PN25.', turkishTranslation: 'top vana' },
+      { term: 'PN16', definition: 'Pressure Nominal 16; a pressure rating of 16 bar at 20°C.', context: 'Butterfly valve, lugged, PN16.', turkishTranslation: 'PN16 (16 bar)' },
+      { term: 'EPDM', definition: 'Ethylene Propylene Diene Monomer; a synthetic rubber used for valve seats.', context: 'Seat: EPDM.', turkishTranslation: 'EPDM kauçuk' },
+      { term: 'full bore', definition: 'A valve where the internal opening equals the pipe diameter, minimizing pressure drop.', context: 'Ball valve, full bore, PN25.', turkishTranslation: 'tam geçiş' },
+    ],
+    questions: [
+      { id: 'mep_b1_q1', type: 'multiple_choice', questionText: 'What material is the disc of valve V-CHW-045 made from?', choices: ['A) Ductile iron', 'B) Bronze', 'C) Stainless steel 316', 'D) EPDM'], correctAnswer: 'C', explanation: 'The schedule shows Disc: Stainless steel 316 for V-CHW-045.' },
+      { id: 'mep_b1_q2', type: 'true_false', questionText: 'Valve V-CHW-046 has a gear operator with handwheel.', correctAnswer: 'false', explanation: 'V-CHW-046 has a lever operator, not a gear operator.' },
+      { id: 'mep_b1_q3', type: 'keyword_answer', questionText: 'What pressure rating (PN) is required for the butterfly valve on the chilled water system?', keywords: ['PN16', '16', '16 bar'], correctAnswer: 'PN16', explanation: 'The schedule specifies PN16 for the butterfly valve V-CHW-045.' },
+    ],
+    xpReward: 45,
+    coinReward: 18,
+    eloReward: 13,
+    sourceMetadata: { origin: 'EngVox original', author: 'AI Content Generation', schemaVersion: 1 },
+  },
+  {
     id: 'shop_drawing_rev',
     title: 'Shop Drawing Revision Note',
     description:
@@ -93,7 +145,7 @@ export const MEP_READING_MISSIONS: ReadingMission[] = [
     description:
       'Solve complex geometric space clashes, thermal load requirements, and power feed capacity overrides.',
     discipline: 'MEP Coordination',
-    cefrLevel: 'C2',
+    cefrLevel: 'C1',
     difficulty: 'Advanced',
     estimatedMinutes: 18,
     passageText:

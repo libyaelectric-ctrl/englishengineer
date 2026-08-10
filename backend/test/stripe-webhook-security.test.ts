@@ -12,7 +12,7 @@ afterEach(() => {
 
 const STRIPE_ENV = {
   STRIPE_SECRET_KEY: 'sk_test_value',
-  STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+  STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
   STRIPE_WEBHOOK_SECRET: 'whsec_test_secret',
 };
 

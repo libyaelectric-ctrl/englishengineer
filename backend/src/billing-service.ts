@@ -10,6 +10,7 @@ import {
 } from './billing-webhook-handlers.js';
 import type { BillingRepository } from './billing-webhook-handlers.js';
 import { ApiError } from './errors.js';
+import { normalizePlanId } from './billing-plan-migration.js';
 import { logger } from './logger.js';
 import { stripeRetry } from './utils/retry.js';
 
@@ -77,9 +78,11 @@ const PLAN_PRICE_CONFIG: Record<string, string> = {
 const resolveOrProvisionPriceId = async (
   config: BillingServiceConfig,
   stripeClient: Stripe,
-  planId: string
+  planId: Exclude<import('../types.js').PlanId, 'free'>,
+  billingInterval: 'month' | 'year' = 'month'
 ): Promise<string> => {
-  const configKey = PLAN_PRICE_CONFIG[planId];
+  const monthlyKey = PLAN_PRICE_CONFIG[planId];
+  const configKey = billingInterval === 'year' ? monthlyKey.replace('Monthly', 'Annual') : monthlyKey;
   if (configKey && config[configKey]) {
     return config[configKey] as string;
   }
@@ -97,11 +100,14 @@ const resolveOrProvisionPriceId = async (
     })
   );
 
+  const annualAmount = Math.round(meta.unitAmount * 12 * 0.8);
+  const intervalAmount = billingInterval === 'year' ? annualAmount : meta.unitAmount;
+  const intervalNickname = billingInterval === 'year' ? `${planId} annual 20% off` : meta.nickname;
   const found = existingPrices.data.find(
     (p) =>
-      p.nickname === meta.nickname &&
-      p.recurring?.interval === 'month' &&
-      p.unit_amount === meta.unitAmount &&
+      p.nickname === intervalNickname &&
+      p.recurring?.interval === billingInterval &&
+      p.unit_amount === intervalAmount &&
       p.currency === 'usd'
   );
 
@@ -123,12 +129,12 @@ const resolveOrProvisionPriceId = async (
   }
 
   const newPrice = await stripeClient.prices.create({
-    unit_amount: meta.unitAmount,
+    unit_amount: intervalAmount,
     currency: 'usd',
-    recurring: { interval: 'month' },
+    recurring: { interval: billingInterval },
     product: product.id,
-    nickname: meta.nickname,
-    metadata: { engineeros_plan: planId },
+    nickname: intervalNickname,
+    metadata: { engineeros_plan: planId, billing_interval: billingInterval },
   });
 
   return newPrice.id;
@@ -181,6 +187,7 @@ interface CheckoutSessionBody {
   successUrl?: string;
   cancelUrl?: string;
   planId?: string;
+  billingInterval?: 'month' | 'year';
 }
 
 interface PortalSessionBody {
@@ -202,9 +209,12 @@ const resolveSubscription = (
   hasStripe: boolean
 ): SubscriptionSnapshot => {
   if (!sub) return emptySubscription();
+  const normalized = { ...sub, planId: normalizePlanId(sub.planId) };
   if (!configured || !hasStripe)
-    return sub.planId !== 'free' && sub.status !== 'none' ? sub : emptySubscription();
-  return sub.stripeCustomerId ? sub : emptySubscription();
+    return normalized.planId !== 'free' && normalized.status !== 'none'
+      ? normalized
+      : emptySubscription();
+  return normalized.stripeCustomerId ? normalized : emptySubscription();
 };
 
 const verifyStripeSignature = (
@@ -305,9 +315,14 @@ export const createBillingService = ({
       const email = requireText(body?.email, 'email');
       const successUrl = requireText(body?.successUrl, 'successUrl');
       const cancelUrl = requireText(body?.cancelUrl, 'cancelUrl');
-      const planId = body?.planId || 'pro';
+      const normalizedPlanId = normalizePlanId(body?.planId || 'junior');
+      if (normalizedPlanId === 'free') {
+        throw new ApiError(400, 'INVALID_PLAN', 'A paid plan is required for checkout.');
+      }
+      const planId = normalizedPlanId;
+      const billingInterval = body?.billingInterval || 'month';
 
-      const price = await resolveOrProvisionPriceId(config, stripeClient!, planId);
+      const price = await resolveOrProvisionPriceId(config, stripeClient!, planId, billingInterval);
 
       const session = await stripeClient!.checkout.sessions.create({
         mode: 'subscription',

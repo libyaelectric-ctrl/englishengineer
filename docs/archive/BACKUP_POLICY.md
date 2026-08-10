@@ -14,7 +14,7 @@ Supabase provides automatic backups:
 | Pro  | Daily + Point-in-time | 7 days + PITR  |
 | Team | Daily + Point-in-time | 14 days + PITR |
 
-**Current Plan:** Pro (recommended for production)
+**Current Plan:** Junior (recommended for production)
 
 ### What Supabase Backs Up Automatically
 

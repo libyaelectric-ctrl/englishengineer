@@ -2,6 +2,32 @@ import type { ReadingMission } from './reading.types';
 
 export const ELECTRICAL_READING_MISSIONS: ReadingMission[] = [
   {
+    id: 'electrical_a2_cable_label_check',
+    title: 'Cable Label Check Notice',
+    description: 'Read a short site notice about checking cable labels before termination.',
+    discipline: 'Electrical Engineering',
+    cefrLevel: 'A2',
+    difficulty: 'Beginner',
+    estimatedMinutes: 6,
+    passageText: 'SITE NOTICE. All electrical contractors: before you terminate any cable, check the label. Every cable must have a label at both ends. The label shows the cable number, size, and destination. Example: CBL-345, 4C x 25mm², to DB-12. If a label is missing or damaged, stop work. Tell the site engineer. Do not guess. Wrong termination causes faults and delays. Labels use black marker on white tape. Cable ties must not cover the label. Check every cable. Thank you.',
+    vocabulary: [
+      { term: 'terminate', definition: 'To connect the end of a cable to a terminal or device.', context: 'Before you terminate any cable, check the label.', turkishTranslation: 'sonlandırma / bağlama' },
+      { term: 'cable label', definition: 'A tag or marking on a cable that identifies its number, size, and destination.', context: 'Every cable must have a label at both ends.', turkishTranslation: 'kablo etiketi' },
+      { term: 'destination', definition: 'The place or equipment where a cable goes.', context: 'The label shows the cable number, size, and destination.', turkishTranslation: 'varış noktası' },
+      { term: 'fault', definition: 'An electrical failure or short circuit.', context: 'Wrong termination causes faults and delays.', turkishTranslation: 'ariza / hata' },
+      { term: 'cable tie', definition: 'A plastic strap used to bundle cables together.', context: 'Cable ties must not cover the label.', turkishTranslation: 'kablo bağı' },
+    ],
+    questions: [
+      { id: 'elec_a2_q1', type: 'multiple_choice', questionText: 'What information does a cable label show?', choices: ['A) Cable number, size, and destination', 'B) Cable color and length', 'C) Contractor name and date', 'D) Voltage and current rating'], correctAnswer: 'A', explanation: 'The notice states the label shows the cable number, size, and destination.' },
+      { id: 'elec_a2_q2', type: 'true_false', questionText: 'You should guess the destination if a label is missing.', correctAnswer: 'false', explanation: 'The notice says "Do not guess. Wrong termination causes faults and delays."' },
+      { id: 'elec_a2_q3', type: 'keyword_answer', questionText: 'What should you do if a cable label is missing or damaged?', keywords: ['stop work', 'tell the site engineer', 'stop', 'engineer'], correctAnswer: 'Stop work and tell the site engineer', explanation: 'The notice says "If a label is missing or damaged, stop work. Tell the site engineer."' },
+    ],
+    xpReward: 40,
+    coinReward: 15,
+    eloReward: 12,
+    sourceMetadata: { origin: 'EngVox original', author: 'AI Content Generation', schemaVersion: 1 },
+  },
+  {
     id: 'elec_site_inspection',
     title: 'Electrical Site Inspection Report',
     description:

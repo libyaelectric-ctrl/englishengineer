@@ -38,6 +38,11 @@ export interface StripeConfig {
   priceSpecialistMonthly?: string | null;
   priceMasterMonthly?: string | null;
   priceTeamMonthly?: string | null;
+  priceJuniorAnnual?: string | null;
+  priceSeniorAnnual?: string | null;
+  priceSpecialistAnnual?: string | null;
+  priceMasterAnnual?: string | null;
+  priceTeamAnnual?: string | null;
   environment: RuntimeEnvironment;
   allowMemoryRepository: boolean;
   eventCacheTtlMs: number;
@@ -199,7 +204,7 @@ export interface WorkspaceDocumentBody {
 
 // --- Billing & Subscriptions ---
 
-export type PlanId = 'free' | 'lite' | 'pro' | 'project' | 'max' | 'exec' | 'private' | 'team';
+export type PlanId = 'free' | 'junior' | 'senior' | 'specialist' | 'master' | 'team';
 
 export type SubscriptionStatus =
   'none' | 'active' | 'canceled' | 'past_due' | 'incomplete' | 'trialing' | 'unpaid';

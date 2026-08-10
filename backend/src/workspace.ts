@@ -2,6 +2,7 @@ import type { Express, NextFunction, Request, RequestHandler, Response } from 'e
 
 import type { WorkspaceConfig } from '../types.js';
 import { ApiError } from './errors.js';
+import { normalizePlanId } from './billing-plan-migration.js';
 import {
   WorkspaceCreateBodySchema,
   WorkspaceDocumentBodySchema,
@@ -19,14 +20,15 @@ export const createWorkspaceRepository = (
 };
 
 const getWorkspaceLimit = (planId: string): number => {
-  switch (planId) {
+  switch (normalizePlanId(planId)) {
     case 'free':
-    case 'pro':
+    case 'junior':
       return 1;
-    case 'project':
-    case 'exec':
+    case 'senior':
+    case 'specialist':
       return 3;
-    case 'private':
+    case 'master':
+    case 'team':
       return Infinity;
     default:
       return 1;
