@@ -1,6 +1,7 @@
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 
 export interface PricingCopy {
+  freePlan?: string;
   title: string;
   subtitle: string;
   monthly: string;
@@ -37,4 +38,25 @@ const COPY: Record<SupportedInterfaceLanguage, PricingCopy> = {
   nl: { title: 'Prijzen', subtitle: 'Kies het plan dat past bij uw technische communicatiedoelen.', monthly: 'Maandelijks', annual: 'Jaarlijks', save20: 'Bespaar 20%', perMonth: 'per maand', perMonthAnnual: 'per maand, jaarlijks gefactureerd', mostPopular: 'Meest populair', comingSoon: 'Binnenkort', getStarted: 'Starten', choosePlan: 'Plan kiezen', loading: 'Laden...', currentPlan: 'Huidig plan', backHome: 'Terug naar home', contactSales: 'Neem contact op met sales', teamDescription: 'Enterpriseplan voor teams. Neem contact op om uw eisen te bespreken.' },
 };
 
-export const getPricingCopy = (language: SupportedInterfaceLanguage): PricingCopy => COPY[language] ?? COPY.en;
+const FREE_PLAN_LABELS: Record<SupportedInterfaceLanguage, string> = {
+  en: 'Free',
+  tr: 'Ücretsiz',
+  ar: 'مجاني',
+  de: 'Kostenlos',
+  es: 'Gratis',
+  pt: 'Grátis',
+  fr: 'Gratuit',
+  ru: 'Бесплатно',
+  zh: '免费',
+  ja: '無料',
+  it: 'Gratis',
+  vi: 'Miễn phí',
+  pl: 'Bezpłatny',
+  id: 'Gratis',
+  nl: 'Gratis',
+};
+
+export const getPricingCopy = (language: SupportedInterfaceLanguage): PricingCopy => ({
+  ...(COPY[language] ?? COPY.en),
+  freePlan: FREE_PLAN_LABELS[language] ?? FREE_PLAN_LABELS.en,
+});

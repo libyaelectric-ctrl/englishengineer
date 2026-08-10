@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 import { PRICING_FEATURE_ORDER, PRICING_TIERS } from '@/shared/data/pricing.data';
 import { getPublicPageCopy } from '@/shared/data/public-page-copy';
+import { getPricingCopy } from '@/shared/data/pricing-copy';
 
 import { CurrencyConfig } from '@/features/billing';
 import { useLocalizationStore } from '@/features/localization';
@@ -15,6 +16,7 @@ import { getLandingTranslations } from './landing-i18n';
 export function PricingSection() {
   const language = useLocalizationStore((s) => s.language);
   const t = getLandingTranslations(language);
+  const pricingCopy = getPricingCopy(language);
   const publicCopy = getPublicPageCopy(language);
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [isAnnual, setIsAnnual] = useState(false);
@@ -50,11 +52,10 @@ export function PricingSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-            {t.pricingTitle ?? 'Simple, Transparent Pricing'}
+            {pricingCopy.title}
           </h2>
           <p className="mt-4 text-slate-600 dark:text-slate-400 text-base sm:text-lg">
-            {t.pricingSubtitle ??
-              'Choose your plan. Every plan includes your discipline-specific vocabulary pool.'}
+            {pricingCopy.subtitle}
           </p>
         </div>
 
@@ -65,16 +66,16 @@ export function PricingSection() {
               onClick={() => setIsAnnual(false)}
               className={`px-3 py-1.5 rounded text-sm font-semibold transition-all ${!isAnnual ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-500'}`}
             >
-              {t.pricingMonthly ?? 'Monthly'}
+              {pricingCopy.monthly}
             </button>
             <button
               type="button"
               onClick={() => setIsAnnual(true)}
               className={`px-3 py-1.5 rounded text-sm font-semibold transition-all flex items-center gap-1.5 ${isAnnual ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-500'}`}
             >
-              <span>{t.pricingAnnual ?? 'Annual'}</span>
+              <span>{pricingCopy.annual}</span>
               <span className="text-[10px] bg-emerald-500 text-white px-1.5 py-0.5 rounded font-mono">
-                -{t.pricingSave20 ?? '20%'}
+                {pricingCopy.save20}
               </span>
             </button>
           </div>
@@ -96,7 +97,7 @@ export function PricingSection() {
         </div>
 
         <div className="mx-auto mb-8 max-w-sm rounded-[var(--radius-card)] border-2 border-primary/40 bg-surface p-5 text-center shadow-sm">
-          <p className="text-sm font-semibold text-foreground">Free</p>
+          <p className="text-sm font-semibold text-foreground">{pricingCopy.freePlan}</p>
           <p className="mt-2 text-3xl font-extrabold tracking-tight text-foreground">$0</p>
           <p className="mt-1 text-xs leading-relaxed text-muted-copy">
             {publicCopy.freeDescription}
