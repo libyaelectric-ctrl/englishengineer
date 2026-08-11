@@ -68,6 +68,7 @@ const PROGRESS_NAV_ITEMS = [
 
 export const NAV_ITEMS = [
   { label: 'Home', href: '/dashboard', icon: Home },
+  { label: 'Öğrenme Yolu (EngDua)', href: '/learning-path', icon: Trophy },
   { label: 'Skills', href: null, icon: Layers3, children: SKILL_NAV_ITEMS },
   { label: 'Progress', href: null, icon: Trophy, children: PROGRESS_NAV_ITEMS },
   {
