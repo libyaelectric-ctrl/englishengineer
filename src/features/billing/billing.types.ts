@@ -4,6 +4,9 @@ export type SubscriptionStatus =
   'none' | 'trialing' | 'active' | 'past_due' | 'canceled' | 'incomplete' | 'enterprise_pending';
 
 export type BillingFeature =
+  | 'placementTest'
+  | 'grammar'
+  | 'translator'
   | 'reading'
   | 'writing'
   | 'listening'

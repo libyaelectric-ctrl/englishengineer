@@ -11,165 +11,75 @@ export const isSubscriptionActive = (subscription: SubscriptionSnapshot): boolea
   subscription.status === 'active' ||
   subscription.status === 'trialing';
 
+const PLAN_HIERARCHY: BillingPlanId[] = ['junior', 'senior', 'specialist', 'master', 'team'];
+
+const findMinimumPlanForFeature = (feature: BillingFeature): BillingPlanId | null => {
+  for (const planId of PLAN_HIERARCHY) {
+    if (BILLING_PLANS[planId].features.includes(feature)) return planId;
+  }
+  return null;
+};
+
 export const canAccessFeature = (
-  _subscription: SubscriptionSnapshot,
-  _feature: BillingFeature
-): EntitlementResult => ({
-  allowed: true,
-  reason: 'All features are available to all users.',
-  requiredPlan: null,
-});
+  subscription: SubscriptionSnapshot,
+  feature: BillingFeature
+): EntitlementResult => {
+  if (!isSubscriptionActive(subscription)) {
+    return {
+      allowed: false,
+      reason: 'Subscription is not active.',
+      requiredPlan: 'junior',
+    };
+  }
+
+  const plan = BILLING_PLANS[subscription.planId];
+  if (plan.features.includes(feature)) {
+    return {
+      allowed: true,
+      reason: `Included in the ${plan.name} plan.`,
+      requiredPlan: null,
+    };
+  }
+
+  const requiredPlan = findMinimumPlanForFeature(feature);
+  return {
+    allowed: false,
+    reason: requiredPlan
+      ? `This feature requires the ${BILLING_PLANS[requiredPlan].name} plan or higher.`
+      : 'This feature is not currently available on any plan.',
+    requiredPlan,
+  };
+};
 
 export const canUseAICoach = (
   subscription: SubscriptionSnapshot,
   _dailyUsageCount = 0
-): EntitlementResult => {
-  if (!isSubscriptionActive(subscription)) {
-    return {
-      allowed: false,
-      reason: 'Subscription is not active.',
-      requiredPlan: 'junior',
-    };
-  }
+): EntitlementResult => canAccessFeature(subscription, 'aiCoach');
 
-  return {
-    allowed: true,
-    reason: 'Unlimited AI Coach access.',
-    requiredPlan: null,
-  };
-};
+export const canCreateMission = (subscription: SubscriptionSnapshot): EntitlementResult =>
+  canAccessFeature(subscription, 'missionCreation');
 
-export const canCreateMission = (subscription: SubscriptionSnapshot): EntitlementResult => {
-  if (!isSubscriptionActive(subscription)) {
-    return {
-      allowed: false,
-      reason: 'Subscription is not active.',
-      requiredPlan: 'junior',
-    };
-  }
-  return {
-    allowed: true,
-    reason: 'Mission creation is available to all users.',
-    requiredPlan: null,
-  };
-};
+export const canViewAdvancedAnalytics = (subscription: SubscriptionSnapshot): EntitlementResult =>
+  canAccessFeature(subscription, 'advancedAnalytics');
 
-export const canViewAdvancedAnalytics = (subscription: SubscriptionSnapshot): EntitlementResult => {
-  if (!isSubscriptionActive(subscription)) {
-    return {
-      allowed: false,
-      reason: 'Subscription is not active.',
-      requiredPlan: 'junior',
-    };
-  }
-  return {
-    allowed: true,
-    reason: 'Advanced analytics available to all users.',
-    requiredPlan: null,
-  };
-};
+export const canAccessProjectWorkspace = (subscription: SubscriptionSnapshot): EntitlementResult =>
+  canAccessFeature(subscription, 'projectWorkspace');
 
-export const canAccessProjectWorkspace = (
-  subscription: SubscriptionSnapshot
-): EntitlementResult => {
-  if (!isSubscriptionActive(subscription)) {
-    return {
-      allowed: false,
-      reason: 'Subscription is not active.',
-      requiredPlan: 'junior',
-    };
-  }
-  return {
-    allowed: true,
-    reason: 'Project workspace available to all users.',
-    requiredPlan: null,
-  };
-};
+export const canAccessPersistentMemory = (subscription: SubscriptionSnapshot): EntitlementResult =>
+  canAccessFeature(subscription, 'persistentProjectMemory');
 
-export const canAccessPersistentMemory = (
-  subscription: SubscriptionSnapshot
-): EntitlementResult => {
-  if (!isSubscriptionActive(subscription)) {
-    return {
-      allowed: false,
-      reason: 'Subscription is not active.',
-      requiredPlan: 'junior',
-    };
-  }
-  return {
-    allowed: true,
-    reason: 'Persistent memory available to all users.',
-    requiredPlan: null,
-  };
-};
-
-export const canAccessCustomScenario = (subscription: SubscriptionSnapshot): EntitlementResult => {
-  if (!isSubscriptionActive(subscription)) {
-    return {
-      allowed: false,
-      reason: 'Subscription is not active.',
-      requiredPlan: 'junior',
-    };
-  }
-  return {
-    allowed: true,
-    reason: 'Custom scenario generation available to all users.',
-    requiredPlan: null,
-  };
-};
+export const canAccessCustomScenario = (subscription: SubscriptionSnapshot): EntitlementResult =>
+  canAccessFeature(subscription, 'customScenarioGeneration');
 
 export const canAccessLinkedInOptimization = (
   subscription: SubscriptionSnapshot
-): EntitlementResult => {
-  if (!isSubscriptionActive(subscription)) {
-    return {
-      allowed: false,
-      reason: 'Subscription is not active.',
-      requiredPlan: 'junior',
-    };
-  }
-  return {
-    allowed: true,
-    reason: 'LinkedIn optimization available to all users.',
-    requiredPlan: null,
-  };
-};
+): EntitlementResult => canAccessFeature(subscription, 'linkedinOptimization');
 
-export const canAccessPersistentAIAgent = (
-  subscription: SubscriptionSnapshot
-): EntitlementResult => {
-  if (!isSubscriptionActive(subscription)) {
-    return {
-      allowed: false,
-      reason: 'Subscription is not active.',
-      requiredPlan: 'junior',
-    };
-  }
-  return {
-    allowed: true,
-    reason: 'AI agent available to all users.',
-    requiredPlan: null,
-  };
-};
+export const canAccessPersistentAIAgent = (subscription: SubscriptionSnapshot): EntitlementResult =>
+  canAccessFeature(subscription, 'persistentAIAgent');
 
-export const canAccessRealVoiceSpeaking = (
-  subscription: SubscriptionSnapshot
-): EntitlementResult => {
-  if (!isSubscriptionActive(subscription)) {
-    return {
-      allowed: false,
-      reason: 'Subscription is not active.',
-      requiredPlan: 'junior',
-    };
-  }
-  return {
-    allowed: true,
-    reason: 'Voice speaking available to all users.',
-    requiredPlan: null,
-  };
-};
-
-const PLAN_HIERARCHY: BillingPlanId[] = ['junior', 'senior', 'specialist', 'master', 'team'];
+export const canAccessRealVoiceSpeaking = (subscription: SubscriptionSnapshot): EntitlementResult =>
+  canAccessFeature(subscription, 'realVoiceSpeaking');
 
 const getPlanLevel = (planId: BillingPlanId): number => PLAN_HIERARCHY.indexOf(planId);
 
@@ -178,7 +88,7 @@ export const isDowngrade = (from: BillingPlanId, to: BillingPlanId): boolean =>
 
 export interface DowngradeImpact {
   isDowngrade: boolean;
-  lostFeatures: never[];
+  lostFeatures: BillingFeature[];
   restrictedLimits: {
     field: string;
     from: number | 'unlimited';
@@ -190,17 +100,56 @@ export interface DowngradeImpact {
 }
 
 export const getDowngradeImpact = (
-  _currentPlanId: BillingPlanId,
-  _targetPlanId: BillingPlanId,
+  currentPlanId: BillingPlanId,
+  targetPlanId: BillingPlanId,
   currentWorkspaceCount = 0
-): DowngradeImpact => ({
-  isDowngrade: false,
-  lostFeatures: [],
-  restrictedLimits: [],
-  workspaceCount: currentWorkspaceCount,
-  requiresDataCleanup: false,
-  warningMessage: 'All features remain available.',
-});
+): DowngradeImpact => {
+  const downgrading = isDowngrade(currentPlanId, targetPlanId);
+  if (!downgrading) {
+    return {
+      isDowngrade: false,
+      lostFeatures: [],
+      restrictedLimits: [],
+      workspaceCount: currentWorkspaceCount,
+      requiresDataCleanup: false,
+      warningMessage: 'All features remain available.',
+    };
+  }
+
+  const currentFeatures = BILLING_PLANS[currentPlanId].features;
+  const targetFeatures = BILLING_PLANS[targetPlanId].features;
+  const lostFeatures = currentFeatures.filter((f) => !targetFeatures.includes(f));
+
+  const limitFields: (
+    'dailyAICoachRequests' | 'moduleAttemptsPerDay' | 'vocabularyReviewsPerDay'
+  )[] = ['dailyAICoachRequests', 'moduleAttemptsPerDay', 'vocabularyReviewsPerDay'];
+  const restrictedLimits = limitFields
+    .map((field) => ({
+      field,
+      from: BILLING_PLANS[currentPlanId].limits[field],
+      to: BILLING_PLANS[targetPlanId].limits[field],
+    }))
+    .filter(
+      ({ from, to }) =>
+        (from === 'unlimited' && to !== 'unlimited') ||
+        (typeof from === 'number' && typeof to === 'number' && to < from)
+    );
+
+  const requiresDataCleanup =
+    lostFeatures.includes('projectWorkspace') && currentWorkspaceCount > 0;
+
+  return {
+    isDowngrade: true,
+    lostFeatures,
+    restrictedLimits,
+    workspaceCount: currentWorkspaceCount,
+    requiresDataCleanup,
+    warningMessage:
+      lostFeatures.length > 0
+        ? `Downgrading to ${BILLING_PLANS[targetPlanId].name} will remove access to: ${lostFeatures.join(', ')}.`
+        : 'No feature access will be lost, but some limits may be reduced.',
+  };
+};
 
 export const getPlanLimitLabel = (
   subscription: SubscriptionSnapshot,
