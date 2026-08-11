@@ -144,32 +144,20 @@ export const Sidebar = () => {
                 </span>
               </div>
             </div>
+            {/* Language Switcher Buttons */}
             <div className="flex items-center gap-1.5">
-              {/* Language Switcher */}
-              <div className="relative group">
+              {dashboardLanguages.map((lang) => (
                 <button
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:text-foreground hover:border-primary/40 transition-colors cursor-pointer"
-                  aria-label="Change language"
+                  key={lang.id}
+                  onClick={() => setLanguage(lang.id as SupportedInterfaceLanguage)}
+                  className={`inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:text-foreground hover:border-primary/40 transition-colors cursor-pointer ${
+                    language === lang.id ? 'bg-primary/10 text-primary font-bold border-primary' : ''
+                  }`}
+                  aria-label={`Change language to ${lang.nativeLabel}`}
                 >
-                  <span className="text-sm leading-none">{currentLangOption.flag}</span>
+                  <span className="text-sm leading-none">{lang.flag}</span>
                 </button>
-                <div className="absolute left-0 top-full mt-1 hidden group-hover:flex flex-col rounded-[var(--radius-card)] border border-border-soft bg-surface p-1.5 shadow-xl min-w-[160px] max-h-[320px] overflow-y-auto z-50 animate-in fade-in duration-150">
-                  {dashboardLanguages.map((lang) => (
-                    <button
-                      key={lang.id}
-                      onClick={() => setLanguage(lang.id as SupportedInterfaceLanguage)}
-                      className={`flex items-center gap-2.5 rounded px-2.5 py-1.5 text-left text-xs transition-colors cursor-pointer ${
-                        language === lang.id
-                          ? 'bg-primary/10 text-primary font-bold'
-                          : 'text-foreground hover:bg-surface-hover'
-                      }`}
-                    >
-                      <span className="text-sm leading-none">{lang.flag}</span>
-                      <span className="truncate">{lang.nativeLabel}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
+              ))}
               <ThemeToggle />
               <button
                 onClick={toggleSidebar}

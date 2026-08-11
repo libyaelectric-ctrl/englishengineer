@@ -1,5 +1,5 @@
 import { PRODUCT_VERSION } from '@/config/product.config';
-import { ArrowRight, ChevronDown, Moon, Sun } from 'lucide-react';
+import { ArrowRight, Moon, Sun } from 'lucide-react';
 
 import { useTheme } from '@/features/theme/ThemeProvider';
 
@@ -23,7 +23,9 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
   const [langOpen, setLangOpen] = useState(false);
   const currentLang = INTERFACE_LANGUAGES.find((l) => l.id === language);
   const englishLanguage = INTERFACE_LANGUAGES.find((l) => l.id === 'en');
-  const otherLanguages = INTERFACE_LANGUAGES.filter((l) => l.id !== 'en');
+  // Show only the currently-selected language (if not EN) + EN as two side-by-side buttons
+  const nonEnglishLangs = INTERFACE_LANGUAGES.filter((l) => l.id !== 'en');
+  const otherLanguages = language === 'en' ? [] : [currentLang!];
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border-soft bg-background/95 backdrop-blur-md shadow-sm">
@@ -48,8 +50,9 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
             </div>
           </Link>
 
-          {/* ── Language Flags: inline raised row (md+), compact popover on small screens ── */}
+          {/* ── Language Selector: side-by-side buttons (selected lang + EN) ── */}
           <div className="hidden md:flex items-center gap-1 lg:gap-1.5 shrink-0 mx-3 lg:mx-6">
+            {/* Non-English selected language button */}
             {otherLanguages.map((lang) => (
               <button
                 key={lang.id}
@@ -57,67 +60,62 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
                 title={lang.nativeLabel}
                 aria-label={`Switch to ${lang.label}`}
                 onClick={() => setLanguage(lang.id as SupportedInterfaceLanguage)}
-                className={`flex items-center justify-center rounded-[var(--radius-card)] w-7 h-7 text-base leading-none border transition-all cursor-pointer select-none ${
+                className={`flex items-center gap-1 rounded-[var(--radius-card)] h-7 px-2 text-[10px] font-bold leading-none border transition-all cursor-pointer select-none ${
                   language === lang.id
-                    ? 'bg-primary/15 border-primary ring-1 ring-primary/60 -translate-y-0.5 shadow-md'
-                    : 'bg-surface border-border-soft opacity-60 hover:opacity-100 hover:-translate-y-0.5 hover:shadow-md shadow-[var(--shadow-card)]'
+                    ? 'bg-primary/15 border-primary ring-1 ring-primary/60 -translate-y-0.5 shadow-md text-primary'
+                    : 'bg-surface border-border-soft opacity-60 hover:opacity-100 hover:-translate-y-0.5 hover:shadow-md shadow-[var(--shadow-card)] text-foreground'
                 }`}
               >
-                {lang.flag}
+                <span className="text-base leading-none">{lang.flag}</span>
+                <span className="uppercase tracking-wide">{lang.id.toUpperCase()}</span>
               </button>
             ))}
-            <ArrowRight className="mx-1 h-3 w-3 shrink-0 text-primary" aria-hidden="true" />
+            {otherLanguages.length > 0 && (
+              <ArrowRight className="mx-0.5 h-3 w-3 shrink-0 text-primary" aria-hidden="true" />
+            )}
+            {/* EN button — always visible, highlighted when EN is selected */}
             {englishLanguage && (
-              <div
+              <button
+                type="button"
                 title="English"
-                aria-label="English (EN), fixed target language"
-                className="flex h-7 shrink-0 items-center gap-1 rounded-[var(--radius-card)] border border-primary bg-primary/15 px-1.5 text-[10px] font-bold leading-none ring-1 ring-primary/60 select-none"
+                aria-label="Switch to English"
+                onClick={() => setLanguage('en' as SupportedInterfaceLanguage)}
+                className={`flex h-7 shrink-0 items-center gap-1 rounded-[var(--radius-card)] border px-2 text-[10px] font-bold leading-none transition-all cursor-pointer select-none ${
+                  language === 'en'
+                    ? 'bg-primary/15 border-primary ring-1 ring-primary/60 text-primary -translate-y-0.5 shadow-md'
+                    : 'bg-surface border-border-soft opacity-60 hover:opacity-100 hover:-translate-y-0.5 hover:shadow-md text-foreground'
+                }`}
               >
-                <span className="text-base">{englishLanguage.flag}</span>
-                <span>EN</span>
-              </div>
+                <span className="uppercase tracking-wide">EN</span>
+              </button>
             )}
           </div>
 
-          {/* Mobile fallback: compact language popover */}
-          <div className="relative shrink-0 md:hidden">
+          {/* Mobile fallback: compact language buttons (current lang + EN) */}
+          <div className="flex items-center gap-1 shrink-0 md:hidden">
+            {language !== 'en' && currentLang && (
+              <button
+                type="button"
+                title={currentLang.nativeLabel}
+                aria-label={`Currently: ${currentLang.label}`}
+                className="flex items-center gap-0.5 rounded border border-primary bg-primary/15 px-1.5 py-1 text-[9px] font-bold text-primary leading-none ring-1 ring-primary/60 cursor-default select-none"
+              >
+                <span className="text-sm leading-none">{currentLang.flag}</span>
+                <span className="uppercase">{currentLang.id.toUpperCase()}</span>
+              </button>
+            )}
             <button
               type="button"
-              onClick={() => setLangOpen((o) => !o)}
-              aria-expanded={langOpen}
-              aria-label="Change interface language"
-              className="flex items-center gap-1 rounded border border-border-soft bg-surface px-1.5 py-1 text-base leading-none transition-colors hover:border-primary/40 cursor-pointer"
+              onClick={() => setLanguage('en' as SupportedInterfaceLanguage)}
+              aria-label="Switch to English"
+              className={`flex items-center gap-0.5 rounded border px-1.5 py-1 text-[9px] font-bold leading-none cursor-pointer select-none transition-all ${
+                language === 'en'
+                  ? 'bg-primary/15 border-primary ring-1 ring-primary/60 text-primary'
+                  : 'bg-surface border-border-soft text-muted-copy hover:border-primary/40 hover:text-foreground'
+              }`}
             >
-              <span>{currentLang?.flag ?? '🌐'}</span>
-              {currentLang?.id === 'en' && <span className="text-[8px] font-bold">EN</span>}
-              <ChevronDown className="h-3 w-3 text-muted-copy" />
+              <span className="uppercase">EN</span>
             </button>
-            {langOpen && (
-              <div className="absolute left-0 top-full mt-1.5 z-50 grid grid-cols-5 gap-0.5 rounded-[var(--radius-card)] border border-border-soft bg-background p-1.5 shadow-xl">
-                {otherLanguages.map((lang) => (
-                  <button
-                    key={lang.id}
-                    type="button"
-                    title={lang.nativeLabel}
-                    aria-label={`Switch to ${lang.label}`}
-                    onClick={() => {
-                      setLanguage(lang.id as SupportedInterfaceLanguage);
-                      setLangOpen(false);
-                    }}
-                    className={`flex items-center justify-center rounded w-7 h-7 text-base leading-none transition-all cursor-pointer select-none ${
-                      language === lang.id
-                        ? 'bg-primary/10 ring-1 ring-primary'
-                        : 'opacity-50 hover:opacity-100 hover:bg-surface'
-                    }`}
-                  >
-                    <span className="flex flex-col items-center gap-0.5">
-                      <span>{lang.flag}</span>
-                      <span className="text-[8px] font-bold uppercase leading-none">{lang.id}</span>
-                    </span>
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
           {/* ── Spacer ── */}
