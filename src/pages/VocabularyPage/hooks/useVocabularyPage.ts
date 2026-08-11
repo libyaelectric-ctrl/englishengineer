@@ -44,6 +44,17 @@ export type { VocabularySetMode };
 
 export function useVocabularyPage() {
   const userId = useAuthStore((state) => state.currentUser?.id);
+  const hearts = useLearningStore((state) => state.hearts);
+  const heartsDepletedAt = useLearningStore((state) => state.heartsDepletedAt);
+  const checkHeartsRefill = useLearningStore((state) => state.checkHeartsRefill);
+
+  useEffect(() => {
+    checkHeartsRefill();
+    // Re-check periodically in case the tab stays open across the refill window.
+    const interval = setInterval(checkHeartsRefill, 60_000);
+    return () => clearInterval(interval);
+  }, [checkHeartsRefill]);
+
   const learningProfile = useMemo(
     () => LearningProfileRepository.getProfile(userId || 'local-user'),
     [userId]
@@ -221,6 +232,11 @@ export function useVocabularyPage() {
   }, [activeTab, batchOffset, learningDomain, selectSet]);
 
   const reviewWord = (term: VocabularyTerm, isCorrect: boolean) => {
+    // Out of hearts: block further wrong-answerable review until the 24h
+    // refill window passes. Correct answers never cost a heart, so still
+    // allow those through even at 0 hearts.
+    if (!isCorrect && hearts <= 0) return;
+
     const prevStatus = VocabularyMenuService.getState().progress[term.id]?.status ?? 'New';
 
     VocabularyMenuService.reviewWord(
@@ -230,7 +246,11 @@ export function useVocabularyPage() {
       repairVocabularyText(term.term)
     );
     useVocabularyStore.getState().updateWordProgress(term.id, isCorrect ? 'correct' : 'incorrect');
-    if (isCorrect) playSound('ding');
+    if (isCorrect) {
+      playSound('ding');
+    } else {
+      useLearningStore.getState().loseHeart();
+    }
     useLearningStore.getState().completeGenericPractice('Vocabulary', isCorrect ? 100 : 0, 0.5);
     dispatchData({
       type: 'SET_MENU_STATE',
@@ -413,6 +433,8 @@ export function useVocabularyPage() {
     hasSearched,
     filters,
     vocabularyProfile,
+    hearts,
+    heartsDepletedAt,
     chooseTab,
     reviewWord,
     learnWord,
