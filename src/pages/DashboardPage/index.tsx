@@ -1,13 +1,8 @@
 import { ArrowRight, BookOpen, Target, TrendingUp, Trophy } from 'lucide-react';
-
 import React, { useEffect } from 'react';
-
 import { Link, useNavigate } from 'react-router-dom';
-
 import { useLearningStore } from '@/core/learning';
-
 import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
-
 import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization/localization.types';
@@ -96,13 +91,22 @@ export const DashboardPage: React.FC = () => {
                 ? `${translate(meta.labelKey as TranslationKey)} • ${translate(meta.descriptionKey as TranslationKey)}`
                 : discipline}
             </p>
-            <Link
-              to="/curriculum/today"
-              className="mt-5 inline-flex items-center gap-1.5 rounded-[var(--radius-card)] bg-[var(--color-primary)] px-5 py-2.5 text-sm font-bold text-white shadow-lg hover:bg-[var(--color-primary-hover)] transition-colors"
-            >
-              {translate('dashboard.startHere')}
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <Link
+                to="/learning-path"
+                className="inline-flex items-center gap-2 rounded-[var(--radius-card)] bg-gradient-to-r from-emerald-500 to-green-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg hover:scale-105 active:scale-95 transition-all"
+              >
+                <Trophy className="h-4 w-4" />
+                <span>Mühendislik Duolingosu'nu Başlat 🚀</span>
+              </Link>
+              <Link
+                to="/curriculum/today"
+                className="inline-flex items-center gap-1.5 rounded-[var(--radius-card)] bg-[var(--surface)] border border-[var(--color-border-soft)] px-5 py-2.5 text-sm font-bold text-[var(--foreground)] hover:bg-[var(--surface-hover)] transition-colors"
+              >
+                {translate('dashboard.startHere')}
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </div>
         </header>
 
