@@ -141,20 +141,60 @@ expensive setup into `beforeAll`; consider a trimmed/mock vocabulary fixture
 for unit tests instead of the full production dataset.
 **Found during:** 2026-08-10 repo audit (see `DENETIM_RAPORU.md`).
 
-### TD-017: Pre-existing failure — `navigation.e2e.test.tsx` `/dashboard renders` 🟡
+### TD-017: `navigation.e2e.test.tsx` `/dashboard renders` — Resolved ✅
 
-**File:** `src/e2e/navigation.e2e.test.tsx`
-**Issue:** The `/dashboard renders` test expects the text "Progress Cockpit" to
-appear on `DashboardPage` but the element is never found, timing out.
-Confirmed via `git stash` that this failure **pre-dates** the entitlement
-gating work in this same audit pass (TD-016 sibling finding) — it is not a
-regression from that change.
-**Impact:** One more red test in the full suite; makes `npm test` less
-trustworthy as a release gate until root-caused.
-**Effort:** Unknown — not yet investigated.
-**Action:** Determine whether "Progress Cockpit" copy still exists on
-`DashboardPage`, or whether this is another instance of stale E2E copy
-(same pattern as the landing-page tests fixed earlier in this audit).
+**File:** `src/e2e/navigation.e2e.test.tsx`, `src/pages/DashboardPage/index.tsx`
+**Root cause (two layers):**
+
+1. `DashboardPage/index.tsx` was redesigned into a "Command Center" style
+   layout (hero + 4 stat cards). The old `ProgressCockpit.tsx` and
+   `DashboardSkeleton.tsx` components (which contained the "Progress
+   Cockpit" text the test was looking for) are **no longer imported
+   anywhere** — dead code left over from the redesign, same pattern as the
+   earlier landing-page test-rot fixes in this audit.
+2. Separately, the test never authenticated a user or completed onboarding,
+   so `DashboardPage` was stuck on its `isLoading` guard (`useAuthStore`
+   defaults to `isLoading: true`) and rendered "Loading..." forever — the
+   test would have failed even after fixing (1) alone.
+   **Fix:** Test now seeds `useAuthStore` with a fully authenticated,
+   onboarded user via `LearningProfileRepository.saveProfile(...)` before
+   rendering, and asserts on the real "EngVox Command Center" heading instead
+   of the removed "Progress Cockpit" copy. 17/17 tests in the file now pass.
+   **Follow-up (not done here):** `ProgressCockpit.tsx` and
+   `DashboardSkeleton.tsx` are dead code — either wire them back in if the
+   "cockpit" UI is still wanted somewhere, or delete them.
+   **Found during / resolved during:** 2026-08-10 repo audit (see `DENETIM_RAPORU.md`).
+
+### TD-018: No shared store-reset helper between E2E test files 🟡
+
+**Files:** `src/e2e/*.e2e.test.tsx`
+**Issue:** Zustand stores (`useAuthStore`, `useBillingStore`, and likely
+others) are module-level singletons. No E2E test file resets them in an
+`afterEach`/`afterAll`, so state set by one test file can leak into the
+next file in the same worker. This was invisible while `canAccessFeature()`
+was a no-op (TD from the 2026-08-10 billing audit) and while `DashboardPage`
+tests didn't authenticate a user, but is now exposed: running
+`navigation.e2e.test.tsx` and `new-features.e2e.test.tsx` together causes 2
+of 17 `new-features` tests to intermittently fail (tab click on a
+lazy-loaded `InterviewSimulator` doesn't register), even though **both
+files pass 100% when run individually**. Root cause not fully isolated —
+likely `useAuthStore.setState(...)` in `navigation.e2e.test.tsx` (added in
+this audit pass) interacting with something in `SpeakingPage`'s tab
+rendering, but could not be pinned down further without a real browser
+debugger.
+**Impact:** Full-suite (`npx vitest run`, no path filter) test results may
+show 1-2 false failures depending on file execution order, even though
+every file is internally correct. Reduces trust in "green CI" as a signal.
+**Effort:** 0.5-1 day.
+**Action:** Add a shared test helper (e.g. `src/e2e/test-utils/resetStores.ts`)
+that resets every Zustand store to its initial state, call it in a global
+`afterEach` (e.g. via `vitest.setup.ts` if one exists, or per-file). This
+removes an entire class of order-dependent flakiness at once, rather than
+patching one interaction at a time.
+**Found during:** 2026-08-10 repo audit (see `DENETIM_RAPORU.md`). Not fixed
+in this pass — the specific interaction was mitigated for the tests this
+audit touched (pinned `useBillingStore`/`useAuthStore` state explicitly
+where needed) but the systemic gap remains.
 **Found during:** 2026-08-10 repo audit (see `DENETIM_RAPORU.md`).
 
 ## Tracking
@@ -177,7 +217,7 @@ trustworthy as a release gate until root-caused.
 | TD-014 | Low      | 🟡 Open     | TBD      | TBD      |
 | TD-015 | Low      | 🟡 Open     | TBD      | TBD      |
 | TD-016 | Medium   | 🟡 Open     | TBD      | TBD      |
-| TD-017 | Low      | 🟡 Open     | TBD      | TBD      |
+| TD-017 | Low      | ✅ Resolved | TBD      | TBD      |
 
 ## Stats
 
