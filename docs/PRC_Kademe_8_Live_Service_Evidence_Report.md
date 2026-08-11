@@ -54,38 +54,38 @@ The report never treats Stripe Dashboard/CLI delivery, provider-failure injectio
 
 ## Redacted Environment Availability
 
-| Variable                    | Scope    | Requirement | Availability |
-| --------------------------- | -------- | ----------- | ------------ |
-| `VITE_AUTH_PROVIDER`        | frontend | required    | OK           |
-| `VITE_SUPABASE_URL`         | frontend | required    | OK           |
-| `VITE_SUPABASE_ANON_KEY`    | frontend | required    | OK           |
-| `VITE_BILLING_API_URL`      | frontend | required    | OK           |
-| `VITE_AI_PROVIDER`          | frontend | required    | OK           |
-| `VITE_AI_PROXY_URL`         | frontend | required    | OK           |
-| `SUPABASE_URL`              | backend  | required    | OK           |
-| `SUPABASE_ANON_KEY`         | backend  | required    | OK           |
-| `SUPABASE_SERVICE_ROLE_KEY` | backend  | required    | OK           |
-| `BILLING_REPOSITORY`        | backend  | required    | OK           |
-| `STRIPE_SECRET_KEY`         | backend  | required    | OK           |
-| `STRIPE_WEBHOOK_SECRET`     | backend  | required    | OK           |
-| `STRIPE_PRICE_JUNIOR_MONTHLY`  | backend  | required    | OK           |
-| `AI_PROVIDER`               | backend  | required    | OK           |
-| `OPENAI_API_KEY`            | backend  | optional    | MISSING      |
-| `ANTHROPIC_API_KEY`         | backend  | optional    | MISSING      |
-| `GEMINI_API_KEY`            | backend  | required    | OK           |
-| `RATE_LIMIT_STORE`          | backend  | required    | OK           |
-| `UPSTASH_REDIS_REST_URL`    | backend  | required    | OK           |
-| `UPSTASH_REDIS_REST_TOKEN`  | backend  | required    | OK           |
+| Variable                      | Scope    | Requirement | Availability |
+| ----------------------------- | -------- | ----------- | ------------ |
+| `VITE_AUTH_PROVIDER`          | frontend | required    | OK           |
+| `VITE_SUPABASE_URL`           | frontend | required    | OK           |
+| `VITE_SUPABASE_ANON_KEY`      | frontend | required    | OK           |
+| `VITE_BILLING_API_URL`        | frontend | required    | OK           |
+| `VITE_AI_PROVIDER`            | frontend | required    | OK           |
+| `VITE_AI_PROXY_URL`           | frontend | required    | OK           |
+| `SUPABASE_URL`                | backend  | required    | OK           |
+| `SUPABASE_ANON_KEY`           | backend  | required    | OK           |
+| `SUPABASE_SERVICE_ROLE_KEY`   | backend  | required    | OK           |
+| `BILLING_REPOSITORY`          | backend  | required    | OK           |
+| `STRIPE_SECRET_KEY`           | backend  | required    | OK           |
+| `STRIPE_WEBHOOK_SECRET`       | backend  | required    | OK           |
+| `STRIPE_PRICE_JUNIOR_MONTHLY` | backend  | required    | OK           |
+| `AI_PROVIDER`                 | backend  | required    | OK           |
+| `OPENAI_API_KEY`              | backend  | optional    | MISSING      |
+| `ANTHROPIC_API_KEY`           | backend  | optional    | MISSING      |
+| `GEMINI_API_KEY`              | backend  | required    | OK           |
+| `RATE_LIMIT_STORE`            | backend  | required    | OK           |
+| `UPSTASH_REDIS_REST_URL`      | backend  | required    | OK           |
+| `UPSTASH_REDIS_REST_TOKEN`    | backend  | required    | OK           |
 
 Only availability is shown. No value, token, key or secret is written to this report.
 
 ## Commands Run
 
-| Command             | Exit code | Result |
-| ------------------- | --------: | ------ |
-| `npm run typecheck` |         0 | PASS   |
+| Command             | Exit code | Result                       |
+| ------------------- | --------: | ---------------------------- |
+| `npm run typecheck` |         0 | PASS                         |
 | `npm test`          |         0 | PASS (165 files / 930 tests) |
-| `npm run build`      |         0 | PASS   |
+| `npm run build`     |         0 | PASS                         |
 
 The external invocation required for this report is `npm run kademe8:verify`.
 
@@ -186,3 +186,55 @@ implement real per-plan entitlement checks in `billing.entitlements.ts`
 before launch, or (b) if "everything open" is intentional for this phase,
 update the UI copy (lock screens, `docs/FAQ.md`, `docs/BUSINESS_MODEL.md`)
 to stop implying features are plan-gated when they currently are not.
+
+---
+
+## Update — 2026-08-10 (3): Resolved — real plan-based gating implemented
+
+Option (a) was implemented. Summary of changes:
+
+- `billing.types.ts`: added `placementTest`, `grammar`, `translator` to
+  `BillingFeature` to cover all 12 modules in the `sonhal.md` matrix.
+- `billing.helpers.ts`: `BILLING_PLANS` now defines cumulative,
+  differentiated `features` arrays per tier (Junior → Senior → Specialist →
+  Master → Team), matching `sonhal.md` exactly. Non-AI-coach plan limits
+  (`dailyAICoachRequests`, `documentUploadsPerMonth`) were also
+  differentiated per tier instead of uniformly `'unlimited'`.
+- `billing.entitlements.ts`: `canAccessFeature()` now does a real lookup
+  against `BILLING_PLANS[subscription.planId].features` and returns the
+  minimum required plan when blocked. All the previously-hardcoded
+  `canAccessXxx()` helpers (`canUseAICoach`, `canCreateMission`,
+  `canViewAdvancedAnalytics`, `canAccessProjectWorkspace`,
+  `canAccessPersistentMemory`, `canAccessCustomScenario`,
+  `canAccessLinkedInOptimization`, `canAccessPersistentAIAgent`,
+  `canAccessRealVoiceSpeaking`) now delegate to it. `getDowngradeImpact()`
+  now computes real lost-feature and limit-reduction lists instead of a
+  stub.
+- `billing.entitlements.test.ts`: rewritten to assert the new cumulative
+  gating behavior per tier (30/30 passing).
+- `src/e2e/new-features.e2e.test.tsx`: the "Interview Simulator" and "Team
+  Dashboard" suites now explicitly pin `useBillingStore` subscription state
+  before each test (this exposed a pre-existing test-isolation gap: the
+  global billing store wasn't reset between test files, which didn't matter
+  while gating was a no-op but does now).
+
+**Verification:** `npm run typecheck` — 0 errors (verified with an
+increased Node heap). All directly-affected test suites pass in full:
+`src/features/billing` (30/30), `src/pages/AIPage` + `src/features/team` +
+`src/pages/SpeakingPage` + `src/pages/ProgressPage` +
+`src/pages/QuickToolsPage` (19/19), `src/e2e` (95/95 — the `/dashboard
+renders` failure noted in the previous update was root-caused and fixed;
+see `TECH_DEBT.md` TD-017),
+`src/features/vocabulary/services/translation` (7/7).
+
+**Still open / explicitly out of scope for this pass:**
+
+- The `Tool`↔`advancedTasks` and `AI Copilot`↔(6 AI flags) mappings used
+  reasonable judgment calls documented in `ENTITLEMENT_GOREVI.md` §2 — worth
+  a product-owner sanity check against the intended UX.
+- No feature-flag / staged-rollout wrapper was added. This changes live
+  behavior immediately for any user on a plan lower than a feature's tier —
+  see the rollout warning at the top of `ENTITLEMENT_GOREVI.md`.
+- `Live billing` and `Production launch` remain **NOT ALLOWED** — this
+  update only fixes entitlement _logic_, it does not constitute new Stripe
+  live-mode evidence.
