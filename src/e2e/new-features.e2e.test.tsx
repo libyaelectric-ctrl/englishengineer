@@ -1,5 +1,5 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { configure, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
 
@@ -10,6 +10,14 @@ import { useWritingStore } from '@/features/writing/writing.store';
 import SpeakingPage from '@/pages/SpeakingPage';
 import TeamPage from '@/pages/TeamPage';
 import WorkToolsPage from '@/pages/WorkToolsPage';
+
+// Several assertions here wait on lazy()/Suspense-loaded components
+// (InterviewSimulator, TeamDashboard). Under a full multi-file test run
+// module transform can take much longer than the default 1s async-util
+// timeout, causing false failures that pass fine in isolation. Give async
+// assertions more headroom.
+configure({ asyncUtilTimeout: 10000 });
+vi.setConfig({ testTimeout: 15000 });
 
 const renderWithRouter = (component: React.ReactElement, initialEntries = ['/']) =>
   render(<MemoryRouter initialEntries={initialEntries}>{component}</MemoryRouter>);

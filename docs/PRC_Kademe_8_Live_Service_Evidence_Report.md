@@ -54,38 +54,38 @@ The report never treats Stripe Dashboard/CLI delivery, provider-failure injectio
 
 ## Redacted Environment Availability
 
-| Variable                    | Scope    | Requirement | Availability |
-| --------------------------- | -------- | ----------- | ------------ |
-| `VITE_AUTH_PROVIDER`        | frontend | required    | OK           |
-| `VITE_SUPABASE_URL`         | frontend | required    | OK           |
-| `VITE_SUPABASE_ANON_KEY`    | frontend | required    | OK           |
-| `VITE_BILLING_API_URL`      | frontend | required    | OK           |
-| `VITE_AI_PROVIDER`          | frontend | required    | OK           |
-| `VITE_AI_PROXY_URL`         | frontend | required    | OK           |
-| `SUPABASE_URL`              | backend  | required    | OK           |
-| `SUPABASE_ANON_KEY`         | backend  | required    | OK           |
-| `SUPABASE_SERVICE_ROLE_KEY` | backend  | required    | OK           |
-| `BILLING_REPOSITORY`        | backend  | required    | OK           |
-| `STRIPE_SECRET_KEY`         | backend  | required    | OK           |
-| `STRIPE_WEBHOOK_SECRET`     | backend  | required    | OK           |
-| `STRIPE_PRICE_JUNIOR_MONTHLY`  | backend  | required    | OK           |
-| `AI_PROVIDER`               | backend  | required    | OK           |
-| `OPENAI_API_KEY`            | backend  | optional    | MISSING      |
-| `ANTHROPIC_API_KEY`         | backend  | optional    | MISSING      |
-| `GEMINI_API_KEY`            | backend  | required    | OK           |
-| `RATE_LIMIT_STORE`          | backend  | required    | OK           |
-| `UPSTASH_REDIS_REST_URL`    | backend  | required    | OK           |
-| `UPSTASH_REDIS_REST_TOKEN`  | backend  | required    | OK           |
+| Variable                      | Scope    | Requirement | Availability |
+| ----------------------------- | -------- | ----------- | ------------ |
+| `VITE_AUTH_PROVIDER`          | frontend | required    | OK           |
+| `VITE_SUPABASE_URL`           | frontend | required    | OK           |
+| `VITE_SUPABASE_ANON_KEY`      | frontend | required    | OK           |
+| `VITE_BILLING_API_URL`        | frontend | required    | OK           |
+| `VITE_AI_PROVIDER`            | frontend | required    | OK           |
+| `VITE_AI_PROXY_URL`           | frontend | required    | OK           |
+| `SUPABASE_URL`                | backend  | required    | OK           |
+| `SUPABASE_ANON_KEY`           | backend  | required    | OK           |
+| `SUPABASE_SERVICE_ROLE_KEY`   | backend  | required    | OK           |
+| `BILLING_REPOSITORY`          | backend  | required    | OK           |
+| `STRIPE_SECRET_KEY`           | backend  | required    | OK           |
+| `STRIPE_WEBHOOK_SECRET`       | backend  | required    | OK           |
+| `STRIPE_PRICE_JUNIOR_MONTHLY` | backend  | required    | OK           |
+| `AI_PROVIDER`                 | backend  | required    | OK           |
+| `OPENAI_API_KEY`              | backend  | optional    | MISSING      |
+| `ANTHROPIC_API_KEY`           | backend  | optional    | MISSING      |
+| `GEMINI_API_KEY`              | backend  | required    | OK           |
+| `RATE_LIMIT_STORE`            | backend  | required    | OK           |
+| `UPSTASH_REDIS_REST_URL`      | backend  | required    | OK           |
+| `UPSTASH_REDIS_REST_TOKEN`    | backend  | required    | OK           |
 
 Only availability is shown. No value, token, key or secret is written to this report.
 
 ## Commands Run
 
-| Command             | Exit code | Result |
-| ------------------- | --------: | ------ |
-| `npm run typecheck` |         0 | PASS   |
+| Command             | Exit code | Result                       |
+| ------------------- | --------: | ---------------------------- |
+| `npm run typecheck` |         0 | PASS                         |
 | `npm test`          |         0 | PASS (165 files / 930 tests) |
-| `npm run build`      |         0 | PASS   |
+| `npm run build`     |         0 | PASS                         |
 
 The external invocation required for this report is `npm run kademe8:verify`.
 
@@ -222,9 +222,9 @@ Option (a) was implemented. Summary of changes:
 increased Node heap). All directly-affected test suites pass in full:
 `src/features/billing` (30/30), `src/pages/AIPage` + `src/features/team` +
 `src/pages/SpeakingPage` + `src/pages/ProgressPage` +
-`src/pages/QuickToolsPage` (19/19), `src/e2e` (78/79 — the one remaining
-failure, `/dashboard renders`, is a pre-existing, unrelated issue confirmed
-via `git stash` to predate this change; tracked as `TECH_DEBT.md` TD-017),
+`src/pages/QuickToolsPage` (19/19), `src/e2e` (95/95 — the `/dashboard
+renders` failure noted in the previous update was root-caused and fixed;
+see `TECH_DEBT.md` TD-017),
 `src/features/vocabulary/services/translation` (7/7).
 
 **Still open / explicitly out of scope for this pass:**

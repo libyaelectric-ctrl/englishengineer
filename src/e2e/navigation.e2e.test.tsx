@@ -4,6 +4,9 @@ import { describe, expect, it } from 'vitest';
 
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
+import { useAuthStore } from '@/features/auth';
+import { LearningProfileRepository } from '@/features/profile/profile.repository';
+
 import DashboardPage from '@/pages/DashboardPage';
 import GrammarPage from '@/pages/GrammarPage';
 import ListeningPage from '@/pages/ListeningPage';
@@ -27,9 +30,32 @@ const renderWithRouter = (component: React.ReactElement, initialEntries = ['/'])
 
 describe('Navigation E2E: Main routes render without errors', () => {
   it('/dashboard renders', async () => {
+    // DashboardPage redirects to /login while auth is loading/unauthenticated,
+    // and to /welcome if onboarding isn't complete. Seed a fully authenticated,
+    // onboarded user so the real dashboard content renders.
+    const userId = 'nav-e2e-user';
+    useAuthStore.setState({
+      currentUser: {
+        id: userId,
+        displayName: 'Nav E2E',
+        email: 'nav-e2e@example.com',
+        role: 'engineer',
+        engineeringDiscipline: 'electrical',
+        targetLevel: 'C1',
+        location: 'Remote',
+        avatarInitials: 'NE',
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:00:00.000Z',
+      },
+      isAuthenticated: true,
+      isLoading: false,
+    });
+    const profile = LearningProfileRepository.getProfile(userId);
+    LearningProfileRepository.saveProfile({ ...profile, userId, onboardingCompleted: true });
+
     renderWithRouter(<DashboardPage />, ['/dashboard']);
     await waitFor(() => {
-      expect(screen.getByText(/Progress Cockpit/i)).toBeInTheDocument();
+      expect(screen.getByText(/Command Center/i)).toBeInTheDocument();
     });
   });
 
