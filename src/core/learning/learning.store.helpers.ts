@@ -10,6 +10,7 @@ import { INITIAL_ELO } from '@/shared/constants/elo.constants';
 import { logger } from '@/shared/logger';
 
 import { DEFAULT_ACHIEVEMENTS } from './learning.achievements.data';
+import { MAX_HEARTS } from './learning.hearts';
 import { DEFAULT_MISSIONS } from './learning.missions.data';
 import type { LearningState } from './learning.types';
 
@@ -42,6 +43,8 @@ export const ensureArrays = (state: Partial<LearningState>): LearningState => {
     vocabularyPool: safe(state.vocabularyPool, []),
     grammarPool: safe(state.grammarPool, []),
     speakingPool: safe(state.speakingPool, []),
+    hearts: state.hearts ?? MAX_HEARTS,
+    heartsDepletedAt: state.heartsDepletedAt ?? null,
   };
 };
 

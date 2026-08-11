@@ -1,9 +1,10 @@
 ﻿import { CheckCircle2 } from 'lucide-react';
 
 import { SectionCard } from '@/shared/components/SectionCard';
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
-import { useAuthStore } from '@/features/auth';
 import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
+import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
 
 import { MasteredHeatmap } from './components/MasteredHeatmap';
@@ -13,8 +14,6 @@ import { SearchResultsSection } from './components/SearchResultsSection';
 import { VocabularyHeader } from './components/VocabularyHeader';
 import { WordSetSection } from './components/WordSetSection';
 import { useVocabularyPage } from './hooks/useVocabularyPage';
-
-import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 const VocabularyPage = () => {
   const translate = useLocalizationStore((s) => s.translate);
@@ -40,6 +39,8 @@ const VocabularyPage = () => {
     hasSearched,
     filters,
     vocabularyProfile,
+    hearts,
+    heartsDepletedAt,
     chooseTab,
     reviewWord,
     learnWord,
@@ -70,6 +71,8 @@ const VocabularyPage = () => {
         allSearchResults={allSearchResults}
         filterOptions={filterOptions}
         chooseTab={chooseTab}
+        hearts={hearts}
+        heartsDepletedAt={heartsDepletedAt}
         onSearchInputChange={(input) => dispatchSearch({ type: 'SET_SEARCH_INPUT', input })}
         onSearchSubmit={runSearch}
         onFilterChange={(field, value) =>
@@ -83,7 +86,11 @@ const VocabularyPage = () => {
       />
 
       <div className="pt-4 space-y-4 pb-20">
-        <PersonalAIPanel discipline={userDiscipline} cefrLevel={vocabularyLevel} userName={currentUser?.displayName} />
+        <PersonalAIPanel
+          discipline={userDiscipline}
+          cefrLevel={vocabularyLevel}
+          userName={currentUser?.displayName}
+        />
 
         <SearchModal
           isOpen={showSearchModal}

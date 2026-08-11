@@ -13,6 +13,7 @@ import { LearningProfileRepository } from '@/features/profile/profile.repository
 
 import { AchievementService } from './achievement.service';
 import { DEFAULT_ACHIEVEMENTS } from './learning.achievements.data';
+import { MAX_HEARTS, loseHeart as computeLoseHeart, refillHeartsIfDue } from './learning.hearts';
 import { DEFAULT_MISSIONS } from './learning.missions.data';
 import {
   INITIAL_ELO,
@@ -45,6 +46,10 @@ export interface LearningStoreActions {
     score: number,
     durationMinutes: number
   ) => ScoreResult;
+  /** Consumes one heart on a wrong quiz answer. No-op once already at 0. */
+  loseHeart: () => void;
+  /** Checks the 24h cooldown and refills to MAX_HEARTS if it has elapsed. */
+  checkHeartsRefill: () => void;
   resetAll: () => void;
 }
 
@@ -66,6 +71,8 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
       vocabularyPool: [],
       grammarPool: [],
       speakingPool: [],
+      hearts: MAX_HEARTS,
+      heartsDepletedAt: null,
 
       startMission: (missionId: string) => {
         const updated = get().missions.map((m) =>
@@ -293,6 +300,26 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
         return result;
       },
 
+      loseHeart: () => {
+        const { hearts, depletedAt } = computeLoseHeart(
+          get().hearts,
+          get().heartsDepletedAt,
+          new Date()
+        );
+        set({ hearts, heartsDepletedAt: depletedAt });
+      },
+
+      checkHeartsRefill: () => {
+        const { hearts, depletedAt } = refillHeartsIfDue(
+          get().hearts,
+          get().heartsDepletedAt,
+          new Date()
+        );
+        if (hearts !== get().hearts || depletedAt !== get().heartsDepletedAt) {
+          set({ hearts, heartsDepletedAt: depletedAt });
+        }
+      },
+
       resetAll: () => {
         set({
           missions: DEFAULT_MISSIONS,
@@ -310,6 +337,8 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
           vocabularyPool: [],
           grammarPool: [],
           speakingPool: [],
+          hearts: MAX_HEARTS,
+          heartsDepletedAt: null,
         });
       },
     }),

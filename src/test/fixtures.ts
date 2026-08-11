@@ -15,5 +15,7 @@ export const createLearningState = (overrides: Partial<LearningState> = {}): Lea
   eloHistory: [],
   vocabularyPool: [],
   grammarPool: [],
+  hearts: 5,
+  heartsDepletedAt: null,
   ...overrides,
 });
