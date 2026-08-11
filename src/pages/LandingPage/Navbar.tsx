@@ -1,9 +1,9 @@
 import { PRODUCT_VERSION } from '@/config/product.config';
-import { ArrowRight, Moon, Sun } from 'lucide-react';
+import { ArrowRight, ChevronDown, Moon, Sun } from 'lucide-react';
 
 import { useTheme } from '@/features/theme/ThemeProvider';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Link, useLocation } from 'react-router-dom';
 
@@ -21,11 +21,18 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
   const { language, setLanguage, translate } = useLocalizationStore();
   const [langOpen, setLangOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const currentLang = INTERFACE_LANGUAGES.find((l) => l.id === language);
-  const englishLanguage = INTERFACE_LANGUAGES.find((l) => l.id === 'en');
-  // Show only the currently-selected language (if not EN) + EN as two side-by-side buttons
-  const nonEnglishLangs = INTERFACE_LANGUAGES.filter((l) => l.id !== 'en');
-  const otherLanguages = language === 'en' ? [] : [currentLang!];
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border-soft bg-background/95 backdrop-blur-md shadow-sm">
@@ -50,72 +57,51 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
             </div>
           </Link>
 
-          {/* ── Language Selector: side-by-side buttons (selected lang + EN) ── */}
-          <div className="hidden md:flex items-center gap-1 lg:gap-1.5 shrink-0 mx-3 lg:mx-6">
-            {/* Non-English selected language button */}
-            {otherLanguages.map((lang) => (
-              <button
-                key={lang.id}
-                type="button"
-                title={lang.nativeLabel}
-                aria-label={`Switch to ${lang.label}`}
-                onClick={() => setLanguage(lang.id as SupportedInterfaceLanguage)}
-                className={`flex items-center gap-1 rounded-[var(--radius-card)] h-7 px-2 text-[10px] font-bold leading-none border transition-all cursor-pointer select-none ${
-                  language === lang.id
-                    ? 'bg-primary/15 border-primary ring-1 ring-primary/60 -translate-y-0.5 shadow-md text-primary'
-                    : 'bg-surface border-border-soft opacity-60 hover:opacity-100 hover:-translate-y-0.5 hover:shadow-md shadow-[var(--shadow-card)] text-foreground'
-                }`}
-              >
-                <span className="text-base leading-none">{lang.flag}</span>
-                <span className="uppercase tracking-wide">{lang.id.toUpperCase()}</span>
-              </button>
-            ))}
-            {otherLanguages.length > 0 && (
-              <ArrowRight className="mx-0.5 h-3 w-3 shrink-0 text-primary" aria-hidden="true" />
-            )}
-            {/* EN button — always visible, highlighted when EN is selected */}
-            {englishLanguage && (
-              <button
-                type="button"
-                title="English"
-                aria-label="Switch to English"
-                onClick={() => setLanguage('en' as SupportedInterfaceLanguage)}
-                className={`flex h-7 shrink-0 items-center gap-1 rounded-[var(--radius-card)] border px-2 text-[10px] font-bold leading-none transition-all cursor-pointer select-none ${
-                  language === 'en'
-                    ? 'bg-primary/15 border-primary ring-1 ring-primary/60 text-primary -translate-y-0.5 shadow-md'
-                    : 'bg-surface border-border-soft opacity-60 hover:opacity-100 hover:-translate-y-0.5 hover:shadow-md text-foreground'
-                }`}
-              >
-                <span className="uppercase tracking-wide">EN</span>
-              </button>
-            )}
-          </div>
-
-          {/* Mobile fallback: compact language buttons (current lang + EN) */}
-          <div className="flex items-center gap-1 shrink-0 md:hidden">
-            {language !== 'en' && currentLang && (
-              <button
-                type="button"
-                title={currentLang.nativeLabel}
-                aria-label={`Currently: ${currentLang.label}`}
-                className="flex items-center gap-0.5 rounded border border-primary bg-primary/15 px-1.5 py-1 text-[9px] font-bold text-primary leading-none ring-1 ring-primary/60 cursor-default select-none"
-              >
-                <span className="text-sm leading-none">{currentLang.flag}</span>
-                <span className="uppercase">{currentLang.id.toUpperCase()}</span>
-              </button>
-            )}
+          {/* ── Language Dropdown: all interface languages ── */}
+          <div className="relative shrink-0 mx-2" ref={dropdownRef}>
             <button
               type="button"
-              onClick={() => setLanguage('en' as SupportedInterfaceLanguage)}
-              aria-label="Switch to English"
-              className={`flex items-center gap-0.5 rounded border px-1.5 py-1 text-[9px] font-bold leading-none cursor-pointer select-none transition-all ${
-                language === 'en'
-                  ? 'bg-primary/15 border-primary ring-1 ring-primary/60 text-primary'
-                  : 'bg-surface border-border-soft text-muted-copy hover:border-primary/40 hover:text-foreground'
-              }`}
+              onClick={() => setLangOpen((o) => !o)}
+              aria-expanded={langOpen}
+              aria-haspopup="listbox"
+              aria-label="Change interface language"
+              className="flex items-center gap-1.5 rounded-[var(--radius-card)] h-7 pl-1.5 pr-2 text-[10px] font-bold leading-none border border-border-soft bg-surface hover:border-primary/40 transition-all cursor-pointer select-none"
             >
-              <span className="uppercase">EN</span>
+              <span className="text-base leading-none">{currentLang?.flag ?? '🌐'}</span>
+              <span className="uppercase tracking-wide">{language}</span>
+              <ChevronDown
+                className={`h-3 w-3 text-muted-copy transition-transform ${langOpen ? 'rotate-180' : ''}`}
+              />
             </button>
+            {langOpen && (
+              <div
+                role="listbox"
+                className="absolute left-0 top-full mt-1.5 z-[60] max-h-80 overflow-y-auto min-w-[170px] rounded-[var(--radius-card)] border border-border-soft bg-background p-1 shadow-xl"
+              >
+                {INTERFACE_LANGUAGES.map((lang) => (
+                  <button
+                    key={lang.id}
+                    type="button"
+                    role="option"
+                    aria-selected={language === lang.id}
+                    title={lang.nativeLabel}
+                    onClick={() => {
+                      setLanguage(lang.id as SupportedInterfaceLanguage);
+                      setLangOpen(false);
+                    }}
+                    className={`flex w-full items-center gap-2 rounded px-2.5 py-1.5 text-left text-[11px] leading-none transition-colors cursor-pointer select-none ${
+                      language === lang.id
+                        ? 'bg-primary/10 text-primary font-bold'
+                        : 'text-foreground hover:bg-surface-hover'
+                    }`}
+                  >
+                    <span className="text-base leading-none">{lang.flag}</span>
+                    <span className="uppercase tracking-wide w-6 shrink-0">{lang.id}</span>
+                    <span className="truncate">{lang.nativeLabel}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* ── Spacer ── */}

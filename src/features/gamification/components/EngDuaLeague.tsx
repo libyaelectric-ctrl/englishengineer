@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trophy, Award, Crown, Shield, Flame, TrendingUp } from 'lucide-react';
+import { Trophy, Award, Crown, Flame } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
 
 export interface LeaderboardUser {
@@ -50,7 +50,6 @@ export const EngDuaLeague: React.FC = () => {
       {/* Leaderboard Table */}
       <div className="space-y-2">
         {mockLeaderboard.map((user) => {
-          const isTop3 = user.rank <= 3;
           let rankBadge = <span className="font-bold text-sm text-[var(--color-muted-copy)]">#{user.rank}</span>;
 
           if (user.rank === 1) rankBadge = <Crown className="h-5 w-5 text-amber-400 fill-amber-400" />;

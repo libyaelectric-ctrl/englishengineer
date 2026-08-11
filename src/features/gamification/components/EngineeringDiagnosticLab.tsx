@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AlertTriangle, CheckCircle2, ShieldAlert, ArrowRight, Zap, RefreshCw } from 'lucide-react';
+import { CheckCircle2, ShieldAlert, ArrowRight } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
 
 export interface EmergencyScenario {
