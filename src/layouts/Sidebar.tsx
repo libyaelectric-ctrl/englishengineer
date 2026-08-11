@@ -70,8 +70,6 @@ export const Sidebar = () => {
   const navigate = useNavigate();
   const [, startTransition] = useTransition();
   const { language, setLanguage } = useLocalizationStore();
-  const currentLangOption =
-    INTERFACE_LANGUAGES.find((l) => l.id === language) || INTERFACE_LANGUAGES[0];
   const dashboardLanguages = INTERFACE_LANGUAGES.filter(
     (l) => l.id === language || l.id === ('en' as SupportedInterfaceLanguage)
   );

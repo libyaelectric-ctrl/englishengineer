@@ -1,5 +1,5 @@
 import React from 'react';
-import { Gem, Heart, Flame, Zap, Shield, Check } from 'lucide-react';
+import { Gem, Heart, Flame, Zap } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
 
 export const EngDuaShop: React.FC = () => {
