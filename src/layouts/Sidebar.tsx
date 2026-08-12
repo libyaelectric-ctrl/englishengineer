@@ -13,6 +13,7 @@ import { cn } from '@/shared/utils/cn';
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
+import { SIDEBAR_EXTRA_COPY } from '@/features/localization';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 
 import { Navigation } from './Navigation';
@@ -82,7 +83,7 @@ export const Sidebar = () => {
     }
   };
   const planName = subscription?.planId || 'junior';
-  const copy = SIDEBAR_COPY[language as keyof typeof SIDEBAR_COPY] ?? SIDEBAR_COPY.en;
+  const copy = SIDEBAR_COPY[language as keyof typeof SIDEBAR_COPY] ?? (SIDEBAR_EXTRA_COPY[language] as typeof SIDEBAR_COPY.en) ?? SIDEBAR_COPY.en;
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const notificationsRef = useRef<HTMLDivElement>(null);
 
