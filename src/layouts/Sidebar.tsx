@@ -13,7 +13,6 @@ import { cn } from '@/shared/utils/cn';
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
-import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 
 import { Navigation } from './Navigation';
 
@@ -70,9 +69,7 @@ export const Sidebar = () => {
   const navigate = useNavigate();
   const [, startTransition] = useTransition();
   const { language, setLanguage } = useLocalizationStore();
-  const dashboardLanguages = INTERFACE_LANGUAGES.filter(
-    (l) => l.id === language || l.id === ('en' as SupportedInterfaceLanguage)
-  );
+  const currentLang = INTERFACE_LANGUAGES.find((l) => l.id === language);
   const closeSidebarOnMobile = () => {
     if (window.innerWidth < 1024 && isSidebarOpen) {
       toggleSidebar();
@@ -142,20 +139,31 @@ export const Sidebar = () => {
                 </span>
               </div>
             </div>
-            {/* Language Switcher Buttons */}
+            {/* Language Switcher: selected language + EN */}
             <div className="flex items-center gap-1.5">
-              {dashboardLanguages.map((lang) => (
+              {language !== 'en' && currentLang && (
                 <button
-                  key={lang.id}
-                  onClick={() => setLanguage(lang.id as SupportedInterfaceLanguage)}
-                  className={`inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:text-foreground hover:border-primary/40 transition-colors cursor-pointer ${
-                    language === lang.id ? 'bg-primary/10 text-primary font-bold border-primary' : ''
-                  }`}
-                  aria-label={`Change language to ${lang.nativeLabel}`}
+                  type="button"
+                  onClick={() => setLanguage(currentLang.id)}
+                  className="inline-flex h-8 items-center justify-center gap-1 rounded-[4px] border border-primary bg-primary/10 px-2 text-[10px] font-bold uppercase tracking-wide text-primary cursor-pointer select-none"
+                  aria-label={`Language: ${currentLang.nativeLabel}`}
                 >
-                  <span className="text-sm leading-none">{lang.flag}</span>
+                  <span className="text-sm leading-none">{currentLang.flag}</span>
+                  <span>{currentLang.id.toUpperCase()}</span>
                 </button>
-              ))}
+              )}
+              <button
+                type="button"
+                onClick={() => setLanguage('en')}
+                className={`inline-flex h-8 items-center justify-center rounded-[4px] border px-2 text-[10px] font-bold uppercase tracking-wide cursor-pointer select-none transition-colors ${
+                  language === 'en'
+                    ? 'border-primary bg-primary/10 text-primary'
+                    : 'border-border-soft bg-surface text-muted-copy hover:text-foreground hover:border-primary/40'
+                }`}
+                aria-label="Change language to English"
+              >
+                EN
+              </button>
               <ThemeToggle />
               <button
                 onClick={toggleSidebar}
