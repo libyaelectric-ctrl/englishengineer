@@ -22,10 +22,10 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border-soft bg-background/95 backdrop-blur-md shadow-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex items-center gap-3 py-2 h-11">
-          {/* ── Left: Logo ── */}
+          {/* â”€â”€ Left: Logo â”€â”€ */}
           <Link to="/" className="flex items-center gap-2 group cursor-pointer shrink-0">
             <div className="flex h-7 w-7 items-center justify-center rounded overflow-hidden transition-transform duration-200 group-hover:scale-105">
-              <img src="/brand/logo.webp" alt="EngVox" className="h-full w-full object-cover" />
+              <img src="/brand/logo.svg" alt="EngVox" className="h-full w-full object-cover" />
             </div>
             <div className="flex items-center gap-1.5">
               <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">
@@ -41,7 +41,7 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
             </div>
           </Link>
 
-          {/* ── Language Flags: inline raised buttons (md+), compact scroll on small screens ── */}
+          {/* â”€â”€ Language Flags: inline raised buttons (md+), compact scroll on small screens â”€â”€ */}
           <div className="hidden md:flex items-center gap-1 lg:gap-1.5 shrink-0 mx-1 lg:mx-3">
             {INTERFACE_LANGUAGES.filter((l) => l.id !== 'en').map((lang) => (
               <button
@@ -110,10 +110,10 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
             )}
           </div>
 
-          {/* ── Spacer ── */}
+          {/* â”€â”€ Spacer â”€â”€ */}
           <div className="flex-1" />
 
-          {/* ── Right: Nav Links + Theme + Auth ── */}
+          {/* â”€â”€ Right: Nav Links + Theme + Auth â”€â”€ */}
           <div className="flex items-center gap-1 shrink-0">
             {!isAuthPage && (
               <>
@@ -141,7 +141,7 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
               </>
             )}
 
-            {/* Try Demo (auth pages only — wired by LoginPage) */}
+            {/* Try Demo (auth pages only â€” wired by LoginPage) */}
             {onDemoClick && (
               <button
                 type="button"
