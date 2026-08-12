@@ -65,6 +65,7 @@ export type TranslationKey =
   | 'common.signup'
   // Translator
   | 'translator.title'
+  | 'translator.headerTitle'
   | 'translator.description'
   | 'translator.sourcePlaceholder'
   | 'translator.outputPlaceholder'
@@ -76,6 +77,10 @@ export type TranslationKey =
   | 'translator.playing'
   | 'translator.listenAudio'
   | 'translator.quickAdd'
+  | 'translator.pageTitle'
+  | 'translator.pageDescription'
+  | 'translator.headerTitle'
+  | 'translator.headerTitle'
   | 'translator.clearText'
   | 'translator.infrastructureAttribution'
   | 'translator.poweredBy'
