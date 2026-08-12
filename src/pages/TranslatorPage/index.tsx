@@ -138,9 +138,6 @@ const SourceInputPanel: React.FC<{
   } = props;
   const quickChars = VIRTUAL_CHAR_BARS[sourceLang];
   const isRtl = sourceLang === 'ar';
-  const sourcePlaceholder = isRtl
-    ? translate('translator.sourcePlaceholder')
-    : translate('translator.sourcePlaceholder');
   const speakLabel = isPlayingAudio === 'source' ? translate('translator.playing') : translate('translator.audio');
   const speakBtnClass =
     isPlayingAudio === 'source'
