@@ -13,6 +13,7 @@ import { cn } from '@/shared/utils/cn';
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
+import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 
 import { Navigation } from './Navigation';
 
@@ -69,7 +70,12 @@ export const Sidebar = () => {
   const navigate = useNavigate();
   const [, startTransition] = useTransition();
   const { language, setLanguage } = useLocalizationStore();
-  const currentLang = INTERFACE_LANGUAGES.find((l) => l.id === language);
+  const [lastNonEnglish, setLastNonEnglish] = useState<SupportedInterfaceLanguage>(() =>
+    language !== 'en' ? language : 'tr'
+  );
+  const altLang = INTERFACE_LANGUAGES.find(
+    (l) => l.id === (language !== 'en' ? language : lastNonEnglish)
+  );
   const closeSidebarOnMobile = () => {
     if (window.innerWidth < 1024 && isSidebarOpen) {
       toggleSidebar();
@@ -129,33 +135,40 @@ export const Sidebar = () => {
       >
         <div className="flex h-screen flex-col overflow-hidden bg-surface">
           {/* Logo */}
-          <div className="flex h-16 shrink-0 items-center justify-between border-b border-border-soft px-4">
-            <div className="flex items-center gap-2.5">
-              <img src="/brand/logo.webp" alt="EngVox" className="h-9 w-9 rounded-[4px]" />
-              <div className="flex flex-col">
-                <span className="text-lg font-bold leading-tight text-foreground">EngVox</span>
-                <span className="text-[10px] font-bold text-primary leading-tight font-mono">
+          <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-border-soft px-3">
+            <div className="flex items-center gap-2">
+              <img src="/brand/logo.webp" alt="EngVox" className="h-7 w-7 rounded-[4px]" />
+              <div className="flex flex-col leading-tight">
+                <span className="text-sm font-bold text-foreground">EngVox</span>
+                <span className="text-[9px] font-bold text-primary font-mono">
                   v{PRODUCT_VERSION}
                 </span>
               </div>
             </div>
-            {/* Language Switcher: selected language + EN */}
-            <div className="flex items-center gap-1.5">
-              {language !== 'en' && currentLang && (
+            {/* Language Switcher: selected language + EN (both always visible) */}
+            <div className="flex items-center gap-1">
+              {altLang && (
                 <button
                   type="button"
-                  onClick={() => setLanguage(currentLang.id)}
-                  className="inline-flex h-8 items-center justify-center gap-1 rounded-[4px] border border-primary bg-primary/10 px-2 text-[10px] font-bold uppercase tracking-wide text-primary cursor-pointer select-none"
-                  aria-label={`Language: ${currentLang.nativeLabel}`}
+                  onClick={() => {
+                    setLanguage(altLang.id);
+                    setLastNonEnglish(altLang.id);
+                  }}
+                  className={`inline-flex h-8 items-center justify-center gap-0.5 rounded-[4px] border px-1.5 text-[9px] font-bold uppercase tracking-wide cursor-pointer select-none transition-colors ${
+                    language === altLang.id
+                      ? 'border-primary bg-primary/10 text-primary'
+                      : 'border-border-soft bg-surface text-muted-copy hover:text-foreground hover:border-primary/40'
+                  }`}
+                  aria-label={`Language: ${altLang.nativeLabel}`}
                 >
-                  <span className="text-sm leading-none">{currentLang.flag}</span>
-                  <span>{currentLang.id.toUpperCase()}</span>
+                  <span className="text-xs leading-none">{altLang.flag}</span>
+                  <span>{altLang.id.toUpperCase()}</span>
                 </button>
               )}
               <button
                 type="button"
                 onClick={() => setLanguage('en')}
-                className={`inline-flex h-8 items-center justify-center rounded-[4px] border px-2 text-[10px] font-bold uppercase tracking-wide cursor-pointer select-none transition-colors ${
+                className={`inline-flex h-8 items-center justify-center rounded-[4px] border px-1.5 text-[9px] font-bold uppercase tracking-wide cursor-pointer select-none transition-colors ${
                   language === 'en'
                     ? 'border-primary bg-primary/10 text-primary'
                     : 'border-border-soft bg-surface text-muted-copy hover:text-foreground hover:border-primary/40'
