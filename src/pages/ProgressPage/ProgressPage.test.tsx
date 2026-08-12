@@ -15,10 +15,6 @@ vi.mock('./ProgressOverviewTab', () => ({
   ProgressOverviewTab: () => <div data-testid="overview-tab">Overview</div>,
 }));
 
-vi.mock('./ProgressNextStepsTab', () => ({
-  ProgressNextStepsTab: () => <div data-testid="next-steps-tab">Next Steps</div>,
-}));
-
 describe('ProgressPage', () => {
   it('renders without crashing', () => {
     render(
