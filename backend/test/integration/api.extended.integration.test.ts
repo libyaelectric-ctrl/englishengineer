@@ -75,16 +75,22 @@ describe('Admin routes (RBAC)', () => {
     assert.equal(res.status, 401);
   });
 
-  // KNOWN BUG (see conversation notes): AuthenticatedUser has no `role` field
-  // anywhere in the codebase, so req.auth.role is always undefined and
-  // requireRole(['admin']) always falls through to the 'user' default and
-  // rejects. This test documents the CURRENT (broken) behavior: there is
-  // presently no way for any user, including the dev-bypass user, to reach
-  // an admin route. If this test starts failing with a 200, it means the
-  // role-assignment gap has been fixed upstream and this test (and its
-  // comment) should be updated to reflect real admin access instead.
-  it('GET /api/admin/stats with dev-bypass credentials returns 200', async () => {
+  // Updated: Dev-bypass now defaults to 'user' role for security.
+  // To access admin routes, the role must be explicitly set to 'admin'.
+  // This test verifies that dev-bypass without explicit admin role is correctly denied.
+  it('GET /api/admin/stats with dev-bypass credentials (user role) returns 403', async () => {
     const res = await request(baseUrl).get('/api/admin/stats').set(devUser);
+    assert.equal(res.status, 403);
+    assert.equal(res.body.error.code, 'forbidden_role');
+  });
+
+  // New test: Dev-bypass with explicit admin role should access admin routes
+  it('GET /api/admin/stats with dev-bypass admin credentials returns 200', async () => {
+    const adminDevUser = { 
+      'X-EngineerOS-User-Id': 'engineeros-dev-user',
+      'X-EngineerOS-User-Role': 'admin'
+    };
+    const res = await request(baseUrl).get('/api/admin/stats').set(adminDevUser);
     assert.equal(res.status, 200);
   });
 });

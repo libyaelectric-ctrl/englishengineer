@@ -169,7 +169,7 @@ export const createBackendAuth = (
     }
     if (!config.allowInsecureDevAuth) return null;
     const email = typeof request.body?.email === 'string' ? request.body.email : undefined;
-    const role = typeof request.body?.role === 'string' ? request.body.role : 'admin';
+    const role = typeof request.body?.role === 'string' ? request.body.role : 'user';
     return {
       userId: getRequestedUserId(request) ?? 'engineeros-dev-user',
       email,

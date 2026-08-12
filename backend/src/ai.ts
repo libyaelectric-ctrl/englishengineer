@@ -24,6 +24,7 @@ export const AI_ROUTES: Record<string, string> = {
   '/api/ai/roleplay': 'generatePractice',
   '/api/ai/translate': 'translate',
   '/api/ai/generate-content': 'generateContent',
+  '/api/ai/transcribe': 'transcribeAudio',
 };
 
 const PLAN_AI_LIMITS: Record<PlanId, { daily: number | null; monthly: number }> = {
