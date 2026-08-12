@@ -1,14 +1,11 @@
 import { PRODUCT_VERSION } from '@/config/product.config';
-import { ArrowRight, ChevronDown, Moon, Sun } from 'lucide-react';
+import { ArrowRight, Moon, Sun } from 'lucide-react';
 
 import { useTheme } from '@/features/theme/ThemeProvider';
-
-import { useEffect, useRef, useState } from 'react';
 
 import { Link, useLocation } from 'react-router-dom';
 
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
-import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 
 interface NavbarProps {
   onDemoClick?: () => void;
@@ -20,19 +17,6 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
   const location = useLocation();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
   const { language, setLanguage, translate } = useLocalizationStore();
-  const [langOpen, setLangOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const currentLang = INTERFACE_LANGUAGES.find((l) => l.id === language);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setLangOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border-soft bg-background/95 backdrop-blur-md shadow-sm">
@@ -57,50 +41,72 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
             </div>
           </Link>
 
-          {/* ── Language Dropdown: all interface languages ── */}
-          <div className="relative shrink-0 mx-2" ref={dropdownRef}>
+          {/* ── Language Flags: inline raised buttons (md+), compact scroll on small screens ── */}
+          <div className="hidden md:flex items-center gap-1 lg:gap-1.5 shrink-0 mx-1 lg:mx-3">
+            {INTERFACE_LANGUAGES.filter((l) => l.id !== 'en').map((lang) => (
+              <button
+                key={lang.id}
+                type="button"
+                title={lang.nativeLabel}
+                aria-label={`Switch to ${lang.label}`}
+                onClick={() => setLanguage(lang.id)}
+                className={`flex items-center justify-center rounded-[var(--radius-card)] w-7 h-7 text-base leading-none border transition-all cursor-pointer select-none ${
+                  language === lang.id
+                    ? 'bg-primary/15 border-primary ring-1 ring-primary/60 -translate-y-0.5 shadow-md'
+                    : 'bg-surface border-border-soft opacity-60 hover:opacity-100 hover:-translate-y-0.5 hover:shadow-md shadow-[var(--shadow-card)]'
+                }`}
+              >
+                {lang.flag}
+              </button>
+            ))}
             <button
               type="button"
-              onClick={() => setLangOpen((o) => !o)}
-              aria-expanded={langOpen}
-              aria-haspopup="listbox"
-              aria-label="Change interface language"
-              className="flex items-center gap-1.5 rounded-[var(--radius-card)] h-7 pl-1.5 pr-2 text-[10px] font-bold leading-none border border-border-soft bg-surface hover:border-primary/40 transition-all cursor-pointer select-none"
+              title="English"
+              aria-label="Switch to English"
+              onClick={() => setLanguage('en')}
+              className={`flex h-7 shrink-0 items-center justify-center rounded-[var(--radius-card)] border px-1.5 text-[10px] font-bold leading-none transition-all cursor-pointer select-none ${
+                language === 'en'
+                  ? 'bg-primary/15 border-primary ring-1 ring-primary/60 text-primary -translate-y-0.5 shadow-md'
+                  : 'bg-surface border-border-soft opacity-60 hover:opacity-100 hover:-translate-y-0.5 hover:shadow-md text-foreground shadow-[var(--shadow-card)]'
+              }`}
             >
-              <span className="text-base leading-none">{currentLang?.flag ?? '🌐'}</span>
-              <span className="uppercase tracking-wide">{language}</span>
-              <ChevronDown
-                className={`h-3 w-3 text-muted-copy transition-transform ${langOpen ? 'rotate-180' : ''}`}
-              />
+              EN
             </button>
-            {langOpen && (
-              <div
-                role="listbox"
-                className="absolute left-0 top-full mt-1.5 z-[60] max-h-80 overflow-y-auto min-w-[170px] rounded-[var(--radius-card)] border border-border-soft bg-background p-1 shadow-xl"
-              >
-                {INTERFACE_LANGUAGES.map((lang) => (
-                  <button
-                    key={lang.id}
-                    type="button"
-                    role="option"
-                    aria-selected={language === lang.id}
-                    title={lang.nativeLabel}
-                    onClick={() => {
-                      setLanguage(lang.id as SupportedInterfaceLanguage);
-                      setLangOpen(false);
-                    }}
-                    className={`flex w-full items-center gap-2 rounded px-2.5 py-1.5 text-left text-[11px] leading-none transition-colors cursor-pointer select-none ${
-                      language === lang.id
-                        ? 'bg-primary/10 text-primary font-bold'
-                        : 'text-foreground hover:bg-surface-hover'
-                    }`}
-                  >
-                    <span className="text-base leading-none">{lang.flag}</span>
-                    <span className="uppercase tracking-wide w-6 shrink-0">{lang.id}</span>
-                    <span className="truncate">{lang.nativeLabel}</span>
-                  </button>
-                ))}
-              </div>
+          </div>
+
+          {/* Mobile: compact horizontally scrollable flags row (no dropdown) */}
+          <div className="flex md:hidden items-center gap-1 shrink-0 max-w-[44vw] overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            {INTERFACE_LANGUAGES.map((lang) =>
+              lang.id === 'en' ? (
+                <button
+                  key={lang.id}
+                  type="button"
+                  aria-label="Switch to English"
+                  onClick={() => setLanguage('en')}
+                  className={`flex h-6 shrink-0 items-center justify-center rounded border px-1 text-[9px] font-bold leading-none cursor-pointer select-none ${
+                    language === 'en'
+                      ? 'bg-primary/15 border-primary ring-1 ring-primary/60 text-primary'
+                      : 'bg-surface border-border-soft opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  EN
+                </button>
+              ) : (
+                <button
+                  key={lang.id}
+                  type="button"
+                  title={lang.nativeLabel}
+                  aria-label={`Switch to ${lang.label}`}
+                  onClick={() => setLanguage(lang.id)}
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded border text-sm leading-none cursor-pointer select-none ${
+                    language === lang.id
+                      ? 'bg-primary/15 border-primary ring-1 ring-primary/60'
+                      : 'bg-surface border-border-soft opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  {lang.flag}
+                </button>
+              )
             )}
           </div>
 
