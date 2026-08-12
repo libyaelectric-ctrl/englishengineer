@@ -1,7 +1,8 @@
 import { storage } from '@/shared/storage';
 
 import { UI_TRANSLATIONS } from './localization.data';
-import type { SupportedInterfaceLanguage, TranslationKey } from './localization.types';
+import { EXTRA_UI_TRANSLATIONS } from './translations';
+import type { SupportedInterfaceLanguage } from './localization.types';
 
 const STORAGE_KEY = 'EngVox_interface_language';
 
@@ -14,7 +15,11 @@ export const LocalizationService = {
     storage.globalSet(STORAGE_KEY, language);
   },
 
-  translate(key: TranslationKey, language: SupportedInterfaceLanguage): string {
-    return UI_TRANSLATIONS[language][key] ?? UI_TRANSLATIONS.en[key] ?? key;
+  translate(key: string, language: SupportedInterfaceLanguage): string {
+    const ui = UI_TRANSLATIONS[language] as Record<string, string>;
+    const uiEn = UI_TRANSLATIONS.en as Record<string, string>;
+    const extra = EXTRA_UI_TRANSLATIONS[language] as Record<string, string>;
+    const extraEn = EXTRA_UI_TRANSLATIONS.en as Record<string, string>;
+    return ui[key] ?? extra[key] ?? uiEn[key] ?? extraEn[key] ?? key;
   },
 };

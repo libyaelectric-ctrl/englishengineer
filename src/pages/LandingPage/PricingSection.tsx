@@ -1,180 +1,65 @@
-import { PricingCard } from '@/components/ui/PricingCard';
-import { Check, Globe, X } from 'lucide-react';
-import { motion } from 'motion/react';
+import { ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-import { useState } from 'react';
-
-import { PRICING_FEATURE_ORDER, PRICING_TIERS } from '@/shared/data/pricing.data';
-import { getPublicPageCopy } from '@/shared/data/public-page-copy';
-import { getPricingCopy } from '@/shared/data/pricing-copy';
-
-import { CurrencyConfig } from '@/features/billing';
 import { useLocalizationStore } from '@/features/localization';
 
-import { getLandingTranslations } from './landing-i18n';
+const PLANS = [
+  { name: 'Junior', price: '$29', popular: false, soon: false },
+  { name: 'Senior', price: '$59', popular: true, soon: false },
+  { name: 'Specialist', price: '$79', popular: false, soon: false },
+  { name: 'Master', price: '$99', popular: false, soon: false },
+  { name: 'Team', price: '$$$$', popular: false, soon: true },
+] as const;
 
-export function PricingSection() {
-  const language = useLocalizationStore((s) => s.language);
-  const t = getLandingTranslations(language);
-  const pricingCopy = getPricingCopy(language);
-  const publicCopy = getPublicPageCopy(language);
-  const [selectedCurrency, setSelectedCurrency] = useState('USD');
-  const [isAnnual, setIsAnnual] = useState(false);
-
-  const moduleLabels: Record<string, string> = {
-    'Placement Test': t.placementTest ?? 'Placement Test',
-    'Learning Hub': t.learningHub ?? 'Learning Hub',
-    Progress: t.progress ?? 'Progress',
-    Vocabulary: t.vocabularyPricing ?? 'Vocabulary',
-    Grammar: t.grammarPricing ?? 'Grammar',
-    Translator: t.translator ?? 'Translator',
-    Reading: t.readingPricing ?? 'Reading',
-    Writing: t.writingPricing ?? 'Writing',
-    Speaking: t.speakingPricing ?? 'Speaking',
-    Listening: t.listening ?? 'Listening',
-    Tool: t.tool ?? 'Tool',
-    'AI Copilot': t.aiCopilot ?? 'AI Copilot',
-  };
-
-  const getFeatureValue = (tierId: string, featureName: string): boolean | string => {
-    const tier = PRICING_TIERS.find((t) => t.id === tierId);
-    if (!tier) return false;
-    if (tier.comingSoon) return 'Coming Soon';
-    const feature = tier.features.find((f) => f.name === featureName);
-    return feature?.included ?? false;
-  };
+export const PricingSection = () => {
+  const navigate = useNavigate();
+  const t = useLocalizationStore((s) => s.translate);
 
   return (
-    <section
-      id="pricing"
-      className="py-24 bg-white dark:bg-slate-900 text-slate-900 dark:text-white transition-colors duration-300 relative overflow-hidden"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-            {pricingCopy.title}
+    <section id="pricing" className="py-20">
+      <div className="mx-auto max-w-6xl px-4">
+        <div className="mb-12 text-center">
+          <h2 className="text-3xl font-extrabold tracking-tight md:text-4xl">
+            {t('pricing.title')}
           </h2>
-          <p className="mt-4 text-slate-600 dark:text-slate-400 text-base sm:text-lg">
-            {pricingCopy.subtitle}
-          </p>
+          <p className="mt-2 text-sm text-muted-copy">{t('pricing.subtitle')}</p>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
-          <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-[var(--radius-card)]">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+          {PLANS.map((plan) => (
             <button
+              key={plan.name}
               type="button"
-              onClick={() => setIsAnnual(false)}
-              className={`px-3 py-1.5 rounded text-sm font-semibold transition-all ${!isAnnual ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-500'}`}
+              onClick={() => navigate('/pricing')}
+              className="group relative flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-[var(--radius-card)] border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-6 text-center transition-all hover:-translate-y-1 hover:border-[var(--color-primary)] hover:shadow-lg"
             >
-              {pricingCopy.monthly}
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsAnnual(true)}
-              className={`px-3 py-1.5 rounded text-sm font-semibold transition-all flex items-center gap-1.5 ${isAnnual ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-500'}`}
-            >
-              <span>{pricingCopy.annual}</span>
-              <span className="text-[10px] bg-emerald-500 text-white px-1.5 py-0.5 rounded font-mono">
-                {pricingCopy.save20}
+              {plan.popular && (
+                <span className="absolute -top-3 rounded-full bg-[var(--color-primary)] px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
+                  {t('pricing.mostPopular')}
+                </span>
+              )}
+              {plan.soon && (
+                <span className="absolute -top-3 rounded-full bg-slate-500 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
+                  {t('pricing.comingSoon')}
+                </span>
+              )}
+
+              <span className="text-lg font-bold">{plan.name}</span>
+              <span className="text-4xl font-extrabold text-[var(--color-primary)]">
+                {plan.price}
+              </span>
+              <span className="text-[10px] font-medium text-muted-copy">
+                {t('pricing.perMonth')}
+              </span>
+
+              <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[var(--color-primary)] opacity-0 transition-opacity group-hover:opacity-100">
+                {t('pricing.choosePlan')}
+                <ArrowRight className="h-3 w-3" />
               </span>
             </button>
-          </div>
-
-          <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-2.5 py-1.5 rounded-[var(--radius-card)]">
-            <Globe className="h-3.5 w-3.5 text-blue-500" />
-            <select
-              value={selectedCurrency}
-              onChange={(e) => setSelectedCurrency(e.target.value)}
-              className="bg-transparent text-xs font-bold text-foreground focus:outline-none cursor-pointer"
-            >
-              {CurrencyConfig.CURRENCIES.map((c) => (
-                <option key={c.code} value={c.code}>
-                  {c.flag} {c.code}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div className="mx-auto mb-8 max-w-sm rounded-[var(--radius-card)] border-2 border-primary/40 bg-surface p-5 text-center shadow-sm">
-          <p className="text-sm font-semibold text-foreground">{pricingCopy.freePlan}</p>
-          <p className="mt-2 text-3xl font-extrabold tracking-tight text-foreground">$0</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-copy">
-            {publicCopy.freeDescription}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-12">
-          {PRICING_TIERS.map((tier, idx) => (
-            <motion.div
-              key={tier.id}
-              className="h-full"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: idx * 0.08 }}
-            >
-              <PricingCard
-                tier={tier}
-                isAnnual={isAnnual}
-                currency={selectedCurrency}
-                variant="landing"
-                onSelect={(tierId) => {
-                  const tier = PRICING_TIERS.find((t) => t.id === tierId);
-                  if (tier && !tier.comingSoon) {
-                    window.location.href = `/onboarding?plan=${tierId}`;
-                  }
-                }}
-              />
-            </motion.div>
           ))}
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-slate-200 dark:border-slate-700">
-                <th className="text-left py-3 pr-4 font-semibold text-slate-600 dark:text-slate-400 w-1/3">
-                  {t.pricingFeature ?? 'Feature'}
-                </th>
-                {PRICING_TIERS.map((tier) => (
-                  <th
-                    key={tier.id}
-                    className="py-3 px-2 text-center font-bold text-slate-900 dark:text-white text-xs"
-                  >
-                    {tier.name}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {PRICING_FEATURE_ORDER.map((featureName) => (
-                <tr key={featureName} className="border-b border-slate-100 dark:border-slate-800">
-                  <td className="py-3 pr-4 text-slate-700 dark:text-slate-300">
-                    {moduleLabels[featureName] ?? featureName}
-                  </td>
-                  {PRICING_TIERS.map((tier) => {
-                    const value = getFeatureValue(tier.id, featureName);
-                    return (
-                      <td key={tier.id} className="py-3 px-2 text-center">
-                        {value === true ? (
-                          <Check className="w-4 h-4 text-emerald-500 mx-auto" />
-                        ) : value === false ? (
-                          <X className="w-4 h-4 text-slate-300 dark:text-slate-600 mx-auto" />
-                        ) : (
-                          <span className="text-[10px] text-slate-400">{value}</span>
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
       </div>
     </section>
   );
-}
-
-export default PricingSection;
+};

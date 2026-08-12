@@ -1,3 +1,5 @@
+import './translations';
+
 export {
   type SupportedInterfaceLanguage,
   type InterfaceLanguageId,
@@ -15,3 +17,5 @@ export {
 export { LocalizationService } from './localization.service';
 
 export { useLocalizationStore } from './localization.store';
+
+export { SIDEBAR_EXTRA_COPY } from './translations';

@@ -1,8 +1,7 @@
 import { Target } from 'lucide-react';
 import { motion } from 'motion/react';
-
 import { MAX_ELO, MIN_ELO } from '@/shared/constants/elo.constants';
-
+import { useLocalizationStore } from '@/features/localization';
 import { CEFR_LEVELS, getCEFRBand, getCEFRIndex, getRank, useAnimatedNumber } from './utils';
 
 export const HeroBanner = ({
@@ -12,6 +11,7 @@ export const HeroBanner = ({
   totalElo: number;
   totalPercentage: number;
 }) => {
+  const t = useLocalizationStore((s) => s.translate);
   const animatedTotalElo = useAnimatedNumber(totalElo, 2.5);
   const totalCEFR = getCEFRBand(totalElo);
   const totalCEFRIdx = getCEFRIndex(totalCEFR);
@@ -21,6 +21,10 @@ export const HeroBanner = ({
     ((totalCEFRIdx + 1) / CEFR_LEVELS.length) * (MAX_ELO - MIN_ELO) + MIN_ELO
   );
   const eloNeeded = Math.max(0, eloForNext - totalElo);
+  const eloMessage =
+    eloNeeded > 0
+      ? t('progress.eloToNext').replace('{count}', String(eloNeeded)).replace('{level}', nextCEFR)
+      : t('progress.maxBand');
 
   return (
     <div className="relative overflow-hidden rounded-[var(--radius-card)] border border-primary/25 bg-surface/80 p-5 shadow-sm">
@@ -48,7 +52,7 @@ export const HeroBanner = ({
             <span className="text-3xl font-bold text-foreground tabular-nums">
               {animatedTotalElo}
             </span>
-            <span className="text-[10px] text-muted-copy font-bold uppercase">/ 5000 ELO</span>
+            <span className="text-[10px] text-muted-copy font-bold uppercase">{t('progress.eloCaption')}</span>
           </div>
         </div>
         <div className="flex-1 text-center md:text-left">
@@ -63,15 +67,11 @@ export const HeroBanner = ({
             </span>
             <span className="inline-flex items-center gap-1 rounded-[var(--radius-card)] border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
               <Target className="h-3 w-3" aria-hidden="true" />
-              Target: C1 Senior Tech Lead / Offshore Pitch Ready
+              {t('progress.targetBadge')}
             </span>
           </div>
-          <h2 className="text-xl font-bold text-foreground mb-1">Engineering Mastery Level</h2>
-          <p className="text-xs text-muted-copy leading-relaxed">
-            {eloNeeded > 0
-              ? `${eloNeeded} more Elo to reach ${nextCEFR}. Keep practicing!`
-              : `Highest CEFR band reached. Maintain your excellence!`}
-          </p>
+          <h2 className="text-xl font-bold text-foreground mb-1">{t('progress.masteryTitle')}</h2>
+          <p className="text-xs text-muted-copy leading-relaxed">{eloMessage}</p>
           <div className="mt-3 flex items-center gap-2">
             <span className="text-[10px] font-bold text-muted-copy">{totalCEFR}</span>
             <div className="flex-1 h-2 rounded-full bg-border-soft overflow-hidden">
@@ -90,10 +90,10 @@ export const HeroBanner = ({
             <span className="flex items-center gap-1">
               <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>
-                Learning Velocity: <strong>+180 ELO/week</strong>
+                {t('progress.learningVelocity')} <strong>+180 {t('progress.velocityUnit')}</strong>
               </span>
             </span>
-            <span className="font-bold text-primary">⏱️ Est. ~3.8 weeks to C1 Target</span>
+            <span className="font-bold text-primary">{t('progress.estTarget')}</span>
           </div>
         </div>
       </div>

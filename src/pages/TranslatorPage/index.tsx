@@ -17,6 +17,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { PageHeader } from '@/shared/components/PageHeader';
 import { PageMetadata } from '@/shared/components/PageMetadata';
 import { logger } from '@/shared/logger';
+import { useLocalizationStore } from '@/features/localization';
+import type { TranslationKey } from '@/features/localization/localization.types';
 
 import { SupportedLang, TranslationResult, translationService } from '@/features/translation';
 
@@ -66,17 +68,18 @@ const LanguageBar: React.FC<{
   targetLang: SupportedLang;
   setTargetLang: React.Dispatch<React.SetStateAction<SupportedLang>>;
   handleSwapLanguages: () => void;
-}> = ({ sourceLang, setSourceLang, targetLang, setTargetLang, handleSwapLanguages }) => (
+  translate: (key: TranslationKey) => string;
+}> = ({ sourceLang, setSourceLang, targetLang, setTargetLang, handleSwapLanguages, translate }) => (
   <div className="flex flex-wrap items-center justify-between gap-3 bg-background p-3 rounded-[var(--radius-card)] border border-border-soft text-xs">
     <div className="flex items-center gap-2">
       <Globe2 className="h-4 w-4 text-primary shrink-0" />
-      <span className="font-bold text-muted-copy">From:</span>
+      <span className="font-bold text-muted-copy">{translate('translator.fromLabel')}</span>
       <select
         value={sourceLang}
         onChange={(e) => setSourceLang(e.target.value as SupportedLang)}
         className="rounded-[var(--radius-card)] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer"
       >
-        <option value="auto">✨ Auto Detect</option>
+        <option value="auto">{translate('translator.autoDetect')}</option>
         {SUPPORTED_LANGUAGES.map((lang) => (
           <option key={lang.code} value={lang.code}>
             {lang.flag} {lang.name}
@@ -89,13 +92,13 @@ const LanguageBar: React.FC<{
       type="button"
       onClick={handleSwapLanguages}
       className="p-2 rounded-[var(--radius-card)] border border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary transition-all cursor-pointer shadow-sm hover:scale-105"
-      title="Swap Source ↔ Target Languages"
+      title={translate('translator.swapTitle')}
     >
       <ArrowLeftRight className="h-4 w-4" />
     </button>
 
     <div className="flex items-center gap-2">
-      <span className="font-bold text-muted-copy">To:</span>
+      <span className="font-bold text-muted-copy">{translate('translator.toLabel')}</span>
       <select
         value={targetLang}
         onChange={(e) => setTargetLang(e.target.value as SupportedLang)}
@@ -120,6 +123,7 @@ const SourceInputPanel: React.FC<{
   isPlayingAudio: 'source' | 'target' | null;
   handleClear: () => void;
   speakText: (text: string, lang: SupportedLang, type: 'source' | 'target') => void;
+  translate: (key: TranslationKey) => string;
 }> = (props) => {
   const {
     inputText,
@@ -130,13 +134,14 @@ const SourceInputPanel: React.FC<{
     isPlayingAudio,
     handleClear,
     speakText,
+    translate,
   } = props;
   const quickChars = VIRTUAL_CHAR_BARS[sourceLang];
   const isRtl = sourceLang === 'ar';
   const sourcePlaceholder = isRtl
-    ? 'أدخل النص الفني أو المواصفات الهندسية...'
-    : 'Enter technical text, engineering specs, contract clauses, or any words to translate...';
-  const speakLabel = isPlayingAudio === 'source' ? 'Playing...' : 'Audio';
+    ? translate('translator.sourcePlaceholder')
+    : translate('translator.sourcePlaceholder');
+  const speakLabel = isPlayingAudio === 'source' ? translate('translator.playing') : translate('translator.audio');
   const speakBtnClass =
     isPlayingAudio === 'source'
       ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 animate-pulse'
@@ -147,7 +152,7 @@ const SourceInputPanel: React.FC<{
       type="button"
       onClick={() => speakText(inputText, sourceLang, 'source')}
       className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded border transition cursor-pointer ${speakBtnClass}`}
-      title="Listen Source Text Audio"
+      title={translate('translator.listenAudio')}
     >
       <Volume2 className="h-3.5 w-3.5" />
       <span>{speakLabel}</span>
@@ -159,13 +164,13 @@ const SourceInputPanel: React.FC<{
       onClick={handleClear}
       className="text-[10px] text-muted-copy hover:text-rose-500 font-bold transition-colors cursor-pointer flex items-center gap-1"
     >
-      <RotateCcw className="h-3 w-3" /> Clear Text
+      <RotateCcw className="h-3 w-3" /> {translate('translator.clearText')}
     </button>
   ) : null;
   const quickCharsBar = quickChars ? (
     <div className="mt-2 flex flex-wrap items-center gap-1.5 bg-background/50 p-2 rounded-[var(--radius-card)] border border-border-soft">
       <span className="text-[10px] font-bold text-muted-copy flex items-center gap-1">
-        <Keyboard className="h-3 w-3 text-primary" /> Hızlı Ekle:
+        <Keyboard className="h-3 w-3 text-primary" /> {translate('translator.quickAdd')}
       </span>
       {quickChars.map((phrase) => (
         <button
@@ -185,7 +190,7 @@ const SourceInputPanel: React.FC<{
       disabled={isTranslating || !hasInput}
       className="w-full py-3 rounded-[var(--radius-card)] bg-primary text-primary-foreground text-xs font-extrabold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-2 mt-3"
     >
-      <Zap className="h-4 w-4" /> {isTranslating ? 'Translating...' : 'Translate Text Now'}
+      <Zap className="h-4 w-4" /> {isTranslating ? translate('translator.translating') : translate('translator.translateNow')}
     </button>
   ) : null;
 
@@ -194,7 +199,7 @@ const SourceInputPanel: React.FC<{
       <div>
         <div className="flex items-center justify-between mb-2">
           <label className="text-xs font-bold text-foreground flex items-center gap-2">
-            Source Text / Technical Document {speakBtn}
+            {translate('translator.sourceText')} {speakBtn}
           </label>
           {clearBtn}
         </div>
@@ -204,7 +209,7 @@ const SourceInputPanel: React.FC<{
           lang={sourceLang}
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          placeholder={sourcePlaceholder}
+          placeholder={translate('translator.sourcePlaceholder')}
           className="w-full rounded-[var(--radius-card)] border border-border-soft bg-background p-4 text-xs text-foreground font-medium focus:border-primary outline-none transition-all leading-relaxed font-sans"
         />
         {quickCharsBar}
@@ -223,6 +228,7 @@ const OutputPanel: React.FC<{
   isPlayingAudio: 'source' | 'target' | null;
   handleCopy: () => void;
   speakText: (text: string, lang: SupportedLang, type: 'source' | 'target') => void;
+  translate: (key: TranslationKey) => string;
 }> = (props) => {
   const {
     translatedText,
@@ -233,9 +239,10 @@ const OutputPanel: React.FC<{
     isPlayingAudio,
     handleCopy,
     speakText,
+    translate,
   } = props;
   const hasOutput = translatedText.trim().length > 0;
-  const speakLabel = isPlayingAudio === 'target' ? 'Playing...' : 'Audio';
+  const speakLabel = isPlayingAudio === 'target' ? translate('translator.playing') : translate('translator.audio');
   const speakBtnClass =
     isPlayingAudio === 'target'
       ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 animate-pulse'
@@ -246,7 +253,7 @@ const OutputPanel: React.FC<{
       type="button"
       onClick={() => speakText(translatedText, targetLang, 'target')}
       className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded border transition cursor-pointer ${speakBtnClass}`}
-      title="Listen Translated Audio"
+      title={translate('translator.listenAudio')}
     >
       <Volume2 className="h-3.5 w-3.5" />
       <span>{speakLabel}</span>
@@ -268,12 +275,12 @@ const OutputPanel: React.FC<{
       ) : (
         <Copy className="h-3.5 w-3.5" />
       )}
-      <span>{copied ? 'Copied!' : 'Copy Result'}</span>
+      <span>{copied ? translate('translator.copied') : translate('translator.copyResult')}</span>
     </button>
   ) : null;
   const translatingOverlay = isTranslating ? (
     <div className="absolute inset-0 bg-background/60 backdrop-blur-[1px] rounded-[var(--radius-card)] flex items-center justify-center text-xs font-bold text-primary gap-2">
-      <Sparkles className="h-4 w-4 animate-spin" /> Translating...
+      <Sparkles className="h-4 w-4 animate-spin" /> {translate('translator.translating')}
     </div>
   ) : null;
 
@@ -281,7 +288,7 @@ const OutputPanel: React.FC<{
     <div className="space-y-2 relative">
       <div className="flex items-center justify-between mb-2">
         <label className="text-xs font-bold text-foreground flex items-center gap-2">
-          Translated Output {speakBtn} {serviceTag}
+          {translate('translator.translatedOutput')} {speakBtn} {serviceTag}
         </label>
         {copyBtn}
       </div>
@@ -291,8 +298,8 @@ const OutputPanel: React.FC<{
           readOnly
           dir={isRtl ? 'rtl' : 'ltr'}
           lang={targetLang}
-          value={isTranslating ? 'Translating...' : translatedText}
-          placeholder="Translated output will appear here automatically..."
+          value={isTranslating ? translate('translator.translating') : translatedText}
+          placeholder={translate('translator.outputPlaceholder')}
           className="w-full rounded-[var(--radius-card)] border border-border-soft bg-background p-4 text-xs text-foreground font-semibold focus:border-primary outline-none leading-relaxed font-sans"
         />
         {translatingOverlay}
@@ -304,15 +311,16 @@ const OutputPanel: React.FC<{
 const WordAnalysisCard: React.FC<{
   resultData: TranslationResult | null;
   translatedText: string;
+  translate: (key: TranslationKey) => string;
 }> = (props) => {
-  const { resultData, translatedText } = props;
+  const { resultData, translatedText, translate } = props;
   const alternatives = resultData?.wordAnalysis?.alternativeMeanings;
   const hasAlternatives = alternatives && alternatives.length > 0;
   const posLabel = resultData?.wordAnalysis?.partOfSpeech?.toUpperCase() || 'GENERAL';
   const altList = hasAlternatives ? (
     <div className="pt-1 text-xs space-y-1">
       <span className="text-[10px] font-bold text-muted-copy uppercase tracking-wider block">
-        Alternatif Türkçe Karşılıkları & Teknik Eş Anlamlılar:
+        {translate('translator.alternativeMeanings')}
       </span>
       <div className="flex flex-wrap gap-1.5">
         {alternatives.map((alt) => (
@@ -333,22 +341,22 @@ const WordAnalysisCard: React.FC<{
         <div className="flex items-center gap-2">
           <BookOpen className="h-4 w-4 text-emerald-600" />
           <span className="text-xs font-extrabold uppercase tracking-wider text-foreground">
-            Single-Word Technical Analysis
+            {translate('translator.singleWordAnalysis')}
           </span>
         </div>
         <span className="rounded bg-emerald-500/20 border border-emerald-500/40 px-2 py-0.5 text-[10px] font-extrabold text-emerald-700 font-mono uppercase">
-          Kelime Türü: {posLabel}
+          {translate('translator.wordType')} {posLabel}
         </span>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
         <div>
-          <span className="text-muted-copy font-bold">Word: </span>
+          <span className="text-muted-copy font-bold">{translate('translator.wordLabel')} </span>
           <span className="font-extrabold text-foreground font-mono">
             {resultData?.wordAnalysis?.word}
           </span>
         </div>
         <div>
-          <span className="text-muted-copy font-bold">Primary Meaning: </span>
+          <span className="text-muted-copy font-bold">{translate('translator.primaryMeaning')} </span>
           <span className="font-extrabold text-emerald-600 font-mono">{translatedText}</span>
         </div>
       </div>
@@ -358,6 +366,7 @@ const WordAnalysisCard: React.FC<{
 };
 
 export const TranslatorPage = () => {
+  const translate = useLocalizationStore((state) => state.translate);
   const [inputText, setInputText] = useState('');
   const [translatedText, setTranslatedText] = useState('');
   const [sourceLang, setSourceLang] = useState<SupportedLang>('auto');
@@ -470,13 +479,13 @@ export const TranslatorPage = () => {
   return (
     <main className="mx-auto w-full max-w-6xl space-y-6 pb-12 animate-in fade-in">
       <PageMetadata
-        title="Engineering Multilingual Translator — Open-Source Engine"
-        description="Multilingual EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL technical translation engine with audio speech synthesis."
+        title={translate('translator.pageTitle')}
+        description={translate('translator.pageDescription')}
       />
 
       <PageHeader
-        title="Engineering Instant Translator"
-        description="Open-source multi-lingual engineering translation engine supporting 13 languages with audio speech synthesis and automatic RTL layout."
+        title={translate('translator.headerTitle')}
+        description={translate('translator.description')}
       />
 
       {/* Main Container Card - Full Width 6XL Spacing */}
@@ -485,9 +494,9 @@ export const TranslatorPage = () => {
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-soft pb-4">
           <div className="flex items-center gap-2 text-xs font-bold text-muted-copy">
             <Info className="h-4 w-4 text-primary shrink-0" />
-            <span>Infrastructure Attribution:</span>
+            <span>{translate('translator.infrastructureAttribution')}</span>
             <span className="rounded-[var(--radius-card)] bg-primary/10 border border-primary/20 px-2.5 py-1 text-[10px] font-extrabold text-primary font-mono">
-              Powered by Google GTX & Lingva Open-Source Engines
+              {translate('translator.poweredBy')}
             </span>
           </div>
 
@@ -498,7 +507,7 @@ export const TranslatorPage = () => {
               onChange={(e) => setLiveTranslateEnabled(e.target.checked)}
               className="rounded border-border-soft text-primary focus:ring-primary h-4 w-4 cursor-pointer"
             />
-            <span>Live Translate (500ms Auto-Debounce)</span>
+            <span>{translate('translator.liveTranslate')}</span>
           </label>
         </div>
 
@@ -509,6 +518,7 @@ export const TranslatorPage = () => {
           targetLang={targetLang}
           setTargetLang={setTargetLang}
           handleSwapLanguages={handleSwapLanguages}
+          translate={translate}
         />
 
         {/* Translation Form */}
@@ -522,6 +532,7 @@ export const TranslatorPage = () => {
             isPlayingAudio={isPlayingAudio}
             handleClear={handleClear}
             speakText={speakText}
+            translate={translate}
           />
           <OutputPanel
             translatedText={translatedText}
@@ -532,12 +543,13 @@ export const TranslatorPage = () => {
             isPlayingAudio={isPlayingAudio}
             handleCopy={handleCopy}
             speakText={speakText}
+            translate={translate}
           />
         </form>
 
         {/* Single-Word Analysis Card */}
         {resultData?.wordAnalysis?.isSingleWord && (
-          <WordAnalysisCard resultData={resultData} translatedText={translatedText} />
+          <WordAnalysisCard resultData={resultData} translatedText={translatedText} translate={translate} />
         )}
       </div>
     </main>
