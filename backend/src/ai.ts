@@ -1,16 +1,16 @@
 import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
 
+import type { PlanId } from '../types.js';
 import { AI_CONTRACT_VERSION, createAIService } from './ai-core/index.js';
 import { createAiLedger } from './ai-ledger.js';
 import type { AiLedger } from './ai-ledger.js';
 import type { SubscriptionSnapshot } from './billing-helpers.js';
+import { normalizePlanId } from './billing-plan-migration.js';
 import { getOrSet } from './cache/redis-cache.service.js';
 import { checkUserLimits } from './cost-tracker.js';
 import { ApiError } from './errors.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
-import { normalizePlanId } from './billing-plan-migration.js';
 import { CircuitBreaker } from './utils/circuit-breaker.js';
-import type { PlanId } from '../types.js';
 import { AiRequestBodySchema, validateBody } from './validation.js';
 
 export { createAIService, AI_CONTRACT_VERSION };
@@ -24,6 +24,7 @@ export const AI_ROUTES: Record<string, string> = {
   '/api/ai/roleplay': 'generatePractice',
   '/api/ai/translate': 'translate',
   '/api/ai/generate-content': 'generateContent',
+  '/api/ai/transcribe': 'transcribeAudio',
 };
 
 const PLAN_AI_LIMITS: Record<PlanId, { daily: number | null; monthly: number }> = {
@@ -41,10 +42,7 @@ const getPlanLimits = (planId: PlanId) => PLAN_AI_LIMITS[planId] ?? DEFAULT_PLAN
 
 export { getPlanLimits };
 
-const resolvePlanId = (
-  subscription: SubscriptionSnapshot | null,
-  configured: boolean
-): PlanId => {
+const resolvePlanId = (subscription: SubscriptionSnapshot | null, configured: boolean): PlanId => {
   if (!configured || !subscription) return 'free';
   const status = subscription.status;
   if (status !== 'active' && status !== 'trialing') return 'free';
@@ -190,7 +188,9 @@ export const registerAIRoutes = (
   _fetchImpl: typeof fetch = fetch
 ): void => {
   const ledger = createAiLedger(config as unknown as Parameters<typeof createAiLedger>[0]);
-  const configured = Boolean(config.stripe && (config.stripe as Record<string, unknown>).configured);
+  const configured = Boolean(
+    config.stripe && (config.stripe as Record<string, unknown>).configured
+  );
 
   const validateOperation = (body: Record<string, unknown>, defaultOp: string) => {
     if (body?.operation !== undefined && body.operation !== defaultOp) {

@@ -1,12 +1,17 @@
 import { createApp } from './app.js';
 import { createBackendConfig } from './config.js';
+import { logger } from './logger.js';
 
 process.on('unhandledRejection', (reason, _promise) => {
-  console.error('[unhandled-rejection]', reason);
+  logger.error(
+    '[unhandled-rejection]',
+    {},
+    reason instanceof Error ? reason : new Error(String(reason))
+  );
 });
 
 process.on('uncaughtException', (error) => {
-  console.error('[uncaught-exception]', error);
+  logger.error('[uncaught-exception]', {}, error);
   process.exit(1);
 });
 
@@ -16,7 +21,7 @@ const app = createApp({ config });
 let isShuttingDown = false;
 
 const server = app.listen(config.port, () => {
-  console.info(`EngineerOS backend ${config.version} listening on port ${config.port}`);
+  logger.info(`EngineerOS backend ${config.version} listening on port ${config.port}`);
 });
 
 // Track active connections for graceful drain
@@ -30,18 +35,18 @@ const shutdown = (signal: string) => {
   if (isShuttingDown) return;
   isShuttingDown = true;
 
-  console.info(`Received ${signal}. Starting graceful shutdown...`);
-  console.info(`Active connections: ${activeConnections}`);
+  logger.info(`Received ${signal}. Starting graceful shutdown...`);
+  logger.info(`Active connections: ${activeConnections}`);
 
   // Stop accepting new connections
   server.close(() => {
-    console.info('Http server closed. No active connections remaining.');
+    logger.info('Http server closed. No active connections remaining.');
     process.exit(0);
   });
 
   // Force exit after timeout
   const forceExit = setTimeout(() => {
-    console.error(
+    logger.error(
       `Graceful shutdown timeout (10s) exceeded. ${activeConnections} connections still active. Force exiting...`
     );
     process.exit(1);
