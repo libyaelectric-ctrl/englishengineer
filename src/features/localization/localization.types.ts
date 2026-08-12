@@ -84,6 +84,10 @@ export type TranslationKey =
   | 'onboarding.roleContext'
   | 'onboarding.giftedModules'
   | 'onboarding.giftedModulesDesc'
+  | 'onboarding.selectDisciplineDesc'
+  | 'onboarding.selectLanguageTitle'
+  | 'onboarding.englishFixedTarget'
+  | 'onboarding.start'
   // Profile
   | 'profile.nameLanguage'
   | 'profile.firstName'

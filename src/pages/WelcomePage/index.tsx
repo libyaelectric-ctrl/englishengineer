@@ -62,9 +62,9 @@ export const WelcomeScreen = () => {
         {step === 'discipline' ? (
           <div className="space-y-6">
             <div className="text-center space-y-2">
-              <h1 className="text-2xl font-bold text-foreground">Mesleginizi Seçin</h1>
+              <h1 className="text-2xl font-bold text-foreground">{translate('onboarding.selectDiscipline')}</h1>
               <p className="text-sm text-muted-copy">
-                Select your engineering discipline to personalize your learning experience
+                {translate('onboarding.selectDisciplineDesc')}
               </p>
             </div>
 
@@ -106,7 +106,7 @@ export const WelcomeScreen = () => {
               disabled={!selectedDiscipline}
               className="w-full flex items-center justify-center gap-2 rounded-[4px] bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all"
             >
-              Devam Et
+              {translate('onboarding.continue')}
               <ArrowRight className="h-4 w-4" />
             </button>
           </div>
@@ -114,13 +114,12 @@ export const WelcomeScreen = () => {
           <div className="space-y-6">
             <div className="text-center space-y-2">
               <Globe className="h-8 w-8 mx-auto text-primary" />
-              <h1 className="text-2xl font-bold text-foreground">Dilinizi Seçin</h1>
-              <p className="text-sm text-muted-copy">Select your preferred interface language</p>
+              <h1 className="text-2xl font-bold text-foreground">{translate('onboarding.selectLanguageTitle')}</h1>
+              <p className="text-sm text-muted-copy">{translate('onboarding.selectLanguage')}</p>
             </div>
 
             <div className="text-center mb-4">
-              <p className="text-xs text-muted-copy">İngilizce sabit hedef dildir</p>
-              <p className="text-xs text-muted-copy mt-1">English is the fixed target language</p>
+              <p className="text-xs text-muted-copy">{translate('onboarding.englishFixedTarget')}</p>
             </div>
 
             <div className="grid grid-cols-3 gap-3 max-h-[400px] overflow-y-auto">
@@ -152,13 +151,13 @@ export const WelcomeScreen = () => {
                 onClick={() => setStep('discipline')}
                 className="flex-1 rounded-[4px] border border-border-soft bg-surface py-3 text-sm font-semibold text-foreground cursor-pointer transition-all hover:bg-surface-hover"
               >
-                Geri
+                {translate('onboarding.back')}
               </button>
               <button
                 onClick={handleFinish}
                 className="flex-1 flex items-center justify-center gap-2 rounded-[4px] bg-primary py-3 text-sm font-semibold text-primary-foreground cursor-pointer transition-all"
               >
-                Başla
+                {translate('onboarding.start')}
                 <ArrowRight className="h-4 w-4" />
               </button>
             </div>
