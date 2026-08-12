@@ -1,3 +1,5 @@
+import winston from 'winston';
+
 interface LogMeta {
   [key: string]: unknown;
 }
@@ -8,18 +10,18 @@ const LOG_LEVELS: Record<string, number> = {
   warn: 2,
   error: 3,
 };
-const currentLevel: number = LOG_LEVELS[process.env.LOG_LEVEL || 'info'] ?? 1;
 
-const formatJSON = (level: string, message: string, meta: LogMeta = {}): string => {
-  return JSON.stringify({
-    timestamp: new Date().toISOString(),
-    level,
-    message,
-    ...meta,
-    pid: process.pid,
-    env: process.env.NODE_ENV || 'development',
-  });
-};
+// Create Winston logger with structured JSON format
+const winstonLogger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/combined.log' }),
+  ],
+  exitOnError: false,
+});
 
 export interface Logger {
   debug: (msg: string, meta?: LogMeta) => void;
@@ -40,25 +42,33 @@ export interface Logger {
   e: (msg: string, meta?: LogMeta, err?: Error) => void;
 }
 
+// Helper to format log messages with metadata
+const formatLogMessage = (level: string, message: string, meta: LogMeta = {}): object => ({
+  timestamp: new Date().toISOString(),
+  level,
+  message,
+  ...meta,
+  pid: process.pid,
+  env: process.env.NODE_ENV || 'development',
+});
+
 export const logger: Logger = {
   debug: (msg: string, meta?: LogMeta) => {
-    if (currentLevel <= 0) console.debug(formatJSON('debug', msg, meta)); // eslint-disable-line no-console
+    winstonLogger.debug(msg, meta);
   },
   info: (msg: string, meta?: LogMeta) => {
-    if (currentLevel <= 1) console.info(formatJSON('info', msg, meta)); // eslint-disable-line no-console
+    winstonLogger.info(msg, meta);
   },
   warn: (msg: string, meta?: LogMeta) => {
-    if (currentLevel <= 2) console.warn(formatJSON('warn', msg, meta)); // eslint-disable-line no-console
+    winstonLogger.warn(msg, meta);
   },
   error: (msg: string, meta?: LogMeta, err?: Error) => {
-    if (currentLevel <= 3) {
-      const entry = formatJSON('error', msg, meta);
-      if (err?.stack) {
-        console.error(entry, err.stack); // eslint-disable-line no-console
-      } else {
-        console.error(entry); // eslint-disable-line no-console
-      }
+    const logData: LogMeta = { ...meta };
+    if (err) {
+      logData.error = err.message;
+      logData.stack = err.stack;
     }
+    winstonLogger.error(msg, logData);
   },
   i(msg: string, meta?: LogMeta) {
     this.info(msg, meta);
@@ -70,3 +80,5 @@ export const logger: Logger = {
     this.error(msg, meta, err);
   },
 };
+
+export default winstonLogger;

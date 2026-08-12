@@ -1,5 +1,7 @@
 import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
 import { randomUUID } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 
 import { checkCostLimits, createAIService } from './ai.js';
 import { getOrSet } from './cache/redis-cache.service.js';
@@ -18,6 +20,28 @@ interface ReadingItem {
   wordCount: number;
   questions?: Array<{ question: string; questionTranslation?: string; answer: string }>;
 }
+
+// Load reading passages from JSON file
+const loadReadingPassages = (): ReadingItem[] => {
+  const passagesPath = path.resolve(
+    process.cwd(),
+    '..',
+    'data',
+    'reading-passages',
+    'passages.json'
+  );
+  try {
+    const data = readFileSync(passagesPath, 'utf-8');
+    const passages = JSON.parse(data) as ReadingItem[];
+    return passages;
+  } catch (error) {
+    // Fallback to hardcoded items if file cannot be read
+    return [];
+  }
+};
+
+// Combine hardcoded items with items from JSON file
+const fileBasedItems = loadReadingPassages();
 
 const READING_ITEMS: ReadingItem[] = [
   {
@@ -100,6 +124,7 @@ const READING_ITEMS: ReadingItem[] = [
     text: 'Municipal water treatment involves a series of physical and chemical processes designed to remove contaminants and make water safe for human consumption. The treatment process typically begins with coagulation, where chemicals such as aluminum sulfate are added to destabilize suspended particles. The destabilized particles clump together in the flocculation stage and are then removed by sedimentation. Filtration through sand or activated carbon removes remaining particles and dissolved organic compounds. Finally, disinfection with chlorine or ultraviolet light eliminates pathogenic microorganisms before the treated water enters the distribution system.',
     wordCount: 110,
   },
+  ...fileBasedItems,
 ];
 
 // Per-user progress store: userId -> Map<contentId, {score, category}>
