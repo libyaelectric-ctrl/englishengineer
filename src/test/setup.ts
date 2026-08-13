@@ -68,7 +68,7 @@ vi.mock('react-virtuoso', () => ({
 const originalFetch = globalThis.fetch;
 globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
   const urlStr = typeof input === 'string' ? input : input.toString();
-  if (urlStr.startsWith('/data/vocabulary/') || urlStr.startsWith('/data/grammar/')) {
+  if (urlStr.startsWith('/data/grammar/')) {
     const relativePath = urlStr.replace(/^\//, '');
     const absolutePath = path?.resolve(process.cwd(), 'public', relativePath);
     try {

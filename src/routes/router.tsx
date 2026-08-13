@@ -87,6 +87,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/admin',
+    errorElement: <RouteErrorPage />,
     element: (
       <AuthGuard>
         <RequireAdminRole>
@@ -237,18 +238,22 @@ export const router = createBrowserRouter([
   },
   {
     path: '/login',
+    errorElement: <RouteErrorPage />,
     element: withSuspense(Login),
   },
   {
     path: '/signup',
+    errorElement: <RouteErrorPage />,
     element: withSuspense(Login),
   },
   {
     path: '/auth/callback',
+    errorElement: <RouteErrorPage />,
     element: withSuspense(AuthCallbackPage),
   },
   {
     path: '*',
+    errorElement: <RouteErrorPage />,
     element: withSuspense(NotFound),
   },
 ]);

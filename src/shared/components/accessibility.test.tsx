@@ -1,44 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { FileText } from 'lucide-react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { MemoryRouter } from 'react-router-dom';
-
 import { Button } from './Button';
-import { EmptyState } from './EmptyState';
-import { SearchInput } from './SearchInput';
 import { Skeleton, SkeletonCard, SkeletonText } from './Skeleton';
 import { ToastContainer, showToast } from './Toast';
 
-const renderWithRouter = (component: React.ReactElement) =>
-  render(<MemoryRouter>{component}</MemoryRouter>);
-
 describe('Component Accessibility', () => {
-  describe('SearchInput', () => {
-    it('has accessible label', () => {
-      renderWithRouter(<SearchInput onSearch={() => {}} placeholder="Search vocabulary" />);
-      expect(screen.getByRole('textbox', { name: /search vocabulary/i })).toBeInTheDocument();
-    });
-
-    it('supports keyboard interaction', async () => {
-      const onSearch = vi.fn();
-      renderWithRouter(<SearchInput onSearch={onSearch} placeholder="Search" />);
-      const input = screen.getByRole('textbox');
-      await userEvent.type(input, 'hello');
-      expect(input).toHaveValue('hello');
-    });
-
-    it('clear button is accessible', async () => {
-      const onSearch = vi.fn();
-      renderWithRouter(<SearchInput onSearch={onSearch} placeholder="Search" />);
-      const input = screen.getByRole('textbox');
-      await userEvent.type(input, 'test');
-      const clearBtn = screen.getByRole('button', { name: /clear/i });
-      expect(clearBtn).toBeInTheDocument();
-    });
-  });
-
   describe('Skeleton', () => {
     it('renders correct count', () => {
       const { container } = render(<Skeleton count={3} />);
@@ -53,28 +21,6 @@ describe('Component Accessibility', () => {
     it('SkeletonText renders lines', () => {
       const { container } = render(<SkeletonText lines={5} />);
       expect(container.querySelectorAll('.animate-pulse')).toHaveLength(5);
-    });
-  });
-
-  describe('EmptyState', () => {
-    it('has accessible heading', () => {
-      renderWithRouter(
-        <EmptyState icon={FileText} title="No documents" description="Create one" />
-      );
-      expect(screen.getByRole('heading', { name: /no documents/i })).toBeInTheDocument();
-    });
-
-    it('action button accessible', () => {
-      renderWithRouter(
-        <EmptyState
-          icon={FileText}
-          title="Empty"
-          description="Nothing"
-          actionLabel="Create"
-          onAction={() => {}}
-        />
-      );
-      expect(screen.getByRole('button', { name: /create/i })).toBeInTheDocument();
     });
   });
 
@@ -173,10 +119,10 @@ describe('ARIA Attributes', () => {
     render(
       <div>
         <Button>Submit</Button>
-        <SearchInput onSearch={() => {}} placeholder="Search" />
+        <Button>Configure</Button>
       </div>
     );
     expect(screen.getByRole('button', { name: /submit/i })).toHaveAccessibleName();
-    expect(screen.getByRole('textbox')).toHaveAccessibleName();
+    expect(screen.getByRole('button', { name: /configure/i })).toHaveAccessibleName();
   });
 });

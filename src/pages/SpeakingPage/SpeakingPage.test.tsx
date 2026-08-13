@@ -82,7 +82,7 @@ vi.mock('@/features/speaking', async (importOriginal) => ({
   })),
 }));
 
-vi.mock('@/features/speaking/DefenseSimulator', () => ({
+vi.mock('@/features/speaking/simulator/DefenseSimulator', () => ({
   DefenseSimulator: () => null,
 }));
 
