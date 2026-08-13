@@ -14,38 +14,16 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/brand/logo-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
+      "src": "/brand/logo.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
       "purpose": "any"
     },
     {
-      "src": "/brand/logo-512.png",
+      "src": "/brand/logo.webp",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/brand/logo-512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/webp",
       "purpose": "maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/brand/screenshot-desktop.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Desktop dashboard"
-    },
-    {
-      "src": "/brand/screenshot-mobile.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Mobile learning view"
     }
   ],
   "shortcuts": [
@@ -53,25 +31,25 @@
       "name": "Dashboard",
       "short_name": "Home",
       "url": "/dashboard",
-      "icons": [{ "src": "/brand/logo-96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/brand/logo.webp", "sizes": "96x96", "type": "image/webp" }]
     },
     {
       "name": "Vocabulary",
       "short_name": "Vocab",
       "url": "/vocabulary",
-      "icons": [{ "src": "/brand/logo-96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/brand/logo.webp", "sizes": "96x96", "type": "image/webp" }]
     },
     {
       "name": "AI Coach",
       "short_name": "AI",
       "url": "/ai",
-      "icons": [{ "src": "/brand/logo-96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/brand/logo.webp", "sizes": "96x96", "type": "image/webp" }]
     },
     {
       "name": "Grammar",
       "short_name": "Grammar",
       "url": "/grammar",
-      "icons": [{ "src": "/brand/logo-96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/brand/logo.webp", "sizes": "96x96", "type": "image/webp" }]
     }
   ]
 }
