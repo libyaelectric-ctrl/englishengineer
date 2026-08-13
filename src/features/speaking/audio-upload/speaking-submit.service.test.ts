@@ -6,7 +6,7 @@ vi.mock('@/shared/services/backend-auth.service', () => ({
   getBackendAuthHeaders: vi.fn().mockResolvedValue({ Authorization: 'Bearer test-token' }),
 }));
 
-vi.mock('@/features/ai/ai.config', () => ({
+vi.mock('@/shared/services/ai-proxy.config', () => ({
   AI_BACKEND_PROXY_CONFIG: { proxyUrl: 'http://localhost:8787/api/v1/ai' },
 }));
 
