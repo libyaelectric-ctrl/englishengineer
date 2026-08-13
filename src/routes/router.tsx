@@ -30,7 +30,6 @@ const Writing = lazy(() => import('@/pages/WritingPage'));
 const Listening = lazy(() => import('@/pages/ListeningPage'));
 const Admin = lazy(() => import('@/pages/AdminPage'));
 const Curriculum = lazy(() => import('@/pages/CurriculumPage'));
-const Offline = lazy(() => import('@/pages/OfflinePage'));
 const Tools = lazy(() => import('@/pages/ToolsPage'));
 const Progress = lazy(() => import('@/pages/ProgressPage'));
 const NotFound = lazy(() => import('@/pages/NotFoundPage'));
@@ -76,7 +75,7 @@ export const router = createBrowserRouter([
         path: '/demo',
         element: <Navigate to="/start" replace />,
       },
-      ...(['terms', 'privacy', 'cookies', 'refund'] as const).map((document) => ({
+      ...(['terms', 'privacy'] as const).map((document) => ({
         path: `/legal/${document}`,
         element: (
           <Suspense fallback={<LoadingState />}>
@@ -225,10 +224,6 @@ export const router = createBrowserRouter([
       {
         path: 'beta-program',
         element: <Navigate to="/dashboard" replace />,
-      },
-      {
-        path: 'offline',
-        element: withSuspense(Offline),
       },
       {
         path: 'team',

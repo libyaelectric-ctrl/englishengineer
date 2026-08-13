@@ -35,13 +35,14 @@ describe('Landing page E2E', () => {
     expect(screen.getAllByText(/^grammar$/i).length).toBeGreaterThan(0);
   });
 
-  it('shows 3 pricing plans on landing', () => {
+  it('shows all 5 pricing plans on landing', () => {
     renderWithProviders(<LandingPage />);
 
-    expect(screen.getAllByText(/Free/i).length).toBeGreaterThan(0);
-    expect(screen.getByText('$0')).toBeInTheDocument();
     expect(screen.getAllByText('$29').length).toBeGreaterThan(0);
     expect(screen.getAllByText('$59').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('$79').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('$99').length).toBeGreaterThan(0);
+    expect(screen.getByText('$$$$')).toBeInTheDocument();
   });
 
   it('FAQ items are clickable', async () => {
