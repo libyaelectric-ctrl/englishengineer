@@ -94,7 +94,7 @@ export const BASE_DAILY_TASKS: DailyCommunicationTask[] = [
     module: 'Quick AI',
     title: 'Improve one real work message',
     description: 'Use a clear provider-labelled rewrite action.',
-    route: '/quick-tools',
+    route: '/tools/quick',
     estimatedMinutes: 5,
     level: 'A1',
   },

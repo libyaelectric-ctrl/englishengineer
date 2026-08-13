@@ -7,6 +7,7 @@ import { EngineeringDiscipline } from '@/shared/constants/engineering-discipline
 import { filterMissionsByDiscipline } from '@/shared/constants/mission-discipline-map';
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { storage } from '@/shared/storage';
+import { applyFeedbackToEvaluation } from '@/shared/utils/evaluation-merge';
 
 import { VocabularyService } from '@/features/vocabulary';
 
@@ -174,12 +175,7 @@ export const SpeakingService = {
     evaluation: SpeakingEvaluationResult,
     feedback: Record<string, string> | undefined
   ): void {
-    if (!feedback) return;
-    const notes = Object.values(feedback).filter(Boolean);
-    if (notes.length === 0) return;
-
-    evaluation.weaknesses = [...new Set([...evaluation.weaknesses, ...notes.slice(0, 3)])];
-    evaluation.feedback = notes.join(' ');
+    if (!applyFeedbackToEvaluation(evaluation, feedback)) return;
 
     // Matched by missionId only, not by object reference: getState() below
     // deserializes state fresh from storage on every call, so a stored

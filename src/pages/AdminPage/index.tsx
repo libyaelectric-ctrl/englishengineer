@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import { AdminHeader } from './AdminHeader';
 import { BillingTab } from './BillingTab';
 import { StatsGrid } from './StatsGrid';
@@ -91,8 +93,10 @@ export const AdminPage = () => {
   const [users, setUsers] = useState<UserRecord[]>(INITIAL_USERS);
   const [activeTab, setActiveTab] = useState<'users' | 'billing' | 'system'>('users');
 
+  const navigate = useNavigate();
+
   const handleLogout = () => {
-    window.location.href = '/login';
+    navigate('/login');
   };
 
   const handlePromote = (id: string) => {

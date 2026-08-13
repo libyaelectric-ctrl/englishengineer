@@ -81,7 +81,7 @@ export const UnifiedReviewQueueService = {
           severity: item.repetitionCount,
         });
         metadata.set(candidateId, {
-          route: '/profile#mistake-log',
+          route: '/profile/skills#skills',
           detail: item.correction,
         });
       });
