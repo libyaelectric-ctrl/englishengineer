@@ -42,7 +42,7 @@
     {
       "name": "AI Coach",
       "short_name": "AI",
-      "url": "/ai",
+      "url": "/tools/ai",
       "icons": [{ "src": "/brand/logo.webp", "sizes": "96x96", "type": "image/webp" }]
     },
     {
