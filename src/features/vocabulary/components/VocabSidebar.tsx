@@ -4,6 +4,9 @@ import { Plus, RefreshCw } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+import { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
+import { interpolate } from '@/features/localization/interpolate';
 import { STORAGE_CHANGE_EVENT } from '@/shared/storage';
 
 import { SkillEntryBrief } from '@/features/learning-orchestrator';
@@ -74,6 +77,8 @@ const getStatusCount = (
 
 export function VocabSidebar() {
   const [menuState, setMenuState] = useState(() => VocabularyMenuService.getState());
+  const language = useLocalizationStore((s) => s.language);
+  const copy = SIDEBAR_SKILL_COPY[language] ?? SIDEBAR_SKILL_COPY.en;
   const summary = VocabularyMenuService.getSummary(menuState);
   const learned = getStatusCount(menuState, 'Learned');
   const struggling = getStatusCount(menuState, 'Struggling');
@@ -92,26 +97,30 @@ export function VocabSidebar() {
   const config: SidebarConfig = {
     header: <SkillEntryBrief skill="vocabulary" compact={true} />,
     skill: 'vocabulary',
-    pathLabel: `Vocabulary · L:${learned} M:${summary.mastered} S:${struggling}`,
-    pathDescription: 'Learn and review engineering vocabulary.',
+    pathLabel: interpolate(copy.vocabPath, {
+      learned,
+      mastered: summary.mastered,
+      struggling,
+    }),
+    pathDescription: copy.vocabDesc,
     currentLevel: getVocabLevel(summary.mastered),
     totalItems: summary.total,
     stats: [
-      { label: 'New', value: summary.newWords, color: 'text-blue-500' },
-      { label: 'Learned', value: learned, color: 'text-cyan-500' },
-      { label: 'Mastered', value: summary.mastered, color: 'text-green-500' },
-      { label: 'Struggling', value: struggling, color: 'text-red-500' },
-      { label: 'Due Today', value: summary.dueToday, color: 'text-purple-500' },
+      { label: copy.vocabNew, value: summary.newWords, color: 'text-blue-500' },
+      { label: copy.vocabLearned, value: learned, color: 'text-cyan-500' },
+      { label: copy.vocabMastered, value: summary.mastered, color: 'text-green-500' },
+      { label: copy.vocabStruggling, value: struggling, color: 'text-red-500' },
+      { label: copy.dueToday, value: summary.dueToday, color: 'text-purple-500' },
     ],
     progressBars: [
       {
-        label: 'Total Mastery',
+        label: copy.totalMastery,
         value: summary.mastered,
         max: summary.total,
         color: '#3b82f6',
       },
       {
-        label: 'Learned',
+        label: copy.vocabLearned,
         value: learned,
         max: summary.total,
         color: '#06b6d4',
@@ -120,7 +129,7 @@ export function VocabSidebar() {
     actions: [
       {
         icon: RefreshCw,
-        label: `Review ${summary.dueToday} due words`,
+        label: interpolate(copy.reviewDue, { count: summary.dueToday }),
         onClick: () => {
           log('/vocabulary', 'review', `${summary.dueToday} due`);
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -129,7 +138,7 @@ export function VocabSidebar() {
       },
       {
         icon: Plus,
-        label: 'Add custom word',
+        label: copy.addCustomWord,
         onClick: () => {
           document.querySelector('input')?.scrollIntoView({ behavior: 'smooth' });
         },
