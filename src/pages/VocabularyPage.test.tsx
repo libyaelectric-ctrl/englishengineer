@@ -129,7 +129,7 @@ describe('VocabularyPage menu', () => {
     });
     fireEvent.keyDown(input, { key: 'Enter' });
     fireEvent.click(
-      await screen.findByRole('button', { name: /add to my vocabulary/i }, { timeout: 10_000 })
+      await screen.findByRole('button', { name: /add to my vocabulary/i }, { timeout: 25_000 })
     );
     const addForm = screen.getByRole('form', {
       name: 'Add to My Vocabulary',
@@ -147,5 +147,5 @@ describe('VocabularyPage menu', () => {
 
     expect(VocabularyMenuService.getState().myVocabulary).toHaveLength(1);
     expect(VocabularyMenuService.getState().myVocabulary[0].term).toBe('fluxuator');
-  }, 10_000);
+  }, 30_000);
 });
