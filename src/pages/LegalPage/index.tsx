@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import { PageMetadata } from '@/shared/components/PageMetadata';
 
-export type LegalDocument = 'terms' | 'privacy' | 'cookies' | 'refund';
+export type LegalDocument = 'terms' | 'privacy';
 
 interface DocumentContent {
   title: string;
@@ -115,46 +115,6 @@ const documents: Record<LegalDocument, DocumentContent> = {
       ],
     ],
   },
-  cookies: {
-    title: 'Cookie & Tracking Policy',
-    summary: 'Detailed disclosures regarding cookies, local storage, and tracking technologies.',
-    badge: 'Cookie Disclosure Policy',
-    lastUpdated: 'July 31, 2026',
-    sections: [
-      [
-        '1. Essential Cookies',
-        'Required for secure user authentication (Supabase tokens), session integrity, and load balancer affinity. Essential cookies cannot be disabled.',
-      ],
-      [
-        '2. Local Storage & IndexedDB',
-        'We utilize browser IndexedDB for offline-first vocabulary caching and local progress tracking to ensure fast, offline application response times.',
-      ],
-      [
-        '3. Analytics & Telemetry',
-        'Anonymized page view telemetry is gathered to evaluate feature usage. Users may toggle analytics preferences at any time from Profile settings.',
-      ],
-    ],
-  },
-  refund: {
-    title: 'Refund & Cancellation Policy',
-    summary: 'Standard 14-day refund policy and cancellation terms for EngVox subscriptions.',
-    badge: '14-Day Money-Back Guarantee',
-    lastUpdated: 'July 31, 2026',
-    sections: [
-      [
-        '1. 14-Day Money-Back Guarantee',
-        'New subscribers may request a full refund within 14 days of initial purchase if they are unsatisfied with any paid plan (Junior, Senior, Specialist, Master, or Team).',
-      ],
-      [
-        '2. Cancellation Process',
-        'You can cancel your subscription at any time with one click from your Billing Settings. Access remains active until the end of your prepaid billing period.',
-      ],
-      [
-        '3. Refund Processing',
-        'Approved refunds are credited directly to your original payment method via Stripe within 5-10 business days.',
-      ],
-    ],
-  },
 };
 
 const LegalPage = ({ document = 'privacy' }: { document?: LegalDocument }) => {
@@ -174,7 +134,7 @@ const LegalPage = ({ document = 'privacy' }: { document?: LegalDocument }) => {
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-1.5 rounded-[var(--radius-card)] bg-surface border border-border-soft p-1">
-            {(['privacy', 'terms', 'cookies', 'refund'] as LegalDocument[]).map((docId) => (
+            {(['privacy', 'terms'] as LegalDocument[]).map((docId) => (
               <button
                 key={docId}
                 onClick={() => setActiveDoc(docId)}
@@ -184,13 +144,7 @@ const LegalPage = ({ document = 'privacy' }: { document?: LegalDocument }) => {
                     : 'text-muted-copy hover:text-foreground hover:bg-background/50'
                 }`}
               >
-                {docId === 'privacy'
-                  ? 'Privacy'
-                  : docId === 'terms'
-                    ? 'Terms'
-                    : docId === 'cookies'
-                      ? 'Cookies'
-                      : 'Refund'}
+                {docId === 'privacy' ? 'Privacy' : 'Terms'}
               </button>
             ))}
           </div>
