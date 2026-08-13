@@ -1,5 +1,8 @@
 import { ArrowUpDown, BarChart3, Filter } from 'lucide-react';
 
+import { useLocalizationStore } from '@/features/localization';
+import { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
+
 interface WritingSidebarProps {
   submissionCount?: number;
   avgScore?: number;
@@ -9,23 +12,25 @@ interface WritingSidebarProps {
   onSortChange?: (sort: string) => void;
 }
 
-const FILTERS = ['All', 'Draft', 'Submitted', 'Graded'];
-const SORTS = ['Duration', 'Difficulty'];
-
 export function WritingSidebar({
   submissionCount = 0,
   avgScore = 0,
-  activeFilter = 'All',
+  activeFilter,
   onFilterChange,
-  activeSort = 'Duration',
+  activeSort,
   onSortChange,
 }: WritingSidebarProps) {
+  const language = useLocalizationStore((s) => s.language);
+  const copy = SIDEBAR_SKILL_COPY[language] ?? SIDEBAR_SKILL_COPY.en;
+  const FILTERS = [copy.all, copy.draft, copy.submitted, copy.graded];
+  const SORTS = [copy.duration, copy.difficulty];
+
   return (
     <aside className="w-64 space-y-4 p-4">
       <div className="rounded-[4px] border-2 border-primary bg-surface p-3">
         <div className="flex items-center gap-2 mb-2">
           <Filter className="h-3 w-3 text-primary" />
-          <span className="text-[10px] font-bold uppercase text-foreground">Filter</span>
+          <span className="text-[10px] font-bold uppercase text-foreground">{copy.filter}</span>
         </div>
         <div className="space-y-1">
           {FILTERS.map((f) => (
@@ -47,7 +52,7 @@ export function WritingSidebar({
       <div className="rounded-[4px] border-2 border-primary bg-surface p-3">
         <div className="flex items-center gap-2 mb-2">
           <ArrowUpDown className="h-3 w-3 text-primary" />
-          <span className="text-[10px] font-bold uppercase text-foreground">Sort</span>
+          <span className="text-[10px] font-bold uppercase text-foreground">{copy.sort}</span>
         </div>
         <div className="space-y-1">
           {SORTS.map((s) => (
@@ -69,15 +74,15 @@ export function WritingSidebar({
       <div className="rounded-[4px] border-2 border-primary bg-surface p-3">
         <div className="flex items-center gap-2 mb-2">
           <BarChart3 className="h-3 w-3 text-primary" />
-          <span className="text-[10px] font-bold uppercase text-foreground">Progress</span>
+          <span className="text-[10px] font-bold uppercase text-foreground">{copy.progress}</span>
         </div>
         <div className="space-y-2 text-[10px]">
           <div className="flex justify-between text-muted-copy">
-            <span>Submissions</span>
+            <span>{copy.submissions}</span>
             <span className="font-bold text-foreground">{submissionCount}</span>
           </div>
           <div className="flex justify-between text-muted-copy">
-            <span>Avg Score</span>
+            <span>{copy.avgScore}</span>
             <span className="font-bold text-foreground">{avgScore}%</span>
           </div>
         </div>

@@ -1,4 +1,6 @@
 import { Action, Item, Progress, Section, Stat } from './SidebarComponents';
+import { useLocalizationStore } from '@/features/localization';
+import { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
 import type { SidebarConfig } from './sidebar.config';
 
 function renderTabs(title: string, tabs: NonNullable<SidebarConfig['tabs']>) {
@@ -20,10 +22,10 @@ function renderTabs(title: string, tabs: NonNullable<SidebarConfig['tabs']>) {
   );
 }
 
-function renderStats(stats: NonNullable<SidebarConfig['stats']>) {
+function renderStats(stats: NonNullable<SidebarConfig['stats']>, statsTitle: string) {
   if (stats.length === 0) return null;
   return (
-    <Section title="Stats">
+    <Section title={statsTitle}>
       {stats.map((stat) => (
         <Stat key={stat.label} label={stat.label} value={stat.value} color={stat.color} />
       ))}
@@ -31,10 +33,10 @@ function renderStats(stats: NonNullable<SidebarConfig['stats']>) {
   );
 }
 
-function renderProgressBars(bars: NonNullable<SidebarConfig['progressBars']>) {
+function renderProgressBars(bars: NonNullable<SidebarConfig['progressBars']>, progressTitle: string) {
   if (bars.length === 0) return null;
   return (
-    <Section title="Progress">
+    <Section title={progressTitle}>
       <div className="space-y-2">
         {bars.map((bar) => (
           <div key={bar.label}>
@@ -53,10 +55,10 @@ function renderProgressBars(bars: NonNullable<SidebarConfig['progressBars']>) {
   );
 }
 
-function renderActions(actions: NonNullable<SidebarConfig['actions']>) {
+function renderActions(actions: NonNullable<SidebarConfig['actions']>, actionsTitle: string) {
   if (actions.length === 0) return null;
   return (
-    <Section title="Actions">
+    <Section title={actionsTitle}>
       <div className="space-y-1.5">
         {actions.map((action) => (
           <Action key={action.label} {...action} />
@@ -67,6 +69,8 @@ function renderActions(actions: NonNullable<SidebarConfig['actions']>) {
 }
 
 export function SkillSidebar({ config }: { config: SidebarConfig }) {
+  const language = useLocalizationStore((s) => s.language);
+  const copy = SIDEBAR_SKILL_COPY[language] ?? SIDEBAR_SKILL_COPY.en;
   return (
     <>
       {config.header && <div className="px-4 pt-4">{config.header}</div>}
@@ -75,7 +79,8 @@ export function SkillSidebar({ config }: { config: SidebarConfig }) {
         <div className="space-y-3">
           <div>
             <p className="text-[10px] font-bold text-primary tracking-wider uppercase mb-1">
-              {config.currentLevel || 'Loading'} PATH · {config.totalItems ?? 0} ITEMS
+              {config.currentLevel || copy.loading} {copy.pathWord} ·{' '}
+              {config.totalItems ?? 0} {copy.itemsWord}
             </p>
             <p className="text-xs text-muted-copy leading-5">{config.pathDescription}</p>
           </div>
@@ -84,9 +89,9 @@ export function SkillSidebar({ config }: { config: SidebarConfig }) {
       </Section>
 
       {config.tabs && renderTabs(config.pathLabel, config.tabs)}
-      {config.stats && renderStats(config.stats)}
-      {config.progressBars && renderProgressBars(config.progressBars)}
-      {config.actions && renderActions(config.actions)}
+      {config.stats && renderStats(config.stats, copy.stats)}
+      {config.progressBars && renderProgressBars(config.progressBars, copy.progress)}
+      {config.actions && renderActions(config.actions, copy.actions)}
     </>
   );
 }

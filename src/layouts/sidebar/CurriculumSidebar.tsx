@@ -1,20 +1,24 @@
+import { useLocalizationStore } from '@/features/localization';
+import { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
 import { SkillSidebar } from './SkillSidebar';
 import type { SidebarConfig } from './sidebar.config';
 
 export function CurriculumSidebar() {
+  const language = useLocalizationStore((s) => s.language);
+  const copy = SIDEBAR_SKILL_COPY[language] ?? SIDEBAR_SKILL_COPY.en;
   const config: SidebarConfig = {
     skill: 'curriculum',
-    pathLabel: 'Your Path',
-    pathDescription: 'Track your learning journey across all skills.',
+    pathLabel: copy.yourPath,
+    pathDescription: copy.trackJourney,
     tabs: [
-      { label: "Today's Tasks", active: true },
-      { label: 'This Week' },
-      { label: 'Full Curriculum' },
-      { label: 'Review Queue', badge: 0 },
+      { label: copy.todayTasks, active: true },
+      { label: copy.thisWeek },
+      { label: copy.fullCurriculum },
+      { label: copy.reviewQueue, badge: 0 },
     ],
     stats: [
-      { label: 'Weekly Goal', value: '85%', color: 'text-green-500' },
-      { label: 'Readiness', value: 'High' },
+      { label: copy.weeklyGoal, value: '85%', color: 'text-green-500' },
+      { label: copy.readiness, value: copy.high },
     ],
     actions: [],
   };
