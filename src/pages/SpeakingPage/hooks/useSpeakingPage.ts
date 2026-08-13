@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import type { ScoreResult } from '@/core/learning';
 
-import { AI_BACKEND_PROXY_CONFIG } from '@/features/ai/ai.config';
+import { AI_BACKEND_PROXY_CONFIG } from '@/shared/services/ai-proxy.config';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { canAccessFeature, useBillingStore } from '@/features/billing';
 import {

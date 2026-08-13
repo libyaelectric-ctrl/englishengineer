@@ -6,7 +6,7 @@ describe('main navigation configuration', () => {
   it('uses locked main navigation entries including Team', () => {
     expect(MAIN_NAVIGATION_LABELS).toEqual([
       'Home',
-      'Öğrenme Yolu (EngDua)',
+      'Learning Path',
       'Skills',
       'Progress',
       'Learning Hub',
