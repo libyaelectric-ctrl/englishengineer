@@ -1,5 +1,7 @@
 import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 
+import { useSearchParams } from 'react-router-dom';
+
 import { useLearningStore } from '@/core/learning';
 
 import { logger } from '@/shared/logger';
@@ -60,7 +62,15 @@ export function useVocabularyPage() {
     [userId]
   );
   const vocabularyProfile = learningProfile.skills.vocabulary;
-  const vocabularyLevel = getBaseCefrLevel(vocabularyProfile.cefrBand);
+  // Drill deep-linking: /vocabulary?cefr=B1 focuses the lab on that band.
+  const [searchParams] = useSearchParams();
+  const rawCefr = searchParams.get('cefr');
+  const requestedLevel =
+    rawCefr && (CEFR_LEVELS as readonly string[]).includes(rawCefr)
+      ? (rawCefr as CefrLevel)
+      : null;
+  const vocabularyLevel = requestedLevel ?? getBaseCefrLevel(vocabularyProfile.cefrBand);
+  const activeCefrBand = requestedLevel ?? vocabularyProfile.cefrBand;
   const preferredDomains = useMemo(() => getPreferredDomains(learningProfile), [learningProfile]);
 
   const [data, dispatchData] = useReducer(dataReducer, {
@@ -114,6 +124,7 @@ export function useVocabularyPage() {
   } = search;
 
   useEffect(() => {
+    initializedSet.current = false;
     let cancelled = false;
     void VocabularyRepository.getVocabularyByLevel(vocabularyLevel)
       .then((levelTerms) => {
@@ -161,14 +172,14 @@ export function useVocabularyPage() {
       offset = 0
     ) =>
       selectVocabularyLearningSet(terms, state, {
-        cefrBand: vocabularyProfile.cefrBand,
+        cefrBand: activeCefrBand,
         skillUse: 'vocabulary',
         status,
         domain: domain === 'All' ? undefined : domain,
         preferredDomains,
         offset,
       }).map((term) => term.id),
-    [learningDomain, preferredDomains, terms, vocabularyProfile.cefrBand]
+    [activeCefrBand, learningDomain, preferredDomains, terms]
   );
 
   useEffect(() => {
