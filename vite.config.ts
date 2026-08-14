@@ -73,6 +73,7 @@ export default defineConfig(() => {
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) return getVendorChunk(id);
+            if (id.includes('vocabulary-translations.json')) return 'vocab-translations';
             if (id.includes('/data/') && id.includes('by-level/'))
               return getDataChunk(id) ?? 'seed-data';
             if (id.includes('/data/') || id.includes('seed')) return 'seed-data';
