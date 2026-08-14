@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo } from 'react';
+import { type ReactNode } from 'react';
 
 import { Navigate, useLocation } from 'react-router-dom';
 
@@ -13,14 +13,15 @@ import { LearningProfileRepository } from './profile.repository';
  * profession (discipline) and an interface language during onboarding are
  * redirected to `/onboarding`. Setup pages themselves are exempt so the flow
  * can be completed.
+ *
+ * The profile is read fresh on every render (no memoization) so that completing
+ * onboarding updates the gate immediately — a stale cached profile would keep
+ * redirecting back to `/onboarding` and lock the user out of the app.
  */
 export const OnboardingGate = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
   const currentUser = useAuthStore((state) => state.currentUser);
-  const profile = useMemo(
-    () => LearningProfileRepository.getProfile(currentUser?.id ?? 'local-user'),
-    [currentUser?.id]
-  );
+  const profile = LearningProfileRepository.getProfile(currentUser?.id ?? 'local-user');
 
   const isSetupPath =
     location.pathname === '/welcome' ||

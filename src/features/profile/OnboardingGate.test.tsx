@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 
 import { useAuthStore } from '@/features/auth';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
@@ -35,6 +36,44 @@ const renderGate = (initialPath: string) =>
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/onboarding/:step" element={<Onboarding />} />
         <Route path="/welcome" element={<Onboarding />} />
+      </Routes>
+    </MemoryRouter>
+  );
+
+const FlowOnboarding = () => {
+  const navigate = useNavigate();
+  const handleComplete = () => {
+    const profile = LearningProfileRepository.getProfile('gate-user');
+    LearningProfileRepository.saveProfile({
+      ...profile,
+      userId: 'gate-user',
+      onboardingCompleted: true,
+      discipline: 'software',
+      interfaceLanguage: 'tr',
+    });
+    navigate('/curriculum');
+  };
+  return (
+    <button type="button" onClick={handleComplete}>
+      COMPLETE ONBOARDING
+    </button>
+  );
+};
+
+const renderFlow = (initialPath: string) =>
+  render(
+    <MemoryRouter initialEntries={[initialPath]}>
+      <Routes>
+        <Route
+          element={
+            <OnboardingGate>
+              <Outlet />
+            </OnboardingGate>
+          }
+        >
+          <Route path="/onboarding" element={<FlowOnboarding />} />
+          <Route path="/curriculum" element={<Guarded />} />
+        </Route>
       </Routes>
     </MemoryRouter>
   );
@@ -103,5 +142,14 @@ describe('OnboardingGate', () => {
   it('exempts the /welcome setup path', async () => {
     renderGate('/welcome');
     expect(await screen.findByText('ONBOARDING PAGE')).toBeInTheDocument();
+  });
+
+  it('reflects onboarding completion on the same mounted gate (no stale cache)', async () => {
+    const user = userEvent.setup();
+    renderFlow('/onboarding');
+    await user.click(screen.getByRole('button', { name: 'COMPLETE ONBOARDING' }));
+
+    expect(await screen.findByText('GUARDED CONTENT')).toBeInTheDocument();
+    expect(screen.queryByText('COMPLETE ONBOARDING')).not.toBeInTheDocument();
   });
 });
