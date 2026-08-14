@@ -93,13 +93,6 @@ export const DashboardPage: React.FC = () => {
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <Link
-                to="/learning-path"
-                className="inline-flex items-center gap-2 rounded-[var(--radius-card)] bg-gradient-to-r from-emerald-500 to-green-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg hover:scale-105 active:scale-95 transition-all"
-              >
-                <Trophy className="h-4 w-4" />
-                <span>Mühendislik Duolingosu'nu Başlat 🚀</span>
-              </Link>
-              <Link
                 to="/curriculum/today"
                 className="inline-flex items-center gap-1.5 rounded-[var(--radius-card)] bg-[var(--surface)] border border-[var(--color-border-soft)] px-5 py-2.5 text-sm font-bold text-[var(--foreground)] hover:bg-[var(--surface-hover)] transition-colors"
               >
