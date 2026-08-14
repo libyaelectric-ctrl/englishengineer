@@ -90,5 +90,4 @@ analysis_output/
 !scripts/.env.example
 
 public/data/*.json
-public/audio/*.mp3
 qa-report/
