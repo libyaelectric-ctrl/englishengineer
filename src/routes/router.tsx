@@ -100,19 +100,15 @@ export const router = createBrowserRouter([
     errorElement: <RouteErrorPage />,
     element: (
       <AuthGuard>
-        <AppShell />
+        <OnboardingGate>
+          <AppShell />
+        </OnboardingGate>
       </AuthGuard>
     ),
     children: [
       {
         path: 'dashboard',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <OnboardingGate>
-              <Dashboard />
-            </OnboardingGate>
-          </Suspense>
-        ),
+        element: withSuspense(Dashboard),
       },
       {
         path: 'onboarding',

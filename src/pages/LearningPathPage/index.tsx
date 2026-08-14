@@ -198,7 +198,7 @@ const LearningPathPage = () => {
                     onSelectLevel={() => navigate(`/vocabulary?cefr=${stage.cefrLevel}`)}
                   />
                   {stage.cefrLevel !== 'C2' && (
-                    <div className="mt-16 h-0.5 w-6 shrink-0 bg-[var(--color-border-soft)]" />
+                    <div className="mt-[5.75rem] h-0.5 w-6 shrink-0 bg-[var(--color-border-soft)]" />
                   )}
                 </div>
               ))}
