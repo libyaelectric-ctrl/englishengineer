@@ -36,9 +36,6 @@ const NotFound = lazy(() => import('@/pages/NotFoundPage'));
 const Login = lazy(() => import('@/pages/LoginPage'));
 const Onboarding = lazy(() => import('@/pages/OnboardingPage'));
 const Welcome = lazy(() => import('@/pages/WelcomePage'));
-const LearningPath = lazy(() => import('@/pages/LearningPathPage'));
-const LessonRunner = lazy(() => import('@/pages/LessonRunnerPage'));
-
 const Landing = lazy(() => import('@/pages/LandingPage'));
 const Pricing = lazy(() => import('@/pages/PricingPage'));
 const Business = lazy(() => import('@/pages/BusinessPage'));
@@ -131,11 +128,7 @@ export const router = createBrowserRouter([
 
       {
         path: 'learning-path',
-        element: withSuspense(LearningPath),
-      },
-      {
-        path: 'lesson/:levelId',
-        element: withSuspense(LessonRunner),
+        element: <Navigate to="/curriculum/today" replace />,
       },
       {
         path: 'profile',

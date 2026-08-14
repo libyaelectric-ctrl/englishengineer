@@ -2,7 +2,7 @@ export const MAX_HEARTS = 5;
 const REFILL_AFTER_MS = 24 * 60 * 60 * 1000; // 24 hours after hearts hit 0
 
 /**
- * Duolingo-style hearts: lose one per wrong answer on a gradeable (right/wrong)
+ * Gamified hearts: lose one per wrong answer on a gradeable (right/wrong)
  * exercise, such as a Vocabulary review card. When hearts reach 0, further
  * attempts are blocked until a full 24h has passed since the moment they hit
  * 0 -- at which point they refill back to MAX_HEARTS in one go (no gradual
