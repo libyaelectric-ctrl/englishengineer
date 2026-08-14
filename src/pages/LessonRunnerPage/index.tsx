@@ -18,6 +18,7 @@ import { MultipleChoiceCard } from '@/features/lesson-runner/components/Multiple
 import { RfiFillBlankCard } from '@/features/lesson-runner/components/RfiFillBlankCard';
 import { useLocalizationStore } from '@/features/localization';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
+import { resolveTermMeaningAsync } from '@/shared/services/vocabulary-translation.service';
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
 
 type LessonCardType = 'mc' | 'rfi' | 'audio' | 'diagram';
@@ -36,6 +37,7 @@ const LessonRunnerPage = () => {
   const navigate = useNavigate();
   const currentUser = useAuthStore((state) => state.currentUser);
   const translate = useLocalizationStore((state) => state.translate);
+  const uiLanguage = useLocalizationStore((state) => state.language);
 
   const { hearts, loseHeart, masterTerms, completeGenericPractice } = useLearningStore(
     useShallow((state) => ({
@@ -80,18 +82,28 @@ const LessonRunnerPage = () => {
           return;
         }
 
+        // Resolve meanings in the user's selected language (fr, de, es, ar, etc.)
+        const resolvedMeanings = await Promise.all(
+          terms.map((term) =>
+            resolveTermMeaningAsync(term.term, {
+              turkishMeaning: term.turkishMeaning,
+              definition: term.definition,
+            }, uiLanguage)
+          )
+        );
+
         const questionList: LessonQuestion[] = terms.map((term, idx) => {
           const type = CARD_TYPES[idx % CARD_TYPES.length];
           const correctAnswer =
             type === 'diagram'
               ? term.domain || term.category || term.cefrLevel
-              : term.turkishMeaning || term.definition || term.term;
+              : resolvedMeanings[idx];
           const distractorValues = terms
-            .filter((t) => t.id !== term.id)
-            .map((t) =>
+            .filter((_, i) => i !== idx)
+            .map((_, i) =>
               type === 'diagram'
-                ? t.domain || t.category || t.cefrLevel
-                : t.turkishMeaning || t.definition || t.term
+                ? terms[i].domain || terms[i].category || terms[i].cefrLevel
+                : resolvedMeanings[i]
             );
           const options = Array.from(new Set([correctAnswer, ...distractorValues]))
             .slice(0, 4)
