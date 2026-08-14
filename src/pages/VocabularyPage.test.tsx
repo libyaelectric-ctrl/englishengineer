@@ -1,6 +1,8 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { MemoryRouter } from 'react-router-dom';
+
 import { CEFR_LEVELS } from '@/features/level-system';
 import { VocabularyMenuService, VocabularyRepository } from '@/features/vocabulary';
 
@@ -24,7 +26,11 @@ describe('VocabularyPage menu', () => {
   });
 
   const renderLoadedPage = async () => {
-    render(<VocabularyPage />);
+    render(
+      <MemoryRouter>
+        <VocabularyPage />
+      </MemoryRouter>
+    );
     await screen.findAllByText('height');
   };
 
@@ -85,7 +91,11 @@ describe('VocabularyPage menu', () => {
     try {
       const terms = await VocabularyRepository.getVocabularyByLevel('A1');
       terms.slice(0, 100).forEach((term) => VocabularyMenuService.startLearning(term.id));
-      render(<VocabularyPage />);
+      render(
+        <MemoryRouter>
+          <VocabularyPage />
+        </MemoryRouter>
+      );
       fireEvent.click(screen.getByRole('tab', { name: 'Learned' }));
 
       fireEvent.click(screen.getByRole('button', { name: 'Start Quiz' }));
@@ -148,4 +158,17 @@ describe('VocabularyPage menu', () => {
     expect(VocabularyMenuService.getState().myVocabulary).toHaveLength(1);
     expect(VocabularyMenuService.getState().myVocabulary[0].term).toBe('fluxuator');
   }, 30_000);
+
+  it('honors the ?cefr= drill deep link and loads that band', async () => {
+    render(
+      <MemoryRouter initialEntries={['/vocabulary?cefr=B1']}>
+        <VocabularyPage />
+      </MemoryRouter>
+    );
+    const cards = await screen.findAllByTestId('vocabulary-word-card');
+    expect(cards.length).toBeGreaterThan(0);
+    expect(
+      within(cards[0]).getByText((_content, element) => element?.textContent === 'LVL-B1')
+    ).toBeInTheDocument();
+  }, 20_000);
 });
