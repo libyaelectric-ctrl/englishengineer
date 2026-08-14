@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/shallow';
 
-import { Cog, ShieldCheck, Zap } from 'lucide-react';
+import { Flame, Heart, Zap } from 'lucide-react';
 
 import { useLearningStore } from '@/core/learning';
 import { useAuthStore } from '@/features/auth';
@@ -113,33 +113,33 @@ const LearningPathPage = () => {
               <span className="font-bold">{bandTitle(currentBand)}</span>
             </p>
           </div>
-          <div className="flex items-center gap-5 rounded-xl bg-black/30 px-5 py-3 border border-white/10 backdrop-blur font-sans">
+          <div className="flex items-center gap-5 rounded-xl bg-black/20 px-5 py-3 backdrop-blur">
             <div className="relative flex flex-col items-center">
               {xpGain && (
                 <span
                   key={xpGain.key}
                   className="animate-xp-pop pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-extrabold text-yellow-300 drop-shadow"
                 >
-                  +{xpGain.amount} CP
+                  +{xpGain.amount} {translate('learningpath.xp')}
                 </span>
               )}
               <Zap className="h-5 w-5 text-yellow-300" />
-              <span className="mt-0.5 text-lg font-extrabold leading-none tabular-nums text-yellow-300">
+              <span className="mt-0.5 text-lg font-extrabold leading-none tabular-nums">
                 {animatedXp}
               </span>
-              <span className="text-[9px] font-bold uppercase tracking-wider text-white/70">CP</span>
+              <span className="text-[10px] uppercase text-white/70">{translate('learningpath.xp')}</span>
             </div>
             <div className="h-8 w-px bg-white/20" />
             <div className="flex flex-col items-center">
-              <Cog className="h-5 w-5 text-cyan-300 animate-spin-slow" />
-              <span className="mt-0.5 text-lg font-extrabold leading-none text-cyan-200">{streak}</span>
-              <span className="text-[9px] font-bold uppercase tracking-wider text-white/70">SHIFT DAYS</span>
+              <Flame className="h-5 w-5 text-orange-300" />
+              <span className="mt-0.5 text-lg font-extrabold leading-none">{streak}</span>
+              <span className="text-[10px] uppercase text-white/70">{translate('learningpath.streak')}</span>
             </div>
             <div className="h-8 w-px bg-white/20" />
             <div className="flex flex-col items-center">
-              <ShieldCheck className="h-5 w-5 text-emerald-300" />
-              <span className="mt-0.5 text-lg font-extrabold leading-none text-emerald-200">{hearts * 20}%</span>
-              <span className="text-[9px] font-bold uppercase tracking-wider text-white/70">INTEGRITY</span>
+              <Heart className="h-5 w-5 text-rose-300" />
+              <span className="mt-0.5 text-lg font-extrabold leading-none">{hearts}</span>
+              <span className="text-[10px] uppercase text-white/70">{translate('learningpath.hearts')}</span>
             </div>
           </div>
         </div>
@@ -195,7 +195,7 @@ const LearningPathPage = () => {
                     stage={stage}
                     title={bandTitle(stage.cefrLevel)}
                     termsLabel={termsLabel}
-                    onSelectLevel={(levelId) => navigate(`/lesson-runner/${levelId}`)}
+                    onSelectLevel={() => navigate(`/vocabulary?cefr=${stage.cefrLevel}`)}
                   />
                   {stage.cefrLevel !== 'C2' && (
                     <div className="mt-[5.75rem] h-0.5 w-6 shrink-0 bg-[var(--color-border-soft)]" />
