@@ -1,3 +1,5 @@
+import { Fragment } from 'react';
+
 import type { PathStage } from '../learning-path.types';
 import { HexagonNode } from './HexagonNode';
 
@@ -40,8 +42,16 @@ export const PathStageColumn = ({
         </div>
       </div>
       <div className="flex flex-col items-center gap-3">
-        {stage.levels.map((level) => (
-          <HexagonNode key={level.id} level={level} onSelect={onSelectLevel} />
+        {stage.levels.map((level, index) => (
+          <Fragment key={level.id}>
+            {index > 0 && (
+              <div className="h-3 w-0.5 shrink-0 rounded-full bg-[var(--color-border-soft)]" />
+            )}
+            <HexagonNode level={level} onSelect={onSelectLevel} />
+            <span className="mt-1 text-[9px] tabular-nums text-[var(--color-muted-copy)]">
+              {Math.round(level.masteryRatio * level.termCount)}/{level.termCount}
+            </span>
+          </Fragment>
         ))}
       </div>
     </div>
