@@ -188,6 +188,31 @@ body {
   }
 }
 
+@keyframes xp-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 6px) scale(0.7);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1.15);
+  }
+  45% {
+    transform: translate(-50%, -4px) scale(1);
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -18px) scale(0.9);
+  }
+}
+
+.animate-xp-pop {
+  animation: xp-pop 1.8s ease-out forwards;
+}
+
 .animate-spin-slow {
   animation: spin-slow 20s linear infinite;
 }

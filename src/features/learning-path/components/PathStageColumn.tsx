@@ -16,23 +16,34 @@ export const PathStageColumn = ({
   title,
   termsLabel,
   onSelectLevel,
-}: PathStageColumnProps) => (
-  <div className="flex min-w-[7rem] flex-col items-center gap-4">
-    <div className="flex flex-col items-center gap-0.5">
-      <span
-        className="rounded-full border px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide"
-        style={{ borderColor: stage.color, color: stage.color }}
-      >
-        {title}
-      </span>
-      <span className="text-[10px] text-[var(--color-muted-copy)]">
-        {stage.totalTerms} {termsLabel}
-      </span>
+}: PathStageColumnProps) => {
+  const masteredRatio =
+    stage.totalTerms > 0 ? Math.round((stage.masteredTerms / stage.totalTerms) * 100) : 0;
+
+  return (
+    <div className="flex min-w-[7rem] flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-1">
+        <span
+          className="rounded-full border px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide"
+          style={{ borderColor: stage.color, color: stage.color }}
+        >
+          {title}
+        </span>
+        <span className="text-[10px] tabular-nums text-[var(--color-muted-copy)]">
+          {stage.masteredTerms}/{stage.totalTerms} {termsLabel}
+        </span>
+        <div className="h-1 w-16 overflow-hidden rounded-full bg-[var(--color-border-soft)]">
+          <div
+            className="h-full rounded-full transition-[width] duration-700 ease-out"
+            style={{ width: `${masteredRatio}%`, backgroundColor: stage.color }}
+          />
+        </div>
+      </div>
+      <div className="flex flex-col items-center gap-3">
+        {stage.levels.map((level) => (
+          <HexagonNode key={level.id} level={level} onSelect={onSelectLevel} />
+        ))}
+      </div>
     </div>
-    <div className="flex flex-col items-center gap-3">
-      {stage.levels.map((level) => (
-        <HexagonNode key={level.id} level={level} onSelect={onSelectLevel} />
-      ))}
-    </div>
-  </div>
-);
+  );
+};

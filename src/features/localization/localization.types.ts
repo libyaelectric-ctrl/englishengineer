@@ -333,6 +333,8 @@ export type TranslationKey =
   | 'learningpath.contentHint'
   | 'learningpath.loading'
   | 'learningpath.error'
+  | 'learningpath.overallMastery'
+  | 'learningpath.levelsCompleted'
   | 'learningpath.band.a1'
   | 'learningpath.band.a2'
   | 'learningpath.band.b1'

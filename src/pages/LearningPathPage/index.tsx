@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/shallow';
@@ -8,6 +8,7 @@ import { Flame, Heart, Zap } from 'lucide-react';
 import { useLearningStore } from '@/core/learning';
 import { useAuthStore } from '@/features/auth';
 import {
+  MasteryOverview,
   PathStageColumn,
   buildLearningPath,
   getDisciplinePalette,
@@ -16,6 +17,7 @@ import {
 import type { LearningPath } from '@/features/learning-path';
 import { useLocalizationStore } from '@/features/localization';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
+import { useCountUp } from '@/shared/hooks/useCountUp';
 import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
 import type { CefrLevel } from '@/shared/types/domain.types';
 
@@ -48,6 +50,19 @@ const LearningPathPage = () => {
 
   const [path, setPath] = useState<LearningPath | null>(null);
   const [failed, setFailed] = useState(false);
+
+  const animatedXp = useCountUp(xp);
+  const prevXpRef = useRef(xp);
+  const [xpGain, setXpGain] = useState<{ amount: number; key: number } | null>(null);
+
+  useEffect(() => {
+    const prev = prevXpRef.current;
+    prevXpRef.current = xp;
+    if (xp <= prev) return undefined;
+    setXpGain({ amount: xp - prev, key: Date.now() });
+    const timer = setTimeout(() => setXpGain(null), 1900);
+    return () => clearTimeout(timer);
+  }, [xp]);
 
   useEffect(() => {
     let active = true;
@@ -99,9 +114,19 @@ const LearningPathPage = () => {
             </p>
           </div>
           <div className="flex items-center gap-5 rounded-xl bg-black/20 px-5 py-3 backdrop-blur">
-            <div className="flex flex-col items-center">
+            <div className="relative flex flex-col items-center">
+              {xpGain && (
+                <span
+                  key={xpGain.key}
+                  className="animate-xp-pop pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-extrabold text-yellow-300 drop-shadow"
+                >
+                  +{xpGain.amount} {translate('learningpath.xp')}
+                </span>
+              )}
               <Zap className="h-5 w-5 text-yellow-300" />
-              <span className="mt-0.5 text-lg font-extrabold leading-none">{xp}</span>
+              <span className="mt-0.5 text-lg font-extrabold leading-none tabular-nums">
+                {animatedXp}
+              </span>
               <span className="text-[10px] uppercase text-white/70">{translate('learningpath.xp')}</span>
             </div>
             <div className="h-8 w-px bg-white/20" />
@@ -148,21 +173,37 @@ const LearningPathPage = () => {
             {translate('learningpath.loading')}
           </p>
         ) : (
-          <div className="scrollbar-thin flex gap-2 overflow-x-auto pb-3">
-            {path.stages.map((stage) => (
-              <div key={stage.id} className="flex items-start">
-                <PathStageColumn
-                  stage={stage}
-                  title={bandTitle(stage.cefrLevel)}
-                  termsLabel={termsLabel}
-                  onSelectLevel={() => navigate(`/vocabulary?cefr=${stage.cefrLevel}`)}
-                />
-                {stage.cefrLevel !== 'C2' && (
-                  <div className="mt-16 h-0.5 w-6 shrink-0 bg-[var(--color-border-soft)]" />
-                )}
-              </div>
-            ))}
-          </div>
+          <>
+            <MasteryOverview
+              percent={
+                path.totalTerms > 0
+                  ? Math.round((path.masteredTerms / path.totalTerms) * 100)
+                  : 0
+              }
+              levelsCompleted={path.stages.reduce(
+                (count, stage) =>
+                  count + stage.levels.filter((level) => level.status === 'completed').length,
+                0
+              )}
+              levelsTotal={path.totalLevels}
+              accent={palette.primary}
+            />
+            <div className="scrollbar-thin flex gap-2 overflow-x-auto pb-3">
+              {path.stages.map((stage) => (
+                <div key={stage.id} className="flex items-start">
+                  <PathStageColumn
+                    stage={stage}
+                    title={bandTitle(stage.cefrLevel)}
+                    termsLabel={termsLabel}
+                    onSelectLevel={() => navigate(`/vocabulary?cefr=${stage.cefrLevel}`)}
+                  />
+                  {stage.cefrLevel !== 'C2' && (
+                    <div className="mt-16 h-0.5 w-6 shrink-0 bg-[var(--color-border-soft)]" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </>
         )}
 
         <p className="mt-4 border-t border-[var(--color-border-soft)] pt-3 text-[11px] text-[var(--color-muted-copy)]">

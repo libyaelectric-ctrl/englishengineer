@@ -12,6 +12,7 @@ export { DISCIPLINE_PALETTES, getDisciplinePalette, STATUS_COLORS } from './disc
 export type { DisciplinePalette } from './discipline-palette';
 
 export { PathStageColumn } from './components/PathStageColumn';
+export { MasteryOverview } from './components/MasteryOverview';
 
 export type {
   LearningPath,
