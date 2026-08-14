@@ -120,26 +120,26 @@ const LearningPathPage = () => {
                   key={xpGain.key}
                   className="animate-xp-pop pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-extrabold text-yellow-300 drop-shadow"
                 >
-                  +{xpGain.amount} {translate('learningpath.xp')}
+                  +{xpGain.amount} {translate('learningpath.careerPoints')}
                 </span>
               )}
               <Zap className="h-5 w-5 text-yellow-300" />
               <span className="mt-0.5 text-lg font-extrabold leading-none tabular-nums">
                 {animatedXp}
               </span>
-              <span className="text-[10px] uppercase text-white/70">{translate('learningpath.xp')}</span>
+              <span className="text-[10px] uppercase text-white/70">{translate('learningpath.careerPoints')}</span>
             </div>
             <div className="h-8 w-px bg-white/20" />
             <div className="flex flex-col items-center">
               <Flame className="h-5 w-5 text-orange-300" />
               <span className="mt-0.5 text-lg font-extrabold leading-none">{streak}</span>
-              <span className="text-[10px] uppercase text-white/70">{translate('learningpath.streak')}</span>
+              <span className="text-[10px] uppercase text-white/70">{translate('learningpath.shiftDays')}</span>
             </div>
             <div className="h-8 w-px bg-white/20" />
             <div className="flex flex-col items-center">
               <Heart className="h-5 w-5 text-rose-300" />
-              <span className="mt-0.5 text-lg font-extrabold leading-none">{hearts}</span>
-              <span className="text-[10px] uppercase text-white/70">{translate('learningpath.hearts')}</span>
+              <span className="mt-0.5 text-lg font-extrabold leading-none">{hearts * 20}%</span>
+              <span className="text-[10px] uppercase text-white/70">{translate('learningpath.systemIntegrity')}</span>
             </div>
           </div>
         </div>
@@ -195,7 +195,7 @@ const LearningPathPage = () => {
                     stage={stage}
                     title={bandTitle(stage.cefrLevel)}
                     termsLabel={termsLabel}
-                    onSelectLevel={() => navigate(`/vocabulary?cefr=${stage.cefrLevel}`)}
+                    onSelectLevel={(levelId) => navigate(`/lesson-runner/${levelId}`)}
                   />
                   {stage.cefrLevel !== 'C2' && (
                     <div className="mt-[5.75rem] h-0.5 w-6 shrink-0 bg-[var(--color-border-soft)]" />

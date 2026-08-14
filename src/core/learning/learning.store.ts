@@ -48,6 +48,8 @@ export interface LearningStoreActions {
   ) => ScoreResult;
   /** Consumes one heart on a wrong quiz answer. No-op once already at 0. */
   loseHeart: () => void;
+  /** Adds mastered term IDs to the user's vocabulary pool. */
+  masterTerms: (termIds: string[]) => void;
   /** Checks the 24h cooldown and refills to MAX_HEARTS if it has elapsed. */
   checkHeartsRefill: () => void;
   resetAll: () => void;
@@ -307,6 +309,12 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
           new Date()
         );
         set({ hearts, heartsDepletedAt: depletedAt });
+      },
+
+      masterTerms: (termIds: string[]) => {
+        const current = get().vocabularyPool ?? [];
+        const combined = Array.from(new Set([...current, ...termIds]));
+        set({ vocabularyPool: combined });
       },
 
       checkHeartsRefill: () => {

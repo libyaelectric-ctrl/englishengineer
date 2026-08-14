@@ -46,6 +46,7 @@ const Start = lazy(() => import('@/pages/StartPage'));
 const Placement = lazy(() => import('@/pages/PlacementPage'));
 const Translator = lazy(() => import('@/pages/TranslatorPage'));
 const LearningPath = lazy(() => import('@/pages/LearningPathPage'));
+const LessonRunner = lazy(() => import('@/pages/LessonRunnerPage'));
 const AuthCallbackPage = lazy(() => import('@/pages/AuthCallbackPage'));
 
 export const router = createBrowserRouter([
@@ -126,6 +127,10 @@ export const router = createBrowserRouter([
       {
         path: 'learning-path',
         element: withSuspense(LearningPath),
+      },
+      {
+        path: 'lesson-runner/:levelId',
+        element: withSuspense(LessonRunner),
       },
       {
         path: 'profile',
