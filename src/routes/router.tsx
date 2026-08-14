@@ -45,6 +45,7 @@ const TeamMember = lazy(() => import('@/pages/TeamMemberPage'));
 const Start = lazy(() => import('@/pages/StartPage'));
 const Placement = lazy(() => import('@/pages/PlacementPage'));
 const Translator = lazy(() => import('@/pages/TranslatorPage'));
+const LearningPath = lazy(() => import('@/pages/LearningPathPage'));
 const AuthCallbackPage = lazy(() => import('@/pages/AuthCallbackPage'));
 
 export const router = createBrowserRouter([
@@ -128,7 +129,7 @@ export const router = createBrowserRouter([
 
       {
         path: 'learning-path',
-        element: <Navigate to="/curriculum/today" replace />,
+        element: withSuspense(LearningPath),
       },
       {
         path: 'profile',
