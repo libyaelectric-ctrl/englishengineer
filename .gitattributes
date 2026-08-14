@@ -1,10 +1,9 @@
-# Git LFS tracking for large binary files
-# Audio files
-public/audio/*.mp3 filter=lfs diff=lfs merge=lfs -text
-
-# Video files
-public/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
-public/**/*.webm filter=lfs diff=lfs merge=lfs -text
+# NOTE: Binary media (images, audio, fonts) is intentionally NOT tracked
+# via Git LFS. The production build environment (Vercel) does not smudge
+# LFS pointers, so LFS-tracked assets were served as 130-byte pointer
+# text instead of the real files -- the app logo, agentic images and
+# listening audio all broke in production. Real content is stored
+# directly in git like the JSON seed data below.
 
 # NOTE: JSON seed data is intentionally NOT tracked via LFS. A prior
 # attempt to move public/data/**/*.json into LFS resulted in the actual
@@ -14,14 +13,3 @@ public/**/*.webm filter=lfs diff=lfs merge=lfs -text
 # aren't what LFS is designed for -- Git's own delta compression
 # already handles text reasonably well at these sizes (hundreds of KB
 # to a few MB). Reverted; real content restored directly in git.
-
-# Images
-public/**/*.webp filter=lfs diff=lfs merge=lfs -text
-public/**/*.png filter=lfs diff=lfs merge=lfs -text
-public/**/*.jpg filter=lfs diff=lfs merge=lfs -text
-public/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
-
-# Fonts
-public/**/*.woff2 filter=lfs diff=lfs merge=lfs -text
-public/**/*.woff filter=lfs diff=lfs merge=lfs -text
-public/**/*.ttf filter=lfs diff=lfs merge=lfs -text
