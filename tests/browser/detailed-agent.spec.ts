@@ -200,7 +200,7 @@ test.describe('Detailed Agent Report', () => {
     // 14. Backend
     await runTest('Backend Health', async () => {
       const response = await page.goto(
-        'https://englishengineer-production.up.railway.app/api/health'
+        'https://englishengineer-backend.onrender.com/api/health'
       );
       const data = await response?.json();
       return `v${data?.version} | AI:${data?.aiConfigured} | Stripe:${data?.stripeConfigured}`;

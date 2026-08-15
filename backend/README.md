@@ -33,7 +33,7 @@ npm start              # runs on port 3001
 ### Example: Health Check
 
 ```bash
-curl https://englishengineer-production.up.railway.app/api/health
+curl https://englishengineer-backend.onrender.com/api/health
 ```
 
 Response:
@@ -53,7 +53,7 @@ Response:
 ### Example: AI Coach
 
 ```bash
-curl -X POST https://englishengineer-production.up.railway.app/api/ai/coach \
+curl -X POST https://englishengineer-backend.onrender.com/api/ai/coach \
   -H "Authorization: Bearer <jwt_token>" \
   -H "Content-Type: application/json" \
   -d '{"message": "How do I write an RFI?", "context": "site-meeting"}'

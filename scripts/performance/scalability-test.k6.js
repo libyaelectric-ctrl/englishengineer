@@ -25,7 +25,7 @@ export const options = {
   },
 };
 
-const BASE_URL = 'https://englishengineer-production.up.railway.app';
+const BASE_URL = 'https://englishengineer-backend.onrender.com';
 
 export default function () {
   const res = http.get(`${BASE_URL}/api/health`);

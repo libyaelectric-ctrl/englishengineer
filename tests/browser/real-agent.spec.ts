@@ -237,7 +237,7 @@ test.describe('Real User Agent', () => {
   test('11. Backend health check', async ({ page }) => {
     log('🔧 Testing Backend...');
     const response = await page.goto(
-      'https://englishengineer-production.up.railway.app/api/health'
+      'https://englishengineer-backend.onrender.com/api/health'
     );
     const data = await response?.json();
     log(

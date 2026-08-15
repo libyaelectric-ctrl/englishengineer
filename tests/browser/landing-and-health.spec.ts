@@ -45,7 +45,7 @@ test.describe('Landing page & public routes', () => {
 
   test('health endpoint returns OK', async ({ request }) => {
     const response = await request.get(
-      'https://englishengineer-production.up.railway.app/api/health'
+      'https://englishengineer-backend.onrender.com/api/health'
     );
     expect(response.ok()).toBeTruthy();
     const body = await response.json();

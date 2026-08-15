@@ -49,7 +49,7 @@
 **Check:**
 
 ```bash
-curl https://englishengineer-production.up.railway.app/api/health
+curl https://englishengineer-backend.onrender.com/api/health
 ```
 
 **Fix:** Check Supabase status, verify env vars
@@ -60,7 +60,7 @@ curl https://englishengineer-production.up.railway.app/api/health
 **Check:**
 
 ```bash
-curl https://englishengineer-production.up.railway.app/api/billing/subscription-status
+curl https://englishengineer-backend.onrender.com/api/billing/subscription-status
 ```
 
 **Fix:** Verify Stripe keys, check webhook logs

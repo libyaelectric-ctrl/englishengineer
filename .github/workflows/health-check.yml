@@ -14,7 +14,7 @@ jobs:
       - name: Check Backend Health
         run: |
           echo "Checking backend health..."
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer-production.up.railway.app/api/health)
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer-backend.onrender.com/api/health)
           if [ "$RESPONSE" -ne 200 ]; then
             echo "FAIL: Backend health check returned $RESPONSE"
             exit 1
@@ -34,7 +34,7 @@ jobs:
       - name: Check API Docs
         run: |
           echo "Checking API docs..."
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer-production.up.railway.app/api-docs)
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer-backend.onrender.com/api-docs)
           if [ "$RESPONSE" -ne 200 ]; then
             echo "WARN: API docs returned $RESPONSE"
           else
@@ -45,5 +45,5 @@ jobs:
         if: failure()
         run: |
           echo "::error::Production health check failed!"
-          echo "Backend: https://englishengineer-production.up.railway.app/api/health"
+          echo "Backend: https://englishengineer-backend.onrender.com/api/health"
           echo "Frontend: https://englishengineer.vercel.app"

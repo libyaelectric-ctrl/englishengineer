@@ -19,7 +19,7 @@ export const options = {
   },
 };
 
-const BASE_URL = 'https://englishengineer-production.up.railway.app';
+const BASE_URL = 'https://englishengineer-backend.onrender.com';
 
 export default function () {
   // Health check (should handle load)

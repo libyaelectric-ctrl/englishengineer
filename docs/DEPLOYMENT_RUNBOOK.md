@@ -46,7 +46,7 @@ Push to `main` triggers automatic deployment via GitHub integration.
 ### Health Check
 
 ```bash
-curl https://englishengineer-production.up.railway.app/api/health
+curl https://englishengineer-backend.onrender.com/api/health
 ```
 
 ### Environment Variables
