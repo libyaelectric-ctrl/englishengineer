@@ -4,6 +4,7 @@ export {
   type LanguageMap,
   type TranslationMap,
   loadVocabularyTranslations,
+  loadLanguageCorpus,
   isTranslationDataLoaded,
   getTermTranslation,
   resolveTermMeaning,
