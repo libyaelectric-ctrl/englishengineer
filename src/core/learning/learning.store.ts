@@ -48,6 +48,10 @@ export interface LearningStoreActions {
   ) => ScoreResult;
   /** Consumes one heart on a wrong quiz answer. No-op once already at 0. */
   loseHeart: () => void;
+  /** Marks a term as weak (answered incorrectly) so it is surfaced first again. */
+  markTermWeak: (termId: string) => void;
+  /** Clears a term from the weak set, e.g. after answering it correctly. */
+  clearWeakTerm: (termId: string) => void;
   /** Adds mastered term IDs to the user's vocabulary pool. */
   masterTerms: (termIds: string[]) => void;
   /** Checks the 24h cooldown and refills to MAX_HEARTS if it has elapsed. */
@@ -75,6 +79,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
       speakingPool: [],
       hearts: MAX_HEARTS,
       heartsDepletedAt: null,
+      weakTermIds: [],
 
       startMission: (missionId: string) => {
         const updated = get().missions.map((m) =>
@@ -317,6 +322,20 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
         set({ vocabularyPool: combined });
       },
 
+      markTermWeak: (termId: string) => {
+        const current = get().weakTermIds ?? [];
+        if (!current.includes(termId)) {
+          set({ weakTermIds: [...current, termId] });
+        }
+      },
+
+      clearWeakTerm: (termId: string) => {
+        const current = get().weakTermIds ?? [];
+        if (current.includes(termId)) {
+          set({ weakTermIds: current.filter((id) => id !== termId) });
+        }
+      },
+
       checkHeartsRefill: () => {
         const { hearts, depletedAt } = refillHeartsIfDue(
           get().hearts,
@@ -347,6 +366,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
           speakingPool: [],
           hearts: MAX_HEARTS,
           heartsDepletedAt: null,
+          weakTermIds: [],
         });
       },
     }),

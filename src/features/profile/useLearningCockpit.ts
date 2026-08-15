@@ -28,6 +28,7 @@ export const useLearningCockpit = (userId?: string | null) => {
       grammarPool: s.grammarPool,
       hearts: s.hearts,
       heartsDepletedAt: s.heartsDepletedAt,
+      weakTermIds: s.weakTermIds,
     }))
   );
   const storedProfile = useMemo(

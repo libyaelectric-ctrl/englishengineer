@@ -81,4 +81,6 @@ export interface LearningState {
   hearts: number;
   /** ISO timestamp of the moment hearts last hit 0, or null if not depleted. */
   heartsDepletedAt: string | null;
+  /** Term IDs answered incorrectly — surfaced first in future lessons (spaced repetition). */
+  weakTermIds: string[];
 }

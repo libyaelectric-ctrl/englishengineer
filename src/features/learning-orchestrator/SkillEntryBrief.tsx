@@ -42,6 +42,7 @@ export const SkillEntryBrief = ({
       speakingPool: s.speakingPool,
       hearts: s.hearts,
       heartsDepletedAt: s.heartsDepletedAt,
+      weakTermIds: s.weakTermIds,
     }))
   );
   const userId = useAuthStore((state) => state.currentUser?.id);

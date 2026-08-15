@@ -45,6 +45,7 @@ export const ensureArrays = (state: Partial<LearningState>): LearningState => {
     speakingPool: safe(state.speakingPool, []),
     hearts: state.hearts ?? MAX_HEARTS,
     heartsDepletedAt: state.heartsDepletedAt ?? null,
+    weakTermIds: safe(state.weakTermIds, []),
   };
 };
 

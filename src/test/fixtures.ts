@@ -17,5 +17,6 @@ export const createLearningState = (overrides: Partial<LearningState> = {}): Lea
   grammarPool: [],
   hearts: 5,
   heartsDepletedAt: null,
+  weakTermIds: [],
   ...overrides,
 });
