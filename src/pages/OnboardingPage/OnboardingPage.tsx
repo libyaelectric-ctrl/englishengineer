@@ -19,14 +19,16 @@ import type { CommunicationGoal, SkillName } from '@/features/profile/profile.ty
 import { BranchLockStep } from './steps/BranchLockStep';
 import { GoalsStep } from './steps/GoalsStep';
 import { LanguageStep } from './steps/LanguageStep';
+import { NativeLanguageStep } from './steps/NativeLanguageStep';
 import { PlacementStep } from './steps/PlacementStep';
 import { PlanStep } from './steps/PlanStep';
 
-const STEPS = ['branch', 'language', 'placement', 'goal', 'package'] as const;
+const STEPS = ['branch', 'language', 'native', 'placement', 'goal', 'package'] as const;
 type Step = (typeof STEPS)[number];
 
 const labels: Record<Step, TranslationKey> = {
   language: 'onboarding.interfaceLanguage',
+  native: 'onboarding.nativeLanguage',
   branch: 'onboarding.yourDiscipline',
   placement: 'onboarding.startingPoint',
   goal: 'onboarding.goals',
@@ -90,6 +92,9 @@ const OnboardingPage = () => {
   const [interfaceLanguage, setInterfaceLanguageState] = useState<SupportedInterfaceLanguage>(
     initial.interfaceLanguage as SupportedInterfaceLanguage
   );
+  const [nativeLanguage, setNativeLanguageState] = useState<SupportedInterfaceLanguage>(
+    (initial.nativeLanguage as SupportedInterfaceLanguage) || interfaceLanguage
+  );
   const [discipline, setDiscipline] = useState<EngineeringDiscipline>(initial.discipline);
   const [branchLockConfirmations, setBranchLockConfirmations] = useState(0);
   const [communicationGoals, setCommunicationGoals] = useState<CommunicationGoal[]>(
@@ -116,6 +121,7 @@ const OnboardingPage = () => {
       discipline,
       professionalTrack: discipline as never,
       interfaceLanguage: interfaceLanguage as never,
+      nativeLanguage: nativeLanguage as never,
       communicationGoals,
       learningFocus,
       careerGoal,
@@ -148,6 +154,7 @@ const OnboardingPage = () => {
 
   const canContinue = (() => {
     if (step === 'language') return !!interfaceLanguage && interfaceLanguage !== 'en';
+    if (step === 'native') return !!nativeLanguage;
     if (step === 'branch') return !!discipline && branchLockConfirmations >= 2;
     if (step === 'placement') return true;
     if (step === 'goal') return true;
@@ -158,6 +165,9 @@ const OnboardingPage = () => {
   const StepContent = () => {
     if (step === 'language') {
       return <LanguageStep language={interfaceLanguage} setLanguage={setInterfaceLanguageState} />;
+    }
+    if (step === 'native') {
+      return <NativeLanguageStep language={nativeLanguage} setLanguage={setNativeLanguageState} />;
     }
     if (step === 'branch') {
       return (
@@ -202,7 +212,7 @@ const OnboardingPage = () => {
               </h1>
             </div>
           </div>
-          <ol className="mt-5 grid grid-cols-5 gap-2" aria-label="Onboarding progress">
+          <ol className="mt-5 grid grid-cols-6 gap-2" aria-label="Onboarding progress">
             {STEPS.map((item, itemIndex) => (
               <li
                 key={item}

@@ -754,6 +754,9 @@ export type TranslationKey =
   // Onboarding
   | 'onboarding.yourDiscipline'
   | 'onboarding.interfaceLanguage'
+  | 'onboarding.nativeLanguage'
+  | 'onboarding.nativeLanguageTitle'
+  | 'onboarding.nativeLanguageDesc'
   | 'onboarding.startingPoint'
   | 'onboarding.plan'
   | 'onboarding.back'
