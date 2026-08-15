@@ -7,7 +7,7 @@ export const swaggerSpec = {
   },
   servers: [
     {
-      url: 'https://englishengineer-production.up.railway.app',
+      url: 'https://englishengineer-backend.onrender.com',
       description: 'Production',
     },
     {

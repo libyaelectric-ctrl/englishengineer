@@ -114,7 +114,7 @@ else
 fi
 
 echo "Checking backend health..."
-BACKEND_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer-production.up.railway.app/api/health)
+BACKEND_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer-backend.onrender.com/api/health)
 if [ "$BACKEND_STATUS" = "200" ]; then
     echo "✅ Backend: OK ($BACKEND_STATUS)"
 else

@@ -53,7 +53,7 @@ test.describe('Comprehensive E2E', () => {
 
   test('Backend health endpoint works', async ({ page }) => {
     const response = await page.goto(
-      'https://englishengineer-production.up.railway.app/api/health'
+      'https://englishengineer-backend.onrender.com/api/health'
     );
     const data = await response?.json();
     expect(data?.ok).toBe(true);

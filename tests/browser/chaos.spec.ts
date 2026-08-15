@@ -6,7 +6,7 @@ test.describe('Chaos Engineering - Resilience Tests', () => {
     setTimeout(() => controller.abort(), 100);
 
     try {
-      await request.get('https://englishengineer-production.up.railway.app/api/health', {
+      await request.get('https://englishengineer-backend.onrender.com/api/health', {
         signal: controller.signal,
       });
     } catch {

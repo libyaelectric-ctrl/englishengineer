@@ -33,6 +33,6 @@ jobs:
 
             ## Deployment
             - Frontend: https://englishengineer.vercel.app
-            - Backend: https://englishengineer-production.up.railway.app
+            - Backend: https://englishengineer-backend.onrender.com
           draft: false
           prerelease: false
