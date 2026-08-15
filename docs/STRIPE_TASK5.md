@@ -23,7 +23,9 @@ Zorunlu (olmadan billing `configured: false` kalır — `backend/src/config-buil
 | `STRIPE_SECRET_KEY` | `sk_live_...` (canlı) veya `sk_test_...` (test) |
 | `STRIPE_PRICE_JUNIOR_MONTHLY` | `price_...` — **junior aylık fiyat boşsa Stripe hiç yapılandırılmaz** |
 | `STRIPE_WEBHOOK_SECRET` | `whsec_...` (webhook endpoint'inin signing secret'ı) |
-| `BILLING_REPOSITORY` | `supabase` (üretim önerilir; `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` zaten ortamda) |
+| `BILLING_REPOSITORY` | `supabase` (üretim önerilir) |
+| `SUPABASE_URL` | `https://<ref>.supabase.co` — **zorunlu**: `BILLING_REPOSITORY=supabase` iken eksikse container deploy aşamasında `nonZeroExit:1` ile çöker (bkz. §5) |
+| `SUPABASE_SERVICE_ROLE_KEY` | `sb_secret_...` (zaten ortamda) |
 
 İsteğe bağlı (tanımlanmazsa backend fiyatları **otomatik oluşturur**):
 
@@ -83,8 +85,22 @@ Kaydet → yeniden deploy (`build`'e `import.meta.env` ile gömülür).
 
 - `/api/health` hâlâ `stripe: { configured: false }` → `STRIPE_SECRET_KEY` ve/veya
   `STRIPE_PRICE_JUNIOR_MONTHLY` eksik/yazım hatası; env kaydedilip redeploy edilmemiş.
+- Render deploy `update_failed` / event'larda `nonZeroExit:1` (build `succeeded` ama container start'ta
+  exit 1) → startup `uncaught-exception` vardır. Logları oku:
+  ```
+  GET /v1/logs?ownerId=<tea-…>&resource=<srv-…>&startTime=…&endTime=…&direction=forward
+  ```
+  (render.dev özel deploy logları `/services/{id}/logs` artık 404 verir; bu genel `/logs` uç noktasını kullan,
+  `message` alanını oku). Bilinen neden: `SUPABASE_URL` ortamda yokken
+  `createSubscriptionRepository` → `createSupabaseBillingRepository` → `assertConfigured` throw eder
+  (`Supabase billing repository requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.`).
+  Fix: Render Environment'a `SUPABASE_URL` ekle → yeni deploy tetikle (`POST /services/{id}/deploys`).
 - Webhook 400 `invalid_webhook_signature` → `STRIPE_WEBHOOK_SECRET` güncel değil veya ilk/boşluk
   karakteri var (backend `stripWhitespace` uygular, manuel sekme bozar). Yeniden kopyala.
+- Webhook imzalı test 200 `received:true` alır ama log'daki `step:"dispatch"` supabase 400 verirse →
+  `subscription_status.user_id` UUID tipindedir; sahte (UUID olmayan) userId gönderiliyordur.
+  PostgREST 400 `invalid input syntax for type uuid`. Gerçek `auth.users` UUID'siyle tekrar dene.
+  (İmza → dedup → dispatch → supabase yazma zincirinin tamamı çalışıyor demektir.)
 - Webhook'a **HTTPS üzerinden giden canlı Stripe event'i 307/403 dönüyorsa** → canlı container eski
   koddur. İki düzeltme koda bağlıydı (ikisi de deploy'da olmalı):
   1. `csrf.middleware.ts` — `/api/webhooks/stripe` CSRF'den muaftır (POST).
