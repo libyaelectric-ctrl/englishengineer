@@ -9,15 +9,26 @@ interface LocalizationStore {
   translate: (key: string) => string;
 }
 
+const RTL_LANGUAGES: SupportedInterfaceLanguage[] = ['ar'];
+
 const createTranslate = (language: SupportedInterfaceLanguage) => {
   return (key: string) => LocalizationService.translate(key, language);
 };
 
+const applyDocumentLanguage = (language: SupportedInterfaceLanguage) => {
+  document.documentElement.dir = RTL_LANGUAGES.includes(language) ? 'rtl' : 'ltr';
+  document.documentElement.lang = language;
+};
+
+const initialLanguage = LocalizationService.getLanguage();
+applyDocumentLanguage(initialLanguage);
+
 export const useLocalizationStore = create<LocalizationStore>((set) => ({
-  language: LocalizationService.getLanguage(),
+  language: initialLanguage,
   setLanguage: (language) => {
     LocalizationService.setLanguage(language);
+    applyDocumentLanguage(language);
     set({ language, translate: createTranslate(language) });
   },
-  translate: createTranslate(LocalizationService.getLanguage()),
+  translate: createTranslate(initialLanguage),
 }));
