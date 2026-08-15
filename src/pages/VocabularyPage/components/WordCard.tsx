@@ -12,6 +12,7 @@ import {
   repairVocabularyText,
 } from '@/features/vocabulary';
 import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
+import { useLearningLanguage } from '@/features/profile/use-learning-language';
 
 import { WordCardDetails } from './WordCardDetails';
 import { WordCardHeader } from './WordCardHeader';
@@ -167,7 +168,7 @@ export const WordCard = ({
 }: WordCardProps) => {
   const language = useLocalizationStore((s) => s.language);
   const translate = useLocalizationStore((s) => s.translate);
-  const resolveMeaning = useTermMeaningResolver(language);
+  const resolveMeaning = useTermMeaningResolver(useLearningLanguage());
   const [answer, setAnswer] = useState('');
   const [quizResult, setQuizResult] = useState<boolean | null>(null);
   const [knowThisCheck, setKnowThisCheck] = useState(false);

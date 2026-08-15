@@ -67,6 +67,7 @@ const mergeProfileDefaults = (
   country: pickOrFallback(stored.country, initial.country),
   timezone: pickOrFallback(stored.timezone, initial.timezone),
   interfaceLanguage: pickOrFallback(stored.interfaceLanguage, initial.interfaceLanguage),
+  nativeLanguage: stored.nativeLanguage ?? stored.interfaceLanguage,
   placementCompleted: pickOrFallback(stored.placementCompleted, initial.placementCompleted),
   placementConfidence: pickOrFallback(stored.placementConfidence, initial.placementConfidence),
   placementBand: pickOrFallback(stored.placementBand, initial.placementBand),
@@ -135,6 +136,7 @@ export const LearningProfileRepository = {
       country: string;
       timezone: string;
       interfaceLanguage: UserLearningProfile['interfaceLanguage'];
+      nativeLanguage: UserLearningProfile['nativeLanguage'];
       placementCompleted: boolean;
       placementConfidence: UserLearningProfile['placementConfidence'];
       placementBand: UserLearningProfile['placementBand'];

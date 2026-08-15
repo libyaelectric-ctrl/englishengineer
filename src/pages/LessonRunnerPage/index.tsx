@@ -18,6 +18,7 @@ import { MultipleChoiceCard } from '@/features/lesson-runner/components/Multiple
 import { RfiFillBlankCard } from '@/features/lesson-runner/components/RfiFillBlankCard';
 import { useLocalizationStore } from '@/features/localization';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
+import { useLearningLanguage } from '@/features/profile/use-learning-language';
 import { resolveTermMeaningAsync } from '@/shared/services/vocabulary-translation.service';
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
 
@@ -37,7 +38,7 @@ const LessonRunnerPage = () => {
   const navigate = useNavigate();
   const currentUser = useAuthStore((state) => state.currentUser);
   const translate = useLocalizationStore((state) => state.translate);
-  const uiLanguage = useLocalizationStore((state) => state.language);
+  const learningLanguage = useLearningLanguage();
 
   const { hearts, loseHeart, masterTerms, completeGenericPractice } = useLearningStore(
     useShallow((state) => ({
@@ -88,7 +89,7 @@ const LessonRunnerPage = () => {
             resolveTermMeaningAsync(term.term, {
               turkishMeaning: term.turkishMeaning,
               definition: term.definition,
-            }, uiLanguage)
+            }, learningLanguage)
           )
         );
 

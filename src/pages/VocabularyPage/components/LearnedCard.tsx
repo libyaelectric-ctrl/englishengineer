@@ -3,13 +3,13 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { useState } from 'react';
 
-import { useLocalizationStore } from '@/features/localization';
 import {
   PronunciationService,
   type VocabularyTerm,
   repairVocabularyText,
 } from '@/features/vocabulary';
 import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
+import { useLearningLanguage } from '@/features/profile/use-learning-language';
 
 interface LearnedCardProps {
   term: VocabularyTerm;
@@ -18,8 +18,7 @@ interface LearnedCardProps {
 
 export function LearnedCard({ term, index }: LearnedCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const language = useLocalizationStore((s) => s.language);
-  const resolveMeaning = useTermMeaningResolver(language);
+  const resolveMeaning = useTermMeaningResolver(useLearningLanguage());
   const meaning = resolveMeaning(term.term, term);
 
   return (

@@ -3,10 +3,10 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { useEffect, useRef } from 'react';
 
-import { useLocalizationStore } from '@/features/localization';
 import type { VocabularyTerm } from '@/features/vocabulary';
 import { repairVocabularyText } from '@/features/vocabulary';
 import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
+import { useLearningLanguage } from '@/features/profile/use-learning-language';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -30,8 +30,7 @@ export function SearchModal({
   onSelectResult,
 }: SearchModalProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const language = useLocalizationStore((s) => s.language);
-  const resolveMeaning = useTermMeaningResolver(language);
+  const resolveMeaning = useTermMeaningResolver(useLearningLanguage());
 
   useEffect(() => {
     if (!isOpen) return;
