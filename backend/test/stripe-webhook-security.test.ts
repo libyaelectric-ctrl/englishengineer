@@ -172,3 +172,43 @@ test('webhook accepts valid signature and processes checkout event', async () =>
   assert.equal(body.received, true);
   assert.equal(body.duplicate, false);
 });
+
+test('webhook is not redirected to /api/v1 by legacy redirect middleware in production', async () => {
+  const event = {
+    id: 'evt_no_redirect_test_001',
+    type: 'checkout.session.completed',
+    data: {
+      object: {
+        id: 'cs_test_noredirect',
+        customer: 'cus_test_noredirect',
+        subscription: 'sub_test_noredirect',
+        metadata: { userId: 'user_test_noredirect' },
+      },
+    },
+  };
+  const stripeClient = { webhooks: { constructEvent: () => event } };
+  const url = await start(
+    {
+      NODE_ENV: 'production',
+      BILLING_REPOSITORY: 'memory',
+      ALLOW_MEMORY_BILLING_REPOSITORY: 'true',
+    },
+    { stripeClient }
+  );
+
+  const response = await fetch(`${url}/api/webhooks/stripe`, {
+    method: 'POST',
+    redirect: 'manual',
+    headers: {
+      'Content-Type': 'application/json',
+      'stripe-signature': 'sig_test_valid',
+      'X-Forwarded-Proto': 'https',
+    },
+    body: JSON.stringify(event),
+  });
+
+  assert.equal(response.status, 200);
+  assert.notEqual(response.status, 307, 'Legacy redirect must not hijack the Stripe webhook');
+  const body = await response.json();
+  assert.equal(body.received, true);
+});
