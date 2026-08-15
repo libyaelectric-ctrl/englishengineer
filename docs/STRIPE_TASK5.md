@@ -85,6 +85,13 @@ Kaydet → yeniden deploy (`build`'e `import.meta.env` ile gömülür).
   `STRIPE_PRICE_JUNIOR_MONTHLY` eksik/yazım hatası; env kaydedilip redeploy edilmemiş.
 - Webhook 400 `invalid_webhook_signature` → `STRIPE_WEBHOOK_SECRET` güncel değil veya ilk/boşluk
   karakteri var (backend `stripWhitespace` uygular, manuel sekme bozar). Yeniden kopyala.
+- Webhook'a **HTTPS üzerinden giden canlı Stripe event'i 307/403 dönüyorsa** → canlı container eski
+  koddur. İki düzeltme koda bağlıydı (ikisi de deploy'da olmalı):
+  1. `csrf.middleware.ts` — `/api/webhooks/stripe` CSRF'den muaftır (POST).
+  2. `app.ts` legacy `/api → /api/v1` redirect middleware'i webhook yolunu **307 ile kaçırmamalı**
+     (production'da Stripe event'leri `/api/v1/webhooks/stripe`'a yönlenir ve orada route yoktur).
+     `req.path !== '/api/webhooks/stripe'` muafiyeti `app.ts:419-422`'e eklendi + regresyon testi
+     (`stripe-webhook-security.test.ts`: "webhook is not redirected... in production").
 - `FORBIDDEN_DEMO_ACTION` → demo hesap; gerçek kullanıcı kullan.
 - `STRIPE_NOT_CONFIGURED` (503) → backend env'de billing kapalı.
 - Fiyat oluşturulamıyor → Stripe hesabının API izinleri (default `Standard` rol yeterli).

@@ -418,7 +418,8 @@ const registerRoutes = (
       !req.path.startsWith('/api/v1/') &&
       req.path !== '/api/health' &&
       req.path !== '/api/metrics' &&
-      req.path !== '/api/csp-report'
+      req.path !== '/api/csp-report' &&
+      req.path !== '/api/webhooks/stripe'
     ) {
       res.setHeader('Deprecation', 'true');
       res.setHeader('Sunset', '2026-12-31');
