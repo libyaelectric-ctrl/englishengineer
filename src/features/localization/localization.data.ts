@@ -785,6 +785,7 @@ export const UI_TRANSLATIONS: Record<
     'lesson.completedTitle': 'Inspection approved!',
     'lesson.completedDesc': 'You successfully verified {count} technical specification items.',
     'lesson.careerPoints': 'Career Points',
+    'lesson.accuracy': 'Accuracy',
     'lesson.depletedTitle': 'System integrity depleted',
     'lesson.depletedDesc': 'System energy reached critical limit due to inspection errors. Recharge your system to resume tasks.',
     'lesson.returnToControl': 'Return to control center',

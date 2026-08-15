@@ -359,6 +359,7 @@ export type TranslationKey =
   | 'lesson.completedTitle'
   | 'lesson.completedDesc'
   | 'lesson.careerPoints'
+  | 'lesson.accuracy'
   | 'lesson.depletedTitle'
   | 'lesson.depletedDesc'
   | 'lesson.returnToControl'
