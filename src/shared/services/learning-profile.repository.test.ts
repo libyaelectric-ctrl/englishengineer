@@ -37,4 +37,21 @@ describe('LearningProfileRepository discipline lock', () => {
     expect(updated.discipline).toBe('mechanical');
     expect(updated.disciplineLockedAt).toBeUndefined();
   });
+
+  it('persists the native language chosen during onboarding', () => {
+    const profile = LearningProfileRepository.updatePreferences(USER, {
+      nativeLanguage: 'fr',
+    });
+    expect(profile.nativeLanguage).toBe('fr');
+
+    const reloaded = LearningProfileRepository.getProfile(USER);
+    expect(reloaded.nativeLanguage).toBe('fr');
+  });
+
+  it('keeps nativeLanguage in sync with interfaceLanguage when not set', () => {
+    LearningProfileRepository.updatePreferences(USER, { interfaceLanguage: 'de' });
+    const profile = LearningProfileRepository.getProfile(USER);
+    expect(profile.interfaceLanguage).toBe('de');
+    expect(profile.nativeLanguage).toBe('de');
+  });
 });
