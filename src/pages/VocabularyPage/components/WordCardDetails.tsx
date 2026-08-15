@@ -1,13 +1,13 @@
 import { ChevronDown } from 'lucide-react';
 import { Volume2 } from 'lucide-react';
 
-import { useLocalizationStore } from '@/features/localization';
 import {
   PronunciationService,
   type VocabularyTerm,
   repairVocabularyText,
 } from '@/features/vocabulary';
 import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
+import { useLearningLanguage } from '@/features/profile/use-learning-language';
 
 import { SentencePanel } from './SentencePanel';
 
@@ -18,8 +18,7 @@ interface WordCardDetailsProps {
 }
 
 export const WordCardDetails = ({ term, showDetails, onToggle }: WordCardDetailsProps) => {
-  const language = useLocalizationStore((s) => s.language);
-  const resolveMeaning = useTermMeaningResolver(language);
+  const resolveMeaning = useTermMeaningResolver(useLearningLanguage());
   const meaning = resolveMeaning(term.term, term);
 
   return (

@@ -141,6 +141,8 @@ export interface UserLearningProfile {
   country: string;
   timezone: string;
   interfaceLanguage: InterfaceLanguage;
+  /** Language used for learning-time translation of answers. */
+  nativeLanguage?: InterfaceLanguage;
   placementCompleted: boolean;
   placementConfidence: 'not-assessed' | 'limited' | 'moderate' | 'strong';
   placementBand: CefrBand | null;

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 import { logger } from '@/shared/logger';
 
-import { useLocalizationStore } from '@/features/localization';
 import {
   PronunciationService,
   type VocabularyMenuProgress,
@@ -12,6 +11,7 @@ import {
   repairVocabularyText,
 } from '@/features/vocabulary';
 import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
+import { useLearningLanguage } from '@/features/profile/use-learning-language';
 
 interface WordCardHeaderProps {
   term: VocabularyTerm;
@@ -21,8 +21,7 @@ interface WordCardHeaderProps {
 }
 
 export const WordCardHeader = ({ term, showAnswer, status }: WordCardHeaderProps) => {
-  const language = useLocalizationStore((s) => s.language);
-  const resolveMeaning = useTermMeaningResolver(language);
+  const resolveMeaning = useTermMeaningResolver(useLearningLanguage());
   const meaning = resolveMeaning(term.term, term);
   const [isStarred, setIsStarred] = useState(false);
   const phonetic = PronunciationService.getPhonetic(term.term) || `/${term.term.toLowerCase()}/`;

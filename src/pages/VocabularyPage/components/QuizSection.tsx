@@ -20,6 +20,7 @@ import {
   selectRandomQuizItems,
 } from '@/features/vocabulary/services/core/learned-quiz';
 import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
+import { useLearningLanguage } from '@/features/profile/use-learning-language';
 
 interface QuizSectionProps {
   menuState: VocabularyMenuState;
@@ -39,7 +40,7 @@ const learnedWordIds = (menuState: VocabularyMenuState): string[] =>
 export const QuizSection = ({ menuState }: QuizSectionProps) => {
   const translate = useLocalizationStore((s) => s.translate);
   const language = useLocalizationStore((s) => s.language);
-  const resolveMeaning = useTermMeaningResolver(language);
+  const resolveMeaning = useTermMeaningResolver(useLearningLanguage());
   const langLabel = INTERFACE_LANGUAGES.find((l) => l.id === language)?.nativeLabel || language;
   const [quizWords, setQuizWords] = useState<VocabularyTerm[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
