@@ -40,11 +40,20 @@ const LessonRunnerPage = () => {
   const translate = useLocalizationStore((state) => state.translate);
   const learningLanguage = useLearningLanguage();
 
-  const { hearts, loseHeart, masterTerms, completeGenericPractice } = useLearningStore(
+  const {
+    hearts,
+    loseHeart,
+    masterTerms,
+    markTermWeak,
+    clearWeakTerm,
+    completeGenericPractice,
+  } = useLearningStore(
     useShallow((state) => ({
       hearts: state.hearts,
       loseHeart: state.loseHeart,
       masterTerms: state.masterTerms,
+      markTermWeak: state.markTermWeak,
+      clearWeakTerm: state.clearWeakTerm,
       completeGenericPractice: state.completeGenericPractice,
     }))
   );
@@ -83,9 +92,17 @@ const LessonRunnerPage = () => {
           return;
         }
 
+        // Spaced repetition: surface previously-weak terms first so they get re-practiced.
+        const weakIds = useLearningStore.getState().weakTermIds;
+        const weakFirstTerms = [...terms].sort((a, b) => {
+          const aWeak = weakIds.includes(a.id) ? 0 : 1;
+          const bWeak = weakIds.includes(b.id) ? 0 : 1;
+          return aWeak - bWeak;
+        });
+
         // Resolve meanings in the user's selected language (fr, de, es, ar, etc.)
         const resolvedMeanings = await Promise.all(
-          terms.map((term) =>
+          weakFirstTerms.map((term) =>
             resolveTermMeaningAsync(term.term, {
               turkishMeaning: term.turkishMeaning,
               definition: term.definition,
@@ -93,17 +110,17 @@ const LessonRunnerPage = () => {
           )
         );
 
-        const questionList: LessonQuestion[] = terms.map((term, idx) => {
+        const questionList: LessonQuestion[] = weakFirstTerms.map((term, idx) => {
           const type = CARD_TYPES[idx % CARD_TYPES.length];
           const correctAnswer =
             type === 'diagram'
               ? term.domain || term.category || term.cefrLevel
               : resolvedMeanings[idx];
-          const distractorValues = terms
+          const distractorValues = weakFirstTerms
             .filter((_, i) => i !== idx)
             .map((_, i) =>
               type === 'diagram'
-                ? terms[i].domain || terms[i].category || terms[i].cefrLevel
+                ? weakFirstTerms[i].domain || weakFirstTerms[i].category || weakFirstTerms[i].cefrLevel
                 : resolvedMeanings[i]
             );
           const options = Array.from(new Set([correctAnswer, ...distractorValues]))
@@ -139,7 +156,12 @@ const LessonRunnerPage = () => {
       selectedAnswer.trim().toLowerCase() === currentQ.correctAnswer.trim().toLowerCase();
     setIsCorrect(correct);
     setIsAnswerChecked(true);
-    if (!correct) loseHeart();
+    if (correct) {
+      clearWeakTerm(currentQ.term.id);
+    } else {
+      loseHeart();
+      markTermWeak(currentQ.term.id);
+    }
   };
 
   const handleNextQuestion = () => {

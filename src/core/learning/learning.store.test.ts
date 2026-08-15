@@ -287,4 +287,34 @@ describe('learning.store', () => {
       expect(useLearningStore.getState().heartsDepletedAt).toBeNull();
     });
   });
+
+  describe('weakTermIds', () => {
+    beforeEach(() => {
+      useLearningStore.setState({ weakTermIds: [] });
+    });
+
+    it('markTermWeak adds a term id without duplicating it', () => {
+      useLearningStore.getState().markTermWeak('term-1');
+      useLearningStore.getState().markTermWeak('term-1');
+      expect(useLearningStore.getState().weakTermIds).toEqual(['term-1']);
+    });
+
+    it('clearWeakTerm removes an existing term id', () => {
+      useLearningStore.setState({ weakTermIds: ['term-1', 'term-2'] });
+      useLearningStore.getState().clearWeakTerm('term-1');
+      expect(useLearningStore.getState().weakTermIds).toEqual(['term-2']);
+    });
+
+    it('clearWeakTerm is a no-op for unknown ids', () => {
+      useLearningStore.setState({ weakTermIds: ['term-1'] });
+      useLearningStore.getState().clearWeakTerm('term-99');
+      expect(useLearningStore.getState().weakTermIds).toEqual(['term-1']);
+    });
+
+    it('resetAll clears the weak term pool', () => {
+      useLearningStore.setState({ weakTermIds: ['term-1'] });
+      useLearningStore.getState().resetAll();
+      expect(useLearningStore.getState().weakTermIds).toEqual([]);
+    });
+  });
 });
