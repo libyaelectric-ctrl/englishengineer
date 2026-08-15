@@ -91,3 +91,6 @@ analysis_output/
 
 public/data/*.json
 qa-report/
+
+# Local opencode tool config (machine-specific)
+opencode.json
