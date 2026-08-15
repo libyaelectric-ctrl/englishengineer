@@ -51,6 +51,24 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Cache-first for language translation corpus chunks (offline learning)
+  if (url.pathname.startsWith('/assets/translation-corpus-')) {
+    event.respondWith(
+      caches.open(CACHE_NAME).then((cache) =>
+        cache.match(request).then((cached) => {
+          if (cached) return cached;
+          return fetch(request).then((response) => {
+            if (response.ok) {
+              cache.put(request, response.clone());
+            }
+            return response;
+          });
+        })
+      )
+    );
+    return;
+  }
+
   // Stale-while-revalidate for static assets
   if (
     request.destination === 'style' ||
