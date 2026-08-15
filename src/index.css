@@ -145,6 +145,12 @@ body {
   }
 }
 
+/* RTL layout support (Arabic) — flexbox & grid mirror automatically via dir="rtl" */
+[dir='rtl'] .sidebar {
+  border-right: none;
+  border-left: 1px solid var(--color-border-soft);
+}
+
 /* Modern Ambient Motion & Light Beam Animations */
 @keyframes spin-slow {
   0% {
