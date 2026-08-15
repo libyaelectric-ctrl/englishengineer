@@ -132,6 +132,12 @@
     <link rel="dns-prefetch" href="https://englishengineer-backend.onrender.com" />
   </head>
   <body class="text-slate-950 antialiased selection:bg-primary/20">
+    <style>
+      .skip-link { left: -999px; position: absolute; }
+      @media (min-width: 640px) { .skip-link { left: auto; } }
+      a { text-decoration: none; color: inherit; }
+      img { max-width: 100%; height: auto; }
+    </style>
     <a
       href="#main-content"
       class="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:p-4 focus:bg-background focus:text-foreground focus:outline-2 focus:outline-primary"
