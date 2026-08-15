@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { ArrowLeft, CheckCircle, RotateCcw, ShieldAlert, X, Zap } from 'lucide-react';
+import { ArrowLeft, RotateCcw, ShieldAlert, X, Zap } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/shallow';
 
@@ -14,6 +14,7 @@ import {
 import { AudioInstructionCard } from '@/features/lesson-runner/components/AudioInstructionCard';
 import { DiagramMatchingCard } from '@/features/lesson-runner/components/DiagramMatchingCard';
 import { FeedbackDrawer } from '@/features/lesson-runner/components/FeedbackDrawer';
+import { LessonCompleteScreen } from '@/features/lesson-runner/components/LessonCompleteScreen';
 import { MultipleChoiceCard } from '@/features/lesson-runner/components/MultipleChoiceCard';
 import { RfiFillBlankCard } from '@/features/lesson-runner/components/RfiFillBlankCard';
 import { useLocalizationStore } from '@/features/localization';
@@ -67,6 +68,7 @@ const LessonRunnerPage = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isAnswerChecked, setIsAnswerChecked] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [earnedCp, setEarnedCp] = useState(0);
 
@@ -157,6 +159,7 @@ const LessonRunnerPage = () => {
     setIsCorrect(correct);
     setIsAnswerChecked(true);
     if (correct) {
+      setCorrectCount((prev) => prev + 1);
       clearWeakTerm(currentQ.term.id);
     } else {
       loseHeart();
@@ -209,38 +212,14 @@ const LessonRunnerPage = () => {
 
   if (completed) {
     return (
-      <div className="mx-auto mt-12 flex max-w-lg flex-col items-center gap-6 rounded-3xl border border-emerald-500/30 bg-emerald-950/30 p-8 text-center font-sans shadow-2xl backdrop-blur">
-        <div className="flex h-20 w-20 items-center justify-center rounded-3xl border border-emerald-500/30 bg-emerald-500/20 text-emerald-400">
-          <CheckCircle className="h-12 w-12" />
-        </div>
-        <div>
-          <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-400">
-            {translate('lesson.completedBadge')}
-          </span>
-          <h2 className="mt-2 text-3xl font-black tracking-tight text-emerald-100">
-            {translate('lesson.completedTitle')}
-          </h2>
-          <p className="mt-2 text-sm text-emerald-200/80">
-            {translate('lesson.completedDesc').replace('{count}', String(questions.length))}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-4 rounded-2xl border border-emerald-500/20 bg-black/40 px-6 py-3">
-          <Zap className="h-6 w-6 text-yellow-300" />
-          <span className="text-2xl font-black text-yellow-300">+{earnedCp}</span>
-          <span className="text-xs font-bold uppercase text-slate-400">
-            {translate('lesson.careerPoints')}
-          </span>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => navigate('/learning-path')}
-          className="w-full rounded-xl bg-emerald-500 py-3.5 font-extrabold text-slate-950 transition-all hover:bg-emerald-400 shadow-lg shadow-emerald-950/50"
-        >
-          {translate('lesson.backToRoadmap')}
-        </button>
-      </div>
+      <LessonCompleteScreen
+        earnedCp={earnedCp}
+        correctCount={correctCount}
+        totalCount={questions.length}
+        onContinue={() => navigate('/learning-path')}
+        onBackToRoadmap={() => navigate('/learning-path')}
+        translate={translate}
+      />
     );
   }
 
