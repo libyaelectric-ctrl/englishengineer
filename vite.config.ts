@@ -64,7 +64,7 @@ export default defineConfig(() => {
     },
     build: {
       outDir: 'dist',
-      sourcemap: false,
+      sourcemap: "hidden",
       chunkSizeWarningLimit: 300,
       target: 'es2022',
       minify: 'esbuild' as const,
