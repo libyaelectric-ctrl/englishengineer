@@ -12,7 +12,13 @@ export function Footer({ className = '' }: { className?: string }) {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-3">
             <div className="relative flex h-8 w-8 items-center justify-center rounded shadow-sm overflow-hidden">
-              <img src="/brand/logo.svg" alt="EngVox Logo" className="h-full w-full object-cover" />
+              <img
+                src="/brand/logo.svg"
+                alt="EngVox Logo"
+                className="h-full w-full object-cover"
+                width="48"
+                height="48"
+              />
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-bold text-foreground">EngVox</span>

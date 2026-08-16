@@ -26,7 +26,7 @@ export const AppShell: FC = () => {
     <div className="relative flex h-screen w-screen overflow-hidden bg-background text-foreground">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:p-4 focus:bg-primary focus:text-white focus:rounded-[var(--radius-card)]"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:p-4 focus:bg-primary focus:text-[var(--color-primary-foreground)] focus:rounded-[var(--radius-card)]"
       >
         Skip to main content
       </a>
