@@ -1,0 +1,46 @@
+User-agent: *
+Allow: /
+
+# Block admin and sensitive routes
+Disallow: /admin$
+Disallow: /api$
+Disallow: /login$
+Disallow: /auth/callback$
+Disallow: /auth/signup$
+
+# Allow important pages
+Allow: /
+Allow: /$
+Allow: /welcome$
+Allow: /dashboard$
+Allow: /profile$
+Allow: /learning-path$
+Allow: /lesson-runner$
+Allow: /vocabulary$
+Allow: /grammar$
+Allow: /reading$
+Allow: /writing$
+Allow: /speaking$
+Allow: /listening$
+Allow: /progress$
+Allow: /tools$
+Allow: /profile$
+Allow: /profile/overview$
+Allow: /profile/:section$
+Allow: /billing$
+Allow: /placement$
+Allow: /translator$
+Allow: /ai$
+Allow: /tools/work$
+Allow: /tools/:section$
+Allow: /learning-plan$
+Allow: /beta-program$
+Allow: /team$
+Allow: /team/members/:memberId$
+
+# Block private or draft content
+Disallow: /dashboard/onboarding$
+Disallow: /dashboard/:step$
+
+# Sitemap
+Sitemap: https://eng-vox.vercel.app/sitemap.xml
