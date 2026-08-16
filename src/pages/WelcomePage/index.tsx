@@ -53,10 +53,11 @@ export const WelcomeScreen = () => {
           <p className="text-sm text-muted-copy">{translate('onboarding.selectDisciplineDesc')}</p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          <section className="space-y-4">
-            <div className="text-center space-y-1">
-              <h2 className="text-lg font-semibold text-foreground">
+        <div className="grid gap-6 md:grid-cols-2 items-stretch">
+          {/* Left Column: Discipline Selection */}
+          <section className="rounded-xl border border-border-soft bg-surface/70 backdrop-blur-sm p-5 shadow-sm flex flex-col justify-between h-full space-y-4">
+            <div className="text-center space-y-1 pb-1 border-b border-border-soft/60">
+              <h2 className="text-base sm:text-lg font-bold text-foreground">
                 {translate('onboarding.selectDiscipline')}
               </h2>
               <p className="text-xs text-muted-copy">
@@ -64,7 +65,7 @@ export const WelcomeScreen = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2.5 flex-1 content-start">
               {ENGINEERING_DISCIPLINES.map((id) => {
                 const Icon = getDisciplineIcon(id);
                 const meta = DISCIPLINE_META[id];
@@ -72,23 +73,28 @@ export const WelcomeScreen = () => {
                 return (
                   <button
                     key={id}
+                    type="button"
                     onClick={() => setSelectedDiscipline(id)}
-                    className={`flex items-center gap-3 rounded-[4px] border p-4 text-left transition-all cursor-pointer ${
+                    className={`flex items-center gap-2.5 rounded-lg border p-3 text-left transition-all cursor-pointer select-none ${
                       isSelected
-                        ? 'border-primary bg-primary/5 text-primary shadow-sm'
-                        : 'border-border-soft bg-surface hover:border-primary/50'
+                        ? 'border-primary bg-primary/10 text-primary shadow-sm font-semibold'
+                        : 'border-border-soft bg-background/60 text-foreground hover:border-primary/50 hover:bg-surface-hover shadow-2xs'
                     }`}
                   >
-                    <Icon
-                      className={`h-5 w-5 ${isSelected ? 'text-primary' : 'text-muted-copy'}`}
-                    />
+                    <div
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md border ${
+                        isSelected
+                          ? 'border-primary bg-primary text-primary-foreground'
+                          : 'border-border-soft bg-surface text-muted-copy'
+                      }`}
+                    >
+                      <Icon className="h-4 w-4" />
+                    </div>
                     <div className="min-w-0 flex-1">
-                      <p
-                        className={`text-sm font-semibold truncate ${isSelected ? 'text-primary' : 'text-foreground'}`}
-                      >
+                      <p className="text-xs font-bold truncate leading-tight">
                         {translate(meta.labelKey as TranslationKey)}
                       </p>
-                      <p className="text-xs text-muted-copy truncate">
+                      <p className="text-[10px] text-muted-copy truncate leading-tight mt-0.5">
                         {translate(meta.descriptionKey as TranslationKey)}
                       </p>
                     </div>
@@ -98,34 +104,50 @@ export const WelcomeScreen = () => {
             </div>
           </section>
 
-          <section className="space-y-4">
-            <div className="text-center space-y-1">
-              <h2 className="text-lg font-semibold text-foreground">
+          {/* Right Column: Language Selection */}
+          <section className="rounded-xl border border-border-soft bg-surface/70 backdrop-blur-sm p-5 shadow-sm flex flex-col justify-between h-full space-y-4">
+            <div className="text-center space-y-1 pb-1 border-b border-border-soft/60">
+              <h2 className="text-base sm:text-lg font-bold text-foreground">
                 {translate('onboarding.selectLanguageTitle')}
               </h2>
-              <p className="text-xs text-muted-copy">{translate('onboarding.selectLanguage')}</p>
               <p className="text-xs text-muted-copy">
-                {translate('onboarding.englishFixedTarget')}
+                {translate('onboarding.selectLanguage')} (
+                {translate('onboarding.englishFixedTarget')})
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-3 max-h-[420px] overflow-y-auto">
-              {INTERFACE_LANGUAGES.filter((l) => l.available && l.id !== 'en').map((lang) => {
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 flex-1 content-start overflow-y-auto max-h-[380px] sm:max-h-none pr-1 [scrollbar-width:thin]">
+              {[
+                ...INTERFACE_LANGUAGES.filter((l) => l.available && l.id !== 'en'),
+                {
+                  id: 'en' as SupportedInterfaceLanguage,
+                  label: 'English',
+                  nativeLabel: 'English',
+                  available: true,
+                  flag: 'EN',
+                },
+              ].map((lang) => {
                 const isSelected = selectedLanguage === lang.id;
+                const isEnglish = lang.id === 'en';
                 return (
                   <button
                     key={lang.id}
+                    type="button"
                     onClick={() => setSelectedLanguage(lang.id as SupportedInterfaceLanguage)}
-                    className={`flex flex-col items-center justify-center gap-2 rounded-[4px] border p-4 text-center transition-all cursor-pointer ${
+                    className={`flex items-center sm:flex-col sm:justify-center gap-2 rounded-lg border p-3 text-left sm:text-center transition-all cursor-pointer select-none ${
                       isSelected
-                        ? 'border-primary bg-primary/5 text-primary shadow-sm'
-                        : 'border-border-soft bg-surface hover:border-primary/50'
+                        ? 'border-primary bg-primary/10 text-primary shadow-sm font-semibold'
+                        : 'border-border-soft bg-background/60 text-foreground hover:border-primary/50 hover:bg-surface-hover shadow-2xs'
                     }`}
                   >
-                    <span className="text-2xl">{lang.flag}</span>
-                    <span
-                      className={`text-sm font-semibold ${isSelected ? 'text-primary' : 'text-foreground'}`}
-                    >
+                    {isEnglish ? (
+                      <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md bg-primary/10 border border-primary/20 text-xs sm:text-sm font-bold text-primary font-mono shrink-0">
+                        EN
+                      </span>
+                    ) : (
+                      <span className="text-xl sm:text-2xl leading-none shrink-0">{lang.flag}</span>
+                    )}
+                    <span className="text-xs font-semibold truncate leading-tight">
                       {lang.nativeLabel}
                     </span>
                   </button>
@@ -136,11 +158,12 @@ export const WelcomeScreen = () => {
         </div>
 
         <button
+          type="button"
           onClick={handleFinish}
           disabled={!selectedDiscipline}
-          className="w-full flex items-center justify-center gap-2 rounded-[4px] bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer transition-all"
+          className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-sm font-bold text-primary-foreground shadow-md hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer transition-all"
         >
-          {translate('onboarding.start')}
+          <span>{translate('onboarding.start')}</span>
           <ArrowRight className="h-4 w-4" />
         </button>
       </div>
