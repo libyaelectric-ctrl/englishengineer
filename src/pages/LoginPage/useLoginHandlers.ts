@@ -4,17 +4,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
 
-import {
-  ENGINEERING_DISCIPLINES,
-  type EngineeringDiscipline,
-} from '@/shared/constants/engineering-disciplines';
-
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
 import { AUTH_CONFIG } from '@/features/auth/auth.config';
 import { getSupabaseClient } from '@/features/auth/supabase.client';
-import { useLocalizationStore } from '@/features/localization';
-import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 import { type RouteLocationState, getErrorMessage } from './constants';
 
@@ -70,15 +63,9 @@ export const useLoginHandlers = () => {
             email: `demo.${provider}@engvox.io`,
           },
         });
-        LearningProfileRepository.updatePreferences(loggedUser.id, {
-          discipline: (loggedUser.engineeringDiscipline ||
-            ENGINEERING_DISCIPLINES[0]) as EngineeringDiscipline,
-          onboardingCompleted: true,
-          interfaceLanguage: useLocalizationStore.getState().language,
-        });
       }
       setSocialLoading(null);
-      navigate('/dashboard', { replace: true });
+      navigate('/welcome', { replace: true });
     } catch (err: unknown) {
       setSocialLoading(null);
       setError(getErrorMessage(err, `Failed to sign in with ${provider}`));
@@ -123,16 +110,7 @@ export const useLoginHandlers = () => {
       setError(null);
       useLearningStore.getState().resetAll();
       await demoLogin();
-      const loggedUser = useAuthStore.getState().currentUser;
-      if (loggedUser) {
-        LearningProfileRepository.updatePreferences(loggedUser.id, {
-          discipline: (loggedUser.engineeringDiscipline ||
-            ENGINEERING_DISCIPLINES[0]) as EngineeringDiscipline,
-          onboardingCompleted: true,
-          interfaceLanguage: useLocalizationStore.getState().language,
-        });
-      }
-      navigate('/dashboard', { replace: true });
+      navigate('/welcome', { replace: true });
     } catch (err: unknown) {
       setError(getErrorMessage(err, 'Failed to initialize demo'));
     }
