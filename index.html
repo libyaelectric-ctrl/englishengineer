@@ -4,10 +4,9 @@
     <meta charset="UTF-8" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
-    />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" /></noscript>
     <link rel="icon" type="image/webp" href="/brand/logo.webp" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
     <link rel="manifest" href="/manifest.json" />
@@ -130,17 +129,22 @@
     <link rel="prefetch" href="/login" as="document" />
     <link rel="prefetch" href="/dashboard" as="document" />
     <link rel="dns-prefetch" href="https://englishengineer-backend.onrender.com" />
+    <!-- Critical CSS inline to avoid render-blocking -->
+    <style>
+      :root{--color-primary:#0d9488;--color-primary-hover:#0f766e;--color-success:#10b981;--color-warning:#f59e0b;--color-error:#ef4444;--color-background:#ffffff;--color-surface:#f8fafc;--color-surface-hover:#f1f5f9;--color-border-soft:#e2e8f0;--color-border-hover:#cbd5e1;--color-foreground:#0f172a;--color-muted-copy:#64748b;--radius-card:8px}
+      *{box-sizing:border-box;margin:0;padding:0}
+      html{font-size:16px;-webkit-text-size-adjust:100%}
+      body{font-family:"Hanken Grotesk",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background-color:var(--color-background);color:var(--color-foreground);line-height:1.5;min-height:100vh}
+      #root{min-height:100vh}
+      .skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+      .skip-link:focus{position:fixed;top:1rem;left:1rem;z-index:9999;padding:0.75rem 1rem;background:var(--color-background);color:var(--color-foreground);border:2px solid var(--color-primary);border-radius:var(--radius-card);outline:none}
+      @media (prefers-reduced-motion:reduce){*,::before,::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}}
+    </style>
   </head>
   <body class="text-slate-950 antialiased selection:bg-primary/20">
-    <style>
-      .skip-link { left: -999px; position: absolute; }
-      @media (min-width: 640px) { .skip-link { left: auto; } }
-      a { text-decoration: none; color: inherit; }
-      img { max-width: 100%; height: auto; }
-    </style>
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:p-4 focus:bg-background focus:text-foreground focus:outline-2 focus:outline-primary"
+      class="skip-link focus:not-sr-only focus:absolute focus:z-[9999] focus:p-4 focus:bg-background focus:text-foreground focus:outline-2 focus:outline-primary"
     >
       Skip to main content
     </a>
