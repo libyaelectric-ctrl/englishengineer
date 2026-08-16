@@ -1,5 +1,6 @@
 import { type Variants } from 'motion/react';
-import { durations, easings } from './tokens';
+
+import { durations, easings, spring } from './tokens';
 
 export const fadeIn: Variants = {
   hidden: { opacity: 0 },
@@ -58,7 +59,7 @@ export const scaleIn: Variants = {
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { duration: durations.fast, ease: easings['spring-soft'] },
+    transition: { duration: durations.fast, ...spring.soft },
   },
 };
 
@@ -67,7 +68,7 @@ export const scaleOut: Variants = {
   hidden: {
     opacity: 0,
     scale: 0.95,
-    transition: { duration: durations.fast, ease: easings['spring-snappy'] },
+    transition: { duration: durations.fast, ...spring.snappy },
   },
 };
 
@@ -112,16 +113,12 @@ export const pageEnter: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.2, ease: easings['ease-out-expo'] },
   },
-};
-
-export const pageExit: Variants = {
-  visible: { opacity: 1, y: 0 },
-  hidden: {
+  exit: {
     opacity: 0,
     y: -6,
-    transition: { duration: 0.16, ease: [0.4, 0, 0.2, 1] },
+    transition: { duration: 0.16, ease: easings['ease-in-out'] },
   },
 };
 
@@ -138,7 +135,7 @@ export const staggerItem: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.4, ease: easings['ease-out-expo'] },
   },
 };
 
@@ -147,7 +144,7 @@ export const listItem: Variants = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.3, ease: easings['ease-out-expo'] },
   },
 };
 
@@ -157,30 +154,30 @@ export const cardHover: Variants = {
     y: -4,
     scale: 1.01,
     boxShadow: '0 12px 24px -10px rgb(0 0 0 / 0.3)',
-    transition: { duration: durations.fast, ease: easings['spring-soft'] },
+    transition: { duration: durations.fast, ...spring.soft },
   },
   tap: {
     scale: 0.98,
-    transition: { duration: durations.instant, ease: easings['spring-snappy'] },
+    transition: { duration: durations.instant, ...spring.snappy },
   },
 };
 
 export const buttonHover: Variants = {
   rest: { scale: 1 },
-  hover: { scale: 1.02, transition: { duration: durations.fast, ease: easings['spring-soft'] } },
-  tap: { scale: 0.97, transition: { duration: durations.instant, ease: easings['spring-snappy'] } },
+  hover: { scale: 1.02, transition: { duration: durations.fast, ...spring.soft } },
+  tap: { scale: 0.97, transition: { duration: durations.instant, ...spring.snappy } },
 };
 
 export const iconHover: Variants = {
   rest: { scale: 1, rotate: 0 },
-  hover: { scale: 1.1, rotate: 3, transition: { duration: durations.fast, ease: easings['spring-soft'] } },
-  tap: { scale: 0.9, transition: { duration: durations.instant, ease: easings['spring-snappy'] } },
+  hover: { scale: 1.1, rotate: 3, transition: { duration: durations.fast, ...spring.soft } },
+  tap: { scale: 0.9, transition: { duration: durations.instant, ...spring.snappy } },
 };
 
 export const chipHover: Variants = {
   rest: { scale: 1 },
-  hover: { scale: 1.04, transition: { duration: durations.fast, ease: easings['spring-soft'] } },
-  tap: { scale: 0.95, transition: { duration: durations.instant, ease: easings['spring-snappy'] } },
+  hover: { scale: 1.04, transition: { duration: durations.fast, ...spring.soft } },
+  tap: { scale: 0.95, transition: { duration: durations.instant, ...spring.snappy } },
 };
 
 export const toastEnter: Variants = {
@@ -189,7 +186,7 @@ export const toastEnter: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: durations.base, ease: easings['spring-soft'] },
+    transition: { duration: durations.base, ...spring.soft },
   },
 };
 
@@ -199,7 +196,7 @@ export const toastExit: Variants = {
     opacity: 0,
     y: -20,
     scale: 0.95,
-    transition: { duration: durations.fast, ease: easings['spring-snappy'] },
+    transition: { duration: durations.fast, ...spring.snappy },
   },
 };
 
@@ -215,13 +212,13 @@ export const modalContent: Variants = {
     opacity: 1,
     scale: 1,
     y: 0,
-    transition: { duration: durations.base, ease: easings['spring-soft'] },
+    transition: { duration: durations.base, ...spring.soft },
   },
   exit: {
     opacity: 0,
     scale: 0.95,
     y: 20,
-    transition: { duration: durations.fast, ease: easings['spring-snappy'] },
+    transition: { duration: durations.fast, ...spring.snappy },
   },
 };
 
@@ -248,7 +245,7 @@ export const tabIndicator: Variants = {
   animate: (custom: number) => ({
     x: custom * 80,
     width: 60,
-    transition: { duration: durations.base, ease: easings['spring-soft'] },
+    transition: { duration: durations.base, ...spring.soft },
   }),
 };
 
@@ -280,7 +277,7 @@ export const glowPulse: Variants = {
 
 export const activeCapsule: Variants = {
   initial: { x: 0, width: 0, opacity: 0 },
-  animate: { opacity: 1, transition: { duration: durations.base, ease: easings['spring-soft'] } },
+  animate: { opacity: 1, transition: { duration: durations.base, ...spring.soft } },
 };
 
 export const staggerChildren: Variants = {
@@ -290,5 +287,5 @@ export const staggerChildren: Variants = {
 
 export const staggerItemFast: Variants = {
   hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: easings['ease-out-expo'] } },
 };

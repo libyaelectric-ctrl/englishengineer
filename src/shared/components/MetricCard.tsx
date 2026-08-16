@@ -1,14 +1,15 @@
 import { ArrowDownRight, ArrowUpRight, LucideIcon } from 'lucide-react';
+import { motion } from 'motion/react';
 
 import { type HTMLAttributes, memo } from 'react';
 
+import { cardHover, countUp, iconHover } from '@/shared/motion/variants';
 import { cn } from '@/shared/utils/cn';
-import { motion } from 'motion/react';
-import { cardHover, iconHover } from '@/shared/motion/variants';
 
-import { Card } from './Card';
-
-interface MetricCardProps extends HTMLAttributes<HTMLDivElement> {
+interface MetricCardProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'onDrag' | 'onDragStart' | 'onDragEnd' | 'onDragEnter' | 'onDragLeave' | 'onDragOver' | 'onDrop'
+> {
   label: string;
   value: string | number;
   icon: LucideIcon;
@@ -57,7 +58,12 @@ export const MetricCard = memo<MetricCardProps>(
         <div className="flex min-w-0 items-start justify-between gap-3">
           <div className="min-w-0 flex-1 space-y-2">
             <p className="text-xs text-muted-copy">{label}</p>
-            <motion.h3 variants={countUp} className="text-2xl font-bold text-foreground tabular-nums">{value}</motion.h3>
+            <motion.h3
+              variants={countUp}
+              className="text-2xl font-bold text-foreground tabular-nums"
+            >
+              {value}
+            </motion.h3>
             {trend && (
               <motion.p
                 className={cn('flex items-center gap-1 text-xs', trendTextColors[trendDirection])}
@@ -65,10 +71,26 @@ export const MetricCard = memo<MetricCardProps>(
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.2 }}
               >
-                {trendDirection === 'up' && <motion.span variants={iconHover} animate={{ rotate: [-10, 10, -10] }} transition={{ duration: 1.5, repeat: Infinity }}><ArrowUpRight className="h-3 w-3" /></motion.span>}
-                {trendDirection === 'down' && <motion.span variants={iconHover} animate={{ rotate: [10, -10, 10] }} transition={{ duration: 1.5, repeat: Infinity }}><ArrowDownRight className="h-3 w-3" /></motion.span>}
+                {trendDirection === 'up' && (
+                  <motion.span
+                    variants={iconHover}
+                    animate={{ rotate: [-10, 10, -10] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  >
+                    <ArrowUpRight className="h-3 w-3" />
+                  </motion.span>
+                )}
+                {trendDirection === 'down' && (
+                  <motion.span
+                    variants={iconHover}
+                    animate={{ rotate: [10, -10, 10] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  >
+                    <ArrowDownRight className="h-3 w-3" />
+                  </motion.span>
+                )}
                 {trend}
-              </p>
+              </motion.p>
             )}
           </div>
           <motion.div

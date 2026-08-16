@@ -1,8 +1,10 @@
 'use client';
 
+import { AnimatePresence, motion } from 'motion/react';
+
 import { type ReactNode } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { pageEnter, pageExit } from './variants';
+
+import { pageEnter } from './variants';
 
 interface MotionPageProps {
   children: ReactNode;

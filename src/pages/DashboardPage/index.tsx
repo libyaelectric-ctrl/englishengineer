@@ -1,14 +1,26 @@
 import { ArrowRight, BookOpen, Target, TrendingUp, Trophy } from 'lucide-react';
+import { motion, useInView } from 'motion/react';
+
 import React, { useEffect, useRef } from 'react';
+
 import { Link, useNavigate } from 'react-router-dom';
+
 import { useLearningStore } from '@/core/learning';
+
 import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
+import {
+  cardHover,
+  countUp,
+  fadeUp,
+  iconHover,
+  staggerContainer,
+  staggerItem,
+} from '@/shared/motion/variants';
+
 import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization/localization.types';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
-import { motion, useInView } from 'motion/react';
-import { fadeUp, staggerContainer, staggerItem, cardHover, iconHover, countUp, scaleIn } from '@/shared/motion/variants';
 
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
@@ -153,7 +165,6 @@ export const DashboardPage: React.FC = () => {
               key={label}
               variants={staggerItem}
               custom={index}
-              variants={cardHover}
               whileHover="hover"
               whileTap="tap"
               className="rounded-[var(--radius-card)] border border-[var(--color-border-soft)] bg-[var(--surface)] p-4"
@@ -167,8 +178,15 @@ export const DashboardPage: React.FC = () => {
                   <Icon className="h-5 w-5 text-[var(--color-primary)]" />
                 </motion.span>
               </motion.div>
-              <motion.p variants={fadeUp} className="text-xs text-[var(--color-muted-copy)]">{label}</motion.p>
-              <motion.div variants={countUp} className="mt-1 text-lg font-bold text-[var(--foreground)]">{value}</motion.div>
+              <motion.p variants={fadeUp} className="text-xs text-[var(--color-muted-copy)]">
+                {label}
+              </motion.p>
+              <motion.div
+                variants={countUp}
+                className="mt-1 text-lg font-bold text-[var(--foreground)]"
+              >
+                {value}
+              </motion.div>
             </motion.div>
           ))}
         </motion.div>

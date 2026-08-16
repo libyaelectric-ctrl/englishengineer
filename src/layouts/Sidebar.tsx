@@ -1,6 +1,7 @@
 import { PRODUCT_VERSION } from '@/config/product.config';
 import { useAppStore } from '@/store/app.store';
 import { Bell, BookOpenCheck, ChevronRight, HardDrive, LogOut, Wallet, X } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useShallow } from 'zustand/shallow';
 
 import { useEffect, useRef, useState, useTransition } from 'react';
@@ -9,8 +10,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { cn } from '@/shared/utils/cn';
-import { motion, AnimatePresence } from 'motion/react';
-import { slideLeft, fadeIn, fadeOut, staggerContainer, staggerItem, cardHover, iconHover } from '@/shared/motion/variants';
 
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
@@ -85,7 +84,10 @@ export const Sidebar = () => {
     }
   };
   const planName = subscription?.planId || 'junior';
-  const copy = SIDEBAR_COPY[language as keyof typeof SIDEBAR_COPY] ?? (SIDEBAR_EXTRA_COPY[language] as typeof SIDEBAR_COPY.en) ?? SIDEBAR_COPY.en;
+  const copy =
+    SIDEBAR_COPY[language as keyof typeof SIDEBAR_COPY] ??
+    (SIDEBAR_EXTRA_COPY[language] as typeof SIDEBAR_COPY.en) ??
+    SIDEBAR_COPY.en;
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const notificationsRef = useRef<HTMLDivElement>(null);
 
@@ -242,74 +244,75 @@ export const Sidebar = () => {
                 </button>
 
                 <AnimatePresence>
-                {notificationsOpen && (
-                  <motion.div
-                    role="status"
-                    className="absolute bottom-full left-0 right-0 z-50 mb-2 overflow-hidden rounded-[4px] border border-border-soft bg-surface shadow-lg"
-                    initial={{ opacity: 0, y: 8, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 35 }}
-                  >
-                    <div className="flex items-center justify-between border-b border-border-soft px-4 py-3">
-                      <div>
-                        <p className="text-xs font-bold text-foreground uppercase tracking-wider">
-                          {copy.workspaceStatus}
-                        </p>
-                        <p className="mt-0.5 text-xs text-muted-copy font-medium">
-                          {copy.noAlerts}
-                        </p>
+                  {notificationsOpen && (
+                    <motion.div
+                      role="status"
+                      className="absolute bottom-full left-0 right-0 z-50 mb-2 overflow-hidden rounded-[4px] border border-border-soft bg-surface shadow-lg"
+                      initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+                    >
+                      <div className="flex items-center justify-between border-b border-border-soft px-4 py-3">
+                        <div>
+                          <p className="text-xs font-bold text-foreground uppercase tracking-wider">
+                            {copy.workspaceStatus}
+                          </p>
+                          <p className="mt-0.5 text-xs text-muted-copy font-medium">
+                            {copy.noAlerts}
+                          </p>
+                        </div>
+                        <span className="rounded-[4px] bg-success/10 px-2 py-0.5 text-[10px] font-bold text-success uppercase tracking-wider">
+                          {copy.ready}
+                        </span>
                       </div>
-                      <span className="rounded-[4px] bg-success/10 px-2 py-0.5 text-[10px] font-bold text-success uppercase tracking-wider">
-                        {copy.ready}
-                      </span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setNotificationsOpen(false);
-                        closeSidebarOnMobile();
-                        startTransition(() => navigate('/curriculum'));
-                      }}
-                      className="group flex w-full items-start gap-3 border-b border-border-soft px-4 py-3 text-left transition-colors hover:bg-surface-hover"
-                    >
-                      <span className="rounded-[4px] bg-foreground/5 p-2 text-foreground">
-                        <BookOpenCheck className="h-4 w-4" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-xs font-bold text-foreground uppercase tracking-wider">
-                          {copy.learningQueue}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setNotificationsOpen(false);
+                          closeSidebarOnMobile();
+                          startTransition(() => navigate('/curriculum'));
+                        }}
+                        className="group flex w-full items-start gap-3 border-b border-border-soft px-4 py-3 text-left transition-colors hover:bg-surface-hover"
+                      >
+                        <span className="rounded-[4px] bg-foreground/5 p-2 text-foreground">
+                          <BookOpenCheck className="h-4 w-4" />
                         </span>
-                        <span className="mt-0.5 block text-xs text-muted-copy font-medium">
-                          {copy.continueQueue}
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-xs font-bold text-foreground uppercase tracking-wider">
+                            {copy.learningQueue}
+                          </span>
+                          <span className="mt-0.5 block text-xs text-muted-copy font-medium">
+                            {copy.continueQueue}
+                          </span>
                         </span>
-                      </span>
-                      <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-copy transition-transform group-hover:translate-x-0.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setNotificationsOpen(false);
-                        closeSidebarOnMobile();
-                        startTransition(() => navigate('/profile'));
-                      }}
-                      className="group flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-hover"
-                    >
-                      <span className="rounded-[4px] bg-warning/10 p-2 text-warning">
-                        <HardDrive className="h-4 w-4" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-xs font-bold text-foreground uppercase tracking-wider">
-                          {copy.localProtection}
+                        <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-copy transition-transform group-hover:translate-x-0.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setNotificationsOpen(false);
+                          closeSidebarOnMobile();
+                          startTransition(() => navigate('/profile'));
+                        }}
+                        className="group flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-hover"
+                      >
+                        <span className="rounded-[4px] bg-warning/10 p-2 text-warning">
+                          <HardDrive className="h-4 w-4" />
                         </span>
-                        <span className="mt-0.5 block text-xs text-muted-copy font-medium">
-                          {copy.checkSync}
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-xs font-bold text-foreground uppercase tracking-wider">
+                            {copy.localProtection}
+                          </span>
+                          <span className="mt-0.5 block text-xs text-muted-copy font-medium">
+                            {copy.checkSync}
+                          </span>
                         </span>
-                      </span>
-                      <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-copy transition-transform group-hover:translate-x-0.5" />
-                    </button>
-                  </motion.div>
-                )}
+                        <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-copy transition-transform group-hover:translate-x-0.5" />
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               <button
@@ -322,7 +325,7 @@ export const Sidebar = () => {
             </div>
           )}
         </div>
-      </aside>
+      </motion.aside>
     </>
   );
 };

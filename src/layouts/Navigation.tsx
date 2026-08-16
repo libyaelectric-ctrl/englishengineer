@@ -1,14 +1,20 @@
 import { NAV_ITEMS } from '@/config/navigation.config';
 import { ChevronDown } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import React, { useState } from 'react';
 
 import { NavLink, useLocation } from 'react-router-dom';
 
+import {
+  accordionItem,
+  accordionOpen,
+  iconHover,
+  staggerContainer,
+  staggerItem,
+} from '@/shared/motion/variants';
 import { cn } from '@/shared/utils/cn';
 import { prefetchRoute } from '@/shared/utils/prefetch';
-import { motion, AnimatePresence } from 'motion/react';
-import { staggerContainer, staggerItem, accordionOpen, accordionItem, fadeIn, slideLeft } from '@/shared/motion/variants';
 
 import { NAVIGATION_TRANSLATIONS, useLocalizationStore } from '@/features/localization';
 
@@ -74,7 +80,12 @@ export const Navigation = React.memo(({ onItemClick }: NavigationProps) => {
         const isOpen = openMenus[item.label] ?? false;
 
         return (
-          <motion.div key={item.label} variants={staggerItem} custom={index} className="space-y-0.5">
+          <motion.div
+            key={item.label}
+            variants={staggerItem}
+            custom={index}
+            className="space-y-0.5"
+          >
             <motion.button
               type="button"
               onClick={() => toggleMenu(item.label)}

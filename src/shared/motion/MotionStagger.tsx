@@ -1,13 +1,21 @@
 'use client';
 
-import { type ReactNode } from 'react';
 import { motion } from 'motion/react';
-import { staggerContainer, staggerItem, staggerChildren, staggerItemFast } from './variants';
+
+import { type ReactNode } from 'react';
+
+import {
+  listItem,
+  staggerChildren,
+  staggerContainer,
+  staggerItem,
+  staggerItemFast,
+} from './variants';
 
 interface MotionStaggerProps {
   children: ReactNode;
   className?: string;
-  variant?: 'default' | 'fast' | 'container';
+  variant?: 'default' | 'fast';
   delay?: number;
   staggerDelay?: number;
 }
@@ -27,26 +35,34 @@ export function MotionStagger({
     },
   };
 
-  const itemVariants = variant === 'fast'
-    ? staggerItemFast
-    : staggerItem;
+  const itemVariants = variant === 'fast' ? staggerItemFast : staggerItem;
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" className={className}>
-      {typeof children === 'function'
-        ? children({ containerVariants, itemVariants })
-        : Array.isArray(children)
-          ? children.map((child, index) => (
-              <motion.div key={index} variants={itemVariants} custom={index}>
-                {child}
-              </motion.div>
-            ))
-          : <motion.div variants={itemVariants}>{children}</motion.div>}
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className={className}
+    >
+      {Array.isArray(children) ? (
+        children.map((child, index) => (
+          <motion.div key={index} variants={itemVariants} custom={index}>
+            {child}
+          </motion.div>
+        ))
+      ) : (
+        <motion.div variants={itemVariants}>{children}</motion.div>
+      )}
     </motion.div>
   );
 }
 
-export function StaggerItem({ children, className, variant = 'default', custom = 0 }: {
+export function StaggerItem({
+  children,
+  className,
+  variant = 'default',
+  custom = 0,
+}: {
   children: ReactNode;
   className?: string;
   variant?: 'default' | 'fast';
@@ -61,7 +77,12 @@ export function StaggerItem({ children, className, variant = 'default', custom =
   );
 }
 
-export function MotionList({ children, className, staggerDelay = 0.06, delayChildren = 0.08 }: {
+export function MotionList({
+  children,
+  className,
+  staggerDelay = 0.06,
+  delayChildren = 0.08,
+}: {
   children: ReactNode | ReactNode[];
   className?: string;
   staggerDelay?: number;
@@ -75,9 +96,13 @@ export function MotionList({ children, className, staggerDelay = 0.06, delayChil
       custom={{ staggerDelay, delayChildren }}
       className={className}
     >
-      {Array.isArray(children) ? children.map((child, i) => (
-        <motion.li key={i} variants={listItem} custom={i}>{child}</motion.li>
-      )) : children}
+      {Array.isArray(children)
+        ? children.map((child, i) => (
+            <motion.li key={i} variants={listItem} custom={i}>
+              {child}
+            </motion.li>
+          ))
+        : children}
     </motion.ul>
   );
 }

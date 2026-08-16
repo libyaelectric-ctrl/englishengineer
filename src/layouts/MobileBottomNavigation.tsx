@@ -1,10 +1,10 @@
 import { BriefcaseBusiness, Home, Layers3, Map, User } from 'lucide-react';
+import { motion } from 'motion/react';
 
 import { NavLink, useLocation } from 'react-router-dom';
 
-import { cn } from '@/shared/utils/cn';
-import { motion, AnimatePresence } from 'motion/react';
 import { activeCapsule, cardHover, iconHover } from '@/shared/motion/variants';
+import { cn } from '@/shared/utils/cn';
 
 import { NAVIGATION_TRANSLATIONS, useLocalizationStore } from '@/features/localization';
 
@@ -54,10 +54,12 @@ export const MobileBottomNavigation = () => {
                   to={item.href}
                   className={cn(
                     'relative flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 rounded-[4px] px-1 text-[10px] font-bold transition-colors',
-                    isActive ? 'text-primary' : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
+                    isActive
+                      ? 'text-primary'
+                      : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
                   )}
                 >
-                  {({ isActive: linkIsActive }) => (
+                  {({ isActive }) => (
                     <>
                       <motion.span
                         variants={iconHover}
