@@ -1,5 +1,4 @@
-﻿import { AppShell } from '@/layouts/AppShell';
-import { PublicLayout } from '@/layouts/PublicLayout';
+﻿import { PublicLayout } from '@/layouts/PublicLayout';
 
 import { type ComponentType, Suspense, lazy } from 'react';
 
@@ -7,11 +6,10 @@ import { Navigate, createBrowserRouter } from 'react-router-dom';
 
 import { LoadingState } from '@/shared/components/LoadingState';
 
-import { AuthGuard } from '@/features/auth/AuthGuard';
-import { RequireAdminRole } from '@/features/auth/RequireAdminRole';
-import { OnboardingGate } from '@/features/profile';
-
 import { RouteErrorPage } from './RouteErrorPage';
+
+const AppLayout = lazy(() => import('./AppLayout'));
+const AdminLayout = lazy(() => import('./AdminLayout'));
 
 const withSuspense = (Component: ComponentType) => (
   <Suspense fallback={<LoadingState />}>
@@ -28,7 +26,6 @@ const Grammar = lazy(() => import('@/pages/GrammarPage'));
 const Reading = lazy(() => import('@/pages/ReadingPage'));
 const Writing = lazy(() => import('@/pages/WritingPage'));
 const Listening = lazy(() => import('@/pages/ListeningPage'));
-const Admin = lazy(() => import('@/pages/AdminPage'));
 const Curriculum = lazy(() => import('@/pages/CurriculumPage'));
 const Tools = lazy(() => import('@/pages/ToolsPage'));
 const Progress = lazy(() => import('@/pages/ProgressPage'));
@@ -87,23 +84,17 @@ export const router = createBrowserRouter([
     path: '/admin',
     errorElement: <RouteErrorPage />,
     element: (
-      <AuthGuard>
-        <RequireAdminRole>
-          <Suspense fallback={<LoadingState />}>
-            <Admin />
-          </Suspense>
-        </RequireAdminRole>
-      </AuthGuard>
+      <Suspense fallback={<LoadingState />}>
+        <AdminLayout />
+      </Suspense>
     ),
   },
   {
     errorElement: <RouteErrorPage />,
     element: (
-      <AuthGuard>
-        <OnboardingGate>
-          <AppShell />
-        </OnboardingGate>
-      </AuthGuard>
+      <Suspense fallback={<LoadingState />}>
+        <AppLayout />
+      </Suspense>
     ),
     children: [
       {
