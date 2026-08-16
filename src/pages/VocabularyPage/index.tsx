@@ -1,4 +1,4 @@
-﻿import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';

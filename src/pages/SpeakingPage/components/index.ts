@@ -1,4 +1,4 @@
-﻿export { EvaluationScores } from './EvaluationScores';
+export { EvaluationScores } from './EvaluationScores';
 export { MissionMetrics } from './MissionMetrics';
 export { MissionSelector } from './MissionSelector';
 export { RoleplayCategoryFilter } from './RoleplayCategoryFilter';
