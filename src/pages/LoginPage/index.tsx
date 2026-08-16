@@ -51,6 +51,9 @@ const LoginPage = () => {
       onClick={(e) => {
         if (e.target === e.currentTarget) handleClose();
       }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') handleClose();
+      }}
     >
       {/* Modal card */}
       <div className="relative w-full max-w-md rounded-2xl bg-white dark:bg-zinc-900 shadow-2xl border border-zinc-200 dark:border-zinc-700 animate-in fade-in zoom-in-95 duration-200">
