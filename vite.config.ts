@@ -43,34 +43,6 @@ export default defineConfig(() => {
       react(),
       tailwindcss(),
       compression({ algorithms: ['brotliCompress'] }),
-      {
-        name: 'inline-critical-css',
-        apply: 'build',
-        enforce: 'post',
-        async generateBundle(_options, bundle) {
-          const crittersInstance = critters({
-            inline: true,
-            external: false,
-            removeUnused: true,
-            reduceInlineStyles: true,
-            mergeStylesheets: true,
-            preload: 'body',
-            noscriptFallback: true,
-            keyframes: 'critical',
-            fontFace: false,
-          });
-          for (const [fileName, asset] of Object.entries(bundle)) {
-            if (
-              fileName.endsWith('.html') &&
-              asset.type === 'asset' &&
-              typeof asset.source === 'string'
-            ) {
-              const processed = await crittersInstance.process(asset.source, { path: fileName });
-              asset.source = processed;
-            }
-          }
-        },
-      },
       ...(process.env.ANALYZE ? [visualizer({ open: true, filename: 'bundle-report.html' })] : []),
     ],
     resolve: {
