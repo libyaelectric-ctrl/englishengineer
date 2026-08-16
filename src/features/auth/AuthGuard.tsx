@@ -12,21 +12,16 @@ interface AuthGuardProps {
 }
 
 export const AuthGuard = ({ children }: AuthGuardProps) => {
-  const { isAuthenticated, isLoading, initialize } = useAuthStore();
+  const { isAuthenticated, isLoading, initialize, currentUser } = useAuthStore();
   const location = useLocation();
 
   useEffect(() => {
-    void initialize();
-    const safetyTimer = window.setTimeout(() => {
-      const state = useAuthStore.getState();
-      if (state.isLoading && !state.isAuthenticated) {
-        useAuthStore.setState({ isLoading: false });
-      }
-    }, 5000);
-    return () => window.clearTimeout(safetyTimer);
-  }, [initialize]);
+    if (!currentUser && !isAuthenticated) {
+      void initialize();
+    }
+  }, [initialize, currentUser, isAuthenticated]);
 
-  if (isLoading) {
+  if (isLoading && !currentUser && !isAuthenticated) {
     return (
       <LoadingState
         title="Opening EngVox"
@@ -35,7 +30,7 @@ export const AuthGuard = ({ children }: AuthGuardProps) => {
     );
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !currentUser) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
