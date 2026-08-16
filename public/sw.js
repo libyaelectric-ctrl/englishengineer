@@ -1,6 +1,6 @@
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 const CACHE_NAME = `engvox-${CACHE_VERSION}`;
-const STATIC_ASSETS = ['/', '/offline.html', '/brand/logo.webp', '/manifest.json'];
+const STATIC_ASSETS = ['/', '/offline.html', '/brand/logo.svg', '/manifest.json'];
 
 // Install: cache static assets
 self.addEventListener('install', (event) => {

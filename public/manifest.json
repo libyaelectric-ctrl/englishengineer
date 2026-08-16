@@ -38,10 +38,10 @@
       "purpose": "maskable"
     },
     {
-      "src": "/brand/logo.webp",
-      "sizes": "512x512",
-      "type": "image/webp",
-      "purpose": "any maskable"
+      "src": "/brand/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ],
   "shortcuts": [
@@ -49,25 +49,25 @@
       "name": "Dashboard",
       "short_name": "Home",
       "url": "/dashboard",
-      "icons": [{ "src": "/brand/logo.webp", "sizes": "96x96", "type": "image/webp" }]
+      "icons": [{ "src": "/brand/logo.svg", "sizes": "any", "type": "image/svg+xml" }]
     },
     {
       "name": "Vocabulary",
       "short_name": "Vocab",
       "url": "/vocabulary",
-      "icons": [{ "src": "/brand/logo.webp", "sizes": "96x96", "type": "image/webp" }]
+      "icons": [{ "src": "/brand/logo.svg", "sizes": "any", "type": "image/svg+xml" }]
     },
     {
       "name": "AI Coach",
       "short_name": "AI",
       "url": "/tools/ai",
-      "icons": [{ "src": "/brand/logo.webp", "sizes": "96x96", "type": "image/webp" }]
+      "icons": [{ "src": "/brand/logo.svg", "sizes": "any", "type": "image/svg+xml" }]
     },
     {
       "name": "Grammar",
       "short_name": "Grammar",
       "url": "/grammar",
-      "icons": [{ "src": "/brand/logo.webp", "sizes": "96x96", "type": "image/webp" }]
+      "icons": [{ "src": "/brand/logo.svg", "sizes": "any", "type": "image/svg+xml" }]
     }
   ]
 }
