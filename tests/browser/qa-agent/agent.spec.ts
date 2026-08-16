@@ -22,9 +22,6 @@ const PUBLIC_ROUTES = [
   '/business',
   '/login',
   '/signup',
-  '/welcome',
-  '/onboarding',
-  '/onboarding/branch',
   '/legal/privacy',
   '/offline',
   '/404-route',
@@ -185,38 +182,49 @@ test.describe('QA Agent — insan gibi sayfa sayfa denetim', () => {
   test('C) Kritik kullanıcı akışları işlevselliği', async ({ page }) => {
     const collector = attachErrorCollectors(page);
 
-    // C1. Onboarding akışı: meslek seç → dil adımı → ileri butonu aktif.
+    // C1. Onboarding akışı: /welcome üzerinde meslek + dil tek ekranda seçilip bitirilir.
     await test.step('Onboarding akışı', async () => {
-      await page.goto('/onboarding/branch', { waitUntil: 'domcontentloaded' });
+      await page.goto('/login', { waitUntil: 'domcontentloaded' });
+      const demoBtn = page
+        .getByRole('button', { name: /launch instant demo|try demo|demo/i })
+        .first();
+      if (await demoBtn.isVisible().catch(() => false)) {
+        await demoBtn.click();
+      }
+      await page
+        .waitForURL(/\/dashboard|\/welcome|\/curriculum/, { timeout: 20000 })
+        .catch(() => {});
+      await page.goto('/welcome', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(800);
-      const continueBtn = page.getByRole('button', { name: /continue|devam/i }).first();
-      const isDisabled = await continueBtn.isDisabled().catch(() => true);
-      if (isDisabled) {
-        // Kullanıcı önce bir dal seçmek zorunda.
-        const branch = page
-          .locator('button')
-          .filter({ hasText: /civil|mechanical|electrical/i })
-          .first();
-        if (await branch.isVisible()) {
-          await branch.click();
-          await page.waitForTimeout(400);
-        }
-        const after = await continueBtn.isDisabled().catch(() => true);
-        if (after) {
-          reports.push({
-            route: '/onboarding/branch',
-            title: 'Onboarding',
-            findings: [
-              {
-                severity: 'bug',
-                category: 'form',
-                message: 'Dal seçildikten sonra bile Continue butonu hâlâ disabled.',
-                url: page.url(),
-              },
-            ],
-            checkedAt: new Date().toISOString(),
-          });
-        }
+
+      const disciplineBtn = page
+        .locator('button')
+        .filter({ hasText: /civil|mechanical|electrical/i })
+        .first();
+      if (await disciplineBtn.isVisible().catch(() => false)) {
+        await disciplineBtn.click();
+        await page.waitForTimeout(400);
+      }
+
+      const startBtn = page.getByRole('button', { name: /start|başla|devam|continue/i }).first();
+      const startDisabled = await startBtn.isDisabled().catch(() => true);
+      if (startDisabled) {
+        reports.push({
+          route: '/welcome',
+          title: 'Onboarding',
+          findings: [
+            {
+              severity: 'bug',
+              category: 'form',
+              message: 'Disiplin seçildikten sonra bile Başla butonu hâlâ disabled.',
+              url: page.url(),
+            },
+          ],
+          checkedAt: new Date().toISOString(),
+        });
+      } else {
+        await startBtn.click();
+        await page.waitForTimeout(800);
       }
     });
 
