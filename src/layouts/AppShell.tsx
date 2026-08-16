@@ -12,6 +12,7 @@ import { BetaAnalyticsTracker, BetaFeedbackWidget } from '@/features/beta';
 import { MobileBottomNavigation } from './MobileBottomNavigation';
 import { RightSidebar } from './RightSidebar';
 import { Sidebar } from './Sidebar';
+import { MotionPage } from '@/shared/motion/MotionPage';
 
 const CommandPalette = lazy(() => import('@/shared/components/CommandPalette'));
 
@@ -50,7 +51,9 @@ export const AppShell: FC = () => {
           id="main-content"
           className="custom-scrollbar flex-1 scroll-smooth overflow-y-auto px-4 pb-28 sm:px-6 sm:pb-28 lg:px-8 lg:pb-8 max-w-full"
         >
-          <Outlet />
+          <MotionPage>
+            <Outlet />
+          </MotionPage>
         </main>
         <BetaFeedbackWidget />
         <MobileBottomNavigation />

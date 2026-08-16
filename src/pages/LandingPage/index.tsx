@@ -9,9 +9,11 @@ import {
   Volume2,
 } from 'lucide-react';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Link } from 'react-router-dom';
+import { motion, useInView } from 'motion/react';
+import { fadeUp, staggerContainer, staggerItem, fadeIn, scaleIn, countUp, glowPulse } from '@/shared/motion/variants';
 
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
 import { getDisciplineIcon } from '@/shared/icons/registry';

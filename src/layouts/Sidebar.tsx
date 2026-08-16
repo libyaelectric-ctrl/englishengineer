@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { cn } from '@/shared/utils/cn';
+import { motion, AnimatePresence } from 'motion/react';
+import { slideLeft, fadeIn, fadeOut, staggerContainer, staggerItem, cardHover, iconHover } from '@/shared/motion/variants';
 
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
@@ -110,29 +112,37 @@ export const Sidebar = () => {
 
   return (
     <>
-      {isSidebarOpen && (
-        <div
-          role="button"
-          tabIndex={0}
-          className="fixed inset-0 z-30 bg-foreground/10 backdrop-blur-[1px] lg:hidden"
-          onClick={toggleSidebar}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              toggleSidebar();
-            }
-          }}
-          aria-label="Close sidebar"
-        />
-      )}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div
+            role="button"
+            tabIndex={0}
+            className="fixed inset-0 z-30 bg-foreground/10 backdrop-blur-[1px] lg:hidden"
+            onClick={toggleSidebar}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                toggleSidebar();
+              }
+            }}
+            aria-label="Close sidebar"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          />
+        )}
+      </AnimatePresence>
 
-      <aside
+      <motion.aside
         data-testid="app-sidebar"
         role="navigation"
         aria-label="Main navigation"
         className={cn(
-          'fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-border-hover bg-surface transition-transform lg:static lg:flex lg:translate-x-0',
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          'fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-border-hover bg-surface lg:static lg:flex lg:translate-x-0'
         )}
+        initial={false}
+        animate={{ x: isSidebarOpen ? 0 : -280 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 40 }}
       >
         <div className="flex h-screen flex-col overflow-hidden bg-surface">
           {/* Logo */}
@@ -231,10 +241,15 @@ export const Sidebar = () => {
                   <span className="absolute right-3 top-3 h-1.5 w-1.5 rounded-full bg-success" />
                 </button>
 
+                <AnimatePresence>
                 {notificationsOpen && (
-                  <div
+                  <motion.div
                     role="status"
                     className="absolute bottom-full left-0 right-0 z-50 mb-2 overflow-hidden rounded-[4px] border border-border-soft bg-surface shadow-lg"
+                    initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 35 }}
                   >
                     <div className="flex items-center justify-between border-b border-border-soft px-4 py-3">
                       <div>
@@ -293,7 +308,7 @@ export const Sidebar = () => {
                       </span>
                       <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-copy transition-transform group-hover:translate-x-0.5" />
                     </button>
-                  </div>
+                  </motion.div>
                 )}
               </div>
 
