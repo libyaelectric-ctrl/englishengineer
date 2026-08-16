@@ -4,13 +4,7 @@ import { motion } from 'motion/react';
 
 import { type ReactNode } from 'react';
 
-import {
-  listItem,
-  staggerChildren,
-  staggerContainer,
-  staggerItem,
-  staggerItemFast,
-} from './variants';
+import { listItem, staggerChildren, staggerItem, staggerItemFast } from './variants';
 
 interface MotionStaggerProps {
   children: ReactNode;

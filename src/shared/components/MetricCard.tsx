@@ -1,15 +1,12 @@
 import { ArrowDownRight, ArrowUpRight, LucideIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 
-import { type HTMLAttributes, memo } from 'react';
+import { memo } from 'react';
 
 import { cardHover, countUp, iconHover } from '@/shared/motion/variants';
 import { cn } from '@/shared/utils/cn';
 
-interface MetricCardProps extends Omit<
-  HTMLAttributes<HTMLDivElement>,
-  'onDrag' | 'onDragStart' | 'onDragEnd' | 'onDragEnter' | 'onDragLeave' | 'onDragOver' | 'onDrop'
-> {
+interface MetricCardProps {
   label: string;
   value: string | number;
   icon: LucideIcon;
@@ -17,6 +14,8 @@ interface MetricCardProps extends Omit<
   trendDirection?: 'up' | 'down' | 'neutral';
   statusColor?:
     'primary' | 'emerald' | 'cyan' | 'amber' | 'rose' | 'success' | 'warning' | 'danger';
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 export const MetricCard = memo<MetricCardProps>(
@@ -28,7 +27,7 @@ export const MetricCard = memo<MetricCardProps>(
     trendDirection = 'up',
     statusColor = 'primary',
     className,
-    ...props
+    style,
   }) => {
     const iconColors: Record<string, string> = {
       primary: 'text-foreground bg-surface-hover',
@@ -53,7 +52,7 @@ export const MetricCard = memo<MetricCardProps>(
         whileHover="hover"
         whileTap="tap"
         className={cn('group relative overflow-hidden p-5', className)}
-        {...props}
+        style={style}
       >
         <div className="flex min-w-0 items-start justify-between gap-3">
           <div className="min-w-0 flex-1 space-y-2">
