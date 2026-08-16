@@ -5,7 +5,6 @@ import * as Sentry from '@sentry/react';
 import { RouterProvider } from 'react-router-dom';
 
 import { ToastContainer } from '@/shared/components/Toast';
-import { YiboMascot } from '@/shared/components/YiboMascot';
 
 import { ThemeProvider } from '@/features/theme/ThemeProvider';
 
@@ -16,7 +15,6 @@ export default function App() {
         <AppProvider>
           <RouterProvider router={router} />
           <ToastContainer />
-          <YiboMascot />
         </AppProvider>
       </ThemeProvider>
     </Sentry.ErrorBoundary>
