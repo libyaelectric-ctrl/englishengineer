@@ -1,12 +1,12 @@
 import { ArrowLeft, Menu, Moon, Sun, X } from 'lucide-react';
 
-import { useTheme } from '@/features/theme/ThemeProvider';
-
 import { useState } from 'react';
 
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { cn } from '@/shared/utils/cn';
+
+import { useTheme } from '@/features/theme/ThemeProvider';
 
 const links = [
   { label: 'Features', href: '/#features' },
@@ -60,7 +60,7 @@ export const PublicLayout = () => {
               aria-label="EngVox home"
             >
               <img
-                src="/brand/logo.webp"
+                src="/brand/logo.svg"
                 alt="EngVox"
                 className="h-9 w-9 rounded-[var(--radius-card)]"
               />
