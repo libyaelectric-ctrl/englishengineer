@@ -201,6 +201,15 @@ const OnboardingPage = () => {
     <main className="mx-auto max-w-5xl py-3 sm:py-6">
       <section className="overflow-hidden rounded-[var(--radius-card)] border border-border-soft bg-surface">
         <header className="border-b border-border-soft bg-surface-hover px-5 py-5 sm:px-7">
+            <div className="flex items-center gap-3">
+              <Link
+                to="/welcome"
+                className="inline-flex items-center gap-2 text-sm font-medium text-underline text-primary hover:text-primary-foreground"
+              >
+                {translate('onboarding.welcome')}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           <div className="flex items-start gap-3 sm:items-center">
             <Compass className="h-5 w-5 text-primary" />
             <div>

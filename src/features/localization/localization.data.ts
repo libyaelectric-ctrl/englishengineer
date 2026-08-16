@@ -101,6 +101,7 @@ export const UI_TRANSLATIONS: Record<
     'vocabulary.typeTurkishMeaning': 'Type Turkish meaning:',
     'curriculum.recommendedToday': 'Recommended Today',
     'onboarding.title': 'Set up your learning path',
+    'onboarding.welcome': 'Welcome',
     'landing.proofreaderAnalyzeButton': 'Analyze & Refine Technical Correspondence',
     'login.ssoDesc':
       "Enter your organization's email domain or provider ID to redirect to SAML SSO.",
@@ -881,6 +882,7 @@ export const UI_TRANSLATIONS: Record<
     'vocabulary.typeTurkishMeaning': 'Türkçe anlamını yazın:',
     'curriculum.recommendedToday': 'Bugün Önerilen',
     'onboarding.title': 'Öğrenme yolunuzu belirleyin',
+    'onboarding.welcome': 'Hoş geldiniz',
     'landing.proofreaderAnalyzeButton': 'Teknik Yazışmaların Analizi ve İyileştirilmesi',
     'login.ssoDesc':
       "SAML SSO'ya yönlendirmek için kuruluşunuzun e-posta alan adını veya sağlayıcı kimliğini girin.",

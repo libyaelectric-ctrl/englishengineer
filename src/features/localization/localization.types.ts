@@ -98,6 +98,7 @@ export type TranslationKey =
   | 'translator.alternativeMeanings'
   // Onboarding
   | 'onboarding.title'
+  | 'onboarding.welcome'
   | 'onboarding.selectDiscipline'
   | 'onboarding.selectLanguage'
   | 'onboarding.professionalTrack'
