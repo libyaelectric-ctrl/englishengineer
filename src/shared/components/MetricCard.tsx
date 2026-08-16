@@ -3,6 +3,8 @@ import { ArrowDownRight, ArrowUpRight, LucideIcon } from 'lucide-react';
 import { type HTMLAttributes, memo } from 'react';
 
 import { cn } from '@/shared/utils/cn';
+import { motion } from 'motion/react';
+import { cardHover, iconHover } from '@/shared/motion/variants';
 
 import { Card } from './Card';
 
@@ -45,29 +47,44 @@ export const MetricCard = memo<MetricCardProps>(
     };
 
     return (
-      <Card className={cn('group relative overflow-hidden p-5', className)} {...props}>
+      <motion.div
+        variants={cardHover}
+        whileHover="hover"
+        whileTap="tap"
+        className={cn('group relative overflow-hidden p-5', className)}
+        {...props}
+      >
         <div className="flex min-w-0 items-start justify-between gap-3">
           <div className="min-w-0 flex-1 space-y-2">
             <p className="text-xs text-muted-copy">{label}</p>
-            <h3 className="text-2xl font-bold text-foreground tabular-nums">{value}</h3>
+            <motion.h3 variants={countUp} className="text-2xl font-bold text-foreground tabular-nums">{value}</motion.h3>
             {trend && (
-              <p className={cn('flex items-center gap-1 text-xs', trendTextColors[trendDirection])}>
-                {trendDirection === 'up' && <ArrowUpRight className="h-3 w-3" />}
-                {trendDirection === 'down' && <ArrowDownRight className="h-3 w-3" />}
+              <motion.p
+                className={cn('flex items-center gap-1 text-xs', trendTextColors[trendDirection])}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+              >
+                {trendDirection === 'up' && <motion.span variants={iconHover} animate={{ rotate: [-10, 10, -10] }} transition={{ duration: 1.5, repeat: Infinity }}><ArrowUpRight className="h-3 w-3" /></motion.span>}
+                {trendDirection === 'down' && <motion.span variants={iconHover} animate={{ rotate: [10, -10, 10] }} transition={{ duration: 1.5, repeat: Infinity }}><ArrowDownRight className="h-3 w-3" /></motion.span>}
                 {trend}
               </p>
             )}
           </div>
-          <div
+          <motion.div
             className={cn(
               'flex h-10 w-10 items-center justify-center rounded-[4px]',
               iconColors[statusColor]
             )}
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
           >
-            <Icon className="h-5 w-5" />
-          </div>
+            <motion.span variants={iconHover} whileHover="hover" whileTap="tap">
+              <Icon className="h-5 w-5" />
+            </motion.span>
+          </motion.div>
         </div>
-      </Card>
+      </motion.div>
     );
   }
 );
