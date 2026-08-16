@@ -40,7 +40,13 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
           {/* ── Left: Logo ── */}
           <Link to="/" className="flex items-center gap-2 group cursor-pointer shrink-0">
             <div className="flex h-7 w-7 items-center justify-center rounded overflow-hidden transition-transform duration-200 group-hover:scale-105">
-              <img src="/brand/logo.svg" alt="EngVox" className="h-full w-full object-cover" />
+              <img
+                src="/brand/logo.svg"
+                alt="EngVox"
+                className="h-full w-full object-cover"
+                width="48"
+                height="48"
+              />
             </div>
             <div className="flex items-center gap-1.5">
               <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">

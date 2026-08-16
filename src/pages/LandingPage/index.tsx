@@ -14,15 +14,15 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
-import { getDisciplineIcon } from '@/shared/icons/registry';
 import { getPublicPageCopy } from '@/shared/data/public-page-copy';
+import { getDisciplineIcon } from '@/shared/icons/registry';
 
 import { useLocalizationStore } from '@/features/localization';
 
 import { Footer } from './Footer';
-import { getLandingTranslations } from './landing-i18n';
 import { Navbar } from './Navbar';
 import { PricingSection } from './PricingSection';
+import { getLandingTranslations } from './landing-i18n';
 
 const FEATURES = [
   { icon: BookOpen, key: 'vocabulary', color: 'blue' },
@@ -71,7 +71,7 @@ export const LandingPage = () => {
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               to="/welcome"
-              className="flex items-center gap-2 rounded-[var(--radius-card)] bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-white shadow-lg hover:bg-[var(--color-primary-hover)] transition-all"
+              className="flex items-center gap-2 rounded-[var(--radius-card)] bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-[var(--color-primary-foreground)] shadow-lg hover:bg-[var(--color-primary-hover)] transition-all"
             >
               {t.ctaSelectBranch}
               <ArrowRight className="h-4 w-4" />
@@ -132,27 +132,29 @@ export const LandingPage = () => {
             </p>
           </div>
 
-<div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
-                {ENGINEERING_DISCIPLINES.map((id) => (
-                  <div
-                    key={id}
-                    className="flex flex-col items-center gap-2 rounded-[var(--radius-card)] border border-[var(--color-border-soft)] bg-[var(--background)] p-4 text-center transition-all hover:border-[var(--color-primary)]/40"
-                  >
-                    {(() => {
-                      const DisciplineIcon = getDisciplineIcon(id);
-                      return (
-                        <DisciplineIcon
-                          className="h-6 w-6 text-[var(--color-primary)]"
-                          aria-hidden="true"
-                        />
-                      );
-                    })()}
-                    <span className="text-xs font-semibold">{translate(`discipline.${id}` as Parameters<typeof translate>[0])}</span>
-                  </div>
-                ))}
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+            {ENGINEERING_DISCIPLINES.map((id) => (
+              <div
+                key={id}
+                className="flex flex-col items-center gap-2 rounded-[var(--radius-card)] border border-[var(--color-border-soft)] bg-[var(--background)] p-4 text-center transition-all hover:border-[var(--color-primary)]/40"
+              >
+                {(() => {
+                  const DisciplineIcon = getDisciplineIcon(id);
+                  return (
+                    <DisciplineIcon
+                      className="h-6 w-6 text-[var(--color-primary)]"
+                      aria-hidden="true"
+                    />
+                  );
+                })()}
+                <span className="text-xs font-semibold">
+                  {translate(`discipline.${id}` as Parameters<typeof translate>[0])}
+                </span>
               </div>
+            ))}
+          </div>
 
-<div className="mt-8 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-6">
+          <div className="mt-8 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-6">
             {FEATURES.map(({ icon: Icon, key, color }) => (
               <div
                 key={key}
