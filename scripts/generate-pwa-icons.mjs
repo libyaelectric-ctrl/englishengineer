@@ -147,6 +147,5 @@ mkdirSync(dist, { recursive: true });
 for (const size of SIZES) {
   const file = join(dist, `icon-${size}.png`);
   writeFileSync(file, render(size));
-  // eslint-disable-next-line no-console
   console.log(`Generated ${file}`);
 }
