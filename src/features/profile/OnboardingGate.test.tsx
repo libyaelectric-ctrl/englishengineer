@@ -4,9 +4,10 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { MemoryRouter, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 
+import { storage } from '@/shared/storage';
+
 import { useAuthStore } from '@/features/auth';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
-import { storage } from '@/shared/storage';
 
 import { OnboardingGate } from './OnboardingGate';
 
@@ -33,8 +34,6 @@ const renderGate = (initialPath: string) =>
             </OnboardingGate>
           }
         />
-        <Route path="/onboarding" element={<Onboarding />} />
-        <Route path="/onboarding/:step" element={<Onboarding />} />
         <Route path="/welcome" element={<Onboarding />} />
       </Routes>
     </MemoryRouter>
@@ -71,7 +70,7 @@ const renderFlow = (initialPath: string) =>
             </OnboardingGate>
           }
         >
-          <Route path="/onboarding" element={<FlowOnboarding />} />
+          <Route path="/welcome" element={<FlowOnboarding />} />
           <Route path="/curriculum" element={<Guarded />} />
         </Route>
       </Routes>
@@ -123,7 +122,7 @@ describe('OnboardingGate', () => {
     expect(screen.queryByText('ONBOARDING PAGE')).not.toBeInTheDocument();
   });
 
-  it('redirects to /onboarding when onboarding is incomplete', async () => {
+  it('redirects to /welcome when onboarding is incomplete', async () => {
     renderGate('/dashboard');
     expect(await screen.findByText('ONBOARDING PAGE')).toBeInTheDocument();
     expect(screen.queryByText('GUARDED CONTENT')).not.toBeInTheDocument();
@@ -134,11 +133,6 @@ describe('OnboardingGate', () => {
     expect(await screen.findByText('ONBOARDING PAGE')).toBeInTheDocument();
   });
 
-  it('exempts the /onboarding setup path', async () => {
-    renderGate('/onboarding');
-    expect(await screen.findByText('ONBOARDING PAGE')).toBeInTheDocument();
-  });
-
   it('exempts the /welcome setup path', async () => {
     renderGate('/welcome');
     expect(await screen.findByText('ONBOARDING PAGE')).toBeInTheDocument();
@@ -146,7 +140,7 @@ describe('OnboardingGate', () => {
 
   it('reflects onboarding completion on the same mounted gate (no stale cache)', async () => {
     const user = userEvent.setup();
-    renderFlow('/onboarding');
+    renderFlow('/welcome');
     await user.click(screen.getByRole('button', { name: 'COMPLETE ONBOARDING' }));
 
     expect(await screen.findByText('GUARDED CONTENT')).toBeInTheDocument();

@@ -1,4 +1,4 @@
-import { ArrowRight, Globe } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 import { useState } from 'react';
 
@@ -26,19 +26,8 @@ export const WelcomeScreen = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const updateProfile = useAuthStore((state) => state.updateProfile);
 
-  const [step, setStep] = useState<'discipline' | 'language'>('discipline');
   const [selectedDiscipline, setSelectedDiscipline] = useState<EngineeringDiscipline | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<SupportedInterfaceLanguage>('tr');
-
-  const handleDisciplineSelect = (id: EngineeringDiscipline) => {
-    setSelectedDiscipline(id);
-  };
-
-  const handleContinueToLanguage = () => {
-    if (selectedDiscipline) {
-      setStep('language');
-    }
-  };
 
   const handleFinish = async () => {
     if (selectedDiscipline && currentUser) {
@@ -58,12 +47,19 @@ export const WelcomeScreen = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl">
-        {step === 'discipline' ? (
-          <div className="space-y-6">
-            <div className="text-center space-y-2">
-              <h1 className="text-2xl font-bold text-foreground">{translate('onboarding.selectDiscipline')}</h1>
-              <p className="text-sm text-muted-copy">
+      <div className="w-full max-w-5xl space-y-8">
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl font-bold text-foreground">{translate('onboarding.title')}</h1>
+          <p className="text-sm text-muted-copy">{translate('onboarding.selectDisciplineDesc')}</p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <section className="space-y-4">
+            <div className="text-center space-y-1">
+              <h2 className="text-lg font-semibold text-foreground">
+                {translate('onboarding.selectDiscipline')}
+              </h2>
+              <p className="text-xs text-muted-copy">
                 {translate('onboarding.selectDisciplineDesc')}
               </p>
             </div>
@@ -76,7 +72,7 @@ export const WelcomeScreen = () => {
                 return (
                   <button
                     key={id}
-                    onClick={() => handleDisciplineSelect(id)}
+                    onClick={() => setSelectedDiscipline(id)}
                     className={`flex items-center gap-3 rounded-[4px] border p-4 text-left transition-all cursor-pointer ${
                       isSelected
                         ? 'border-primary bg-primary/5 text-primary shadow-sm'
@@ -100,29 +96,20 @@ export const WelcomeScreen = () => {
                 );
               })}
             </div>
+          </section>
 
-            <button
-              onClick={handleContinueToLanguage}
-              disabled={!selectedDiscipline}
-              className="w-full flex items-center justify-center gap-2 rounded-[4px] bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all"
-            >
-              {translate('onboarding.continue')}
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            <div className="text-center space-y-2">
-              <Globe className="h-8 w-8 mx-auto text-primary" />
-              <h1 className="text-2xl font-bold text-foreground">{translate('onboarding.selectLanguageTitle')}</h1>
-              <p className="text-sm text-muted-copy">{translate('onboarding.selectLanguage')}</p>
+          <section className="space-y-4">
+            <div className="text-center space-y-1">
+              <h2 className="text-lg font-semibold text-foreground">
+                {translate('onboarding.selectLanguageTitle')}
+              </h2>
+              <p className="text-xs text-muted-copy">{translate('onboarding.selectLanguage')}</p>
+              <p className="text-xs text-muted-copy">
+                {translate('onboarding.englishFixedTarget')}
+              </p>
             </div>
 
-            <div className="text-center mb-4">
-              <p className="text-xs text-muted-copy">{translate('onboarding.englishFixedTarget')}</p>
-            </div>
-
-            <div className="grid grid-cols-3 gap-3 max-h-[400px] overflow-y-auto">
+            <div className="grid grid-cols-3 gap-3 max-h-[420px] overflow-y-auto">
               {INTERFACE_LANGUAGES.filter((l) => l.available && l.id !== 'en').map((lang) => {
                 const isSelected = selectedLanguage === lang.id;
                 return (
@@ -145,24 +132,17 @@ export const WelcomeScreen = () => {
                 );
               })}
             </div>
+          </section>
+        </div>
 
-            <div className="flex gap-3">
-              <button
-                onClick={() => setStep('discipline')}
-                className="flex-1 rounded-[4px] border border-border-soft bg-surface py-3 text-sm font-semibold text-foreground cursor-pointer transition-all hover:bg-surface-hover"
-              >
-                {translate('onboarding.back')}
-              </button>
-              <button
-                onClick={handleFinish}
-                className="flex-1 flex items-center justify-center gap-2 rounded-[4px] bg-primary py-3 text-sm font-semibold text-primary-foreground cursor-pointer transition-all"
-              >
-                {translate('onboarding.start')}
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        )}
+        <button
+          onClick={handleFinish}
+          disabled={!selectedDiscipline}
+          className="w-full flex items-center justify-center gap-2 rounded-[4px] bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer transition-all"
+        >
+          {translate('onboarding.start')}
+          <ArrowRight className="h-4 w-4" />
+        </button>
       </div>
     </div>
   );
