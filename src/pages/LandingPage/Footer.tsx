@@ -13,7 +13,7 @@ export function Footer({ className = '' }: { className?: string }) {
           <div className="flex items-center gap-3">
             <div className="relative flex h-8 w-8 items-center justify-center rounded shadow-sm overflow-hidden">
               <img
-                src="/brand/logo.webp"
+                src="/brand/logo-sm.webp"
                 alt="EngVox Logo"
                 className="h-full w-full object-cover"
               />

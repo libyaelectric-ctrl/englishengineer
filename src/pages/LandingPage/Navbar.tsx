@@ -1,11 +1,10 @@
 import { PRODUCT_VERSION } from '@/config/product.config';
 import { ArrowRight, Moon, Sun } from 'lucide-react';
 
-import { useTheme } from '@/features/theme/ThemeProvider';
-
 import { Link, useLocation } from 'react-router-dom';
 
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
+import { useTheme } from '@/features/theme/ThemeProvider';
 
 interface NavbarProps {
   onDemoClick?: () => void;
@@ -25,7 +24,7 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
           {/* ── Left: Logo ── */}
           <Link to="/" className="flex items-center gap-2 group cursor-pointer shrink-0">
             <div className="flex h-7 w-7 items-center justify-center rounded overflow-hidden transition-transform duration-200 group-hover:scale-105">
-              <img src="/brand/logo.webp" alt="EngVox" className="h-full w-full object-cover" />
+              <img src="/brand/logo-sm.webp" alt="EngVox" className="h-full w-full object-cover" />
             </div>
             <div className="flex items-center gap-1.5">
               <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">

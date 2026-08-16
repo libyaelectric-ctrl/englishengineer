@@ -150,7 +150,7 @@ export const Sidebar = () => {
           {/* Logo */}
           <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-border-soft px-3">
             <div className="flex items-center gap-2">
-              <img src="/brand/logo.webp" alt="EngVox" className="h-7 w-7 rounded-[4px]" />
+              <img src="/brand/logo-sm.webp" alt="EngVox" className="h-7 w-7 rounded-[4px]" />
               <div className="flex flex-col leading-tight">
                 <span className="text-sm font-bold text-foreground">EngVox</span>
                 <span className="text-[9px] font-bold text-primary font-mono">
