@@ -4,7 +4,7 @@ interface LogMeta {
   [key: string]: unknown;
 }
 
-const LOG_LEVELS: Record<string, number> = {
+const _LOG_LEVELS: Record<string, number> = {
   debug: 0,
   info: 1,
   warn: 2,
@@ -43,7 +43,7 @@ export interface Logger {
 }
 
 // Helper to format log messages with metadata
-const formatLogMessage = (level: string, message: string, meta: LogMeta = {}): object => ({
+const _formatLogMessage = (level: string, message: string, meta: LogMeta = {}): object => ({
   timestamp: new Date().toISOString(),
   level,
   message,
