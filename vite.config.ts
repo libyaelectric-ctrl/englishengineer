@@ -1,7 +1,5 @@
 ﻿import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-// @ts-expect-error - critters types not properly exported
-import critters from 'critters';
 import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { fileURLToPath } from 'url';
