@@ -143,7 +143,7 @@ const LessonRunnerPage = () => {
     return () => {
       active = false;
     };
-  }, [discipline, levelId, profile.skills.vocabulary.cefrBand]);
+  }, [discipline, levelId, profile.skills.vocabulary.cefrBand, learningLanguage]);
 
   const currentQ = questions[currentIndex];
 

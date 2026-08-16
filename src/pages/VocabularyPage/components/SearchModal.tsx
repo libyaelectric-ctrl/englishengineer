@@ -86,7 +86,6 @@ export function SearchModal({
                 }}
                 placeholder="Type a word in English or your language..."
                 className="w-full rounded-[var(--radius-card)] border border-border-soft bg-surface px-3 py-2 text-sm text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
-                autoFocus
               />
               <button
                 type="submit"
