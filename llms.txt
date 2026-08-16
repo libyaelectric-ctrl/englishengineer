@@ -1,0 +1,7 @@
+# EngVox
+
+This is EngVox, an engineering English platform covering 10 disciplines.
+
+Platform features include AI coaching, vocabulary practice, grammar drills, and offline-first usage.
+
+Visit https://eng-vox.vercel.app for more information.
