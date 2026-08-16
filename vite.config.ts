@@ -8,7 +8,7 @@ import { compression } from 'vite-plugin-compression2';
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
-const VENDOR_CHUNKS: [string, string][] = [
+const VENDOR_CHUNKS: [string, ...string[]][] = [
   ['react-dom', 'vendor-react-dom'],
   ['react-router', 'vendor-router'],
   ['@supabase', 'vendor-supabase'],
@@ -17,8 +17,7 @@ const VENDOR_CHUNKS: [string, string][] = [
   ['zustand', 'vendor-state'],
   ['lucide', 'vendor-icons'],
   ['isomorphic-dompurify', 'vendor-sanitize'],
-  ['clsx', 'vendor-utils'],
-  ['tailwind', 'vendor-utils'],
+  ['clsx', 'tailwind', 'vendor-utils'],
   ['react-virtuoso', 'vendor-virtual'],
   ['react-error-boundary', 'vendor-error'],
 ];
@@ -79,6 +78,16 @@ export default defineConfig(() => {
             if (id.includes('/data/') && id.includes('by-level/'))
               return getDataChunk(id) ?? 'seed-data';
             if (id.includes('/data/') || id.includes('seed')) return 'seed-data';
+            if (id.includes('/pages/LandingPage')) return 'page-landing';
+            if (id.includes('/pages/DashboardPage')) return 'page-dashboard';
+            if (id.includes('/pages/OnboardingPage')) return 'page-onboarding';
+            if (id.includes('/pages/CurriculumPage')) return 'page-curriculum';
+            if (id.includes('/pages/VocabularyPage')) return 'page-vocabulary';
+            if (id.includes('/pages/GrammarPage')) return 'page-grammar';
+            if (id.includes('/pages/ReadingPage')) return 'page-reading';
+            if (id.includes('/pages/WritingPage')) return 'page-writing';
+            if (id.includes('/pages/SpeakingPage')) return 'page-speaking';
+            if (id.includes('/pages/ListeningPage')) return 'page-listening';
           },
         },
         onwarn(warning, warn) {
