@@ -62,9 +62,19 @@ const safeEqual = (a: string, b: string): boolean => {
 };
 
 /**
+ * Standard Webhooks secret is `whsec_<base64-key>`; the HMAC key is the
+ * base64-decoded portion after the `whsec_` prefix (not the literal string).
+ */
+const hmacKeyFromSecret = (secret: string): Buffer => {
+  const raw = secret.startsWith('whsec_') ? secret.slice('whsec_'.length) : secret;
+  return Buffer.from(raw, 'base64');
+};
+
+/**
  * Standard Webhooks signature verification:
- * HMAC-SHA256(`${webhook-id}.${webhook-timestamp}.${rawPayload}`, secret),
- * compared against the `webhook-signature` header (optionally `v1,<sig>`).
+ * HMAC-SHA256(`${webhook-id}.${webhook-timestamp}.${rawPayload}`, decodedKey),
+ * compared against the `webhook-signature` header (`v1,<base64>`, possibly
+ * space-separated when multiple signatures are sent).
  * Returns the verified webhook id used for idempotency.
  */
 const verifyDodoSignature = (
@@ -85,12 +95,18 @@ const verifyDodoSignature = (
   }
 
   const message = `${id}.${timestamp}.${rawBody.toString('utf8')}`;
-  const expected = createHmac('sha256', secret).update(message).digest('base64');
-  // Standard Webhooks formats the header as `v1,<base64>`, but accept a bare signature too.
-  const parts = signatureHeader.split(',').map((part) => part.trim());
-  const provided = parts[parts.length - 1] ?? '';
+  const expected = createHmac('sha256', hmacKeyFromSecret(secret)).update(message).digest('base64');
 
-  if (!safeEqual(expected, provided)) {
+  // Standard Webhooks sends `v1,<base64>` (possibly several, space-separated).
+  const accepted = signatureHeader
+    .split(' ')
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => part.split(','))
+    .filter((parts) => parts.length === 2)
+    .map((parts) => parts[1]);
+
+  if (!accepted.some((provided) => safeEqual(expected, provided))) {
     throw new ApiError(
       400,
       'invalid_webhook_signature',
