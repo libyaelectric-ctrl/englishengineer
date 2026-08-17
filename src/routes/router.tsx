@@ -34,7 +34,6 @@ const Curriculum = lazy(() => import('@/pages/CurriculumPage'));
 const Tools = lazy(() => import('@/pages/ToolsPage'));
 const Progress = lazy(() => import('@/pages/ProgressPage'));
 const NotFound = lazy(() => import('@/pages/NotFoundPage'));
-const Login = lazy(() => import('@/pages/LoginPage'));
 const Welcome = lazy(() => import('@/pages/WelcomePage'));
 const Landing = lazy(() => import('@/pages/LandingPage'));
 const Pricing = lazy(() => import('@/pages/PricingPage'));
@@ -235,12 +234,20 @@ export const router = createBrowserRouter([
   {
     path: '/login',
     errorElement: <RouteErrorPage />,
-    element: withSuspense(Login),
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <ClerkAuthPage mode="sign-in" />
+      </Suspense>
+    ),
   },
   {
     path: '/signup',
     errorElement: <RouteErrorPage />,
-    element: withSuspense(Login),
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <ClerkAuthPage mode="sign-up" />
+      </Suspense>
+    ),
   },
   {
     path: '/auth/callback',
