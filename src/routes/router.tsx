@@ -9,6 +9,7 @@ import { LoadingState } from '@/shared/components/LoadingState';
 
 import { AuthGuard } from '@/features/auth/AuthGuard';
 import { RequireAdminRole } from '@/features/auth/RequireAdminRole';
+import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
 import { OnboardingGate } from '@/features/profile';
 
 import { RouteErrorPage } from './RouteErrorPage';
@@ -47,6 +48,7 @@ const Translator = lazy(() => import('@/pages/TranslatorPage'));
 const LearningPath = lazy(() => import('@/pages/LearningPathPage'));
 const LessonRunner = lazy(() => import('@/pages/LessonRunnerPage'));
 const AuthCallbackPage = lazy(() => import('@/pages/AuthCallbackPage'));
+const ClerkAuthPage = lazy(() => import('@/pages/ClerkAuthPage'));
 
 export const router = createBrowserRouter([
   {
@@ -244,6 +246,24 @@ export const router = createBrowserRouter([
     path: '/auth/callback',
     errorElement: <RouteErrorPage />,
     element: withSuspense(AuthCallbackPage),
+  },
+  {
+    path: CLERK_SIGN_IN_URL,
+    errorElement: <RouteErrorPage />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <ClerkAuthPage mode="sign-in" />
+      </Suspense>
+    ),
+  },
+  {
+    path: CLERK_SIGN_UP_URL,
+    errorElement: <RouteErrorPage />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <ClerkAuthPage mode="sign-up" />
+      </Suspense>
+    ),
   },
   {
     path: '*',
