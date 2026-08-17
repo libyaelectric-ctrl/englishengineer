@@ -56,8 +56,8 @@ describe('BillingStatusPanel', () => {
     {
       name: 'junior',
       subscription: createSubscription('none'),
-      statusLabel: 'Junior',
-      message: 'No paid subscription is active. Junior plan limits apply.',
+      statusLabel: 'Free',
+      message: 'No paid subscription is active. Free plan limits apply.',
     },
     {
       name: 'active',
@@ -105,10 +105,10 @@ describe('BillingStatusPanel', () => {
 
     expect(
       screen.getByText(
-        'Billing backend is not connected. This is local Junior access, not a verified paid subscription.'
+        'Billing backend is not connected. This is local Free access, not a verified paid subscription.'
       )
     ).toBeVisible();
-    expect(screen.getByText('Junior entitlements')).toBeVisible();
+    expect(screen.getByText('Free entitlements')).toBeVisible();
     expect(screen.getByText('Local billing mode')).toBeVisible();
     expect(screen.getByRole('button', { name: /manage subscription/i })).toBeDisabled();
   });

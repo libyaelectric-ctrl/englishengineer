@@ -7,11 +7,19 @@ import {
 } from './billing.types';
 
 export const isSubscriptionActive = (subscription: SubscriptionSnapshot): boolean =>
+  subscription.planId === 'free' ||
   subscription.planId === 'junior' ||
   subscription.status === 'active' ||
   subscription.status === 'trialing';
 
-const PLAN_HIERARCHY: BillingPlanId[] = ['junior', 'senior', 'specialist', 'master', 'team'];
+const PLAN_HIERARCHY: BillingPlanId[] = [
+  'free',
+  'junior',
+  'senior',
+  'specialist',
+  'master',
+  'team',
+];
 
 const findMinimumPlanForFeature = (feature: BillingFeature): BillingPlanId | null => {
   for (const planId of PLAN_HIERARCHY) {
@@ -28,7 +36,7 @@ export const canAccessFeature = (
     return {
       allowed: false,
       reason: 'Subscription is not active.',
-      requiredPlan: 'junior',
+      requiredPlan: 'free',
     };
   }
 
@@ -50,6 +58,14 @@ export const canAccessFeature = (
     requiredPlan,
   };
 };
+
+/**
+ * True when the user is on the free tier (plan 'free', or the legacy
+ * 'junior' + status 'none' fallback the app used before 'free' existed).
+ */
+export const isFreeTier = (subscription: SubscriptionSnapshot): boolean =>
+  subscription.planId === 'free' ||
+  (subscription.planId === 'junior' && subscription.status === 'none');
 
 export const canUseAICoach = (
   subscription: SubscriptionSnapshot,

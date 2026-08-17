@@ -133,7 +133,7 @@ export const BillingPlanCards = ({
   voiceMinutesUsed,
 }: BillingPlanCardsProps) => {
   const isPro = subscription.planId === 'senior';
-  const isFree = subscription.planId === 'junior';
+  const isFree = subscription.planId === 'free' || subscription.planId === 'junior';
   const isMaxTier = subscription.planId === 'master' || subscription.planId === 'team';
 
   return (

@@ -11,6 +11,7 @@ interface WorkspaceSelectorProps {
 }
 
 const PLAN_WORKSPACE_LIMIT: Record<BillingPlanId, number | null> = {
+  free: 1,
   junior: 1,
   senior: 2,
   specialist: 3,

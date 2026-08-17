@@ -34,13 +34,31 @@ describe('billing entitlements', () => {
     expect(isSubscriptionActive(createFreeSubscription())).toBe(true);
   });
 
+  it('distinguishes the free tier from a paid Junior plan', () => {
+    const free = createFreeSubscription();
+    const paidJunior = { ...withPlan('junior'), status: 'active' as const };
+
+    // Free tier: core vocabulary/grammar + analytics, but no placement test
+    // and nothing paid.
+    expect(canAccessFeature(free, 'vocabulary').allowed).toBe(true);
+    expect(canAccessFeature(free, 'grammar').allowed).toBe(true);
+    expect(canAccessFeature(free, 'placementTest').allowed).toBe(false);
+    expect(canAccessFeature(free, 'learningHub').allowed).toBe(false);
+    expect(canAccessFeature(free, 'reading').allowed).toBe(false);
+
+    // Paid Junior unlocks the placement test.
+    expect(canAccessFeature(paidJunior, 'placementTest').allowed).toBe(true);
+    expect(canAccessFeature(paidJunior, 'learningHub').allowed).toBe(true);
+    expect(canAccessFeature(paidJunior, 'reading').allowed).toBe(false);
+  });
+
   it('blocks inactive paid subscription', () => {
     expect(isSubscriptionActive({ ...proSubscription, status: 'canceled' })).toBe(false);
   });
 
   describe('plan-based feature gating (cumulative tiers)', () => {
     it('gives Junior only the base modules', () => {
-      const junior = createFreeSubscription();
+      const junior = { ...createFreeSubscription(), planId: 'junior' as const };
       expect(canAccessFeature(junior, 'vocabulary').allowed).toBe(true);
       expect(canAccessFeature(junior, 'grammar').allowed).toBe(true);
       expect(canAccessFeature(junior, 'placementTest').allowed).toBe(true);
@@ -78,7 +96,7 @@ describe('billing entitlements', () => {
     });
 
     it('reports the minimum required plan when blocked', () => {
-      const junior = createFreeSubscription();
+      const junior = { ...createFreeSubscription(), planId: 'junior' as const };
       const result = canAccessFeature(junior, 'aiCoach');
       expect(result.allowed).toBe(false);
       expect(result.requiredPlan).toBe('master');
@@ -87,7 +105,7 @@ describe('billing entitlements', () => {
     it('blocks every feature for an inactive subscription', () => {
       const canceled = { ...withPlan('master'), status: 'canceled' as const };
       expect(canAccessFeature(canceled, 'vocabulary').allowed).toBe(false);
-      expect(canAccessFeature(canceled, 'vocabulary').requiredPlan).toBe('junior');
+      expect(canAccessFeature(canceled, 'vocabulary').requiredPlan).toBe('free');
     });
   });
 

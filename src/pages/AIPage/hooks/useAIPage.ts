@@ -39,7 +39,7 @@ const isUploadBlocked = (
   docLimit: number | 'unlimited',
   uploadedDocsCount: number
 ): string | null => {
-  if (planId === 'junior')
+  if (planId === 'free' || planId === 'junior')
     return 'Free plan accounts do not support document upload. Please upgrade to Pro.';
   if (docLimit !== 'unlimited' && uploadedDocsCount >= docLimit)
     return `Monthly document upload limit reached (${docLimit}/${docLimit}). Please upgrade to a higher tier.`;
@@ -54,7 +54,7 @@ const incrementDocCount = (current: number, setter: (n: number) => void): number
 };
 
 const computeDocLimit = (planId: string): number | 'unlimited' => {
-  if (planId === 'junior') return 0;
+  if (planId === 'free' || planId === 'junior') return 0;
   if (planId === 'senior') return 2;
   return 'unlimited';
 };
