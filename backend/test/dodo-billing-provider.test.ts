@@ -11,6 +11,9 @@ import type { DodoConfig } from '../types.js';
 
 const TEST_SECRET = 'whsec_dodo_test_secret';
 
+// Standard Webhooks: the HMAC key is the base64-decoded portion after `whsec_`.
+const TEST_HMAC_KEY = Buffer.from(TEST_SECRET.slice('whsec_'.length), 'base64');
+
 const makeConfig = (overrides: Partial<DodoConfig> = {}): DodoConfig => ({
   configured: true,
   apiKey: 'dodo_test_api_key',
@@ -49,7 +52,7 @@ const signWebhook = (
   id = 'msg_test_123',
   timestamp = '1720000000'
 ): { id: string; timestamp: string; signature: string } => {
-  const signature = createHmac('sha256', TEST_SECRET)
+  const signature = createHmac('sha256', TEST_HMAC_KEY)
     .update(`${id}.${timestamp}.${payload}`)
     .digest('base64');
   return { id, timestamp, signature: `v1,${signature}` };
@@ -199,6 +202,28 @@ describe('dodo billing provider — webhooks', () => {
     });
     return { repository, provider };
   };
+
+  test('rejects a signature produced with the literal whsec string (not the decoded key)', async () => {
+    // Regression: Standard Webhooks decodes the base64 key material after
+    // `whsec_` before HMAC. Signing with the literal string used to pass the
+    // old (self-consistent) verifier but never matches real Dodo deliveries.
+    const { provider } = buildProvider();
+    const payload = JSON.stringify({ type: 'payment.succeeded', data: {} });
+    const id = 'msg_literal_key_test';
+    const timestamp = '1720000000';
+    const literalSignature = createHmac('sha256', TEST_SECRET)
+      .update(`${id}.${timestamp}.${payload}`)
+      .digest('base64');
+
+    await assert.rejects(
+      provider.processWebhook(Buffer.from(payload), {
+        'webhook-id': id,
+        'webhook-timestamp': timestamp,
+        'webhook-signature': `v1,${literalSignature}`,
+      }),
+      (error: unknown) => error instanceof ApiError && error.code === 'invalid_webhook_signature'
+    );
+  });
 
   test('activates a subscription on subscription.updated', async () => {
     const { repository, provider } = buildProvider();
