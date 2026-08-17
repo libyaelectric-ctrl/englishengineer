@@ -14,6 +14,7 @@ interface AuthActions {
   demoLogin: () => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
+  setClerkUserSync: (fn: ((updates: Partial<UserProfile>) => Promise<void>) | null) => void;
   providerMode: 'local' | 'supabase';
 }
 
@@ -23,6 +24,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       currentUser: null,
       isAuthenticated: false,
       isLoading: true,
+      clerkUserSync: null,
       providerMode: AuthService.getProviderMode(),
 
       initialize: async () => {
@@ -107,6 +109,16 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           // stale 'auth_user' record that does not belong to this user).
           if (current?.id.startsWith('user_')) {
             set({ currentUser: { ...current, ...updates } });
+            // Persist display edits (e.g. displayName) to the Clerk account
+            // so they survive a reload/sign-in.
+            const sync = useAuthStore.getState().clerkUserSync;
+            if (sync && updates.displayName) {
+              try {
+                await sync(updates);
+              } catch (e) {
+                logger.w('Clerk profile sync failed.', e);
+              }
+            }
             return;
           }
           const updated = await AuthService.updateProfile(updates);
@@ -115,6 +127,10 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           logger.e('Auth profile update failed.', e);
           throw e;
         }
+      },
+
+      setClerkUserSync: (fn) => {
+        set({ clerkUserSync: fn });
       },
     }),
     { name: 'AuthStore' }

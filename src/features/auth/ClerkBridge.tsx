@@ -83,6 +83,18 @@ export const ClerkBridge = () => {
         });
         storage.setUserId(user.id);
       }
+
+      // Persist display-field edits (displayName -> first/last name) to the
+      // Clerk account so profile changes survive a reload/sign-in.
+      useAuthStore.getState().setClerkUserSync(async (updates) => {
+        if (!updates.displayName) return;
+        const parts = updates.displayName.trim().split(/\s+/).filter(Boolean);
+        await user.update({
+          firstName: parts[0] || '',
+          lastName: parts.slice(1).join(' '),
+        });
+      });
+
       bridgedUserId.current = user.id;
       return;
     }
@@ -98,6 +110,7 @@ export const ClerkBridge = () => {
         });
         storage.setUserId(null);
       }
+      useAuthStore.getState().setClerkUserSync(null);
     }
   }, [isLoaded, isSignedIn, user]);
 
