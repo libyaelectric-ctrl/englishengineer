@@ -2,6 +2,7 @@
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { describe, expect, it } from 'vitest';
+
 import { logger } from '@/shared/logger';
 
 const SRC_DIR = join(process.cwd(), 'src');
@@ -17,6 +18,32 @@ const getImportsFromFile = (filePath: string): string[] => {
   const content = readFileSync(filePath, 'utf-8');
   const importMatches = content.match(/from\s+['"]([^'"]+)['"]/g) || [];
   return importMatches.map((m) => m.replace(/from\s+['"]|['"]/g, ''));
+};
+
+/** True if `symbol` is imported from '@/core' or a '@/core/...' module anywhere in src. */
+const isCoreSymbolImported = (symbol: string): boolean => {
+  const checkDir = (dir: string): boolean => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (checkDir(fullPath)) return true;
+      } else if (
+        (entry.name.endsWith('.ts') || entry.name.endsWith('.tsx')) &&
+        !fullPath.startsWith(join(SRC_DIR, 'core'))
+      ) {
+        const fileContent = readFileSync(fullPath, 'utf-8');
+        const importBlocks =
+          fileContent.match(
+            /import(?:\s+type)?\s*\{[^}]+\}\s*from\s*['"]@\/core(?:\/[^'"]*)?['"]/g
+          ) || [];
+        if (importBlocks.some((block) => new RegExp(`\\b${symbol}\\b`).test(block))) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+  return checkDir(SRC_DIR);
 };
 
 describe('Architecture Rules', () => {
@@ -227,18 +254,30 @@ describe('Architecture Rules', () => {
   it('no unused exports in core index', () => {
     const coreIndexPath = join(SRC_DIR, 'core', 'index.ts');
     const content = readFileSync(coreIndexPath, 'utf-8');
-    const exportMatches = content.match(/export\s+\{[^}]+\}/g) || [];
 
-    // Should have at least some exports
-    expect(exportMatches.length).toBeGreaterThan(0);
+    // The root core/index.ts is an intentional placeholder (`export {};`) —
+    // core modules are consumed directly (e.g. `@/core/learning`). Whenever
+    // the index re-exports symbols, every one of them must be imported by the
+    // app so nothing exported from core goes unused.
+    const exportBlocks = content.match(/export\s+\{([^}]+)\}/g) || [];
+    const unused: string[] = [];
 
-    // Each export block should have at least one item
-    for (const block of exportMatches) {
-      const items = block
+    for (const block of exportBlocks) {
+      for (const raw of block
         .replace(/export\s+\{/, '')
         .replace(/\}/, '')
-        .split(',');
-      expect(items.length).toBeGreaterThan(0);
+        .split(',')) {
+        const symbol = raw
+          .trim()
+          .split(/\s+as\s+/)[0]
+          .trim();
+        if (!symbol) continue;
+        if (!isCoreSymbolImported(symbol)) {
+          unused.push(symbol);
+        }
+      }
     }
+
+    expect(unused).toEqual([]);
   });
 });
