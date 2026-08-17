@@ -1,12 +1,16 @@
 import { ArrowRight, BookOpen, Target, TrendingUp, Trophy } from 'lucide-react';
+
 import React, { useEffect } from 'react';
+
 import { Link, useNavigate } from 'react-router-dom';
+
 import { useLearningStore } from '@/core/learning';
+
 import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
+
 import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization/localization.types';
-import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,17 +22,8 @@ export const DashboardPage: React.FC = () => {
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       navigate('/login', { replace: true });
-      return;
     }
-
-    if (!isLoading && currentUser) {
-      const userId = currentUser.id || 'local-user';
-      const profile = LearningProfileRepository.getProfile(userId);
-      if (!currentUser.engineeringDiscipline || !profile.onboardingCompleted) {
-        navigate('/welcome', { replace: true });
-      }
-    }
-  }, [currentUser, isAuthenticated, isLoading, navigate]);
+  }, [isLoading, isAuthenticated, navigate]);
 
   if (isLoading) {
     return (
@@ -86,6 +81,11 @@ export const DashboardPage: React.FC = () => {
             <h1 className="mt-1 text-2xl font-extrabold text-[var(--foreground)]">
               {translate('dashboard.goodMorning')}, {currentUser.displayName}!
             </h1>
+            {currentUser.email ? (
+              <p className="mt-0.5 text-xs font-medium text-[var(--color-muted-copy)]">
+                {currentUser.email}
+              </p>
+            ) : null}
             <p className="mt-1 text-sm text-[var(--color-muted-copy)]">
               {meta
                 ? `${translate(meta.labelKey as TranslationKey)} • ${translate(meta.descriptionKey as TranslationKey)}`

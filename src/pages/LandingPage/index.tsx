@@ -70,7 +70,7 @@ export const LandingPage = () => {
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
-              to="/welcome"
+              to="/dashboard"
               className="flex items-center gap-2 rounded-[var(--radius-card)] bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-[var(--color-primary-foreground)] shadow-lg hover:bg-[var(--color-primary-hover)] transition-all"
             >
               {t.ctaSelectBranch}

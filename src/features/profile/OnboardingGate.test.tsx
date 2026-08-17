@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { MemoryRouter, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { storage } from '@/shared/storage';
 
@@ -11,7 +11,6 @@ import { LearningProfileRepository } from '@/features/profile/profile.repository
 
 import { OnboardingGate } from './OnboardingGate';
 
-const Onboarding = () => <div>ONBOARDING PAGE</div>;
 const Guarded = () => <div>GUARDED CONTENT</div>;
 
 const renderGate = (initialPath: string) =>
@@ -34,45 +33,6 @@ const renderGate = (initialPath: string) =>
             </OnboardingGate>
           }
         />
-        <Route path="/welcome" element={<Onboarding />} />
-      </Routes>
-    </MemoryRouter>
-  );
-
-const FlowOnboarding = () => {
-  const navigate = useNavigate();
-  const handleComplete = () => {
-    const profile = LearningProfileRepository.getProfile('gate-user');
-    LearningProfileRepository.saveProfile({
-      ...profile,
-      userId: 'gate-user',
-      onboardingCompleted: true,
-      discipline: 'software',
-      interfaceLanguage: 'tr',
-    });
-    navigate('/curriculum');
-  };
-  return (
-    <button type="button" onClick={handleComplete}>
-      COMPLETE ONBOARDING
-    </button>
-  );
-};
-
-const renderFlow = (initialPath: string) =>
-  render(
-    <MemoryRouter initialEntries={[initialPath]}>
-      <Routes>
-        <Route
-          element={
-            <OnboardingGate>
-              <Outlet />
-            </OnboardingGate>
-          }
-        >
-          <Route path="/welcome" element={<FlowOnboarding />} />
-          <Route path="/curriculum" element={<Guarded />} />
-        </Route>
       </Routes>
     </MemoryRouter>
   );
@@ -119,31 +79,29 @@ describe('OnboardingGate', () => {
 
     renderGate('/dashboard');
     expect(await screen.findByText('GUARDED CONTENT')).toBeInTheDocument();
-    expect(screen.queryByText('ONBOARDING PAGE')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Start/ })).not.toBeInTheDocument();
   });
 
-  it('redirects to /welcome when onboarding is incomplete', async () => {
+  it('shows the centered selection panel when onboarding is incomplete', async () => {
     renderGate('/dashboard');
-    expect(await screen.findByText('ONBOARDING PAGE')).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /^Start/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Architecture Design/ })).toBeInTheDocument();
     expect(screen.queryByText('GUARDED CONTENT')).not.toBeInTheDocument();
   });
 
   it('gates every app route, not just the dashboard', async () => {
     renderGate('/vocabulary');
-    expect(await screen.findByText('ONBOARDING PAGE')).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /^Start/ })).toBeInTheDocument();
+    expect(screen.queryByText('GUARDED CONTENT')).not.toBeInTheDocument();
   });
 
-  it('exempts the /welcome setup path', async () => {
-    renderGate('/welcome');
-    expect(await screen.findByText('ONBOARDING PAGE')).toBeInTheDocument();
-  });
-
-  it('reflects onboarding completion on the same mounted gate (no stale cache)', async () => {
+  it('unlocks the app on the same mounted gate once the panel is completed (no stale cache)', async () => {
     const user = userEvent.setup();
-    renderFlow('/welcome');
-    await user.click(screen.getByRole('button', { name: 'COMPLETE ONBOARDING' }));
+    renderGate('/dashboard');
+    await user.click(screen.getByRole('button', { name: /Architecture Design/ }));
+    await user.click(screen.getByRole('button', { name: /^Start/ }));
 
     expect(await screen.findByText('GUARDED CONTENT')).toBeInTheDocument();
-    expect(screen.queryByText('COMPLETE ONBOARDING')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Start/ })).not.toBeInTheDocument();
   });
 });

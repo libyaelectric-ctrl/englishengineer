@@ -4,6 +4,8 @@ import { useEffect, useRef } from 'react';
 
 import { storage } from '@/shared/storage';
 
+import { LearningProfileRepository } from '@/features/profile/profile.repository';
+
 import { useAuthStore } from './auth.store';
 import type { UserProfile } from './auth.types';
 
@@ -37,12 +39,17 @@ const buildProfile = (user: ClerkUser): UserProfile => {
   };
 };
 
+// Legacy local-auth record. When Clerk is the auth of record we clear it so
+// AuthService.restoreSession() can never resurrect a stale demo/local user.
+const LEGACY_AUTH_STORAGE_KEY = 'auth_user';
+
 /**
  * Keeps the app's zustand auth store in sync with the Clerk session so that
- * routes guarded by <AuthGuard> recognize a Clerk sign-in. The existing
- * Supabase/local auth flow is left untouched: the bridge only seeds the store
- * while no other provider owns the session, and it only clears a user that it
- * bridged itself.
+ * routes guarded by <AuthGuard> recognize a Clerk sign-in.
+ *
+ * Clerk is the auth of record: whenever a Clerk session is active it always
+ * seeds the store (replacing any legacy/demo user that a previous local-auth
+ * session left behind). The bridge only clears a user that it seeded itself.
  */
 export const ClerkBridge = () => {
   const { isLoaded, isSignedIn } = useAuth();
@@ -55,20 +62,28 @@ export const ClerkBridge = () => {
     const state = useAuthStore.getState();
 
     if (isSignedIn && user) {
-      // Only take ownership when the app is not already signed in through
-      // another provider, or when the current user is the same Clerk user.
+      // Clerk always wins — never let a stale demo/local session shadow the
+      // signed-in Clerk user.
+      storage.globalRemove(LEGACY_AUTH_STORAGE_KEY);
+
       const alreadyMine = state.currentUser?.id === user.id;
-      if (!state.isAuthenticated || alreadyMine) {
-        if (!alreadyMine) {
-          useAuthStore.setState({
-            currentUser: buildProfile(user),
-            isAuthenticated: true,
-            isLoading: false,
-          });
-          storage.setUserId(user.id);
+      if (!alreadyMine) {
+        const profile = buildProfile(user);
+        // Hydrate the discipline the user picked during onboarding so pages
+        // like the dashboard that read it off the store user render correctly
+        // on every visit, not just the first.
+        const learningProfile = LearningProfileRepository.getProfile(user.id);
+        if (learningProfile.discipline) {
+          profile.engineeringDiscipline = learningProfile.discipline;
         }
-        bridgedUserId.current = user.id;
+        useAuthStore.setState({
+          currentUser: profile,
+          isAuthenticated: true,
+          isLoading: false,
+        });
+        storage.setUserId(user.id);
       }
+      bridgedUserId.current = user.id;
       return;
     }
 
