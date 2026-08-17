@@ -34,7 +34,6 @@ const Curriculum = lazy(() => import('@/pages/CurriculumPage'));
 const Tools = lazy(() => import('@/pages/ToolsPage'));
 const Progress = lazy(() => import('@/pages/ProgressPage'));
 const NotFound = lazy(() => import('@/pages/NotFoundPage'));
-const Welcome = lazy(() => import('@/pages/WelcomePage'));
 const Landing = lazy(() => import('@/pages/LandingPage'));
 const Pricing = lazy(() => import('@/pages/PricingPage'));
 const Business = lazy(() => import('@/pages/BusinessPage'));
@@ -113,15 +112,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'onboarding',
-        element: <Navigate to="/welcome" replace />,
+        element: <Navigate to="/dashboard" replace />,
       },
       {
         path: 'onboarding/:step',
-        element: <Navigate to="/welcome" replace />,
-      },
-      {
-        path: 'welcome',
-        element: withSuspense(Welcome),
+        element: <Navigate to="/dashboard" replace />,
       },
 
       {

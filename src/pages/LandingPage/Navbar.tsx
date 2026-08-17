@@ -28,7 +28,7 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
     }
     try {
       await demoLogin();
-      navigate('/welcome', { replace: true });
+      navigate('/dashboard', { replace: true });
     } catch (err) {
       console.error('Demo login failed', err);
     }

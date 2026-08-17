@@ -15,4 +15,4 @@ export const CLERK_SIGN_IN_FALLBACK_REDIRECT_URL =
   import.meta.env.VITE_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL || '/dashboard';
 
 export const CLERK_SIGN_UP_FALLBACK_REDIRECT_URL =
-  import.meta.env.VITE_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL || '/welcome';
+  import.meta.env.VITE_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL || '/dashboard';

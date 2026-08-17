@@ -77,7 +77,7 @@ export const useLoginHandlers = () => {
         });
       }
       setSocialLoading(null);
-      navigate('/welcome', { replace: true });
+      navigate('/dashboard', { replace: true });
     } catch (err: unknown) {
       setSocialLoading(null);
       setError(
@@ -136,7 +136,7 @@ export const useLoginHandlers = () => {
       setError(null);
       useLearningStore.getState().resetAll();
       await demoLogin();
-      navigate('/welcome', { replace: true });
+      navigate('/dashboard', { replace: true });
     } catch (err: unknown) {
       setError(getErrorMessage(err, translate('login.demoInitFailed')));
     }
@@ -236,7 +236,7 @@ export const useLoginHandlers = () => {
         ProductAnalyticsService.track('signup_completed', '/login', {
           metadata: { source: 'system' },
         });
-        navigate('/welcome', { replace: true });
+        navigate('/dashboard', { replace: true });
       } else {
         await login(derivedDisplayName, email.trim(), password);
         navigate(from, { replace: true });

@@ -100,6 +100,15 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
       updateProfile: async (updates) => {
         try {
+          const current = useAuthStore.getState().currentUser;
+          // Clerk is the auth of record: display fields live in the Clerk
+          // account, so profile edits update the in-memory user instead of
+          // touching the legacy local-auth adapter (which would write to a
+          // stale 'auth_user' record that does not belong to this user).
+          if (current?.id.startsWith('user_')) {
+            set({ currentUser: { ...current, ...updates } });
+            return;
+          }
           const updated = await AuthService.updateProfile(updates);
           set({ currentUser: updated });
         } catch (e) {

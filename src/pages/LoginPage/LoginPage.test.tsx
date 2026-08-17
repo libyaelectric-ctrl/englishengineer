@@ -267,7 +267,7 @@ describe('LoginPage — forgot password', () => {
 });
 
 describe('LoginPage — demo workspace', () => {
-  it('launches the demo workspace and navigates to /welcome', async () => {
+  it('launches the demo workspace and navigates to /dashboard', async () => {
     demoLoginMock.mockResolvedValue(undefined);
     const user = userEvent.setup();
     renderLoginPage();
@@ -275,7 +275,7 @@ describe('LoginPage — demo workspace', () => {
     await user.click(screen.getByRole('button', { name: 'Anlık Demo Çalışma Alanını Başlat' }));
 
     await waitFor(() => {
-      expect(screen.getByTestId('current-route').textContent).toBe('/welcome');
+      expect(screen.getByTestId('current-route').textContent).toBe('/dashboard');
     });
     expect(demoLoginMock).toHaveBeenCalledTimes(1);
   });
