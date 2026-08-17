@@ -96,6 +96,7 @@ export const resolveAuth = (env: Env, runtimeEnv: RuntimeEnvironment): AuthConfi
       ? (env.SUPABASE_ANON_KEY || env.SUPABASE_SERVICE_ROLE_KEY)!.replace(/\s+/g, '')
       : null,
     supabaseJwtSecret: stripWhitespace(env.SUPABASE_JWT_SECRET),
+    clerkIssuer: stripWhitespace(env.CLERK_ISSUER),
   };
 };
 

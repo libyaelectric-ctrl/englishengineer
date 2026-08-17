@@ -1,7 +1,8 @@
-import { useAuth, useUser } from '@clerk/clerk-react';
+import { useAuth, useClerk, useUser } from '@clerk/clerk-react';
 
 import { useEffect, useRef } from 'react';
 
+import { setClerkTokenGetter } from '@/shared/services/auth-backend/backend-auth.service';
 import { storage } from '@/shared/storage';
 
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
@@ -25,11 +26,14 @@ type ClerkUser = NonNullable<ReturnType<typeof useUser>['user']>;
 
 const buildProfile = (user: ClerkUser): UserProfile => {
   const email = user.primaryEmailAddress?.emailAddress || '';
+  const metadataRole = (user.publicMetadata?.role as string | undefined) ?? null;
   return {
     id: user.id,
     displayName: user.fullName || email.split('@')[0] || 'Clerk User',
     email,
-    role: 'engineer',
+    role: metadataRole || 'engineer',
+    isSuperUser:
+      user.publicMetadata?.isSuperUser === true || metadataRole === 'Super Administrator',
     engineeringDiscipline: '',
     targetLevel: '',
     location: '',
@@ -52,8 +56,9 @@ const LEGACY_AUTH_STORAGE_KEY = 'auth_user';
  * session left behind). The bridge only clears a user that it seeded itself.
  */
 export const ClerkBridge = () => {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn, getToken } = useAuth();
   const { user } = useUser();
+  const { signOut } = useClerk();
   const bridgedUserId = useRef<string | null>(null);
 
   useEffect(() => {
@@ -68,6 +73,11 @@ export const ClerkBridge = () => {
 
       const alreadyMine = state.currentUser?.id === user.id;
       if (!alreadyMine) {
+        // Scope storage to this user BEFORE reading any user-scoped data so
+        // the profile repository resolves the same key that onboarding writes
+        // (eos_user_<id>_learning_profile_<id>) instead of an unprefixed key.
+        storage.setUserId(user.id);
+
         const profile = buildProfile(user);
         // Hydrate the discipline the user picked during onboarding so pages
         // like the dashboard that read it off the store user render correctly
@@ -81,8 +91,16 @@ export const ClerkBridge = () => {
           isAuthenticated: true,
           isLoading: false,
         });
-        storage.setUserId(user.id);
       }
+
+      // End the app's logout() on the Clerk session as well, so Sign Out fully
+      // signs the user out instead of leaving a live session that bounces the
+      // user back into a guard that waits forever.
+      useAuthStore.getState().setClerkSignOut(() => signOut());
+
+      // Expose the session token so getBackendAuthHeaders() can authenticate
+      // backend calls with a Clerk JWT (verified against the instance JWKS).
+      setClerkTokenGetter(async () => (await getToken()) ?? null);
 
       // Persist display-field edits (displayName -> first/last name) to the
       // Clerk account so profile changes survive a reload/sign-in.
@@ -111,8 +129,10 @@ export const ClerkBridge = () => {
         storage.setUserId(null);
       }
       useAuthStore.getState().setClerkUserSync(null);
+      useAuthStore.getState().setClerkSignOut(null);
+      setClerkTokenGetter(null);
     }
-  }, [isLoaded, isSignedIn, user]);
+  }, [isLoaded, isSignedIn, user, signOut, getToken]);
 
   return null;
 };

@@ -4,20 +4,15 @@ import { useShallow } from 'zustand/shallow';
 import { useState } from 'react';
 
 import { BillingPlanId } from '@/features/billing/billing.types';
-import { Workspace, useWorkspaceStore } from '@/features/billing/workspace.store';
+import {
+  Workspace,
+  getPlanWorkspaceLimit,
+  useWorkspaceStore,
+} from '@/features/billing/workspace.store';
 
 interface WorkspaceSelectorProps {
   planId: BillingPlanId;
 }
-
-const PLAN_WORKSPACE_LIMIT: Record<BillingPlanId, number | null> = {
-  free: 1,
-  junior: 1,
-  senior: 2,
-  specialist: 3,
-  master: 5,
-  team: null,
-};
 
 const WorkspaceListItem = ({
   ws,
@@ -116,7 +111,7 @@ const CreateWorkspaceButton = ({
   workspaceCount,
   onClick,
 }: {
-  limit: number | null;
+  limit: number;
   workspaceCount: number;
   onClick: () => void;
 }) => (
@@ -127,7 +122,7 @@ const CreateWorkspaceButton = ({
   >
     <Plus className="h-3 w-3" aria-hidden="true" />
     New Workspace
-    {limit !== null && (
+    {Number.isFinite(limit) && (
       <span className="ml-auto text-[10px] text-muted-copy font-bold">
         {workspaceCount}/{limit}
       </span>
@@ -139,7 +134,7 @@ const WorkspaceLimitMessage = ({ limit }: { limit: number }) => (
   <div className="border-t border-border-soft px-3 py-2">
     <p className="text-[10px] leading-4 text-muted-copy font-bold uppercase tracking-wider">
       {limit === 1
-        ? 'Upgrade to Project ($39) for up to 3 workspaces.'
+        ? 'Upgrade to the Master plan for unlimited workspaces.'
         : `Workspace limit reached (${limit}).`}
     </p>
   </div>
@@ -180,7 +175,7 @@ const WorkspaceDropdown = ({
   newName: string;
   setNewName: (v: string) => void;
   createError: string | null;
-  limit: number | null;
+  limit: number;
   onSwitch: (ws: Workspace) => void;
   onDelete: (e: React.MouseEvent, id: string) => void;
   onCreate: () => void;
@@ -246,7 +241,7 @@ const WorkspaceDropdown = ({
         </div>
       )}
 
-      {!canCreate && limit !== null && <WorkspaceLimitMessage limit={limit} />}
+      {!canCreate && <WorkspaceLimitMessage limit={limit} />}
 
       <WorkspaceSummary activeWorkspace={activeWorkspace} />
     </div>
@@ -270,8 +265,8 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
   const [newName, setNewName] = useState('');
   const [createError, setCreateError] = useState<string | null>(null);
 
-  const limit = PLAN_WORKSPACE_LIMIT[planId];
-  const canCreate = limit === null || workspaces.length < limit;
+  const limit = getPlanWorkspaceLimit(planId);
+  const canCreate = !Number.isFinite(limit) || workspaces.length < limit;
   const activeWorkspace = workspaces.find((ws) => ws.id === activeWorkspaceId) ?? workspaces[0];
 
   const handleCreate = () => {
@@ -281,8 +276,8 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
     if (!success) {
       setCreateError(
         limit === 1
-          ? 'Your plan supports 1 workspace. Upgrade to Project ($39) for up to 3.'
-          : `Workspace limit reached (${limit}). Upgrade for more.`
+          ? 'Your plan supports 1 workspace. Upgrade to the Master plan for unlimited workspaces.'
+          : `Workspace limit reached (${limit}). Upgrade to the Master plan for more.`
       );
       return;
     }

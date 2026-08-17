@@ -76,6 +76,13 @@ export const registerBillingRoutes = (
   );
   const subscriptionStatusHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      // Subscription data is only served for the request's authenticated
+      // identity. Unauthenticated callers get the anonymous fallback and must
+      // never read another user's record through a `?userId=` query (IDOR).
+      if (!req.auth?.userId) {
+        res.json(await billingService.getSubscriptionStatus(null));
+        return;
+      }
       res.json(await billingService.getSubscriptionStatus(assertUserOwnership(req)));
     } catch (error) {
       next(error);

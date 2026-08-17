@@ -29,6 +29,12 @@ export interface AuthConfig {
   supabaseUrl: string | null;
   supabaseAnonKey: string | null;
   supabaseJwtSecret: string | null;
+  /**
+   * Clerk instance issuer (e.g. https://dominant-cricket-288.clerk.accounts.dev).
+   * When set, Bearer tokens that verify against the Clerk JWKS authenticate as
+   * the Clerk user id (source: 'clerk-jwt').
+   */
+  clerkIssuer: string | null;
 }
 
 export interface DodoConfig {
@@ -134,7 +140,7 @@ export interface AuthenticatedUser {
   userId: string;
   email?: string;
   role?: string;
-  source: 'internal-secret' | 'supabase-jwt' | 'local-jwt' | 'dev-bypass';
+  source: 'internal-secret' | 'supabase-jwt' | 'local-jwt' | 'dev-bypass' | 'clerk-jwt';
 }
 
 // --- API Errors ---

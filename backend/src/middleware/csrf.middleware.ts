@@ -61,8 +61,25 @@ const isStateChangingMethod = (method: string): boolean =>
  * - Exempts: Stripe webhooks (raw body), health checks, GET requests
  * - Skipped ONLY in the automated test environment (NODE_ENV=test)
  */
+/**
+ * Requests authenticated via an Authorization Bearer token are not subject to
+ * CSRF: a cross-site attacker cannot set that header on top of a victim fetch
+ * (the state-changing preflight would be rejected by CORS). Requiring a
+ * double-submit cookie here would 403 every API call from the SPA, which
+ * authenticates with a token rather than cookies.
+ */
+const hasBearerToken = (req: Request): boolean => {
+  const header = req.headers.authorization;
+  return typeof header === 'string' && header.startsWith('Bearer ');
+};
+
 export const csrfProtection = (req: Request, res: Response, next: NextFunction): void => {
   if (process.env.NODE_ENV === 'test') {
+    next();
+    return;
+  }
+
+  if (hasBearerToken(req)) {
     next();
     return;
   }

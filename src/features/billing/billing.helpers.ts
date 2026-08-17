@@ -277,6 +277,17 @@ export const getBillingStatusPresentation = (
         entitlementTone: 'danger',
         periodLabel: 'Billing period',
       };
+    case 'unpaid':
+      return {
+        ...base,
+        statusLabel: 'Payment required',
+        statusTone: 'danger',
+        message:
+          'Payment for your subscription has not been received. Update your billing details to keep plan access.',
+        entitlementLabel: 'Paid entitlements restricted',
+        entitlementTone: 'danger',
+        periodLabel: 'Billing period',
+      };
     case 'canceled':
       return {
         ...base,

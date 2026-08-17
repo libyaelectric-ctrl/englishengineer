@@ -25,10 +25,19 @@ const getUserId = (object: WebhookObject): string | null =>
 
 const buildCheckoutUpdate = (current: SubscriptionSnapshot, object: WebhookObject) => {
   const meta = object.metadata ?? {};
-  if (meta.type === 'topup')
+  // Top-ups and one-time purchases are credit transactions — they must never
+  // grant an active (recurring) subscription. Only checkouts that represent a
+  // real subscription may activate a plan.
+  if (meta.type === 'topup' || meta.type === 'one_time' || !object.subscription) {
+    const credits = (
+      meta.type === 'topup' || meta.type === 'one_time'
+        ? parseInt(meta.credits ?? '50', 10) || 0
+        : 0
+    ) as number;
     return {
-      topupCredits: (current.topupCredits || 0) + parseInt(meta.credits ?? '50', 10),
+      topupCredits: (current.topupCredits || 0) + credits,
     };
+  }
   return {
     planId: normalizePlanId(meta.planId),
     status: 'active' as const,

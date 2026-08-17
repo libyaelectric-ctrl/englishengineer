@@ -208,6 +208,11 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
         'X-EngineerOS-Request-Id',
         'X-EngineerOS-User-Id',
         'X-EngineerOS-User-Email',
+        'X-EngineerOS-Org-Id',
+        'X-Corporation-Id',
+        'X-EngVox-User-Id',
+        'X-EngVox-AI-Contract',
+        'X-EngVox-Request-Id',
         'X-CSRF-Token',
       ],
     })

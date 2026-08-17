@@ -3,6 +3,7 @@ import { afterEach, test } from 'node:test';
 
 import { createApp } from '../src/app.js';
 import { createBackendConfig, toPublicHealth } from '../src/config.js';
+import { logger } from '../src/logger.js';
 import {
   createMemorySubscriptionRepository,
   createSubscriptionRepository,
@@ -627,9 +628,9 @@ test('production selects Supabase billing persistence when configured', () => {
 test('production requires an explicitly configured external rate-limit store', () => {
   assert.throws(() => createBackendConfig({ NODE_ENV: 'production' }), /UPSTASH_REDIS_REST_URL/);
   // Memory rate limit in production now warns instead of throwing
-  const originalWarn = console.warn;
+  const originalWarn = logger.warn;
   let warningMessage = '';
-  console.warn = (msg) => {
+  logger.warn = (msg: string) => {
     warningMessage = msg;
   };
   try {
@@ -642,7 +643,7 @@ test('production requires an explicitly configured external rate-limit store', (
         warningMessage.includes('Production rate limiting')
     );
   } finally {
-    console.warn = originalWarn;
+    logger.warn = originalWarn;
   }
 });
 
@@ -979,6 +980,7 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
     {
       NODE_ENV: 'staging',
       ALLOW_INSECURE_DEV_AUTH: 'true',
+      ENGINEEROS_INTERNAL_API_SECRET: 'internal-test-secret',
       SUPABASE_URL: 'https://example.supabase.co',
       SUPABASE_ANON_KEY: 'anon-key',
       STRIPE_SECRET_KEY: 'sk_test_value',

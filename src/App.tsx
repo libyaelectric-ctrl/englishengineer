@@ -15,6 +15,7 @@ import {
   CLERK_SIGN_UP_FALLBACK_REDIRECT_URL,
   CLERK_SIGN_UP_URL,
 } from '@/features/auth/clerk.config';
+import { BillingSync } from '@/features/billing/BillingSync';
 import { ThemeProvider } from '@/features/theme/ThemeProvider';
 
 export default function App() {
@@ -31,10 +32,14 @@ export default function App() {
               signUpFallbackRedirectUrl={CLERK_SIGN_UP_FALLBACK_REDIRECT_URL}
             >
               <ClerkBridge />
+              <BillingSync />
               <RouterProvider router={router} />
             </ClerkProvider>
           ) : (
-            <RouterProvider router={router} />
+            <>
+              <BillingSync />
+              <RouterProvider router={router} />
+            </>
           )}
           <ToastContainer />
         </AppProvider>

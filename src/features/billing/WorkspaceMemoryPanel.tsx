@@ -234,7 +234,7 @@ const WorkspaceMemoryContent = ({
     {!hasProjectAccess && entries.length > 0 && (
       <div className="mt-3 rounded-[4px] bg-surface-hover border border-border-soft p-2.5 text-center shadow-sm">
         <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy leading-normal">
-          Workspace memory is read-only. Upgrade to the Project Plan ($39/mo) to edit details.
+          Workspace memory is read-only. Upgrade to the Master plan to edit details.
         </p>
       </div>
     )}

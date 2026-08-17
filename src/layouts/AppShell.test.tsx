@@ -29,6 +29,8 @@ vi.mock('@/features/billing', () => ({
   useBillingStore: vi.fn(() => ({
     subscription: { planId: 'junior' },
   })),
+  canAccessFeature: vi.fn(() => ({ allowed: true, requiredPlan: null })),
+  LockedFeatureModal: () => null,
 }));
 
 vi.mock('@/shared/components/ThemeToggle', () => ({
