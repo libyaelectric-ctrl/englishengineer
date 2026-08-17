@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 
+import { isFreeTier } from './billing.entitlements';
 import { getBillingStatusPresentation } from './billing.helpers';
 import type {
   BillingProviderStatus,
@@ -39,8 +40,10 @@ export const BillingStatusPanel = ({
 }: BillingStatusPanelProps) => {
   const navigate = useNavigate();
   const presentation = getBillingStatusPresentation(subscription, providerStatus);
+  // The paid 'junior' plan (status active/trialing) is paid access; only the
+  // free tier should trigger the "Upgrade Plan" CTA.
   const paidAccessIsActive =
-    presentation.planId !== 'junior' &&
+    !isFreeTier(subscription) &&
     (subscription.status === 'active' || subscription.status === 'trialing');
   const canOpenPortal = providerStatus.isConfigured && Boolean(subscription.stripeCustomerId);
 

@@ -73,6 +73,120 @@ const readBearerToken = (request: Request): string | null => {
   return authorization.slice('Bearer '.length).trim() || null;
 };
 
+const JWKS_CACHE_TTL_MS = 60 * 60 * 1000;
+
+interface ClerkJwk {
+  kid?: string;
+  kty?: string;
+  n?: string;
+  e?: string;
+  alg?: string;
+  use?: string;
+}
+
+interface ClerkClaims {
+  sub?: string;
+  sid?: string;
+  iss?: string;
+  exp?: number;
+  nbf?: number;
+  iat?: number;
+  email?: string;
+  role?: string;
+}
+
+let clerkJwksCache: { issuer: string; keys: ClerkJwk[]; fetchedAt: number } | null = null;
+
+const fetchClerkJwks = async (issuer: string, fetchImpl: typeof fetch): Promise<ClerkJwk[]> => {
+  if (
+    clerkJwksCache &&
+    clerkJwksCache.issuer === issuer &&
+    Date.now() - clerkJwksCache.fetchedAt < JWKS_CACHE_TTL_MS
+  ) {
+    return clerkJwksCache.keys;
+  }
+  const response = await fetchImpl(`${issuer}/.well-known/jwks.json`);
+  if (!response.ok) {
+    throw new ApiError(503, 'auth_provider_unavailable', 'Clerk JWKS could not be fetched.');
+  }
+  const document = (await response.json()) as { keys?: ClerkJwk[] };
+  clerkJwksCache = { issuer, keys: document.keys ?? [], fetchedAt: Date.now() };
+  return clerkJwksCache.keys;
+};
+
+const base64UrlBytes = (value: string): Uint8Array => {
+  const normalized = value.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = normalized + '='.repeat((4 - (normalized.length % 4)) % 4);
+  const buffer = Buffer.from(padded, 'base64');
+  return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+};
+
+/**
+ * Verifies a Clerk session JWT against the instance's JWKS using WebCrypto
+ * (RS256). No Clerk SDK is required for verification — the public signing key
+ * is published under <issuer>/.well-known/jwks.json. Returns the authenticated
+ * user when the token is valid and issued by the configured issuer, otherwise
+ * null/throws so callers can fall through to the next auth provider.
+ */
+const verifyClerkToken = async (
+  token: string,
+  issuer: string | null,
+  fetchImpl: typeof fetch
+): Promise<AuthenticatedUser | null> => {
+  if (!issuer) return null;
+  const parts = token.split('.');
+  if (parts.length !== 3) return null;
+
+  const [headerB64, payloadB64, signatureB64] = parts;
+  let header: { kid?: string } = {};
+  let payload: ClerkClaims = {};
+  try {
+    header = JSON.parse(Buffer.from(headerB64!, 'base64').toString('utf8'));
+    payload = JSON.parse(Buffer.from(payloadB64!, 'base64').toString('utf8'));
+  } catch {
+    return null;
+  }
+
+  if (typeof payload.sub !== 'string' || !payload.sub) return null;
+  if (typeof payload.iss !== 'string' || payload.iss !== issuer) return null;
+
+  const now = Math.floor(Date.now() / 1000);
+  if (typeof payload.exp === 'number' && payload.exp < now) return null;
+  if (typeof payload.nbf === 'number' && payload.nbf > now) return null;
+
+  const keys = await fetchClerkJwks(issuer, fetchImpl);
+  const key = keys.find((candidate) => candidate.kid === header.kid);
+  if (!key?.n || !key.e) return null;
+
+  try {
+    const cryptoKey = await subtle.importKey(
+      'jwk',
+      { kty: 'RSA', alg: 'RS256', use: 'sig', n: key.n, e: key.e },
+      { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+      false,
+      ['verify']
+    );
+    const valid = await subtle.verify(
+      'RSASSA-PKCS1-v1_5',
+      cryptoKey,
+      // Same DOM/Node typed-array overlap handled in verifyJwtLocally; the
+      // value is a real buffer at runtime.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      base64UrlBytes(signatureB64!) as any,
+      new TextEncoder().encode(`${headerB64}.${payloadB64}`)
+    );
+    if (!valid) return null;
+    return {
+      userId: payload.sub,
+      email: typeof payload.email === 'string' ? payload.email : undefined,
+      role: typeof payload.role === 'string' ? payload.role : undefined,
+      source: 'clerk-jwt',
+    };
+  } catch {
+    return null;
+  }
+};
+
 const secretsMatch = (
   left: string | null | undefined,
   right: string | null | undefined
@@ -169,11 +283,15 @@ export const createBackendAuth = (
     }
     if (!config.allowInsecureDevAuth) return null;
     const email = typeof request.body?.email === 'string' ? request.body.email : undefined;
-    const role = typeof request.body?.role === 'string' ? request.body.role : 'user';
+    const bodyRole = typeof request.body?.role === 'string' ? request.body.role : undefined;
+    const headerRole =
+      typeof request.headers['x-engineeros-user-role'] === 'string'
+        ? request.headers['x-engineeros-user-role']
+        : undefined;
     return {
       userId: getRequestedUserId(request) ?? 'engineeros-dev-user',
       email,
-      role,
+      role: bodyRole || headerRole || 'user',
       source: 'dev-bypass',
     };
   };
@@ -187,6 +305,11 @@ export const createBackendAuth = (
     if (config.supabaseJwtSecret && token) {
       const localUser = await verifyJwtLocally(token, config.supabaseJwtSecret);
       if (localUser) return localUser;
+    }
+
+    if (config.clerkIssuer && token) {
+      const clerkUser = await verifyClerkToken(token, config.clerkIssuer, fetchImpl);
+      if (clerkUser) return clerkUser;
     }
 
     const supabaseUser = await validateSupabaseToken(config, token, fetchImpl);

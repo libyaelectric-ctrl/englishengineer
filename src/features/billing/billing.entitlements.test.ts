@@ -57,11 +57,12 @@ describe('billing entitlements', () => {
   });
 
   describe('plan-based feature gating (cumulative tiers)', () => {
-    it('gives Junior only the base modules', () => {
+    it('gives the legacy junior+none (free tier) only the base modules', () => {
       const junior = { ...createFreeSubscription(), planId: 'junior' as const };
       expect(canAccessFeature(junior, 'vocabulary').allowed).toBe(true);
       expect(canAccessFeature(junior, 'grammar').allowed).toBe(true);
-      expect(canAccessFeature(junior, 'placementTest').allowed).toBe(true);
+      expect(canAccessFeature(junior, 'placementTest').allowed).toBe(false);
+      expect(canAccessFeature(junior, 'learningHub').allowed).toBe(false);
       expect(canAccessFeature(junior, 'reading').allowed).toBe(false);
       expect(canAccessFeature(junior, 'writing').allowed).toBe(false);
       expect(canAccessFeature(junior, 'speaking').allowed).toBe(false);
@@ -102,10 +103,11 @@ describe('billing entitlements', () => {
       expect(result.requiredPlan).toBe('master');
     });
 
-    it('blocks every feature for an inactive subscription', () => {
+    it('degrades an inactive subscription to the free tier instead of locking everything', () => {
       const canceled = { ...withPlan('master'), status: 'canceled' as const };
-      expect(canAccessFeature(canceled, 'vocabulary').allowed).toBe(false);
-      expect(canAccessFeature(canceled, 'vocabulary').requiredPlan).toBe('free');
+      expect(canAccessFeature(canceled, 'vocabulary').allowed).toBe(true);
+      expect(canAccessFeature(canceled, 'vocabulary').requiredPlan).toBe(null);
+      expect(canAccessFeature(canceled, 'placementTest').allowed).toBe(false);
     });
   });
 

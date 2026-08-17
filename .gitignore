@@ -15,6 +15,7 @@ test-results/
 playwright-report/
 .playwright-cli/
 .vercel-tmp/
+.freebuff/
 __pycache__/
 data/translations/results/
 *.zip

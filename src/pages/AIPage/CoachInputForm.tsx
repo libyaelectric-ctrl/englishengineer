@@ -48,8 +48,8 @@ const PlanLockBanner = ({
       </h4>
       <p className="text-xs text-muted-copy max-w-md mx-auto leading-relaxed font-medium">
         {isProLocked
-          ? 'Upgrade to the Pro Plan ($19/mo) to unlock professional engineering CV optimization, unlimited daily AI requests, and 12-month study history.'
-          : 'Upgrade to the Project Plan ($39/mo) to unlock workspace memory integration, custom scenario generation from documents, LinkedIn profile optimization, and persistent AI agents.'}
+          ? 'Upgrade to the Senior plan to unlock professional engineering CV optimization, unlimited daily AI requests, and 12-month study history.'
+          : 'Upgrade to the Master plan to unlock workspace memory integration, custom scenario generation from documents, LinkedIn profile optimization, and persistent AI agents.'}
       </p>
     </div>
     <Button

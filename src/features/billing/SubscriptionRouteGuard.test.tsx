@@ -29,6 +29,18 @@ const juniorSubscription: SubscriptionSnapshot = {
   status: 'active',
 };
 
+const seniorSubscription: SubscriptionSnapshot = {
+  ...freeSubscription,
+  planId: 'senior',
+  status: 'active',
+};
+
+const masterSubscription: SubscriptionSnapshot = {
+  ...freeSubscription,
+  planId: 'master',
+  status: 'active',
+};
+
 const mockedUseBillingStore = vi.mocked(useBillingStore);
 
 const setSubscription = (subscription: SubscriptionSnapshot) => {
@@ -57,6 +69,22 @@ const renderGuardRoutes = (initialPath: string) =>
             <CurriculumSectionGuard>
               <div>LEARNING HUB CONTENT</div>
             </CurriculumSectionGuard>
+          }
+        />
+        <Route
+          path="/translator"
+          element={
+            <SubscriptionRouteGuard feature="translator">
+              <div>TRANSLATOR CONTENT</div>
+            </SubscriptionRouteGuard>
+          }
+        />
+        <Route
+          path="/tools/:section"
+          element={
+            <SubscriptionRouteGuard feature="tool">
+              <div>TOOLS CONTENT</div>
+            </SubscriptionRouteGuard>
           }
         />
       </Routes>
@@ -119,6 +147,58 @@ describe('CurriculumSectionGuard learning hub locks', () => {
     renderGuardRoutes('/curriculum/full');
 
     expect(screen.getByText('LEARNING HUB CONTENT')).toBeInTheDocument();
+    expect(screen.queryByText('PRICING PAGE')).not.toBeInTheDocument();
+  });
+});
+
+describe('SubscriptionRouteGuard translator lock', () => {
+  beforeEach(() => {
+    mockedUseBillingStore.mockReset();
+  });
+
+  it('redirects a free-tier user from /translator to /pricing', () => {
+    setSubscription(freeSubscription);
+    renderGuardRoutes('/translator');
+
+    expect(screen.getByText('PRICING PAGE')).toBeInTheDocument();
+    expect(screen.queryByText('TRANSLATOR CONTENT')).not.toBeInTheDocument();
+  });
+
+  it('renders the translator for a senior user (senior includes translator)', () => {
+    setSubscription(seniorSubscription);
+    renderGuardRoutes('/translator');
+
+    expect(screen.getByText('TRANSLATOR CONTENT')).toBeInTheDocument();
+    expect(screen.queryByText('PRICING PAGE')).not.toBeInTheDocument();
+  });
+});
+
+describe('SubscriptionRouteGuard tools lock', () => {
+  beforeEach(() => {
+    mockedUseBillingStore.mockReset();
+  });
+
+  it('redirects a free-tier user from /tools/ai to /pricing', () => {
+    setSubscription(freeSubscription);
+    renderGuardRoutes('/tools/ai');
+
+    expect(screen.getByText('PRICING PAGE')).toBeInTheDocument();
+    expect(screen.queryByText('TOOLS CONTENT')).not.toBeInTheDocument();
+  });
+
+  it('redirects a senior user from /tools/ai to /pricing (tool requires Master)', () => {
+    setSubscription(seniorSubscription);
+    renderGuardRoutes('/tools/ai');
+
+    expect(screen.getByText('PRICING PAGE')).toBeInTheDocument();
+    expect(screen.queryByText('TOOLS CONTENT')).not.toBeInTheDocument();
+  });
+
+  it('renders the tools for a master user (master includes tool)', () => {
+    setSubscription(masterSubscription);
+    renderGuardRoutes('/tools/ai');
+
+    expect(screen.getByText('TOOLS CONTENT')).toBeInTheDocument();
     expect(screen.queryByText('PRICING PAGE')).not.toBeInTheDocument();
   });
 });

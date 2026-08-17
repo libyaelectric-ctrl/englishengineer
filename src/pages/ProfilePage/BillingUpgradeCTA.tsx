@@ -19,7 +19,7 @@ export const BillingUpgradeCTA = ({ planId }: BillingUpgradeCTAProps) => (
   <div className="mt-4 rounded-[4px] border border-primary/20 bg-primary/5 p-4 space-y-3 shadow-sm">
     <h5 className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
       <Crown className="h-4 w-4 text-warning fill-warning/20" />
-      Pro subscription benefits
+      Paid subscription benefits
     </h5>
     <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-copy font-medium">
       {PRO_BENEFITS.map((benefit) => (

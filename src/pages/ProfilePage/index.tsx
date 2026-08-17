@@ -3,6 +3,8 @@ import { useState } from 'react';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
 
+import { BILLING_PLANS } from '@/features/billing';
+import type { BillingPlanId } from '@/features/billing';
 import { useLocalizationStore } from '@/features/localization';
 import { LearningProfileRepository } from '@/features/profile';
 import { PROFESSIONS } from '@/features/profile/profile.preferences';
@@ -23,34 +25,41 @@ const ProfileHeader = ({
 }: {
   currentUser: { displayName?: string } | null;
   profile: { professionId: string | null };
-  subscription: { planId: string };
+  subscription: { planId: string; status?: string };
   completionPercent: number;
-}) => (
-  <header className="flex flex-col gap-4 border-b border-border-soft pb-6">
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-          {currentUser?.displayName || 'Demo Engineer'}
-        </h1>
-        <p className="mt-1.5 text-xs font-bold uppercase tracking-wider text-muted-copy">
-          {PROFESSIONS.find((p) => p.id === profile.professionId)?.label ||
-            'Engineering Professional'}
-        </p>
+}) => {
+  const planId = subscription.planId as BillingPlanId;
+  const planName = BILLING_PLANS[planId]?.name ?? 'Free';
+  const isFree = planId === 'free' || (planId === 'junior' && subscription.status === 'none');
+  const accessLabel = isFree ? 'Free Plan Access' : `${planName} Plan Access`;
+
+  return (
+    <header className="flex flex-col gap-4 border-b border-border-soft pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            {currentUser?.displayName || 'Demo Engineer'}
+          </h1>
+          <p className="mt-1.5 text-xs font-bold uppercase tracking-wider text-muted-copy">
+            {PROFESSIONS.find((p) => p.id === profile.professionId)?.label ||
+              'Engineering Professional'}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="rounded-[4px] border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+            {accessLabel}
+          </span>
+          <span className="rounded-[4px] border border-border-soft bg-surface px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+            Profile Completion: {completionPercent}%
+          </span>
+        </div>
       </div>
-      <div className="flex items-center gap-2">
-        <span className="rounded-[4px] border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
-          {subscription.planId === 'senior' ? 'Pro Access' : 'Free Trial'}
-        </span>
-        <span className="rounded-[4px] border border-border-soft bg-surface px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
-          Profile Completion: {completionPercent}%
-        </span>
-      </div>
-    </div>
-    <p className="text-xs leading-5 text-muted-copy max-w-2xl font-medium">
-      Manage your professional profile, learning preferences and EngVox access.
-    </p>
-  </header>
-);
+      <p className="text-xs leading-5 text-muted-copy max-w-2xl font-medium">
+        Manage your professional profile, learning preferences and EngVox access.
+      </p>
+    </header>
+  );
+};
 
 const AlertBanner = ({
   message,

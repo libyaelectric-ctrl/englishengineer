@@ -107,7 +107,7 @@ export const SiteDictionaryTab = () => {
           onClick={() => {
             if (!hasProjectAccess) {
               alert(
-                'Custom terminology customization requires the Project Plan ($39/mo) or higher. Please upgrade to customize project vocabulary!'
+                'Custom terminology customization requires the Master plan or higher. Please upgrade to customize project vocabulary!'
               );
               return;
             }

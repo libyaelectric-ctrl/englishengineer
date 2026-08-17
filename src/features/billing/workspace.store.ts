@@ -41,6 +41,18 @@ interface WorkspaceStoreState {
 
 const STORAGE_KEY = 'EngVox_workspaces';
 
+/**
+ * Single source of truth for workspace limits, aligned with the backend
+ * (backend/src/workspace.ts getWorkspaceLimit): free/junior 1, senior and
+ * specialist 3, master/team unlimited.
+ */
+export const getPlanWorkspaceLimit = (planId: BillingPlanId): number =>
+  planId === 'free' || planId === 'junior'
+    ? 1
+    : planId === 'senior' || planId === 'specialist'
+      ? 3
+      : Infinity;
+
 const createDefaultWorkspace = (): Workspace => ({
   id: 'default-workspace',
   name: 'Primary Workspace',
@@ -61,16 +73,7 @@ export const useWorkspaceStore = create<WorkspaceStoreState>()(
 
         createWorkspace: (name, planId) => {
           const currentWorkspaces = get().workspaces;
-          const limit =
-            planId === 'free' || planId === 'junior'
-              ? 1
-              : planId === 'senior'
-                ? 2
-                : planId === 'specialist'
-                  ? 3
-                  : planId === 'master'
-                    ? 5
-                    : Infinity;
+          const limit = getPlanWorkspaceLimit(planId);
 
           if (currentWorkspaces.length >= limit) {
             return false;

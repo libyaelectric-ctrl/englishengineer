@@ -8,7 +8,6 @@ import {
 
 export const isSubscriptionActive = (subscription: SubscriptionSnapshot): boolean =>
   subscription.planId === 'free' ||
-  subscription.planId === 'junior' ||
   subscription.status === 'active' ||
   subscription.status === 'trialing';
 
@@ -32,15 +31,47 @@ export const canAccessFeature = (
   subscription: SubscriptionSnapshot,
   feature: BillingFeature
 ): EntitlementResult => {
-  if (!isSubscriptionActive(subscription)) {
+  const active = isSubscriptionActive(subscription);
+  const plan = BILLING_PLANS[subscription.planId];
+
+  // Inactive/canceled/past-due subscriptions degrade to the free tier: free
+  // features must never disappear entirely just because a paid plan lapsed.
+  if (!active) {
+    if (BILLING_PLANS.free.features.includes(feature)) {
+      return {
+        allowed: true,
+        reason: `Included in the ${BILLING_PLANS.free.name} plan.`,
+        requiredPlan: null,
+      };
+    }
     return {
       allowed: false,
       reason: 'Subscription is not active.',
-      requiredPlan: 'free',
+      requiredPlan: findMinimumPlanForFeature(feature),
     };
   }
 
-  const plan = BILLING_PLANS[subscription.planId];
+  // Active subscription (or free tier, which is always active): a free-tier
+  // snapshot must never unlock paid features, even when its planId is the
+  // legacy 'junior' marker.
+  if (isFreeTier(subscription)) {
+    if (BILLING_PLANS.free.features.includes(feature)) {
+      return {
+        allowed: true,
+        reason: `Included in the ${BILLING_PLANS.free.name} plan.`,
+        requiredPlan: null,
+      };
+    }
+    const requiredPlan = findMinimumPlanForFeature(feature);
+    return {
+      allowed: false,
+      reason: requiredPlan
+        ? `This feature requires the ${BILLING_PLANS[requiredPlan].name} plan or higher.`
+        : 'This feature is not currently available on any plan.',
+      requiredPlan,
+    };
+  }
+
   if (plan.features.includes(feature)) {
     return {
       allowed: true,

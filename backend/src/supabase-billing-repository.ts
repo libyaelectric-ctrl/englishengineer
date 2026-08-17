@@ -52,6 +52,7 @@ const mapSubscriptionSnapshot = (userId: string, snapshot: SubscriptionSnapshot)
   stripe_subscription_id: snapshot.stripeSubscriptionId,
   updated_at: snapshot.updatedAt,
   source: snapshot.source,
+  topup_credits: snapshot.topupCredits ?? 0,
 });
 
 const handleDbError = (error: {

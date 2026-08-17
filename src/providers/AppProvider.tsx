@@ -27,7 +27,11 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   }, []);
 
   useEffect(() => {
-    if (providerMode !== 'supabase' || !currentUser) {
+    // Clerk users have no Supabase session: the anonymous client cannot pass
+    // RLS and every attempt ends in a perpetual "Sync failed" status. Only the
+    // legacy Supabase flow (non-Clerk user ids are the only ids that arrive
+    // here because Clerk ids always start with user_) should touch cloud sync.
+    if (providerMode !== 'supabase' || !currentUser || currentUser.id.startsWith('user_')) {
       return undefined;
     }
 
@@ -67,9 +71,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
   return (
     <ErrorBoundaryProvider>
-      <QueryProvider>
-        {children}
-      </QueryProvider>
+      <QueryProvider>{children}</QueryProvider>
     </ErrorBoundaryProvider>
   );
 };

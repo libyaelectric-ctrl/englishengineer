@@ -15,6 +15,7 @@ interface AuthActions {
   logout: () => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
   setClerkUserSync: (fn: ((updates: Partial<UserProfile>) => Promise<void>) | null) => void;
+  setClerkSignOut: (fn: (() => Promise<void>) | null) => void;
   providerMode: 'local' | 'supabase';
 }
 
@@ -25,6 +26,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       isAuthenticated: false,
       isLoading: true,
       clerkUserSync: null,
+      clerkSignOut: null,
       providerMode: AuthService.getProviderMode(),
 
       initialize: async () => {
@@ -90,7 +92,14 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       logout: async () => {
         set({ isLoading: true });
         try {
+          // End the Clerk session too, otherwise the Sign Out action leaves
+          // the Clerk session alive and /login bounces the user straight back
+          // to a guard that waits forever for a <ClerkBridge> re-seed.
           await AuthService.logout();
+          const clerkSignOut = useAuthStore.getState().clerkSignOut;
+          if (clerkSignOut) {
+            await clerkSignOut();
+          }
           set({ currentUser: null, isAuthenticated: false });
           storage.setUserId(null);
         } catch (e) {
@@ -131,6 +140,10 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
       setClerkUserSync: (fn) => {
         set({ clerkUserSync: fn });
+      },
+
+      setClerkSignOut: (fn) => {
+        set({ clerkSignOut: fn });
       },
     }),
     { name: 'AuthStore' }

@@ -1,7 +1,14 @@
 export type BillingPlanId = 'free' | 'junior' | 'senior' | 'specialist' | 'master' | 'team';
 
 export type SubscriptionStatus =
-  'none' | 'trialing' | 'active' | 'past_due' | 'canceled' | 'incomplete' | 'enterprise_pending';
+  | 'none'
+  | 'trialing'
+  | 'active'
+  | 'past_due'
+  | 'canceled'
+  | 'incomplete'
+  | 'unpaid'
+  | 'enterprise_pending';
 
 export type BillingFeature =
   | 'placementTest'
@@ -60,6 +67,8 @@ export interface SubscriptionSnapshot {
   stripeSubscriptionId: string | null;
   updatedAt: string;
   topupCredits?: number;
+  /** Billing provider the snapshot came from ('stripe' | 'dodo'). */
+  source?: string;
 }
 
 export interface BillingSessionRequest {

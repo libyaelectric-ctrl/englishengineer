@@ -30,3 +30,5 @@ services:
         sync: false
       - key: ANTHROPIC_API_KEY
         sync: false
+      - key: CLERK_ISSUER
+        sync: false
