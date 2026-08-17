@@ -57,6 +57,8 @@ export { LockedFeatureModal, type LockedFeatureModalItem } from './LockedFeature
 
 export { SubscriptionRouteGuard } from './SubscriptionRouteGuard';
 
+export { CurriculumSectionGuard } from './CurriculumSectionGuard';
+
 export { BillingService } from './billing.service';
 
 export { useBillingStore } from './billing.store';
