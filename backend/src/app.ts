@@ -201,6 +201,9 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
         'Authorization',
         'Content-Type',
         'Stripe-Signature',
+        'Webhook-Signature',
+        'Webhook-Id',
+        'Webhook-Timestamp',
         'X-EngineerOS-AI-Contract',
         'X-EngineerOS-Request-Id',
         'X-EngineerOS-User-Id',
@@ -210,13 +213,15 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
     })
   );
 
-  const stripeRawRouter = express.Router();
-  stripeRawRouter.post(
-    '/api/webhooks/stripe',
-    express.raw({ type: 'application/json', limit: '1mb' }),
-    (_req: Request, _res: Response, next: NextFunction) => next()
-  );
-  app.use(stripeRawRouter);
+  const webhookRawRouter = express.Router();
+  for (const webhookPath of ['/api/webhooks/stripe', '/api/webhooks/dodo']) {
+    webhookRawRouter.post(
+      webhookPath,
+      express.raw({ type: 'application/json', limit: '1mb' }),
+      (_req: Request, _res: Response, next: NextFunction) => next()
+    );
+  }
+  app.use(webhookRawRouter);
   app.use(express.json({ limit: '256kb' }));
   app.use(csrfProtection);
 
@@ -419,7 +424,8 @@ const registerRoutes = (
       req.path !== '/api/health' &&
       req.path !== '/api/metrics' &&
       req.path !== '/api/csp-report' &&
-      req.path !== '/api/webhooks/stripe'
+      req.path !== '/api/webhooks/stripe' &&
+      req.path !== '/api/webhooks/dodo'
     ) {
       res.setHeader('Deprecation', 'true');
       res.setHeader('Sunset', '2026-12-31');
@@ -479,7 +485,11 @@ const registerRoutes = (
   registerBillingRoutes(
     v1RouterAdapter as unknown as Express,
     createBillingService({
-      config: config.stripe as unknown as BillingServiceConfig,
+      config: {
+        ...config.stripe,
+        provider: config.billing.provider,
+        dodo: config.dodo,
+      } as unknown as BillingServiceConfig,
       stripeClient: stripeClient as Stripe,
       repository:
         billingRepository ??
@@ -491,6 +501,7 @@ const registerRoutes = (
           },
           fetchImpl
         ),
+      fetchImpl,
     }),
     requireBackendAuth,
     limiters.billing,

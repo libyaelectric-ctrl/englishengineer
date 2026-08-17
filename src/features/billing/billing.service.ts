@@ -27,7 +27,16 @@ const getReturnUrl = (path: string): string => {
   return `${window.location.origin}${path}`;
 };
 
-const ALLOWED_REDIRECT_HOSTS = ['checkout.stripe.com', 'billing.stripe.com', 'portal.stripe.com'];
+const ALLOWED_REDIRECT_HOSTS = [
+  'checkout.stripe.com',
+  'billing.stripe.com',
+  'portal.stripe.com',
+  // Dodo Payments (merchant of record)
+  'checkout.dodopayments.com',
+  'test.checkout.dodopayments.com',
+  'customer.dodopayments.com',
+  'test.customer.dodopayments.com',
+];
 
 const safeRedirect = (url: string): void => {
   try {

@@ -61,15 +61,20 @@ curl -X POST https://englishengineer-backend.onrender.com/api/ai/coach \
 
 ## Environment Variables
 
-| Variable                    | Required | Description                             |
-| --------------------------- | -------- | --------------------------------------- |
-| `STRIPE_SECRET_KEY`         | Yes      | Stripe secret key                       |
-| `STRIPE_WEBHOOK_SECRET`     | Yes      | Stripe webhook signing secret           |
-| `SUPABASE_URL`              | Yes      | Supabase project URL                    |
-| `SUPABASE_SERVICE_ROLE_KEY` | Yes      | Supabase service role key               |
-| `AI_PROVIDER`               | No       | `mock`, `openai`, `anthropic`, `gemini` |
-| `UPSTASH_REDIS_REST_URL`    | Prod     | Upstash Redis URL for rate limiting     |
-| `UPSTASH_REDIS_REST_TOKEN`  | Prod     | Upstash Redis token                     |
+| Variable                                                   | Required | Description                                                                                                    |
+| ---------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------- |
+| `BILLING_PROVIDER`                                         | No       | Active payment provider: `stripe` (default), `dodo`, or `paddle`                                               |
+| `STRIPE_SECRET_KEY`                                        | Yes*     | Stripe secret key (when provider is `stripe`)                                                                  |
+| `STRIPE_WEBHOOK_SECRET`                                    | Yes*     | Stripe webhook signing secret                                                                                  |
+| `DODO_PAYMENTS_API_KEY`                                    | Yes*     | Dodo Payments API key (when provider is `dodo`)                                                                |
+| `DODO_PAYMENTS_WEBHOOK_KEY`                                | Yes*     | Dodo webhook signing secret                                                                                    |
+| `DODO_PAYMENTS_ENVIRONMENT`                                | No       | `test` or `live` (defaults to `live`)                                                                          |
+| `DODO_PRODUCT_JUNIOR_MONTHLY` … `DODO_PRODUCT_TEAM_ANNUAL` | No*      | Dodo product IDs for each plan/interval (Junior→Team, monthly/annual); `DODO_PRODUCT_TOPUP` for credit top-ups |
+| `SUPABASE_URL`                                             | Yes      | Supabase project URL                                                                                           |
+| `SUPABASE_SERVICE_ROLE_KEY`                                | Yes      | Supabase service role key                                                                                      |
+| `AI_PROVIDER`                                              | No       | `mock`, `openai`, `anthropic`, `gemini`                                                                        |
+| `UPSTASH_REDIS_REST_URL`                                   | Prod     | Upstash Redis URL for rate limiting                                                                            |
+| `UPSTASH_REDIS_REST_TOKEN`                                 | Prod     | Upstash Redis token                                                                                            |
 
 ## Testing
 

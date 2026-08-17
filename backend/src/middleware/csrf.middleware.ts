@@ -47,7 +47,8 @@ const tokensMatch = (a: string, b: string): boolean => {
 const isCsrfExempt = (req: Request): boolean =>
   req.path === '/api/health' ||
   req.path === '/api/v1/health' ||
-  req.path === '/api/webhooks/stripe';
+  req.path === '/api/webhooks/stripe' ||
+  req.path === '/api/webhooks/dodo';
 
 const isStateChangingMethod = (method: string): boolean =>
   method === 'POST' || method === 'PUT' || method === 'DELETE' || method === 'PATCH';

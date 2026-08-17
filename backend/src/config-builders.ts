@@ -1,7 +1,10 @@
 import type {
   AiConfig,
   AuthConfig,
+  BillingConfig,
+  BillingProviderName,
   BillingRepositoryMode,
+  DodoConfig,
   RateLimitConfig,
   RateLimitStoreMode,
   RuntimeEnvironment,
@@ -96,6 +99,44 @@ export const resolveAuth = (env: Env, runtimeEnv: RuntimeEnvironment): AuthConfi
   };
 };
 
+export const resolveBilling = (env: Env): BillingConfig => {
+  const requested = (env.BILLING_PROVIDER || 'stripe').toLowerCase();
+  if (!['stripe', 'dodo', 'paddle'].includes(requested)) {
+    throw new Error('BILLING_PROVIDER must be stripe, dodo, or paddle.');
+  }
+  return { provider: requested as BillingProviderName };
+};
+
+export const resolveDodo = (env: Env): DodoConfig => {
+  const apiKey = stripWhitespace(env.DODO_PAYMENTS_API_KEY);
+  const webhookSecret = stripWhitespace(env.DODO_PAYMENTS_WEBHOOK_KEY);
+  const environment = env.DODO_PAYMENTS_ENVIRONMENT === 'test' ? 'test' : 'live';
+  const baseUrl =
+    environment === 'test' ? 'https://test.dodopayments.com' : 'https://live.dodopayments.com';
+  const configured = hasText(apiKey) && hasText(env.DODO_PRODUCT_JUNIOR_MONTHLY);
+
+  return {
+    configured,
+    apiKey: configured ? apiKey : null,
+    webhookSecret: webhookSecret || null,
+    baseUrl: configured ? baseUrl : null,
+    environment,
+    productJuniorMonthly: trimEnv(env.DODO_PRODUCT_JUNIOR_MONTHLY),
+    productSeniorMonthly: trimEnv(env.DODO_PRODUCT_SENIOR_MONTHLY),
+    productSpecialistMonthly: trimEnv(env.DODO_PRODUCT_SPECIALIST_MONTHLY),
+    productMasterMonthly: trimEnv(env.DODO_PRODUCT_MASTER_MONTHLY),
+    productTeamMonthly: trimEnv(env.DODO_PRODUCT_TEAM_MONTHLY),
+    productJuniorAnnual: trimEnv(env.DODO_PRODUCT_JUNIOR_ANNUAL),
+    productSeniorAnnual: trimEnv(env.DODO_PRODUCT_SENIOR_ANNUAL),
+    productSpecialistAnnual: trimEnv(env.DODO_PRODUCT_SPECIALIST_ANNUAL),
+    productMasterAnnual: trimEnv(env.DODO_PRODUCT_MASTER_ANNUAL),
+    productTeamAnnual: trimEnv(env.DODO_PRODUCT_TEAM_ANNUAL),
+    productTopup: trimEnv(env.DODO_PRODUCT_TOPUP),
+    eventCacheTtlMs: toPositiveInteger(env.DODO_EVENT_CACHE_TTL_MS, 86_400_000),
+    eventCacheMax: toPositiveInteger(env.DODO_EVENT_CACHE_MAX, 5_000),
+  };
+};
+
 export const resolveStripe = (env: Env, runtimeEnv: RuntimeEnvironment): StripeConfig => {
   const juniorPrice = trimEnv(env.STRIPE_PRICE_JUNIOR_MONTHLY);
   const hasPrice = hasText(juniorPrice);
@@ -114,8 +155,7 @@ export const resolveStripe = (env: Env, runtimeEnv: RuntimeEnvironment): StripeC
     configured,
     secretKey: configured ? env.STRIPE_SECRET_KEY!.replace(/\s+/g, '') : null,
     webhookSecret: stripWhitespace(env.STRIPE_WEBHOOK_SECRET),
-    priceJuniorMonthly:
-      juniorPrice,
+    priceJuniorMonthly: juniorPrice,
     priceSeniorMonthly: trimEnv(env.STRIPE_PRICE_SENIOR_MONTHLY),
     priceSpecialistMonthly: trimEnv(env.STRIPE_PRICE_SPECIALIST_MONTHLY),
     priceMasterMonthly: trimEnv(env.STRIPE_PRICE_MASTER_MONTHLY),

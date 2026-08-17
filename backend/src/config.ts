@@ -2,6 +2,8 @@ import type { BackendConfig, RuntimeEnvironment } from '../types.js';
 import {
   resolveAI,
   resolveAuth,
+  resolveBilling,
+  resolveDodo,
   resolveEnvironment,
   resolveRateLimit,
   resolveStripe,
@@ -29,6 +31,8 @@ export const createBackendConfig = (environment: Env = process.env): BackendConf
     },
     ai: resolveAI(environment),
     auth: resolveAuth(environment, runtimeEnv),
+    billing: resolveBilling(environment),
+    dodo: resolveDodo(environment),
     stripe: resolveStripe(environment, runtimeEnv),
     supabase,
     vocabulary: resolveVocabulary(environment),
