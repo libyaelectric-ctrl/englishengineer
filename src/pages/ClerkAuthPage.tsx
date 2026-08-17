@@ -41,13 +41,18 @@ const ClerkAuthPage = ({ mode }: ClerkAuthPageProps) => {
   const signUpAfter = returnTarget ?? CLERK_SIGN_UP_FALLBACK_REDIRECT_URL;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-      <div className="relative w-full max-w-md rounded-2xl bg-white dark:bg-zinc-900 shadow-2xl border border-zinc-200 dark:border-zinc-700 animate-in fade-in zoom-in-50 duration-200 p-6">
-        {mode === 'sign-in' ? (
-          <SignIn afterSignInUrl={signInAfter} />
-        ) : (
-          <SignUp afterSignUpUrl={signUpAfter} />
-        )}
+    // The overlay itself scrolls: after the email step Clerk grows the card
+    // (password / code input) and a non-scrollable fixed container would clip
+    // that second step off-screen, leaving the user with nothing to type into.
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-zinc-950/60 backdrop-blur-sm">
+      <div className="flex min-h-full items-center justify-center px-4 py-8">
+        <div className="w-full max-w-[26rem] animate-in fade-in zoom-in-50 duration-200">
+          {mode === 'sign-in' ? (
+            <SignIn afterSignInUrl={signInAfter} />
+          ) : (
+            <SignUp afterSignUpUrl={signUpAfter} />
+          )}
+        </div>
       </div>
     </div>
   );
