@@ -8,28 +8,6 @@ import { compression } from 'vite-plugin-compression2';
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
-const VENDOR_CHUNKS: [string, string][] = [
-  ['react-dom', 'vendor-react-dom'],
-  ['react-router', 'vendor-router'],
-  ['@supabase', 'vendor-supabase'],
-  ['@tanstack', 'vendor-query'],
-  ['motion', 'vendor-motion'],
-  ['zustand', 'vendor-state'],
-  ['lucide', 'vendor-icons'],
-  ['isomorphic-dompurify', 'vendor-sanitize'],
-  ['clsx', 'vendor-utils'],
-  ['tailwind', 'vendor-utils'],
-  ['react-virtuoso', 'vendor-virtual'],
-  ['react-error-boundary', 'vendor-error'],
-];
-
-function getVendorChunk(id: string): string | undefined {
-  for (const [pattern, chunk] of VENDOR_CHUNKS) {
-    if (id.includes(pattern)) return chunk;
-  }
-  return 'vendor-misc';
-}
-
 function getDataChunk(id: string): string | undefined {
   const levelMatch = id.match(/by-level\/([a-c][1-2])\.seed/i);
   if (!levelMatch) return undefined;
@@ -64,7 +42,7 @@ export default defineConfig(() => {
     },
     build: {
       outDir: 'dist',
-      sourcemap: "hidden",
+      sourcemap: 'hidden',
       chunkSizeWarningLimit: 300,
       target: 'es2022',
       minify: 'esbuild' as const,
@@ -72,7 +50,7 @@ export default defineConfig(() => {
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes('node_modules')) return getVendorChunk(id);
+            if (id.includes('node_modules')) return 'vendor';
             if (id.includes('vocabulary-translations.json')) return 'vocab-translations';
             const byLangMatch = id.match(/translations[/\\]by-lang[/\\]([a-z]{2})\.json/i);
             if (byLangMatch) return `translation-corpus-${byLangMatch[1]}`;
