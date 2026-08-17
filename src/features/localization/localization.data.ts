@@ -396,8 +396,10 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.statusIn-progress': 'In progress',
     'learningpath.statusCompleted': 'Completed',
     'learningpath.statusLocked': 'Locked',
-    'learningpath.practice': 'Levels open the vocabulary lab with real terms for your discipline — no placeholders.',
-    'learningpath.contentHint': 'Content is generated live from the 14,000+ term engineering database.',
+    'learningpath.practice':
+      'Levels open the vocabulary lab with real terms for your discipline — no placeholders.',
+    'learningpath.contentHint':
+      'Content is generated live from the 14,000+ term engineering database.',
     'learningpath.loading': 'Building your roadmap…',
     'learningpath.error': 'Could not load your roadmap. Please try again.',
     'learningpath.overallMastery': 'Overall mastery',
@@ -498,7 +500,8 @@ export const UI_TRANSLATIONS: Record<
       'An internal estimate of your readiness for real project communication.',
     'login.securityThisDevice': 'THIS DEVICE',
     'onboarding.selectDiscipline': 'Select your discipline',
-    'onboarding.selectDisciplineDesc': 'Select your engineering discipline to personalize your learning experience',
+    'onboarding.selectDisciplineDesc':
+      'Select your engineering discipline to personalize your learning experience',
     'onboarding.selectLanguageTitle': 'Select your language',
     'onboarding.englishFixedTarget': 'English is the fixed target language',
     'onboarding.start': 'Start',
@@ -690,6 +693,33 @@ export const UI_TRANSLATIONS: Record<
     'landing.faq6Q': 'Can I upgrade, downgrade, or cancel my subscription at any time?',
     'landing.navFeatures': 'Features',
     'login.forgotPassword': 'Forgot password?',
+    'login.noAccount': "Don't have an account?",
+    'login.hasAccount': 'Already have an account?',
+    'login.showPassword': 'Show password',
+    'login.hidePassword': 'Hide password',
+    'login.emailPlaceholder': 'you@example.com',
+    'login.fillRequiredFields': 'Please fill in all required fields.',
+    'login.invalidEmail': 'Please enter a valid email address.',
+    'login.passwordTooShort': 'Password must be at least 6 characters.',
+    'login.signInFailed': 'Sign-in failed.',
+    'login.providerSignInFailed': '{provider} sign-in failed.',
+    'login.demoInitFailed': 'Failed to initialize demo.',
+    'login.demoSignInFailed': 'Failed to sign in with {provider}.',
+    'login.backendUnreachable':
+      'Backend service is currently unreachable. Please check your internet connection or try local demo mode.',
+    'login.providerNotEnabled':
+      '{provider} login is not yet configured on Supabase. Use email login or try demo mode.',
+    'login.ssoDomainRequired': 'Please enter your company domain or SSO Provider ID.',
+    'login.ssoRequiresSupabase': 'SSO requires Supabase authentication to be configured.',
+    'login.ssoInvalidRedirect': 'SSO provider returned an unexpected redirect URL.',
+    'login.ssoNoRedirect': 'No redirect URL returned from SSO provider.',
+    'login.ssoFailed': 'SSO authentication failed.',
+    'login.invalidCredentials':
+      'Invalid email or password. Check your credentials, or use "Forgot password?" to reset your password. Accounts created in local/demo mode cannot be used to sign in here.',
+    'login.resetSent': 'Password reset link sent to {email}. Check your inbox.',
+    'login.resetFailed': 'Failed to send password reset link.',
+    'login.resetUnsupported':
+      'Password reset requires Supabase authentication. You can create a new account or use demo mode instead.',
     'landing.comparison3After':
       'Live cable risk identified; area isolated and electrical permit raised per HSE procedure.',
     'login.magicLinkTitle': 'Passwordless Magic Link Login',
@@ -723,9 +753,11 @@ export const UI_TRANSLATIONS: Record<
     'translator.wordLabel': 'Word:',
     'translator.primaryMeaning': 'Primary Meaning:',
     'translator.alternativeMeanings': 'Alternative Meanings & Technical Synonyms:',
-    'translator.description': 'Open-source multi-lingual engineering translation engine supporting 13 languages with audio speech synthesis and automatic RTL layout.',
+    'translator.description':
+      'Open-source multi-lingual engineering translation engine supporting 13 languages with audio speech synthesis and automatic RTL layout.',
     'translator.pageTitle': 'Engineering Multilingual Translator — Open-Source Engine',
-    'translator.pageDescription': 'Multilingual EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL technical translation engine with audio speech synthesis and automatic RTL layout.',
+    'translator.pageDescription':
+      'Multilingual EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL technical translation engine with audio speech synthesis and automatic RTL layout.',
     'translator.headerTitle': 'Engineering Instant Translator',
     'discipline.electrical.desc': 'Power Systems & Grid',
     'landing.skillReading': 'Reading',
@@ -791,7 +823,8 @@ export const UI_TRANSLATIONS: Record<
     'lesson.careerPoints': 'Career Points',
     'lesson.accuracy': 'Accuracy',
     'lesson.depletedTitle': 'System integrity depleted',
-    'lesson.depletedDesc': 'System energy reached critical limit due to inspection errors. Recharge your system to resume tasks.',
+    'lesson.depletedDesc':
+      'System energy reached critical limit due to inspection errors. Recharge your system to resume tasks.',
     'lesson.returnToControl': 'Return to control center',
     'lesson.correctTitle': 'Correct inspection',
     'lesson.incorrectTitle': 'Incorrect submittal',
@@ -799,7 +832,8 @@ export const UI_TRANSLATIONS: Record<
     'lesson.tip': 'Tip',
     'lesson.continue': 'Continue',
     'lesson.card.mcTitle': 'Technical term matching',
-    'lesson.card.mcHeading': 'Select the correct engineering definition or translation for this specification term:',
+    'lesson.card.mcHeading':
+      'Select the correct engineering definition or translation for this specification term:',
     'lesson.card.rfiTitle': 'RFI & submittal challenge',
     'lesson.card.rfiHeading': 'Complete the technical request (RFI)',
     'lesson.card.rfiSheetId': 'Project RFI #104-B',
@@ -865,8 +899,7 @@ export const UI_TRANSLATIONS: Record<
     'onboarding.interfaceLanguage': 'Arayüz dili',
     'onboarding.nativeLanguage': 'Anadil',
     'onboarding.nativeLanguageTitle': 'Öğrenme çevirilerini hangi dilde görmek istiyorsun?',
-    'onboarding.nativeLanguageDesc':
-      'Kelime ipuçları ve örnek çeviriler bu dilde görünecektir.',
+    'onboarding.nativeLanguageDesc': 'Kelime ipuçları ve örnek çeviriler bu dilde görünecektir.',
     'landing.audioPlayerTerm1': 'beton',
     'landing.streakBadge2': 'FIDIC Master',
     'curriculum.viewPlan': 'Planı görüntüle',
@@ -1178,8 +1211,10 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.statusIn-progress': 'Devam ediyor',
     'learningpath.statusCompleted': 'Tamamlandı',
     'learningpath.statusLocked': 'Kilitli',
-    'learningpath.practice': 'Seviyeler, dalına ait gerçek terimlerle kelime laboratuvarını açar — yer tutucu yok.',
-    'learningpath.contentHint': 'İçerik 14.000+ terimlik mühendislik veritabanından canlı üretilir.',
+    'learningpath.practice':
+      'Seviyeler, dalına ait gerçek terimlerle kelime laboratuvarını açar — yer tutucu yok.',
+    'learningpath.contentHint':
+      'İçerik 14.000+ terimlik mühendislik veritabanından canlı üretilir.',
     'learningpath.loading': 'Yol haritan inşa ediliyor…',
     'learningpath.error': 'Yol haritan yüklenemedi. Lütfen tekrar dene.',
     'learningpath.overallMastery': 'Genel ustalık',
@@ -1281,7 +1316,8 @@ export const UI_TRANSLATIONS: Record<
     'dashboard.readinessDesc': 'Gerçek proje iletişimine hazır olduğunuzun dahili tahmini.',
     'login.securityThisDevice': 'BU CİHAZ',
     'onboarding.selectDiscipline': 'Alanınızı seçin',
-    'onboarding.selectDisciplineDesc': 'Öğrenme deneyiminizi kişiselleştirmek için mühendislik alanınızı seçin',
+    'onboarding.selectDisciplineDesc':
+      'Öğrenme deneyiminizi kişiselleştirmek için mühendislik alanınızı seçin',
     'onboarding.selectLanguageTitle': 'Dilinizi seçin',
     'onboarding.englishFixedTarget': 'İngilizce sabit hedef dildir',
     'onboarding.start': 'Başla',
@@ -1478,6 +1514,35 @@ export const UI_TRANSLATIONS: Record<
       'Aboneliğimi istediğim zaman yükseltebilir, düşürebilir veya iptal edebilir miyim?',
     'landing.navFeatures': 'Özellikler',
     'login.forgotPassword': 'Şifremi unuttum?',
+    'login.noAccount': 'Hesabın yok mu?',
+    'login.hasAccount': 'Zaten hesabın var mı?',
+    'login.showPassword': 'Şifreyi göster',
+    'login.hidePassword': 'Şifreyi gizle',
+    'login.emailPlaceholder': 'ornek@eposta.com',
+    'login.fillRequiredFields': 'Lütfen tüm zorunlu alanları doldurun.',
+    'login.invalidEmail': 'Lütfen geçerli bir e-posta adresi girin.',
+    'login.passwordTooShort': 'Şifre en az 6 karakter olmalıdır.',
+    'login.signInFailed': 'Giriş başarısız oldu.',
+    'login.providerSignInFailed': '{provider} girişi başarısız oldu.',
+    'login.demoInitFailed': 'Demo başlatılamadı.',
+    'login.demoSignInFailed': '{provider} ile giriş yapılamadı.',
+    'login.backendUnreachable':
+      'Arka uç hizmetine şu anda ulaşılamıyor. İnternet bağlantınızı kontrol edin veya yerel demo modunu deneyin.',
+    'login.providerNotEnabled':
+      '{provider} girişi Supabase üzerinde henüz yapılandırılmamış. E-posta girişini kullanın veya demo modunu deneyin.',
+    'login.ssoDomainRequired': 'Lütfen şirket alan adınızı veya SSO Sağlayıcı Kimliğinizi girin.',
+    'login.ssoRequiresSupabase':
+      'SSO için Supabase kimlik doğrulamasının yapılandırılması gerekir.',
+    'login.ssoInvalidRedirect': "SSO sağlayıcısı beklenmeyen bir yönlendirme URL'si döndürdü.",
+    'login.ssoNoRedirect': "SSO sağlayıcısından yönlendirme URL'si döndürülmedi.",
+    'login.ssoFailed': 'SSO kimlik doğrulaması başarısız oldu.',
+    'login.invalidCredentials':
+      'E-posta veya şifre hatalı. Bilgilerinizi kontrol edin veya "Şifremi unuttum?" ile şifrenizi sıfırlayın. Yerel/demo modda oluşturulan hesaplar buradan giriş yapamaz.',
+    'login.resetSent':
+      'Şifre sıfırlama bağlantısı {email} adresine gönderildi. E-postanızı kontrol edin.',
+    'login.resetFailed': 'Şifre sıfırlama bağlantısı gönderilemedi.',
+    'login.resetUnsupported':
+      'Şifre sıfırlama için Supabase kimlik doğrulaması gerekir. Bunun yerine yeni bir hesap oluşturabilir veya demo modunu kullanabilirsiniz.',
     'landing.comparison3After':
       'Canlı kablo riski tespit edildi; bölge tecrit edildi ve HSE prosedürüne uygun olarak elektrik izni alındı.',
     'login.magicLinkTitle': 'Şifresiz Sihirli Bağlantı Girişi',
@@ -1511,9 +1576,11 @@ export const UI_TRANSLATIONS: Record<
     'translator.wordLabel': 'Kelime:',
     'translator.primaryMeaning': 'Birincil Anlam:',
     'translator.alternativeMeanings': 'Alternatif Anlamlar ve Teknik Eş Anlamlılar:',
-    'translator.description': 'Sesli konuşma sentezi ve otomatik RTL düzeniyle 13 dili destekleyen açık kaynak çok dilli mühendislik çeviri motoru.',
+    'translator.description':
+      'Sesli konuşma sentezi ve otomatik RTL düzeniyle 13 dili destekleyen açık kaynak çok dilli mühendislik çeviri motoru.',
     'translator.pageTitle': 'Mühendislik Çok Dilli Çevirmen — Açık Kaynak Motor',
-    'translator.pageDescription': 'Sesli konuşma sentezi ve otomatik RTL düzeniyle EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL teknik çeviri motoru.',
+    'translator.pageDescription':
+      'Sesli konuşma sentezi ve otomatik RTL düzeniyle EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL teknik çeviri motoru.',
     'translator.headerTitle': 'Mühendislik Anlık Çevirmen',
     'discipline.electrical.desc': 'Güç Sistemleri & Şebeke',
     'landing.skillReading': 'Okuma',
@@ -1614,8 +1681,7 @@ export const UI_TRANSLATIONS: Record<
     'onboarding.interfaceLanguage': 'لغة الواجهة',
     'onboarding.nativeLanguage': 'اللغة الأم',
     'onboarding.nativeLanguageTitle': 'بأي لغة تريد رؤية ترجمات التعلم؟',
-    'onboarding.nativeLanguageDesc':
-      'ستظهر تلميحات الكلمات وترجمات الأمثلة بهذه اللغة.',
+    'onboarding.nativeLanguageDesc': 'ستظهر تلميحات الكلمات وترجمات الأمثلة بهذه اللغة.',
     'landing.audioPlayerTerm1': 'الخرسانة',
     'landing.streakBadge2': 'شهادة FIDIC الرئيسية',
     'curriculum.viewPlan': 'عرض الخطة',
@@ -1923,8 +1989,10 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.statusIn-progress': 'قيد التقدم',
     'learningpath.statusCompleted': 'مكتمل',
     'learningpath.statusLocked': 'مقفل',
-    'learningpath.practice': 'تفتح المستويات مختبر المفردات بمصطلحات حقيقية من تخصصك — بدون محتوى مؤقت.',
-    'learningpath.contentHint': 'يتم إنشاء المحتوى مباشرة من قاعدة بيانات تضم أكثر من 14,000 مصطلح هندسي.',
+    'learningpath.practice':
+      'تفتح المستويات مختبر المفردات بمصطلحات حقيقية من تخصصك — بدون محتوى مؤقت.',
+    'learningpath.contentHint':
+      'يتم إنشاء المحتوى مباشرة من قاعدة بيانات تضم أكثر من 14,000 مصطلح هندسي.',
     'learningpath.loading': 'جارٍ إنشاء خريطة الطريق…',
     'learningpath.error': 'تعذر تحميل خريطة الطريق. يرجى المحاولة مرة أخرى.',
     'learningpath.overallMastery': 'الإتقان العام',
@@ -2223,6 +2291,34 @@ export const UI_TRANSLATIONS: Record<
     'landing.faq6Q': 'هل يمكنني ترقية اشتراكي أو الرجوع إلى اشتراك أقل أو إلغاء اشتراكي في أي وقت؟',
     'landing.navFeatures': 'الميزات',
     'login.forgotPassword': 'هل نسيت كلمة المرور؟',
+    'login.noAccount': 'ليس لديك حساب؟',
+    'login.hasAccount': 'هل لديك حساب بالفعل؟',
+    'login.showPassword': 'إظهار كلمة المرور',
+    'login.hidePassword': 'إخفاء كلمة المرور',
+    'login.emailPlaceholder': 'you@example.com',
+    'login.fillRequiredFields': 'يرجى ملء جميع الحقول المطلوبة.',
+    'login.invalidEmail': 'يرجى إدخال عنوان بريد إلكتروني صالح.',
+    'login.passwordTooShort': 'يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.',
+    'login.signInFailed': 'فشل تسجيل الدخول.',
+    'login.providerSignInFailed': 'فشل تسجيل الدخول عبر {provider}.',
+    'login.demoInitFailed': 'فشل تهيئة الوضع التجريبي.',
+    'login.demoSignInFailed': 'فشل تسجيل الدخول عبر {provider}.',
+    'login.backendUnreachable':
+      'خدمة الخلفية غير متاحة حالياً. يرجى التحقق من اتصالك بالإنترنت أو تجربة الوضع التجريبي المحلي.',
+    'login.providerNotEnabled':
+      'تسجيل الدخول عبر {provider} غير مهيأ بعد على Supabase. استخدم تسجيل الدخول بالبريد الإلكتروني أو جرّب الوضع التجريبي.',
+    'login.ssoDomainRequired': 'يرجى إدخال مجال شركتك أو معرف مزود SSO.',
+    'login.ssoRequiresSupabase': 'يتطلب SSO تهيئة مصادقة Supabase.',
+    'login.ssoInvalidRedirect': 'أعاد مزود SSO عنوان إعادة توجيه غير متوقع.',
+    'login.ssoNoRedirect': 'لم يتم إرجاع عنوان إعادة توجيه من مزود SSO.',
+    'login.ssoFailed': 'فشلت مصادقة SSO.',
+    'login.invalidCredentials':
+      'البريد الإلكتروني أو كلمة المرور غير صحيحة. تحقق من بياناتك أو استخدم "هل نسيت كلمة المرور؟" لإعادة تعيينها. الحسابات التي أُنشئت في الوضع المحلي/التجريبي لا يمكنها تسجيل الدخول هنا.',
+    'login.resetSent':
+      'تم إرسال رابط إعادة تعيين كلمة المرور إلى {email}. تحقق من بريدك الإلكتروني.',
+    'login.resetFailed': 'تعذر إرسال رابط إعادة تعيين كلمة المرور.',
+    'login.resetUnsupported':
+      'تتطلب إعادة تعيين كلمة المرور مصادقة Supabase. يمكنك إنشاء حساب جديد أو استخدام الوضع التجريبي بدلاً من ذلك.',
     'landing.comparison3After':
       'تم تحديد خطر يتعلق بكابل تحت الجهد؛ وتم عزل المنطقة والحصول على تصريح كهربائي وفقًا لإجراءات الصحة والسلامة والبيئة (HSE).',
     'login.magicLinkTitle': 'تسجيل الدخول عبر «الرابط السحري» بدون كلمة مرور',
@@ -2256,9 +2352,11 @@ export const UI_TRANSLATIONS: Record<
     'translator.wordLabel': 'الكلمة:',
     'translator.primaryMeaning': 'المعنى الأساسي:',
     'translator.alternativeMeanings': 'المعاني البديلة والمرادفات التقنية:',
-    'translator.description': 'محرك ترجمة هندسية متعدد اللغات مفتوح المصدر يدعم 13 لغة مع توليف الكلام وتخطيط RTL تلقائي.',
+    'translator.description':
+      'محرك ترجمة هندسية متعدد اللغات مفتوح المصدر يدعم 13 لغة مع توليف الكلام وتخطيط RTL تلقائي.',
     'translator.pageTitle': 'مترجم هندسي متعدد اللغات — محرك مفتوح المصدر',
-    'translator.pageDescription': 'محرك ترجمة تقنية متعدد اللغات EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL مع توليف الكلام وتخطيط RTL تلقائي.',
+    'translator.pageDescription':
+      'محرك ترجمة تقنية متعدد اللغات EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL مع توليف الكلام وتخطيط RTL تلقائي.',
     'translator.headerTitle': 'مترجم هندسي فوري',
     'discipline.electrical.desc': 'أنظمة الطاقة والشبكات',
     'landing.skillReading': 'القراءة',
@@ -2686,10 +2784,13 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.statusIn-progress': 'In Bearbeitung',
     'learningpath.statusCompleted': 'Abgeschlossen',
     'learningpath.statusLocked': 'Gesperrt',
-    'learningpath.practice': 'Stufen öffnen das Vokabularlabor mit echten Begriffen deiner Disziplin – keine Platzhalter.',
-    'learningpath.contentHint': 'Inhalte werden live aus der Datenbank mit über 14.000 Ingenieurbegriffen erzeugt.',
+    'learningpath.practice':
+      'Stufen öffnen das Vokabularlabor mit echten Begriffen deiner Disziplin – keine Platzhalter.',
+    'learningpath.contentHint':
+      'Inhalte werden live aus der Datenbank mit über 14.000 Ingenieurbegriffen erzeugt.',
     'learningpath.loading': 'Deine Straßenkarte wird erstellt…',
-    'learningpath.error': 'Deine Straßenkarte konnte nicht geladen werden. Bitte versuche es erneut.',
+    'learningpath.error':
+      'Deine Straßenkarte konnte nicht geladen werden. Bitte versuche es erneut.',
     'learningpath.overallMastery': 'Gesamtfortschritt',
     'learningpath.levelsCompleted': 'Levels abgeschlossen',
     'learningpath.band.a1': 'A1 · Grundlagen',
@@ -2792,7 +2893,8 @@ export const UI_TRANSLATIONS: Record<
       'Eine interne Einschätzung Ihrer Bereitschaft für die Kommunikation in realen Projekten.',
     'login.securityThisDevice': 'DIESES GERÄT',
     'onboarding.selectDiscipline': 'Wählen Sie Ihr Fachgebiet aus',
-    'onboarding.selectDisciplineDesc': 'Wählen Sie Ihre Ingenieurdisziplin, um Ihr Lernen zu personalisieren',
+    'onboarding.selectDisciplineDesc':
+      'Wählen Sie Ihre Ingenieurdisziplin, um Ihr Lernen zu personalisieren',
     'onboarding.selectLanguageTitle': 'Wählen Sie Ihre Sprache',
     'onboarding.englishFixedTarget': 'Englisch ist die feste Zielsprache',
     'onboarding.start': 'Starten',
@@ -2994,6 +3096,35 @@ export const UI_TRANSLATIONS: Record<
     'landing.faq6Q': 'Kann ich mein Abonnement jederzeit upgraden, downgraden oder kündigen?',
     'landing.navFeatures': 'Funktionen',
     'login.forgotPassword': 'Passwort vergessen?',
+    'login.noAccount': 'Noch kein Konto?',
+    'login.hasAccount': 'Bereits ein Konto?',
+    'login.showPassword': 'Passwort anzeigen',
+    'login.hidePassword': 'Passwort ausblenden',
+    'login.emailPlaceholder': 'you@example.com',
+    'login.fillRequiredFields': 'Bitte füllen Sie alle Pflichtfelder aus.',
+    'login.invalidEmail': 'Bitte geben Sie eine gültige E-Mail-Adresse ein.',
+    'login.passwordTooShort': 'Das Passwort muss mindestens 6 Zeichen lang sein.',
+    'login.signInFailed': 'Anmeldung fehlgeschlagen.',
+    'login.providerSignInFailed': 'Anmeldung mit {provider} fehlgeschlagen.',
+    'login.demoInitFailed': 'Demo konnte nicht initialisiert werden.',
+    'login.demoSignInFailed': 'Anmeldung mit {provider} fehlgeschlagen.',
+    'login.backendUnreachable':
+      'Der Backend-Dienst ist derzeit nicht erreichbar. Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie den lokalen Demo-Modus.',
+    'login.providerNotEnabled':
+      '{provider}-Anmeldung ist auf Supabase noch nicht konfiguriert. Verwenden Sie die E-Mail-Anmeldung oder versuchen Sie den Demo-Modus.',
+    'login.ssoDomainRequired': 'Bitte geben Sie Ihre Unternehmensdomain oder SSO-Anbieter-ID ein.',
+    'login.ssoRequiresSupabase': 'SSO erfordert eine konfigurierte Supabase-Authentifizierung.',
+    'login.ssoInvalidRedirect':
+      'Der SSO-Anbieter hat eine unerwartete Weiterleitungs-URL zurückgegeben.',
+    'login.ssoNoRedirect': 'Keine Weiterleitungs-URL vom SSO-Anbieter zurückgegeben.',
+    'login.ssoFailed': 'SSO-Authentifizierung fehlgeschlagen.',
+    'login.invalidCredentials':
+      'E-Mail oder Passwort ist falsch. Überprüfen Sie Ihre Daten oder nutzen Sie "Passwort vergessen?" zum Zurücksetzen. Konten aus dem lokalen/Demo-Modus können sich hier nicht anmelden.',
+    'login.resetSent':
+      'Link zum Zurücksetzen des Passworts an {email} gesendet. Prüfen Sie Ihren Posteingang.',
+    'login.resetFailed': 'Link zum Zurücksetzen des Passworts konnte nicht gesendet werden.',
+    'login.resetUnsupported':
+      'Zum Zurücksetzen des Passworts ist die Supabase-Authentifizierung erforderlich. Sie können stattdessen ein neues Konto erstellen oder den Demo-Modus verwenden.',
     'landing.comparison3After':
       'Risiko durch stromführende Kabel festgestellt; Bereich abgesperrt und gemäß HSE-Verfahren eine elektrische Arbeitsgenehmigung beantragt.',
     'login.magicLinkTitle': 'Anmeldung über „Magic Link“ ohne Passwort',
@@ -3027,9 +3158,11 @@ export const UI_TRANSLATIONS: Record<
     'translator.wordLabel': 'Wort:',
     'translator.primaryMeaning': 'Hauptbedeutung:',
     'translator.alternativeMeanings': 'Alternative Bedeutungen & technische Synonyme:',
-    'translator.description': 'Open-Source-Mehrsprachige-Übersetzungs-Engine für Technik mit Unterstützung für 13 Sprachen, Sprachsynthese und automatischem RTL-Layout.',
+    'translator.description':
+      'Open-Source-Mehrsprachige-Übersetzungs-Engine für Technik mit Unterstützung für 13 Sprachen, Sprachsynthese und automatischem RTL-Layout.',
     'translator.pageTitle': 'Mehrsprachiger technischer Übersetzer — Open-Source-Engine',
-    'translator.pageDescription': 'Mehrsprachige technische Übersetzungs-Engine für EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL mit Sprachsynthese und automatischem RTL-Layout.',
+    'translator.pageDescription':
+      'Mehrsprachige technische Übersetzungs-Engine für EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL mit Sprachsynthese und automatischem RTL-Layout.',
     'translator.headerTitle': 'Technischer Sofort-Übersetzer',
     'discipline.electrical.desc': 'Energieversorgung & Netz',
     'landing.skillReading': 'Lesen',
@@ -3457,8 +3590,10 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.statusIn-progress': 'En curso',
     'learningpath.statusCompleted': 'Completado',
     'learningpath.statusLocked': 'Bloqueado',
-    'learningpath.practice': 'Los niveles abren el laboratorio de vocabulario con términos reales de tu especialidad: sin marcadores.',
-    'learningpath.contentHint': 'El contenido se genera en vivo desde la base de datos de más de 14.000 términos de ingeniería.',
+    'learningpath.practice':
+      'Los niveles abren el laboratorio de vocabulario con términos reales de tu especialidad: sin marcadores.',
+    'learningpath.contentHint':
+      'El contenido se genera en vivo desde la base de datos de más de 14.000 términos de ingeniería.',
     'learningpath.loading': 'Creando tu hoja de ruta…',
     'learningpath.error': 'No se pudo cargar tu hoja de ruta. Inténtalo de nuevo.',
     'learningpath.overallMastery': 'Dominio general',
@@ -3561,7 +3696,8 @@ export const UI_TRANSLATIONS: Record<
       'Una evaluación interna de tu preparación para la comunicación en proyectos reales.',
     'login.securityThisDevice': 'ESTE DISPOSITIVO',
     'onboarding.selectDiscipline': 'Selecciona tu disciplina',
-    'onboarding.selectDisciplineDesc': 'Selecciona tu disciplina de ingeniería para personalizar tu experiencia de aprendizaje',
+    'onboarding.selectDisciplineDesc':
+      'Selecciona tu disciplina de ingeniería para personalizar tu experiencia de aprendizaje',
     'onboarding.selectLanguageTitle': 'Selecciona tu idioma',
     'onboarding.englishFixedTarget': 'El inglés es el idioma objetivo fijo',
     'onboarding.start': 'Iniciar',
@@ -3766,6 +3902,34 @@ export const UI_TRANSLATIONS: Record<
       '¿Puedo cambiar a un plan superior, a uno inferior o dar de baja mi suscripción en cualquier momento?',
     'landing.navFeatures': 'Características',
     'login.forgotPassword': '¿Has olvidado la contraseña?',
+    'login.noAccount': '¿No tienes una cuenta?',
+    'login.hasAccount': '¿Ya tienes una cuenta?',
+    'login.showPassword': 'Mostrar contraseña',
+    'login.hidePassword': 'Ocultar contraseña',
+    'login.emailPlaceholder': 'you@example.com',
+    'login.fillRequiredFields': 'Por favor, rellena todos los campos obligatorios.',
+    'login.invalidEmail': 'Por favor, introduce una dirección de correo electrónico válida.',
+    'login.passwordTooShort': 'La contraseña debe tener al menos 6 caracteres.',
+    'login.signInFailed': 'Error al iniciar sesión.',
+    'login.providerSignInFailed': 'Error al iniciar sesión con {provider}.',
+    'login.demoInitFailed': 'No se pudo inicializar la demo.',
+    'login.demoSignInFailed': 'Error al iniciar sesión con {provider}.',
+    'login.backendUnreachable':
+      'El servicio de backend no está disponible actualmente. Comprueba tu conexión a internet o prueba el modo demo local.',
+    'login.providerNotEnabled':
+      'El inicio de sesión con {provider} aún no está configurado en Supabase. Usa el inicio de sesión por correo o prueba el modo demo.',
+    'login.ssoDomainRequired': 'Introduce el dominio de tu empresa o el ID del proveedor SSO.',
+    'login.ssoRequiresSupabase': 'SSO requiere que la autenticación de Supabase esté configurada.',
+    'login.ssoInvalidRedirect': 'El proveedor SSO devolvió una URL de redirección inesperada.',
+    'login.ssoNoRedirect': 'No se devolvió ninguna URL de redirección del proveedor SSO.',
+    'login.ssoFailed': 'Error en la autenticación SSO.',
+    'login.invalidCredentials':
+      'Correo electrónico o contraseña incorrectos. Comprueba tus datos o usa "¿Has olvidado la contraseña?" para restablecerla. Las cuentas creadas en modo local/demo no pueden iniciar sesión aquí.',
+    'login.resetSent':
+      'Enlace de restablecimiento de contraseña enviado a {email}. Revisa tu bandeja de entrada.',
+    'login.resetFailed': 'No se pudo enviar el enlace de restablecimiento de contraseña.',
+    'login.resetUnsupported':
+      'El restablecimiento de contraseña requiere autenticación de Supabase. Puedes crear una cuenta nueva o usar el modo demo.',
     'landing.comparison3After':
       'Se ha detectado un riesgo relacionado con un cable bajo tensión; se ha aislado la zona y se ha solicitado la autorización eléctrica conforme al procedimiento de HSE.',
     'login.magicLinkTitle': 'Inicio de sesión con «Magic Link» sin contraseña',
@@ -3799,9 +3963,11 @@ export const UI_TRANSLATIONS: Record<
     'translator.wordLabel': 'Palabra:',
     'translator.primaryMeaning': 'Significado principal:',
     'translator.alternativeMeanings': 'Significados alternativos y sinónimos técnicos:',
-    'translator.description': 'Motor de traducción técnica multilingüe de código abierto que admite 13 idiomas con síntesis de voz y diseño RTL automático.',
+    'translator.description':
+      'Motor de traducción técnica multilingüe de código abierto que admite 13 idiomas con síntesis de voz y diseño RTL automático.',
     'translator.pageTitle': 'Traductor técnico multilingüe — Motor de código abierto',
-    'translator.pageDescription': 'Motor de traducción técnica multilingüe EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL con síntesis de voz y diseño RTL automático.',
+    'translator.pageDescription':
+      'Motor de traducción técnica multilingüe EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL con síntesis de voz y diseño RTL automático.',
     'translator.headerTitle': 'Traductor técnico instantáneo',
     'discipline.electrical.desc': 'Sistemas de Energía & Redes',
     'landing.skillReading': 'Lectura',
@@ -4225,8 +4391,10 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.statusIn-progress': 'Em andamento',
     'learningpath.statusCompleted': 'Concluído',
     'learningpath.statusLocked': 'Bloqueado',
-    'learningpath.practice': 'Os níveis abrem o laboratório de vocabulário com termos reais da sua especialidade — sem placeholders.',
-    'learningpath.contentHint': 'O conteúdo é gerado ao vivo a partir do banco com mais de 14.000 termos de engenharia.',
+    'learningpath.practice':
+      'Os níveis abrem o laboratório de vocabulário com termos reais da sua especialidade — sem placeholders.',
+    'learningpath.contentHint':
+      'O conteúdo é gerado ao vivo a partir do banco com mais de 14.000 termos de engenharia.',
     'learningpath.loading': 'Criando sua trilha…',
     'learningpath.error': 'Não foi possível carregar sua trilha. Tente novamente.',
     'learningpath.overallMastery': 'Domínio geral',
@@ -4330,7 +4498,8 @@ export const UI_TRANSLATIONS: Record<
       'Uma avaliação interna do seu nível de preparação para a comunicação em projetos reais.',
     'login.securityThisDevice': 'ESTE DISPOSITIVO',
     'onboarding.selectDiscipline': 'Selecione sua área de estudo',
-    'onboarding.selectDisciplineDesc': 'Selecione sua disciplina de engenharia para personalizar sua experiência de aprendizado',
+    'onboarding.selectDisciplineDesc':
+      'Selecione sua disciplina de engenharia para personalizar sua experiência de aprendizado',
     'onboarding.selectLanguageTitle': 'Selecione seu idioma',
     'onboarding.englishFixedTarget': 'O inglês é o idioma alvo fixo',
     'onboarding.start': 'Iniciar',
@@ -4532,6 +4701,34 @@ export const UI_TRANSLATIONS: Record<
       'Posso fazer um upgrade, um downgrade ou cancelar minha assinatura a qualquer momento?',
     'landing.navFeatures': 'Recursos',
     'login.forgotPassword': 'Esqueceu a senha?',
+    'login.noAccount': 'Não tem uma conta?',
+    'login.hasAccount': 'Já tem uma conta?',
+    'login.showPassword': 'Mostrar senha',
+    'login.hidePassword': 'Ocultar senha',
+    'login.emailPlaceholder': 'you@example.com',
+    'login.fillRequiredFields': 'Preencha todos os campos obrigatórios.',
+    'login.invalidEmail': 'Digite um endereço de e-mail válido.',
+    'login.passwordTooShort': 'A senha deve ter pelo menos 6 caracteres.',
+    'login.signInFailed': 'Falha ao entrar.',
+    'login.providerSignInFailed': 'Falha ao entrar com {provider}.',
+    'login.demoInitFailed': 'Não foi possível inicializar a demonstração.',
+    'login.demoSignInFailed': 'Falha ao entrar com {provider}.',
+    'login.backendUnreachable':
+      'O serviço de backend está inacessível no momento. Verifique sua conexão com a internet ou tente o modo demo local.',
+    'login.providerNotEnabled':
+      'O login com {provider} ainda não está configurado no Supabase. Use o login por e-mail ou tente o modo demo.',
+    'login.ssoDomainRequired': 'Digite o domínio da sua empresa ou o ID do provedor SSO.',
+    'login.ssoRequiresSupabase': 'O SSO exige que a autenticação do Supabase esteja configurada.',
+    'login.ssoInvalidRedirect': 'O provedor SSO retornou uma URL de redirecionamento inesperada.',
+    'login.ssoNoRedirect': 'Nenhuma URL de redirecionamento retornada pelo provedor SSO.',
+    'login.ssoFailed': 'Falha na autenticação SSO.',
+    'login.invalidCredentials':
+      'E-mail ou senha incorretos. Verifique seus dados ou use "Esqueceu a senha?" para redefini-la. Contas criadas no modo local/demo não podem entrar aqui.',
+    'login.resetSent':
+      'Link de redefinição de senha enviado para {email}. Verifique sua caixa de entrada.',
+    'login.resetFailed': 'Não foi possível enviar o link de redefinição de senha.',
+    'login.resetUnsupported':
+      'A redefinição de senha requer autenticação do Supabase. Você pode criar uma nova conta ou usar o modo demo.',
     'landing.comparison3After':
       'Risco relacionado a fio sob tensão identificado; área isolada e autorização elétrica emitida de acordo com o procedimento da HSE.',
     'login.magicLinkTitle': 'Login por link mágico sem senha',
@@ -4565,9 +4762,11 @@ export const UI_TRANSLATIONS: Record<
     'translator.wordLabel': 'Palavra:',
     'translator.primaryMeaning': 'Significado principal:',
     'translator.alternativeMeanings': 'Significados alternativos e sinônimos técnicos:',
-    'translator.description': 'Motor de tradução técnica multilíngue de código aberto compatível com 13 idiomas, com síntese de fala e layout RTL automático.',
+    'translator.description':
+      'Motor de tradução técnica multilíngue de código aberto compatível com 13 idiomas, com síntese de fala e layout RTL automático.',
     'translator.pageTitle': 'Tradutor técnico multilíngue — Motor de código aberto',
-    'translator.pageDescription': 'Motor de tradução técnica multilíngue EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL com síntese de fala e layout RTL automático.',
+    'translator.pageDescription':
+      'Motor de tradução técnica multilíngue EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL com síntese de fala e layout RTL automático.',
     'translator.headerTitle': 'Tradutor técnico instantâneo',
     'discipline.electrical.desc': 'Sistemas de Energia & Redes',
     'landing.skillReading': 'Leitura',
@@ -5000,8 +5199,10 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.statusIn-progress': 'En cours',
     'learningpath.statusCompleted': 'Terminé',
     'learningpath.statusLocked': 'Verrouillé',
-    'learningpath.practice': 'Les niveaux ouvrent le laboratoire de vocabulaire avec de vrais termes de votre spécialité — pas de placeholders.',
-    'learningpath.contentHint': 'Le contenu est généré en direct depuis la base de plus de 14 000 termes d’ingénierie.',
+    'learningpath.practice':
+      'Les niveaux ouvrent le laboratoire de vocabulaire avec de vrais termes de votre spécialité — pas de placeholders.',
+    'learningpath.contentHint':
+      'Le contenu est généré en direct depuis la base de plus de 14 000 termes d’ingénierie.',
     'learningpath.loading': 'Création de votre feuille de route…',
     'learningpath.error': 'Impossible de charger votre feuille de route. Veuillez réessayer.',
     'learningpath.overallMastery': 'Maîtrise globale',
@@ -5106,9 +5307,10 @@ export const UI_TRANSLATIONS: Record<
       "Une évaluation interne de votre niveau de préparation à la communication dans le cadre d'un projet concret.",
     'login.securityThisDevice': 'CET APPAREIL',
     'onboarding.selectDiscipline': 'Sélectionnez votre discipline',
-    'onboarding.selectDisciplineDesc': 'Sélectionnez votre discipline d\'ingénierie pour personnaliser votre expérience d\'apprentissage',
+    'onboarding.selectDisciplineDesc':
+      "Sélectionnez votre discipline d'ingénierie pour personnaliser votre expérience d'apprentissage",
     'onboarding.selectLanguageTitle': 'Sélectionnez votre langue',
-    'onboarding.englishFixedTarget': 'L\'anglais est la langue cible fixe',
+    'onboarding.englishFixedTarget': "L'anglais est la langue cible fixe",
     'onboarding.start': 'Démarrer',
     'onboarding.finish': 'Terminer',
     'landing.faq2Q': "À qui s'adresse précisément EngVox ?",
@@ -5314,6 +5516,36 @@ export const UI_TRANSLATIONS: Record<
       'Puis-je passer à un abonnement supérieur, revenir à un abonnement inférieur ou résilier mon abonnement à tout moment ?',
     'landing.navFeatures': 'Caractéristiques',
     'login.forgotPassword': 'Mot de passe oublié ?',
+    'login.noAccount': "Vous n'avez pas de compte ?",
+    'login.hasAccount': 'Vous avez déjà un compte ?',
+    'login.showPassword': 'Afficher le mot de passe',
+    'login.hidePassword': 'Masquer le mot de passe',
+    'login.emailPlaceholder': 'you@example.com',
+    'login.fillRequiredFields': 'Veuillez remplir tous les champs obligatoires.',
+    'login.invalidEmail': 'Veuillez saisir une adresse e-mail valide.',
+    'login.passwordTooShort': 'Le mot de passe doit contenir au moins 6 caractères.',
+    'login.signInFailed': 'Échec de la connexion.',
+    'login.providerSignInFailed': 'Échec de la connexion avec {provider}.',
+    'login.demoInitFailed': "Impossible d'initialiser la démo.",
+    'login.demoSignInFailed': 'Échec de la connexion avec {provider}.',
+    'login.backendUnreachable':
+      'Le service backend est actuellement injoignable. Vérifiez votre connexion internet ou essayez le mode démo local.',
+    'login.providerNotEnabled':
+      "La connexion {provider} n'est pas encore configurée sur Supabase. Utilisez la connexion par e-mail ou essayez le mode démo.",
+    'login.ssoDomainRequired':
+      "Veuillez saisir le domaine de votre entreprise ou l'identifiant du fournisseur SSO.",
+    'login.ssoRequiresSupabase':
+      "Le SSO nécessite que l'authentification Supabase soit configurée.",
+    'login.ssoInvalidRedirect': 'Le fournisseur SSO a renvoyé une URL de redirection inattendue.',
+    'login.ssoNoRedirect': 'Aucune URL de redirection renvoyée par le fournisseur SSO.',
+    'login.ssoFailed': "Échec de l'authentification SSO.",
+    'login.invalidCredentials':
+      'Adresse e-mail ou mot de passe incorrect. Vérifiez vos identifiants ou utilisez « Mot de passe oublié ? » pour le réinitialiser. Les comptes créés en mode local/démo ne peuvent pas se connecter ici.',
+    'login.resetSent':
+      'Lien de réinitialisation du mot de passe envoyé à {email}. Vérifiez votre boîte de réception.',
+    'login.resetFailed': "Impossible d'envoyer le lien de réinitialisation du mot de passe.",
+    'login.resetUnsupported':
+      "La réinitialisation du mot de passe nécessite l'authentification Supabase. Vous pouvez créer un nouveau compte ou utiliser le mode démo.",
     'landing.comparison3After':
       'Risque lié à un câble sous tension identifié ; zone isolée et permis électrique délivré conformément à la procédure HSE.',
     'login.magicLinkTitle': 'Connexion via « Magic Link » sans mot de passe',
@@ -5334,7 +5566,7 @@ export const UI_TRANSLATIONS: Record<
     'translator.translateNow': 'Traduire le texte maintenant',
     'translator.copied': 'Copié !',
     'translator.clearText': 'Effacer le texte',
-    'translator.infrastructureAttribution': 'Attribution d\'infrastructure :',
+    'translator.infrastructureAttribution': "Attribution d'infrastructure :",
     'translator.poweredBy': 'Propulsé par les moteurs open source Google GTX et Lingva',
     'translator.liveTranslate': 'Traduction en direct (anti-rebond auto de 500 ms)',
     'translator.fromLabel': 'De :',
@@ -5343,14 +5575,16 @@ export const UI_TRANSLATIONS: Record<
     'translator.swapTitle': 'Échanger les langues source et cible',
     'translator.sourceText': 'Texte source / Document technique',
     'translator.translatedOutput': 'Sortie traduite',
-    'translator.singleWordAnalysis': 'Analyse technique d\'un seul mot',
+    'translator.singleWordAnalysis': "Analyse technique d'un seul mot",
     'translator.wordType': 'Type de mot :',
     'translator.wordLabel': 'Mot :',
     'translator.primaryMeaning': 'Signification principale :',
     'translator.alternativeMeanings': 'Significations alternatives et synonymes techniques :',
-    'translator.description': 'Moteur de traduction technique multilingue open source prenant en charge 13 langues avec synthèse vocale et mise en page RTL automatique.',
+    'translator.description':
+      'Moteur de traduction technique multilingue open source prenant en charge 13 langues avec synthèse vocale et mise en page RTL automatique.',
     'translator.pageTitle': 'Traducteur technique multilingue — Moteur open source',
-    'translator.pageDescription': 'Moteur de traduction technique multilingue EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL avec synthèse vocale et mise en page RTL automatique.',
+    'translator.pageDescription':
+      'Moteur de traduction technique multilingue EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL avec synthèse vocale et mise en page RTL automatique.',
     'translator.headerTitle': 'Traducteur technique instantané',
     'discipline.electrical.desc': 'Systèmes Électriques & Réseaux',
     'landing.skillReading': 'Lecture',
@@ -5774,8 +6008,10 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.statusIn-progress': 'В процессе',
     'learningpath.statusCompleted': 'Завершено',
     'learningpath.statusLocked': 'Заблокировано',
-    'learningpath.practice': 'Уровни открывают словарную лабораторию с реальными терминами вашей специальности — без заглушек.',
-    'learningpath.contentHint': 'Контент создаётся в реальном времени из базы более чем 14 000 инженерных терминов.',
+    'learningpath.practice':
+      'Уровни открывают словарную лабораторию с реальными терминами вашей специальности — без заглушек.',
+    'learningpath.contentHint':
+      'Контент создаётся в реальном времени из базы более чем 14 000 инженерных терминов.',
     'learningpath.loading': 'Создание вашей карты…',
     'learningpath.error': 'Не удалось загрузить вашу карту. Попробуйте ещё раз.',
     'learningpath.overallMastery': 'Общий прогресс',
@@ -5878,7 +6114,8 @@ export const UI_TRANSLATIONS: Record<
       'Внутренняя оценка вашей готовности к общению в рамках реальных проектов.',
     'login.securityThisDevice': 'ДАННОЕ УСТРОЙСТВО',
     'onboarding.selectDiscipline': 'Выберите свою дисциплину',
-    'onboarding.selectDisciplineDesc': 'Выберите свою инженерную дисциплину, чтобы персонализировать обучение',
+    'onboarding.selectDisciplineDesc':
+      'Выберите свою инженерную дисциплину, чтобы персонализировать обучение',
     'onboarding.selectLanguageTitle': 'Выберите свой язык',
     'onboarding.englishFixedTarget': 'Английский — фиксированный целевой язык',
     'onboarding.start': 'Начать',
@@ -6084,6 +6321,33 @@ export const UI_TRANSLATIONS: Record<
       'Могу ли я в любой момент перейти на более дорогой тариф, перейти на более дешевый тариф или отменить подписку?',
     'landing.navFeatures': 'Особенности',
     'login.forgotPassword': 'Забыли пароль?',
+    'login.noAccount': 'Нет аккаунта?',
+    'login.hasAccount': 'Уже есть аккаунт?',
+    'login.showPassword': 'Показать пароль',
+    'login.hidePassword': 'Скрыть пароль',
+    'login.emailPlaceholder': 'you@example.com',
+    'login.fillRequiredFields': 'Пожалуйста, заполните все обязательные поля.',
+    'login.invalidEmail': 'Введите корректный адрес электронной почты.',
+    'login.passwordTooShort': 'Пароль должен содержать не менее 6 символов.',
+    'login.signInFailed': 'Не удалось войти.',
+    'login.providerSignInFailed': 'Не удалось войти через {provider}.',
+    'login.demoInitFailed': 'Не удалось инициализировать демо-режим.',
+    'login.demoSignInFailed': 'Не удалось войти через {provider}.',
+    'login.backendUnreachable':
+      'Серверная служба сейчас недоступна. Проверьте подключение к интернету или попробуйте локальный демо-режим.',
+    'login.providerNotEnabled':
+      'Вход через {provider} ещё не настроен в Supabase. Используйте вход по электронной почте или попробуйте демо-режим.',
+    'login.ssoDomainRequired': 'Введите домен вашей компании или ID поставщика SSO.',
+    'login.ssoRequiresSupabase': 'Для SSO требуется настроенная аутентификация Supabase.',
+    'login.ssoInvalidRedirect': 'Поставщик SSO вернул неожиданный URL перенаправления.',
+    'login.ssoNoRedirect': 'Поставщик SSO не вернул URL перенаправления.',
+    'login.ssoFailed': 'Сбой аутентификации SSO.',
+    'login.invalidCredentials':
+      'Неверный адрес электронной почты или пароль. Проверьте данные или воспользуйтесь «Забыли пароль?» для сброса. Аккаунты, созданные в локальном/демо-режиме, не могут войти здесь.',
+    'login.resetSent': 'Ссылка для сброса пароля отправлена на {email}. Проверьте почту.',
+    'login.resetFailed': 'Не удалось отправить ссылку для сброса пароля.',
+    'login.resetUnsupported':
+      'Для сброса пароля требуется аутентификация Supabase. Вы можете создать новый аккаунт или использовать демо-режим.',
     'landing.comparison3After':
       'Выявлен риск, связанный с находящимся под напряжением кабелем; участок изолирован, и в соответствии с процедурой HSE оформлено разрешение на проведение электромонтажных работ.',
     'login.magicLinkTitle': 'Вход через «Magic Link» без ввода пароля',
@@ -6117,9 +6381,11 @@ export const UI_TRANSLATIONS: Record<
     'translator.wordLabel': 'Слово:',
     'translator.primaryMeaning': 'Основное значение:',
     'translator.alternativeMeanings': 'Альтернативные значения и технические синонимы:',
-    'translator.description': 'Многоязычный открытый движок технического перевода с поддержкой 13 языков, синтеза речи и автоматической RTL-разметки.',
+    'translator.description':
+      'Многоязычный открытый движок технического перевода с поддержкой 13 языков, синтеза речи и автоматической RTL-разметки.',
     'translator.pageTitle': 'Многоязычный технический переводчик — открытый движок',
-    'translator.pageDescription': 'Многоязычный движок технического перевода EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL с синтезом речи и автоматической RTL-разметкой.',
+    'translator.pageDescription':
+      'Многоязычный движок технического перевода EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL с синтезом речи и автоматической RTL-разметкой.',
     'translator.headerTitle': 'Мгновенный технический переводчик',
     'discipline.electrical.desc': 'Системы электроснабжения & Сети',
     'landing.skillReading': 'Чтение',
@@ -6799,6 +7065,32 @@ export const UI_TRANSLATIONS: Record<
     'landing.faq6Q': '我可以随时升级、降级或取消我的订阅吗？',
     'landing.navFeatures': '功能',
     'login.forgotPassword': '忘记密码了吗？',
+    'login.noAccount': '还没有账号？',
+    'login.hasAccount': '已有账号？',
+    'login.showPassword': '显示密码',
+    'login.hidePassword': '隐藏密码',
+    'login.emailPlaceholder': 'you@example.com',
+    'login.fillRequiredFields': '请填写所有必填字段。',
+    'login.invalidEmail': '请输入有效的电子邮件地址。',
+    'login.passwordTooShort': '密码至少需要 6 个字符。',
+    'login.signInFailed': '登录失败。',
+    'login.providerSignInFailed': '使用 {provider} 登录失败。',
+    'login.demoInitFailed': '无法初始化演示模式。',
+    'login.demoSignInFailed': '使用 {provider} 登录失败。',
+    'login.backendUnreachable': '后端服务当前不可用。请检查您的网络连接，或尝试本地演示模式。',
+    'login.providerNotEnabled':
+      '{provider} 登录尚未在 Supabase 上配置。请使用电子邮件登录或尝试演示模式。',
+    'login.ssoDomainRequired': '请输入您的公司域名或 SSO 提供商 ID。',
+    'login.ssoRequiresSupabase': 'SSO 需要配置 Supabase 身份验证。',
+    'login.ssoInvalidRedirect': 'SSO 提供商返回了意外的重定向 URL。',
+    'login.ssoNoRedirect': 'SSO 提供商未返回重定向 URL。',
+    'login.ssoFailed': 'SSO 身份验证失败。',
+    'login.invalidCredentials':
+      '邮箱或密码错误。请检查您的凭据，或使用“忘记密码了吗？”重置密码。在本地/演示模式下创建的账户无法在此登录。',
+    'login.resetSent': '密码重置链接已发送至 {email}。请检查您的收件箱。',
+    'login.resetFailed': '无法发送密码重置链接。',
+    'login.resetUnsupported':
+      '密码重置需要配置 Supabase 身份验证。您可以创建新账户或改用演示模式。',
     'landing.comparison3After':
       '已发现带电电缆风险；已对该区域进行隔离，并根据HSE程序申请了电气施工许可。',
     'login.magicLinkTitle': '无需密码的“魔法链接”登录',
@@ -6834,7 +7126,8 @@ export const UI_TRANSLATIONS: Record<
     'translator.alternativeMeanings': '替代含义和技术同义词：',
     'translator.description': '支持 13 种语言、语音合成和自动 RTL 布局的开源多语言工程翻译引擎。',
     'translator.pageTitle': '工程多语言翻译器 — 开源引擎',
-    'translator.pageDescription': '支持语音合成和自动 RTL 布局的多语言 EN、TR、AR、ZH、RU、DE、ES、IT、FR、JA、KO、PT、PL 技术翻译引擎。',
+    'translator.pageDescription':
+      '支持语音合成和自动 RTL 布局的多语言 EN、TR、AR、ZH、RU、DE、ES、IT、FR、JA、KO、PT、PL 技术翻译引擎。',
     'translator.headerTitle': '工程即时翻译器',
     'discipline.electrical.desc': '电力系统 & 电网',
     'landing.skillReading': '阅读',
@@ -7240,8 +7533,10 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.statusIn-progress': '進行中',
     'learningpath.statusCompleted': '完了',
     'learningpath.statusLocked': 'ロック中',
-    'learningpath.practice': '各レベルで、あなたの専門分野の実際の用語を使った語彙ラボが開きます。プレースホルダーはありません。',
-    'learningpath.contentHint': 'コンテンツは14,000以上のエンジニアリング用語データベースからリアルタイムに生成されます。',
+    'learningpath.practice':
+      '各レベルで、あなたの専門分野の実際の用語を使った語彙ラボが開きます。プレースホルダーはありません。',
+    'learningpath.contentHint':
+      'コンテンツは14,000以上のエンジニアリング用語データベースからリアルタイムに生成されます。',
     'learningpath.loading': 'ロードマップを作成中…',
     'learningpath.error': 'ロードマップを読み込めませんでした。もう一度お試しください。',
     'learningpath.overallMastery': '全体の習熟度',
@@ -7541,6 +7836,34 @@ export const UI_TRANSLATIONS: Record<
       'サブスクリプションはいつでもアップグレード、ダウングレード、または解約できますか？',
     'landing.navFeatures': '特長',
     'login.forgotPassword': 'パスワードをお忘れですか？',
+    'login.noAccount': 'アカウントをお持ちでないですか？',
+    'login.hasAccount': 'すでにアカウントをお持ちですか？',
+    'login.showPassword': 'パスワードを表示',
+    'login.hidePassword': 'パスワードを非表示',
+    'login.emailPlaceholder': 'you@example.com',
+    'login.fillRequiredFields': '必須項目をすべて入力してください。',
+    'login.invalidEmail': '有効なメールアドレスを入力してください。',
+    'login.passwordTooShort': 'パスワードは6文字以上で入力してください。',
+    'login.signInFailed': 'サインインに失敗しました。',
+    'login.providerSignInFailed': '{provider} でのサインインに失敗しました。',
+    'login.demoInitFailed': 'デモを初期化できませんでした。',
+    'login.demoSignInFailed': '{provider} でのサインインに失敗しました。',
+    'login.backendUnreachable':
+      'バックエンドサービスに現在アクセスできません。インターネット接続を確認するか、ローカルデモモードをお試しください。',
+    'login.providerNotEnabled':
+      '{provider} ログインは Supabase でまだ設定されていません。メールログインを使用するか、デモモードをお試しください。',
+    'login.ssoDomainRequired': '会社のドメインまたはSSOプロバイダーIDを入力してください。',
+    'login.ssoRequiresSupabase': 'SSOにはSupabase認証の設定が必要です。',
+    'login.ssoInvalidRedirect': 'SSOプロバイダーが予期しないリダイレクトURLを返しました。',
+    'login.ssoNoRedirect': 'SSOプロバイダーからリダイレクトURLが返されませんでした。',
+    'login.ssoFailed': 'SSO認証に失敗しました。',
+    'login.invalidCredentials':
+      'メールアドレスまたはパスワードが正しくありません。入力内容をご確認いただくか、「パスワードをお忘れですか？」からリセットしてください。ローカル/デモモードで作成されたアカウントはここからサインインできません。',
+    'login.resetSent':
+      'パスワードリセットリンクを {email} に送信しました。受信トレイをご確認ください。',
+    'login.resetFailed': 'パスワードリセットリンクを送信できませんでした。',
+    'login.resetUnsupported':
+      'パスワードのリセットにはSupabase認証が必要です。代わりに新しいアカウントを作成するか、デモモードをご利用ください。',
     'landing.comparison3After':
       'ケーブルの感電リスクが確認されたため、当該エリアを隔離し、HSEの手順に従って電気工事許可を取得した。',
     'login.magicLinkTitle': 'パスワード不要のマジックリンクログイン',
@@ -7575,9 +7898,11 @@ export const UI_TRANSLATIONS: Record<
     'translator.wordLabel': '単語：',
     'translator.primaryMeaning': '主な意味：',
     'translator.alternativeMeanings': '代替の意味と技術的同義語：',
-    'translator.description': '13言語、音声合成、自動RTL対応のオープンソース多言語エンジニアリング翻訳エンジン。',
+    'translator.description':
+      '13言語、音声合成、自動RTL対応のオープンソース多言語エンジニアリング翻訳エンジン。',
     'translator.pageTitle': 'エンジニアリング多言語翻訳 — オープンソースエンジン',
-    'translator.pageDescription': '音声合成と自動RTL対応の多言語EN・TR・AR・ZH・RU・DE・ES・IT・FR・JA・KO・PT・PL技術翻訳エンジン。',
+    'translator.pageDescription':
+      '音声合成と自動RTL対応の多言語EN・TR・AR・ZH・RU・DE・ES・IT・FR・JA・KO・PT・PL技術翻訳エンジン。',
     'translator.headerTitle': 'エンジニアリング即時翻訳',
     'discipline.electrical.desc': '電力系統 & 送電網',
     'landing.skillReading': '読書',
@@ -8009,8 +8334,10 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.statusIn-progress': 'In corso',
     'learningpath.statusCompleted': 'Completato',
     'learningpath.statusLocked': 'Bloccato',
-    'learningpath.practice': 'I livelli aprono il laboratorio di vocabolario con termini reali della tua disciplina, niente segnaposto.',
-    'learningpath.contentHint': 'Il contenuto è generato in tempo reale dal database di oltre 14.000 termini di ingegneria.',
+    'learningpath.practice':
+      'I livelli aprono il laboratorio di vocabolario con termini reali della tua disciplina, niente segnaposto.',
+    'learningpath.contentHint':
+      'Il contenuto è generato in tempo reale dal database di oltre 14.000 termini di ingegneria.',
     'learningpath.loading': 'Creazione della tua roadmap…',
     'learningpath.error': 'Impossibile caricare la tua roadmap. Riprova.',
     'learningpath.overallMastery': 'Padronanza generale',
@@ -8114,9 +8441,10 @@ export const UI_TRANSLATIONS: Record<
       "Una valutazione interna del tuo livello di preparazione alla comunicazione nell'ambito di un progetto reale.",
     'login.securityThisDevice': 'QUESTO DISPOSITIVO',
     'onboarding.selectDiscipline': 'Seleziona la tua disciplina',
-    'onboarding.selectDisciplineDesc': 'Seleziona la tua disciplina ingegneristica per personalizzare la tua esperienza di apprendimento',
+    'onboarding.selectDisciplineDesc':
+      'Seleziona la tua disciplina ingegneristica per personalizzare la tua esperienza di apprendimento',
     'onboarding.selectLanguageTitle': 'Seleziona la tua lingua',
-    'onboarding.englishFixedTarget': 'L\'inglese è la lingua target fissa',
+    'onboarding.englishFixedTarget': "L'inglese è la lingua target fissa",
     'onboarding.start': 'Inizia',
     'onboarding.finish': 'Termina',
     'landing.faq2Q': 'A chi è rivolto in particolare EngVox?',
@@ -8318,6 +8646,35 @@ export const UI_TRANSLATIONS: Record<
       'Posso passare a un piano superiore, a uno inferiore o disdire il mio abbonamento in qualsiasi momento?',
     'landing.navFeatures': 'Caratteristiche',
     'login.forgotPassword': 'Hai dimenticato la password?',
+    'login.noAccount': 'Non hai un account?',
+    'login.hasAccount': 'Hai già un account?',
+    'login.showPassword': 'Mostra password',
+    'login.hidePassword': 'Nascondi password',
+    'login.emailPlaceholder': 'you@example.com',
+    'login.fillRequiredFields': 'Compila tutti i campi obbligatori.',
+    'login.invalidEmail': 'Inserisci un indirizzo email valido.',
+    'login.passwordTooShort': 'La password deve contenere almeno 6 caratteri.',
+    'login.signInFailed': 'Accesso non riuscito.',
+    'login.providerSignInFailed': 'Accesso con {provider} non riuscito.',
+    'login.demoInitFailed': 'Impossibile inizializzare la demo.',
+    'login.demoSignInFailed': 'Accesso con {provider} non riuscito.',
+    'login.backendUnreachable':
+      'Il servizio backend non è attualmente raggiungibile. Controlla la connessione internet o prova la modalità demo locale.',
+    'login.providerNotEnabled':
+      "L'accesso con {provider} non è ancora configurato su Supabase. Usa l'accesso con email o prova la modalità demo.",
+    'login.ssoDomainRequired': "Inserisci il dominio della tua azienda o l'ID del provider SSO.",
+    'login.ssoRequiresSupabase': "SSO richiede che l'autenticazione Supabase sia configurata.",
+    'login.ssoInvalidRedirect':
+      'Il provider SSO ha restituito un URL di reindirizzamento imprevisto.',
+    'login.ssoNoRedirect': 'Nessun URL di reindirizzamento restituito dal provider SSO.',
+    'login.ssoFailed': 'Autenticazione SSO non riuscita.',
+    'login.invalidCredentials':
+      'Email o password errati. Controlla le tue credenziali oppure usa "Hai dimenticato la password?" per reimpostarla. Gli account creati in modalità locale/demo non possono accedere qui.',
+    'login.resetSent':
+      'Link per reimpostare la password inviato a {email}. Controlla la tua casella di posta.',
+    'login.resetFailed': 'Impossibile inviare il link per reimpostare la password.',
+    'login.resetUnsupported':
+      "Per reimpostare la password è necessaria l'autenticazione Supabase. Puoi creare un nuovo account o usare la modalità demo.",
     'landing.comparison3After':
       "Individuato un rischio legato ai cavi sotto tensione; l'area è stata isolata ed è stata richiesta l'autorizzazione elettrica secondo la procedura HSE.",
     'login.magicLinkTitle': 'Accesso tramite Magic Link senza password',
@@ -8337,7 +8694,7 @@ export const UI_TRANSLATIONS: Record<
     'translator.translateNow': 'Traduci ora',
     'translator.copied': 'Copiato!',
     'translator.clearText': 'Cancella testo',
-    'translator.infrastructureAttribution': 'Attribuzione dell\'infrastruttura:',
+    'translator.infrastructureAttribution': "Attribuzione dell'infrastruttura:",
     'translator.poweredBy': 'Basato su Google GTX e motori open-source Lingva',
     'translator.liveTranslate': 'Traduzione live (anti-rimbalzo automatico di 500 ms)',
     'translator.fromLabel': 'Da:',
@@ -8351,9 +8708,11 @@ export const UI_TRANSLATIONS: Record<
     'translator.wordLabel': 'Parola:',
     'translator.primaryMeaning': 'Significato principale:',
     'translator.alternativeMeanings': 'Significati alternativi e sinonimi tecnici:',
-    'translator.description': 'Motore di traduzione tecnica multilingue open source che supporta 13 lingue con sintesi vocale e layout RTL automatico.',
+    'translator.description':
+      'Motore di traduzione tecnica multilingue open source che supporta 13 lingue con sintesi vocale e layout RTL automatico.',
     'translator.pageTitle': 'Traduttore tecnico multilingue — Motore open source',
-    'translator.pageDescription': 'Motore di traduzione tecnica multilingue EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL con sintesi vocale e layout RTL automatico.',
+    'translator.pageDescription':
+      'Motore di traduzione tecnica multilingue EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL con sintesi vocale e layout RTL automatico.',
     'translator.headerTitle': 'Traduttore tecnico istantaneo',
     'discipline.electrical.desc': 'Energia e sistemi',
     'landing.skillReading': 'Lettura',
@@ -8778,8 +9137,10 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.statusIn-progress': 'Đang thực hiện',
     'learningpath.statusCompleted': 'Hoàn thành',
     'learningpath.statusLocked': 'Đã khóa',
-    'learningpath.practice': 'Mỗi cấp độ mở phòng thí nghiệm từ vựng với các thuật ngữ thực của chuyên ngành bạn — không có chỗ trống.',
-    'learningpath.contentHint': 'Nội dung được tạo trực tiếp từ cơ sở dữ liệu hơn 14.000 thuật ngữ kỹ thuật.',
+    'learningpath.practice':
+      'Mỗi cấp độ mở phòng thí nghiệm từ vựng với các thuật ngữ thực của chuyên ngành bạn — không có chỗ trống.',
+    'learningpath.contentHint':
+      'Nội dung được tạo trực tiếp từ cơ sở dữ liệu hơn 14.000 thuật ngữ kỹ thuật.',
     'learningpath.loading': 'Đang xây dựng lộ trình…',
     'learningpath.error': 'Không thể tải lộ trình của bạn. Vui lòng thử lại.',
     'learningpath.overallMastery': 'Độ thành thạo tổng',
@@ -8880,7 +9241,8 @@ export const UI_TRANSLATIONS: Record<
     'dashboard.readinessDesc': 'Dựa trên giao tiếp, từ vựng kỹ thuật và hiệu suất tình huống.',
     'login.securityThisDevice': 'THIẾT BỊ NÀY',
     'onboarding.selectDiscipline': 'Chọn lĩnh vực của bạn',
-    'onboarding.selectDisciplineDesc': 'Chọn ngành kỹ thuật của bạn để cá nhân hóa trải nghiệm học tập',
+    'onboarding.selectDisciplineDesc':
+      'Chọn ngành kỹ thuật của bạn để cá nhân hóa trải nghiệm học tập',
     'onboarding.selectLanguageTitle': 'Chọn ngôn ngữ của bạn',
     'onboarding.englishFixedTarget': 'Tiếng Anh là ngôn ngữ mục tiêu cố định',
     'onboarding.start': 'Bắt đầu',
@@ -9082,6 +9444,34 @@ export const UI_TRANSLATIONS: Record<
     'landing.faq6Q': 'Tôi có thể nâng cấp, hạ cấp hoặc hủy đăng ký của mình bất cứ lúc nào không?',
     'landing.navFeatures': 'Tính năng',
     'login.forgotPassword': 'Quên mật khẩu?',
+    'login.noAccount': 'Chưa có tài khoản?',
+    'login.hasAccount': 'Đã có tài khoản?',
+    'login.showPassword': 'Hiện mật khẩu',
+    'login.hidePassword': 'Ẩn mật khẩu',
+    'login.emailPlaceholder': 'you@example.com',
+    'login.fillRequiredFields': 'Vui lòng điền tất cả các trường bắt buộc.',
+    'login.invalidEmail': 'Vui lòng nhập địa chỉ email hợp lệ.',
+    'login.passwordTooShort': 'Mật khẩu phải có ít nhất 6 ký tự.',
+    'login.signInFailed': 'Đăng nhập thất bại.',
+    'login.providerSignInFailed': 'Đăng nhập bằng {provider} thất bại.',
+    'login.demoInitFailed': 'Không thể khởi tạo bản demo.',
+    'login.demoSignInFailed': 'Đăng nhập bằng {provider} thất bại.',
+    'login.backendUnreachable':
+      'Dịch vụ backend hiện không truy cập được. Vui lòng kiểm tra kết nối internet hoặc thử chế độ demo cục bộ.',
+    'login.providerNotEnabled':
+      'Đăng nhập {provider} chưa được cấu hình trên Supabase. Hãy sử dụng đăng nhập email hoặc thử chế độ demo.',
+    'login.ssoDomainRequired': 'Vui lòng nhập tên miền công ty hoặc ID nhà cung cấp SSO.',
+    'login.ssoRequiresSupabase': 'SSO yêu cầu cấu hình xác thực Supabase.',
+    'login.ssoInvalidRedirect': 'Nhà cung cấp SSO trả về URL chuyển hướng không mong muốn.',
+    'login.ssoNoRedirect': 'Không có URL chuyển hướng nào được trả về từ nhà cung cấp SSO.',
+    'login.ssoFailed': 'Xác thực SSO thất bại.',
+    'login.invalidCredentials':
+      'Email hoặc mật khẩu không đúng. Hãy kiểm tra thông tin đăng nhập hoặc dùng "Quên mật khẩu?" để đặt lại. Các tài khoản tạo ở chế độ cục bộ/demo không thể đăng nhập tại đây.',
+    'login.resetSent':
+      'Liên kết đặt lại mật khẩu đã được gửi đến {email}. Hãy kiểm tra hộp thư của bạn.',
+    'login.resetFailed': 'Không thể gửi liên kết đặt lại mật khẩu.',
+    'login.resetUnsupported':
+      'Đặt lại mật khẩu yêu cầu xác thực Supabase. Bạn có thể tạo tài khoản mới hoặc sử dụng chế độ demo.',
     'landing.comparison3After':
       'Đã phát hiện nguy cơ từ dây cáp đang có điện; khu vực đã được cách ly và giấy phép điện đã được cấp theo quy trình của HSE.',
     'login.magicLinkTitle': 'Đăng nhập bằng liên kết ma thuật không cần mật khẩu',
@@ -9115,9 +9505,11 @@ export const UI_TRANSLATIONS: Record<
     'translator.wordLabel': 'Từ:',
     'translator.primaryMeaning': 'Ý nghĩa chính:',
     'translator.alternativeMeanings': 'Ý nghĩa thay thế và từ đồng nghĩa kỹ thuật:',
-    'translator.description': 'Công cụ dịch kỹ thuật đa ngôn ngữ mã nguồn mở hỗ trợ 13 ngôn ngữ với tổng hợp giọng nói và bố cục RTL tự động.',
+    'translator.description':
+      'Công cụ dịch kỹ thuật đa ngôn ngữ mã nguồn mở hỗ trợ 13 ngôn ngữ với tổng hợp giọng nói và bố cục RTL tự động.',
     'translator.pageTitle': 'Trình dịch kỹ thuật đa ngôn ngữ — Công cụ mã nguồn mở',
-    'translator.pageDescription': 'Công cụ dịch kỹ thuật đa ngôn ngữ EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL với tổng hợp giọng nói và bố cục RTL tự động.',
+    'translator.pageDescription':
+      'Công cụ dịch kỹ thuật đa ngôn ngữ EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL với tổng hợp giọng nói và bố cục RTL tự động.',
     'translator.headerTitle': 'Trình dịch kỹ thuật tức thì',
     'discipline.electrical.desc': 'Năng lượng & hệ thống',
     'landing.skillReading': 'Đọc',
@@ -9547,8 +9939,10 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.statusIn-progress': 'W trakcie',
     'learningpath.statusCompleted': 'Ukończony',
     'learningpath.statusLocked': 'Zablokowany',
-    'learningpath.practice': 'Poziomy otwierają laboratorium słownictwa z prawdziwymi terminami Twojej dyscypliny — bez podstawek.',
-    'learningpath.contentHint': 'Treść jest generowana na żywo z bazy ponad 14 000 terminów inżynierskich.',
+    'learningpath.practice':
+      'Poziomy otwierają laboratorium słownictwa z prawdziwymi terminami Twojej dyscypliny — bez podstawek.',
+    'learningpath.contentHint':
+      'Treść jest generowana na żywo z bazy ponad 14 000 terminów inżynierskich.',
     'learningpath.loading': 'Tworzenie Twojej mapy…',
     'learningpath.error': 'Nie udało się załadować mapy. Spróbuj ponownie.',
     'learningpath.overallMastery': 'Ogólne opanowanie',
@@ -9651,7 +10045,8 @@ export const UI_TRANSLATIONS: Record<
       'Wewnętrzna ocena Twojej gotowości do komunikacji w ramach rzeczywistego projektu.',
     'login.securityThisDevice': 'TO URZĄDZENIE',
     'onboarding.selectDiscipline': 'Wybierz dziedzinę',
-    'onboarding.selectDisciplineDesc': 'Wybierz swoją dyscyplinę inżynierską, aby spersonalizować naukę',
+    'onboarding.selectDisciplineDesc':
+      'Wybierz swoją dyscyplinę inżynierską, aby spersonalizować naukę',
     'onboarding.selectLanguageTitle': 'Wybierz swój język',
     'onboarding.englishFixedTarget': 'Angielski jest ustalonym językiem docelowym',
     'onboarding.start': 'Rozpocznij',
@@ -9854,6 +10249,33 @@ export const UI_TRANSLATIONS: Record<
       'Czy mogę w dowolnym momencie zmienić plan na wyższy lub niższy albo anulować subskrypcję?',
     'landing.navFeatures': 'Funkcje',
     'login.forgotPassword': 'Nie pamiętasz hasła?',
+    'login.noAccount': 'Nie masz konta?',
+    'login.hasAccount': 'Masz już konto?',
+    'login.showPassword': 'Pokaż hasło',
+    'login.hidePassword': 'Ukryj hasło',
+    'login.emailPlaceholder': 'you@example.com',
+    'login.fillRequiredFields': 'Wypełnij wszystkie wymagane pola.',
+    'login.invalidEmail': 'Wprowadź prawidłowy adres e-mail.',
+    'login.passwordTooShort': 'Hasło musi mieć co najmniej 6 znaków.',
+    'login.signInFailed': 'Logowanie nie powiodło się.',
+    'login.providerSignInFailed': 'Logowanie przez {provider} nie powiodło się.',
+    'login.demoInitFailed': 'Nie udało się zainicjować wersji demo.',
+    'login.demoSignInFailed': 'Logowanie przez {provider} nie powiodło się.',
+    'login.backendUnreachable':
+      'Usługa backendu jest obecnie niedostępna. Sprawdź połączenie z internetem lub spróbuj trybu demo.',
+    'login.providerNotEnabled':
+      'Logowanie przez {provider} nie jest jeszcze skonfigurowane w Supabase. Użyj logowania e-mail lub wypróbuj tryb demo.',
+    'login.ssoDomainRequired': 'Wprowadź domenę firmową lub identyfikator dostawcy SSO.',
+    'login.ssoRequiresSupabase': 'SSO wymaga skonfigurowanego uwierzytelniania Supabase.',
+    'login.ssoInvalidRedirect': 'Dostawca SSO zwrócił nieoczekiwany adres URL przekierowania.',
+    'login.ssoNoRedirect': 'Dostawca SSO nie zwrócił adresu URL przekierowania.',
+    'login.ssoFailed': 'Uwierzytelnianie SSO nie powiodło się.',
+    'login.invalidCredentials':
+      'Nieprawidłowy e-mail lub hasło. Sprawdź dane lub użyj opcji „Nie pamiętasz hasła?", aby je zresetować. Konta utworzone w trybie lokalnym/demo nie mogą się tutaj zalogować.',
+    'login.resetSent': 'Link do resetowania hasła wysłano na {email}. Sprawdź skrzynkę odbiorczą.',
+    'login.resetFailed': 'Nie udało się wysłać linku do resetowania hasła.',
+    'login.resetUnsupported':
+      'Resetowanie hasła wymaga uwierzytelniania Supabase. Możesz utworzyć nowe konto lub skorzystać z trybu demo.',
     'landing.comparison3After':
       'Stwierdzono zagrożenie związane z przewodem pod napięciem; obszar został odizolowany, a zezwolenie na prace elektryczne wydano zgodnie z procedurą HSE.',
     'login.magicLinkTitle': 'Logowanie za pomocą linku „Magic Link” bez hasła',
@@ -9887,9 +10309,11 @@ export const UI_TRANSLATIONS: Record<
     'translator.wordLabel': 'Słowo:',
     'translator.primaryMeaning': 'Główne znaczenie:',
     'translator.alternativeMeanings': 'Alternatywne znaczenia i synonimy techniczne:',
-    'translator.description': 'Wielojęzyczny silnik tłumaczeń technicznych open source obsługujący 13 języków z syntezą mowy i automatycznym układem RTL.',
+    'translator.description':
+      'Wielojęzyczny silnik tłumaczeń technicznych open source obsługujący 13 języków z syntezą mowy i automatycznym układem RTL.',
     'translator.pageTitle': 'Wielojęzyczny tłumacz techniczny — silnik open source',
-    'translator.pageDescription': 'Wielojęzyczny silnik tłumaczeń technicznych EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL z syntezą mowy i automatycznym układem RTL.',
+    'translator.pageDescription':
+      'Wielojęzyczny silnik tłumaczeń technicznych EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL z syntezą mowy i automatycznym układem RTL.',
     'translator.headerTitle': 'Natychmiastowy tłumacz techniczny',
     'discipline.electrical.desc': 'Energia i systemy',
     'landing.skillReading': 'Czytanie',
@@ -9994,7 +10418,8 @@ export const UI_TRANSLATIONS: Record<
     'profile.save': 'Simpan profil',
     'onboarding.interfaceLanguage': 'Bahasa antarmuka',
     'onboarding.nativeLanguage': 'Bahasa ibu',
-    'onboarding.nativeLanguageTitle': 'Anda ingin melihat terjemahan pembelajaran dalam bahasa apa?',
+    'onboarding.nativeLanguageTitle':
+      'Anda ingin melihat terjemahan pembelajaran dalam bahasa apa?',
     'onboarding.nativeLanguageDesc':
       'Petunjuk kosakata dan terjemahan contoh akan ditampilkan dalam bahasa ini.',
     'landing.audioPlayerTerm1': 'beton',
@@ -10312,8 +10737,10 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.statusIn-progress': 'Berlangsung',
     'learningpath.statusCompleted': 'Selesai',
     'learningpath.statusLocked': 'Terkunci',
-    'learningpath.practice': 'Setiap level membuka laboratorium kosakata dengan istilah nyata dari disiplin Anda — tanpa placeholder.',
-    'learningpath.contentHint': 'Konten dibuat langsung dari database lebih dari 14.000 istilah teknik.',
+    'learningpath.practice':
+      'Setiap level membuka laboratorium kosakata dengan istilah nyata dari disiplin Anda — tanpa placeholder.',
+    'learningpath.contentHint':
+      'Konten dibuat langsung dari database lebih dari 14.000 istilah teknik.',
     'learningpath.loading': 'Membangun peta jalan Anda…',
     'learningpath.error': 'Peta jalan gagal dimuat. Silakan coba lagi.',
     'learningpath.overallMastery': 'Penguasaan keseluruhan',
@@ -10414,7 +10841,8 @@ export const UI_TRANSLATIONS: Record<
     'dashboard.readinessDesc': 'Berdasarkan komunikasi, kosakata teknis, dan performa skenario.',
     'login.securityThisDevice': 'PERANGKAT INI',
     'onboarding.selectDiscipline': 'Pilih bidang studi Anda',
-    'onboarding.selectDisciplineDesc': 'Pilih disiplin teknik Anda untuk memersonalisasi pengalaman belajar',
+    'onboarding.selectDisciplineDesc':
+      'Pilih disiplin teknik Anda untuk memersonalisasi pengalaman belajar',
     'onboarding.selectLanguageTitle': 'Pilih bahasa Anda',
     'onboarding.englishFixedTarget': 'Bahasa Inggris adalah bahasa target tetap',
     'onboarding.start': 'Mulai',
@@ -10617,6 +11045,34 @@ export const UI_TRANSLATIONS: Record<
       'Apakah saya bisa meningkatkan, menurunkan, atau membatalkan langganan saya kapan saja?',
     'landing.navFeatures': 'Fitur',
     'login.forgotPassword': 'Lupa kata sandi?',
+    'login.noAccount': 'Belum punya akun?',
+    'login.hasAccount': 'Sudah punya akun?',
+    'login.showPassword': 'Tampilkan kata sandi',
+    'login.hidePassword': 'Sembunyikan kata sandi',
+    'login.emailPlaceholder': 'you@example.com',
+    'login.fillRequiredFields': 'Harap isi semua kolom yang wajib diisi.',
+    'login.invalidEmail': 'Masukkan alamat email yang valid.',
+    'login.passwordTooShort': 'Kata sandi minimal 6 karakter.',
+    'login.signInFailed': 'Gagal masuk.',
+    'login.providerSignInFailed': 'Gagal masuk dengan {provider}.',
+    'login.demoInitFailed': 'Gagal menginisialisasi demo.',
+    'login.demoSignInFailed': 'Gagal masuk dengan {provider}.',
+    'login.backendUnreachable':
+      'Layanan backend saat ini tidak dapat diakses. Periksa koneksi internet Anda atau coba mode demo lokal.',
+    'login.providerNotEnabled':
+      'Login {provider} belum dikonfigurasi di Supabase. Gunakan login email atau coba mode demo.',
+    'login.ssoDomainRequired': 'Masukkan domain perusahaan atau ID penyedia SSO Anda.',
+    'login.ssoRequiresSupabase': 'SSO memerlukan autentikasi Supabase yang dikonfigurasi.',
+    'login.ssoInvalidRedirect': 'Penyedia SSO mengembalikan URL pengalihan yang tidak terduga.',
+    'login.ssoNoRedirect': 'Tidak ada URL pengalihan yang dikembalikan dari penyedia SSO.',
+    'login.ssoFailed': 'Autentikasi SSO gagal.',
+    'login.invalidCredentials':
+      'Email atau kata sandi salah. Periksa kredensial Anda atau gunakan "Lupa kata sandi?" untuk mengatur ulang. Akun yang dibuat dalam mode lokal/demo tidak dapat masuk di sini.',
+    'login.resetSent':
+      'Tautan pengaturan ulang kata sandi dikirim ke {email}. Periksa kotak masuk Anda.',
+    'login.resetFailed': 'Gagal mengirim tautan pengaturan ulang kata sandi.',
+    'login.resetUnsupported':
+      'Pengaturan ulang kata sandi memerlukan autentikasi Supabase. Anda dapat membuat akun baru atau menggunakan mode demo.',
     'landing.comparison3After':
       'Risiko kabel bertegangan teridentifikasi; area tersebut telah diisolasi dan izin listrik telah diterbitkan sesuai prosedur HSE.',
     'login.magicLinkTitle': 'Masuk dengan Tautan Ajaib Tanpa Kata Sandi',
@@ -10650,9 +11106,11 @@ export const UI_TRANSLATIONS: Record<
     'translator.wordLabel': 'Kata:',
     'translator.primaryMeaning': 'Arti utama:',
     'translator.alternativeMeanings': 'Arti alternatif dan sinonim teknis:',
-    'translator.description': 'Mesin penerjemah teknik multibahasa sumber terbuka yang mendukung 13 bahasa dengan sintesis suara dan tata letak RTL otomatis.',
+    'translator.description':
+      'Mesin penerjemah teknik multibahasa sumber terbuka yang mendukung 13 bahasa dengan sintesis suara dan tata letak RTL otomatis.',
     'translator.pageTitle': 'Penerjemah teknik multibahasa — Mesin sumber terbuka',
-    'translator.pageDescription': 'Mesin penerjemah teknik multibahasa EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL dengan sintesis suara dan tata letak RTL otomatis.',
+    'translator.pageDescription':
+      'Mesin penerjemah teknik multibahasa EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL dengan sintesis suara dan tata letak RTL otomatis.',
     'translator.headerTitle': 'Penerjemah teknik instan',
     'discipline.electrical.desc': 'Energi & sistem',
     'landing.skillReading': 'Membaca',
@@ -11079,8 +11537,10 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.statusIn-progress': 'Bezig',
     'learningpath.statusCompleted': 'Voltooid',
     'learningpath.statusLocked': 'Vergrendeld',
-    'learningpath.practice': 'Niveaus openen het woordenlab met echte termen uit jouw discipline — geen placeholders.',
-    'learningpath.contentHint': 'Inhoud wordt live gegenereerd uit de database met meer dan 14.000 technische termen.',
+    'learningpath.practice':
+      'Niveaus openen het woordenlab met echte termen uit jouw discipline — geen placeholders.',
+    'learningpath.contentHint':
+      'Inhoud wordt live gegenereerd uit de database met meer dan 14.000 technische termen.',
     'learningpath.loading': 'Je routekaart wordt opgebouwd…',
     'learningpath.error': 'Kon je routekaart niet laden. Probeer het opnieuw.',
     'learningpath.overallMastery': 'Algehele beheersing',
@@ -11181,7 +11641,8 @@ export const UI_TRANSLATIONS: Record<
       'Een interne inschatting van in hoeverre je klaar bent voor communicatie in echte projecten.',
     'login.securityThisDevice': 'DIT APPARAAT',
     'onboarding.selectDiscipline': 'Kies je vakgebied',
-    'onboarding.selectDisciplineDesc': 'Kies je ingenieursdiscipline om je leervaring te personaliseren',
+    'onboarding.selectDisciplineDesc':
+      'Kies je ingenieursdiscipline om je leervaring te personaliseren',
     'onboarding.selectLanguageTitle': 'Kies je taal',
     'onboarding.englishFixedTarget': 'Engels is de vaste doeltaal',
     'onboarding.start': 'Start',
@@ -11383,6 +11844,34 @@ export const UI_TRANSLATIONS: Record<
     'landing.faq6Q': 'Kan ik mijn abonnement op elk moment upgraden, downgraden of opzeggen?',
     'landing.navFeatures': 'Kenmerken',
     'login.forgotPassword': 'Wachtwoord vergeten?',
+    'login.noAccount': 'Nog geen account?',
+    'login.hasAccount': 'Heb je al een account?',
+    'login.showPassword': 'Wachtwoord tonen',
+    'login.hidePassword': 'Wachtwoord verbergen',
+    'login.emailPlaceholder': 'you@example.com',
+    'login.fillRequiredFields': 'Vul alle verplichte velden in.',
+    'login.invalidEmail': 'Voer een geldig e-mailadres in.',
+    'login.passwordTooShort': 'Het wachtwoord moet minimaal 6 tekens bevatten.',
+    'login.signInFailed': 'Inloggen mislukt.',
+    'login.providerSignInFailed': 'Inloggen met {provider} mislukt.',
+    'login.demoInitFailed': 'Demo kan niet worden geïnitialiseerd.',
+    'login.demoSignInFailed': 'Inloggen met {provider} mislukt.',
+    'login.backendUnreachable':
+      'De backenddienst is momenteel niet bereikbaar. Controleer je internetverbinding of probeer de lokale demomodus.',
+    'login.providerNotEnabled':
+      '{provider}-login is nog niet geconfigureerd op Supabase. Gebruik e-maillogin of probeer de demomodus.',
+    'login.ssoDomainRequired': 'Voer het domein van je bedrijf of de SSO-provider-ID in.',
+    'login.ssoRequiresSupabase': 'SSO vereist dat Supabase-authenticatie is geconfigureerd.',
+    'login.ssoInvalidRedirect':
+      'De SSO-provider heeft een onverwachte omleidings-URL geretourneerd.',
+    'login.ssoNoRedirect': 'Geen omleidings-URL geretourneerd door de SSO-provider.',
+    'login.ssoFailed': 'SSO-authenticatie mislukt.',
+    'login.invalidCredentials':
+      'E-mailadres of wachtwoord is onjuist. Controleer je gegevens of gebruik "Wachtwoord vergeten?" om het opnieuw in te stellen. Accounts uit de lokale/demomodus kunnen hier niet inloggen.',
+    'login.resetSent': 'Resetlink voor wachtwoord verzonden naar {email}. Controleer je inbox.',
+    'login.resetFailed': 'De resetlink voor het wachtwoord kon niet worden verzonden.',
+    'login.resetUnsupported':
+      'Voor het resetten van het wachtwoord is Supabase-authenticatie vereist. Je kunt een nieuw account aanmaken of de demomodus gebruiken.',
     'landing.comparison3After':
       'Er is een risico met betreken tot een stroomvoerende kabel vastgesteld; het gebied is afgezet en er is een elektriciteitsvergunning aangevraagd volgens de HSE-procedure.',
     'login.magicLinkTitle': 'Inloggen via Magic Link zonder wachtwoord',
@@ -11416,9 +11905,11 @@ export const UI_TRANSLATIONS: Record<
     'translator.wordLabel': 'Woord:',
     'translator.primaryMeaning': 'Primaire betekenis:',
     'translator.alternativeMeanings': 'Alternatieve betekenissen en technische synoniemen:',
-    'translator.description': 'Open-source meertalige technische vertaalengine die 13 talen ondersteunt met spraaksynthese en automatische RTL-lay-out.',
+    'translator.description':
+      'Open-source meertalige technische vertaalengine die 13 talen ondersteunt met spraaksynthese en automatische RTL-lay-out.',
     'translator.pageTitle': 'Meertalige technische vertaler — Open-source engine',
-    'translator.pageDescription': 'Meertalige technische vertaalengine EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL met spraaksynthese en automatische RTL-lay-out.',
+    'translator.pageDescription':
+      'Meertalige technische vertaalengine EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL met spraaksynthese en automatische RTL-lay-out.',
     'translator.headerTitle': 'Instant technische vertaler',
     'discipline.electrical.desc': 'Energie & systemen',
     'landing.skillReading': 'Lezen',

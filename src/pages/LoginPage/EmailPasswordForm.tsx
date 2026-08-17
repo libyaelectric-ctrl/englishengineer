@@ -16,6 +16,7 @@ interface EmailPasswordFormProps {
   isLocalAuthBlocked: boolean;
   isSupabaseMode: boolean;
   onSubmit: (e: React.FormEvent) => void;
+  onForgotPassword: () => void;
   onShowSsoForm: () => void;
 }
 
@@ -28,6 +29,7 @@ export const EmailPasswordForm = ({
   isLoading,
   isLocalAuthBlocked,
   onSubmit,
+  onForgotPassword,
 }: EmailPasswordFormProps) => {
   const translate = useLocalizationStore((state) => state.translate);
   const [showPassword, setShowPassword] = useState(false);
@@ -48,7 +50,7 @@ export const EmailPasswordForm = ({
             aria-required="true"
             onChange={(e) => onEmailChange(e.target.value)}
             className="h-10 w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 pl-10 pr-4 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors"
-            placeholder="you@example.com"
+            placeholder={translate('login.emailPlaceholder')}
           />
         </div>
       </div>
@@ -62,6 +64,7 @@ export const EmailPasswordForm = ({
           {!isSignUpMode && (
             <button
               type="button"
+              onClick={onForgotPassword}
               className="text-xs font-medium text-zinc-500 hover:text-primary dark:text-zinc-400 dark:hover:text-primary cursor-pointer transition-colors"
             >
               {translate('login.forgotPassword')}
@@ -83,7 +86,9 @@ export const EmailPasswordForm = ({
           <button
             type="button"
             onClick={() => setShowPassword((v) => !v)}
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-label={
+              showPassword ? translate('login.hidePassword') : translate('login.showPassword')
+            }
             className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
           >
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

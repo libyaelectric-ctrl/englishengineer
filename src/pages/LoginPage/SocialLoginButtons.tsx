@@ -42,7 +42,7 @@ export const SocialLoginButtons = ({ socialLoading, onSocialLogin }: SocialLogin
         </div>
         <div className="relative flex justify-center">
           <span className="bg-white dark:bg-zinc-900 px-3 text-xs text-zinc-400 dark:text-zinc-500 font-medium uppercase tracking-wider">
-            or
+            {translate('common.or')}
           </span>
         </div>
       </div>

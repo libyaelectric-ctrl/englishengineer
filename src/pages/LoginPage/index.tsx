@@ -1,4 +1,4 @@
-import { ChevronDown, ShieldAlert, X } from 'lucide-react';
+import { CheckCircle2, ChevronDown, ShieldAlert, X } from 'lucide-react';
 
 import { useEffect, useRef, useState } from 'react';
 
@@ -133,6 +133,14 @@ const LoginPage = () => {
             </p>
           </div>
 
+          {/* Success notice */}
+          {h.notice && (
+            <div className="flex items-start gap-2 rounded-lg border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-2.5 text-sm text-emerald-700 dark:text-emerald-400 animate-in fade-in">
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+              <span>{h.notice}</span>
+            </div>
+          )}
+
           {/* Error alert */}
           {h.error && (
             <div className="flex items-start gap-2 rounded-lg border border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10 px-3 py-2.5 text-sm text-rose-600 dark:text-rose-400 animate-in fade-in">
@@ -155,6 +163,7 @@ const LoginPage = () => {
             isLocalAuthBlocked={h.isLocalAuthBlocked}
             isSupabaseMode={h.isSupabaseMode}
             onSubmit={h.handleSubmit}
+            onForgotPassword={h.handleForgotPassword}
             onShowSsoForm={() => {}}
           />
 
@@ -162,7 +171,7 @@ const LoginPage = () => {
           <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
             {h.isSignUpMode ? (
               <>
-                Already have an account?{' '}
+                {translate('login.hasAccount')}{' '}
                 <button
                   type="button"
                   onClick={h.toggleSignUpMode}
@@ -173,7 +182,7 @@ const LoginPage = () => {
               </>
             ) : (
               <>
-                {"Don't have an account?"}{' '}
+                {translate('login.noAccount')}{' '}
                 <button
                   type="button"
                   onClick={h.toggleSignUpMode}
@@ -184,6 +193,16 @@ const LoginPage = () => {
               </>
             )}
           </p>
+
+          {/* Demo workspace */}
+          <button
+            type="button"
+            onClick={h.handleDemoSubmit}
+            disabled={h.isLoading}
+            className="mx-auto block text-xs font-medium text-zinc-500 hover:text-primary dark:text-zinc-400 dark:hover:text-primary cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {translate('login.launchDemo')}
+          </button>
         </div>
 
         {/* Footer */}

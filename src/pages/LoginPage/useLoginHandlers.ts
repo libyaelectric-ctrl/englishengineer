@@ -5,9 +5,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useLearningStore } from '@/core/learning';
 
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
-import { useAuthStore } from '@/features/auth';
+import { AuthService, useAuthStore } from '@/features/auth';
 import { AUTH_CONFIG } from '@/features/auth/auth.config';
 import { getSupabaseClient } from '@/features/auth/supabase.client';
+import { useLocalizationStore } from '@/features/localization';
 
 import { type RouteLocationState, getErrorMessage } from './constants';
 
@@ -28,12 +29,14 @@ const isSafeRedirectUrl = (url: string): boolean => {
 export const useLoginHandlers = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const translate = useLocalizationStore((s) => s.translate);
   const { login, signUp, demoLogin, initialize, isLoading, providerMode } = useAuthStore();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUpMode, setIsSignUpMode] = useState(location.pathname === '/signup');
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const [ssoDomain, setSsoDomain] = useState('');
   const [showSsoForm, setShowSsoForm] = useState(false);
@@ -46,6 +49,15 @@ export const useLoginHandlers = () => {
 
   const isProviderNotEnabled = (msg: string) =>
     msg.includes('not enabled') || msg.includes('Unsupported provider');
+
+  const localizedProvider = (provider: 'google' | 'linkedin' | 'apple') =>
+    provider.charAt(0).toUpperCase() + provider.slice(1);
+
+  const providerNotEnabledMsg = (provider: 'google' | 'linkedin' | 'apple') =>
+    translate('login.providerNotEnabled').replace('{provider}', localizedProvider(provider));
+
+  const providerSignInFailedMsg = (provider: 'google' | 'linkedin' | 'apple') =>
+    translate('login.providerSignInFailed').replace('{provider}', localizedProvider(provider));
 
   const handleDemoSocialLogin = async (provider: 'google' | 'linkedin' | 'apple') => {
     try {
@@ -68,7 +80,12 @@ export const useLoginHandlers = () => {
       navigate('/welcome', { replace: true });
     } catch (err: unknown) {
       setSocialLoading(null);
-      setError(getErrorMessage(err, `Failed to sign in with ${provider}`));
+      setError(
+        getErrorMessage(
+          err,
+          translate('login.demoSignInFailed').replace('{provider}', localizedProvider(provider))
+        )
+      );
     }
   };
 
@@ -81,26 +98,35 @@ export const useLoginHandlers = () => {
     }
 
     // Supabase Auth Mode
-    const capitalizedProvider = provider.charAt(0).toUpperCase() + provider.slice(1);
-    const notEnabledMsg = `${capitalizedProvider} login is not yet configured on Supabase. Use email login or try demo mode.`;
+    const notEnabledMsg = providerNotEnabledMsg(provider);
 
     try {
       setSocialLoading(provider);
       setError(null);
-      const { error: authError } = await client.auth.signInWithOAuth({
+      const { data, error: authError } = await client.auth.signInWithOAuth({
         provider,
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
-      if (authError && isProviderNotEnabled(authError.message ?? '')) {
-        setError(notEnabledMsg);
-      } else if (authError) {
-        throw authError;
+      if (authError) {
+        // Always clear the loading state so the form is never left disabled.
+        setSocialLoading(null);
+        const msg = getErrorMessage(authError, providerSignInFailedMsg(provider));
+        setError(isProviderNotEnabled(msg) ? notEnabledMsg : msg);
+        return;
+      }
+      // supabase-js already navigates in the browser, but redirect explicitly so
+      // the flow also works when the automatic redirect is deferred or blocked.
+      setSocialLoading(null);
+      if (data?.url) {
+        window.location.assign(data.url);
+      } else {
+        setError(translate('login.ssoNoRedirect'));
       }
     } catch (err: unknown) {
       setSocialLoading(null);
-      const msg = getErrorMessage(err, `${provider} sign-in failed.`);
+      const msg = getErrorMessage(err, providerSignInFailedMsg(provider));
       setError(isProviderNotEnabled(msg) ? notEnabledMsg : msg);
     }
   };
@@ -112,20 +138,44 @@ export const useLoginHandlers = () => {
       await demoLogin();
       navigate('/welcome', { replace: true });
     } catch (err: unknown) {
-      setError(getErrorMessage(err, 'Failed to initialize demo'));
+      setError(getErrorMessage(err, translate('login.demoInitFailed')));
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email.trim()) {
+      setError(translate('login.fillRequiredFields'));
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError(translate('login.invalidEmail'));
+      return;
+    }
+    if (!getSupabaseClient()) {
+      setError(translate('login.resetUnsupported'));
+      return;
+    }
+    try {
+      setError(null);
+      setNotice(null);
+      await AuthService.resetPassword(email.trim());
+      setNotice(translate('login.resetSent').replace('{email}', email.trim()));
+    } catch (err: unknown) {
+      setNotice(null);
+      setError(getErrorMessage(err, translate('login.resetFailed')));
     }
   };
 
   const handleSsoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!ssoDomain.trim()) {
-      setError('Please enter your company domain or SSO Provider ID.');
+      setError(translate('login.ssoDomainRequired'));
       return;
     }
 
     const client = getSupabaseClient();
     if (!client) {
-      setError('SSO requires Supabase authentication to be configured.');
+      setError(translate('login.ssoRequiresSupabase'));
       return;
     }
 
@@ -143,34 +193,34 @@ export const useLoginHandlers = () => {
       if (authError) throw authError;
       if (data?.url) {
         if (!isSafeRedirectUrl(data.url)) {
-          setError('SSO provider returned an unexpected redirect URL.');
+          setError(translate('login.ssoInvalidRedirect'));
           setSsoLoading(false);
           return;
         }
         window.location.href = data.url;
       } else {
-        setError('No redirect URL returned from SSO provider.');
+        setError(translate('login.ssoNoRedirect'));
       }
     } catch (err: unknown) {
       setSsoLoading(false);
-      setError(getErrorMessage(err, 'SSO authentication failed.'));
+      setError(getErrorMessage(err, translate('login.ssoFailed')));
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password) {
-      setError('Please fill in all required fields.');
+      setError(translate('login.fillRequiredFields'));
       return;
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError('Please enter a valid email address.');
+      setError(translate('login.invalidEmail'));
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters.');
+      setError(translate('login.passwordTooShort'));
       return;
     }
 
@@ -192,14 +242,12 @@ export const useLoginHandlers = () => {
         navigate(from, { replace: true });
       }
     } catch (err: unknown) {
-      const msg = getErrorMessage(err, 'Sign-in failed.');
-      if (
-        msg.toLowerCase().includes('failed to fetch') ||
-        msg.toLowerCase().includes('fetch failed')
-      ) {
-        setError(
-          'Backend service is currently unreachable. Please check your internet connection or try local demo mode.'
-        );
+      const msg = getErrorMessage(err, translate('login.signInFailed'));
+      const normalized = msg.toLowerCase();
+      if (normalized.includes('invalid login credentials')) {
+        setError(translate('login.invalidCredentials'));
+      } else if (normalized.includes('failed to fetch') || normalized.includes('fetch failed')) {
+        setError(translate('login.backendUnreachable'));
       } else {
         setError(msg);
       }
@@ -209,6 +257,7 @@ export const useLoginHandlers = () => {
   const toggleSignUpMode = () => {
     setIsSignUpMode((m) => !m);
     setError(null);
+    setNotice(null);
   };
 
   return {
@@ -219,6 +268,8 @@ export const useLoginHandlers = () => {
     isSignUpMode,
     error,
     setError,
+    notice,
+    setNotice,
     socialLoading,
     ssoDomain,
     setSsoDomain,
@@ -234,6 +285,7 @@ export const useLoginHandlers = () => {
     handleDemoSubmit,
     handleSsoSubmit,
     handleSubmit,
+    handleForgotPassword,
     toggleSignUpMode,
   };
 };
