@@ -3,13 +3,14 @@ import { PublicLayout } from '@/layouts/PublicLayout';
 
 import { type ComponentType, Suspense, lazy } from 'react';
 
-import { Navigate, createBrowserRouter } from 'react-router-dom';
+import { Navigate, createBrowserRouter, useParams } from 'react-router-dom';
 
 import { LoadingState } from '@/shared/components/LoadingState';
 
 import { AuthGuard } from '@/features/auth/AuthGuard';
 import { RequireAdminRole } from '@/features/auth/RequireAdminRole';
 import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
+import { SubscriptionRouteGuard } from '@/features/billing';
 import { OnboardingGate } from '@/features/profile';
 
 import { RouteErrorPage } from './RouteErrorPage';
@@ -47,6 +48,20 @@ const LearningPath = lazy(() => import('@/pages/LearningPathPage'));
 const LessonRunner = lazy(() => import('@/pages/LessonRunnerPage'));
 const AuthCallbackPage = lazy(() => import('@/pages/AuthCallbackPage'));
 const ClerkAuthPage = lazy(() => import('@/pages/ClerkAuthPage'));
+
+/**
+ * Guards individual Learning Hub sections: 'today' is the free entry, while
+ * 'full' and 'memory' require the paid Learning Hub feature.
+ */
+const CurriculumSectionGuard = () => {
+  const { section } = useParams();
+  const feature = section === 'today' ? null : 'learningHub';
+  return feature ? (
+    <SubscriptionRouteGuard feature={feature}>{withSuspense(Curriculum)}</SubscriptionRouteGuard>
+  ) : (
+    withSuspense(Curriculum)
+  );
+};
 
 export const router = createBrowserRouter([
   {
@@ -141,35 +156,61 @@ export const router = createBrowserRouter([
       },
       {
         path: 'placement',
-        element: withSuspense(Placement),
+        element: (
+          <SubscriptionRouteGuard feature="placementTest">
+            {withSuspense(Placement)}
+          </SubscriptionRouteGuard>
+        ),
       },
       {
         path: 'translator',
-        element: withSuspense(Translator),
+        element: (
+          <SubscriptionRouteGuard feature="translator">
+            {withSuspense(Translator)}
+          </SubscriptionRouteGuard>
+        ),
       },
       {
         path: 'speaking',
-        element: withSuspense(Speaking),
+        element: (
+          <SubscriptionRouteGuard feature="speaking">
+            {withSuspense(Speaking)}
+          </SubscriptionRouteGuard>
+        ),
       },
       {
         path: 'vocabulary',
-        element: withSuspense(Vocabulary),
+        element: (
+          <SubscriptionRouteGuard feature="vocabulary">
+            {withSuspense(Vocabulary)}
+          </SubscriptionRouteGuard>
+        ),
       },
       {
         path: 'grammar',
-        element: withSuspense(Grammar),
+        element: (
+          <SubscriptionRouteGuard feature="grammar">{withSuspense(Grammar)}</SubscriptionRouteGuard>
+        ),
       },
       {
         path: 'reading',
-        element: withSuspense(Reading),
+        element: (
+          <SubscriptionRouteGuard feature="reading">{withSuspense(Reading)}</SubscriptionRouteGuard>
+        ),
       },
       {
         path: 'writing',
-        element: withSuspense(Writing),
+        element: (
+          <SubscriptionRouteGuard feature="writing">{withSuspense(Writing)}</SubscriptionRouteGuard>
+        ),
       },
       {
         path: 'listening',
-        element: withSuspense(Listening),
+        element: (
+          <SubscriptionRouteGuard feature="listening">
+            {withSuspense(Listening)}
+          </SubscriptionRouteGuard>
+        ),
       },
       {
         path: 'ai',
@@ -196,8 +237,10 @@ export const router = createBrowserRouter([
         element: <Navigate to="/curriculum/today" replace />,
       },
       {
+        // Today is the free Learning Hub entry; the full curriculum and
+        // learning memory require a paid plan (Learning Hub feature).
         path: 'curriculum/:section',
-        element: withSuspense(Curriculum),
+        element: withSuspense(CurriculumSectionGuard),
       },
       {
         path: 'tools',
@@ -205,7 +248,9 @@ export const router = createBrowserRouter([
       },
       {
         path: 'tools/:section',
-        element: withSuspense(Tools),
+        element: (
+          <SubscriptionRouteGuard feature="tool">{withSuspense(Tools)}</SubscriptionRouteGuard>
+        ),
       },
 
       {

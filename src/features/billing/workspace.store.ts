@@ -5,9 +5,9 @@ import { IdService } from '@/core/ids/id.service';
 
 import { logger } from '@/shared/logger';
 import { eosPersistConfig } from '@/shared/storage/persist-middleware';
+import { AICoachSession } from '@/shared/types/ai.types';
 
 import { useAIStore } from '@/features/ai';
-import { AICoachSession } from '@/shared/types/ai.types';
 
 import { BillingPlanId } from './billing.types';
 
@@ -62,7 +62,15 @@ export const useWorkspaceStore = create<WorkspaceStoreState>()(
         createWorkspace: (name, planId) => {
           const currentWorkspaces = get().workspaces;
           const limit =
-            planId === 'junior' ? 1 : planId === 'senior' ? 2 : planId === 'specialist' ? 3 : planId === 'master' ? 5 : Infinity;
+            planId === 'free' || planId === 'junior'
+              ? 1
+              : planId === 'senior'
+                ? 2
+                : planId === 'specialist'
+                  ? 3
+                  : planId === 'master'
+                    ? 5
+                    : Infinity;
 
           if (currentWorkspaces.length >= limit) {
             return false;

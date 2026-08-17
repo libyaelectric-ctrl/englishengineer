@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import { useLearningStore } from '@/core/learning';
 
 import { showToast } from '@/shared/components/Toast';
 
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
+import { isFreeTier, useBillingStore } from '@/features/billing';
 import { GrammarProgressService, GrammarRepository, useGrammarStore } from '@/features/grammar';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 import { getBaseCefrLevel, useLearningCockpit } from '@/features/profile';
@@ -214,7 +217,19 @@ export function useGrammarPage() {
 
   const masteredCount = rulesWithProgress.filter((e) => e.status === 'Mastered').length;
 
+  const navigate = useNavigate();
+  const subscription = useBillingStore((state) => state.subscription);
+
   const selectRule = (ruleId: string) => {
+    // Free tier previews only the first module; other modules are locked.
+    if (isFreeTier(subscription)) {
+      const firstModule = pathGroups[0]?.module;
+      const target = pathGroups.find((group) => group.entries.some((e) => e.rule.id === ruleId));
+      if (target && firstModule && target.module !== firstModule) {
+        navigate('/pricing');
+        return;
+      }
+    }
     setSelectedId(ruleId);
     setQuizOpen(false);
     setHintOpen(false);

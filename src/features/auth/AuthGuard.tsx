@@ -30,6 +30,20 @@ export const AuthGuard = ({ children }: AuthGuardProps) => {
 
   const hasSession = isAuthenticated || Boolean(currentUser) || hasClerkSession;
 
+  // While Clerk is still loading we cannot know whether the user is signed
+  // in. Redirecting to /login in this window races Clerk's session restore:
+  // /login sees the signed-in session and bounces back to /dashboard, which
+  // bounces to /login again — an infinite reload loop. Wait for Clerk before
+  // ever deciding the user is signed out.
+  if (!clerkLoaded) {
+    return (
+      <LoadingState
+        title="Opening EngVox"
+        description="Restoring your professional learning workspace."
+      />
+    );
+  }
+
   if (!hasSession) {
     if (isLoading) {
       return (

@@ -17,8 +17,8 @@ export function DashboardSidebar() {
   const language = useLocalizationStore((s) => s.language);
   const copy = RIGHT_SIDEBAR_COPY[language] ?? RIGHT_SIDEBAR_COPY.en;
 
-  const planName = subscription?.planId || 'junior';
-  const isFree = planName === 'junior';
+  const planName = subscription?.planId || 'free';
+  const isFree = planName === 'free' || planName === 'junior';
   const userInitials = (currentUser?.displayName || 'Eng')
     .split(' ')
     .map((n) => n[0])
@@ -81,11 +81,7 @@ export function DashboardSidebar() {
             label={copy.instantTranslator}
             onClick={() => navigate('/translator')}
           />
-          <Action
-            icon={Target}
-            label={copy.placementTest}
-            onClick={() => navigate('/placement')}
-          />
+          <Action icon={Target} label={copy.placementTest} onClick={() => navigate('/placement')} />
           <Action icon={Bot} label={copy.aiCopilotTools} onClick={() => navigate('/tools')} />
           <Action icon={Users} label={copy.teamManagement} onClick={() => navigate('/team')} />
         </div>

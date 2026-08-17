@@ -82,7 +82,7 @@ export const Sidebar = () => {
       toggleSidebar();
     }
   };
-  const planName = subscription?.planId || 'junior';
+  const planName = subscription?.planId || 'free';
   const copy =
     SIDEBAR_COPY[language as keyof typeof SIDEBAR_COPY] ??
     (SIDEBAR_EXTRA_COPY[language] as typeof SIDEBAR_COPY.en) ??

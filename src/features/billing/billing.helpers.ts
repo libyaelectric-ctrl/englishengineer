@@ -13,13 +13,19 @@ interface BillingEnv {
   VITE_BILLING_API_URL?: string;
 }
 
-export const JUNIOR_FEATURES: BillingFeature[] = [
-  'placementTest',
+/**
+ * Free tier mirrors the pricing page's $0 plan: core vocabulary & grammar
+ * practice and a single Learning Hub entry (Today). Placement Test and the
+ * full Learning Hub (Curriculum / Learning Memory) stay locked.
+ */
+export const FREE_FEATURES: BillingFeature[] = [
   'vocabulary',
   'grammar',
   'analytics',
   'gamification',
 ];
+
+export const JUNIOR_FEATURES: BillingFeature[] = [...FREE_FEATURES, 'placementTest', 'learningHub'];
 
 export const SENIOR_FEATURES: BillingFeature[] = [
   ...JUNIOR_FEATURES,
@@ -39,6 +45,7 @@ export const SPECIALIST_FEATURES: BillingFeature[] = [
 
 export const MASTER_FEATURES: BillingFeature[] = [
   ...SPECIALIST_FEATURES,
+  'tool',
   'advancedTasks',
   'aiCoach',
   'futureAI',
@@ -62,6 +69,19 @@ export const MASTER_FEATURES: BillingFeature[] = [
 export const TEAM_FEATURES: BillingFeature[] = [...MASTER_FEATURES];
 
 export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
+  free: {
+    id: 'free',
+    name: 'Free',
+    description: 'Core vocabulary and grammar practice to start your engineering English path.',
+    isFutureReady: false,
+    features: FREE_FEATURES,
+    limits: {
+      dailyAICoachRequests: 0,
+      moduleAttemptsPerDay: 'unlimited',
+      vocabularyReviewsPerDay: 'unlimited',
+      documentUploadsPerMonth: 0,
+    },
+  },
   junior: {
     id: 'junior',
     name: 'Junior',
@@ -131,7 +151,7 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
 };
 
 export const createFreeSubscription = (): SubscriptionSnapshot => ({
-  planId: 'junior',
+  planId: 'free',
   status: 'none',
   currentPeriodEnd: null,
   cancelAtPeriodEnd: false,
@@ -186,13 +206,13 @@ export const getBillingStatusPresentation = (
 ): BillingStatusPresentation => {
   if (!providerStatus.isConfigured) {
     return {
-      planId: 'junior',
-      planLabel: 'Junior',
-      statusLabel: 'Local Junior access',
+      planId: 'free',
+      planLabel: 'Free',
+      statusLabel: 'Local Free access',
       statusTone: 'warning',
       message:
-        'Billing backend is not connected. This is local Junior access, not a verified paid subscription.',
-      entitlementLabel: 'Junior entitlements',
+        'Billing backend is not connected. This is local Free access, not a verified paid subscription.',
+      entitlementLabel: 'Free entitlements',
       entitlementTone: 'neutral',
       periodLabel: 'Renewal',
       periodValue: 'Not scheduled',
@@ -293,10 +313,10 @@ export const getBillingStatusPresentation = (
     default:
       return {
         ...base,
-        statusLabel: 'Junior',
+        statusLabel: 'Free',
         statusTone: 'neutral',
-        message: 'No paid subscription is active. Junior plan limits apply.',
-        entitlementLabel: 'Junior entitlements active',
+        message: 'No paid subscription is active. Free plan limits apply.',
+        entitlementLabel: 'Free entitlements active',
         entitlementTone: 'neutral',
         periodLabel: 'Renewal',
       };

@@ -12,13 +12,11 @@ vi.mock('@/features/auth', () => ({
   useAuthStore: vi.fn(),
 }));
 
-vi.mock('@/features/billing', async (importOriginal) => {
-  const original = (await importOriginal()) as Record<string, unknown>;
-  return {
-    ...original,
-    useBillingStore: vi.fn(),
-  };
-});
+// PricingPage imports useBillingStore from the subpath, so mock that module
+// (the barrel mock above would not intercept it).
+vi.mock('@/features/billing/billing.store', () => ({
+  useBillingStore: vi.fn(),
+}));
 
 vi.mock('@/features/localization', () => ({
   useLocalizationStore: vi.fn(

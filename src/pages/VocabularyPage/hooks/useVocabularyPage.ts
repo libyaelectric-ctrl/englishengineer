@@ -1,6 +1,6 @@
 import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
 
@@ -10,6 +10,7 @@ import { playSound } from '@/shared/utils/sound';
 
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
+import { isFreeTier, useBillingStore } from '@/features/billing';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 import {
   LearningProfileRepository,
@@ -66,9 +67,7 @@ export function useVocabularyPage() {
   const [searchParams] = useSearchParams();
   const rawCefr = searchParams.get('cefr');
   const requestedLevel =
-    rawCefr && (CEFR_LEVELS as readonly string[]).includes(rawCefr)
-      ? (rawCefr as CefrLevel)
-      : null;
+    rawCefr && (CEFR_LEVELS as readonly string[]).includes(rawCefr) ? (rawCefr as CefrLevel) : null;
   const vocabularyLevel = requestedLevel ?? getBaseCefrLevel(vocabularyProfile.cefrBand);
   const activeCefrBand = requestedLevel ?? vocabularyProfile.cefrBand;
   const preferredDomains = useMemo(() => getPreferredDomains(learningProfile), [learningProfile]);
@@ -355,7 +354,16 @@ export function useVocabularyPage() {
     URL.revokeObjectURL(url);
   };
 
+  const navigate = useNavigate();
+  const subscription = useBillingStore((state) => state.subscription);
+
   const loadNextBatch = () => {
+    // Free tier previews a single page of the word set; the next page is
+    // locked behind a paid plan.
+    if (isFreeTier(subscription)) {
+      navigate('/pricing');
+      return;
+    }
     const nextOffset = batchOffset + 15;
     const nextIds = selectSet(activeTab, menuState, learningDomain, nextOffset);
     const resolvedOffset = nextIds.length > 0 ? nextOffset : 0;

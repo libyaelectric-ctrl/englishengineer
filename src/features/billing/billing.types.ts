@@ -1,4 +1,4 @@
-export type BillingPlanId = 'junior' | 'senior' | 'specialist' | 'master' | 'team';
+export type BillingPlanId = 'free' | 'junior' | 'senior' | 'specialist' | 'master' | 'team';
 
 export type SubscriptionStatus =
   'none' | 'trialing' | 'active' | 'past_due' | 'canceled' | 'incomplete' | 'enterprise_pending';
@@ -12,6 +12,8 @@ export type BillingFeature =
   | 'listening'
   | 'speaking'
   | 'vocabulary'
+  | 'learningHub'
+  | 'tool'
   | 'aiCoach'
   | 'analytics'
   | 'advancedAnalytics'

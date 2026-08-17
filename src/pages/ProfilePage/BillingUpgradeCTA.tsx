@@ -33,7 +33,7 @@ export const BillingUpgradeCTA = ({ planId }: BillingUpgradeCTAProps) => (
         to="/pricing"
         className="w-full mt-2 h-9 inline-flex items-center justify-center rounded-[4px] bg-primary hover:bg-primary/90 border border-primary text-xs font-bold uppercase tracking-wider text-white transition-colors text-center cursor-pointer shadow-sm"
       >
-        {planId === 'junior' ? 'Upgrade Plan' : 'Change / Upgrade Plan'}
+        {planId === 'free' || planId === 'junior' ? 'Upgrade Plan' : 'Change / Upgrade Plan'}
       </Link>
     )}
   </div>

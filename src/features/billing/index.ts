@@ -24,6 +24,7 @@ export {
 
 export {
   BILLING_PLANS,
+  FREE_FEATURES,
   createFreeSubscription,
   getBillingApiUrl,
   getBillingProviderStatus,
@@ -33,6 +34,7 @@ export {
 
 export {
   isSubscriptionActive,
+  isFreeTier,
   canAccessFeature,
   canUseAICoach,
   canCreateMission,
@@ -50,6 +52,10 @@ export {
 } from './billing.entitlements';
 
 export { EntitlementGate } from './EntitlementGate';
+
+export { LockedFeatureModal, type LockedFeatureModalItem } from './LockedFeatureModal';
+
+export { SubscriptionRouteGuard } from './SubscriptionRouteGuard';
 
 export { BillingService } from './billing.service';
 

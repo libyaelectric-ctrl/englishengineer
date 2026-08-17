@@ -34,25 +34,26 @@ import {
 
 // Internal - used by NAV_ITEMS and tested in navigation.config.test.ts
 export const SKILL_NAV_ITEMS = [
-  { label: 'Vocabulary', href: '/vocabulary', icon: BookMarked },
-  { label: 'Grammar', href: '/grammar', icon: Languages },
-  { label: 'Reading', href: '/reading', icon: BookOpen },
-  { label: 'Writing', href: '/writing', icon: PenTool },
-  { label: 'Listening', href: '/listening', icon: Headphones },
-  { label: 'Speaking', href: '/speaking', icon: Mic2 },
+  { label: 'Vocabulary', href: '/vocabulary', icon: BookMarked, feature: 'vocabulary' },
+  { label: 'Grammar', href: '/grammar', icon: Languages, feature: 'grammar' },
+  { label: 'Reading', href: '/reading', icon: BookOpen, feature: 'reading' },
+  { label: 'Writing', href: '/writing', icon: PenTool, feature: 'writing' },
+  { label: 'Listening', href: '/listening', icon: Headphones, feature: 'listening' },
+  { label: 'Speaking', href: '/speaking', icon: Mic2, feature: 'speaking' },
 ] as const;
 
+// 'today' has no requiredFeature — it is the free Learning Hub entry.
 const LEARNING_HUB_NAV_ITEMS = [
   { label: 'Today', href: '/curriculum/today', icon: Calendar },
-  { label: 'Curriculum', href: '/curriculum/full', icon: Library },
-  { label: 'Learning Memory', href: '/curriculum/memory', icon: BarChart3 },
-  { label: 'Placement Test', href: '/placement', icon: Compass },
+  { label: 'Curriculum', href: '/curriculum/full', icon: Library, feature: 'learningHub' },
+  { label: 'Learning Memory', href: '/curriculum/memory', icon: BarChart3, feature: 'learningHub' },
+  { label: 'Placement Test', href: '/placement', icon: Compass, feature: 'placementTest' },
 ] as const;
 
 const TOOLS_NAV_ITEMS = [
-  { label: 'Work Tools', href: '/tools/work', icon: BriefcaseBusiness },
-  { label: 'Quick Tools', href: '/tools/quick', icon: WandSparkles },
-  { label: 'AI Copilot', href: '/tools/ai', icon: BrainCircuit },
+  { label: 'Work Tools', href: '/tools/work', icon: BriefcaseBusiness, feature: 'tool' },
+  { label: 'Quick Tools', href: '/tools/quick', icon: WandSparkles, feature: 'tool' },
+  { label: 'AI Copilot', href: '/tools/ai', icon: BrainCircuit, feature: 'aiCoach' },
 ] as const;
 
 const PROFILE_NAV_ITEMS = [
@@ -83,8 +84,8 @@ export const NAV_ITEMS = [
     icon: BriefcaseBusiness,
     children: TOOLS_NAV_ITEMS,
   },
-  { label: 'Translator', href: '/translator', icon: Languages },
-  { label: 'Team', href: '/team', icon: Users },
+  { label: 'Translator', href: '/translator', icon: Languages, feature: 'translator' },
+  { label: 'Team', href: '/team', icon: Users, comingSoon: true },
   { label: 'Profile', href: null, icon: User, children: PROFILE_NAV_ITEMS },
 ] as const;
 
