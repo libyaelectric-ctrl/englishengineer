@@ -1,9 +1,10 @@
 import { PRODUCT_VERSION } from '@/config/product.config';
-import { ArrowRight, Moon, Sun } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { useAuthStore } from '@/features/auth';
+import { ClerkAuthControls } from '@/features/auth/ClerkAuthControls';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import { useTheme } from '@/features/theme/ThemeProvider';
 
@@ -189,23 +190,7 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
               )}
             </button>
 
-            {!isAuthPage && (
-              <>
-                <Link
-                  to="/login"
-                  className="hidden sm:inline-flex items-center rounded border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-semibold text-foreground hover:bg-surface-hover hover:border-primary/40 transition-colors ml-1"
-                >
-                  {translate('common.login') || 'Log in'}
-                </Link>
-                <Link
-                  to="/signup"
-                  className="inline-flex items-center gap-1 rounded bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground shadow-sm hover:bg-primary-hover transition-colors ml-0.5"
-                >
-                  {translate('landing.startFree')}
-                  <ArrowRight className="h-3 w-3" />
-                </Link>
-              </>
-            )}
+            {!isAuthPage && <ClerkAuthControls />}
           </div>
         </div>
       </div>
