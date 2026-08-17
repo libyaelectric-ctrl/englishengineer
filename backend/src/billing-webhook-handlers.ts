@@ -2,7 +2,7 @@ import { emptySubscription } from './billing-helpers.js';
 import type { SubscriptionSnapshot } from './billing-helpers.js';
 import { normalizePlanId } from './billing-plan-migration.js';
 
-interface WebhookObject {
+export interface WebhookObject {
   metadata?: Record<string, string>;
   client_reference_id?: string;
   customer?: string;

@@ -9,6 +9,8 @@ export type AiProvider = 'mock' | 'openai' | 'anthropic' | 'gemini';
 
 export type BillingRepositoryMode = 'memory' | 'supabase';
 
+export type BillingProviderName = 'stripe' | 'dodo' | 'paddle';
+
 export type RateLimitStoreMode = 'memory' | 'upstash';
 
 export interface AiConfig {
@@ -27,6 +29,31 @@ export interface AuthConfig {
   supabaseUrl: string | null;
   supabaseAnonKey: string | null;
   supabaseJwtSecret: string | null;
+}
+
+export interface DodoConfig {
+  configured: boolean;
+  apiKey: string | null;
+  webhookSecret: string | null;
+  baseUrl: string | null;
+  environment: 'test' | 'live';
+  productJuniorMonthly?: string | null;
+  productSeniorMonthly?: string | null;
+  productSpecialistMonthly?: string | null;
+  productMasterMonthly?: string | null;
+  productTeamMonthly?: string | null;
+  productJuniorAnnual?: string | null;
+  productSeniorAnnual?: string | null;
+  productSpecialistAnnual?: string | null;
+  productMasterAnnual?: string | null;
+  productTeamAnnual?: string | null;
+  productTopup?: string | null;
+  eventCacheTtlMs?: number;
+  eventCacheMax?: number;
+}
+
+export interface BillingConfig {
+  provider: BillingProviderName;
 }
 
 export interface StripeConfig {
@@ -91,6 +118,8 @@ export interface BackendConfig {
   sentry: SentryConfig;
   ai: AiConfig;
   auth: AuthConfig;
+  billing: BillingConfig;
+  dodo: DodoConfig;
   stripe: StripeConfig;
   supabase: { configured: boolean };
   vocabulary: VocabularyConfig;

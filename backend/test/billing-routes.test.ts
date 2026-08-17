@@ -26,10 +26,17 @@ const createMockApp = () => {
 
 const noopMiddleware = () => async (_req: Request, _res: Response, next: NextFunction) => next();
 
+const mockProvider = {
+  name: 'stripe',
+  configured: true,
+  webhookRoutes: [{ path: '/api/webhooks/stripe', signatureHeaders: ['stripe-signature'] }],
+};
+
 describe('Billing Routes', () => {
   it('registers checkout, topup, portal, subscription-status, and webhook routes', () => {
     const app = createMockApp();
     const mockBillingService = {
+      provider: mockProvider,
       createCheckoutSession: async () => ({}),
       createTopupCheckoutSession: async () => ({}),
       createPortalSession: async () => ({}),
@@ -108,7 +115,10 @@ describe('Billing Routes', () => {
     const app = createMockApp();
     registerBillingRoutes(
       app as unknown as Express,
-      { processWebhook: async () => ({}) } as unknown as BillingService,
+      {
+        provider: mockProvider,
+        processWebhook: async () => ({}),
+      } as unknown as BillingService,
       noopMiddleware(),
       noopMiddleware()
     );
