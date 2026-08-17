@@ -15,6 +15,7 @@ import {
   CLERK_SIGN_UP_FALLBACK_REDIRECT_URL,
   CLERK_SIGN_UP_URL,
 } from '@/features/auth/clerk.config';
+import { CLERK_THEME } from '@/features/auth/clerk.theme';
 import { BillingSync } from '@/features/billing/BillingSync';
 import { ThemeProvider } from '@/features/theme/ThemeProvider';
 
@@ -26,6 +27,7 @@ export default function App() {
           {CLERK_PUBLISHABLE_KEY ? (
             <ClerkProvider
               publishableKey={CLERK_PUBLISHABLE_KEY}
+              appearance={CLERK_THEME}
               signInUrl={CLERK_SIGN_IN_URL}
               signUpUrl={CLERK_SIGN_UP_URL}
               signInFallbackRedirectUrl={CLERK_SIGN_IN_FALLBACK_REDIRECT_URL}

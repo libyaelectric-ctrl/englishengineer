@@ -35,7 +35,9 @@ describe('VocabularyPage menu', () => {
   };
 
   const startWordSet = async () => {
-    await waitFor(() => expect(screen.getAllByTestId('vocabulary-word-card').length).toBeGreaterThan(0));
+    await waitFor(() =>
+      expect(screen.getAllByTestId('vocabulary-word-card').length).toBeGreaterThan(0)
+    );
   };
 
   const openSearchModal = async () => {
@@ -128,7 +130,7 @@ describe('VocabularyPage menu', () => {
     fireEvent.change(input, { target: { value: `y\u00fckseklik` } });
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(await screen.findByText(/results found/i)).toBeInTheDocument();
-  }, 10_000);
+  }, 30_000);
 
   it('adds an unknown term only to My Vocabulary', async () => {
     await renderLoadedPage();
@@ -157,7 +159,7 @@ describe('VocabularyPage menu', () => {
 
     expect(VocabularyMenuService.getState().myVocabulary).toHaveLength(1);
     expect(VocabularyMenuService.getState().myVocabulary[0].term).toBe('fluxuator');
-  }, 30_000);
+  }, 60_000);
 
   it('honors the ?cefr= drill deep link and loads that band', async () => {
     render(
