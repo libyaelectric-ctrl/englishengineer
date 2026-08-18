@@ -157,6 +157,8 @@ const logAiUsage = (
     provider?: string;
     durationMs?: number;
     text?: string;
+    tokensUsed?: number;
+    promptVersion?: string;
   },
   body: { modeId?: string },
   operation: string
@@ -168,6 +170,11 @@ const logAiUsage = (
       operation,
       durationMs: result.durationMs || 0,
       resultSummary: result.text ? result.text.slice(0, 100) : '',
+      tokensUsed: result.tokensUsed ?? 0,
+      metadata: {
+        promptVersion: result.promptVersion ?? null,
+        operation,
+      },
     });
   }
 };
@@ -223,6 +230,8 @@ export const registerAIRoutes = (
         provider: result.provider as string | undefined,
         durationMs: result.durationMs as number | undefined,
         text: result.text as string | undefined,
+        tokensUsed: result.tokensUsed as number | undefined,
+        promptVersion: result.promptVersion as string | undefined,
       },
       { modeId: body.modeId as string | undefined },
       operation
@@ -261,4 +270,20 @@ export const registerAIRoutes = (
       }
     );
   });
+
+  app.get(
+    '/api/ai/analytics',
+    requireBackendAuth,
+    rateLimiter,
+    async (request: Request, response: Response, next: NextFunction) => {
+      try {
+        const userId = request.auth?.userId;
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+        const analytics = await ledger.getUserAnalytics(userId);
+        response.json({ userId, ...analytics });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
 };

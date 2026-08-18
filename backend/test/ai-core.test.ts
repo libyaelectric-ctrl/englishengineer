@@ -77,6 +77,12 @@ describe('AI Core Service', () => {
     assert.ok(result.structuredResult);
     assert.equal(result.structuredResult.summary, 'Excellent English grammar.');
     assert.equal(result.text, 'Cleaned version X');
+    assert.equal(result.mockMode, false);
+    assert.ok(result.estimatedTokens > 0, 'token estimate should be positive for real calls');
+    assert.ok(
+      result.promptVersion?.startsWith('json-structure:'),
+      'prompt version should reference the json-structure instruction'
+    );
   });
 
   it('falls back to raw text if LLM returns malformed JSON', async () => {

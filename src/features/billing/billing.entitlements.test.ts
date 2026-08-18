@@ -8,6 +8,7 @@ import {
   canUseAICoach,
   canViewAdvancedAnalytics,
   getDowngradeImpact,
+  getFreeTierPreview,
   getPlanLimitLabel,
   isSubscriptionActive,
 } from './billing.entitlements';
@@ -32,6 +33,35 @@ const withPlan = (planId: SubscriptionSnapshot['planId']): SubscriptionSnapshot 
 describe('billing entitlements', () => {
   it('treats free subscription as active fallback', () => {
     expect(isSubscriptionActive(createFreeSubscription())).toBe(true);
+  });
+
+  describe('free-tier preview limits (Grammar first module, Vocabulary first page)', () => {
+    it('gives the free tier a limited Grammar preview', () => {
+      const free = createFreeSubscription();
+      expect(getFreeTierPreview(free, 'grammar')).toEqual({
+        limited: true,
+        scope: 'firstGrammarModule',
+      });
+      expect(getFreeTierPreview(free, 'vocabulary')).toEqual({
+        limited: true,
+        scope: 'firstVocabularyBatch',
+      });
+      // Features without a preview stay fully locked on the free tier.
+      expect(getFreeTierPreview(free, 'reading').limited).toBe(false);
+      expect(getFreeTierPreview(free, 'reading').scope).toBe(null);
+    });
+
+    it('gives the legacy junior+none tier the same previews', () => {
+      const junior = { ...createFreeSubscription(), planId: 'junior' as const };
+      expect(getFreeTierPreview(junior, 'grammar').limited).toBe(true);
+      expect(getFreeTierPreview(junior, 'vocabulary').limited).toBe(true);
+    });
+
+    it('does not limit paid subscribers', () => {
+      expect(getFreeTierPreview(withPlan('master'), 'grammar').limited).toBe(false);
+      expect(getFreeTierPreview(withPlan('master'), 'vocabulary').limited).toBe(false);
+      expect(getFreeTierPreview(withPlan('master'), 'grammar').scope).toBe(null);
+    });
   });
 
   it('distinguishes the free tier from a paid Junior plan', () => {

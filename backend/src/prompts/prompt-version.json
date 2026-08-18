@@ -1,0 +1,10 @@
+{
+  "json-structure": {
+    "version": "2026-06-26.v1",
+    "description": "JSON structure contract for structured AI output"
+  },
+  "content-generation": {
+    "version": "2026-06-26.v1",
+    "description": "Content structure contract for generated lessons"
+  }
+}

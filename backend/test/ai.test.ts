@@ -17,6 +17,9 @@ const createMockApp = () => {
     post: (path: string, ...handlers: unknown[]) => {
       registered.push({ method: 'POST', path, handlerCount: handlers.length });
     },
+    get: (path: string, ...handlers: unknown[]) => {
+      registered.push({ method: 'GET', path, handlerCount: handlers.length });
+    },
     registered,
   };
 };
@@ -73,9 +76,33 @@ describe('AI Routes', () => {
       {}
     );
 
-    for (const route of app.registered) {
+    for (const route of app.registered.filter((r) => r.path in AI_ROUTES)) {
       assert.equal(route.handlerCount, 4, `Route ${route.path} should have 4 middleware/handlers`);
     }
+  });
+
+  it('registers a GET /api/ai/analytics route with auth, rateLimiter, and handler', () => {
+    const app = createMockApp();
+    const mockAiService = {
+      complete: async () => ({ text: 'ok', provider: 'mock' }),
+    };
+    const mockBillingRepo = {
+      getSubscriptionStatus: async () => ({ planId: 'free', topupCredits: 0 }),
+    } as unknown as SubscriptionRepository;
+
+    registerAIRoutes(
+      app as unknown as Express,
+      mockAiService,
+      noopMiddleware(),
+      noopMiddleware(),
+      mockBillingRepo,
+      {}
+    );
+
+    const analytics = app.registered.find((r) => r.path === '/api/ai/analytics');
+    assert.ok(analytics, 'Expected GET /api/ai/analytics to be registered');
+    assert.equal(analytics.method, 'GET');
+    assert.equal(analytics.handlerCount, 3);
   });
 
   it('exports createAIService from ai-core', async () => {

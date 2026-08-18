@@ -36,11 +36,67 @@ interface AiLedgerSession {
   operation: string;
   durationMs?: number;
   resultSummary?: string;
+  tokensUsed?: number;
+  metadata?: Record<string, unknown>;
 }
+
+export interface AiAnalytics {
+  totalRequests: number;
+  averageDurationMs: number;
+  totalEstimatedTokens: number;
+  estimatedCostUsd: number;
+  byOperation: Array<{ operation: string; count: number }>;
+  byDay: Array<{ date: string; count: number }>;
+}
+
+// Rough output-heavy price used only when real provider billing details are
+// unavailable. Deliberately labeled "estimated" in the API contract.
+const ESTIMATED_USD_PER_1K_TOKENS = 0.01;
+
+const emptyAnalytics = (): AiAnalytics => ({
+  totalRequests: 0,
+  averageDurationMs: 0,
+  totalEstimatedTokens: 0,
+  estimatedCostUsd: 0,
+  byOperation: [],
+  byDay: [],
+});
+
+const buildAnalytics = (
+  sessions: Array<{ operation: string; durationMs: number; tokensUsed: number; timestamp: number }>
+): AiAnalytics => {
+  if (sessions.length === 0) return emptyAnalytics();
+
+  const totalDuration = sessions.reduce((sum, s) => sum + s.durationMs, 0);
+  const totalTokens = sessions.reduce((sum, s) => sum + s.tokensUsed, 0);
+
+  const byOperationMap = new Map<string, number>();
+  const byDayMap = new Map<string, number>();
+  for (const session of sessions) {
+    byOperationMap.set(session.operation, (byOperationMap.get(session.operation) ?? 0) + 1);
+    const day = new Date(session.timestamp).toISOString().split('T')[0];
+    byDayMap.set(day, (byDayMap.get(day) ?? 0) + 1);
+  }
+
+  return {
+    totalRequests: sessions.length,
+    averageDurationMs: Math.round(totalDuration / sessions.length),
+    totalEstimatedTokens: totalTokens,
+    estimatedCostUsd:
+      Math.round(totalTokens * (ESTIMATED_USD_PER_1K_TOKENS / 1000) * 10000) / 10000,
+    byOperation: [...byOperationMap.entries()]
+      .map(([operation, count]) => ({ operation, count }))
+      .sort((a, b) => b.count - a.count),
+    byDay: [...byDayMap.entries()]
+      .map(([date, count]) => ({ date, count }))
+      .sort((a, b) => (a.date < b.date ? 1 : -1)),
+  };
+};
 
 export interface AiLedger {
   countRecentRequests(userId: string, planId: string): Promise<number>;
   logSession(userId: string, session: AiLedgerSession): Promise<void>;
+  getUserAnalytics(userId: string): Promise<AiAnalytics>;
 }
 
 export const createSupabaseAiLedger = (config: {
@@ -94,7 +150,8 @@ export const createSupabaseAiLedger = (config: {
           success: true,
           duration_ms: session.durationMs || 0,
           result_summary: session.resultSummary || '',
-          metadata: {},
+          tokens_used: session.tokensUsed || 0,
+          metadata: session.metadata || {},
         });
 
         if (error) {
@@ -104,6 +161,37 @@ export const createSupabaseAiLedger = (config: {
         logger.error('Ledger log error', {
           error: err instanceof Error ? err.message : String(err),
         });
+      }
+    },
+
+    async getUserAnalytics(userId) {
+      try {
+        const { data, error } = await supabase
+          .from('ai_sessions')
+          .select('operation, duration_ms, tokens_used, created_at')
+          .eq('user_id', userId);
+
+        if (error) {
+          logger.error('Ledger analytics error', { error: error.message });
+          return emptyAnalytics();
+        }
+
+        const rows = (data as Array<Record<string, unknown>>) ?? [];
+        return buildAnalytics(
+          rows.map((row) => ({
+            operation: typeof row.operation === 'string' ? row.operation : 'unknown',
+            durationMs:
+              typeof row.duration_ms === 'number' ? row.duration_ms : Number(row.duration_ms) || 0,
+            tokensUsed:
+              typeof row.tokens_used === 'number' ? row.tokens_used : Number(row.tokens_used) || 0,
+            timestamp: typeof row.created_at === 'string' ? Date.parse(row.created_at) : Date.now(),
+          }))
+        );
+      } catch (err: unknown) {
+        logger.error('Ledger analytics error', {
+          error: err instanceof Error ? err.message : String(err),
+        });
+        return emptyAnalytics();
       }
     },
   };
@@ -134,6 +222,21 @@ export const createMemoryAiLedger = (): AiLedger => {
 
     async logSession(userId, session) {
       ledger.push({ userId, timestamp: Date.now(), ...session });
+    },
+
+    async getUserAnalytics(userId) {
+      const now = Date.now();
+      prune(now);
+      return buildAnalytics(
+        ledger
+          .filter((item) => item.userId === userId)
+          .map((item) => ({
+            operation: item.operation,
+            durationMs: item.durationMs || 0,
+            tokensUsed: item.tokensUsed || 0,
+            timestamp: item.timestamp,
+          }))
+      );
     },
   };
 };

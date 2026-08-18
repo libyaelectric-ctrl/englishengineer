@@ -7,16 +7,23 @@ import {
   getContentGenerationInstructionAsync,
   getCustomPracticePrompt,
   getJsonStructureInstructionAsync,
+  getResolvedPromptVersion,
 } from '../prompts/prompt-loader.js';
 import { callAnthropic, callGemini, callOpenAI, mockText } from './providers.js';
 import type { ProviderConfig } from './providers.js';
 
 export const AI_CONTRACT_VERSION = '2026-06-26.v1';
 
-const JSON_OPERATIONS = ['analyzeProgress', 'evaluateEngineeringEnglish', 'analyzeText', 'generateContent'];
+const JSON_OPERATIONS = [
+  'analyzeProgress',
+  'evaluateEngineeringEnglish',
+  'analyzeText',
+  'generateContent',
+];
 
 const isStructuredOperation = (operation: string, body: AiRequestBody) =>
-  JSON_OPERATIONS.includes(operation) && (operation === 'generateContent' || body?.context !== undefined);
+  JSON_OPERATIONS.includes(operation) &&
+  (operation === 'generateContent' || body?.context !== undefined);
 
 const isCustomPracticeRequest = (prompt: string) => {
   const lower = prompt.toLowerCase();
@@ -115,6 +122,10 @@ interface AiResult {
   mode: 'mock' | 'real';
   mockMode: boolean;
   durationMs: number;
+  /** Version(s) of the bundled/database prompt instruction that served this call. */
+  promptVersion?: string;
+  /** Cheap heuristic token estimate for billing/analytics (chars/4). */
+  estimatedTokens: number;
 }
 
 interface AiRequestBody {
@@ -142,6 +153,7 @@ export const createAIService = (config: AiConfig, fetchImpl: typeof fetch = fetc
         mode: 'mock',
         mockMode: true,
         durationMs: Date.now() - startedAt,
+        estimatedTokens: 0,
       };
     }
 
@@ -162,6 +174,10 @@ export const createAIService = (config: AiConfig, fetchImpl: typeof fetch = fetc
       responseText = parsed.responseText;
     }
 
+    const instructionKey =
+      operation === 'generateContent' ? 'content-generation' : 'json-structure';
+    const resolvedVersion = structured && getResolvedPromptVersion(instructionKey);
+
     return {
       contractVersion: AI_CONTRACT_VERSION,
       requestId,
@@ -172,6 +188,11 @@ export const createAIService = (config: AiConfig, fetchImpl: typeof fetch = fetc
       mode: 'real',
       mockMode: false,
       durationMs: Date.now() - startedAt,
+      promptVersion:
+        resolvedVersion && structured
+          ? `${resolvedVersion.key}:${resolvedVersion.version}@${resolvedVersion.source}`
+          : undefined,
+      estimatedTokens: Math.ceil((finalPrompt.length + text.length) / 4),
     };
   },
 });

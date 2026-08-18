@@ -71,6 +71,39 @@ Railway dashboard → Variables:
 - [ ] API endpoints respond
 - [ ] Sentry captures errors (if configured)
 
+## Clerk Auth (Canlı Gözlem — 2026-08-18)
+
+### Instance
+
+- App: `app_3I251yNGqaZVZWzccI00jRzihhp` (EngVox)
+- Dev instance: `ins_3I2521N8mUolXuAU0OuvDvkX3OR` (`environment_type: development`)
+- Publishable key: `pk_test_...` (test modu)
+- Backend: `GET /api/v1/reading/feed` + geçerli Clerk JWT → 200 (JWKS doğrulaması canlıda çalışıyor)
+
+### Doğrulanan Akışlar (eng-vox.vercel.app)
+
+- `/login` Clerk UI ile render ediliyor (Apple/Google/LinkedIn + email/password, "Development mode" rozeti)
+- Email+password giriş akışı → "Check your email" yeni-cihaz doğrulama adımına ilerliyor
+- `clerk impersonate <user_id>` ile oturum kuruluyor; `clerk users create --email --password ...` ile test kullanıcısı oluşturulabiliyor
+
+### Bilinen Sorun: Dashboard "Opening EngVox" Takılması
+
+**Belirti:** `/dashboard` yükleme ekranında kalıyor; Clerk `useAuth().isLoaded` hiç `true` olmuyor (console hatasız).
+
+**Kök neden:** Instance'ın tüm redirect URL'leri (`home_url`, `after_sign_in_url`, `after_sign_up_url`, ...) Clerk'ın kendi `dominant-cricket-288.accounts.dev/default-redirect` portalına işaret ediyor. Uygulama origin'i (`eng-vox.vercel.app`) Clerk'e **Application URLs** üzerinden tanıtılmadığı için giriş sonrası oturum uygulamaya geri taşınamıyor.
+
+**Düzeltme:** Clerk Dashboard → EngVox → **Application URLs** → `https://eng-vox.vercel.app` (sign-in/sign-up/home) olarak ekleyin. CLI'den yapılamıyor (`clerk config` yalnızca relative path'leri kapsar).
+
+## Production Clerk Geçişi
+
+**Blocker:** Production instance özel bir alan adı gerektirir (örn. `auth.eng-vox.com`); `eng-vox.vercel.app` gibi platform alt alan adı geçersiz. Alan adı alınınca:
+
+1. `clerk deploy` (interaktif wizard, insan terminali gerekir) — domain + OAuth production kimlikleri sorar
+2. `clerk deploy status --mode agent` ile doğrulama
+3. Production instance'ın `CLERK_SECRET_KEY` / `VITE_CLERK_PUBLISHABLE_KEY`'ini env'e yazma (Render backend + Vercel frontend)
+4. Render + Vercel redeploy
+5. `clerk doctor --json` ile uçtan uca doğrulama
+
 ## Incident Response
 
 ### Frontend Down

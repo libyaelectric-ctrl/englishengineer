@@ -10,6 +10,29 @@ const __dirname = dirname(__filename);
 
 const cache = new Map<string, string>();
 
+// Tracks where each dynamic prompt key was last resolved from so callers can
+// report which version/source actually served a request (prompt versioning).
+const resolvedSources = new Map<string, 'file' | 'db'>();
+
+interface PromptVersionManifest {
+  [key: string]: { version: string; description?: string };
+}
+
+let cachedManifest: PromptVersionManifest | null = null;
+const getPromptVersionManifest = (): PromptVersionManifest => {
+  if (cachedManifest) return cachedManifest;
+  try {
+    const raw = readFileSync(join(__dirname, 'prompt-version.json'), 'utf8');
+    cachedManifest = JSON.parse(raw) as PromptVersionManifest;
+  } catch (err: unknown) {
+    logger.warn('[PromptLoader] Failed to read prompt-version.json manifest', {
+      error: err instanceof Error ? err.message : String(err),
+    });
+    cachedManifest = {};
+  }
+  return cachedManifest;
+};
+
 let supabaseClient: ReturnType<typeof createClient> | null = null;
 const getSupabaseClient = () => {
   if (supabaseClient) return supabaseClient;
@@ -31,7 +54,10 @@ const loadPrompt = (filename: string): string => {
 
 const loadPromptFromDb = async (key: string, fallbackFilename: string): Promise<string> => {
   const cacheKey = `db:${key}`;
-  if (cache.has(cacheKey)) return cache.get(cacheKey)!;
+  if (cache.has(cacheKey)) {
+    resolvedSources.set(key, 'db');
+    return cache.get(cacheKey)!;
+  }
 
   const client = getSupabaseClient();
   if (client) {
@@ -46,6 +72,7 @@ const loadPromptFromDb = async (key: string, fallbackFilename: string): Promise<
       if (!error && row?.content) {
         const content = row.content.trim();
         cache.set(cacheKey, content);
+        resolvedSources.set(key, 'db');
         logger.info(`[PromptLoader] Loaded ${key} instruction from database`);
         return content;
       } else if (error) {
@@ -66,7 +93,31 @@ const loadPromptFromDb = async (key: string, fallbackFilename: string): Promise<
     }
   }
 
+  resolvedSources.set(key, 'file');
   return loadPrompt(fallbackFilename);
+};
+
+interface PromptResolvedVersion {
+  key: string;
+  version: string;
+  source: 'file' | 'db';
+}
+
+/**
+ * Returns the version that will be attached to a dynamic prompt key
+ * (json-structure / content-generation) plus whether it was resolved from the
+ * bundled file or the database. Falls back to the manifest entry with source
+ * "file" when the loader has not run yet.
+ */
+export const getResolvedPromptVersion = (key: string): PromptResolvedVersion | null => {
+  const manifest = getPromptVersionManifest();
+  const entry = manifest[key];
+  if (!entry) return null;
+  return {
+    key,
+    version: entry.version,
+    source: resolvedSources.get(key) ?? 'file',
+  };
 };
 
 export const getJsonStructureInstructionAsync = (): Promise<string> =>

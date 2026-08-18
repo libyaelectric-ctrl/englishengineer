@@ -7,6 +7,7 @@ import type { EngineeringDiscipline } from '@/shared/constants/engineering-disci
 
 import { useLocalizationStore } from '@/features/localization';
 
+import { AiAnalyticsCard } from './AiAnalyticsCard';
 import {
   type GenerateLessonParams,
   PersonalAIService,
@@ -164,6 +165,8 @@ export const PersonalAIPanel = ({
       icon={Brain}
     >
       <div className="space-y-4">
+        <AiAnalyticsCard />
+
         <div className="flex flex-wrap gap-2">
           {SKILL_TABS.map(({ id, icon: Icon }) => (
             <button
