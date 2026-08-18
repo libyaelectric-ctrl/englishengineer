@@ -1,62 +1,52 @@
-import { type Page, expect, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+
+import { skipIfNoClerkSecret } from '../helpers/clerk-login';
+
+skipIfNoClerkSecret();
 
 const API_BASE = process.env.BACKEND_URL || 'http://localhost:8787';
 
-const demoLogin = async (page: Page) => {
-  await page.goto('/login');
-  await page.getByRole('button', { name: /demo/i }).click();
-  await expect(page.getByRole('heading', { name: /command center/i })).toBeVisible();
-};
-
 test.describe('Stripe billing integration', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
-    await page.evaluate(() => localStorage.clear());
-  });
 
-  test('pricing page shows all plan tiers with correct prices', async ({ page }) => {
+  test('pricing page shows plan tiers with current prices', async ({ page }) => {
     await page.goto('/pricing');
-    await expect(page.getByRole('heading', { name: /access level/i })).toBeVisible();
+    await expect(page.getByText(/pricing plans/i).first()).toBeVisible();
 
     // Free plan
     await expect(page.getByText('$0').first()).toBeVisible();
-    await expect(page.getByText('Free').first()).toBeVisible();
+    await expect(page.getByText('Free', { exact: true }).first()).toBeVisible();
 
-    // Pro plan
+    // Paid tiers (billing catalog: Junior $29, Senior $59, Master $99)
     await expect(page.getByText('$29').first()).toBeVisible();
-
-    // Project plan
     await expect(page.getByText('$59').first()).toBeVisible();
-
-    // Exec plan
     await expect(page.getByText('$99').first()).toBeVisible();
   });
 
-  test('checkout flow initiates for Pro plan', async ({ page }) => {
-    await demoLogin(page);
+  test('checkout flow initiates for a paid plan', async ({ page }) => {
     await page.goto('/pricing');
 
-    // Find and click the Pro plan checkout button
-    const proButton = page.getByRole('button', { name: /upgrade|subscribe|get pro/i }).first();
+    // Find and click a plan checkout button (naming differs per plan)
+    const planButton = page
+      .getByRole('button', { name: /upgrade|subscribe|choose|get started|start/i })
+      .first();
 
-    if (await proButton.isVisible()) {
-      await proButton.click();
-      // Should redirect to Stripe checkout or show auth prompt
+    if (await planButton.isVisible()) {
+      await planButton.click();
+      // Should redirect to a checkout/portal or show a demo-blocked message
       await page.waitForTimeout(2000);
       const url = page.url();
       const isCheckoutRedirect =
-        url.includes('checkout.stripe.com') || url.includes('/login') || url.includes('/start');
+        url.includes('checkout.') || url.includes('/login') || url.includes('/start');
       expect(isCheckoutRedirect).toBeTruthy();
     }
   });
 
   test('billing section shows current plan in profile', async ({ page }) => {
-    await demoLogin(page);
     await page.goto('/profile/billing');
     await expect(page.getByText(/billing|subscription|plan/i).first()).toBeVisible();
   });
 
-  test('health endpoint confirms Stripe is configured', async ({ request }) => {
+  test('health endpoint confirms billing provider check exists', async ({ request }) => {
     const response = await request.get(`${API_BASE}/api/health`);
     expect(response.ok()).toBeTruthy();
     const body = await response.json();

@@ -14,6 +14,7 @@ coverage/
 test-results/
 playwright-report/
 .playwright-cli/
+playwright/.auth/
 tests/e2e/.debug-signin.mjs
 .vercel-tmp/
 .freebuff/

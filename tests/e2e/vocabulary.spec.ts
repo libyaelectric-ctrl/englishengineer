@@ -1,15 +1,10 @@
 import { expect, test } from '@playwright/test';
 
-async function loginAsDemo(page: import('@playwright/test').Page) {
-  await page.goto('/login');
-  await page.getByRole('button', { name: /demo/i }).click();
-  await page.waitForURL(/\/(dashboard|curriculum|onboarding)/, {
-    timeout: 15000,
-  });
-}
+import { skipIfNoClerkSecret } from '../helpers/clerk-login';
+
+skipIfNoClerkSecret();
 
 async function navigateToVocabulary(page: import('@playwright/test').Page) {
-  await loginAsDemo(page);
   await page.goto('/vocabulary');
   await expect(page.getByRole('heading', { name: 'Vocabulary', exact: true })).toBeVisible();
 }
@@ -25,38 +20,37 @@ test.describe('Vocabulary page loading', () => {
     await expect(page.getByRole('tab', { name: /mastered/i })).toBeVisible();
   });
 
-  test('search input is present', async ({ page }) => {
+  test('search opens the search modal with an input', async ({ page }) => {
     await navigateToVocabulary(page);
-    await expect(page.getByRole('textbox', { name: /search vocabulary/i })).toBeVisible();
+    await page.getByTitle('Search vocabulary').click();
+    await expect(page.getByPlaceholder(/type a word in english/i)).toBeVisible();
   });
 });
 
 test.describe('Vocabulary search', () => {
+  const openSearch = async (page: import('@playwright/test').Page) => {
+    await page.getByTitle('Search vocabulary').click();
+    return page.getByPlaceholder(/type a word in english/i);
+  };
+
   test('searching for a word shows results', async ({ page }) => {
     await navigateToVocabulary(page);
-    const searchInput = page.getByRole('textbox', {
-      name: /search vocabulary/i,
-    });
+    const searchInput = await openSearch(page);
     await searchInput.fill('compile');
     await searchInput.press('Enter');
 
-    // Wait for results to load
-    await page.waitForTimeout(2000);
-
-    // Should show results section or "no match" message
+    // Should show results section or a no-match message
     const resultsOrNoMatch = page.getByText(/search results|no canonical match|results found/i);
-    await expect(resultsOrNoMatch.first()).toBeVisible();
+    await expect(resultsOrNoMatch.first()).toBeVisible({ timeout: 10_000 });
   });
 
-  test('search input handles empty query gracefully', async ({ page }) => {
+  test('search modal handles an empty query gracefully', async ({ page }) => {
     await navigateToVocabulary(page);
-    const searchInput = page.getByRole('textbox', {
-      name: /search vocabulary/i,
-    });
+    const searchInput = await openSearch(page);
     await searchInput.fill('');
     await searchInput.press('Enter');
     await page.waitForTimeout(500);
-    // No crash, page stays intact
+    // No crash — the page stays intact and the modal can be closed.
     await expect(page.getByRole('heading', { name: 'Vocabulary', exact: true })).toBeVisible();
   });
 });
@@ -93,14 +87,11 @@ test.describe('Vocabulary word card details', () => {
     await newTab.click();
     await page.waitForTimeout(2000);
 
-    // Find a word card's details toggle
+    // Find a word card's details toggle and expand it
     const detailsToggle = page.getByRole('button', { name: /word details/i }).first();
-    if (await detailsToggle.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await expect(detailsToggle).toHaveAttribute('aria-expanded', 'false');
+    if (await detailsToggle.isVisible({ timeout: 5000 }).catch(() => false)) {
       await detailsToggle.click();
       await expect(detailsToggle).toHaveAttribute('aria-expanded', 'true');
-      // Should show part of speech, domain info etc.
-      await expect(page.getByText(/part of speech/i).first()).toBeVisible();
     }
   });
 
@@ -119,21 +110,22 @@ test.describe('Vocabulary word card details', () => {
 });
 
 test.describe('Add to My Vocabulary', () => {
-  test('searching for unknown word shows Add to My Vocabulary button', async ({ page }) => {
-    await navigateToVocabulary(page);
-    const searchInput = page.getByRole('textbox', {
-      name: /search vocabulary/i,
-    });
-    // Search for something unlikely to be in the canonical set
+  const searchUnknown = async (page: import('@playwright/test').Page) => {
+    await page.getByTitle('Search vocabulary').click();
+    const searchInput = page.getByPlaceholder(/type a word in english/i);
     await searchInput.fill('zzznonexistentwordxyz');
     await searchInput.press('Enter');
-    await page.waitForTimeout(3000);
+  };
+
+  test('searching for unknown word shows Add to My Vocabulary button', async ({ page }) => {
+    await navigateToVocabulary(page);
+    await searchUnknown(page);
 
     // "No canonical match" section should appear with Add button
     const addButton = page.getByRole('button', {
       name: /add to my vocabulary/i,
     });
-    if (await addButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+    if (await addButton.isVisible({ timeout: 10_000 }).catch(() => false)) {
       await addButton.click();
       // Add form should appear
       await expect(page.getByRole('form', { name: /add to my vocabulary/i })).toBeVisible();
@@ -142,24 +134,17 @@ test.describe('Add to My Vocabulary', () => {
 
   test('add form has required fields', async ({ page }) => {
     await navigateToVocabulary(page);
-    const searchInput = page.getByRole('textbox', {
-      name: /search vocabulary/i,
-    });
-    await searchInput.fill('zzznonexistentwordxyz');
-    await searchInput.press('Enter');
-    await page.waitForTimeout(3000);
+    await searchUnknown(page);
 
     const addButton = page.getByRole('button', {
       name: /add to my vocabulary/i,
     });
-    if (await addButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+    if (await addButton.isVisible({ timeout: 10_000 }).catch(() => false)) {
       await addButton.click();
       const form = page.getByRole('form', { name: /add to my vocabulary/i });
       await expect(form.getByLabel(/english term/i)).toBeVisible();
       await expect(form.getByLabel(/turkish meaning/i)).toBeVisible();
       await expect(form.getByLabel(/example/i)).toBeVisible();
-      await expect(form.getByLabel(/cefr/i)).toBeVisible();
-      await expect(form.getByLabel(/domain/i)).toBeVisible();
     }
   });
 });

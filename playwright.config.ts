@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  testMatch: ['browser/**/*.spec.ts', 'e2e/**/*.spec.ts'],
+  testMatch: ['browser/**/*.spec.ts', 'e2e/**/*.spec.ts', 'helpers/auth-setup.ts'],
   timeout: 90_000,
   expect: {
     timeout: 10_000,
@@ -24,17 +24,28 @@ export default defineConfig({
     timeout: 120_000,
   },
   projects: [
+    // Signs in once as the Clerk test user and saves the session (cookie +
+    // localStorage) so every spec starts authenticated without a per-test
+    // sign-in. Skips when CLERK_SECRET_KEY is missing.
+    {
+      name: 'setup-auth',
+      testMatch: /auth-setup\.ts/,
+    },
     {
       name: 'chromium-desktop',
+      dependencies: ['setup-auth'],
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1440, height: 1000 },
+        storageState: 'playwright/.auth/user.json',
       },
     },
     {
       name: 'mobile-safari',
+      dependencies: ['setup-auth'],
       use: {
         ...devices['iPhone 14'],
+        storageState: 'playwright/.auth/user.json',
       },
     },
   ],

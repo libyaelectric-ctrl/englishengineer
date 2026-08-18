@@ -2,6 +2,10 @@ import { expect, test } from '@playwright/test';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
+import { skipIfNoClerkSecret } from '../../helpers/clerk-login';
+
+skipIfNoClerkSecret();
+
 import {
   type QaFinding,
   type QaPageReport,
@@ -142,16 +146,9 @@ test.describe('QA Agent — insan gibi sayfa sayfa denetim', () => {
   test('B) Demo kullanıcı ile giriş yapılıp ürün sayfaları denetlenir', async ({ page }) => {
     await test.step('Demo girişi', async () => {
       const collector = attachErrorCollectors(page);
-      await page.goto('/login', { waitUntil: 'domcontentloaded', timeout: 30000 });
-      const demoBtn = page
-        .getByRole('button', { name: /launch instant demo|try demo|demo/i })
-        .first();
-      if (await demoBtn.isVisible()) {
-        await demoBtn.click();
-      }
-      await page
-        .waitForURL(/\/dashboard|\/welcome|\/curriculum/, { timeout: 20000 })
-        .catch(() => {});
+      // The demo button is gone (Clerk is the single auth path); the shared
+      // auth-setup session is already present, so load the dashboard.
+      await page.goto('/dashboard');
       await page.waitForTimeout(1500);
       const current = new URL(page.url()).pathname;
       const report = await auditPage(page, current, true);

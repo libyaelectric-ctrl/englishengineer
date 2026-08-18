@@ -14,6 +14,7 @@ import {
   getTemplatesForMode,
   useAIStore,
 } from '@/features/ai';
+import { showToast } from '@/shared/components/Toast';
 import { AssessmentService } from '@/features/assessment';
 import { useAuthStore } from '@/features/auth';
 import {
@@ -109,14 +110,14 @@ export function useAIPage() {
         .join('\n')
     : '';
 
-  const [uploadedDocsCount, setUploadedDocsCount] = useState<number>(() => {
+const [uploadedDocsCount, setUploadedDocsCount] = useState<number>(() => {
     const val = localStorage.getItem('uploaded_docs_count');
     return val ? parseInt(val, 10) : 0;
   });
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const startTopupCheckout = useBillingStore((state) => state.startTopupCheckout);
   const [isBuyingCredits, setIsBuyingCredits] = useState(false);
   const [buyError, setBuyError] = useState<string | null>(null);
+  const [rateLimitExceeded, setRateLimitExceeded] = useState(false);
 
   const handleBuyCredits = async () => {
     if (!currentUser) return;

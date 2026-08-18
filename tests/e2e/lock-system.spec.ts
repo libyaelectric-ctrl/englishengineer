@@ -11,156 +11,21 @@
  *
  * Requires a Clerk secret key (CLERK_SECRET_KEY in the environment or in the
  * root .env.local) so the test can create/reuse its dedicated `+clerk_test`
- * account. Test emails accept the fixed verification code 424242, so the whole
- * sign-in is scriptable. Skips cleanly when the key is missing.
+ * account. Skips cleanly when the key is missing.
  */
-import { type APIRequestContext, type Page, expect, test } from '@playwright/test';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { expect, test } from '@playwright/test';
 
-const TEST_EMAIL = 'e2e.locksmoke+clerk_test@gmail.com';
-const TEST_PASSWORD = 'EngVoxLockE2E2026';
+import { skipIfNoClerkSecret } from '../helpers/clerk-login';
 
-/** Minimal KEY=VALUE parser for the root .env.local (values are never logged). */
-const loadDotEnv = (): Record<string, string> => {
-  try {
-    const raw = readFileSync(resolve(process.cwd(), '.env.local'), 'utf8');
-    const env: Record<string, string> = {};
-    for (const line of raw.split(/\r?\n/)) {
-      const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
-      if (match) env[match[1]] = match[2].replace(/^["']|["']$/g, '');
-    }
-    return env;
-  } catch {
-    return {};
-  }
-};
-
-const env = loadDotEnv();
-const CLERK_SECRET_KEY = process.env.CLERK_SECRET_KEY || env.CLERK_SECRET_KEY || '';
-const CLERK_API_URL = (
-  process.env.CLERK_API_URL ||
-  env.CLERK_API_URL ||
-  'https://api.clerk.com'
-).replace(/\/+$/, '');
-
-test.skip(
-  !CLERK_SECRET_KEY,
-  'CLERK_SECRET_KEY is required (set it in .env.local) to run the lock-system smoke test'
-);
-
-const clerkHeaders = { Authorization: `Bearer ${CLERK_SECRET_KEY}` };
-
-/** Create the dedicated test user once, or resolve its id if it already exists. */
-const ensureTestUser = async (request: APIRequestContext): Promise<string> => {
-  const create = await request.post(`${CLERK_API_URL}/v1/users`, {
-    headers: { ...clerkHeaders, 'Content-Type': 'application/json' },
-    data: {
-      email_address: [TEST_EMAIL],
-      password: TEST_PASSWORD,
-      first_name: 'E2E',
-      last_name: 'Lock Smoke',
-      public_metadata: { source: 'lock-system-smoke' },
-    },
-  });
-  if (create.ok()) {
-    const user = (await create.json()) as { id: string };
-    return user.id;
-  }
-  if (create.status() !== 422) {
-    throw new Error(`Clerk user creation failed: HTTP ${create.status()} ${await create.text()}`);
-  }
-  // Email already taken — look the user up.
-  const list = await request.get(
-    `${CLERK_API_URL}/v1/users?email_address=${encodeURIComponent(TEST_EMAIL)}`,
-    { headers: clerkHeaders }
-  );
-  expect(list.ok()).toBeTruthy();
-  const users = (await list.json()) as { id: string }[];
-  expect(users.length).toBeGreaterThan(0);
-  return users[0].id;
-};
-
-/**
- * Scripted Clerk sign-in: email → password → one-time code (fixed 424242 for
- * `+clerk_test` addresses). Handles instances that skip either step.
- */
-const signIn = async (page: Page) => {
-  // The lock system lives in the desktop sidebar, which collapses into a
-  // drawer on mobile — force a desktop viewport so this suite runs under
-  // both Playwright projects.
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/login');
-  const emailInput = page.locator('input[name="identifier"]').first();
-  await expect(emailInput).toBeVisible({ timeout: 30_000 });
-  await emailInput.fill(TEST_EMAIL);
-  await page.getByRole('button', { name: /continue/i }).click();
-
-  // Password (factor one). Some instances skip straight to the code.
-  const passwordInput = page.locator('input[name="password"]');
-  if (await passwordInput.isVisible({ timeout: 10_000 }).catch(() => false)) {
-    await passwordInput.fill(TEST_PASSWORD);
-    await page.getByRole('button', { name: /continue/i }).click();
-  }
-
-  // The password → verification-code step can be slow: Clerk sends the
-  // email before mounting the code input. Wait on the URL (hash route
-  // #/factor-two) instead of polling the input.
-  await page.waitForURL(/\/dashboard|#\/factor-two/, { timeout: 75_000 });
-
-  if (page.url().includes('#/factor-two')) {
-    // New-device verification: +clerk_test emails accept the fixed code
-    // 424242. The input is labelled "Enter verification code".
-    const codeInput = page
-      .getByLabel(/verification code/i)
-      .or(page.locator('input[name="code"]'))
-      .first();
-    await expect(codeInput).toBeVisible({ timeout: 30_000 });
-    // Clerk's code input is a custom OTP field: it ignores programmatic
-    // value setting (fill) and needs real keystrokes, so type sequentially.
-    await codeInput.pressSequentially('424242', { delay: 100 });
-    // Clerk auto-submits once all six digits are entered.
-    await page.waitForURL(/\/dashboard/, { timeout: 60_000 });
-  }
-};
-
-/**
- * Fresh users land on the onboarding gate. Seed the learning profile directly
- * (the key ClerkBridge reads after sign-in) so the app unlocks without
- * clicking through the panel — keeps the smoke test focused on the lock system.
- */
-const passOnboarding = async (page: Page, userId: string) => {
-  await page.evaluate(
-    ({ id }) => {
-      localStorage.setItem(
-        `eos_user_${id}_learning_profile_${id}`,
-        JSON.stringify({
-          userId: id,
-          discipline: 'civil',
-          interfaceLanguage: 'en',
-          onboardingCompleted: true,
-        })
-      );
-    },
-    { id: userId }
-  );
-  await page.reload();
-};
+// The auth-setup project signs in as the free-tier Clerk user and stores the
+// session, so tests start authenticated by going straight to /dashboard.
+skipIfNoClerkSecret();
 
 test.describe('Lock system smoke test (free tier)', () => {
-  test.describe.configure({ timeout: 240_000 });
-
-  let userId: string;
-
-  test.beforeAll(async ({ request }) => {
-    userId = await ensureTestUser(request);
-  });
-
   test('menu shows locks, locked item opens the plan modal, See plans → /pricing', async ({
     page,
   }) => {
-    await signIn(page);
-    await passOnboarding(page, userId);
+    await page.goto('/dashboard');
 
     // Top-level locked items render as buttons with a lock affordance.
     const translatorLocked = page.getByRole('button', { name: /translator \(locked\)/i });
@@ -193,8 +58,7 @@ test.describe('Lock system smoke test (free tier)', () => {
   test('Team (coming soon) shows a "coming soon" modal without a See plans action', async ({
     page,
   }) => {
-    await signIn(page);
-    await passOnboarding(page, userId);
+    await page.goto('/dashboard');
 
     await page.getByRole('button', { name: /team \(locked\)/i }).click();
     const modal = page.getByTestId('locked-feature-modal');
@@ -210,8 +74,7 @@ test.describe('Lock system smoke test (free tier)', () => {
   test('URL protection: locked routes redirect to /pricing, preview routes stay open', async ({
     page,
   }) => {
-    await signIn(page);
-    await passOnboarding(page, userId);
+    await page.goto('/dashboard');
 
     // Fully locked routes → pricing.
     for (const path of [
