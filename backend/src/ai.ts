@@ -193,11 +193,13 @@ export const registerAIRoutes = (
     stripe?: Record<string, unknown>;
     supabase?: Record<string, unknown>;
     ledger?: { filePath?: string };
+    workspace?: Record<string, unknown>;
   },
   _fetchImpl: typeof fetch = fetch
 ): void => {
   const ledger = createAiLedger({
     ...config,
+    workspace: config.workspace,
     ledger: { filePath: config.ledger?.filePath ?? process.env.AI_LEDGER_FILE },
   } as unknown as Parameters<typeof createAiLedger>[0]);
   const configured = Boolean(
