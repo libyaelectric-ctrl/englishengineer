@@ -181,11 +181,13 @@ function getUserProgress(userId: string): Map<string, { score: number; category:
 export const registerReadingRoutes = (
   app: Express,
   requireBackendAuth: RequestHandler,
+  readingLimiter: RequestHandler,
   aiService: AiService
 ): void => {
   app.post(
     '/api/reading/generate',
     requireBackendAuth,
+    readingLimiter,
     validateBody(ReadingGenerateBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {

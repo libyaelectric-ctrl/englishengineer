@@ -168,9 +168,7 @@ function mapAiScores(
   // the average of tone and overall since the JSON schema has no structure field.
   const coherenceScore = clarity > 0 ? clarity : fallbackGrade(text).coherenceScore;
   const structureScore =
-    tone > 0 && overall > 0
-      ? Math.round((tone + overall) / 2)
-      : fallbackGrade(text).structureScore;
+    tone > 0 && overall > 0 ? Math.round((tone + overall) / 2) : fallbackGrade(text).structureScore;
   const score = overall > 0 ? overall : fallbackGrade(text).score;
 
   const feedback: Record<string, string> = {};
@@ -187,7 +185,9 @@ function mapAiScores(
     feedback.vocabulary = `Suggested correction: ${(corrections[0] as { original: unknown }).original}`;
   }
   const grammarNotes = Array.isArray(structured.grammarNotes)
-    ? (structured.grammarNotes as unknown[]).filter((n): n is { rule: unknown } => typeof n === 'object' && n !== null)
+    ? (structured.grammarNotes as unknown[]).filter(
+        (n): n is { rule: unknown } => typeof n === 'object' && n !== null
+      )
     : [];
   if (grammarNotes.length > 0 && !feedback.grammar) {
     feedback.grammar = `Rule: ${(grammarNotes[0] as { rule: unknown }).rule}`;
@@ -200,6 +200,7 @@ function mapAiScores(
 export const registerWritingRoutes = (
   app: Express,
   requireBackendAuth: RequestHandler,
+  writingLimiter: RequestHandler,
   aiService: AiService
 ): void => {
   app.get(
@@ -230,6 +231,7 @@ export const registerWritingRoutes = (
   app.post(
     '/api/writing/submit',
     requireBackendAuth,
+    writingLimiter,
     validateBody(WritingSubmitBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {

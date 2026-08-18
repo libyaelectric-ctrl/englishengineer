@@ -35,10 +35,15 @@ function getOverview(userId: string) {
   return overviewStore.get(userId)!;
 }
 
-export const registerProgressRoutes = (app: Express, requireBackendAuth?: RequestHandler): void => {
+export const registerProgressRoutes = (
+  app: Express,
+  progressLimiter: RequestHandler,
+  requireBackendAuth?: RequestHandler
+): void => {
   app.get(
     '/api/progress/overview',
     ...(requireBackendAuth ? [requireBackendAuth] : []),
+    progressLimiter,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
