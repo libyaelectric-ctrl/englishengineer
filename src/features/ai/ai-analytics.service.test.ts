@@ -77,6 +77,20 @@ describe('AiAnalyticsService', () => {
     vi.unstubAllGlobals();
   });
 
+  it('returns empty defaults when rate limit error', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('rate limit exceeded', { status: 429 }))
+    );
+
+    const result = await AiAnalyticsService.fetch();
+
+    expect(result.totalRequests).toBe(0);
+    expect(result.planId).toBe('');
+    expect(result.byOperation).toEqual([]);
+    vi.unstubAllGlobals();
+  });
+
   it('fetches admin analytics from the admin endpoint', async () => {
     const fetchMock = vi.fn(
       async () =>
