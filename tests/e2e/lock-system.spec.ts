@@ -86,32 +86,42 @@ const ensureTestUser = async (request: APIRequestContext): Promise<string> => {
  * `+clerk_test` addresses). Handles instances that skip either step.
  */
 const signIn = async (page: Page) => {
+  // The lock system lives in the desktop sidebar, which collapses into a
+  // drawer on mobile — force a desktop viewport so this suite runs under
+  // both Playwright projects.
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/login');
-  await expect(page.locator('input[name="identifier"]').first()).toBeVisible({
-    timeout: 30_000,
-  });
-  await page.locator('input[name="identifier"]').first().fill(TEST_EMAIL);
+  const emailInput = page.locator('input[name="identifier"]').first();
+  await expect(emailInput).toBeVisible({ timeout: 30_000 });
+  await emailInput.fill(TEST_EMAIL);
   await page.getByRole('button', { name: /continue/i }).click();
 
+  // Password (factor one). Some instances skip straight to the code.
   const passwordInput = page.locator('input[name="password"]');
-  if (await passwordInput.isVisible({ timeout: 15_000 }).catch(() => false)) {
+  if (await passwordInput.isVisible({ timeout: 10_000 }).catch(() => false)) {
     await passwordInput.fill(TEST_PASSWORD);
     await page.getByRole('button', { name: /continue/i }).click();
   }
 
-  // New-device verification: the code input is labelled "Enter verification
-  // code" (Clerk no longer names it `code`), and +clerk_test emails accept
-  // the fixed code 424242.
-  const codeInput = page
-    .getByLabel(/verification code/i)
-    .or(page.locator('input[name="code"]'))
-    .first();
-  if (await codeInput.isVisible({ timeout: 15_000 }).catch(() => false)) {
-    await codeInput.fill('424242');
-    await page.getByRole('button', { name: /continue/i }).click();
-  }
+  // The password → verification-code step can be slow: Clerk sends the
+  // email before mounting the code input. Wait on the URL (hash route
+  // #/factor-two) instead of polling the input.
+  await page.waitForURL(/\/dashboard|#\/factor-two/, { timeout: 75_000 });
 
-  await page.waitForURL(/\/dashboard/, { timeout: 30_000 });
+  if (page.url().includes('#/factor-two')) {
+    // New-device verification: +clerk_test emails accept the fixed code
+    // 424242. The input is labelled "Enter verification code".
+    const codeInput = page
+      .getByLabel(/verification code/i)
+      .or(page.locator('input[name="code"]'))
+      .first();
+    await expect(codeInput).toBeVisible({ timeout: 30_000 });
+    // Clerk's code input is a custom OTP field: it ignores programmatic
+    // value setting (fill) and needs real keystrokes, so type sequentially.
+    await codeInput.pressSequentially('424242', { delay: 100 });
+    // Clerk auto-submits once all six digits are entered.
+    await page.waitForURL(/\/dashboard/, { timeout: 60_000 });
+  }
 };
 
 /**
@@ -138,6 +148,8 @@ const passOnboarding = async (page: Page, userId: string) => {
 };
 
 test.describe('Lock system smoke test (free tier)', () => {
+  test.describe.configure({ timeout: 240_000 });
+
   let userId: string;
 
   test.beforeAll(async ({ request }) => {
