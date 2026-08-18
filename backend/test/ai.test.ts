@@ -2,8 +2,10 @@ import type { Express, NextFunction, Request, Response } from 'express';
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { AI_ROUTES, registerAIRoutes } from '../src/ai.js';
+import { createMemoryAiLedger } from '../src/ai-ledger.js';
+import { AI_ROUTES, getPlanLimits, isLimitReached, registerAIRoutes } from '../src/ai.js';
 import type { SubscriptionRepository } from '../src/subscription-repository.js';
+import type { PlanId } from '../types.js';
 
 interface RegisteredRoute {
   method: string;
@@ -105,6 +107,30 @@ describe('AI Routes', () => {
     assert.equal(analytics.handlerCount, 3);
   });
 
+  it('registers a GET /api/ai/analytics/admin route with auth, role, rateLimiter, and handler', () => {
+    const app = createMockApp();
+    const mockAiService = {
+      complete: async () => ({ text: 'ok', provider: 'mock' }),
+    };
+    const mockBillingRepo = {
+      getSubscriptionStatus: async () => ({ planId: 'free', topupCredits: 0 }),
+    } as unknown as SubscriptionRepository;
+
+    registerAIRoutes(
+      app as unknown as Express,
+      mockAiService,
+      noopMiddleware(),
+      noopMiddleware(),
+      mockBillingRepo,
+      {}
+    );
+
+    const admin = app.registered.find((r) => r.path === '/api/ai/analytics/admin');
+    assert.ok(admin, 'Expected GET /api/ai/analytics/admin to be registered');
+    assert.equal(admin.method, 'GET');
+    assert.equal(admin.handlerCount, 4);
+  });
+
   it('exports createAIService from ai-core', async () => {
     const { createAIService } = await import('../src/ai.js');
     assert.equal(typeof createAIService, 'function');
@@ -114,5 +140,32 @@ describe('AI Routes', () => {
     const { AI_CONTRACT_VERSION } = await import('../src/ai.js');
     assert.equal(typeof AI_CONTRACT_VERSION, 'string');
     assert.ok(AI_CONTRACT_VERSION.length > 0);
+  });
+
+  it('isLimitReached enforces the free daily limit', () => {
+    assert.equal(isLimitReached('free', 2), false);
+    assert.equal(isLimitReached('free', 3), true);
+  });
+
+  it('isLimitReached enforces paid monthly limits', () => {
+    assert.equal(isLimitReached('senior', 149), false);
+    assert.equal(isLimitReached('senior', 150), true);
+    assert.equal(isLimitReached('team', 1500), true);
+  });
+
+  it('getPlanLimits exposes daily/monthly limits per plan with a free fallback', () => {
+    assert.equal(getPlanLimits('free').daily, 3);
+    assert.equal(getPlanLimits('junior').monthly, 50);
+    assert.equal(getPlanLimits('unknown' as PlanId).daily, 3);
+  });
+
+  it('countRecentRequests counts only requests in the plan window', async () => {
+    const ledger = createMemoryAiLedger();
+    await ledger.logSession('user-a', { operation: 'translate', tokensUsed: 100 });
+    await ledger.logSession('user-b', { operation: 'translate', tokensUsed: 100 });
+
+    assert.equal(await ledger.countRecentRequests('user-a', 'free'), 1);
+    assert.equal(await ledger.countRecentRequests('user-b', 'free'), 1);
+    assert.equal(await ledger.countRecentRequests('nobody', 'free'), 0);
   });
 });

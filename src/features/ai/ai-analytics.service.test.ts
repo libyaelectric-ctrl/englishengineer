@@ -16,6 +16,8 @@ vi.mock('./ai.config', () => ({
 
 const analyticsPayload: AiAnalyticsData = {
   userId: 'user_1',
+  planId: 'free',
+  limits: { used: 2, remaining: 1, daily: 3, monthly: null },
   totalRequests: 3,
   averageDurationMs: 1400,
   totalEstimatedTokens: 6400,
@@ -38,7 +40,8 @@ describe('AiAnalyticsService', () => {
     const result = await AiAnalyticsService.fetch();
 
     expect(result.totalRequests).toBe(3);
-    expect(result.estimatedCostUsd).toBe(0.0042);
+    expect(result.planId).toBe('free');
+    expect(result.limits.remaining).toBe(1);
     expect(fetchMock).toHaveBeenCalledWith(
       'https://backend.example.com/api/v1/ai/analytics',
       expect.objectContaining({ headers: { Authorization: 'Bearer test' } })
@@ -55,6 +58,7 @@ describe('AiAnalyticsService', () => {
     const result = await AiAnalyticsService.fetch();
 
     expect(result.totalRequests).toBe(0);
+    expect(result.planId).toBe('');
     expect(result.byOperation).toEqual([]);
     vi.unstubAllGlobals();
   });
@@ -70,6 +74,54 @@ describe('AiAnalyticsService', () => {
     const result = await AiAnalyticsService.fetch();
 
     expect(result.totalRequests).toBe(0);
+    vi.unstubAllGlobals();
+  });
+
+  it('fetches admin analytics from the admin endpoint', async () => {
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            success: true,
+            data: {
+              totalRequests: 10,
+              totalEstimatedTokens: 20000,
+              estimatedCostUsd: 0.02,
+              topUsers: [
+                {
+                  userId: 'a',
+                  totalRequests: 5,
+                  totalEstimatedTokens: 10000,
+                  estimatedCostUsd: 0.01,
+                },
+              ],
+            },
+          }),
+          { status: 200 }
+        )
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const result = await AiAnalyticsService.fetchAdmin();
+
+    expect(result?.totalRequests).toBe(10);
+    expect(result?.topUsers[0].userId).toBe('a');
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://backend.example.com/api/v1/ai/analytics/admin',
+      expect.anything()
+    );
+    vi.unstubAllGlobals();
+  });
+
+  it('returns null from fetchAdmin when unauthorized', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('forbidden', { status: 403 }))
+    );
+
+    const result = await AiAnalyticsService.fetchAdmin();
+
+    expect(result).toBeNull();
     vi.unstubAllGlobals();
   });
 });

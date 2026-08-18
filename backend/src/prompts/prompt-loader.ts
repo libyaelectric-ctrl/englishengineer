@@ -120,6 +120,15 @@ export const getResolvedPromptVersion = (key: string): PromptResolvedVersion | n
   };
 };
 
+/**
+ * Returns the bundled prompt-version.json version for a key, or null when the
+ * key is not tracked in the manifest.
+ */
+export const getBundledPromptVersion = (key: string): string | null => {
+  const manifest = getPromptVersionManifest();
+  return manifest[key]?.version ?? null;
+};
+
 export const getJsonStructureInstructionAsync = (): Promise<string> =>
   loadPromptFromDb('json-structure', 'json-structure.md');
 

@@ -1,4 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
+import { promises as fsp } from 'node:fs';
+import path from 'node:path';
 
 import { logger } from './logger.js';
 
@@ -49,6 +51,18 @@ export interface AiAnalytics {
   byDay: Array<{ date: string; count: number }>;
 }
 
+export interface AiAdminAnalytics {
+  totalRequests: number;
+  totalEstimatedTokens: number;
+  estimatedCostUsd: number;
+  topUsers: Array<{
+    userId: string;
+    totalRequests: number;
+    totalEstimatedTokens: number;
+    estimatedCostUsd: number;
+  }>;
+}
+
 // Rough output-heavy price used only when real provider billing details are
 // unavailable. Deliberately labeled "estimated" in the API contract.
 const ESTIMATED_USD_PER_1K_TOKENS = 0.01;
@@ -61,6 +75,16 @@ const emptyAnalytics = (): AiAnalytics => ({
   byOperation: [],
   byDay: [],
 });
+
+const emptyAdminAnalytics = (): AiAdminAnalytics => ({
+  totalRequests: 0,
+  totalEstimatedTokens: 0,
+  estimatedCostUsd: 0,
+  topUsers: [],
+});
+
+const estimateCostUsd = (tokens: number): number =>
+  Math.round(tokens * (ESTIMATED_USD_PER_1K_TOKENS / 1000) * 10000) / 10000;
 
 const buildAnalytics = (
   sessions: Array<{ operation: string; durationMs: number; tokensUsed: number; timestamp: number }>
@@ -82,8 +106,7 @@ const buildAnalytics = (
     totalRequests: sessions.length,
     averageDurationMs: Math.round(totalDuration / sessions.length),
     totalEstimatedTokens: totalTokens,
-    estimatedCostUsd:
-      Math.round(totalTokens * (ESTIMATED_USD_PER_1K_TOKENS / 1000) * 10000) / 10000,
+    estimatedCostUsd: estimateCostUsd(totalTokens),
     byOperation: [...byOperationMap.entries()]
       .map(([operation, count]) => ({ operation, count }))
       .sort((a, b) => b.count - a.count),
@@ -93,10 +116,45 @@ const buildAnalytics = (
   };
 };
 
+interface AdminAnalyticsEntry {
+  userId: string;
+  tokensUsed: number;
+}
+
+const buildAdminAnalytics = (entries: AdminAnalyticsEntry[]): AiAdminAnalytics => {
+  if (entries.length === 0) return emptyAdminAnalytics();
+
+  const perUser = new Map<string, { count: number; tokens: number }>();
+  let totalTokens = 0;
+  for (const entry of entries) {
+    const current = perUser.get(entry.userId) ?? { count: 0, tokens: 0 };
+    current.count += 1;
+    current.tokens += entry.tokensUsed;
+    perUser.set(entry.userId, current);
+    totalTokens += entry.tokensUsed;
+  }
+
+  return {
+    totalRequests: entries.length,
+    totalEstimatedTokens: totalTokens,
+    estimatedCostUsd: estimateCostUsd(totalTokens),
+    topUsers: [...perUser.entries()]
+      .map(([userId, usage]) => ({
+        userId,
+        totalRequests: usage.count,
+        totalEstimatedTokens: usage.tokens,
+        estimatedCostUsd: estimateCostUsd(usage.tokens),
+      }))
+      .sort((a, b) => b.totalRequests - a.totalRequests)
+      .slice(0, 20),
+  };
+};
+
 export interface AiLedger {
   countRecentRequests(userId: string, planId: string): Promise<number>;
   logSession(userId: string, session: AiLedgerSession): Promise<void>;
   getUserAnalytics(userId: string): Promise<AiAnalytics>;
+  getAdminAnalytics(): Promise<AiAdminAnalytics>;
 }
 
 export const createSupabaseAiLedger = (config: {
@@ -194,6 +252,31 @@ export const createSupabaseAiLedger = (config: {
         return emptyAnalytics();
       }
     },
+
+    async getAdminAnalytics() {
+      try {
+        const { data, error } = await supabase.from('ai_sessions').select('user_id, tokens_used');
+
+        if (error) {
+          logger.error('Ledger admin analytics error', { error: error.message });
+          return emptyAdminAnalytics();
+        }
+
+        const rows = (data as Array<Record<string, unknown>>) ?? [];
+        return buildAdminAnalytics(
+          rows.map((row) => ({
+            userId: typeof row.user_id === 'string' ? row.user_id : 'unknown',
+            tokensUsed:
+              typeof row.tokens_used === 'number' ? row.tokens_used : Number(row.tokens_used) || 0,
+          }))
+        );
+      } catch (err: unknown) {
+        logger.error('Ledger admin analytics error', {
+          error: err instanceof Error ? err.message : String(err),
+        });
+        return emptyAdminAnalytics();
+      }
+    },
   };
 };
 
@@ -238,12 +321,112 @@ export const createMemoryAiLedger = (): AiLedger => {
           }))
       );
     },
+
+    async getAdminAnalytics() {
+      const now = Date.now();
+      prune(now);
+      return buildAdminAnalytics(
+        ledger.map((item) => ({ userId: item.userId, tokensUsed: item.tokensUsed || 0 }))
+      );
+    },
   };
 };
 
-export const createAiLedger = (config: { workspace?: Record<string, unknown> }): AiLedger => {
+const readPersistedEntries = async (filePath: string): Promise<LedgerEntry[]> => {
+  try {
+    const raw = await fsp.readFile(filePath, 'utf8');
+    const entries: LedgerEntry[] = [];
+    for (const line of raw.split('\n')) {
+      if (!line.trim()) continue;
+      try {
+        const parsed = JSON.parse(line) as LedgerEntry;
+        if (
+          parsed &&
+          typeof parsed.userId === 'string' &&
+          typeof parsed.timestamp === 'number' &&
+          typeof parsed.operation === 'string'
+        ) {
+          entries.push(parsed);
+        }
+      } catch {
+        // A single malformed line must not corrupt the whole ledger.
+      }
+    }
+    return entries;
+  } catch {
+    return [];
+  }
+};
+
+const writePersistedEntries = async (filePath: string, entries: LedgerEntry[]): Promise<void> => {
+  await fsp.mkdir(path.dirname(filePath), { recursive: true });
+  const lines = entries.map((entry) => JSON.stringify(entry));
+  await fsp.writeFile(filePath, lines.length > 0 ? `${lines.join('\n')}\n` : '', 'utf8');
+};
+
+const pruneEntries = (entries: LedgerEntry[], now: number): LedgerEntry[] => {
+  const cutoff = now - PAID_PERIOD_MS;
+  return entries.filter((item) => item.timestamp >= cutoff);
+};
+
+export const createFileAiLedger = (filePath: string): AiLedger => {
+  return {
+    async countRecentRequests(userId, planId) {
+      const now = Date.now();
+      const entries = pruneEntries(await readPersistedEntries(filePath), now);
+      const { windowMs } = getLimitForPlan(planId);
+      const startTime = now - windowMs;
+      return entries.filter((item) => item.userId === userId && item.timestamp >= startTime).length;
+    },
+
+    async logSession(userId, session) {
+      try {
+        const now = Date.now();
+        const entries = pruneEntries(await readPersistedEntries(filePath), now);
+        entries.push({ userId, timestamp: now, ...session });
+        await writePersistedEntries(filePath, entries);
+      } catch (err: unknown) {
+        logger.error('File ledger log error', {
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
+    },
+
+    async getUserAnalytics(userId) {
+      const now = Date.now();
+      const entries = pruneEntries(await readPersistedEntries(filePath), now);
+      return buildAnalytics(
+        entries
+          .filter((item) => item.userId === userId)
+          .map((item) => ({
+            operation: item.operation,
+            durationMs: item.durationMs || 0,
+            tokensUsed: item.tokensUsed || 0,
+            timestamp: item.timestamp,
+          }))
+      );
+    },
+
+    async getAdminAnalytics() {
+      const now = Date.now();
+      const entries = pruneEntries(await readPersistedEntries(filePath), now);
+      return buildAdminAnalytics(
+        entries.map((item) => ({ userId: item.userId, tokensUsed: item.tokensUsed || 0 }))
+      );
+    },
+  };
+};
+
+export const createAiLedger = (config: {
+  workspace?: Record<string, unknown>;
+  ledger?: { filePath?: string };
+}): AiLedger => {
   if (config.workspace?.configured) {
     return createSupabaseAiLedger(config);
+  }
+  const filePath = config.ledger?.filePath;
+  if (filePath) {
+    return createFileAiLedger(filePath);
   }
   return createMemoryAiLedger();
 };

@@ -61,6 +61,7 @@ Railway dashboard → Variables:
 - `RATE_LIMIT_STORE=upstash`
 - `UPSTASH_REDIS_REST_URL`
 - `UPSTASH_REDIS_REST_TOKEN`
+- `AI_LEDGER_FILE` (optional) — AI kullanım ledger'ının NDJSON dosya yolu; ayarlanmazsa ve Supabase yapılandırılmamışsa in-memory ledger kullanılır (kalıcılık yok)
 
 ## Post-Deploy Checklist
 
@@ -103,6 +104,23 @@ Railway dashboard → Variables:
 3. Production instance'ın `CLERK_SECRET_KEY` / `VITE_CLERK_PUBLISHABLE_KEY`'ini env'e yazma (Render backend + Vercel frontend)
 4. Render + Vercel redeploy
 5. `clerk doctor --json` ile uçtan uca doğrulama
+
+## AI Analytics & Prompt Telemetry
+
+### Endpoints (auth + rate-limit korumalı)
+
+- `GET /api/v1/ai/analytics` (legacy: `/api/ai/analytics`) — oturum açan kullanıcının AI tüketim özeti + kota durumu (`planId`, `limits.used/remaining/daily/monthly`, `byOperation`, `byDay`, `estimatedCostUsd`).
+- `GET /api/v1/ai/analytics/admin` — yalnızca `admin` rolü. Tüm kullanıcıların toplam istek/token/tahmini maliyeti, `topUsers` ve `promptVersionUsage` telemetrisi (bundled dosya vs DB kaynağı, drift/uyumsuzluk sayacı).
+
+### Kota
+
+Plan bazlı günlük (free: 3/gün) veya aylık (ücretli) AI limitleri `backend/src/ai.ts` `PLAN_AI_LIMITS` üzerinden zorlanır. Limit dolunca `429` döner; UI'da kotanın kalan kısmı Kişisel AI panelindeki "AI Kullanım Analitiği" kartında gösterilir.
+
+### Ledger kalıcılığı
+
+- Supabase yapılandırılmışsa `ai_sessions` tablosu kullanılır.
+- Değilse: `AI_LEDGER_FILE` set edildiyse NDJSON dosya ledger'ı (restart'a dayanır), yoksa in-memory ledger.
+- `prompt-version.json` manifesti, structured operasyonların (`json-structure`, `content-generation`) servis ettiği prompt sürümünü izler; uyumsuzluk (`@db` kaynak veya farklı sürüm) telemetride sayılır.
 
 ## Incident Response
 
