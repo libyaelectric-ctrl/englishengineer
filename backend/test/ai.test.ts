@@ -168,4 +168,9 @@ describe('AI Routes', () => {
     assert.equal(await ledger.countRecentRequests('user-b', 'free'), 1);
     assert.equal(await ledger.countRecentRequests('nobody', 'free'), 0);
   });
+
+  it('writing-review route is registered via AI_ROUTES', () => {
+    assert.ok('/api/ai/writing-review' in AI_ROUTES, 'writing-review route should be registered');
+    assert.equal(AI_ROUTES['/api/ai/writing-review'], 'evaluateEngineeringEnglish');
+  });
 });

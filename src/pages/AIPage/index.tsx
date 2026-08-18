@@ -1,3 +1,7 @@
+import { useEffect } from 'react';
+
+import { ToastContainer } from '@/shared/components/Toast';
+
 import { useBillingStore } from '@/features/billing';
 
 import { CoachInputForm } from './CoachInputForm';
@@ -17,8 +21,18 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
   const subscription = useBillingStore((state) => state.subscription);
   const h = useAIPage();
 
+  useEffect(() => {
+    if (h.isLimitedResponse) {
+      showToast(
+        'AI yanıtı kısaltıldı (limit aşıldı veya yapılandırılmadı). Yeniden deneyin.',
+        'error'
+      );
+    }
+  }, [h.isLimitedResponse, showToast]);
+
   return (
     <div className="space-y-4 animate-in fade-in duration-300 font-sans pt-8 sm:pt-0">
+      <ToastContainer />
       {!embedded && (
         <div className="sticky top-0 z-40 flex h-14 shrink-0 items-center border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <h1 className="text-base font-bold tracking-tight text-foreground">AI Copilot Studio</h1>
