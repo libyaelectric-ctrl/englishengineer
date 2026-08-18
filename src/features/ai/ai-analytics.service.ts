@@ -15,6 +15,7 @@ export interface AiAnalyticsData {
   averageDurationMs: number;
   totalEstimatedTokens: number;
   estimatedCostUsd: number;
+  vocabulary: number;
   byOperation: Array<{ operation: string; count: number }>;
   byDay: Array<{ date: string; count: number }>;
 }
