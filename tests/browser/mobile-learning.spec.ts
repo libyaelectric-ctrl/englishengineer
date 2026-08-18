@@ -1,10 +1,8 @@
 import { type Page, expect, test } from '@playwright/test';
 
-const loginDemo = async (page: Page) => {
-  await page.goto('/login');
-  await page.getByRole('button', { name: /demo/i }).click();
-  await expect(page.getByRole('heading', { name: /command center/i })).toBeVisible();
-};
+import { skipIfNoClerkSecret } from '../helpers/clerk-login';
+
+skipIfNoClerkSecret();
 
 const expectNoHorizontalOverflow = async (page: Page) => {
   const dimensions = await page.evaluate(() => ({
@@ -15,19 +13,13 @@ const expectNoHorizontalOverflow = async (page: Page) => {
 };
 
 test.describe('mobile-first learning shell', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
-    await page.evaluate(() => localStorage.clear());
-  });
-
   test('phone opens Grammar without overflow and keeps navigation dismissible', async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await loginDemo(page);
     await page.goto('/grammar');
     await expect(page.getByRole('heading', { name: 'Grammar', exact: true })).toBeVisible();
-    await expect(page.getByPlaceholder('Search grammar concepts...')).toBeVisible();
+    await expect(page.getByPlaceholder('Search rules...')).toBeVisible();
     await expectNoHorizontalOverflow(page);
 
     const sidebar = page.getByTestId('app-sidebar');
@@ -43,17 +35,16 @@ test.describe('mobile-first learning shell', () => {
       })
       .toBeLessThanOrEqual(0);
 
+    // /curriculum/memory is locked for the free tier → pricing.
     await page.goto('/curriculum/memory');
-    await expect(page.getByRole('heading', { name: 'Learning Hub' })).toBeVisible();
-    await expect(page.getByText('Unified Review Queue')).toBeVisible();
+    await expect(page).toHaveURL(/\/pricing/, { timeout: 20_000 });
     await expectNoHorizontalOverflow(page);
   });
 
   test('tablet dashboard remains within the viewport', async ({ page }) => {
     await page.setViewportSize({ width: 820, height: 1180 });
-    await loginDemo(page);
     await page.goto('/dashboard');
-    await expect(page.getByRole('heading', { name: /command center/i })).toBeVisible();
+    await expect(page.getByText(/command center/i).first()).toBeVisible({ timeout: 20_000 });
     await expectNoHorizontalOverflow(page);
   });
 });

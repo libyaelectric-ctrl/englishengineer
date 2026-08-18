@@ -193,11 +193,17 @@ jobs:
             exit 1
           fi
 
-      # Scoped to the lock-system smoke test: the remaining browser/e2e specs
-      # are legacy demo-login flows that predate the Clerk migration and are
-      # kept for local reference until they are updated.
+      # Local e2e/browser suites, all migrated to the shared Clerk sign-in
+      # helper (tests/helpers/clerk-login.ts). Production-targeted agent specs
+      # (real-agent, detailed-agent, e2e-comprehensive) are excluded — they
+      # assert against the deployed site and run on demand.
       - name: Run E2E Tests
-        run: npx playwright test tests/e2e/lock-system.spec.ts --project=chromium-desktop
+        run: >
+          npx playwright test tests/e2e
+          tests/browser/mobile-learning.spec.ts
+          tests/browser/stripe-billing.spec.ts
+          tests/browser/olympus.production.spec.ts
+          --project=chromium-desktop
         env:
           CI: true
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
