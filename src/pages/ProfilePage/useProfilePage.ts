@@ -24,7 +24,7 @@ export const useProfilePage = () => {
   const navigate = useNavigate();
   const { section } = useParams<{ section: string }>();
   const activeSection = section || 'overview';
-  const { currentUser, providerMode, logout } = useAuthStore();
+  const { currentUser, logout } = useAuthStore();
   const {
     subscription,
     providerStatus,
@@ -161,11 +161,11 @@ export const useProfilePage = () => {
   };
 
   const clearLocalData = useCallback(async () => {
-    if (providerMode !== 'local' || clearConfirmation !== 'CLEAR') return;
+    if (clearConfirmation !== 'CLEAR') return;
     await logout();
     storage.clear();
     navigate('/start');
-  }, [providerMode, clearConfirmation, logout, navigate]);
+  }, [clearConfirmation, logout, navigate]);
 
   const resetLearningProgress = useCallback(async () => {
     if (clearConfirmation !== 'CLEAR') return;
@@ -206,7 +206,6 @@ export const useProfilePage = () => {
   return {
     activeSection,
     currentUser,
-    providerMode,
     subscription,
     providerStatus,
     isBillingLoading,

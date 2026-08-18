@@ -124,7 +124,6 @@ const ProfilePage = () => {
     setShowClearConfirmation,
     clearConfirmation,
     setClearConfirmation,
-    providerMode,
     enterEditMode,
     handleSaveProfile,
     handleSavePreferences,
@@ -221,7 +220,6 @@ const ProfilePage = () => {
 
       {activeSection === 'security' && (
         <SecuritySection
-          providerMode={providerMode}
           showClearConfirmation={showClearConfirmation}
           setShowClearConfirmation={setShowClearConfirmation}
           clearConfirmation={clearConfirmation}

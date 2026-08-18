@@ -117,10 +117,6 @@ vi.mock('@/shared/components/SectionCard', () => ({
   SectionCard: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
-vi.mock('@/shared/components/SkillLockedState', () => ({
-  SkillLockedState: () => null,
-}));
-
 vi.mock('@/shared/components/StatusBadge', () => ({
   StatusBadge: () => null,
 }));

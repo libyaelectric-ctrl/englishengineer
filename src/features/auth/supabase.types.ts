@@ -1,1 +1,0 @@
-export { type SupabaseProfileRow, type SupabaseProgressSnapshotRow, type EngVoxDatabase, type JsonPrimitive, type JsonValue, type JsonObject, mapProfileToSupabaseRow, mapSupabaseRowToProfile } from '@/shared/services/auth-backend/supabase.types';

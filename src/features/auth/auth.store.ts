@@ -4,19 +4,13 @@ import { devtools } from 'zustand/middleware';
 import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
 
-import { AuthService } from './auth.service';
 import { AuthState, UserProfile } from './auth.types';
 
 interface AuthActions {
-  initialize: () => Promise<void>;
-  login: (displayName: string, email: string, password?: string) => Promise<void>;
-  signUp: (displayName: string, email: string, password: string) => Promise<void>;
-  demoLogin: () => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
   setClerkUserSync: (fn: ((updates: Partial<UserProfile>) => Promise<void>) | null) => void;
   setClerkSignOut: (fn: (() => Promise<void>) | null) => void;
-  providerMode: 'local' | 'supabase';
 }
 
 export const useAuthStore = create<AuthState & AuthActions>()(
@@ -27,67 +21,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       isLoading: true,
       clerkUserSync: null,
       clerkSignOut: null,
-      providerMode: AuthService.getProviderMode(),
-
-      initialize: async () => {
-        set({ isLoading: true });
-        try {
-          const user = await AuthService.restoreSession();
-          if (user) {
-            set({ currentUser: user, isAuthenticated: true });
-            storage.setUserId(user.id);
-          } else {
-            set({ currentUser: null, isAuthenticated: false });
-            storage.setUserId(null);
-          }
-        } catch (e) {
-          logger.e('Auth initialization failed.', e);
-        } finally {
-          set({ isLoading: false });
-        }
-      },
-
-      login: async (displayName, email, password) => {
-        set({ isLoading: true });
-        try {
-          const user = await AuthService.login(displayName, email, password);
-          set({ currentUser: user, isAuthenticated: true });
-          storage.setUserId(user.id);
-        } catch (e) {
-          logger.e('Auth login failed.', e);
-          throw e;
-        } finally {
-          set({ isLoading: false });
-        }
-      },
-
-      signUp: async (displayName, email, password) => {
-        set({ isLoading: true });
-        try {
-          const user = await AuthService.signUp(displayName, email, password);
-          set({ currentUser: user, isAuthenticated: true });
-          storage.setUserId(user.id);
-        } catch (e) {
-          logger.e('Auth sign up failed.', e);
-          throw e;
-        } finally {
-          set({ isLoading: false });
-        }
-      },
-
-      demoLogin: async () => {
-        set({ isLoading: true });
-        try {
-          const user = await AuthService.demoLogin();
-          set({ currentUser: user, isAuthenticated: true });
-          storage.setUserId(user.id);
-        } catch (e) {
-          logger.e('Auth demo login failed.', e);
-          throw e;
-        } finally {
-          set({ isLoading: false });
-        }
-      },
 
       logout: async () => {
         set({ isLoading: true });
@@ -95,7 +28,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           // End the Clerk session too, otherwise the Sign Out action leaves
           // the Clerk session alive and /login bounces the user straight back
           // to a guard that waits forever for a <ClerkBridge> re-seed.
-          await AuthService.logout();
           const clerkSignOut = useAuthStore.getState().clerkSignOut;
           if (clerkSignOut) {
             await clerkSignOut();
@@ -112,26 +44,21 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       updateProfile: async (updates) => {
         try {
           const current = useAuthStore.getState().currentUser;
+          if (!current) return;
           // Clerk is the auth of record: display fields live in the Clerk
           // account, so profile edits update the in-memory user instead of
-          // touching the legacy local-auth adapter (which would write to a
-          // stale 'auth_user' record that does not belong to this user).
-          if (current?.id.startsWith('user_')) {
-            set({ currentUser: { ...current, ...updates } });
-            // Persist display edits (e.g. displayName) to the Clerk account
-            // so they survive a reload/sign-in.
-            const sync = useAuthStore.getState().clerkUserSync;
-            if (sync && updates.displayName) {
-              try {
-                await sync(updates);
-              } catch (e) {
-                logger.w('Clerk profile sync failed.', e);
-              }
+          // touching any legacy local/supabase adapter.
+          set({ currentUser: { ...current, ...updates } });
+          // Persist display edits (e.g. displayName) to the Clerk account
+          // so they survive a reload/sign-in.
+          const sync = useAuthStore.getState().clerkUserSync;
+          if (sync && updates.displayName) {
+            try {
+              await sync(updates);
+            } catch (e) {
+              logger.w('Clerk profile sync failed.', e);
             }
-            return;
           }
-          const updated = await AuthService.updateProfile(updates);
-          set({ currentUser: updated });
         } catch (e) {
           logger.e('Auth profile update failed.', e);
           throw e;

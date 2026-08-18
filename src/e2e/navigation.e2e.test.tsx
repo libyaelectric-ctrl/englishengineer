@@ -10,7 +10,6 @@ import { LearningProfileRepository } from '@/features/profile/profile.repository
 import DashboardPage from '@/pages/DashboardPage';
 import GrammarPage from '@/pages/GrammarPage';
 import ListeningPage from '@/pages/ListeningPage';
-import LoginPage from '@/pages/LoginPage';
 import ProfilePage from '@/pages/ProfilePage';
 import ReadingPage from '@/pages/ReadingPage';
 import SpeakingPage from '@/pages/SpeakingPage';
@@ -124,22 +123,6 @@ describe('Navigation E2E: Tools routes', () => {
     renderWithRouter(<ToolsPage />, ['/tools/work']);
     await waitFor(() => {
       expect(screen.getByText(/Templates, quick phrases/i)).toBeInTheDocument();
-    });
-  });
-});
-
-describe('Navigation E2E: Auth routes', () => {
-  it('/login renders LoginPage', async () => {
-    renderWithRouter(<LoginPage />, ['/login']);
-    await waitFor(() => {
-      expect(screen.getByText(/Welcome back/i)).toBeInTheDocument();
-    });
-  });
-
-  it('/signup renders LoginPage in signup mode', async () => {
-    renderWithRouter(<LoginPage />, ['/signup']);
-    await waitFor(() => {
-      expect(screen.getByText(/Create your account/i)).toBeInTheDocument();
     });
   });
 });

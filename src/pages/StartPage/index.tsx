@@ -1,39 +1,20 @@
-import { ArrowRight, LockKeyhole, LogIn, Sparkles, UserPlus } from 'lucide-react';
+import { ArrowRight, LogIn, UserPlus } from 'lucide-react';
 
 import { useEffect } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useLearningStore } from '@/core/learning';
-
-import { Button } from '@/shared/components/Button';
-
 import { useAuthStore } from '@/features/auth';
-import { AUTH_CONFIG } from '@/features/auth/auth.config';
 
 const StartPage = () => {
   const navigate = useNavigate();
-  const { demoLogin, initialize, isLoading, isAuthenticated, providerMode } = useAuthStore();
-  const accountAvailable = providerMode === 'supabase';
-  const liteAvailable = AUTH_CONFIG.localAuthAllowed;
+  const { isAuthenticated, currentUser } = useAuthStore();
 
   useEffect(() => {
-    void initialize();
-  }, [initialize]);
-
-  useEffect(() => {
-    if (isLoading) {
-      return;
+    if (isAuthenticated || currentUser) {
+      navigate('/dashboard', { replace: true });
     }
-
-    navigate(isAuthenticated ? '/dashboard' : '/signup', { replace: true });
-  }, [isAuthenticated, isLoading, navigate]);
-
-  const startLite = async () => {
-    useLearningStore.getState().resetAll();
-    await demoLogin();
-    navigate('/dashboard', { replace: true });
-  };
+  }, [isAuthenticated, currentUser, navigate]);
 
   return (
     <main className="min-h-screen bg-transparent px-4 py-10 sm:px-6 text-foreground">
@@ -42,76 +23,35 @@ const StartPage = () => {
           <div className="max-w-2xl">
             <p className="public-eyebrow">Choose how to begin</p>
             <h1 className="mt-3 text-3xl font-bold text-foreground sm:text-4xl">
-              Start EngVox on your terms.
+              Start EngVox with a secure account.
             </h1>
             <p className="mt-3 text-xs leading-5 text-muted-copy">
-              Try the local Lite workspace immediately, or use a verified account when Supabase
-              authentication is configured.
+              Sign up with a Clerk-managed account to keep your progress synced and accessible.
             </p>
           </div>
         </div>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          <section className="flex flex-col rounded-card border border-border-soft bg-surface p-6 shadow-sm">
-            <Sparkles className="h-6 w-6 text-primary" />
-            <h2 className="mt-5 text-base font-bold text-foreground">Try Lite</h2>
-            <p className="mt-2 flex-1 text-xs leading-5 text-muted-copy">
-              No account required. Progress stays on this device and can be cleared by the browser.
-            </p>
-            <span className="mt-4 rounded-full border border-warning/25 bg-warning/10 px-3 py-0.5 text-[10px] font-bold text-warning uppercase tracking-wider w-fit">
-              Local demo mode
-            </span>
-            <Button
-              className="mt-5 w-full text-xs min-h-10"
-              onClick={startLite}
-              disabled={isLoading || !liteAvailable}
-            >
-              {isLoading ? 'Preparing Lite...' : 'Try Lite'}
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-            {!liteAvailable && (
-              <p className="mt-2 text-[10px] leading-4 text-muted-copy">
-                Unavailable: local Lite mode is disabled in this production build.
-              </p>
-            )}
-          </section>
-
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
           <section className="flex flex-col rounded-card border border-border-soft bg-surface p-6 shadow-sm">
             <UserPlus className="h-6 w-6 text-muted-copy" />
             <h2 className="mt-5 text-base font-bold text-foreground">Create account</h2>
             <p className="mt-2 flex-1 text-xs leading-5 text-muted-copy">
-              Email and password account with session restore when the secure authentication backend
-              is active.
+              Email and password account secured with Clerk, with session restore and profile
+              persistence.
             </p>
-            {accountAvailable ? (
-              <Link
-                to="/signup"
-                className="public-primary-action mt-5 w-full text-center py-2 text-xs min-h-10 flex items-center justify-center gap-2"
-              >
-                Create account <ArrowRight className="h-4 w-4" />
-              </Link>
-            ) : (
-              <div className="mt-5">
-                <button
-                  type="button"
-                  disabled
-                  className="flex min-h-10 w-full items-center justify-center gap-2 rounded-card border border-border-soft bg-surface/50 px-4 text-xs font-bold text-muted-copy cursor-not-allowed"
-                >
-                  <LockKeyhole className="h-4 w-4" /> Create account
-                </button>
-                <p className="mt-2 text-[10px] leading-4 text-muted-copy">
-                  Unavailable: secure account service is not configured.
-                </p>
-              </div>
-            )}
+            <Link
+              to="/signup"
+              className="public-primary-action mt-5 w-full text-center py-2 text-xs min-h-10 flex items-center justify-center gap-2"
+            >
+              Create account <ArrowRight className="h-4 w-4" />
+            </Link>
           </section>
 
           <section className="flex flex-col rounded-card border border-border-soft bg-surface p-6 shadow-sm">
             <LogIn className="h-6 w-6 text-muted-copy" />
             <h2 className="mt-5 text-base font-bold text-foreground">Log in</h2>
             <p className="mt-2 flex-1 text-xs leading-5 text-muted-copy">
-              Continue with an existing verified account. Local Lite users can return through Try
-              Lite.
+              Continue with an existing verified account.
             </p>
             <Link
               to="/login"

@@ -83,10 +83,6 @@ vi.mock('@/shared/components/MetricCard', () => ({
   MetricCard: () => null,
 }));
 
-vi.mock('@/shared/components/SkillLockedState', () => ({
-  SkillLockedState: () => null,
-}));
-
 vi.mock('@/shared/components/Button', () => ({
   Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
     <button {...props}>{children}</button>

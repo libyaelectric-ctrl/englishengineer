@@ -1,38 +1,28 @@
 import { useAuth } from '@clerk/clerk-react';
 
 import type { ReactNode } from 'react';
-import { useEffect } from 'react';
 
 import { Navigate, useLocation } from 'react-router-dom';
 
 import { LoadingState } from '@/shared/components/LoadingState';
 
 import { useAuthStore } from './auth.store';
-import { CLERK_PUBLISHABLE_KEY } from './clerk.config';
 
 interface AuthGuardProps {
   children: ReactNode;
 }
 
 /**
- * Clerk-aware guard. Rendered only when a Clerk publishable key is configured
- * (i.e. <ClerkProvider> is mounted) so the unconditional useAuth() call below
- * can never throw "no ClerkProvider detected".
+ * Clerk-aware guard. Rendered only inside <ClerkProvider> (Clerk is the single
+ * auth of record), so the unconditional useAuth() call below is always safe.
+ * The app's own zustand store is seeded by <ClerkBridge> when a Clerk session
+ * is active, so the guard must not redirect to /login in the meantime.
  */
-const ClerkAuthGuard = ({ children }: AuthGuardProps) => {
-  const { isAuthenticated, isLoading, initialize, currentUser } = useAuthStore();
+export const AuthGuard = ({ children }: AuthGuardProps) => {
+  const { isAuthenticated, isLoading, currentUser } = useAuthStore();
   const location = useLocation();
-  // Clerk runs alongside the app's own auth store. When a Clerk session is
-  // active the store is seeded by <ClerkBridge> a moment later, so the guard
-  // must not redirect to /login in the meantime.
   const { isLoaded: clerkLoaded, isSignedIn: clerkSignedIn } = useAuth();
   const hasClerkSession = clerkLoaded && clerkSignedIn;
-
-  useEffect(() => {
-    if (!currentUser && !isAuthenticated && !hasClerkSession) {
-      void initialize();
-    }
-  }, [initialize, currentUser, isAuthenticated, hasClerkSession]);
 
   const hasSession = isAuthenticated || Boolean(currentUser) || hasClerkSession;
 
@@ -62,55 +52,7 @@ const ClerkAuthGuard = ({ children }: AuthGuardProps) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Clerk session is active but the bridge has not seeded the store yet.
-  if (hasClerkSession && !currentUser && !isAuthenticated) {
-    return (
-      <LoadingState
-        title="Opening EngVox"
-        description="Restoring your professional learning workspace."
-      />
-    );
-  }
-
   return <>{children}</>;
 };
 
-/**
- * Legacy guard used when no Clerk key is configured: the whole app runs on the
- * Supabase/local adapter, so there is no ClerkProvider and Clerk hooks must
- * never be called.
- */
-const LegacyAuthGuard = ({ children }: AuthGuardProps) => {
-  const { isAuthenticated, isLoading, initialize, currentUser } = useAuthStore();
-  const location = useLocation();
-
-  useEffect(() => {
-    if (!currentUser && !isAuthenticated) {
-      void initialize();
-    }
-  }, [initialize, currentUser, isAuthenticated]);
-
-  const hasSession = isAuthenticated || Boolean(currentUser);
-
-  if (isLoading && !hasSession) {
-    return (
-      <LoadingState
-        title="Opening EngVox"
-        description="Restoring your professional learning workspace."
-      />
-    );
-  }
-
-  if (!hasSession) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-
-  return <>{children}</>;
-};
-
-export const AuthGuard = ({ children }: AuthGuardProps) =>
-  CLERK_PUBLISHABLE_KEY ? (
-    <ClerkAuthGuard>{children}</ClerkAuthGuard>
-  ) : (
-    <LegacyAuthGuard>{children}</LegacyAuthGuard>
-  );
+export default AuthGuard;

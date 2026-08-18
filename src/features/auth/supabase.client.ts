@@ -1,1 +1,0 @@
-export { isSupabaseConfigured, getSupabaseClient } from '@/shared/services/auth-backend/supabase.client';
