@@ -35,6 +35,12 @@ const seniorSubscription: SubscriptionSnapshot = {
   status: 'active',
 };
 
+const specialistSubscription: SubscriptionSnapshot = {
+  ...freeSubscription,
+  planId: 'specialist',
+  status: 'active',
+};
+
 const masterSubscription: SubscriptionSnapshot = {
   ...freeSubscription,
   planId: 'master',
@@ -84,6 +90,22 @@ const renderGuardRoutes = (initialPath: string) =>
           element={
             <SubscriptionRouteGuard feature="tool">
               <div>TOOLS CONTENT</div>
+            </SubscriptionRouteGuard>
+          }
+        />
+        <Route
+          path="/speaking"
+          element={
+            <SubscriptionRouteGuard feature="speaking">
+              <div>SPEAKING CONTENT</div>
+            </SubscriptionRouteGuard>
+          }
+        />
+        <Route
+          path="/listening"
+          element={
+            <SubscriptionRouteGuard feature="listening">
+              <div>LISTENING CONTENT</div>
             </SubscriptionRouteGuard>
           }
         />
@@ -199,6 +221,66 @@ describe('SubscriptionRouteGuard tools lock', () => {
     renderGuardRoutes('/tools/ai');
 
     expect(screen.getByText('TOOLS CONTENT')).toBeInTheDocument();
+    expect(screen.queryByText('PRICING PAGE')).not.toBeInTheDocument();
+  });
+});
+
+describe('SubscriptionRouteGuard speaking lock', () => {
+  beforeEach(() => {
+    mockedUseBillingStore.mockReset();
+  });
+
+  it('redirects a free-tier user from /speaking to /pricing', () => {
+    setSubscription(freeSubscription);
+    renderGuardRoutes('/speaking');
+
+    expect(screen.getByText('PRICING PAGE')).toBeInTheDocument();
+    expect(screen.queryByText('SPEAKING CONTENT')).not.toBeInTheDocument();
+  });
+
+  it('redirects a senior user from /speaking to /pricing (speaking requires Specialist)', () => {
+    setSubscription(seniorSubscription);
+    renderGuardRoutes('/speaking');
+
+    expect(screen.getByText('PRICING PAGE')).toBeInTheDocument();
+    expect(screen.queryByText('SPEAKING CONTENT')).not.toBeInTheDocument();
+  });
+
+  it('renders the speaking for a specialist user (specialist includes speaking)', () => {
+    setSubscription(specialistSubscription);
+    renderGuardRoutes('/speaking');
+
+    expect(screen.getByText('SPEAKING CONTENT')).toBeInTheDocument();
+    expect(screen.queryByText('PRICING PAGE')).not.toBeInTheDocument();
+  });
+});
+
+describe('SubscriptionRouteGuard listening lock', () => {
+  beforeEach(() => {
+    mockedUseBillingStore.mockReset();
+  });
+
+  it('redirects a free-tier user from /listening to /pricing', () => {
+    setSubscription(freeSubscription);
+    renderGuardRoutes('/listening');
+
+    expect(screen.getByText('PRICING PAGE')).toBeInTheDocument();
+    expect(screen.queryByText('LISTENING CONTENT')).not.toBeInTheDocument();
+  });
+
+  it('redirects a senior user from /listening to /pricing (listening requires Specialist)', () => {
+    setSubscription(seniorSubscription);
+    renderGuardRoutes('/listening');
+
+    expect(screen.getByText('PRICING PAGE')).toBeInTheDocument();
+    expect(screen.queryByText('LISTENING CONTENT')).not.toBeInTheDocument();
+  });
+
+  it('renders the listening for a specialist user (specialist includes listening)', () => {
+    setSubscription(specialistSubscription);
+    renderGuardRoutes('/listening');
+
+    expect(screen.getByText('LISTENING CONTENT')).toBeInTheDocument();
     expect(screen.queryByText('PRICING PAGE')).not.toBeInTheDocument();
   });
 });

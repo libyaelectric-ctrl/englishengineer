@@ -122,10 +122,10 @@ no-subscription users; the frontend maps it to the real Free plan
 
 ## 5. Test coverage
 
-| Suite                    | File                                                       | Cases                                      |
-| ------------------------ | ---------------------------------------------------------- | ------------------------------------------ |
-| Navigation locks + modal | `src/layouts/Navigation.test.tsx`                          | 7                                          |
-| Entitlement matrix       | `src/features/billing/billing.entitlements.test.ts`        | incl. free/junior placement & learning hub |
-| Grammar gate             | `src/pages/GrammarPage/hooks/useGrammarPage.test.ts`       | 4                                          |
-| Vocabulary gate          | `src/pages/VocabularyPage/hooks/useVocabularyPage.test.ts` | 3                                          |
-| Route guards             | `src/features/billing/SubscriptionRouteGuard.test.tsx`     | 6                                          |
+| Suite                    | File                                                       | Cases                                                                            |
+| ------------------------ | ---------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Navigation locks + modal | `src/layouts/Navigation.test.tsx`                          | 7                                                                                |
+| Entitlement matrix       | `src/features/billing/billing.entitlements.test.ts`        | incl. free/junior placement & learning hub                                       |
+| Grammar gate             | `src/pages/GrammarPage/hooks/useGrammarPage.test.ts`       | 4                                                                                |
+| Vocabulary gate          | `src/pages/VocabularyPage/hooks/useVocabularyPage.test.ts` | 3                                                                                |
+| Route guards             | `src/features/billing/SubscriptionRouteGuard.test.tsx`     | 17 (placement 2, learning hub 4, translator 2, tools 3, speaking 3, listening 3) |
