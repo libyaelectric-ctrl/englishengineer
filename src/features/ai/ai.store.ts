@@ -7,9 +7,9 @@ import { LearningState } from '@/core/learning/learning.types';
 
 import { logger } from '@/shared/logger';
 import { eosPersistConfig } from '@/shared/storage/persist-middleware';
+import { useLearningIntelligenceStore } from '@/shared/stores/learning-intelligence.store';
 
 import { UserProfile } from '@/features/auth/auth.types';
-import { useLearningIntelligenceStore } from '@/shared/stores/learning-intelligence.store';
 
 import {
   AI_COACH_MODES,
@@ -55,6 +55,10 @@ export interface AIUsageSummary {
   mostUsedMode: string;
   suggestedFocusArea: string;
   recentSession: AICoachSession | null;
+  totalTokens: number;
+  estimatedCostUsd: number;
+  byOperation: Array<{ operation: string; count: number }>;
+  byDay: Array<{ date: string; count: number }>;
 }
 
 const isCoachResult = (
@@ -147,11 +151,31 @@ export const buildAIUsageSummary = (sessions: AICoachSession[]): AIUsageSummary 
   const mostUsedMode =
     Object.entries(modeCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'No sessions yet';
   const recentSession = sessions[0] || null;
+
+  const totalTokens = sessions.reduce((sum, session) => sum + (session.tokensUsed || 0), 0);
+  const estimatedCostUsd = Math.round(totalTokens * (0.01 / 1000) * 10000) / 10000;
+
+  const byOperationMap = new Map<string, number>();
+  const byDayMap = new Map<string, number>();
+  for (const session of sessions) {
+    byOperationMap.set(session.modeName, (byOperationMap.get(session.modeName) ?? 0) + 1);
+    const day = new Date(session.timestamp).toISOString().split('T')[0];
+    byDayMap.set(day, (byDayMap.get(day) ?? 0) + 1);
+  }
+
   return {
     totalSessions: sessions.length,
     mostUsedMode,
     suggestedFocusArea: recentSession?.result.focusArea || 'Writing',
     recentSession,
+    totalTokens,
+    estimatedCostUsd,
+    byOperation: [...byOperationMap.entries()]
+      .map(([operation, count]) => ({ operation, count }))
+      .sort((a, b) => b.count - a.count),
+    byDay: [...byDayMap.entries()]
+      .map(([date, count]) => ({ date, count }))
+      .sort((a, b) => (a.date < b.date ? 1 : -1)),
   };
 };
 
