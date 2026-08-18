@@ -8,7 +8,7 @@ import { showToast } from '@/shared/components/Toast';
 
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
-import { isFreeTier, useBillingStore } from '@/features/billing';
+import { getFreeTierPreview, useBillingStore } from '@/features/billing';
 import { GrammarProgressService, GrammarRepository, useGrammarStore } from '@/features/grammar';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 import { getBaseCefrLevel, useLearningCockpit } from '@/features/profile';
@@ -222,7 +222,8 @@ export function useGrammarPage() {
 
   const selectRule = (ruleId: string) => {
     // Free tier previews only the first module; other modules are locked.
-    if (isFreeTier(subscription)) {
+    // Decision comes from the centralized free-tier preview policy.
+    if (getFreeTierPreview(subscription, 'grammar').limited) {
       const firstModule = pathGroups[0]?.module;
       const target = pathGroups.find((group) => group.entries.some((e) => e.rule.id === ruleId));
       if (target && firstModule && target.module !== firstModule) {

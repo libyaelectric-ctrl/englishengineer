@@ -98,6 +98,34 @@ export const isFreeTier = (subscription: SubscriptionSnapshot): boolean =>
   subscription.planId === 'free' ||
   (subscription.planId === 'junior' && subscription.status === 'none');
 
+export type FreeTierPreviewScope = 'firstGrammarModule' | 'firstVocabularyBatch';
+
+export interface FreeTierPreview {
+  limited: boolean;
+  scope: FreeTierPreviewScope | null;
+}
+
+/**
+ * Features where the free tier gets a limited preview instead of full
+ * access: Grammar shows only the first module, Vocabulary only the first
+ * page. Single source of truth for partial free-tier unlocks — the route
+ * guard (URL protection) and the page hooks both read this, so the limit
+ * policy lives in exactly one place.
+ */
+export const FREE_TIER_PREVIEW_LIMITS: Partial<Record<BillingFeature, FreeTierPreviewScope>> = {
+  grammar: 'firstGrammarModule',
+  vocabulary: 'firstVocabularyBatch',
+};
+
+export const getFreeTierPreview = (
+  subscription: SubscriptionSnapshot,
+  feature: BillingFeature
+): FreeTierPreview => {
+  if (!isFreeTier(subscription)) return { limited: false, scope: null };
+  const scope = FREE_TIER_PREVIEW_LIMITS[feature];
+  return scope ? { limited: true, scope } : { limited: false, scope: null };
+};
+
 export const canUseAICoach = (
   subscription: SubscriptionSnapshot,
   _dailyUsageCount = 0

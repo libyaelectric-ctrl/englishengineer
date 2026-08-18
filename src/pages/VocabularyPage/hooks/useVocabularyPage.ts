@@ -10,7 +10,7 @@ import { playSound } from '@/shared/utils/sound';
 
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
-import { isFreeTier, useBillingStore } from '@/features/billing';
+import { getFreeTierPreview, useBillingStore } from '@/features/billing';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 import {
   LearningProfileRepository,
@@ -359,8 +359,9 @@ export function useVocabularyPage() {
 
   const loadNextBatch = () => {
     // Free tier previews a single page of the word set; the next page is
-    // locked behind a paid plan.
-    if (isFreeTier(subscription)) {
+    // locked behind a paid plan. Decision comes from the centralized
+    // free-tier preview policy.
+    if (getFreeTierPreview(subscription, 'vocabulary').limited) {
       navigate('/pricing');
       return;
     }

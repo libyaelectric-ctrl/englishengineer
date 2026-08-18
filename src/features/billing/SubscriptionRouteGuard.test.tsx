@@ -94,6 +94,22 @@ const renderGuardRoutes = (initialPath: string) =>
           }
         />
         <Route
+          path="/grammar"
+          element={
+            <SubscriptionRouteGuard feature="grammar">
+              <div>GRAMMAR CONTENT</div>
+            </SubscriptionRouteGuard>
+          }
+        />
+        <Route
+          path="/vocabulary"
+          element={
+            <SubscriptionRouteGuard feature="vocabulary">
+              <div>VOCABULARY CONTENT</div>
+            </SubscriptionRouteGuard>
+          }
+        />
+        <Route
           path="/speaking"
           element={
             <SubscriptionRouteGuard feature="speaking">
@@ -221,6 +237,28 @@ describe('SubscriptionRouteGuard tools lock', () => {
     renderGuardRoutes('/tools/ai');
 
     expect(screen.getByText('TOOLS CONTENT')).toBeInTheDocument();
+    expect(screen.queryByText('PRICING PAGE')).not.toBeInTheDocument();
+  });
+});
+
+describe('SubscriptionRouteGuard free-tier preview routes', () => {
+  beforeEach(() => {
+    mockedUseBillingStore.mockReset();
+  });
+
+  it('lets a free-tier user open /grammar (limited to the first module)', () => {
+    setSubscription(freeSubscription);
+    renderGuardRoutes('/grammar');
+
+    expect(screen.getByText('GRAMMAR CONTENT')).toBeInTheDocument();
+    expect(screen.queryByText('PRICING PAGE')).not.toBeInTheDocument();
+  });
+
+  it('lets a free-tier user open /vocabulary (limited to the first page)', () => {
+    setSubscription(freeSubscription);
+    renderGuardRoutes('/vocabulary');
+
+    expect(screen.getByText('VOCABULARY CONTENT')).toBeInTheDocument();
     expect(screen.queryByText('PRICING PAGE')).not.toBeInTheDocument();
   });
 });

@@ -49,6 +49,10 @@ export {
   type DowngradeImpact,
   getDowngradeImpact,
   getPlanLimitLabel,
+  FREE_TIER_PREVIEW_LIMITS,
+  getFreeTierPreview,
+  type FreeTierPreviewScope,
+  type FreeTierPreview,
 } from './billing.entitlements';
 
 export { EntitlementGate } from './EntitlementGate';
