@@ -32,90 +32,90 @@ export default defineConfig({
       include: ['src/**/*.ts', 'src/**/*.tsx'],
       exclude: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'src/test/**'],
       // Thresholds aligned to actual measured coverage (2026-08-18 run).
-        // Each feature-area threshold is set ~5 pp below its measured minimum
-        // to catch regressions while letting the suite pass.
-        thresholds: {
-          branches: 30,
+      // Each feature-area threshold is set ~5 pp below its measured minimum
+      // to catch regressions while letting the suite pass.
+      thresholds: {
+        branches: 30,
+        functions: 40,
+        lines: 45,
+        statements: 45,
+        // Measured: lines 35.2 / branches 31.2 / functions 29.4 / stmts 36.4
+        'src/features/billing/**': {
+          branches: 25,
+          functions: 25,
+          lines: 30,
+          statements: 30,
+        },
+        // Measured: lines 24.7 / branches 18 / functions 35.7 / stmts 26.1
+        'src/features/auth/**': {
+          branches: 13,
+          functions: 30,
+          lines: 20,
+          statements: 20,
+        },
+        // Measured: lines 48 / branches 31.3 / functions 40.4 / stmts 49.5
+        'src/features/ai/**': {
+          branches: 25,
+          functions: 35,
+          lines: 43,
+          statements: 43,
+        },
+        // Measured: lines ~74 / branches ~55 / functions ~63 / stmts ~71
+        'src/features/vocabulary/**': {
+          branches: 48,
+          functions: 57,
+          lines: 65,
+          statements: 65,
+        },
+        // Measured: lines 71.2 / branches 61.9 / functions 71.6 / stmts 70.4
+        'src/features/grammar/**': {
+          branches: 55,
+          functions: 65,
+          lines: 64,
+          statements: 64,
+        },
+        // Measured: lines 50.2 / branches 39.7 / functions 46.3 / stmts 51.5
+        'src/features/reading/**': {
+          branches: 33,
           functions: 40,
-          lines: 45,
-          statements: 45,
-          // Measured: lines 35.2 / branches 31.2 / functions 29.4 / stmts 36.4
-          'src/features/billing/**': {
-            branches: 25,
-            functions: 25,
-            lines: 30,
-            statements: 30,
-          },
-          // Measured: lines 24.7 / branches 18 / functions 35.7 / stmts 26.1
-          'src/features/auth/**': {
-            branches: 13,
-            functions: 30,
-            lines: 20,
-            statements: 20,
-          },
-          // Measured: lines 48 / branches 31.3 / functions 40.4 / stmts 49.5
-          'src/features/ai/**': {
-            branches: 25,
-            functions: 35,
-            lines: 43,
-            statements: 43,
-          },
-          // Measured: lines ~74 / branches ~55 / functions ~63 / stmts ~71
-          'src/features/vocabulary/**': {
-            branches: 48,
-            functions: 57,
-            lines: 65,
-            statements: 65,
-          },
-          // Measured: lines 71.2 / branches 61.9 / functions 71.6 / stmts 70.4
-          'src/features/grammar/**': {
-            branches: 55,
-            functions: 65,
-            lines: 64,
-            statements: 64,
-          },
-          // Measured: lines 50.2 / branches 39.7 / functions 46.3 / stmts 51.5
-          'src/features/reading/**': {
-            branches: 33,
-            functions: 40,
-            lines: 44,
-            statements: 44,
-          },
-          // Measured: lines 57.7 / branches 38.2 / functions 50 / stmts 58.1
-          'src/features/writing/**': {
-            branches: 32,
-            functions: 44,
-            lines: 52,
-            statements: 52,
-          },
+          lines: 44,
+          statements: 44,
+        },
+        // Measured: lines 57.7 / branches 38.2 / functions 50 / stmts 58.1
+        'src/features/writing/**': {
+          branches: 32,
+          functions: 44,
+          lines: 52,
+          statements: 52,
+        },
         // Measured: lines ~0 (speaking core 73.2, but index 0) / branches 32.6
-          'src/features/speaking/**': {
-            branches: 27,
-            functions: 25,
-            lines: 30,
-            statements: 30,
-          },
-          // Measured: lines 44.3 / branches 45.9 / functions 44 / stmts 45.9
-          'src/features/listening/**': {
-            branches: 40,
-            functions: 38,
-            lines: 38,
-            statements: 38,
-          },
-          // Measured: lines ~48 (core/learning 82.8, but core/entities 0)
-          'src/core/**': {
-            branches: 35,
-            functions: 30,
-            lines: 42,
-            statements: 42,
-          },
-          // Measured: shared overall ~38-58 depending on subdir
-          'src/shared/**': {
-            branches: 30,
-            functions: 35,
-            lines: 38,
-            statements: 38,
-          },
+        'src/features/speaking/**': {
+          branches: 27,
+          functions: 25,
+          lines: 30,
+          statements: 30,
+        },
+        // Measured: lines 44.3 / branches 45.9 / functions 44 / stmts 45.9
+        'src/features/listening/**': {
+          branches: 40,
+          functions: 38,
+          lines: 38,
+          statements: 38,
+        },
+        // Measured: lines ~48 (core/learning 82.8, but core/entities 0)
+        'src/core/**': {
+          branches: 35,
+          functions: 30,
+          lines: 42,
+          statements: 42,
+        },
+        // Measured: shared overall ~38-58 depending on subdir
+        'src/shared/**': {
+          branches: 30,
+          functions: 35,
+          lines: 38,
+          statements: 38,
+        },
       },
     },
   },

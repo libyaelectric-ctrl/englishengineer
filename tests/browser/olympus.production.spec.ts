@@ -9,7 +9,6 @@ const authenticatedPage = async (page: Page, path: string) => {
 };
 
 test.describe('EngineerOS Olympus real browser verification (Clerk + free tier)', () => {
-
   test('startup, Clerk sign-in, dashboard persistence, and logout', async ({ page }) => {
     await page.goto('/');
     await expect(
@@ -60,7 +59,9 @@ test.describe('EngineerOS Olympus real browser verification (Clerk + free tier)'
     const translator = page.getByRole('button', { name: /translator \(locked\)/i });
     await expect(translator).toBeVisible();
     await expect(page.getByRole('button', { name: /team \(locked\)/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /team \(locked\)/i }).getByText('Soon')).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: /team \(locked\)/i }).getByText('Soon')
+    ).toBeVisible();
 
     // Nested skills are locked too.
     await page.getByRole('button', { name: /^skills$/i }).click();

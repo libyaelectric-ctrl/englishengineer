@@ -149,7 +149,9 @@ describe('ReadingEvaluator', () => {
           },
         ],
       });
-      const submission = createSubmission({ q1: 'The construction process involves building structures.' });
+      const submission = createSubmission({
+        q1: 'The construction process involves building structures.',
+      });
       const result = ReadingEvaluator.evaluate(mission, submission, 0);
 
       expect(result.vocabularyScore).toBeGreaterThan(0);
@@ -220,7 +222,12 @@ describe('ReadingEvaluator', () => {
 
     it('includes scoring results (xp, coins, elo)', () => {
       const mission = createMission();
-      const submission = createSubmission({ q1: 'A', q2: 'true', q3: 'concrete', q4: 'construction' });
+      const submission = createSubmission({
+        q1: 'A',
+        q2: 'true',
+        q3: 'concrete',
+        q4: 'construction',
+      });
       const result = ReadingEvaluator.evaluate(mission, submission, 0);
 
       expect(result.xpEarned).toBeDefined();
@@ -230,7 +237,12 @@ describe('ReadingEvaluator', () => {
 
     it('generates strengths and weaknesses', () => {
       const mission = createMission();
-      const submission = createSubmission({ q1: 'A', q2: 'true', q3: 'concrete', q4: 'construction' });
+      const submission = createSubmission({
+        q1: 'A',
+        q2: 'true',
+        q3: 'concrete',
+        q4: 'construction',
+      });
       const result = ReadingEvaluator.evaluate(mission, submission, 0);
 
       expect(result.strengths).toBeInstanceOf(Array);

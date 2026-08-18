@@ -5,6 +5,7 @@
 EngVox is currently running on a **Clerk development instance** (`dominant-cricket-288.clerk.accounts.dev`). This guide covers the full migration to a production instance, including OAuth reconfiguration, environment variable updates, and deployment.
 
 > **Current state:**
+>
 > - Instance type: `development` (capped at 100 users, shared OAuth credentials, `__clerk_db_jwt` session management)
 > - Publishable key: `pk_test_...` → needs to become `pk_live_...`
 > - Google OAuth callback redirects to `clerk.shared.lcl.dev` (dev proxy) → must redirect to production domain
@@ -37,11 +38,12 @@ EngVox is currently running on a **Clerk development instance** (`dominant-crick
 
 1. In the production instance dashboard → **Configure → Paths**
 2. Set:
-   | Field | Value |
-   |---|---|
-   | Home URL | `https://engvox.com` |
+
+   | Field             | Value                          |
+   | ----------------- | ------------------------------ |
+   | Home URL          | `https://engvox.com`           |
    | After sign-in URL | `https://engvox.com/dashboard` |
-   | After sign-up URL | `https://engvox.com/sign-up` |
+   | After sign-up URL | `https://engvox.com/sign-up`   |
 
 3. Go to **Configure → Domains**
 4. Add your production domain and note the CNAME records Clerk provides:
@@ -57,12 +59,13 @@ EngVox is currently running on a **Clerk development instance** (`dominant-crick
 
 Add these DNS records to your domain registrar:
 
-| Type | Name | Value | Purpose |
-|---|---|---|---|
-| CNAME | `clerk` | `cname.clerk.app` | Frontend API (FAPI) |
-| CNAME | `clerk._domainkey` | `<provided>` | Session management |
+| Type  | Name               | Value             | Purpose             |
+| ----- | ------------------ | ----------------- | ------------------- |
+| CNAME | `clerk`            | `cname.clerk.app` | Frontend API (FAPI) |
+| CNAME | `clerk._domainkey` | `<provided>`      | Session management  |
 
 > ⏱️ DNS propagation can take up to 48 hours. Use `dig` to verify:
+>
 > ```bash
 > dig clerk.engvox.com +short CAA
 > ```
@@ -78,9 +81,11 @@ Add these DNS records to your domain registrar:
 1. Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
 2. Create a new **OAuth 2.0 Client ID** (or use existing)
 3. Set **Authorized redirect URIs** to:
+
    ```
    https://clerk.engvox.com/v1/oauth_callback
    ```
+
    > Replace `clerk.engvox.com` with your actual Clerk FAPI domain
 
 4. Note the **Client ID** and **Client Secret**
@@ -99,8 +104,8 @@ Add these DNS records to your domain registrar:
 
 Update these in Vercel → Settings → Environment Variables:
 
-| Variable | Development | Production |
-|---|---|---|
+| Variable                     | Development             | Production          |
+| ---------------------------- | ----------------------- | ------------------- |
 | `VITE_CLERK_PUBLISHABLE_KEY` | `pk_test_ZG9taW5hbn...` | `pk_live_<new_key>` |
 
 > Other VITE_CLERK_* variables (SIGN_IN_URL, SIGN_UP_URL, etc.) can stay the same.
@@ -109,8 +114,8 @@ Update these in Vercel → Settings → Environment Variables:
 
 Update these in Render → Service → Environment:
 
-| Variable | Development | Production |
-|---|---|---|
+| Variable       | Development                                       | Production                 |
+| -------------- | ------------------------------------------------- | -------------------------- |
 | `CLERK_ISSUER` | `https://dominant-cricket-288.clerk.accounts.dev` | `https://clerk.engvox.com` |
 
 > `CLERK_SECRET_KEY` is not currently set on Render. If you add it for backend API calls, use the `sk_live_` version.
@@ -217,28 +222,28 @@ If something goes wrong:
 
 ## Key Differences: Dev vs Production
 
-| Feature | Development | Production |
-|---|---|---|
-| User limit | 100 | Unlimited |
-| OAuth credentials | Shared (insecure) | Your own |
-| Session management | `__clerk_db_jwt` (querystring) | `__client` (HttpOnly cookie) |
-| Frontend API domain | `*.clerk.accounts.dev` | `clerk.yourdomain.com` |
-| Email branding | "Development" prefix | Your app branding |
-| Banner in dashboard | "Development" shown | None |
-| Security posture | Relaxed | Strict |
+| Feature             | Development                    | Production                   |
+| ------------------- | ------------------------------ | ---------------------------- |
+| User limit          | 100                            | Unlimited                    |
+| OAuth credentials   | Shared (insecure)              | Your own                     |
+| Session management  | `__clerk_db_jwt` (querystring) | `__client` (HttpOnly cookie) |
+| Frontend API domain | `*.clerk.accounts.dev`         | `clerk.yourdomain.com`       |
+| Email branding      | "Development" prefix           | Your app branding            |
+| Banner in dashboard | "Development" shown            | None                         |
+| Security posture    | Relaxed                        | Strict                       |
 
 ---
 
 ## Timeline Estimate
 
-| Step | Time |
-|---|---|
-| Create production instance | 5 min |
-| DNS configuration | 5 min (propagation: 0–48 hrs) |
-| Google OAuth setup | 10 min |
-| Environment variable updates | 5 min |
-| Deploy & verify | 15 min |
-| **Total (excluding DNS propagation)** | **~40 min** |
+| Step                                  | Time                          |
+| ------------------------------------- | ----------------------------- |
+| Create production instance            | 5 min                         |
+| DNS configuration                     | 5 min (propagation: 0–48 hrs) |
+| Google OAuth setup                    | 10 min                        |
+| Environment variable updates          | 5 min                         |
+| Deploy & verify                       | 15 min                        |
+| **Total (excluding DNS propagation)** | **~40 min**                   |
 
 ---
 

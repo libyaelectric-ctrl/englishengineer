@@ -7,7 +7,6 @@ skipIfNoClerkSecret();
 const API_BASE = process.env.BACKEND_URL || 'http://localhost:8787';
 
 test.describe('Stripe billing integration', () => {
-
   test('pricing page shows plan tiers with current prices', async ({ page }) => {
     await page.goto('/pricing');
     await expect(page.getByText(/pricing plans/i).first()).toBeVisible();

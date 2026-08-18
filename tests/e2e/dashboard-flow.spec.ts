@@ -5,7 +5,6 @@ import { skipIfNoClerkSecret } from '../helpers/clerk-login';
 skipIfNoClerkSecret();
 
 test.describe('Dashboard flow', () => {
-
   test('dashboard loads after login', async ({ page }) => {
     await page.goto('/dashboard');
     await expect(page.getByText(/dashboard/i).first()).toBeVisible({ timeout: 10000 });

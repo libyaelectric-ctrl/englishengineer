@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
 
+import { showToast } from '@/shared/components/Toast';
 import { logger } from '@/shared/logger';
 
 import {
@@ -14,7 +15,6 @@ import {
   getTemplatesForMode,
   useAIStore,
 } from '@/features/ai';
-import { showToast } from '@/shared/components/Toast';
 import { AssessmentService } from '@/features/assessment';
 import { useAuthStore } from '@/features/auth';
 import {
@@ -110,7 +110,7 @@ export function useAIPage() {
         .join('\n')
     : '';
 
-const [uploadedDocsCount, setUploadedDocsCount] = useState<number>(() => {
+  const [uploadedDocsCount, setUploadedDocsCount] = useState<number>(() => {
     const val = localStorage.getItem('uploaded_docs_count');
     return val ? parseInt(val, 10) : 0;
   });

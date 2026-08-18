@@ -13,7 +13,6 @@
  * the secret is configured before running.
  */
 import { type APIRequestContext, type Page, expect, test } from '@playwright/test';
-
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -47,7 +46,10 @@ export const hasClerkSecret = (): boolean => Boolean(CLERK_SECRET_KEY);
 
 /** Call at module scope in specs that need a real Clerk session. */
 export const skipIfNoClerkSecret = (): void => {
-  test.skip(!hasClerkSecret(), 'CLERK_SECRET_KEY is required (set it in .env.local) to run Clerk-based e2e tests');
+  test.skip(
+    !hasClerkSecret(),
+    'CLERK_SECRET_KEY is required (set it in .env.local) to run Clerk-based e2e tests'
+  );
 };
 
 /** Create the shared test user once, or resolve its id if it already exists. */

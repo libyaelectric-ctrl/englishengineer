@@ -179,7 +179,8 @@ describe('ListeningEvaluator', () => {
     it('calculates summary score based on word count', () => {
       const mission = createMission();
       const submission = createSubmission({
-        summary: 'This is a detailed summary with more than thirty words to test the summary scoring function. It should include technical terms and provide a comprehensive overview of the engineering topic discussed in the audio.',
+        summary:
+          'This is a detailed summary with more than thirty words to test the summary scoring function. It should include technical terms and provide a comprehensive overview of the engineering topic discussed in the audio.',
         userKeywords: 'engineering construction',
       });
       const result = ListeningEvaluator.evaluate(mission, submission);

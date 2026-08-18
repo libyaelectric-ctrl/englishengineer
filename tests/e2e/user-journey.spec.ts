@@ -5,9 +5,7 @@ import { skipIfNoClerkSecret } from '../helpers/clerk-login';
 skipIfNoClerkSecret();
 
 test.describe('Full user journey', () => {
-  test('landing → login → dashboard → vocabulary → grammar → profile → tools', async ({
-    page,
-  }) => {
+  test('landing → login → dashboard → vocabulary → grammar → profile → tools', async ({ page }) => {
     // 1. Landing page
     await page.goto('/');
     await expect(page.getByRole('heading', { name: /engineering english os/i })).toBeVisible();
