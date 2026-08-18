@@ -101,7 +101,7 @@ Round 6, tüm maddeleri **mevcut kodla doğrulayarak** sıfırdan puanlar.
 | 12  | Clean Architecture        | Servis katmanı + utility helpers                              | 85   |
 | 13  | Separation of Concerns    | Route/Service/Repository/Utils ayrımı                         | 85   |
 | 14  | Layer Isolation           | Frontend/Backend/API net ayrımı                               | 85   |
-| 15  | Dependency Direction      | dependency-cruiser + `depcruise-output.txt`                   | 85   |
+| 15  | Dependency Direction      | dependency-cruiser (rapor talep üzerine üretilir)             | 85   |
 | 16  | Modular Design            | Feature-based + utility modules                               | 85   |
 | 17  | Feature Isolation         | Her özellik kendi dosyalarında                                | 85   |
 | 18  | Domain Modeling           | Organization/Team/User/Workspace modelleri                    | 80   |

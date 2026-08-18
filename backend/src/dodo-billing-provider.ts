@@ -160,6 +160,89 @@ const getCustomerId = (data: Record<string, unknown>): string | null => {
  * repository handlers. Returns null when the event should be acknowledged but
  * ignored (unknown events, or payment events without a subscription).
  */
+const mapPaymentSucceeded = (
+  webhookId: string,
+  data: Record<string, unknown>,
+  ignored: NormalizedWebhookEvent
+): NormalizedWebhookEvent => {
+  // Subscription first/renewal payments are handled via subscription.* events.
+  // Only one-time purchases (top-up credits) are applied from payments.
+  if (typeof data.subscription_id === 'string') return ignored;
+  const userId = getUserId(data);
+  const customerId = getCustomerId(data);
+  const meta = isRecord(data.metadata) ? data.metadata : {};
+  return {
+    id: webhookId,
+    type: 'checkout.session.completed',
+    data: {
+      metadata: {
+        ...(userId ? { userId } : {}),
+        type: meta.type === 'topup' ? 'topup' : 'one_time',
+        credits: typeof meta.credits === 'string' ? meta.credits : '50',
+        planId: typeof meta.planId === 'string' ? meta.planId : 'junior',
+      },
+      customer: customerId,
+      subscription: null,
+    },
+  };
+};
+
+const mapPaymentFailed = (
+  webhookId: string,
+  data: Record<string, unknown>,
+  ignored: NormalizedWebhookEvent
+): NormalizedWebhookEvent => {
+  // Renewal failure -> mark the user past due. One-time failures are ignored.
+  if (typeof data.subscription_id !== 'string') return ignored;
+  const userId = getUserId(data);
+  return {
+    id: webhookId,
+    type: 'invoice.payment_failed',
+    data: {
+      metadata: userId ? { userId } : {},
+      subscription: data.subscription_id,
+    },
+  };
+};
+
+const mapSubscriptionEvent = (
+  config: DodoConfig,
+  webhookId: string,
+  data: Record<string, unknown>
+): NormalizedWebhookEvent => {
+  const userId = getUserId(data);
+  const customerId = getCustomerId(data);
+  const meta = isRecord(data.metadata) ? data.metadata : {};
+  const rawStatus = typeof data.status === 'string' ? data.status : '';
+  const appStatus = DODO_STATUS_TO_APP_STATUS[rawStatus] ?? 'incomplete';
+  const planIdFromMeta = typeof meta.planId === 'string' ? meta.planId : null;
+  const planIdFromProduct =
+    typeof data.product_id === 'string' ? planIdFromProductId(config, data.product_id) : null;
+  const planId = planIdFromMeta ?? planIdFromProduct;
+  const periodEnd = parseIsoToSeconds(data.next_billing_date);
+
+  return {
+    id: webhookId,
+    type: 'customer.subscription.updated',
+    data: {
+      metadata: {
+        ...(userId ? { userId } : {}),
+        ...(planId ? { planId } : {}),
+      },
+      id: typeof data.subscription_id === 'string' ? data.subscription_id : null,
+      customer: customerId,
+      status: appStatus,
+      cancel_at_period_end: data.cancel_at_next_billing_date === true,
+      ...(periodEnd !== null ? { current_period_end: periodEnd } : {}),
+    },
+  };
+};
+
+/**
+ * Maps a Dodo webhook event onto the shared normalized shape consumed by the
+ * repository handlers. Returns null when the event should be acknowledged but
+ * ignored (unknown events, or payment events without a subscription).
+ */
 const normalizeDodoEvent = (
   config: DodoConfig,
   webhookId: string,
@@ -167,68 +250,10 @@ const normalizeDodoEvent = (
   data: Record<string, unknown>
 ): NormalizedWebhookEvent => {
   const ignored: NormalizedWebhookEvent = { id: webhookId, type: 'ignored', data: {} };
-  const userId = getUserId(data);
-  const customerId = getCustomerId(data);
-  const meta = isRecord(data.metadata) ? data.metadata : {};
 
-  if (type === 'payment.succeeded') {
-    // Subscription first/renewal payments are handled via subscription.* events.
-    // Only one-time purchases (top-up credits) are applied from payments.
-    if (typeof data.subscription_id === 'string') return ignored;
-    return {
-      id: webhookId,
-      type: 'checkout.session.completed',
-      data: {
-        metadata: {
-          ...(userId ? { userId } : {}),
-          type: meta.type === 'topup' ? 'topup' : 'one_time',
-          credits: typeof meta.credits === 'string' ? meta.credits : '50',
-          planId: typeof meta.planId === 'string' ? meta.planId : 'junior',
-        },
-        customer: customerId,
-        subscription: null,
-      },
-    };
-  }
-
-  if (type === 'payment.failed') {
-    // Renewal failure -> mark the user past due. One-time failures are ignored.
-    if (typeof data.subscription_id !== 'string') return ignored;
-    return {
-      id: webhookId,
-      type: 'invoice.payment_failed',
-      data: {
-        metadata: userId ? { userId } : {},
-        subscription: data.subscription_id,
-      },
-    };
-  }
-
-  if (type.startsWith('subscription.')) {
-    const rawStatus = typeof data.status === 'string' ? data.status : '';
-    const appStatus = DODO_STATUS_TO_APP_STATUS[rawStatus] ?? 'incomplete';
-    const planIdFromMeta = typeof meta.planId === 'string' ? meta.planId : null;
-    const planIdFromProduct =
-      typeof data.product_id === 'string' ? planIdFromProductId(config, data.product_id) : null;
-    const planId = planIdFromMeta ?? planIdFromProduct;
-    const periodEnd = parseIsoToSeconds(data.next_billing_date);
-
-    return {
-      id: webhookId,
-      type: 'customer.subscription.updated',
-      data: {
-        metadata: {
-          ...(userId ? { userId } : {}),
-          ...(planId ? { planId } : {}),
-        },
-        id: typeof data.subscription_id === 'string' ? data.subscription_id : null,
-        customer: customerId,
-        status: appStatus,
-        cancel_at_period_end: data.cancel_at_next_billing_date === true,
-        ...(periodEnd !== null ? { current_period_end: periodEnd } : {}),
-      },
-    };
-  }
+  if (type === 'payment.succeeded') return mapPaymentSucceeded(webhookId, data, ignored);
+  if (type === 'payment.failed') return mapPaymentFailed(webhookId, data, ignored);
+  if (type.startsWith('subscription.')) return mapSubscriptionEvent(config, webhookId, data);
 
   return ignored;
 };
