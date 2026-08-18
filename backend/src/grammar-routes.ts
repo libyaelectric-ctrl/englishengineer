@@ -18,10 +18,15 @@ function getUserRecords(userId: string): GrammarRecord[] {
   return progressStore.get(userId)!;
 }
 
-export const registerGrammarRoutes = (app: Express, requireBackendAuth: RequestHandler): void => {
+export const registerGrammarRoutes = (
+  app: Express,
+  requireBackendAuth: RequestHandler,
+  grammarLimiter: RequestHandler
+): void => {
   app.post(
     '/api/grammar/:id/progress',
     requireBackendAuth,
+    grammarLimiter,
     validateBody(ProgressBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {

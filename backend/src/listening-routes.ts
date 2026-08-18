@@ -126,7 +126,11 @@ function getUserProgress(userId: string): Map<string, { score: number; category:
   return progressStore.get(userId)!;
 }
 
-export const registerListeningRoutes = (app: Express, requireBackendAuth: RequestHandler): void => {
+export const registerListeningRoutes = (
+  app: Express,
+  requireBackendAuth: RequestHandler,
+  listeningLimiter: RequestHandler
+): void => {
   app.get(
     '/api/listening/feed',
     requireBackendAuth,
@@ -150,6 +154,7 @@ export const registerListeningRoutes = (app: Express, requireBackendAuth: Reques
   app.post(
     '/api/listening/:id/progress',
     requireBackendAuth,
+    listeningLimiter,
     validateBody(ListeningScoreBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {

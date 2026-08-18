@@ -299,6 +299,7 @@ function mapTranscriptScores(
 export const registerSpeakingRoutes = (
   app: Express,
   requireBackendAuth: RequestHandler,
+  speakingLimiter: RequestHandler,
   aiService: AiService
 ): void => {
   // Raw audio body parser scoped ONLY to this route -- does not affect the
@@ -306,6 +307,7 @@ export const registerSpeakingRoutes = (
   app.post(
     '/api/speaking/audio-upload',
     requireBackendAuth,
+    speakingLimiter,
     express.raw({ type: Object.keys(ALLOWED_AUDIO_TYPES), limit: '15mb' }),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
@@ -386,6 +388,7 @@ export const registerSpeakingRoutes = (
   app.post(
     '/api/speaking/submit',
     requireBackendAuth,
+    speakingLimiter,
     validateBody(SpeakingSubmitBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {

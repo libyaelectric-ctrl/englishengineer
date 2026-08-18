@@ -278,6 +278,42 @@ const createAllRateLimiters = (
     scope: 'workspace',
     store: rateLimitStore,
   }),
+  reading: createRateLimiter({
+    windowMs: config.ai.rateLimitWindowMs,
+    max: config.ai.rateLimitMax,
+    scope: 'reading',
+    store: rateLimitStore,
+  }),
+  writing: createRateLimiter({
+    windowMs: config.ai.rateLimitWindowMs,
+    max: config.ai.rateLimitMax,
+    scope: 'writing',
+    store: rateLimitStore,
+  }),
+  speaking: createRateLimiter({
+    windowMs: config.ai.rateLimitWindowMs,
+    max: config.ai.rateLimitMax,
+    scope: 'speaking',
+    store: rateLimitStore,
+  }),
+  listening: createRateLimiter({
+    windowMs: config.rateLimit.windowMs,
+    max: config.rateLimit.max,
+    scope: 'listening',
+    store: rateLimitStore,
+  }),
+  grammar: createRateLimiter({
+    windowMs: config.rateLimit.windowMs,
+    max: config.rateLimit.max,
+    scope: 'grammar',
+    store: rateLimitStore,
+  }),
+  progress: createRateLimiter({
+    windowMs: config.rateLimit.windowMs,
+    max: config.rateLimit.max,
+    scope: 'progress',
+    store: rateLimitStore,
+  }),
   global: createRateLimiter({
     windowMs: config.rateLimit.windowMs,
     max: config.rateLimit.max * 2,
@@ -527,15 +563,42 @@ const registerRoutes = (
 
   registerAdminRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, limiters.global);
 
-  registerProgressRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
-  registerReadingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, aiService);
-  registerWritingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, aiService);
-  registerListeningRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
-  registerSpeakingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, aiService);
+  registerProgressRoutes(
+    v1RouterAdapter as unknown as Express,
+    limiters.progress,
+    requireBackendAuth
+  );
+  registerReadingRoutes(
+    v1RouterAdapter as unknown as Express,
+    requireBackendAuth,
+    limiters.reading,
+    aiService
+  );
+  registerWritingRoutes(
+    v1RouterAdapter as unknown as Express,
+    requireBackendAuth,
+    limiters.writing,
+    aiService
+  );
+  registerListeningRoutes(
+    v1RouterAdapter as unknown as Express,
+    requireBackendAuth,
+    limiters.listening
+  );
+  registerSpeakingRoutes(
+    v1RouterAdapter as unknown as Express,
+    requireBackendAuth,
+    limiters.speaking,
+    aiService
+  );
   // Serves audio uploaded via POST /api/speaking/audio-upload. Scoped to
   // this one directory only, never the whole filesystem.
   app.use('/uploads/speaking', express.static(path.resolve(process.cwd(), 'uploads', 'speaking')));
-  registerGrammarRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
+  registerGrammarRoutes(
+    v1RouterAdapter as unknown as Express,
+    requireBackendAuth,
+    limiters.grammar
+  );
 };
 
 const initConnectionPool = (config: BackendConfig) => {
