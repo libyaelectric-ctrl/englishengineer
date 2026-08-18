@@ -1,4 +1,4 @@
-import { ShieldAlert, Sparkles, Target } from 'lucide-react';
+import { DollarSign, ShieldAlert, Sparkles, Target } from 'lucide-react';
 
 import { MetricCard } from '@/shared/components/MetricCard';
 
@@ -7,6 +7,10 @@ interface MetricsGridProps {
     totalSessions: number;
     mostUsedMode: string;
     suggestedFocusArea: string;
+    totalTokens: number;
+    estimatedCostUsd: number;
+    byOperation: Array<{ operation: string; count: number }>;
+    byDay: Array<{ date: string; count: number }>;
   };
   coachContext: { averageScore: number };
   connectionValue: string;
@@ -33,6 +37,13 @@ export const MetricsGrid = ({
       icon={Target}
       trend={`${coachContext.averageScore}% average score`}
       statusColor="warning"
+    />
+    <MetricCard
+      label="Total Tokens"
+      value={`${usage.totalTokens}`}
+      icon={Sparkles}
+      trend={`${usage.estimatedCostUsd} USD`}
+      statusColor="cyan"
     />
     <MetricCard
       label="AI Connection"

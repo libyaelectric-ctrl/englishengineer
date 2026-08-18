@@ -115,6 +115,7 @@ export interface AICoachSession {
   result: AICoachResult;
   timestamp: string;
   providerUsed: AIProviderStatus;
+  tokensUsed?: number;
 }
 
 export interface AIRequest {
