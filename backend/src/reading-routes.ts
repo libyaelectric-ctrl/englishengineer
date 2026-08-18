@@ -34,7 +34,7 @@ const loadReadingPassages = (): ReadingItem[] => {
     const data = readFileSync(passagesPath, 'utf-8');
     const passages = JSON.parse(data) as ReadingItem[];
     return passages;
-  } catch (error) {
+  } catch {
     // Fallback to hardcoded items if file cannot be read
     return [];
   }
@@ -168,6 +168,7 @@ function mapGeneratedReading(
     level,
     text: passage,
     wordCount: passage.split(/\s+/).filter(Boolean).length,
+    questions: questions.length > 0 ? questions : undefined,
   };
 }
 

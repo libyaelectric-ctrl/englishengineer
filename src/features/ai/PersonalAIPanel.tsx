@@ -30,6 +30,100 @@ const SKILL_TABS: { id: SkillTab; icon: React.ElementType }[] = [
   { id: 'listening', icon: Headphones },
 ];
 
+interface LessonSectionProps {
+  title: string;
+  icon: React.ElementType;
+  visible: boolean;
+  children: React.ReactNode;
+}
+
+const LessonSection = ({ title, icon: Icon, visible, children }: LessonSectionProps) => {
+  if (!visible) return null;
+  return (
+    <div className="space-y-2">
+      <h4 className="text-sm font-bold flex items-center gap-1.5">
+        <Icon className="h-4 w-4 text-primary" />
+        {title}
+      </h4>
+      <div className="rounded-[var(--radius-card)] bg-surface-hover p-3 space-y-2">{children}</div>
+    </div>
+  );
+};
+
+const showSkillSection = (activeTab: SkillTab, skill: SkillTab, present: boolean): boolean =>
+  (activeTab === 'all' || activeTab === skill) && present;
+
+interface LessonContentProps {
+  lesson: PersonalLessonContent;
+  activeTab: SkillTab;
+}
+
+const LessonContent = ({ lesson, activeTab }: LessonContentProps) => {
+  return (
+    <div className="space-y-4 pt-2">
+      {(activeTab === 'all' || activeTab === 'vocabulary') && lesson.vocabulary?.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="text-sm font-bold flex items-center gap-1.5">
+            <BookOpen className="h-4 w-4 text-primary" />
+            Kelime
+          </h4>
+          <div className="grid gap-2">
+            {lesson.vocabulary.map((v, i) => (
+              <div
+                key={i}
+                className="rounded-[var(--radius-card)] bg-surface-hover p-3 text-xs space-y-1"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-primary">{v.term}</span>
+                  <span className="text-muted-copy">{v.cefrLevel}</span>
+                </div>
+                <p className="font-medium">{v.translation}</p>
+                <p className="text-muted-copy">{v.definition}</p>
+                <p className="italic text-muted-copy">{v.example}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <LessonSection
+        title="Okuma"
+        icon={BookOpen}
+        visible={showSkillSection(activeTab, 'reading', lesson.reading !== undefined)}
+      >
+        <p className="font-bold text-sm">{lesson.reading?.title}</p>
+        <p className="text-xs">{lesson.reading?.titleTranslation}</p>
+        <p className="text-sm leading-relaxed">{lesson.reading?.passage}</p>
+        <p className="text-xs text-muted-copy italic">{lesson.reading?.passageTranslation}</p>
+      </LessonSection>
+      <LessonSection
+        title="Yazma"
+        icon={PenTool}
+        visible={showSkillSection(activeTab, 'writing', lesson.writing !== undefined)}
+      >
+        <p className="text-sm font-medium">{lesson.writing?.prompt}</p>
+        <p className="text-xs text-muted-copy italic">{lesson.writing?.promptTranslation}</p>
+      </LessonSection>
+      <LessonSection
+        title="Konuşma"
+        icon={MessageSquare}
+        visible={showSkillSection(activeTab, 'speaking', lesson.speaking !== undefined)}
+      >
+        <p className="text-xs font-medium">{lesson.speaking?.scenario}</p>
+        <p className="text-xs text-muted-copy italic">{lesson.speaking?.scenarioTranslation}</p>
+      </LessonSection>
+      <LessonSection
+        title="Dinleme"
+        icon={Headphones}
+        visible={showSkillSection(activeTab, 'listening', lesson.listening !== undefined)}
+      >
+        <p className="text-sm leading-relaxed">{lesson.listening?.script}</p>
+        <p className="text-xs text-muted-copy italic">{lesson.listening?.scriptTranslation}</p>
+      </LessonSection>
+    </div>
+  );
+};
+
 export const PersonalAIPanel = ({
   discipline,
   cefrLevel = 'B1',
@@ -102,95 +196,7 @@ export const PersonalAIPanel = ({
           </div>
         )}
 
-        {lesson && (
-          <div className="space-y-4 pt-2">
-            {(activeTab === 'all' || activeTab === 'vocabulary') &&
-              lesson.vocabulary?.length > 0 && (
-                <div className="space-y-2">
-                  <h4 className="text-sm font-bold flex items-center gap-1.5">
-                    <BookOpen className="h-4 w-4 text-primary" />
-                    Kelime
-                  </h4>
-                  <div className="grid gap-2">
-                    {lesson.vocabulary.map((v, i) => (
-                      <div
-                        key={i}
-                        className="rounded-[var(--radius-card)] bg-surface-hover p-3 text-xs space-y-1"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-primary">{v.term}</span>
-                          <span className="text-muted-copy">{v.cefrLevel}</span>
-                        </div>
-                        <p className="font-medium">{v.translation}</p>
-                        <p className="text-muted-copy">{v.definition}</p>
-                        <p className="italic text-muted-copy">{v.example}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-            {(activeTab === 'all' || activeTab === 'reading') && lesson.reading && (
-              <div className="space-y-2">
-                <h4 className="text-sm font-bold flex items-center gap-1.5">
-                  <BookOpen className="h-4 w-4 text-primary" />
-                  Okuma
-                </h4>
-                <div className="rounded-[var(--radius-card)] bg-surface-hover p-3 space-y-2">
-                  <p className="font-bold text-sm">{lesson.reading.title}</p>
-                  <p className="text-xs">{lesson.reading.titleTranslation}</p>
-                  <p className="text-sm leading-relaxed">{lesson.reading.passage}</p>
-                  <p className="text-xs text-muted-copy italic">
-                    {lesson.reading.passageTranslation}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {(activeTab === 'all' || activeTab === 'writing') && lesson.writing && (
-              <div className="space-y-2">
-                <h4 className="text-sm font-bold flex items-center gap-1.5">
-                  <PenTool className="h-4 w-4 text-primary" />
-                  Yazma
-                </h4>
-                <div className="rounded-[var(--radius-card)] bg-surface-hover p-3 space-y-2">
-                  <p className="text-sm font-medium">{lesson.writing.prompt}</p>
-                  <p className="text-xs text-muted-copy">{lesson.writing.promptTranslation}</p>
-                </div>
-              </div>
-            )}
-
-            {(activeTab === 'all' || activeTab === 'speaking') && lesson.speaking && (
-              <div className="space-y-2">
-                <h4 className="text-sm font-bold flex items-center gap-1.5">
-                  <MessageSquare className="h-4 w-4 text-primary" />
-                  Konuşma
-                </h4>
-                <div className="rounded-[var(--radius-card)] bg-surface-hover p-3 space-y-1">
-                  <p className="text-xs font-medium">{lesson.speaking.scenario}</p>
-                  <p className="text-xs text-muted-copy italic">
-                    {lesson.speaking.scenarioTranslation}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {(activeTab === 'all' || activeTab === 'listening') && lesson.listening && (
-              <div className="space-y-2">
-                <h4 className="text-sm font-bold flex items-center gap-1.5">
-                  <Headphones className="h-4 w-4 text-primary" />
-                  Dinleme
-                </h4>
-                <div className="rounded-[var(--radius-card)] bg-surface-hover p-3 space-y-2">
-                  <p className="text-sm leading-relaxed">{lesson.listening.script}</p>
-                  <p className="text-xs text-muted-copy italic">
-                    {lesson.listening.scriptTranslation}
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+        {lesson && <LessonContent lesson={lesson} activeTab={activeTab} />}
       </div>
     </SectionCard>
   );

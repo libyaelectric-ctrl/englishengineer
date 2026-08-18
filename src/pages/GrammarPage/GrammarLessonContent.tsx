@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
 
+import { useGrammarTranslation } from '@/features/ai/useGrammarTranslation';
 import {
   type ChatMessage,
   type GrammarRuleProgress,
   GrammarTeacherService,
   getGrammarReviewReason,
 } from '@/features/grammar';
-import { useGrammarTranslation } from '@/features/ai/useGrammarTranslation';
 
 import { ExportPanel } from './GrammarLessonContent/ExportPanel';
 import { InteractiveDrillPanel } from './GrammarLessonContent/InteractiveDrillPanel';
@@ -29,25 +29,7 @@ import { compact } from './GrammarPageHelpers';
 
 export type { Rule, QuizItem };
 
-export const GrammarLessonContent = ({
-  selectedRule,
-  selectedProgress,
-  selectedStatus,
-  selectedModule,
-  rules,
-  totalGrammarLessons,
-  masteredCount,
-  grammarPoolIds,
-  linkedVocabulary,
-  recordUsage,
-  quizOpen,
-  setQuizOpen,
-  hintOpen,
-  setHintOpen,
-  quizAnswers,
-  setQuizAnswers,
-  quizItems,
-}: {
+type GrammarLessonContentProps = {
   selectedRule: Rule;
   selectedProgress: GrammarRuleProgress;
   selectedStatus: 'New' | 'Practicing' | 'Needs Reading/Writing' | 'Mastered';
@@ -65,7 +47,103 @@ export const GrammarLessonContent = ({
   quizAnswers: Record<number, string>;
   setQuizAnswers: (fn: (prev: Record<number, string>) => Record<number, string>) => void;
   quizItems: QuizItem[];
+};
+
+type GrammarTranslation = NonNullable<ReturnType<typeof useGrammarTranslation>['translation']>;
+type GrammarLanguage = ReturnType<typeof useGrammarTranslation>['language'];
+
+const TeacherExplanationSection = ({
+  selectedRule,
+  grammarTranslation,
+  grammarLanguage,
+}: {
+  selectedRule: Rule;
+  grammarTranslation: GrammarTranslation | null;
+  grammarLanguage: GrammarLanguage;
 }) => {
+  return (
+    <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
+      <SectionHeading
+        title={
+          grammarTranslation?.title
+            ? `Teacher Explanation — ${grammarTranslation.title}`
+            : 'Teacher Explanation'
+        }
+      />
+      <p className="mt-2 text-xs leading-relaxed">
+        {compact(selectedRule.explanation, selectedRule.definition)}
+      </p>
+      {grammarTranslation && grammarLanguage !== 'en' && (
+        <p className="mt-2 rounded-[4px] border border-primary/25 bg-primary/5 p-3 text-xs leading-relaxed text-primary">
+          {grammarLanguage === 'tr'
+            ? 'Türkçe açıklama:'
+            : `${grammarLanguage.toUpperCase()} açıklama:`}{' '}
+          {grammarTranslation.explanation}
+        </p>
+      )}
+      {grammarLanguage === 'tr' && (
+        <p className="mt-2 rounded-[4px] border border-border-soft bg-background p-3 text-xs leading-relaxed text-muted-copy">
+          Turkish speaker note: {selectedRule.turkishExplanation}
+        </p>
+      )}
+    </div>
+  );
+};
+
+const CommonMistakeSection = ({
+  selectedRule,
+  grammarTranslation,
+  grammarLanguage,
+}: {
+  selectedRule: Rule;
+  grammarTranslation: GrammarTranslation | null;
+  grammarLanguage: GrammarLanguage;
+}) => {
+  return (
+    <div className="rounded-[4px] border border-rose-200 bg-rose-50 p-4">
+      <p className="text-[11px] font-bold uppercase tracking-wide text-rose-700">Common Mistake</p>
+      <div className="mt-2 grid gap-2 md:grid-cols-2">
+        <div>
+          <p className="break-words text-xs font-bold text-rose-900">
+            {selectedRule.badExampleEnglish}
+          </p>
+          <p className="mt-1 break-words text-xs leading-relaxed text-rose-800">
+            {grammarLanguage !== 'en' && grammarTranslation?.badExampleTurkishExplanation
+              ? grammarTranslation.badExampleTurkishExplanation
+              : selectedRule.badExampleTurkishExplanation || selectedRule.commonMistakes}
+          </p>
+        </div>
+        <div className="rounded-[4px] border border-success/30 bg-surface p-3 shadow-sm">
+          <p className="text-[11px] font-bold uppercase text-success">Better</p>
+          <p className="mt-1 break-words text-xs font-bold">
+            {selectedRule.correctedExampleEnglish}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const GrammarLessonContent = (props: GrammarLessonContentProps) => {
+  const {
+    selectedRule,
+    selectedProgress,
+    selectedStatus,
+    selectedModule,
+    rules,
+    totalGrammarLessons,
+    masteredCount,
+    grammarPoolIds,
+    linkedVocabulary,
+    recordUsage,
+    quizOpen,
+    setQuizOpen,
+    hintOpen,
+    setHintOpen,
+    quizAnswers,
+    setQuizAnswers,
+    quizItems,
+  } = props;
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState('');
   const [isTalking, setIsTalking] = useState(false);
@@ -83,8 +161,10 @@ export const GrammarLessonContent = ({
       }
     : null;
 
-  const { translation: grammarTranslation, language: grammarLanguage } =
-    useGrammarTranslation(ruleForTranslation, { enableAiFallback: true });
+  const { translation: grammarTranslation, language: grammarLanguage } = useGrammarTranslation(
+    ruleForTranslation,
+    { enableAiFallback: true }
+  );
 
   useEffect(() => {
     setMessages([
@@ -134,24 +214,11 @@ export const GrammarLessonContent = ({
 
       <LinkedVocabularySection linkedVocabulary={linkedVocabulary} />
 
-      <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
-        <SectionHeading
-          title={grammarTranslation?.title ? `Teacher Explanation — ${grammarTranslation.title}` : 'Teacher Explanation'}
-        />
-        <p className="mt-2 text-xs leading-relaxed">
-          {compact(selectedRule.explanation, selectedRule.definition)}
-        </p>
-        {grammarTranslation && grammarLanguage !== 'en' && (
-          <p className="mt-2 rounded-[4px] border border-primary/25 bg-primary/5 p-3 text-xs leading-relaxed text-primary">
-            {grammarLanguage === 'tr' ? 'Türkçe açıklama:' : `${grammarLanguage.toUpperCase()} açıklama:`} {grammarTranslation.explanation}
-          </p>
-        )}
-        {grammarLanguage === 'tr' && (
-          <p className="mt-2 rounded-[4px] border border-border-soft bg-background p-3 text-xs leading-relaxed text-muted-copy">
-            Turkish speaker note: {selectedRule.turkishExplanation}
-          </p>
-        )}
-      </div>
+      <TeacherExplanationSection
+        selectedRule={selectedRule}
+        grammarTranslation={grammarTranslation}
+        grammarLanguage={grammarLanguage}
+      />
 
       <div className="grid gap-3 md:grid-cols-2">
         <div className="rounded-[4px] border border-primary/25 bg-surface-hover p-4">
@@ -191,29 +258,11 @@ export const GrammarLessonContent = ({
         </div>
       </div>
 
-      <div className="rounded-[4px] border border-rose-200 bg-rose-50 p-4">
-        <p className="text-[11px] font-bold uppercase tracking-wide text-rose-700">
-          Common Mistake
-        </p>
-        <div className="mt-2 grid gap-2 md:grid-cols-2">
-          <div>
-            <p className="break-words text-xs font-bold text-rose-900">
-              {selectedRule.badExampleEnglish}
-            </p>
-            <p className="mt-1 break-words text-xs leading-relaxed text-rose-800">
-              {grammarLanguage !== 'en' && grammarTranslation?.badExampleTurkishExplanation
-                ? grammarTranslation.badExampleTurkishExplanation
-                : selectedRule.badExampleTurkishExplanation || selectedRule.commonMistakes}
-            </p>
-          </div>
-          <div className="rounded-[4px] border border-success/30 bg-surface p-3 shadow-sm">
-            <p className="text-[11px] font-bold uppercase text-success">Better</p>
-            <p className="mt-1 break-words text-xs font-bold">
-              {selectedRule.correctedExampleEnglish}
-            </p>
-          </div>
-        </div>
-      </div>
+      <CommonMistakeSection
+        selectedRule={selectedRule}
+        grammarTranslation={grammarTranslation}
+        grammarLanguage={grammarLanguage}
+      />
 
       <ChatPanel
         messages={messages}

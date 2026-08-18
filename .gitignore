@@ -105,6 +105,9 @@ bundle-report.html
 
 # One-time analysis outputs
 analysis_output/
+depcruise-output.txt
+test-output.txt
+test-vocab.txt
 *.py
 !.env.example
 !scripts/.env.example

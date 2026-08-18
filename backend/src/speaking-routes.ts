@@ -296,6 +296,64 @@ function mapTranscriptScores(
   };
 }
 
+type SpeakingScore = Omit<
+  SpeakingSubmission,
+  'id' | 'promptId' | 'audioUrl' | 'submittedAt' | 'status'
+>;
+
+// STT entegrasyonu: audioUrl varsa AI ile transcript elde et. Pronunciation ve
+// fluency skorları STT metnine dayalı heuristiklerle tahmin edilir (gerçek STT
+// servisleri bu metrikleri kendi üretir; şimdilik AI tahmini kullanıyoruz).
+const transcribeWithStt = async (
+  userId: string,
+  audioUrl: string,
+  aiService: AiService
+): Promise<{ transcript?: string; pronunciationScore?: number; fluencyScore?: number }> => {
+  enforceAiLimits(userId);
+  const sttPrompt = `Transcribe the following audio and return ONLY the text in plain format. Do not add any additional commentary or formatting.\nAudio URL: ${audioUrl}`;
+  const sttResult = await speakingCircuitBreaker.execute(() =>
+    aiService.complete('transcribeAudio', {
+      prompt: sttPrompt,
+      context: {},
+    })
+  );
+  if (!sttResult.mockMode && sttResult.text) {
+    return {
+      transcript: sttResult.text.trim(),
+      pronunciationScore: estimatePronunciationScore(sttResult.text),
+      fluencyScore: estimateFluencyScore(sttResult.text),
+    };
+  }
+  return {};
+};
+
+// Transcript varsa grammar/kelime değerlendirmesi yap; AI yanıtı yoksa ya da
+// servis başarısız olursa mock skorlara düş.
+const evaluateTranscript = async (
+  userId: string,
+  transcript: string,
+  pronunciationScore: number | undefined,
+  fluencyScore: number | undefined,
+  aiService: AiService
+): Promise<SpeakingScore> => {
+  enforceAiLimits(userId);
+  try {
+    const aiPrompt = `Evaluate this engineering student's spoken response transcript.\nTranscript:\n"""\n${transcript}\n"""\nProvide grammar and vocabulary feedback. Return ONLY a valid JSON object matching the structural analysis schema.`;
+    const aiResult = await speakingCircuitBreaker.execute(() =>
+      aiService.complete('evaluateEngineeringEnglish', {
+        prompt: aiPrompt,
+        context: {},
+      })
+    );
+    if (!aiResult.mockMode && aiResult.structuredResult) {
+      return mapTranscriptScores(aiResult.structuredResult, pronunciationScore, fluencyScore);
+    }
+    return mockScore();
+  } catch {
+    return mockScore();
+  }
+};
+
 export const registerSpeakingRoutes = (
   app: Express,
   requireBackendAuth: RequestHandler,
@@ -401,29 +459,17 @@ export const registerSpeakingRoutes = (
           transcript?: string;
         };
 
-        // STT entegrasyonu: Eğer audioUrl varsa, transcript yoksa veya boşsa STT ile transcript elde et
         let finalTranscript = transcript?.trim();
         let pronunciationScore: number | undefined;
         let fluencyScore: number | undefined;
 
-        if (audioUrl && (!finalTranscript || finalTranscript.length === 0)) {
-          // STT ile audioUrl'den transcript elde et
+        if (audioUrl && !finalTranscript) {
           try {
-            enforceAiLimits(userId);
-            const sttPrompt = `Transcribe the following audio and return ONLY the text in plain format. Do not add any additional commentary or formatting.\nAudio URL: ${audioUrl}`;
-            const sttResult = await speakingCircuitBreaker.execute(() =>
-              aiService.complete('transcribeAudio', {
-                prompt: sttPrompt,
-                context: {},
-              })
-            );
-            if (!sttResult.mockMode && sttResult.text) {
-              finalTranscript = sttResult.text.trim();
-              // STT sonucu başarılıysa pronunciation ve fluency skorlarını tahmin et
-              // Bu, gerçek STT servisleri (Whisper, Google STT) tarafından sağlanabilecek metriklerdir
-              // Şimdilik AI'ya dayalı tahmin yapıyoruz
-              pronunciationScore = estimatePronunciationScore(sttResult.text);
-              fluencyScore = estimateFluencyScore(sttResult.text);
+            const stt = await transcribeWithStt(userId, audioUrl, aiService);
+            if (stt.transcript) {
+              finalTranscript = stt.transcript;
+              pronunciationScore = stt.pronunciationScore;
+              fluencyScore = stt.fluencyScore;
             }
           } catch (sttError) {
             logger.warn('STT transcription failed, falling back to mock or provided transcript', {
@@ -433,39 +479,16 @@ export const registerSpeakingRoutes = (
           }
         }
 
-        // Transcript varsa (orijinal veya STT'den elde edilmiş) grammar/kelime değerlendirmesi yap
-        let scoring: Omit<
-          SpeakingSubmission,
-          'id' | 'promptId' | 'audioUrl' | 'submittedAt' | 'status'
-        >;
-
-        if (finalTranscript && finalTranscript.length > 0) {
-          enforceAiLimits(userId);
-          try {
-            const aiPrompt = `Evaluate this engineering student's spoken response transcript.\nTranscript:\n"""\n${finalTranscript}\n"""\nProvide grammar and vocabulary feedback. Return ONLY a valid JSON object matching the structural analysis schema.`;
-            const aiResult = await speakingCircuitBreaker.execute(() =>
-              aiService.complete('evaluateEngineeringEnglish', {
-                prompt: aiPrompt,
-                context: {},
-              })
-            );
-
-            if (!aiResult.mockMode && aiResult.structuredResult) {
-              scoring = mapTranscriptScores(
-                aiResult.structuredResult,
+        const scoring: SpeakingScore =
+          finalTranscript && finalTranscript.length > 0
+            ? await evaluateTranscript(
+                userId,
+                finalTranscript,
                 pronunciationScore,
-                fluencyScore
-              );
-            } else {
-              scoring = mockScore();
-            }
-          } catch {
-            scoring = mockScore();
-          }
-        } else {
-          // No transcript provided and STT failed -> fall back to mock scoring
-          scoring = mockScore();
-        }
+                fluencyScore,
+                aiService
+              )
+            : mockScore();
 
         const submissionId = randomUUID();
 

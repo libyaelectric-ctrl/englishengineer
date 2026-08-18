@@ -121,6 +121,44 @@ const base64UrlBytes = (value: string): Uint8Array => {
   return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
 };
 
+interface DecodedClerkToken {
+  header: { kid?: string };
+  payload: ClerkClaims;
+  signingInput: string;
+  signature: Uint8Array;
+}
+
+const decodeClerkToken = (token: string): DecodedClerkToken | null => {
+  const parts = token.split('.');
+  if (parts.length !== 3) return null;
+  const [headerB64, payloadB64, signatureB64] = parts;
+  try {
+    return {
+      header: JSON.parse(Buffer.from(headerB64!, 'base64').toString('utf8')) as { kid?: string },
+      payload: JSON.parse(Buffer.from(payloadB64!, 'base64').toString('utf8')) as ClerkClaims,
+      signingInput: `${headerB64}.${payloadB64}`,
+      signature: base64UrlBytes(signatureB64!),
+    };
+  } catch {
+    return null;
+  }
+};
+
+const hasValidClerkClaims = (payload: ClerkClaims, issuer: string, now: number): boolean => {
+  if (typeof payload.sub !== 'string' || !payload.sub) return false;
+  if (typeof payload.iss !== 'string' || payload.iss !== issuer) return false;
+  if (typeof payload.exp === 'number' && payload.exp < now) return false;
+  if (typeof payload.nbf === 'number' && payload.nbf > now) return false;
+  return true;
+};
+
+const toAuthenticatedUser = (payload: ClerkClaims): AuthenticatedUser => ({
+  userId: payload.sub as string,
+  email: typeof payload.email === 'string' ? payload.email : undefined,
+  role: typeof payload.role === 'string' ? payload.role : undefined,
+  source: 'clerk-jwt',
+});
+
 /**
  * Verifies a Clerk session JWT against the instance's JWKS using WebCrypto
  * (RS256). No Clerk SDK is required for verification — the public signing key
@@ -134,28 +172,14 @@ const verifyClerkToken = async (
   fetchImpl: typeof fetch
 ): Promise<AuthenticatedUser | null> => {
   if (!issuer) return null;
-  const parts = token.split('.');
-  if (parts.length !== 3) return null;
-
-  const [headerB64, payloadB64, signatureB64] = parts;
-  let header: { kid?: string } = {};
-  let payload: ClerkClaims = {};
-  try {
-    header = JSON.parse(Buffer.from(headerB64!, 'base64').toString('utf8'));
-    payload = JSON.parse(Buffer.from(payloadB64!, 'base64').toString('utf8'));
-  } catch {
+  const decoded = decodeClerkToken(token);
+  if (!decoded) return null;
+  if (!hasValidClerkClaims(decoded.payload, issuer, Math.floor(Date.now() / 1000))) {
     return null;
   }
 
-  if (typeof payload.sub !== 'string' || !payload.sub) return null;
-  if (typeof payload.iss !== 'string' || payload.iss !== issuer) return null;
-
-  const now = Math.floor(Date.now() / 1000);
-  if (typeof payload.exp === 'number' && payload.exp < now) return null;
-  if (typeof payload.nbf === 'number' && payload.nbf > now) return null;
-
   const keys = await fetchClerkJwks(issuer, fetchImpl);
-  const key = keys.find((candidate) => candidate.kid === header.kid);
+  const key = keys.find((candidate) => candidate.kid === decoded.header.kid);
   if (!key?.n || !key.e) return null;
 
   try {
@@ -169,19 +193,11 @@ const verifyClerkToken = async (
     const valid = await subtle.verify(
       'RSASSA-PKCS1-v1_5',
       cryptoKey,
-      // Same DOM/Node typed-array overlap handled in verifyJwtLocally; the
-      // value is a real buffer at runtime.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      base64UrlBytes(signatureB64!) as any,
-      new TextEncoder().encode(`${headerB64}.${payloadB64}`)
+      Buffer.from(decoded.signature),
+      new TextEncoder().encode(decoded.signingInput)
     );
     if (!valid) return null;
-    return {
-      userId: payload.sub,
-      email: typeof payload.email === 'string' ? payload.email : undefined,
-      role: typeof payload.role === 'string' ? payload.role : undefined,
-      source: 'clerk-jwt',
-    };
+    return toAuthenticatedUser(decoded.payload);
   } catch {
     return null;
   }
