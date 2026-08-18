@@ -13,10 +13,7 @@ export type { DisciplinePalette } from './discipline-palette';
 
 export { PathStageColumn } from './components/PathStageColumn';
 export { MasteryOverview } from './components/MasteryOverview';
+export { DashboardLearningPipeline } from './components/DashboardLearningPipeline';
+export { ConceptCPipelineView } from './components/ConceptCPipelineView';
 
-export type {
-  LearningPath,
-  PathLevel,
-  PathLevelStatus,
-  PathStage,
-} from './learning-path.types';
+export type { LearningPath, PathLevel, PathLevelStatus, PathStage } from './learning-path.types';
