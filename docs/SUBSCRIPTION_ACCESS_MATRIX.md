@@ -48,30 +48,32 @@ Locked items show a lock icon; clicking opens `LockedFeatureModal` naming the
 required plan ("…is included in the **Senior** plan") with **See plans** →
 `/pricing`. Free-tier items navigate normally.
 
-| Menu item        | Path                 | Required feature | Minimum plan                    |
-| ---------------- | -------------------- | ---------------- | ------------------------------- |
-| Home             | `/dashboard`         | —                | Free                            |
-| Learning Path    | `/learning-path`     | —                | Free                            |
-| **Skills**       |                      |                  |                                 |
-| Vocabulary       | `/vocabulary`        | `vocabulary`     | Free                            |
-| Grammar          | `/grammar`           | `grammar`        | Free                            |
-| Reading          | `/reading`           | `reading`        | Senior                          |
-| Writing          | `/writing`           | `writing`        | Senior                          |
-| Listening        | `/listening`         | `listening`      | Specialist                      |
-| Speaking         | `/speaking`          | `speaking`       | Specialist                      |
-| **Progress**     | `/progress/*`        | —                | Free                            |
-| **Learning Hub** |                      |                  |                                 |
-| Today            | `/curriculum/today`  | —                | Free                            |
-| Curriculum       | `/curriculum/full`   | `learningHub`    | Junior                          |
-| Learning Memory  | `/curriculum/memory` | `learningHub`    | Junior                          |
-| Placement Test   | `/placement`         | `placementTest`  | Junior                          |
-| **Tools**        |                      |                  |                                 |
-| Work Tools       | `/tools/work`        | `tool`           | Master                          |
-| Quick Tools      | `/tools/quick`       | `tool`           | Master                          |
-| AI Copilot       | `/tools/ai`          | `aiCoach`        | Master                          |
-| Translator       | `/translator`        | `translator`     | Senior                          |
-| Team             | `/team`              | —                | **always locked** (coming soon) |
-| Profile          | `/profile/*`         | —                | Free                            |
+| Menu item            | Path                          | Required feature | Minimum plan                    |
+| -------------------- | ----------------------------- | ---------------- | ------------------------------- |
+| Home                 | `/dashboard`                  | —                | Free                            |
+| Learning Path        | `/learning-path`              | —                | Free                            |
+| **Skills**           |                               |                  |                                 |
+| Vocabulary           | `/vocabulary`                 | `vocabulary`     | Free                            |
+| Grammar              | `/grammar`                    | `grammar`        | Free                            |
+| Reading              | `/reading`                    | `reading`        | Senior                          |
+| Writing              | `/writing`                    | `writing`        | Senior                          |
+| Listening            | `/listening`                  | `listening`      | Specialist                      |
+| Speaking             | `/speaking`                   | `speaking`       | Specialist                      |
+| **Progress**         | `/progress/*`                 | —                | Free                            |
+| **Learning Hub**     |                               |                  |                                 |
+| Today                | `/curriculum/today`           | —                | Free                            |
+| Curriculum           | `/curriculum/full`            | `learningHub`    | Junior                          |
+| Learning Memory      | `/curriculum/memory`          | `learningHub`    | Junior                          |
+| Placement Test       | `/placement`                  | `placementTest`  | Junior                          |
+| **Tools**            |                               |                  |                                 |
+| Work Tools           | `/tools/work`                 | `tool`           | Master                          |
+| Quick Tools          | `/tools/quick`                | `tool`           | Master                          |
+| AI Copilot           | `/tools/ai`                   | `aiCoach`        | Master                          |
+| AI Analytics         | AI widget (kişisel panel)     | `aiAnalytics`    | Free (kendi kullanımı)          |
+| AI Analytics (admin) | `GET /api/ai/analytics/admin` | `aiAnalytics`    | admin rolü                      |
+| Translator           | `/translator`                 | `translator`     | Senior                          |
+| Team                 | `/team`                       | —                | **always locked** (coming soon) |
+| Profile              | `/profile/*`                  | —                | Free                            |
 
 ---
 

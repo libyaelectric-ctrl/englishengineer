@@ -9,6 +9,7 @@ import { normalizePlanId } from './billing-plan-migration.js';
 import { getOrSet } from './cache/redis-cache.service.js';
 import { checkUserLimits } from './cost-tracker.js';
 import { ApiError } from './errors.js';
+import { requireRole } from './middleware/rbac.middleware.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
 import { CircuitBreaker } from './utils/circuit-breaker.js';
 import { AiRequestBodySchema, validateBody } from './validation.js';
@@ -191,10 +192,14 @@ export const registerAIRoutes = (
     ai?: { rateLimitWindowMs?: number; rateLimitMax?: number };
     stripe?: Record<string, unknown>;
     supabase?: Record<string, unknown>;
+    ledger?: { filePath?: string };
   },
   _fetchImpl: typeof fetch = fetch
 ): void => {
-  const ledger = createAiLedger(config as unknown as Parameters<typeof createAiLedger>[0]);
+  const ledger = createAiLedger({
+    ...config,
+    ledger: { filePath: config.ledger?.filePath ?? process.env.AI_LEDGER_FILE },
+  } as unknown as Parameters<typeof createAiLedger>[0]);
   const configured = Boolean(
     config.stripe && (config.stripe as Record<string, unknown>).configured
   );
@@ -280,7 +285,48 @@ export const registerAIRoutes = (
         const userId = request.auth?.userId;
         if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
         const analytics = await ledger.getUserAnalytics(userId);
-        response.json({ userId, ...analytics });
+
+        const subscription = billingRepository
+          ? await billingRepository.getSubscriptionStatus(userId)
+          : null;
+        const planId = resolvePlanId(subscription, configured);
+        const limits = getPlanLimits(planId);
+        const activeLimit = limits.daily ?? limits.monthly;
+        const used = await ledger.countRecentRequests(userId, planId);
+
+        response.json({
+          userId,
+          planId,
+          limits: {
+            used,
+            remaining: Math.max(0, activeLimit - used),
+            daily: limits.daily,
+            monthly: limits.monthly,
+          },
+          ...analytics,
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+
+  app.get(
+    '/api/ai/analytics/admin',
+    requireBackendAuth,
+    requireRole(['admin']),
+    rateLimiter,
+    async (_request: Request, response: Response, next: NextFunction) => {
+      try {
+        const adminAnalytics = await ledger.getAdminAnalytics();
+        const { getPromptVersionTelemetry } = await import('./ai-core/prompt-version-telemetry.js');
+        response.json({
+          success: true,
+          data: {
+            ...adminAnalytics,
+            promptVersionUsage: getPromptVersionTelemetry(),
+          },
+        });
       } catch (error) {
         next(error);
       }

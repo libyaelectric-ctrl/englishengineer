@@ -4,11 +4,13 @@ import type { AiConfig } from '../../types.js';
 import { ApiError } from '../errors.js';
 import { logger } from '../logger.js';
 import {
+  getBundledPromptVersion,
   getContentGenerationInstructionAsync,
   getCustomPracticePrompt,
   getJsonStructureInstructionAsync,
   getResolvedPromptVersion,
 } from '../prompts/prompt-loader.js';
+import { recordPromptVersionUsage } from './prompt-version-telemetry.js';
 import { callAnthropic, callGemini, callOpenAI, mockText } from './providers.js';
 import type { ProviderConfig } from './providers.js';
 
@@ -176,7 +178,16 @@ export const createAIService = (config: AiConfig, fetchImpl: typeof fetch = fetc
 
     const instructionKey =
       operation === 'generateContent' ? 'content-generation' : 'json-structure';
-    const resolvedVersion = structured && getResolvedPromptVersion(instructionKey);
+    const resolvedVersion = structured ? getResolvedPromptVersion(instructionKey) : null;
+
+    if (structured && resolvedVersion) {
+      recordPromptVersionUsage(
+        instructionKey,
+        resolvedVersion.version,
+        resolvedVersion.source,
+        getBundledPromptVersion(instructionKey)
+      );
+    }
 
     return {
       contractVersion: AI_CONTRACT_VERSION,
