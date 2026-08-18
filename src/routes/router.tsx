@@ -46,7 +46,6 @@ const Placement = lazy(() => import('@/pages/PlacementPage'));
 const Translator = lazy(() => import('@/pages/TranslatorPage'));
 const LearningPath = lazy(() => import('@/pages/LearningPathPage'));
 const LessonRunner = lazy(() => import('@/pages/LessonRunnerPage'));
-const AuthCallbackPage = lazy(() => import('@/pages/AuthCallbackPage'));
 const ClerkAuthPage = lazy(() => import('@/pages/ClerkAuthPage'));
 
 export const router = createBrowserRouter([
@@ -274,11 +273,6 @@ export const router = createBrowserRouter([
         <ClerkAuthPage mode="sign-up" />
       </Suspense>
     ),
-  },
-  {
-    path: '/auth/callback',
-    errorElement: <RouteErrorPage />,
-    element: withSuspense(AuthCallbackPage),
   },
   {
     path: CLERK_SIGN_IN_URL,

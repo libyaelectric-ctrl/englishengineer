@@ -2,7 +2,10 @@ import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
 import { IdService } from '@/core/ids';
 
-import { getSupabaseClient, isSupabaseConfigured } from '@/features/auth';
+import {
+  getSupabaseClient,
+  isSupabaseConfigured,
+} from '@/shared/services/auth-backend/supabase.client';
 
 import { DEMO_TEAM_WORKSPACE } from './team.data';
 import type {

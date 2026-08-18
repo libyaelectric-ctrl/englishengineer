@@ -28,17 +28,15 @@ const PricingPage = () => {
   const pricingCopy = getPricingCopy(language);
   const publicCopy = getPublicPageCopy(language);
   const currentUser = useAuthStore((state) => state.currentUser);
-  const { initialize: initializeAuth } = useAuthStore();
 
   const [isAnnual, setIsAnnual] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   useEffect(() => {
-    void initializeAuth();
     ProductAnalyticsService.track('screen_viewed', 'pricing');
     ProductAnalyticsService.trackOnce('paywall_viewed', 'pricing');
-  }, [initializeAuth]);
+  }, []);
 
   const { isLoading: isCheckoutLoading, startCheckout, subscription } = useBillingStore();
 

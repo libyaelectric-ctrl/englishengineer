@@ -108,10 +108,6 @@ vi.mock('@/shared/components/MetricCard', () => ({
   MetricCard: () => null,
 }));
 
-vi.mock('@/shared/components/SkillLockedState', () => ({
-  SkillLockedState: () => null,
-}));
-
 describe('WritingPage', () => {
   it('renders without crashing', () => {
     render(

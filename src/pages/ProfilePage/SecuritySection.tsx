@@ -1,12 +1,9 @@
-import { Download, History, Key, Lock, Shield, ShieldCheck, Trash2 } from 'lucide-react';
+import { Download, History, Key, Lock, ShieldCheck, Trash2 } from 'lucide-react';
 
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 
-import { CloudSyncStatusPanel } from '@/features/auth';
-
 interface SecuritySectionProps {
-  providerMode: 'local' | 'supabase';
   showClearConfirmation: boolean;
   setShowClearConfirmation: (show: boolean | ((prev: boolean) => boolean)) => void;
   clearConfirmation: string;
@@ -17,7 +14,6 @@ interface SecuritySectionProps {
 }
 
 export const SecuritySection = ({
-  providerMode,
   showClearConfirmation,
   setShowClearConfirmation,
   clearConfirmation,
@@ -33,23 +29,10 @@ export const SecuritySection = ({
     {/* Section: Access Control Terminal */}
     <SectionCard
       title="Security, Privacy & Data"
-      subtitle="Local storage data administration, privacy controls, and backup operations"
+      subtitle="Account, privacy controls, and backup operations"
       icon={ShieldCheck}
     >
       <div className="space-y-6 relative z-10">
-        {/* Cloud Sync section */}
-        <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
-          <div className="flex justify-between items-center border-b border-border-soft pb-2 mb-4">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-primary flex items-center gap-1.5">
-              <Shield className="h-4 w-4" /> Cloud Synced Records
-            </span>
-            <span className="rounded-[4px] border border-primary/25 bg-primary/5 px-2 py-0.5 text-[10px] font-mono font-bold text-primary uppercase tracking-wider">
-              {providerMode === 'supabase' ? 'CLOUD-ACTIVE' : 'LOCAL-PERSISTENCE'}
-            </span>
-          </div>
-          <CloudSyncStatusPanel providerMode={providerMode} />
-        </div>
-
         {/* Change Password Configuration Card */}
         <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm space-y-4">
           <div className="flex items-center gap-1.5 border-b border-border-soft pb-2">
@@ -107,7 +90,8 @@ export const SecuritySection = ({
               Multi-Factor Authentication (MFA)
             </span>
             <span className="text-xs text-muted-copy font-medium block">
-              Secure your account using hardware keys or authenticator apps (TOTP).
+              Secure your account using hardware keys or authenticator apps (TOTP), managed through
+              Clerk.
             </span>
           </div>
           <div className="flex items-center gap-3 shrink-0">
@@ -184,45 +168,35 @@ export const SecuritySection = ({
             Completely erase all study sessions, mistake history, and vocabulary data from this
             local device. This action is irreversible.
           </p>
+          <Button
+            type="button"
+            variant="danger"
+            onClick={() => setShowClearConfirmation((val) => !val)}
+            className="text-xs min-h-9 bg-rose-600 hover:bg-rose-500 border border-rose-600 text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5"
+          >
+            <Trash2 className="h-3.5 w-3.5 mr-1" /> Clear this device
+          </Button>
 
-          {providerMode === 'local' ? (
-            <>
+          {showClearConfirmation && (
+            <div className="mt-4 rounded-[4px] border border-rose-500/25 bg-surface p-4 shadow-sm animate-in fade-in duration-300">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-rose-600 block">
+                Type CLEAR to remove local progress from this browser.
+                <input
+                  value={clearConfirmation}
+                  onChange={(event) => setClearConfirmation(event.target.value.toUpperCase())}
+                  className="mt-2 min-h-10 w-full rounded-[4px] border border-rose-500/25 bg-surface px-3 text-xs text-foreground outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500/10 font-bold shadow-sm"
+                />
+              </label>
               <Button
                 type="button"
                 variant="danger"
-                onClick={() => setShowClearConfirmation((val) => !val)}
-                className="text-xs min-h-9 bg-rose-600 hover:bg-rose-500 border border-rose-600 text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5"
+                className="mt-3 text-xs bg-rose-600 hover:bg-rose-500 border border-rose-600 text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm min-h-9 px-4 flex items-center justify-center"
+                disabled={clearConfirmation !== 'CLEAR'}
+                onClick={() => void clearLocalData()}
               >
-                <Trash2 className="h-3.5 w-3.5 mr-1" /> Clear this device
+                Confirm local data removal
               </Button>
-
-              {showClearConfirmation && (
-                <div className="mt-4 rounded-[4px] border border-rose-500/25 bg-surface p-4 shadow-sm animate-in fade-in duration-300">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-rose-600 block">
-                    Type CLEAR to remove local progress from this browser.
-                    <input
-                      value={clearConfirmation}
-                      onChange={(event) => setClearConfirmation(event.target.value.toUpperCase())}
-                      className="mt-2 min-h-10 w-full rounded-[4px] border border-rose-500/25 bg-surface px-3 text-xs text-foreground outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500/10 font-bold shadow-sm"
-                    />
-                  </label>
-                  <Button
-                    type="button"
-                    variant="danger"
-                    className="mt-3 text-xs bg-rose-600 hover:bg-rose-500 border border-rose-600 text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm min-h-9 px-4 flex items-center justify-center"
-                    disabled={clearConfirmation !== 'CLEAR'}
-                    onClick={() => void clearLocalData()}
-                  >
-                    Confirm local data removal
-                  </Button>
-                </div>
-              )}
-            </>
-          ) : (
-            <p className="text-xs text-muted-copy font-medium">
-              Cloud account administration is managed via Supabase. Local data clearing is only
-              available in Guest/Local profile modes.
-            </p>
+            </div>
           )}
         </div>
 

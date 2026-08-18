@@ -13,7 +13,6 @@ import { storage } from '@/shared/storage';
 import { createBackendProxyProvider } from '@/features/ai/backend-proxy.provider';
 import { createMockAIProvider } from '@/features/ai/mock-ai.provider';
 import { AssessmentService } from '@/features/assessment';
-import { AuthService } from '@/features/auth';
 import { BillingService } from '@/features/billing';
 import { ListeningService } from '@/features/listening';
 import { LISTENING_MISSIONS } from '@/features/listening/listening.data';
@@ -50,20 +49,7 @@ describe('EngVox release candidate E2E smoke fallback', () => {
     expect(router.routes.some((route) => route.path === '/login')).toBe(true);
   });
 
-  it('2. demo local login works', async () => {
-    const user = await AuthService.demoLogin();
-
-    expect(user.displayName).toBe('Demo Engineer');
-    expect(user.email).toBe('demo.engineer@local.EngVox');
-    expect(user.location).toBe('Local Lite workspace');
-  });
-
-  it('3. auth provider readiness is explicit in every environment', () => {
-    expect(['local', 'supabase']).toContain(AuthService.getProviderMode());
-    expect(AuthService.getReadinessLabel()).toMatch(/local|Supabase/i);
-  });
-
-  it('4. reading mission submit persists progress', () => {
+  it('2. reading mission submit persists progress', () => {
     const mission = ReadingService.getMissions()[0];
     const result = ReadingService.submitSubmission(
       {
@@ -205,18 +191,7 @@ describe('EngVox release candidate E2E smoke fallback', () => {
     ).rejects.toThrow();
   });
 
-  it('17. profile update works in local auth mode', async () => {
-    await AuthService.demoLogin();
-    const user = await AuthService.updateProfile({
-      displayName: 'QA/QC Engineer',
-      role: 'QA/QC Engineer',
-    });
-
-    expect(user.displayName).toBe('QA/QC Engineer');
-    expect(user.role).toBe('QA/QC Engineer');
-  });
-
-  it('18. offline local progress persistence survives service reload', () => {
+  it('17. offline local progress persistence survives service reload', () => {
     const mission = ListeningService.getMissions()[0];
     ListeningService.saveResumePosition(mission.id, 42);
 

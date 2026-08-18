@@ -1,9 +1,12 @@
 import { eventBus } from '@/core/events/event-bus';
 
 import { logger } from '@/shared/logger';
+import {
+  getSupabaseClient,
+  isSupabaseConfigured,
+} from '@/shared/services/auth-backend/supabase.client';
 
 import { useAuthStore } from '@/features/auth';
-import { getSupabaseClient, isSupabaseConfigured } from '@/features/auth/supabase.client';
 
 import { useLearningStore } from './learning.store';
 

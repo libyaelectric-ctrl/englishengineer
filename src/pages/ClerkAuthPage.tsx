@@ -3,12 +3,9 @@ import { SignIn, SignUp } from '@clerk/clerk-react';
 import { useLocation } from 'react-router-dom';
 
 import {
-  CLERK_PUBLISHABLE_KEY,
   CLERK_SIGN_IN_FALLBACK_REDIRECT_URL,
   CLERK_SIGN_UP_FALLBACK_REDIRECT_URL,
 } from '@/features/auth/clerk.config';
-
-import LoginPage from './LoginPage';
 
 interface ClerkAuthPageProps {
   mode: 'sign-in' | 'sign-up';
@@ -32,10 +29,6 @@ const getReturnTarget = (search: string, state: ClerkLocationState): string | un
 const ClerkAuthPage = ({ mode }: ClerkAuthPageProps) => {
   const location = useLocation();
   const returnTarget = getReturnTarget(location.search, location.state as ClerkLocationState);
-
-  if (!CLERK_PUBLISHABLE_KEY) {
-    return <LoginPage />;
-  }
 
   const signInAfter = returnTarget ?? CLERK_SIGN_IN_FALLBACK_REDIRECT_URL;
   const signUpAfter = returnTarget ?? CLERK_SIGN_UP_FALLBACK_REDIRECT_URL;

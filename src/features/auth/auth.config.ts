@@ -1,1 +1,0 @@
-export { AUTH_CONFIG, isLocalAuthAllowed, type SupabaseReadyConfig } from '@/shared/services/auth-backend/auth.config';

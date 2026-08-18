@@ -14,13 +14,17 @@ import {
 
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
-import { CORE_VOCABULARY_WORD_COUNT, DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
+import {
+  CORE_VOCABULARY_WORD_COUNT,
+  DISCIPLINE_META,
+} from '@/shared/constants/engineering-disciplines';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { INTERFACE_LANGUAGES } from '@/features/localization/localization.data';
 import { useLocalizationStore } from '@/features/localization/localization.store';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
-import { ContentPreview } from '@/pages/OnboardingPage/steps/ContentPreview';
+
+import { ContentPreview } from '@/pages/ProfilePage/ContentPreview';
 
 const DISCIPLINE_ICONS: Record<EngineeringDiscipline, typeof Bot> = {
   architecture: Building2,

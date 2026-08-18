@@ -73,10 +73,6 @@ vi.mock('@/shared/components/SectionCard', () => ({
   SectionCard: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
-vi.mock('@/shared/components/SkillLockedState', () => ({
-  SkillLockedState: () => null,
-}));
-
 describe('ListeningPage', () => {
   it('renders without crashing', () => {
     render(

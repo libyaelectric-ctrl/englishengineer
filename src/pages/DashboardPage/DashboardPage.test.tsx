@@ -61,10 +61,6 @@ vi.mock('@/features/translation', () => ({
   DashboardTranslatorWidget: () => null,
 }));
 
-vi.mock('@/shared/components/StreakFlameWidget', () => ({
-  StreakFlameWidget: () => null,
-}));
-
 vi.mock('./DailyGoalBar', () => ({
   DailyGoalBar: () => null,
 }));

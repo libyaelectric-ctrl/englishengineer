@@ -3,7 +3,6 @@ import { Moon, Sun } from 'lucide-react';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { useAuthStore } from '@/features/auth';
 import { ClerkAuthControls } from '@/features/auth/ClerkAuthControls';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import { useTheme } from '@/features/theme/ThemeProvider';
@@ -19,19 +18,15 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
   const navigate = useNavigate();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
   const { language, setLanguage, translate } = useLocalizationStore();
-  const { demoLogin, isLoading } = useAuthStore();
 
-  const handleDemoClick = async () => {
+  const handleDemoClick = () => {
     if (onDemoClick) {
       onDemoClick();
       return;
     }
-    try {
-      await demoLogin();
-      navigate('/dashboard', { replace: true });
-    } catch (err) {
-      console.error('Demo login failed', err);
-    }
+    // Clerk is the single auth path: the demo CTA routes to the secure
+    // sign-up flow instead of creating a legacy local session.
+    navigate('/signup');
   };
 
   return (
@@ -167,7 +162,6 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
             <button
               type="button"
               onClick={handleDemoClick}
-              disabled={isLoading}
               className="inline-flex items-center rounded border border-primary/40 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors cursor-pointer"
             >
               {translate('landing.tryDemo')}
