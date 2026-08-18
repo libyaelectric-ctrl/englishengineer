@@ -3,9 +3,6 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { skipIfNoClerkSecret } from '../../helpers/clerk-login';
-
-skipIfNoClerkSecret();
-
 import {
   type QaFinding,
   type QaPageReport,
@@ -16,6 +13,8 @@ import {
   scanDeadControls,
   scanEmptyState,
 } from './qa-helpers';
+
+skipIfNoClerkSecret();
 
 const REPORT_DIR = resolve('qa-report');
 const SHOTS_DIR = resolve(REPORT_DIR, 'shots');

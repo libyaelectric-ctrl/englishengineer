@@ -11,11 +11,15 @@
  * Skips cleanly when CLERK_SECRET_KEY is missing; dependent tests are skipped
  * automatically when this setup is skipped.
  */
+import { test as setup } from '@playwright/test';
 import { mkdirSync } from 'node:fs';
 
-import { test as setup } from '@playwright/test';
-
-import { completeOnboarding, ensureTestUser, hasClerkSecret, signInAsTestUser } from './clerk-login';
+import {
+  completeOnboarding,
+  ensureTestUser,
+  hasClerkSecret,
+  signInAsTestUser,
+} from './clerk-login';
 
 setup.skip(!hasClerkSecret(), 'CLERK_SECRET_KEY is required to run Clerk-based e2e tests');
 

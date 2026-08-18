@@ -1,4 +1,6 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { storage } from '@/shared/storage';
 
 import { ListeningService } from './listening.service';
 
@@ -31,8 +33,6 @@ vi.mock('@/shared/logger', () => ({
     w: vi.fn(),
   },
 }));
-
-import { storage } from '@/shared/storage';
 
 describe('ListeningService', () => {
   beforeEach(() => {
@@ -221,7 +221,9 @@ describe('ListeningService', () => {
         audioCompletedMissionIds: ['mission-1'],
       });
       const state = ListeningService.markAudioCompleted('mission-1');
-      expect(state.audioCompletedMissionIds.filter((id: string) => id === 'mission-1')).toHaveLength(1);
+      expect(
+        state.audioCompletedMissionIds.filter((id: string) => id === 'mission-1')
+      ).toHaveLength(1);
     });
   });
 

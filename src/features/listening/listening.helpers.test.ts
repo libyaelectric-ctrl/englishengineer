@@ -5,15 +5,21 @@ import { ListeningHelpers } from './listening.helpers';
 describe('ListeningHelpers', () => {
   describe('getAudioFormatLabel', () => {
     it('returns format label for mp3', () => {
-      expect(ListeningHelpers.getAudioFormatLabel('https://example.com/audio.mp3')).toBe('MP3 audio');
+      expect(ListeningHelpers.getAudioFormatLabel('https://example.com/audio.mp3')).toBe(
+        'MP3 audio'
+      );
     });
 
     it('returns format label for wav', () => {
-      expect(ListeningHelpers.getAudioFormatLabel('https://example.com/audio.wav')).toBe('WAV audio');
+      expect(ListeningHelpers.getAudioFormatLabel('https://example.com/audio.wav')).toBe(
+        'WAV audio'
+      );
     });
 
     it('returns format label for ogg', () => {
-      expect(ListeningHelpers.getAudioFormatLabel('https://example.com/audio.ogg')).toBe('OGG audio');
+      expect(ListeningHelpers.getAudioFormatLabel('https://example.com/audio.ogg')).toBe(
+        'OGG audio'
+      );
     });
 
     it('returns Audio asset for no-extension URL', () => {

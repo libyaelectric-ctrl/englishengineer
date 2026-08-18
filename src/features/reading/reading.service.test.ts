@@ -1,4 +1,6 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { storage } from '@/shared/storage';
 
 import { ReadingService } from './reading.service';
 
@@ -38,8 +40,6 @@ vi.mock('@/features/ai', () => ({
   },
 }));
 
-import { storage } from '@/shared/storage';
-
 describe('ReadingService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -60,7 +60,9 @@ describe('ReadingService', () => {
       vi.mocked(storage.get).mockReturnValue({
         completedMissions: { 'mission-1': 85 },
         lastSelectedMissionId: 'mission-2',
-        history: [{ missionId: 'mission-1', timestamp: '2024-01-01', score: 85, evaluation: {} as any }],
+        history: [
+          { missionId: 'mission-1', timestamp: '2024-01-01', score: 85, evaluation: {} as any },
+        ],
       });
       const state = ReadingService.getState();
       expect(state.completedMissions).toEqual({ 'mission-1': 85 });
