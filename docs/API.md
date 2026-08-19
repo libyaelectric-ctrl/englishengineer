@@ -14,7 +14,7 @@ Authorization: Bearer <supabase_access_token>
 
 ```bash
 # 1. Redirect user to:
-https://wxabrwzitwsjtpmlvvqe.supabase.co/auth/v1/authorize?provider=google&redirect_to=https://englishengineer.vercel.app/auth/callback
+https://wxabrwzitwsjtpmlvvqe.supabase.co/auth/v1/authorize?provider=google&redirect_to=https://eng-vox.vercel.app/auth/callback
 
 # 2. User authenticates with Google
 # 3. Supabase redirects to /auth/callback with tokens
@@ -117,8 +117,8 @@ Content-Type: application/json
 {
   "email": "user@example.com",
   "planId": "pro",
-  "successUrl": "https://englishengineer.vercel.app/dashboard",
-  "cancelUrl": "https://englishengineer.vercel.app/pricing"
+  "successUrl": "https://eng-vox.vercel.app/dashboard",
+  "cancelUrl": "https://eng-vox.vercel.app/pricing"
 }
 ```
 

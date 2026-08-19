@@ -11,5 +11,5 @@ Kademe 64 (simdi): Performance 68
 Degisim: 3 puan
 
 Lighthouse versiyon: 13.4.0
-URL: https://englishengineer.vercel.app/
+URL: https://eng-vox.vercel.app/
 

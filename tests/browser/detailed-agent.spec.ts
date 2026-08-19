@@ -1,7 +1,7 @@
 ﻿/* eslint-disable @typescript-eslint/no-require-imports */
 import { expect, test } from '@playwright/test';
 
-const SITE = 'https://englishengineer.vercel.app';
+const SITE = 'https://eng-vox.vercel.app';
 
 interface TestResult {
   test: string;
@@ -199,9 +199,7 @@ test.describe('Detailed Agent Report', () => {
 
     // 14. Backend
     await runTest('Backend Health', async () => {
-      const response = await page.goto(
-        'https://englishengineer-backend.onrender.com/api/health'
-      );
+      const response = await page.goto('https://englishengineer-backend.onrender.com/api/health');
       const data = await response?.json();
       return `v${data?.version} | AI:${data?.aiConfigured} | Stripe:${data?.stripeConfigured}`;
     });

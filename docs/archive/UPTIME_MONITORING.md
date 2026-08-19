@@ -24,11 +24,11 @@
 
 ### Frontend (Vercel)
 
-| Name         | URL                                           | Interval | Expected Status |
-| ------------ | --------------------------------------------- | -------- | --------------- |
-| Landing Page | https://englishengineer.vercel.app            | 1 min    | 200             |
-| Login Page   | https://englishengineer.vercel.app/login      | 5 min    | 200             |
-| API Health   | https://englishengineer.vercel.app/api/health | 1 min    | 200             |
+| Name         | URL                                   | Interval | Expected Status |
+| ------------ | ------------------------------------- | -------- | --------------- |
+| Landing Page | https://eng-vox.vercel.app            | 1 min    | 200             |
+| Login Page   | https://eng-vox.vercel.app/login      | 5 min    | 200             |
+| API Health   | https://eng-vox.vercel.app/api/health | 1 min    | 200             |
 
 ### Backend (Railway)
 
@@ -64,7 +64,7 @@
 
 ## Status Page
 
-Create a public status page at `status.englishengineer.vercel.app`:
+Create a public status page at `status.eng-vox.vercel.app`:
 
 1. Go to BetterUptime → Status Pages
 2. Add all monitors

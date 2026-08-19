@@ -106,7 +106,7 @@ echo "Waiting for deployment to stabilize..."
 sleep 10
 
 echo "Checking frontend health..."
-FRONTEND_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer.vercel.app)
+FRONTEND_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://eng-vox.vercel.app)
 if [ "$FRONTEND_STATUS" = "200" ]; then
     echo "✅ Frontend: OK ($FRONTEND_STATUS)"
 else

@@ -65,7 +65,7 @@ Railway dashboard → Variables:
 
 ## Post-Deploy Checklist
 
-- [ ] Frontend loads (https://englishengineer.vercel.app)
+- [ ] Frontend loads (https://eng-vox.vercel.app)
 - [ ] Backend health check returns 200
 - [ ] Login page loads
 - [ ] Google OAuth redirects correctly

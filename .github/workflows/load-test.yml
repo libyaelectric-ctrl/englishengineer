@@ -8,7 +8,7 @@ on:
       target_url:
         description: 'Target URL for load test'
         required: false
-        default: 'https://englishengineer.vercel.app'
+        default: 'https://eng-vox.vercel.app'
 
 jobs:
   load-test:
@@ -27,4 +27,4 @@ jobs:
       - name: Run load test
         run: k6 run scripts/performance/load-test.k6.js
         env:
-          API_BASE_URL: ${{ github.event.inputs.target_url || 'https://englishengineer.vercel.app' }}
+          API_BASE_URL: ${{ github.event.inputs.target_url || 'https://eng-vox.vercel.app' }}

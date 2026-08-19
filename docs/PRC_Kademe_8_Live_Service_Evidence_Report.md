@@ -140,7 +140,7 @@ above to three isolated causes, none of which were product regressions:
 **Result:** The targeted previously-failing files pass 19/19. The full local
 suite passes 165 files and 930 tests. `npm run typecheck` and `npm run build`
 also pass with 0 errors. Frontend production availability was checked at
-`https://englishengineer.vercel.app` and returned HTTP 200. This report does
+`https://eng-vox.vercel.app` and returned HTTP 200. This report does
 not mark production launch or live billing as allowed because browser and
 backend staging evidence remain incomplete.
 

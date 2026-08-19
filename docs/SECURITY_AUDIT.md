@@ -130,7 +130,7 @@ EngineerOS underwent comprehensive security review. 15 critical/high findings id
 
 ```javascript
 {
-  origin: ['https://englishengineer.vercel.app'],
+  origin: ['https://eng-vox.vercel.app'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token']

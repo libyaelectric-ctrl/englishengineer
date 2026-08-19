@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const SITE = 'https://englishengineer.vercel.app';
+const SITE = 'https://eng-vox.vercel.app';
 
 test.describe('Comprehensive E2E', () => {
   test('Landing page loads correctly', async ({ page }) => {
@@ -52,9 +52,7 @@ test.describe('Comprehensive E2E', () => {
   });
 
   test('Backend health endpoint works', async ({ page }) => {
-    const response = await page.goto(
-      'https://englishengineer-backend.onrender.com/api/health'
-    );
+    const response = await page.goto('https://englishengineer-backend.onrender.com/api/health');
     const data = await response?.json();
     expect(data?.ok).toBe(true);
     expect(data?.version).toBe('4.0.1');

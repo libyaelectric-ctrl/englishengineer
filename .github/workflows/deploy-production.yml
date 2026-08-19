@@ -142,7 +142,7 @@ jobs:
 
       - name: Check Production Health
         run: |
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer.vercel.app/api/health)
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://eng-vox.vercel.app/api/health)
           if [ "$RESPONSE" -ne 200 ]; then
             echo "::error::Production health check failed"
             exit 1
