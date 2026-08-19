@@ -1,4 +1,4 @@
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Target, TrendingUp } from 'lucide-react';
 
 import { useMemo, useState } from 'react';
 
@@ -6,6 +6,10 @@ import { useLearningStore } from '@/core/learning';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+import {
+  type PipelineStation,
+  UniversalCyberPipeline,
+} from '@/shared/components/UniversalCyberPipeline';
 import { MAX_ELO, MIN_ELO, RANK_THRESHOLDS } from '@/shared/constants/elo.constants';
 import { getRankIcon } from '@/shared/icons/registry';
 
@@ -17,6 +21,7 @@ import {
   ErrorPatternAnalyzer,
   GrammarProgressService,
 } from '@/features/grammar';
+import { useLocalizationStore } from '@/features/localization';
 import { useLearningCockpit } from '@/features/profile';
 
 import { AssessmentProfilePanel } from '@/pages/ProgressPage/AnalyticsPanels';
@@ -29,6 +34,7 @@ import { SkillSidebar } from './SkillSidebar';
 import { SKILLS, getCEFRBand } from './utils';
 
 export const ProgressOverviewTab = () => {
+  const translate = useLocalizationStore((s) => s.translate);
   const { currentUser } = useAuthStore();
   const { profile, learningState } = useLearningCockpit(currentUser?.id);
   const vocabularyPool = useLearningStore((state) => state.vocabularyPool) ?? [];
@@ -132,9 +138,52 @@ export const ProgressOverviewTab = () => {
     { id: 'vocabulary', label: 'Vocabulary' },
   ];
 
+  const progressStations: PipelineStation[] = SKILLS.map((skill) => {
+    const elo = eloScores[skill.id];
+    const isWeakest = skill.id === lowestSkill.id;
+    const isMastered = elo >= 4000;
+    return {
+      id: `skill-${skill.id}`,
+      levelBadge: getCEFRBand(elo),
+      title: skill.label,
+      status: isMastered ? 'completed' : isWeakest ? 'in-progress' : 'available',
+      progressRatio: Math.min(1, elo / MAX_ELO),
+      totalItems: MAX_ELO,
+      completedItems: elo,
+    };
+  });
+
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       <HeroBanner totalElo={totalElo} totalPercentage={totalPercentage} />
+
+      {/* Cyber Telemetry Skill Mastery Pipeline */}
+      <UniversalCyberPipeline
+        title={translate('dashboard.progressCockpit')}
+        badgeText={totalCEFR}
+        icon={Target}
+        stations={progressStations}
+        activeStationId={lowestSkill.id ? `skill-${lowestSkill.id}` : undefined}
+        onSelectStation={() => {}}
+        translate={translate}
+        metrics={[
+          {
+            icon: <TrendingUp className="h-4 w-4 text-emerald-400" />,
+            label: translate('dashboard.competencyIndex'),
+            value: totalElo,
+          },
+          {
+            icon: <ShieldCheck className="h-4 w-4 text-cyan-400" />,
+            label: translate('dashboard.level'),
+            value: totalCEFR,
+          },
+          {
+            icon: <Target className="h-4 w-4 text-amber-400" />,
+            label: translate('pipeline.metric.tasks'),
+            value: SKILLS.length,
+          },
+        ]}
+      />
 
       <QuickStats
         totalElo={totalElo}
