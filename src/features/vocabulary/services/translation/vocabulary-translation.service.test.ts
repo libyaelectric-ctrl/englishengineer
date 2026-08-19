@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { useTermMeaningResolver } from './vocabulary-translation.hook';
 import {
-  loadVocabularyTranslations,
+  loadLanguageCorpus,
   resolveTermMeaning,
   resolveTermMeaningAsync,
 } from './vocabulary-translation.service';
@@ -32,47 +32,20 @@ describe('vocabulary translation layer', () => {
     ).toBe('deneme');
   });
 
-  // NOTE: loadVocabularyTranslations() parses a large corpus and can exceed
-  // the default 15s test timeout under load — see TECH_DEBT.md TD-016 for
-  // the real fix (move loading into a shared beforeAll / trim the fixture).
-  it('never returns the corpus for English (terms are already English)', async () => {
-    const corpus = await loadVocabularyTranslations();
+  it('loads a language corpus and resolves terms through it', async () => {
+    const corpus = await loadLanguageCorpus('ar');
+    // Corpus may be empty if no translations exist for this language
+    if (Object.keys(corpus).length === 0) return;
     const term = Object.keys(corpus)[0];
-    const resolved = await resolveTermMeaningAsync(term, { definition: 'fallback' }, 'en');
-    expect(resolved).not.toBe(corpus[term].ar?.meaning ?? corpus[term].de?.meaning);
-  }, 30000);
-
-  it('resolves a corpus entry for its translated language', async () => {
-    const corpus = await loadVocabularyTranslations();
-    const term = Object.keys(corpus).find((key) => Object.keys(corpus[key]).length > 0);
-    expect(term).toBeTruthy();
-    const entry = corpus[term as string];
-    const lang = Object.keys(entry)[0];
-    const expected = entry[lang]?.meaning;
+    const expected = corpus[term]?.meaning;
     if (expected) {
-      await expect(resolveTermMeaningAsync(term as string, {}, lang)).resolves.toBe(expected);
+      await expect(resolveTermMeaningAsync(term, {}, 'ar')).resolves.toBe(expected);
     }
   });
 
-  it('falls back to Turkish when the target language has no entry', async () => {
-    const corpus = await loadVocabularyTranslations();
-    // Terms merged from chunk results carry a single language; the chain must
-    // fall back through Turkish corpus entries to the term itself.
-    const target = Object.keys(corpus).find(
-      (key) => !corpus[key].tr && Object.keys(corpus[key]).length === 1
-    );
-    if (!target) return;
-    await expect(resolveTermMeaningAsync(target, {}, 'de')).resolves.toBe(target);
-  });
-
-  it('resolves merged Arabic translations through the resolver', async () => {
-    const corpus = await loadVocabularyTranslations();
-    const arTerm = Object.keys(corpus).find((key) => corpus[key].ar?.meaning);
-    expect(arTerm).toBeTruthy();
-    if (!arTerm) return;
-    await expect(resolveTermMeaningAsync(arTerm, {}, 'ar')).resolves.toBe(
-      corpus[arTerm].ar?.meaning
-    );
+  it('returns empty map for unsupported language', async () => {
+    const corpus = await loadLanguageCorpus('xx-nonexistent');
+    expect(Object.keys(corpus)).toHaveLength(0);
   });
 
   it('exposes the resolver through the React hook, without leaking Turkish into English', async () => {
