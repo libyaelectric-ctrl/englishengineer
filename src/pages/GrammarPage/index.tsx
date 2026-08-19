@@ -104,6 +104,7 @@ const GrammarPage = () => {
           stations={grammarStations}
           activeStationId={selectedRule?.id}
           onSelectStation={(id) => selectRule(id)}
+          translate={translate}
           metrics={[
             {
               icon: <Zap className="h-4 w-4 text-amber-400" />,

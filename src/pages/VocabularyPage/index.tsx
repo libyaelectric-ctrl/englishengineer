@@ -135,6 +135,7 @@ const VocabularyPage = () => {
         stations={vocabularyStations}
         activeStationId={selectedStationId ?? `vocab-${vocabularyLevel}`}
         onSelectStation={(id) => setSelectedStationId(id)}
+        translate={translate}
         metrics={[
           {
             icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
