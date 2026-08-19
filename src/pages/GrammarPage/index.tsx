@@ -1,11 +1,18 @@
+import { Flame, Layers, ShieldCheck, Zap } from 'lucide-react';
+
+import { useMemo } from 'react';
+
 import { PageContainer } from '@/shared/components/PageContainer';
+import {
+  type PipelineStation,
+  UniversalCyberPipeline,
+} from '@/shared/components/UniversalCyberPipeline';
 
 import { useGrammarStore } from '@/features/grammar';
 
 import { GrammarEnhancementPanel } from './GrammarEnhancementPanel';
 import { GrammarHeader } from './GrammarHeader';
 import { GrammarLessonContent } from './GrammarLessonContent';
-import { GrammarLessonMap } from './GrammarLessonMap';
 import { GrammarNextStep } from './GrammarNextStep';
 import { getModuleLabel } from './GrammarPageHelpers';
 import { GrammarReviewQueue } from './GrammarReviewQueue';
@@ -29,7 +36,6 @@ const GrammarPage = () => {
     grammarPoolIds,
     query,
     setQuery,
-    lessonStripRef,
     quizOpen,
     setQuizOpen,
     hintOpen,
@@ -40,20 +46,39 @@ const GrammarPage = () => {
     totalGrammarLessons,
     selectedRule,
     selectedProgress,
-    pathGroups,
     linkedVocabulary,
     nextLesson,
     reviewTargets,
     masteredCount,
     rulesWithProgress,
     selectRule,
-    scrollLessonStrip,
     recordUsage,
     quizItems,
   } = useGrammarPage();
 
   const selectedStatus = getSelectedStatus(selectedProgress);
   const selectedModule = selectedRule ? getModuleLabel(selectedRule.grammarCategory) : '';
+
+  const grammarStations: PipelineStation[] = useMemo(() => {
+    if (!rulesWithProgress || !rulesWithProgress.length) return [];
+    return rulesWithProgress.slice(0, 6).map((item, idx) => ({
+      id: item.rule.id,
+      levelBadge: `G${idx + 1}`,
+      title: item.rule.title,
+      subtitle: `${getModuleLabel(item.rule.grammarCategory)} · ${(item.rule.explanation || item.rule.definition || '').slice(0, 35)}...`,
+      status:
+        item.progress?.reviewStatus === 'Strong'
+          ? 'completed'
+          : item.rule.id === selectedRule?.id
+            ? 'in-progress'
+            : 'available',
+      progressRatio: Math.min(1, Math.max(0.2, (item.progress?.strength ?? 40) / 100)),
+      totalItems: 10,
+      completedItems: item.progress?.correctUsages ?? 0,
+      actionLabel: 'Gramer Egzersizine Başla',
+      onAction: () => setQuizOpen(true),
+    }));
+  }, [rulesWithProgress, selectedRule, setQuizOpen]);
 
   return (
     <PageContainer className="space-y-6 min-h-screen bg-background pb-16 text-foreground">
@@ -68,15 +93,43 @@ const GrammarPage = () => {
         onOpenStrugglingQuiz={() => {}}
       />
 
-      <main className="mt-6 space-y-5">
-        <GrammarLessonMap
-          pathGroups={pathGroups}
-          selectedRule={selectedRule}
-          selectRule={selectRule}
-          scrollLessonStrip={scrollLessonStrip}
-          lessonStripRef={lessonStripRef as React.RefObject<HTMLDivElement>}
+      {/* Cyber Telemetry Grammar Energy Pipeline */}
+      {grammarStations.length > 0 && (
+        <UniversalCyberPipeline
+          title="Mühendislik Gramer & Raporlama Hattı"
+          subtitle="Teknik şartname, FIDIC sözleşme standartları ve saha raporlama dilbilgisi hattı"
+          badgeText={`CEFR: ${level}`}
+          icon={Layers}
+          stations={grammarStations}
+          activeStationId={selectedRule?.id}
+          onSelectStation={(id) => selectRule(id)}
+          tierLabels={[
+            'Temel Yapılar (A1-A2)',
+            'Saha Raporlama (B1)',
+            'Teknik Şartname (B2)',
+            'Sözleşme & FIDIC (C1-C2)',
+          ]}
+          metrics={[
+            {
+              icon: <Zap className="h-4 w-4 text-amber-400" />,
+              label: 'Öğrenilen Kurallar',
+              value: grammarLearned,
+            },
+            {
+              icon: <Flame className="h-4 w-4 text-orange-400" />,
+              label: 'Usta Kural',
+              value: grammarStats.mastered,
+            },
+            {
+              icon: <ShieldCheck className="h-4 w-4 text-emerald-400" />,
+              label: 'Toplam Kural',
+              value: totalGrammarLessons,
+            },
+          ]}
         />
+      )}
 
+      <main className="mt-6 space-y-5">
         <section className="min-w-0 space-y-4">
           {selectedRule && selectedProgress ? (
             <GrammarLessonContent

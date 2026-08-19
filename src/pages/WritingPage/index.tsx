@@ -1,11 +1,15 @@
 import { FileCheck, FileText, Layers, ShieldCheck } from 'lucide-react';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
 import { MetricCard } from '@/shared/components/MetricCard';
 import { PageContainer } from '@/shared/components/PageContainer';
+import {
+  type PipelineStation,
+  UniversalCyberPipeline,
+} from '@/shared/components/UniversalCyberPipeline';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
@@ -325,6 +329,26 @@ const WritingPage = () => {
   const currentUser = useAuthStore((s) => s.currentUser);
   const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
 
+  const writingStations: PipelineStation[] = useMemo(() => {
+    return visibleMissions.slice(0, 6).map((mission) => {
+      const score = completedMissions[mission.id];
+      const isCompleted = score !== undefined;
+      const isActive = mission.id === selectedMissionId;
+      return {
+        id: mission.id,
+        levelBadge: mission.cefrLevel,
+        title: mission.title,
+        subtitle: mission.description,
+        status: isCompleted ? 'completed' : isActive ? 'in-progress' : 'available',
+        progressRatio: isCompleted ? Math.min(1, score / 100) : isActive ? 0.4 : 0,
+        totalItems: 100,
+        completedItems: isCompleted ? score : 0,
+        actionLabel: isCompleted ? 'Tekrar Yaz' : 'Taslak Oluştur',
+        onAction: () => handleLaunchMission(mission.id),
+      };
+    });
+  }, [visibleMissions, completedMissions, selectedMissionId, handleLaunchMission]);
+
   if (!currentMission) {
     return (
       <EmptyMissionView
@@ -345,6 +369,41 @@ const WritingPage = () => {
         subTab={subTab}
         setSubTab={setSubTab}
       />
+
+      {showStatsBar && writingStations.length > 0 && (
+        <UniversalCyberPipeline
+          title="Raporlama & Yazışma Hattı"
+          subtitle="Saha raporundan RFI/NCR ve teklif dosyasına uzanan mühendislik yazışma hiyerarşisi"
+          badgeText={`CEFR: ${currentLevel}`}
+          icon={FileText}
+          stations={writingStations}
+          activeStationId={selectedMissionId}
+          onSelectStation={(id) => handleLaunchMission(id)}
+          tierLabels={[
+            'Günlük Saha Raporları (A1-A2)',
+            'RFI & NCR (B1)',
+            'Change Order & Teklif (B2)',
+            'Sözleşme & Tender (C1-C2)',
+          ]}
+          metrics={[
+            {
+              icon: <FileCheck className="h-4 w-4 text-emerald-400" />,
+              label: 'Tamamlanan',
+              value: finishedCount,
+            },
+            {
+              icon: <ShieldCheck className="h-4 w-4 text-cyan-400" />,
+              label: 'Ortalama Skor',
+              value: bestScoreAvg > 0 ? `${bestScoreAvg}%` : '0%',
+            },
+            {
+              icon: <Layers className="h-4 w-4 text-amber-400" />,
+              label: 'Görev',
+              value: `${finishedCount}/${missions.length}`,
+            },
+          ]}
+        />
+      )}
 
       {showStatsBar && (
         <>

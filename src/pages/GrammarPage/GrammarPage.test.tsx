@@ -35,6 +35,7 @@ vi.mock('./hooks/useGrammarPage', () => ({
     nextLesson: null,
     reviewTargets: [],
     masteredCount: 0,
+    rulesWithProgress: [],
     selectRule: vi.fn(),
     scrollLessonStrip: vi.fn(),
     recordUsage: vi.fn(),
