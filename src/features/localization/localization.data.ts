@@ -858,6 +858,51 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.tierEntry': 'Entry Level (A1 - A2)',
     'learningpath.tierIntermediate': 'Intermediate Professional (B1 - B2)',
     'learningpath.tierAdvanced': 'Advanced & Leadership (C1 - C2)',
+    // Reading page
+    'reading.comprehensionRate': 'Comprehension Rate',
+    'reading.jargonVocabulary': 'Jargon / Vocabulary',
+    'reading.technicalPrecision': 'Technical Precision',
+    'reading.scoringRewardsClaimed': 'Scoring Rewards Claimed',
+    'reading.identifiedStrengths': 'Identified Strengths',
+    'reading.developmentGaps': 'Development Gaps',
+    'reading.backToList': 'Back to Reading list',
+    'reading.elapsed': 'Elapsed',
+    'reading.typingResponse': 'Typing response...',
+    // Writing page
+    'writing.linguisticClarity': 'Linguistic Clarity',
+    'writing.backToList': 'Back to Writing list',
+    'writing.elapsed': 'Elapsed',
+    'writing.analyzingDraft': 'Analyzing draft and context...',
+    'writing.score': 'Score',
+    'writing.goalWords': 'Goal: {current}/{max} words',
+    // Listening page
+    'listening.selectTrueFalse': 'Select true or false',
+    'listening.true': 'True',
+    'listening.false': 'False',
+    // Speaking page
+    'speaking.yourScore': 'Your Score',
+    'speaking.averageScore': 'Average Score',
+    // Grammar page
+    'grammar.quickTemplates': 'Quick Prompt Templates',
+    'grammar.examples': 'Examples',
+    'grammar.commonMistake': 'Common Mistake',
+    'grammar.thinkingExplaining': 'Thinking and explaining...',
+    // Profile page
+    'profile.interfaceLanguage': 'Interface Language',
+    'profile.chooseLanguageDesc': 'Choose the language for the application interface',
+    'profile.engineeringDiscipline': 'Engineering Discipline',
+    'profile.disciplineLockedDesc': 'Your discipline was chosen at sign-up and is permanent',
+    'profile.selectDisciplineDesc':
+      'Select your engineering field for tailored vocabulary and content',
+    'profile.permanentlyLocked': 'Permanently locked — this choice cannot be changed',
+    'profile.saveChanges': 'Save Changes',
+    'profile.words': 'words',
+    // Vocabulary page
+    'vocabulary.less': 'Less',
+    'vocabulary.more': 'More',
+    'vocabulary.goal': 'Goal',
+    // Progress page
+    'progress.todaysTarget': "Today's Target",
   },
   tr: {
     'onboarding.freeDesc': 'Temel öğrenimle yerel olarak başlayın.',
@@ -1655,6 +1700,50 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.tierEntry': 'Başlangıç Seviyesi (A1 - A2)',
     'learningpath.tierIntermediate': 'Orta Düzey Profesyonel (B1 - B2)',
     'learningpath.tierAdvanced': 'İleri Düzey & Liderlik (C1 - C2)',
+    // Reading page
+    'reading.comprehensionRate': 'Anlama Oranı',
+    'reading.jargonVocabulary': 'Terimler / Kelime Dağarcığı',
+    'reading.technicalPrecision': 'Teknik Hassasiyet',
+    'reading.scoringRewardsClaimed': 'Puanlama Ödülleri Alındı',
+    'reading.identifiedStrengths': 'Belirlenen Güçlü Yönler',
+    'reading.developmentGaps': 'Gelişim Eksiklikleri',
+    'reading.backToList': 'Okuma listesine dön',
+    'reading.elapsed': 'Geçen süre',
+    'reading.typingResponse': 'Yanıt yazılıyor...',
+    // Writing page
+    'writing.linguisticClarity': 'Dilbilgisel Netlik',
+    'writing.backToList': 'Yazma listesine dön',
+    'writing.elapsed': 'Geçen süre',
+    'writing.analyzingDraft': 'Taslak ve bağlam analiz ediliyor...',
+    'writing.score': 'Puan',
+    'writing.goalWords': 'Hedef: {current}/{max} kelime',
+    // Listening page
+    'listening.selectTrueFalse': 'Doğru veya yanlış seçin',
+    'listening.true': 'Doğru',
+    'listening.false': 'Yanlış',
+    // Speaking page
+    'speaking.yourScore': 'Senin Puanın',
+    'speaking.averageScore': 'Ortalama Puan',
+    // Grammar page
+    'grammar.quickTemplates': 'Hızlı Şablonlar',
+    'grammar.examples': 'Örnekler',
+    'grammar.commonMistake': 'Yaygın Hata',
+    'grammar.thinkingExplaining': 'Düşünüyor ve açıklıyor...',
+    // Profile page
+    'profile.interfaceLanguage': 'Arayüz Dili',
+    'profile.chooseLanguageDesc': 'Uygulama arayüzü için dili seçin',
+    'profile.engineeringDiscipline': 'Mühendislik Dalı',
+    'profile.disciplineLockedDesc': 'Dalınız kayıt sırasında seçildi ve kalıcıdır',
+    'profile.selectDisciplineDesc': 'Kelime dağarcığı ve içerik için mühendislik alanınızı seçin',
+    'profile.permanentlyLocked': 'Kalıcı olarak kilitlendi — bu seçim değiştirilemez',
+    'profile.saveChanges': 'Değişiklikleri Kaydet',
+    'profile.words': 'kelime',
+    // Vocabulary page
+    'vocabulary.less': 'Daha Az',
+    'vocabulary.more': 'Daha Fazla',
+    'vocabulary.goal': 'Hedef',
+    // Progress page
+    'progress.todaysTarget': 'Bugünün Hedefi',
   },
   ar: {
     'onboarding.freeDesc': 'ابدأ محليًّا بالتعلم الأساسي.',
