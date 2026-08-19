@@ -1,0 +1,52 @@
+groups:
+  - name: engvox-alerts
+    rules:
+      # High error rate
+      - alert: HighErrorRate
+        expr: engineeros_error_rate_percent > 5
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: 'High error rate detected'
+          description: 'Error rate is {{ $value }}% (threshold: 5%)'
+
+      # High response time
+      - alert: HighResponseTime
+        expr: engineeros_request_duration_p95_ms > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'High P95 response time'
+          description: 'P95 response time is {{ $value }}ms (threshold: 1000ms)'
+
+      # High memory usage
+      - alert: HighMemoryUsage
+        expr: (engineeros_memory_heap_used_bytes / engineeros_memory_heap_total_bytes) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'High heap memory usage'
+          description: 'Heap usage is {{ $value }}% (threshold: 85%)'
+
+      # Service down
+      - alert: ServiceDown
+        expr: up{job="engvox-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: 'Backend service is down'
+          description: 'EngVox backend has been unreachable for over 1 minute'
+
+      # High request rate (potential DDoS)
+      - alert: HighRequestRate
+        expr: rate(engineeros_requests_total[5m]) > 100
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'Unusually high request rate'
+          description: 'Request rate is {{ $value }} req/s (threshold: 100 req/s)'
