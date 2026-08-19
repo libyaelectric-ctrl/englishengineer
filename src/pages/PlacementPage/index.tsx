@@ -11,6 +11,8 @@ import {
 } from '@/shared/components/UniversalCyberPipeline';
 
 import { useAuthStore } from '@/features/auth';
+import { useLocalizationStore } from '@/features/localization';
+import { interpolate } from '@/features/localization/interpolate';
 import { PLACEMENT_QUESTIONS, PlacementService, usePlacementStore } from '@/features/placement';
 
 const DIAGNOSTIC_STATIONS: Array<{ id: string; label: string; band: string; threshold: number }> = [
@@ -24,6 +26,7 @@ const DIAGNOSTIC_STATIONS: Array<{ id: string; label: string; band: string; thre
 
 const PlacementPage = () => {
   const navigate = useNavigate();
+  const translate = useLocalizationStore((s) => s.translate);
   const userId = useAuthStore((state) => state.currentUser?.id ?? 'local-user');
   const { currentIndex, answers, result, answer, next, previous, submit, reset } =
     usePlacementStore(
@@ -110,28 +113,30 @@ const PlacementPage = () => {
   return (
     <main className="mx-auto max-w-3xl py-4 sm:py-8">
       <UniversalCyberPipeline
-        title="Dinamik CEFR Teşhis Hattı"
-        subtitle="A1'den C2'ye uzanan seviye tespit ve kalibrasyon hattı"
-        badgeText={`Soru ${currentIndex + 1}/${PLACEMENT_QUESTIONS.length}`}
+        title={translate('pipeline.placement.title')}
+        subtitle={translate('pipeline.placement.subtitle')}
+        badgeText={interpolate(translate('pipeline.placement.questionBadge'), {
+          current: currentIndex + 1,
+          total: PLACEMENT_QUESTIONS.length,
+        })}
         icon={ClipboardCheck}
         stations={placementStations}
         activeStationId={activeDiagnosticStation}
         onSelectStation={() => {}}
-        tierLabels={['Başlangıç (A1-A2)', 'Orta Düzey (B1-B2)', 'İleri Düzey (C1)', 'Uzman (C2)']}
         metrics={[
           {
             icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
-            label: 'Cevaplanan',
+            label: translate('pipeline.metric.answered'),
             value: currentIndex,
           },
           {
             icon: <ClipboardCheck className="h-4 w-4 text-cyan-400" />,
-            label: 'Toplam',
+            label: translate('pipeline.metric.total'),
             value: PLACEMENT_QUESTIONS.length,
           },
           {
             icon: <ArrowRight className="h-4 w-4 text-amber-400" />,
-            label: 'İlerleme',
+            label: translate('pipeline.metric.progress'),
             value: `${Math.round(((currentIndex + 1) / PLACEMENT_QUESTIONS.length) * 100)}%`,
           },
         ]}

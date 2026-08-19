@@ -9,6 +9,7 @@ import {
 } from '@/shared/components/UniversalCyberPipeline';
 
 import { useGrammarStore } from '@/features/grammar';
+import { useLocalizationStore } from '@/features/localization';
 
 import { GrammarEnhancementPanel } from './GrammarEnhancementPanel';
 import { GrammarHeader } from './GrammarHeader';
@@ -27,6 +28,7 @@ const getSelectedStatus = (progress: ReturnType<typeof useGrammarPage>['selected
 };
 
 const GrammarPage = () => {
+  const translate = useLocalizationStore((s) => s.translate);
   const grammarStats = useGrammarStore((s) => s.stats);
   const grammarLearned = grammarStats.learned + grammarStats.mastered;
   const grammarStruggling = grammarStats.struggling;
@@ -75,7 +77,6 @@ const GrammarPage = () => {
       progressRatio: Math.min(1, Math.max(0.2, (item.progress?.strength ?? 40) / 100)),
       totalItems: 10,
       completedItems: item.progress?.correctUsages ?? 0,
-      actionLabel: 'Gramer Egzersizine Başla',
       onAction: () => setQuizOpen(true),
     }));
   }, [rulesWithProgress, selectedRule, setQuizOpen]);
@@ -96,33 +97,27 @@ const GrammarPage = () => {
       {/* Cyber Telemetry Grammar Energy Pipeline */}
       {grammarStations.length > 0 && (
         <UniversalCyberPipeline
-          title="Mühendislik Gramer & Raporlama Hattı"
-          subtitle="Teknik şartname, FIDIC sözleşme standartları ve saha raporlama dilbilgisi hattı"
+          title={translate('pipeline.grammar.title')}
+          subtitle={translate('pipeline.grammar.subtitle')}
           badgeText={`CEFR: ${level}`}
           icon={Layers}
           stations={grammarStations}
           activeStationId={selectedRule?.id}
           onSelectStation={(id) => selectRule(id)}
-          tierLabels={[
-            'Temel Yapılar (A1-A2)',
-            'Saha Raporlama (B1)',
-            'Teknik Şartname (B2)',
-            'Sözleşme & FIDIC (C1-C2)',
-          ]}
           metrics={[
             {
               icon: <Zap className="h-4 w-4 text-amber-400" />,
-              label: 'Öğrenilen Kurallar',
+              label: translate('pipeline.metric.learned'),
               value: grammarLearned,
             },
             {
               icon: <Flame className="h-4 w-4 text-orange-400" />,
-              label: 'Usta Kural',
+              label: translate('pipeline.metric.mastered'),
               value: grammarStats.mastered,
             },
             {
               icon: <ShieldCheck className="h-4 w-4 text-emerald-400" />,
-              label: 'Toplam Kural',
+              label: translate('pipeline.metric.total'),
               value: totalGrammarLessons,
             },
           ]}

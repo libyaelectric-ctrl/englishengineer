@@ -20,6 +20,7 @@ import {
   EmptyLevelState,
   LevelContentFilter,
 } from '@/features/level-system';
+import { useLocalizationStore } from '@/features/localization';
 import { type WritingCorrection, type WritingEvaluationResult } from '@/features/writing';
 import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
 
@@ -289,6 +290,7 @@ const WritingMainContent = ({
 );
 
 const WritingPage = () => {
+  const translate = useLocalizationStore((s) => s.translate);
   const [subTab, setSubTab] = useState<'missions' | 'field-docs'>('missions');
 
   const {
@@ -343,7 +345,6 @@ const WritingPage = () => {
         progressRatio: isCompleted ? Math.min(1, score / 100) : isActive ? 0.4 : 0,
         totalItems: 100,
         completedItems: isCompleted ? score : 0,
-        actionLabel: isCompleted ? 'Tekrar Yaz' : 'Taslak Oluştur',
         onAction: () => handleLaunchMission(mission.id),
       };
     });
@@ -372,33 +373,27 @@ const WritingPage = () => {
 
       {showStatsBar && writingStations.length > 0 && (
         <UniversalCyberPipeline
-          title="Raporlama & Yazışma Hattı"
-          subtitle="Saha raporundan RFI/NCR ve teklif dosyasına uzanan mühendislik yazışma hiyerarşisi"
+          title={translate('pipeline.writing.title')}
+          subtitle={translate('pipeline.writing.subtitle')}
           badgeText={`CEFR: ${currentLevel}`}
           icon={FileText}
           stations={writingStations}
           activeStationId={selectedMissionId}
           onSelectStation={(id) => handleLaunchMission(id)}
-          tierLabels={[
-            'Günlük Saha Raporları (A1-A2)',
-            'RFI & NCR (B1)',
-            'Change Order & Teklif (B2)',
-            'Sözleşme & Tender (C1-C2)',
-          ]}
           metrics={[
             {
               icon: <FileCheck className="h-4 w-4 text-emerald-400" />,
-              label: 'Tamamlanan',
+              label: translate('pipeline.metric.completed'),
               value: finishedCount,
             },
             {
               icon: <ShieldCheck className="h-4 w-4 text-cyan-400" />,
-              label: 'Ortalama Skor',
+              label: translate('pipeline.metric.avgScore'),
               value: bestScoreAvg > 0 ? `${bestScoreAvg}%` : '0%',
             },
             {
               icon: <Layers className="h-4 w-4 text-amber-400" />,
-              label: 'Görev',
+              label: translate('pipeline.metric.tasks'),
               value: `${finishedCount}/${missions.length}`,
             },
           ]}
