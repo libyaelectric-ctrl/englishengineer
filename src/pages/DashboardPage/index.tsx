@@ -7,10 +7,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useLearningStore } from '@/core/learning';
 
 import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { useAuthStore } from '@/features/auth';
+import { DashboardLearningPipeline, resolveDefaultDiscipline } from '@/features/learning-path';
 import { useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization/localization.types';
+import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
@@ -36,12 +39,11 @@ export const DashboardPage: React.FC = () => {
     );
   }
 
-  if (!currentUser?.engineeringDiscipline) {
-    return null;
-  }
-
-  const discipline = currentUser.engineeringDiscipline;
-  const meta = DISCIPLINE_META[discipline as keyof typeof DISCIPLINE_META];
+  const profile = LearningProfileRepository.getProfile(currentUser?.id || 'local-user');
+  const discipline = resolveDefaultDiscipline(
+    (currentUser?.engineeringDiscipline as EngineeringDiscipline) || profile?.discipline
+  );
+  const meta = DISCIPLINE_META[discipline];
   const learningState = useLearningStore.getState();
   const activeMissions = learningState.missions?.filter((m) => m.status === 'active').length || 0;
 
@@ -79,9 +81,9 @@ export const DashboardPage: React.FC = () => {
               {translate('dashboard.commandCenter')}
             </p>
             <h1 className="mt-1 text-2xl font-extrabold text-[var(--foreground)]">
-              {translate('dashboard.goodMorning')}, {currentUser.displayName}!
+              {translate('dashboard.goodMorning')}, {currentUser?.displayName ?? ''}!
             </h1>
-            {currentUser.email ? (
+            {currentUser?.email ? (
               <p className="mt-0.5 text-xs font-medium text-[var(--color-muted-copy)]">
                 {currentUser.email}
               </p>
@@ -102,6 +104,9 @@ export const DashboardPage: React.FC = () => {
             </div>
           </div>
         </header>
+
+        {/* Learning & Career Path Pipeline (Concept C) */}
+        <DashboardLearningPipeline disciplineOverride={discipline as any} />
 
         {/* Stats */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

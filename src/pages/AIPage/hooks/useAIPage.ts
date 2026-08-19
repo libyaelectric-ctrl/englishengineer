@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
 
-import { showToast } from '@/shared/components/Toast';
 import { logger } from '@/shared/logger';
 
 import {
@@ -117,7 +116,8 @@ export function useAIPage() {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isBuyingCredits, setIsBuyingCredits] = useState(false);
   const [buyError, setBuyError] = useState<string | null>(null);
-  const [rateLimitExceeded, setRateLimitExceeded] = useState(false);
+
+  const { startTopupCheckout } = useBillingStore();
 
   const handleBuyCredits = async () => {
     if (!currentUser) return;

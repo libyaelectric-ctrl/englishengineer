@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { ToastContainer } from '@/shared/components/Toast';
+import { ToastContainer, showToast } from '@/shared/components/Toast';
 
 import { useBillingStore } from '@/features/billing';
 

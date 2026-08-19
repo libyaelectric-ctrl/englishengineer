@@ -13,7 +13,7 @@ vi.mock('react-router-dom', async (importOriginal) => ({
 vi.mock('@/features/auth', async (importOriginal) => ({
   ...(await importOriginal()),
   useAuthStore: vi.fn(() => ({
-    currentUser: { id: 'user-1', displayName: 'Test Engineer' },
+    currentUser: { id: 'user-1', displayName: 'Test Engineer', engineeringDiscipline: 'software' },
   })),
 }));
 
