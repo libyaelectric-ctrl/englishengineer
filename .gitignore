@@ -165,3 +165,5 @@ opencode.json
 *.tar.xz
 *.tar.zst
 ```
+monitoring/grafana_data/
+monitoring/prometheus_data/

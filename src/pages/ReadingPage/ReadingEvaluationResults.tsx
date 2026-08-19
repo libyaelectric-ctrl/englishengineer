@@ -19,6 +19,7 @@ import { SectionCard } from '@/shared/components/SectionCard';
 import type { ReadingEvaluationResult } from '@/features/reading/reading.types';
 
 interface ReadingEvaluationResultsProps {
+  translate?: (key: string) => string;
   evaluationResult: ReadingEvaluationResult;
   resetCurrentMission: () => void;
   setSelectedWord: (word: null) => void;
@@ -29,6 +30,7 @@ interface ReadingEvaluationResultsProps {
 }
 
 export const ReadingEvaluationResults = ({
+  translate = (key: string) => key,
   evaluationResult,
   resetCurrentMission,
   setSelectedWord,
@@ -64,21 +66,21 @@ export const ReadingEvaluationResults = ({
           <div className="w-full space-y-4 border-t border-border-soft pt-4">
             <div className="space-y-1.5">
               <div className="flex justify-between items-center text-[10px] font-mono font-medium text-muted-copy">
-                <span>Comprehension Rate</span>
+                <span>{translate('reading.comprehensionRate')}</span>
                 <span>{evaluationResult.comprehensionScore}%</span>
               </div>
               <ProgressBar value={evaluationResult.comprehensionScore} color="primary" />
             </div>
             <div className="space-y-1.5">
               <div className="flex justify-between items-center text-[10px] font-mono font-medium text-muted-copy">
-                <span>Jargon / Vocabulary</span>
+                <span>{translate('reading.jargonVocabulary')}</span>
                 <span>{evaluationResult.vocabularyScore}%</span>
               </div>
               <ProgressBar value={evaluationResult.vocabularyScore} color="primary" />
             </div>
             <div className="space-y-1.5">
               <div className="flex justify-between items-center text-[10px] font-mono font-medium text-muted-copy">
-                <span>Technical Precision</span>
+                <span>{translate('reading.technicalPrecision')}</span>
                 <span>{evaluationResult.technicalAccuracyScore}%</span>
               </div>
               <ProgressBar value={evaluationResult.technicalAccuracyScore} color="success" />
@@ -89,7 +91,7 @@ export const ReadingEvaluationResults = ({
         <div className="p-5 bg-success/5 border border-success/20 rounded-[4px] space-y-4 shadow-sm">
           <h5 className="text-xs font-bold uppercase text-success tracking-wider flex items-center gap-1.5">
             <Award className="h-4.5 w-4.5" />
-            <span>Scoring Rewards Claimed</span>
+            <span>{translate('reading.scoringRewardsClaimed')}</span>
           </h5>
           <div className="grid grid-cols-3 gap-3">
             <div className="rounded-[4px] border border-border-soft bg-surface p-3 text-center shadow-sm">
@@ -129,7 +131,7 @@ export const ReadingEvaluationResults = ({
           <div className="space-y-3">
             <h5 className="text-xs font-bold text-success uppercase tracking-widest font-mono flex items-center gap-1.5">
               <CheckCircle2 className="h-4 w-4 shrink-0" />
-              <span>Identified Strengths</span>
+              <span>{translate('reading.identifiedStrengths')}</span>
             </h5>
             <ul className="space-y-1.5">
               {evaluationResult.strengths.map((s) => (
@@ -146,7 +148,7 @@ export const ReadingEvaluationResults = ({
           <div className="space-y-3 border-t border-border-soft pt-4 md:border-l md:border-t-0 md:pl-4 md:pt-0">
             <h5 className="text-xs font-bold text-warning uppercase tracking-widest font-mono flex items-center gap-1.5">
               <AlertTriangle className="h-4 w-4 shrink-0" />
-              <span>Development Gaps</span>
+              <span>{translate('reading.developmentGaps')}</span>
             </h5>
             <ul className="space-y-1.5">
               {evaluationResult.weaknesses.map((w) => (
