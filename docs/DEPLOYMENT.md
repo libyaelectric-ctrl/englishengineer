@@ -21,7 +21,7 @@ cd 8.0
 npx vercel --prod
 ```
 
-**Production URL:** https://englishengineer.vercel.app
+**Production URL:** https://eng-vox.vercel.app
 
 **Configuration:** `vercel.json` handles SPA routing (`/* -> /index.html`) and asset caching.
 

@@ -42,7 +42,7 @@ This triggers the `deploy-production.yml` workflow automatically.
 
 ```bash
 # Check frontend
-curl -s https://englishengineer.vercel.app | head -5
+curl -s https://eng-vox.vercel.app | head -5
 
 # Check backend
 curl -s https://englishengineer-production.up.railway.app/api/health
@@ -102,7 +102,7 @@ curl -s https://englishengineer-production.up.railway.app/api-docs
 
 ### Health Check Endpoints
 
-- Frontend: `https://englishengineer.vercel.app`
+- Frontend: `https://eng-vox.vercel.app`
 - Backend: `https://englishengineer-production.up.railway.app/api/health`
 - API Docs: `https://englishengineer-production.up.railway.app/api-docs`
 

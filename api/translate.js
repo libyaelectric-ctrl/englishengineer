@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const ALLOWED_ORIGINS = ['https://englishengineer.vercel.app', 'http://localhost:5173'];
+  const ALLOWED_ORIGINS = ['https://eng-vox.vercel.app', 'http://localhost:5173'];
   const origin = req.headers.origin || '';
   if (ALLOWED_ORIGINS.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);

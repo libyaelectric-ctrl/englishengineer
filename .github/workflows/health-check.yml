@@ -24,7 +24,7 @@ jobs:
       - name: Check Frontend
         run: |
           echo "Checking frontend..."
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer.vercel.app)
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://eng-vox.vercel.app)
           if [ "$RESPONSE" -ne 200 ]; then
             echo "FAIL: Frontend returned $RESPONSE"
             exit 1
@@ -46,4 +46,4 @@ jobs:
         run: |
           echo "::error::Production health check failed!"
           echo "Backend: https://englishengineer-backend.onrender.com/api/health"
-          echo "Frontend: https://englishengineer.vercel.app"
+          echo "Frontend: https://eng-vox.vercel.app"

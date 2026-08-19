@@ -16,7 +16,7 @@ agentic-browsing: 0
 Lighthouse versiyon: 13.4.0
 User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36
 Fetch time: 2026-07-18T20:00:04.860Z
-URL: https://englishengineer.vercel.app/
+URL: https://eng-vox.vercel.app/
 Toplam audit: 160
 
 Not: Performance dusuk (buyuk bundle boyutlari nedeniyle). Kod-splitting ile iyilestirilebilir.

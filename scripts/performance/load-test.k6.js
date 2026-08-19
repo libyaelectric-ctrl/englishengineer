@@ -38,7 +38,7 @@ export const options = {
   },
 };
 
-const BASE_URL = __ENV.API_BASE_URL || 'https://englishengineer.vercel.app';
+const BASE_URL = __ENV.API_BASE_URL || 'https://eng-vox.vercel.app';
 
 export default function () {
   // Sistem sagligi (Health Check) ve Ana sayfa render hizi kontrolu

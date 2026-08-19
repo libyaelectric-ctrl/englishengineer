@@ -13,7 +13,7 @@ const REPOSITORY = process.env.REPOSITORY;
 const PR_TITLE = process.env.PR_TITLE || '';
 const PR_BODY = process.env.PR_BODY || '';
 
-const ENGVOX_URL = 'https://englishengineer.vercel.app';
+const ENGVOX_URL = 'https://eng-vox.vercel.app';
 
 const API_BASE = 'https://api.github.com';
 

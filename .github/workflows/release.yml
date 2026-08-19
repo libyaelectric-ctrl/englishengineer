@@ -32,7 +32,7 @@ jobs:
             ${{ steps.changelog.outputs.changes }}
 
             ## Deployment
-            - Frontend: https://englishengineer.vercel.app
+            - Frontend: https://eng-vox.vercel.app
             - Backend: https://englishengineer-backend.onrender.com
           draft: false
           prerelease: false

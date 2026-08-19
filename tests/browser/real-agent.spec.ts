@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 
-const SITE = 'https://englishengineer.vercel.app';
+const SITE = 'https://eng-vox.vercel.app';
 const results: string[] = [];
 
 function log(msg: string) {
@@ -236,9 +236,7 @@ test.describe('Real User Agent', () => {
 
   test('11. Backend health check', async ({ page }) => {
     log('🔧 Testing Backend...');
-    const response = await page.goto(
-      'https://englishengineer-backend.onrender.com/api/health'
-    );
+    const response = await page.goto('https://englishengineer-backend.onrender.com/api/health');
     const data = await response?.json();
     log(
       `🔧 Backend: v${data?.version} | AI: ${data?.aiConfigured} | Stripe: ${data?.stripeConfigured}`

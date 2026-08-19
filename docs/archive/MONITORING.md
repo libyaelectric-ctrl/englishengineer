@@ -8,7 +8,7 @@ EngineerOS uses a multi-layered monitoring approach with automated health checks
 
 ### Frontend
 
-- **URL:** `https://englishengineer.vercel.app`
+- **URL:** `https://eng-vox.vercel.app`
 - **Check:** HTTP 200 response
 - **Frequency:** Every 30 minutes (GitHub Actions)
 
@@ -80,7 +80,7 @@ EngineerOS uses a multi-layered monitoring approach with automated health checks
 
 ```bash
 # Check frontend
-curl -s -o /dev/null -w "%{http_code}" https://englishengineer.vercel.app
+curl -s -o /dev/null -w "%{http_code}" https://eng-vox.vercel.app
 
 # Check backend
 curl -s https://englishengineer-production.up.railway.app/api/health

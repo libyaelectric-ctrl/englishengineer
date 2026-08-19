@@ -53,4 +53,4 @@ jobs:
       - name: Report Rollback
         run: |
           echo "✅ Rollback complete: ${{ inputs.version }} -> ${{ inputs.environment }}"
-          echo "Frontend: https://englishengineer.vercel.app"
+          echo "Frontend: https://eng-vox.vercel.app"

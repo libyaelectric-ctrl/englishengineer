@@ -173,8 +173,8 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
   const allowedOrigins = [
     ...new Set([
       ...configuredOrigins,
-      'https://englishengineer.vercel.app',
-      'https://www.englishengineer.vercel.app',
+      'https://eng-vox.vercel.app',
+      'https://www.eng-vox.vercel.app',
     ]),
   ].filter(Boolean) as string[];
 

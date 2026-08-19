@@ -26,7 +26,7 @@ const documents: Record<LegalDocument, DocumentContent> = {
     sections: [
       [
         '1. Data Controller & International Contact',
-        'EngVox Operating Systems Inc. ("EngVox", "we", "us", or "our") acts as the Data Controller responsible for your personal information. For all data privacy inquiries, exercising data subject rights, or contacting our Data Protection Officer (DPO), please email dpo@englishengineer.vercel.app or privacy@englishengineer.vercel.app.',
+        'EngVox Operating Systems Inc. ("EngVox", "we", "us", or "our") acts as the Data Controller responsible for your personal information. For all data privacy inquiries, exercising data subject rights, or contacting our Data Protection Officer (DPO), please email dpo@eng-vox.vercel.app or privacy@eng-vox.vercel.app.',
       ],
       [
         '2. Local-First Architecture & Data Collection',
@@ -46,7 +46,7 @@ const documents: Record<LegalDocument, DocumentContent> = {
       ],
       [
         '6. Data Retention & Permanent Account Erasure',
-        'Account credentials and workspace state are retained only while your account remains active. Anonymized performance metrics are pruned after 90 days. Users may trigger instant, automated account deletion and workspace purge from their Profile settings or by emailing privacy@englishengineer.vercel.app.',
+        'Account credentials and workspace state are retained only while your account remains active. Anonymized performance metrics are pruned after 90 days. Users may trigger instant, automated account deletion and workspace purge from their Profile settings or by emailing privacy@eng-vox.vercel.app.',
       ],
       [
         '7. International Data Transfers & Safeguards',
