@@ -123,6 +123,7 @@ const PlacementPage = () => {
         stations={placementStations}
         activeStationId={activeDiagnosticStation}
         onSelectStation={() => {}}
+        translate={translate}
         metrics={[
           {
             icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,

@@ -2,8 +2,8 @@ import { ArrowRight, Check, Flag, Lock, LucideIcon, Zap } from 'lucide-react';
 
 import React, { useMemo } from 'react';
 
-import { useLocalizationStore } from '@/features/localization';
-import { interpolate } from '@/features/localization/interpolate';
+const interpolate = (template: string, values: Record<string, string | number>): string =>
+  template.replace(/\{(\w+)\}/g, (match, key) => (key in values ? String(values[key]) : match));
 
 export interface PipelineStation {
   id: string;
@@ -27,6 +27,7 @@ export interface UniversalCyberPipelineProps {
   stations: PipelineStation[];
   activeStationId?: string | null;
   onSelectStation: (id: string) => void;
+  translate?: (key: string) => string;
   tierLabels?: [string, string, string, string];
   metrics?: Array<{
     icon: React.ReactNode;
@@ -45,11 +46,11 @@ export const UniversalCyberPipeline: React.FC<UniversalCyberPipelineProps> = ({
   stations,
   activeStationId,
   onSelectStation,
+  translate = (key: string) => key,
   tierLabels,
   metrics = [],
   className = '',
 }) => {
-  const translate = useLocalizationStore((s) => s.translate);
   const resolvedTierLabels: [string, string, string, string] = tierLabels ?? [
     translate('pipeline.tier.foundation'),
     translate('pipeline.tier.operational'),

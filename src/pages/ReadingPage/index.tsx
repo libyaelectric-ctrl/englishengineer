@@ -321,6 +321,7 @@ const ReadingPage = () => {
           stations={readingStations}
           activeStationId={currentMission?.id}
           onSelectStation={(id) => handleLaunchMission(id)}
+          translate={translate}
           metrics={[
             {
               icon: <GraduationCap className="h-4 w-4 text-emerald-400" />,

@@ -115,6 +115,7 @@ const RoleplayTab = () => {
           stations={speakingStations}
           activeStationId={activeMission?.id}
           onSelectStation={(id) => handleMissionSelect(id)}
+          translate={translate}
           metrics={[
             {
               icon: <Trophy className="h-4 w-4 text-emerald-400" />,

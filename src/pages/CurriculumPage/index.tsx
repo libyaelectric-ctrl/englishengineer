@@ -164,6 +164,7 @@ const CurriculumPage = () => {
                 const target = missions.find((m) => m.id === id);
                 if (target) navigate(target.route);
               }}
+              translate={translate}
               metrics={[
                 {
                   icon: <Bolt className="h-4 w-4 text-emerald-400" />,

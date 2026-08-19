@@ -380,6 +380,7 @@ const WritingPage = () => {
           stations={writingStations}
           activeStationId={selectedMissionId}
           onSelectStation={(id) => handleLaunchMission(id)}
+          translate={translate}
           metrics={[
             {
               icon: <FileCheck className="h-4 w-4 text-emerald-400" />,
