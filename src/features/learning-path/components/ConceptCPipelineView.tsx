@@ -15,6 +15,7 @@ import type { CefrLevel } from '@/shared/types/domain.types';
 
 import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
+import { interpolate } from '@/features/localization/interpolate';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 import { type LearningPath, buildLearningPath, resolveDefaultDiscipline } from '../index';
@@ -309,13 +310,14 @@ export const ConceptCPipelineView: React.FC<ConceptCPipelineViewProps> = ({
                   ) : (
                     <>
                       <Flag className="h-3 w-3 fill-cyan-300" />
-                      ACTIVE TARGET MISSION
+                      {translate('pipeline.activeTarget')}
                     </>
                   )}
                 </span>
 
                 <span className="text-xs font-bold text-slate-400">
-                  {activeStation.cefrLevel} · Modül {activeStation.index + 1}
+                  {activeStation.cefrLevel} · {translate('learningpath.module')}{' '}
+                  {activeStation.index + 1}
                 </span>
               </div>
 
@@ -324,7 +326,7 @@ export const ConceptCPipelineView: React.FC<ConceptCPipelineViewProps> = ({
                   {activeStation.cefrLevel}.{activeStation.index + 1}: {activeStation.topicName}
                 </h3>
                 <p className="text-xs font-medium text-slate-300">
-                  {translate(disciplineMeta.labelKey)} Terminoloji ve Saha Pratiği
+                  {translate(disciplineMeta.labelKey)}
                 </p>
               </div>
 
@@ -332,7 +334,7 @@ export const ConceptCPipelineView: React.FC<ConceptCPipelineViewProps> = ({
               <div className="space-y-1.5 pt-1">
                 <div className="flex items-center justify-between text-xs text-slate-400">
                   <span>
-                    Durum:{' '}
+                    {translate('pipeline.statusLabel')}{' '}
                     <strong className="font-bold text-cyan-300">
                       {translate('learningpath.statusIn-progress')}
                     </strong>
@@ -368,7 +370,9 @@ export const ConceptCPipelineView: React.FC<ConceptCPipelineViewProps> = ({
                 <ArrowRight className="h-4 w-4 stroke-[3] transition-transform group-hover:translate-x-1" />
               </button>
               <p className="text-[11px] font-medium text-slate-400">
-                {activeStation.topicName} alıştırmalarına devam et
+                {interpolate(translate('pipeline.continuePractice'), {
+                  title: activeStation.topicName,
+                })}
               </p>
             </div>
           </div>
@@ -382,11 +386,16 @@ export const ConceptCPipelineView: React.FC<ConceptCPipelineViewProps> = ({
           <div className="flex items-center gap-2">
             <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#10B981]" />
             <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-300">
-              {translate('learningpath.verified')}: {completedStationsCount || 4} Seviye
+              {interpolate(translate('pipeline.verifiedStations'), {
+                count: completedStationsCount || 4,
+              })}
             </span>
           </div>
           <span className="text-xs font-semibold text-slate-400">
-            Toplam: {stations.length} İstasyon · %{overallMasteryPercent} Tamamlandı
+            {interpolate(translate('pipeline.stationsSummary'), {
+              count: stations.length,
+              percent: overallMasteryPercent,
+            })}
           </span>
         </div>
 
@@ -484,7 +493,7 @@ export const ConceptCPipelineView: React.FC<ConceptCPipelineViewProps> = ({
           {translate('learningpath.tierAdvanced')}
         </div>
         <div className="rounded-lg border-b-2 border-slate-700 bg-slate-900/20 py-2 text-slate-500">
-          Expert / C2
+          {translate('pipeline.tier.contractual')}
         </div>
       </div>
     </div>
