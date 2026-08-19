@@ -1,10 +1,25 @@
-const CACHE_VERSION = 'v4';
+const CACHE_VERSION = 'v5';
 const CACHE_NAME = `engvox-${CACHE_VERSION}`;
 const STATIC_ASSETS = ['/', '/offline.html', '/brand/logo.svg', '/manifest.json'];
+const MAX_CACHE_ENTRIES = 200;
+
+// Trim cache to max entries
+const trimCache = async (cacheName, maxEntries) => {
+  const cache = await caches.open(cacheName);
+  const keys = await cache.keys();
+  if (keys.length > maxEntries) {
+    await Promise.all(keys.slice(0, keys.length - maxEntries).map((k) => cache.delete(k)));
+  }
+};
 
 // Install: cache static assets
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS)));
+  event.waitUntil(
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => cache.addAll(STATIC_ASSETS))
+      .then(() => trimCache(CACHE_NAME, MAX_CACHE_ENTRIES))
+  );
   self.skipWaiting();
 });
 
