@@ -1,0 +1,40 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  receiver: 'email-notifications'
+
+receivers:
+  - name: 'email-notifications'
+    email_configs:
+      - to: 'admin@engvox.com'
+        from: 'alerts@engvox.com'
+        smarthost: 'smtp.gmail.com:587'
+        auth_username: 'alerts@engvox.com'
+        auth_password: 'YOUR_APP_PASSWORD'
+        subject: '[EngVox Alert] {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Severity: {{ .Labels.severity }}
+          {{ end }}
+
+# Optional: Slack webhook
+# - name: 'slack-notifications'
+#   slack_configs:
+#     - api_url: 'YOUR_SLACK_WEBHOOK_URL'
+#       channel: '#engvox-alerts'
+#       title: '{{ .GroupLabels.alertname }}'
+#       text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname']
