@@ -86,6 +86,8 @@ const PricingPage = () => {
             <button
               type="button"
               onClick={() => setIsAnnual(false)}
+              aria-pressed={!isAnnual}
+              aria-label="Select monthly billing"
               className={`px-3 py-1.5 rounded text-sm font-semibold transition-all ${!isAnnual ? 'bg-primary text-white shadow-sm' : 'text-muted-copy'}`}
             >
               {pricingCopy.monthly}
@@ -93,6 +95,8 @@ const PricingPage = () => {
             <button
               type="button"
               onClick={() => setIsAnnual(true)}
+              aria-pressed={isAnnual}
+              aria-label="Select annual billing"
               className={`px-3 py-1.5 rounded text-sm font-semibold transition-all flex items-center gap-1.5 ${isAnnual ? 'bg-primary text-white shadow-sm' : 'text-muted-copy'}`}
             >
               <span>{pricingCopy.annual}</span>
@@ -103,10 +107,11 @@ const PricingPage = () => {
           </div>
 
           <div className="flex items-center gap-1.5 bg-surface px-2.5 py-1.5 rounded-[var(--radius-card)] border border-border-soft">
-            <Globe className="h-3.5 w-3.5 text-blue-500" />
+            <Globe className="h-3.5 w-3.5 text-blue-500" aria-hidden="true" />
             <select
               value={selectedCurrency}
               onChange={(e) => setSelectedCurrency(e.target.value)}
+              aria-label="Select currency"
               className="bg-transparent text-xs font-bold text-foreground focus:outline-none cursor-pointer"
             >
               {CurrencyConfig.CURRENCIES.map((c) => (
@@ -166,7 +171,7 @@ const PricingPage = () => {
 
         {/* Feature Comparison Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm" role="table" aria-label="Feature comparison by plan">
             <thead>
               <tr className="border-b border-border-soft">
                 <th className="text-left py-3 pr-4 font-semibold text-muted-copy w-1/3">Feature</th>

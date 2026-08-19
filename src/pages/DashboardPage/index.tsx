@@ -96,30 +96,39 @@ export const DashboardPage: React.FC = () => {
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <Link
                 to="/curriculum/today"
+                aria-label={translate('dashboard.startHere')}
                 className="inline-flex items-center gap-1.5 rounded-[var(--radius-card)] bg-[var(--surface)] border border-[var(--color-border-soft)] px-5 py-2.5 text-sm font-bold text-[var(--foreground)] hover:bg-[var(--surface-hover)] transition-colors"
               >
                 {translate('dashboard.startHere')}
-                <ArrowRight className="h-3.5 w-3.5" />
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
               </Link>
             </div>
           </div>
         </header>
-
         {/* Learning & Career Path Pipeline (Concept C) */}
         <DashboardLearningPipeline disciplineOverride={discipline as any} />
-
-        {/* Stats */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Stats */}{' '}
+        <div
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+          role="list"
+          aria-label="Dashboard statistics"
+        >
           {stats.map(({ label, value, icon: Icon }) => (
             <div
               key={label}
+              role="listitem"
               className="rounded-[var(--radius-card)] border border-[var(--color-border-soft)] bg-[var(--surface)] p-4 transition-all hover:border-[var(--color-primary)]/40 hover:shadow-lg"
             >
               <div className="mb-3 inline-flex rounded-[var(--radius-card)] bg-[var(--color-primary)]/10 p-2.5">
-                <Icon className="h-5 w-5 text-[var(--color-primary)]" />
+                <Icon className="h-5 w-5 text-[var(--color-primary)]" aria-hidden="true" />
               </div>
               <p className="text-xs text-[var(--color-muted-copy)]">{label}</p>
-              <p className="mt-1 text-lg font-bold text-[var(--foreground)]">{value}</p>
+              <p
+                className="mt-1 text-lg font-bold text-[var(--foreground)]"
+                aria-label={`${label}: ${value}`}
+              >
+                {value}
+              </p>
             </div>
           ))}
         </div>
