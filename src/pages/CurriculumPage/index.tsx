@@ -122,12 +122,11 @@ const CurriculumPage = () => {
       id: mission.id,
       levelBadge: mission.cefrBand,
       title: mission.title,
-      subtitle: `${mission.skill} · ${mission.estimatedMinutes} dk`,
+      subtitle: mission.skill,
       status: idx === 0 ? 'in-progress' : 'available',
       progressRatio: idx === 0 ? 0.4 : 0,
       totalItems: 1,
       completedItems: 0,
-      actionLabel: 'Göreve Başla',
       onAction: () => navigate(mission.route),
     }));
   }, [missions, navigate]);
@@ -155,8 +154,8 @@ const CurriculumPage = () => {
         <>
           {curriculumStations.length > 0 && (
             <UniversalCyberPipeline
-              title="Günlük Görev Yörüngesi"
-              subtitle="Term drill'den AI senaryo pratiğine uzanan günlük enerji hattı"
+              title={translate('pipeline.curriculum.title')}
+              subtitle={translate('pipeline.curriculum.subtitle')}
               badgeText={`DAY-${dailyStreak + 1}`}
               icon={Bolt}
               stations={curriculumStations}
@@ -165,16 +164,10 @@ const CurriculumPage = () => {
                 const target = missions.find((m) => m.id === id);
                 if (target) navigate(target.route);
               }}
-              tierLabels={[
-                'Term Drill (A1-A2)',
-                'Grammar Polish (B1)',
-                'AI Senaryo Pratiği (B2)',
-                'Günlük Tekrar (C1-C2)',
-              ]}
               metrics={[
                 {
                   icon: <Bolt className="h-4 w-4 text-emerald-400" />,
-                  label: 'Streak',
+                  label: translate('pipeline.metric.streak'),
                   value: dailyStreak,
                 },
                 {
@@ -184,7 +177,7 @@ const CurriculumPage = () => {
                 },
                 {
                   icon: <Bolt className="h-4 w-4 text-amber-400" />,
-                  label: 'Görev',
+                  label: translate('pipeline.metric.tasks'),
                   value: missions.length,
                 },
               ]}

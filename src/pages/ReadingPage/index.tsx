@@ -22,6 +22,7 @@ import {
   EmptyLevelState,
   LevelContentFilter,
 } from '@/features/level-system';
+import { useLocalizationStore } from '@/features/localization';
 import type { VocabularyItem } from '@/features/reading';
 
 import { ReadingMissionCard } from './ReadingMissionCard';
@@ -219,6 +220,7 @@ const WorkspaceTabContent = ({
 };
 
 const ReadingPage = () => {
+  const translate = useLocalizationStore((s) => s.translate);
   const currentUser = useAuthStore((s) => s.currentUser);
   const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
 
@@ -271,7 +273,6 @@ const ReadingPage = () => {
         progressRatio: isCompleted ? Math.min(1, score / 100) : isActive ? 0.4 : 0,
         totalItems: 100,
         completedItems: isCompleted ? score : 0,
-        actionLabel: isCompleted ? 'Tekrar Çöz' : 'Okumaya Başla',
         onAction: () => handleLaunchMission(mission.id),
       };
     });
@@ -313,33 +314,27 @@ const ReadingPage = () => {
 
       {activeTab === 'missions' && readingStations.length > 0 && (
         <UniversalCyberPipeline
-          title="Teknik Dokümantasyon Hattı"
-          subtitle="Saha dokümanları, teknik şartname ve sözleşme standartlarına dayalı okuma-anlama hattı"
+          title={translate('pipeline.reading.title')}
+          subtitle={translate('pipeline.reading.subtitle')}
           badgeText={`CEFR: ${currentLevel}`}
           icon={FileText}
           stations={readingStations}
           activeStationId={currentMission?.id}
           onSelectStation={(id) => handleLaunchMission(id)}
-          tierLabels={[
-            'Temel Dokümanlar (A1-A2)',
-            'Saha Dokümanları (B1)',
-            'ISO & Standartlar (B2)',
-            'Sözleşme & FIDIC (C1-C2)',
-          ]}
           metrics={[
             {
               icon: <GraduationCap className="h-4 w-4 text-emerald-400" />,
-              label: 'Tamamlanan',
+              label: translate('pipeline.metric.completed'),
               value: finishedCount,
             },
             {
               icon: <BookOpen className="h-4 w-4 text-cyan-400" />,
-              label: 'Ortalama Skor',
+              label: translate('pipeline.metric.avgScore'),
               value: bestScoreAvg > 0 ? `${bestScoreAvg}%` : '0%',
             },
             {
               icon: <FileText className="h-4 w-4 text-amber-400" />,
-              label: 'Görev',
+              label: translate('pipeline.metric.tasks'),
               value: `${finishedCount}/${visibleMissions.length}`,
             },
           ]}

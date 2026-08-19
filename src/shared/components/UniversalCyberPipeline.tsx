@@ -2,6 +2,9 @@ import { ArrowRight, Check, Flag, Lock, LucideIcon, Zap } from 'lucide-react';
 
 import React, { useMemo } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+import { interpolate } from '@/features/localization/interpolate';
+
 export interface PipelineStation {
   id: string;
   levelBadge: string; // e.g. "A1.1", "G1", "SDS-01"
@@ -42,15 +45,18 @@ export const UniversalCyberPipeline: React.FC<UniversalCyberPipelineProps> = ({
   stations,
   activeStationId,
   onSelectStation,
-  tierLabels = [
-    'Başlangıç (A1 - A2)',
-    'Orta Düzey (B1 - B2)',
-    'İleri Düzey (C1 - C2)',
-    'Uzman (C2)',
-  ],
+  tierLabels,
   metrics = [],
   className = '',
 }) => {
+  const translate = useLocalizationStore((s) => s.translate);
+  const resolvedTierLabels: [string, string, string, string] = tierLabels ?? [
+    translate('pipeline.tier.foundation'),
+    translate('pipeline.tier.operational'),
+    translate('pipeline.tier.technical'),
+    translate('pipeline.tier.contractual'),
+  ];
+
   const activeStation = useMemo(() => {
     if (!stations.length) return null;
     if (activeStationId) {
@@ -176,12 +182,12 @@ export const UniversalCyberPipeline: React.FC<UniversalCyberPipelineProps> = ({
                   {activeStation.status === 'completed' ? (
                     <>
                       <Check className="h-3 w-3 stroke-[3]" />
-                      DOĞRULANDI & TAMAMLANDI
+                      {translate('pipeline.verifiedCompleted')}
                     </>
                   ) : (
                     <>
                       <Flag className="h-3 w-3 fill-cyan-300" />
-                      AKTİF ÇALIŞMA HEDEFİ
+                      {translate('pipeline.activeTarget')}
                     </>
                   )}
                 </span>
@@ -202,14 +208,17 @@ export const UniversalCyberPipeline: React.FC<UniversalCyberPipelineProps> = ({
               <div className="space-y-1.5 pt-1">
                 <div className="flex items-center justify-between text-xs text-slate-400">
                   <span>
-                    Durum:{' '}
+                    {translate('pipeline.statusLabel')}{' '}
                     <strong className="font-bold text-cyan-300">
-                      {activeStation.status === 'completed' ? 'Tamamlandı' : 'Devam Ediyor'}
+                      {activeStation.status === 'completed'
+                        ? translate('pipeline.statusCompleted')
+                        : translate('pipeline.statusInProgress')}
                     </strong>
                   </span>
                   {activeStation.totalItems !== undefined && (
                     <span className="font-bold tabular-nums text-slate-200">
-                      {activeStation.completedItems ?? 0} / {activeStation.totalItems} Terim/Kural
+                      {activeStation.completedItems ?? 0} / {activeStation.totalItems}{' '}
+                      {translate('pipeline.itemsUnit')}
                     </span>
                   )}
                 </div>
@@ -240,12 +249,16 @@ export const UniversalCyberPipeline: React.FC<UniversalCyberPipelineProps> = ({
                 >
                   <span>
                     {activeStation.actionLabel ||
-                      (activeStation.status === 'completed' ? 'Modülü İncele' : 'Egzersize Başla')}
+                      (activeStation.status === 'completed'
+                        ? translate('pipeline.reviewModule')
+                        : translate('pipeline.startExercise'))}
                   </span>
                   <ArrowRight className="h-4 w-4 stroke-[3] transition-transform group-hover:translate-x-1" />
                 </button>
                 <p className="text-[11px] font-medium text-slate-400">
-                  {activeStation.title} pratiğine devam et
+                  {interpolate(translate('pipeline.continuePractice'), {
+                    title: activeStation.title,
+                  })}
                 </p>
               </div>
             )}
@@ -260,11 +273,14 @@ export const UniversalCyberPipeline: React.FC<UniversalCyberPipelineProps> = ({
           <div className="flex items-center gap-2">
             <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#10B981]" />
             <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-300">
-              DOĞRULANDI: {completedCount} İstasyon
+              {interpolate(translate('pipeline.verifiedStations'), { count: completedCount })}
             </span>
           </div>
           <span className="text-xs font-semibold text-slate-400">
-            Toplam: {stations.length} İstasyon · %{overallPercent} Tamamlandı
+            {interpolate(translate('pipeline.stationsSummary'), {
+              count: stations.length,
+              percent: overallPercent,
+            })}
           </span>
         </div>
 
@@ -362,16 +378,16 @@ export const UniversalCyberPipeline: React.FC<UniversalCyberPipelineProps> = ({
       {/* 4. ALT BÖLGE: Kademe Cetveli */}
       <div className="relative z-10 grid grid-cols-2 gap-3 border-t border-slate-800/80 pt-4 text-center text-xs font-bold uppercase tracking-wider sm:grid-cols-4">
         <div className="rounded-lg border-b-2 border-emerald-500 bg-emerald-950/20 py-2 text-emerald-400">
-          {tierLabels[0]}
+          {resolvedTierLabels[0]}
         </div>
         <div className="rounded-lg border-b-2 border-emerald-400 bg-emerald-950/20 py-2 text-emerald-300">
-          {tierLabels[1]}
+          {resolvedTierLabels[1]}
         </div>
         <div className="rounded-lg border-b-2 border-cyan-400 bg-cyan-950/20 py-2 text-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
-          {tierLabels[2]}
+          {resolvedTierLabels[2]}
         </div>
         <div className="rounded-lg border-b-2 border-slate-700 bg-slate-900/20 py-2 text-slate-500">
-          {tierLabels[3]}
+          {resolvedTierLabels[3]}
         </div>
       </div>
     </div>

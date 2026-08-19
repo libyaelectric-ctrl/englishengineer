@@ -16,6 +16,7 @@ import type { EngineeringDiscipline } from '@/shared/constants/engineering-disci
 import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
 import { useAuthStore } from '@/features/auth';
 import { LevelContentFilter } from '@/features/level-system';
+import { useLocalizationStore } from '@/features/localization';
 import { SPEAKING_MVP_MODE } from '@/features/speaking';
 import { DefenseSimulator } from '@/features/speaking/simulator/DefenseSimulator';
 
@@ -39,6 +40,7 @@ const InterviewSimulator = lazy(() =>
 type SpeakingTab = 'roleplay' | 'interview' | 'defense';
 
 const RoleplayTab = () => {
+  const translate = useLocalizationStore((s) => s.translate);
   const {
     ROLEPLAY_FILTERS,
     typedTranscript,
@@ -89,7 +91,6 @@ const RoleplayTab = () => {
         progressRatio: isCompleted ? Math.min(1, score / 100) : isActive ? 0.4 : 0,
         totalItems: 100,
         completedItems: isCompleted ? score : 0,
-        actionLabel: isCompleted ? 'Tekrar Pratik' : 'Brifinge Başla',
         onAction: () => handleMissionSelect(mission.id),
       };
     });
@@ -107,33 +108,27 @@ const RoleplayTab = () => {
     <>
       {speakingStations.length > 0 && (
         <UniversalCyberPipeline
-          title="Sözlü Sunum & Brifing Hattı"
-          subtitle="Toolbox Talk'tan yönetim kurulu teknik savunmasına uzanan sözlü yeterlilik hattı"
+          title={translate('pipeline.speaking.title')}
+          subtitle={translate('pipeline.speaking.subtitle')}
           badgeText={`CEFR: ${currentLevel}`}
           icon={MessageSquareText}
           stations={speakingStations}
           activeStationId={activeMission?.id}
           onSelectStation={(id) => handleMissionSelect(id)}
-          tierLabels={[
-            'Toolbox Talk (A1-A2)',
-            'Handover Brifingi (B1)',
-            'Kök Neden Sunumu (B2)',
-            'Yönetim Kurulu Savunması (C1-C2)',
-          ]}
           metrics={[
             {
               icon: <Trophy className="h-4 w-4 text-emerald-400" />,
-              label: 'Tamamlanan',
+              label: translate('pipeline.metric.completed'),
               value: speakingFinishedCount,
             },
             {
               icon: <MessageSquareText className="h-4 w-4 text-cyan-400" />,
-              label: 'Ortalama Skor',
+              label: translate('pipeline.metric.avgScore'),
               value: speakingAvgScore > 0 ? `${speakingAvgScore}%` : '0%',
             },
             {
               icon: <Mic className="h-4 w-4 text-amber-400" />,
-              label: 'Görev',
+              label: translate('pipeline.metric.tasks'),
               value: `${speakingFinishedCount}/${roleplayMissions.length}`,
             },
           ]}

@@ -13,6 +13,7 @@ import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
 import { useAuthStore } from '@/features/auth';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 import { useLocalizationStore } from '@/features/localization';
+import { interpolate } from '@/features/localization/interpolate';
 import { VocabularyMenuService, type VocabularyTerm } from '@/features/vocabulary';
 
 import { MasteredHeatmap } from './components/MasteredHeatmap';
@@ -91,14 +92,20 @@ const VocabularyPage = () => {
         .join(' · ');
       const hasData = levelTerms.length > 0;
       const isCurrent = level === vocabularyLevel;
+      const disciplineLabel = userDiscipline ? userDiscipline.toUpperCase() : 'MÜHENDİSLİK';
 
       return {
         id: `vocab-${level}`,
         levelBadge: level,
         title: sampleTerms || `${level} Engineering Terminology`,
         subtitle: hasData
-          ? `${levelTerms.length} terim · ${userDiscipline ? userDiscipline.toUpperCase() : 'MÜHENDİSLİK'}`
-          : `${userDiscipline ? userDiscipline.toUpperCase() : 'MÜHENDİSLİK'} terminoloji istasyonu`,
+          ? interpolate(translate('pipeline.vocab.stationSubtitle'), {
+              count: levelTerms.length,
+              discipline: disciplineLabel,
+            })
+          : interpolate(translate('pipeline.vocab.stationFallback'), {
+              discipline: disciplineLabel,
+            }),
         status:
           hasData && mastered > 0 && mastered === levelTerms.length
             ? 'completed'
@@ -108,45 +115,40 @@ const VocabularyPage = () => {
         progressRatio: hasData ? learned / levelTerms.length : 0,
         totalItems: hasData ? levelTerms.length : vocabularySummary.total,
         completedItems: hasData ? mastered : 0,
-        actionLabel: 'Kelime Egzersizine Başla',
         onAction: () => {
           chooseTab('New');
         },
       };
     });
-  }, [terms, menuState, vocabularyLevel, userDiscipline, chooseTab, vocabularySummary]);
+  }, [terms, menuState, vocabularyLevel, userDiscipline, chooseTab, vocabularySummary, translate]);
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 animate-in fade-in duration-300 relative pb-8">
       {/* Cyber Telemetry Vocabulary Energy Pipeline */}
       <UniversalCyberPipeline
-        title="Terminoloji Enerji Hattı"
-        subtitle={`${userDiscipline ? userDiscipline.toUpperCase() : 'Mühendislik'} branşına özel teknik terim ve kavram kazanım hattı`}
+        title={translate('pipeline.vocab.title')}
+        subtitle={interpolate(translate('pipeline.vocab.subtitle'), {
+          discipline: userDiscipline ? userDiscipline.toUpperCase() : 'Engineering',
+        })}
         badgeText={`CEFR: ${vocabularyLevel}`}
         icon={BookOpen}
         stations={vocabularyStations}
         activeStationId={selectedStationId ?? `vocab-${vocabularyLevel}`}
         onSelectStation={(id) => setSelectedStationId(id)}
-        tierLabels={[
-          'Temel Terimler (A1-A2)',
-          'Saha & Donanım (B1)',
-          'Sistem & Teşhis (B2)',
-          'Şartname & Liderlik (C1-C2)',
-        ]}
         metrics={[
           {
             icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
-            label: 'Ustalaşılan',
+            label: translate('pipeline.metric.mastered'),
             value: vocabularySummary.mastered,
           },
           {
             icon: <BookOpen className="h-4 w-4 text-cyan-400" />,
-            label: 'Öğrenilen',
+            label: translate('pipeline.metric.learned'),
             value: vocabularySummary.learning,
           },
           {
             icon: <Zap className="h-4 w-4 text-amber-400" />,
-            label: 'Bugün Tekrar',
+            label: translate('pipeline.metric.dueToday'),
             value: vocabularySummary.dueToday,
           },
         ]}

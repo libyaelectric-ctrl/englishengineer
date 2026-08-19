@@ -37,6 +37,7 @@ import {
   type ListeningEvaluationResult,
   type ListeningMission,
 } from '@/features/listening/listening.types';
+import { useLocalizationStore } from '@/features/localization';
 
 type Question = {
   id: string;
@@ -334,6 +335,7 @@ const WorkspaceView = ({
 };
 
 const ListeningPage = () => {
+  const translate = useLocalizationStore((s) => s.translate);
   const missions = useListeningMissionsStore((s) => s.missions);
   const selectedMissionId = useListeningMissionsStore((s) => s.selectedMissionId);
   const completedMissions = useListeningMissionsStore((s) => s.completedMissions);
@@ -386,7 +388,6 @@ const ListeningPage = () => {
         progressRatio: isCompleted ? Math.min(1, score / 100) : isActive ? 0.4 : 0,
         totalItems: 100,
         completedItems: isCompleted ? score : 0,
-        actionLabel: isCompleted ? 'Tekrar Dinle' : 'Dinlemeye Başla',
         onAction: () => {
           selectMission(mission.id);
           setWorkspaceOpen(true);
@@ -459,8 +460,8 @@ const ListeningPage = () => {
           <>
             {listeningStations.length > 0 && (
               <UniversalCyberPipeline
-                title="Telsiz & Saha İletişimi Hattı"
-                subtitle="Atölye brifinginden acil telsiz ve çok dilli müşteri toplantısına uzanan dinleme hattı"
+                title={translate('pipeline.listening.title')}
+                subtitle={translate('pipeline.listening.subtitle')}
                 badgeText={`CEFR: ${currentLevel}`}
                 icon={Headphones}
                 stations={listeningStations}
@@ -469,26 +470,20 @@ const ListeningPage = () => {
                   selectMission(id);
                   setWorkspaceOpen(true);
                 }}
-                tierLabels={[
-                  'Net Atölye Brifingi (A1-A2)',
-                  'Yüksek Gürültü Saha (B1)',
-                  'Acil Telsiz İletişimi (B2)',
-                  'Çok Dilli Müşteri Toplantısı (C1-C2)',
-                ]}
                 metrics={[
                   {
                     icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
-                    label: 'Tamamlanan',
+                    label: translate('pipeline.metric.completed'),
                     value: listeningFinishedCount,
                   },
                   {
                     icon: <Headphones className="h-4 w-4 text-cyan-400" />,
-                    label: 'Ortalama Skor',
+                    label: translate('pipeline.metric.avgScore'),
                     value: listeningAvgScore > 0 ? `${listeningAvgScore}%` : '0%',
                   },
                   {
                     icon: <FileText className="h-4 w-4 text-amber-400" />,
-                    label: 'Görev',
+                    label: translate('pipeline.metric.tasks'),
                     value: `${listeningFinishedCount}/${visibleMissions.length}`,
                   },
                 ]}

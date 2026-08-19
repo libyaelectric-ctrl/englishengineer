@@ -142,7 +142,12 @@ export const resolveStripe = (env: Env, runtimeEnv: RuntimeEnvironment): StripeC
   const juniorPrice = trimEnv(env.STRIPE_PRICE_JUNIOR_MONTHLY);
   const hasPrice = hasText(juniorPrice);
   const configured = hasText(env.STRIPE_SECRET_KEY) && hasPrice;
-  const supabaseConfigured = [env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY].every(hasText);
+  const supabaseKey = env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  const supabaseConfigured =
+    hasText(env.SUPABASE_URL) &&
+    hasText(supabaseKey) &&
+    !supabaseKey?.startsWith('YOUR_') &&
+    supabaseKey !== 'your-supabase-service-role-key';
 
   const requestedBillingRepository = (
     env.BILLING_REPOSITORY ||
