@@ -10,7 +10,7 @@ vi.mock('./hooks/useVocabularyPage', () => ({
     vocabularyLevel: 'A1',
     loadError: null,
     terms: [],
-    menuState: { loading: false, error: null },
+    menuState: { progress: {}, myVocabulary: [] },
     wordSet: [],
     searchResults: [],
     allSearchResults: [],

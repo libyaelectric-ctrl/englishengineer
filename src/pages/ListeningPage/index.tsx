@@ -12,7 +12,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
+import {
+  type PipelineStation,
+  UniversalCyberPipeline,
+} from '@/shared/components/UniversalCyberPipeline';
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
+import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
+import { useAuthStore } from '@/features/auth';
 import {
   type ContentLevelFilter,
   DEFAULT_CONTENT_LEVEL_FILTER,
@@ -26,9 +33,6 @@ import {
 import { useListeningMissionsStore } from '@/features/listening';
 import { AudioPlayer } from '@/features/listening/AudioPlayer';
 import { PLAYBACK_SPEEDS } from '@/features/listening/listening.constants';
-import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
-import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
-import { useAuthStore } from '@/features/auth';
 import {
   type ListeningEvaluationResult,
   type ListeningMission,
@@ -332,6 +336,7 @@ const WorkspaceView = ({
 const ListeningPage = () => {
   const missions = useListeningMissionsStore((s) => s.missions);
   const selectedMissionId = useListeningMissionsStore((s) => s.selectedMissionId);
+  const completedMissions = useListeningMissionsStore((s) => s.completedMissions);
   const answers = useListeningMissionsStore((s) => s.answers);
   const summary = useListeningMissionsStore((s) => s.summary);
   const userKeywords = useListeningMissionsStore((s) => s.userKeywords);
@@ -366,6 +371,37 @@ const ListeningPage = () => {
 
   const currentUser = useAuthStore((s) => s.currentUser);
   const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
+
+  const listeningStations: PipelineStation[] = useMemo(() => {
+    return visibleMissions.slice(0, 6).map((mission) => {
+      const score = completedMissions[mission.id];
+      const isCompleted = score !== undefined;
+      const isActive = mission.id === currentMission?.id;
+      return {
+        id: mission.id,
+        levelBadge: mission.cefrLevel,
+        title: mission.title,
+        subtitle: mission.missionType,
+        status: isCompleted ? 'completed' : isActive ? 'in-progress' : 'available',
+        progressRatio: isCompleted ? Math.min(1, score / 100) : isActive ? 0.4 : 0,
+        totalItems: 100,
+        completedItems: isCompleted ? score : 0,
+        actionLabel: isCompleted ? 'Tekrar Dinle' : 'Dinlemeye Başla',
+        onAction: () => {
+          selectMission(mission.id);
+          setWorkspaceOpen(true);
+        },
+      };
+    });
+  }, [visibleMissions, completedMissions, currentMission, selectMission]);
+
+  const listeningFinishedCount = Object.keys(completedMissions).length;
+  const listeningAvgScore =
+    listeningFinishedCount > 0
+      ? Math.round(
+          Object.values(completedMissions).reduce((a, b) => a + b, 0) / listeningFinishedCount
+        )
+      : 0;
 
   useEffect(() => initializeStore(), [initializeStore]);
 
@@ -408,7 +444,11 @@ const ListeningPage = () => {
         </div>
       </div>
       <div className="space-y-6 pt-4">
-        <PersonalAIPanel discipline={userDiscipline} cefrLevel={currentLevel} userName={currentUser?.displayName} />
+        <PersonalAIPanel
+          discipline={userDiscipline}
+          cefrLevel={currentLevel}
+          userName={currentUser?.displayName}
+        />
         <LevelContentFilter
           value={levelFilter}
           currentLevel={currentLevel}
@@ -416,65 +456,104 @@ const ListeningPage = () => {
         />
 
         {!workspaceOpen ? (
-          <SectionCard
-            title="Transcript Tasks"
-            subtitle="Choose a level-safe task; the system recommendation remains changeable"
-            icon={Headphones}
-          >
-            <div className="flex flex-wrap gap-2 mb-4">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setCategoryFilter(cat)}
-                  className={`min-h-9 rounded-[4px] px-3.5 text-xs font-bold transition-all cursor-pointer border ${
-                    categoryFilter === cat
-                      ? 'bg-primary border-primary text-primary-foreground shadow-sm'
-                      : 'text-muted-copy border-border-soft bg-surface hover:bg-primary/5 hover:text-primary'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {filteredMissions.map((mission) => (
-                <article
-                  key={mission.id}
-                  className="group rounded-[4px] border border-border-soft bg-surface p-5 hover:border-primary/30 hover:shadow-md transition-all duration-200"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-                        {mission.cefrLevel}
-                      </span>
-                      <LevelAccessBadge
-                        label={getContentAccessLabel(mission.cefrLevel, currentLevel)}
-                      />
-                    </div>
-                    <span className="text-xs text-muted-copy font-bold">
-                      {mission.estimatedMinutes} M
-                    </span>
-                  </div>
-                  <h2 className="mt-3 font-bold text-foreground group-hover:text-primary transition-colors tracking-tight">
-                    {mission.title}
-                  </h2>
-                  <p className="mt-2 text-sm leading-6 text-muted-copy font-normal">
-                    {mission.description}
-                  </p>
-                  <Button
-                    className="mt-4 w-full rounded-[4px] font-bold uppercase tracking-wider text-[10px] cursor-pointer bg-primary hover:bg-primary-hover border border-primary h-10"
-                    onClick={() => {
-                      selectMission(mission.id);
-                      setWorkspaceOpen(true);
-                    }}
+          <>
+            {listeningStations.length > 0 && (
+              <UniversalCyberPipeline
+                title="Telsiz & Saha İletişimi Hattı"
+                subtitle="Atölye brifinginden acil telsiz ve çok dilli müşteri toplantısına uzanan dinleme hattı"
+                badgeText={`CEFR: ${currentLevel}`}
+                icon={Headphones}
+                stations={listeningStations}
+                activeStationId={currentMission?.id}
+                onSelectStation={(id) => {
+                  selectMission(id);
+                  setWorkspaceOpen(true);
+                }}
+                tierLabels={[
+                  'Net Atölye Brifingi (A1-A2)',
+                  'Yüksek Gürültü Saha (B1)',
+                  'Acil Telsiz İletişimi (B2)',
+                  'Çok Dilli Müşteri Toplantısı (C1-C2)',
+                ]}
+                metrics={[
+                  {
+                    icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
+                    label: 'Tamamlanan',
+                    value: listeningFinishedCount,
+                  },
+                  {
+                    icon: <Headphones className="h-4 w-4 text-cyan-400" />,
+                    label: 'Ortalama Skor',
+                    value: listeningAvgScore > 0 ? `${listeningAvgScore}%` : '0%',
+                  },
+                  {
+                    icon: <FileText className="h-4 w-4 text-amber-400" />,
+                    label: 'Görev',
+                    value: `${listeningFinishedCount}/${visibleMissions.length}`,
+                  },
+                ]}
+              />
+            )}
+            <SectionCard
+              title="Transcript Tasks"
+              subtitle="Choose a level-safe task; the system recommendation remains changeable"
+              icon={Headphones}
+            >
+              <div className="flex flex-wrap gap-2 mb-4">
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setCategoryFilter(cat)}
+                    className={`min-h-9 rounded-[4px] px-3.5 text-xs font-bold transition-all cursor-pointer border ${
+                      categoryFilter === cat
+                        ? 'bg-primary border-primary text-primary-foreground shadow-sm'
+                        : 'text-muted-copy border-border-soft bg-surface hover:bg-primary/5 hover:text-primary'
+                    }`}
                   >
-                    Open transcript task
-                  </Button>
-                </article>
-              ))}
-            </div>
-          </SectionCard>
+                    {cat}
+                  </button>
+                ))}
+              </div>
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {filteredMissions.map((mission) => (
+                  <article
+                    key={mission.id}
+                    className="group rounded-[4px] border border-border-soft bg-surface p-5 hover:border-primary/30 hover:shadow-md transition-all duration-200"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
+                          {mission.cefrLevel}
+                        </span>
+                        <LevelAccessBadge
+                          label={getContentAccessLabel(mission.cefrLevel, currentLevel)}
+                        />
+                      </div>
+                      <span className="text-xs text-muted-copy font-bold">
+                        {mission.estimatedMinutes} M
+                      </span>
+                    </div>
+                    <h2 className="mt-3 font-bold text-foreground group-hover:text-primary transition-colors tracking-tight">
+                      {mission.title}
+                    </h2>
+                    <p className="mt-2 text-sm leading-6 text-muted-copy font-normal">
+                      {mission.description}
+                    </p>
+                    <Button
+                      className="mt-4 w-full rounded-[4px] font-bold uppercase tracking-wider text-[10px] cursor-pointer bg-primary hover:bg-primary-hover border border-primary h-10"
+                      onClick={() => {
+                        selectMission(mission.id);
+                        setWorkspaceOpen(true);
+                      }}
+                    >
+                      Open transcript task
+                    </Button>
+                  </article>
+                ))}
+              </div>
+            </SectionCard>
+          </>
         ) : (
           <WorkspaceView
             currentMission={currentMission}

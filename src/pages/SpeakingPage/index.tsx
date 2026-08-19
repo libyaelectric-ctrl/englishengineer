@@ -1,12 +1,16 @@
 import { FileText, MessageSquareText, Mic, RotateCcw, ShieldCheck, Trophy } from 'lucide-react';
 
 import type { JSX } from 'react';
-import { Suspense, lazy, useState } from 'react';
+import { Suspense, lazy, useMemo, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
 import { ScoreFeedbackOverlay } from '@/shared/components/ScoreFeedbackOverlay';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+import {
+  type PipelineStation,
+  UniversalCyberPipeline,
+} from '@/shared/components/UniversalCyberPipeline';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
@@ -71,8 +75,71 @@ const RoleplayTab = () => {
     MAX_VOICE_MINUTES,
   } = useSpeakingPage();
 
+  const speakingStations: PipelineStation[] = useMemo(() => {
+    return roleplayMissions.slice(0, 6).map((mission) => {
+      const score = completedMissions[mission.id];
+      const isCompleted = score !== undefined;
+      const isActive = mission.id === activeMission?.id;
+      return {
+        id: mission.id,
+        levelBadge: mission.cefrLevel,
+        title: mission.title,
+        subtitle: mission.scenarioType,
+        status: isCompleted ? 'completed' : isActive ? 'in-progress' : 'available',
+        progressRatio: isCompleted ? Math.min(1, score / 100) : isActive ? 0.4 : 0,
+        totalItems: 100,
+        completedItems: isCompleted ? score : 0,
+        actionLabel: isCompleted ? 'Tekrar Pratik' : 'Brifinge Başla',
+        onAction: () => handleMissionSelect(mission.id),
+      };
+    });
+  }, [roleplayMissions, completedMissions, activeMission, handleMissionSelect]);
+
+  const speakingFinishedCount = Object.keys(completedMissions).length;
+  const speakingAvgScore =
+    speakingFinishedCount > 0
+      ? Math.round(
+          Object.values(completedMissions).reduce((a, b) => a + b, 0) / speakingFinishedCount
+        )
+      : 0;
+
   return (
     <>
+      {speakingStations.length > 0 && (
+        <UniversalCyberPipeline
+          title="Sözlü Sunum & Brifing Hattı"
+          subtitle="Toolbox Talk'tan yönetim kurulu teknik savunmasına uzanan sözlü yeterlilik hattı"
+          badgeText={`CEFR: ${currentLevel}`}
+          icon={MessageSquareText}
+          stations={speakingStations}
+          activeStationId={activeMission?.id}
+          onSelectStation={(id) => handleMissionSelect(id)}
+          tierLabels={[
+            'Toolbox Talk (A1-A2)',
+            'Handover Brifingi (B1)',
+            'Kök Neden Sunumu (B2)',
+            'Yönetim Kurulu Savunması (C1-C2)',
+          ]}
+          metrics={[
+            {
+              icon: <Trophy className="h-4 w-4 text-emerald-400" />,
+              label: 'Tamamlanan',
+              value: speakingFinishedCount,
+            },
+            {
+              icon: <MessageSquareText className="h-4 w-4 text-cyan-400" />,
+              label: 'Ortalama Skor',
+              value: speakingAvgScore > 0 ? `${speakingAvgScore}%` : '0%',
+            },
+            {
+              icon: <Mic className="h-4 w-4 text-amber-400" />,
+              label: 'Görev',
+              value: `${speakingFinishedCount}/${roleplayMissions.length}`,
+            },
+          ]}
+        />
+      )}
+
       {hasMaxAccess && subscription.planId === 'master' && (
         <VoiceMinuteWallet
           voiceMinutesUsedThisMonth={voiceMinutesUsedThisMonth}

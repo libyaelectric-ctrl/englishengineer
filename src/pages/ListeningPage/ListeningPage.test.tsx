@@ -11,6 +11,7 @@ vi.mock('@/features/listening', async (importOriginal) => ({
     const state = {
       missions: [],
       selectedMissionId: null,
+      completedMissions: {},
       answers: {},
       summary: '',
       userKeywords: '',

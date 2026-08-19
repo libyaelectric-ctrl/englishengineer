@@ -1,11 +1,19 @@
-﻿import { CheckCircle2 } from 'lucide-react';
+import { BookOpen, CheckCircle2, Zap } from 'lucide-react';
+
+import { useMemo, useState } from 'react';
 
 import { SectionCard } from '@/shared/components/SectionCard';
+import {
+  type PipelineStation,
+  UniversalCyberPipeline,
+} from '@/shared/components/UniversalCyberPipeline';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
 import { useAuthStore } from '@/features/auth';
+import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 import { useLocalizationStore } from '@/features/localization';
+import { VocabularyMenuService, type VocabularyTerm } from '@/features/vocabulary';
 
 import { MasteredHeatmap } from './components/MasteredHeatmap';
 import { QuizSection } from './components/QuizSection';
@@ -56,8 +64,93 @@ const VocabularyPage = () => {
     closeSearchModal,
   } = useVocabularyPage();
 
+  const [selectedStationId, setSelectedStationId] = useState<string | null>(null);
+
+  const vocabularySummary = useMemo(() => VocabularyMenuService.getSummary(menuState), [menuState]);
+
+  const vocabularyStations: PipelineStation[] = useMemo(() => {
+    const termsByLevel = new Map<CefrLevel, VocabularyTerm[]>();
+    terms.forEach((term) => {
+      const list = termsByLevel.get(term.cefrLevel) ?? [];
+      list.push(term);
+      termsByLevel.set(term.cefrLevel, list);
+    });
+
+    return CEFR_LEVELS.map((level) => {
+      const levelTerms = termsByLevel.get(level) ?? [];
+      const mastered = levelTerms.filter(
+        (term) => menuState.progress[term.id]?.status === 'Mastered'
+      ).length;
+      const learned = levelTerms.filter((term) => {
+        const status = menuState.progress[term.id]?.status;
+        return status === 'Learning' || status === 'Learned' || status === 'Mastered';
+      }).length;
+      const sampleTerms = levelTerms
+        .slice(0, 3)
+        .map((term) => term.term)
+        .join(' · ');
+      const hasData = levelTerms.length > 0;
+      const isCurrent = level === vocabularyLevel;
+
+      return {
+        id: `vocab-${level}`,
+        levelBadge: level,
+        title: sampleTerms || `${level} Engineering Terminology`,
+        subtitle: hasData
+          ? `${levelTerms.length} terim · ${userDiscipline ? userDiscipline.toUpperCase() : 'MÜHENDİSLİK'}`
+          : `${userDiscipline ? userDiscipline.toUpperCase() : 'MÜHENDİSLİK'} terminoloji istasyonu`,
+        status:
+          hasData && mastered > 0 && mastered === levelTerms.length
+            ? 'completed'
+            : isCurrent
+              ? 'in-progress'
+              : 'available',
+        progressRatio: hasData ? learned / levelTerms.length : 0,
+        totalItems: hasData ? levelTerms.length : vocabularySummary.total,
+        completedItems: hasData ? mastered : 0,
+        actionLabel: 'Kelime Egzersizine Başla',
+        onAction: () => {
+          chooseTab('New');
+        },
+      };
+    });
+  }, [terms, menuState, vocabularyLevel, userDiscipline, chooseTab, vocabularySummary]);
+
   return (
     <div className="mx-auto max-w-5xl space-y-6 animate-in fade-in duration-300 relative pb-8">
+      {/* Cyber Telemetry Vocabulary Energy Pipeline */}
+      <UniversalCyberPipeline
+        title="Terminoloji Enerji Hattı"
+        subtitle={`${userDiscipline ? userDiscipline.toUpperCase() : 'Mühendislik'} branşına özel teknik terim ve kavram kazanım hattı`}
+        badgeText={`CEFR: ${vocabularyLevel}`}
+        icon={BookOpen}
+        stations={vocabularyStations}
+        activeStationId={selectedStationId ?? `vocab-${vocabularyLevel}`}
+        onSelectStation={(id) => setSelectedStationId(id)}
+        tierLabels={[
+          'Temel Terimler (A1-A2)',
+          'Saha & Donanım (B1)',
+          'Sistem & Teşhis (B2)',
+          'Şartname & Liderlik (C1-C2)',
+        ]}
+        metrics={[
+          {
+            icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
+            label: 'Ustalaşılan',
+            value: vocabularySummary.mastered,
+          },
+          {
+            icon: <BookOpen className="h-4 w-4 text-cyan-400" />,
+            label: 'Öğrenilen',
+            value: vocabularySummary.learning,
+          },
+          {
+            icon: <Zap className="h-4 w-4 text-amber-400" />,
+            label: 'Bugün Tekrar',
+            value: vocabularySummary.dueToday,
+          },
+        ]}
+      />
       <VocabularyHeader
         vocabularyLevel={vocabularyLevel}
         activeTab={activeTab}

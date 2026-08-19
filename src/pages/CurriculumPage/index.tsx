@@ -1,6 +1,13 @@
+import { Bolt } from 'lucide-react';
+
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import {
+  type PipelineStation,
+  UniversalCyberPipeline,
+} from '@/shared/components/UniversalCyberPipeline';
 
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
@@ -26,6 +33,7 @@ import { SKILL_META } from './curriculum-data';
 
 const CurriculumPage = () => {
   const { section } = useParams<{ section: string }>();
+  const navigate = useNavigate();
   const activeSection = section || 'today';
   const translate = useLocalizationStore((s) => s.translate);
   const currentUser = useAuthStore((state) => state.currentUser);
@@ -109,6 +117,24 @@ const CurriculumPage = () => {
   const badges = LearningProfileEngine.getBadges(profile, memory);
   const repeatedMistakes = mistakeLog.filter((item) => (item.repetitionCount ?? 1) >= 3).length;
 
+  const curriculumStations: PipelineStation[] = useMemo(() => {
+    return missions.slice(0, 6).map((mission, idx) => ({
+      id: mission.id,
+      levelBadge: mission.cefrBand,
+      title: mission.title,
+      subtitle: `${mission.skill} · ${mission.estimatedMinutes} dk`,
+      status: idx === 0 ? 'in-progress' : 'available',
+      progressRatio: idx === 0 ? 0.4 : 0,
+      totalItems: 1,
+      completedItems: 0,
+      actionLabel: 'Göreve Başla',
+      onAction: () => navigate(mission.route),
+    }));
+  }, [missions, navigate]);
+
+  const dailyStreak = learningState?.streak ?? 0;
+  const dailyXp = learningState?.xp ?? 0;
+
   return (
     <div className="mx-auto w-full max-w-5xl space-y-7 animate-in fade-in duration-300 pb-8 text-foreground relative z-10 font-sans">
       <div className="sticky top-0 z-20 border-b border-border-soft bg-background/95 backdrop-blur-xl py-3.5 mb-6">
@@ -126,11 +152,50 @@ const CurriculumPage = () => {
       />
 
       {activeSection === 'today' && (
-        <CurriculumTodayTab
-          isLoading={isLoading}
-          missions={missions}
-          learningState={learningState}
-        />
+        <>
+          {curriculumStations.length > 0 && (
+            <UniversalCyberPipeline
+              title="Günlük Görev Yörüngesi"
+              subtitle="Term drill'den AI senaryo pratiğine uzanan günlük enerji hattı"
+              badgeText={`DAY-${dailyStreak + 1}`}
+              icon={Bolt}
+              stations={curriculumStations}
+              activeStationId={curriculumStations[0]?.id}
+              onSelectStation={(id) => {
+                const target = missions.find((m) => m.id === id);
+                if (target) navigate(target.route);
+              }}
+              tierLabels={[
+                'Term Drill (A1-A2)',
+                'Grammar Polish (B1)',
+                'AI Senaryo Pratiği (B2)',
+                'Günlük Tekrar (C1-C2)',
+              ]}
+              metrics={[
+                {
+                  icon: <Bolt className="h-4 w-4 text-emerald-400" />,
+                  label: 'Streak',
+                  value: dailyStreak,
+                },
+                {
+                  icon: <Bolt className="h-4 w-4 text-cyan-400" />,
+                  label: 'XP',
+                  value: dailyXp,
+                },
+                {
+                  icon: <Bolt className="h-4 w-4 text-amber-400" />,
+                  label: 'Görev',
+                  value: missions.length,
+                },
+              ]}
+            />
+          )}
+          <CurriculumTodayTab
+            isLoading={isLoading}
+            missions={missions}
+            learningState={learningState}
+          />
+        </>
       )}
 
       {activeSection === 'memory' && (
