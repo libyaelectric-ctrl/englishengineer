@@ -1,10 +1,8 @@
 ﻿import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import { visualizer } from 'rollup-plugin-visualizer';
 import { fileURLToPath } from 'url';
 import { defineConfig } from 'vite';
-import { compression } from 'vite-plugin-compression2';
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
@@ -17,12 +15,7 @@ function getDataChunk(id: string): string | undefined {
 
 export default defineConfig(() => {
   return {
-    plugins: [
-      react(),
-      tailwindcss(),
-      compression({ algorithms: ['brotliCompress'] }),
-      ...(process.env.ANALYZE ? [visualizer({ open: true, filename: 'bundle-report.html' })] : []),
-    ],
+    plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
         '@': path.resolve(projectRoot, './src'),
@@ -51,7 +44,6 @@ export default defineConfig(() => {
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) return 'vendor';
-            if (id.includes('vocabulary-translations.json')) return 'vocab-translations';
             const byLangMatch = id.match(/translations[/\\]by-lang[/\\]([a-z]{2})\.json/i);
             if (byLangMatch) return `translation-corpus-${byLangMatch[1]}`;
             if (id.includes('/data/') && id.includes('by-level/'))

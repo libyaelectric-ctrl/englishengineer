@@ -23,9 +23,6 @@ export type LanguageMap = Record<string, TermTranslation>;
 /** term -> per-language entries (the full merged corpus). */
 export type TranslationMap = Record<string, LanguageMap>;
 
-let fullCache: TranslationMap | null = null;
-let fullPending: Promise<TranslationMap> | null = null;
-
 const langCache = new Map<string, LanguageMap>();
 const pendingLoads = new Map<string, Promise<LanguageMap>>();
 
@@ -41,14 +38,15 @@ export const loadLanguageCorpus = (language: string): Promise<LanguageMap> => {
   if (pendingLoads.has(language)) return pendingLoads.get(language)!;
 
   const loader = corpusModules[`../../data/translations/by-lang/${language}.json`];
-  const load = (loader
-    ? loader().then((mod) => {
-        const map = mod.default ?? emptyMap;
-        langCache.set(language, map);
-        pendingLoads.delete(language);
-        return map;
-      })
-    : Promise.resolve<LanguageMap>(emptyMap)
+  const load = (
+    loader
+      ? loader().then((mod) => {
+          const map = mod.default ?? emptyMap;
+          langCache.set(language, map);
+          pendingLoads.delete(language);
+          return map;
+        })
+      : Promise.resolve<LanguageMap>(emptyMap)
   ).catch(() => {
     langCache.set(language, emptyMap);
     pendingLoads.delete(language);
@@ -58,22 +56,6 @@ export const loadLanguageCorpus = (language: string): Promise<LanguageMap> => {
   pendingLoads.set(language, load);
   return load;
 };
-
-/** Loads the full merged corpus from the single 56 MB file (legacy path). */
-export const loadVocabularyTranslations = (): Promise<TranslationMap> => {
-  if (!fullPending) {
-    fullPending = import('../../../data/translations/vocabulary-translations.json').then((mod) => {
-      fullCache = (mod.default ?? mod) as TranslationMap;
-      return fullCache;
-    });
-  }
-  return fullPending;
-};
-
-export const isTranslationDataLoaded = (): boolean => fullCache !== null;
-
-export const getTermTranslation = (term: string, language: string): TermTranslation | undefined =>
-  fullCache?.[term.toLowerCase()]?.[language];
 
 /** Synchronous resolver; returns the best available meaning for the given language. */
 export const resolveTermMeaning = (
