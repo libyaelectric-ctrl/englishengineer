@@ -40,6 +40,7 @@ const EMPTY: AiAnalyticsData = {
   averageDurationMs: 0,
   totalEstimatedTokens: 0,
   estimatedCostUsd: 0,
+  vocabulary: 0,
   byOperation: [],
   byDay: [],
 };

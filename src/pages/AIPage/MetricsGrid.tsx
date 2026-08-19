@@ -1,4 +1,4 @@
-import { DollarSign, ShieldAlert, Sparkles, Target } from 'lucide-react';
+import { ShieldAlert, Sparkles, Target } from 'lucide-react';
 
 import { MetricCard } from '@/shared/components/MetricCard';
 

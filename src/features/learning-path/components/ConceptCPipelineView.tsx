@@ -1,4 +1,4 @@
-import { ArrowRight, Check, Cpu, Flag, Flame, Heart, Lock, ShieldCheck, Zap } from 'lucide-react';
+import { ArrowRight, Check, Cpu, Flag, Flame, Heart, Lock, Zap } from 'lucide-react';
 import { useShallow } from 'zustand/shallow';
 
 import React, { useEffect, useMemo, useState } from 'react';
@@ -17,12 +17,7 @@ import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
-import {
-  type LearningPath,
-  buildLearningPath,
-  getDisciplinePalette,
-  resolveDefaultDiscipline,
-} from '../index';
+import { type LearningPath, buildLearningPath, resolveDefaultDiscipline } from '../index';
 
 export interface ConceptCPipelineViewProps {
   disciplineOverride?: EngineeringDiscipline;
@@ -54,7 +49,6 @@ export const ConceptCPipelineView: React.FC<ConceptCPipelineViewProps> = ({
       (currentUser?.engineeringDiscipline as EngineeringDiscipline) ||
       profile.discipline
   );
-  const palette = getDisciplinePalette(discipline);
   const disciplineMeta = DISCIPLINE_META[discipline];
   const currentBand = (profile.skills.vocabulary.cefrBand.replace('+', '') as CefrLevel) ?? 'A1';
 
@@ -418,7 +412,6 @@ export const ConceptCPipelineView: React.FC<ConceptCPipelineViewProps> = ({
             {stations.slice(0, 6).map((station, idx) => {
               const isCompleted = station.status === 'completed' || idx < 2;
               const isActive = station.id === activeStation?.id;
-              const isLocked = !isCompleted && !isActive;
 
               return (
                 <div

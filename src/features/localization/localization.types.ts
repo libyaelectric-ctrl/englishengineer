@@ -345,6 +345,16 @@ export type TranslationKey =
   | 'learningpath.careerPoints'
   | 'learningpath.shiftDays'
   | 'learningpath.systemIntegrity'
+  // Pipeline labels
+  | 'learningpath.verified'
+  | 'learningpath.currentTarget'
+  | 'learningpath.stage'
+  | 'learningpath.module'
+  | 'learningpath.startLesson'
+  | 'learningpath.reviewModule'
+  | 'learningpath.tierEntry'
+  | 'learningpath.tierIntermediate'
+  | 'learningpath.tierAdvanced'
   // Lesson Runner
   | 'lesson.exitSimulator'
   | 'lesson.taskProgress'
