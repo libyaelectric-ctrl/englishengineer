@@ -134,18 +134,6 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
           <div className="flex items-center gap-1 shrink-0">
             {!isAuthPage && (
               <>
-                <a
-                  href="#disciplines"
-                  className="hidden md:inline-flex items-center rounded px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wide text-foreground/70 hover:text-primary hover:bg-surface transition-colors"
-                >
-                  {translate('landing.navDisciplines')}
-                </a>
-                <a
-                  href="#features"
-                  className="hidden md:inline-flex items-center rounded px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wide text-foreground/70 hover:text-primary hover:bg-surface transition-colors"
-                >
-                  {translate('landing.navFeatures')}
-                </a>
                 <Link
                   to="/pricing"
                   className="hidden md:inline-flex items-center rounded px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wide text-foreground/70 hover:text-primary hover:bg-surface transition-colors"
