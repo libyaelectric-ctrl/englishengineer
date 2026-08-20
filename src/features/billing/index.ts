@@ -13,6 +13,7 @@ export {
   type BillingStatusPresentation,
   type EntitlementResult,
   type BillingState,
+  type InvoiceRecord,
 } from './billing.types';
 
 export {

@@ -2,18 +2,14 @@ import { Activity } from 'lucide-react';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 
-interface SystemLog {
-  id: number;
-  time: string;
-  type: 'info' | 'warning';
-  msg: string;
-}
+import type { AdminSystemLog } from '@/features/admin';
 
 interface SystemTabProps {
-  systemLogs: SystemLog[];
+  systemLogs: AdminSystemLog[];
+  isLoading: boolean;
 }
 
-export const SystemTab = ({ systemLogs }: SystemTabProps) => {
+export const SystemTab = ({ systemLogs, isLoading }: SystemTabProps) => {
   return (
     <SectionCard title="System Diagnostics" icon={Activity}>
       <div className="space-y-4">
@@ -44,14 +40,28 @@ export const SystemTab = ({ systemLogs }: SystemTabProps) => {
             Live System Log Output
           </h3>
           <div className="rounded-[var(--radius-card)] bg-primary/5 p-4 font-mono text-[10px] text-primary space-y-1 max-h-48 overflow-y-auto">
-            {systemLogs.map((log) => (
-              <p key={log.id}>
-                <span className="opacity-50">[{log.time}]</span>{' '}
-                <span className={log.type === 'warning' ? 'text-amber-600 font-bold' : ''}>
-                  {log.msg}
-                </span>
-              </p>
-            ))}
+            {isLoading ? (
+              <p className="opacity-50">Loading system logs...</p>
+            ) : systemLogs.length === 0 ? (
+              <p className="opacity-50">No audit logs recorded yet.</p>
+            ) : (
+              systemLogs.map((log) => (
+                <p key={log.id}>
+                  <span className="opacity-50">[{log.time}]</span>{' '}
+                  <span
+                    className={
+                      log.type === 'error'
+                        ? 'text-red-600 font-bold'
+                        : log.type === 'warning'
+                          ? 'text-amber-600 font-bold'
+                          : ''
+                    }
+                  >
+                    {log.msg}
+                  </span>
+                </p>
+              ))
+            )}
           </div>
         </div>
       </div>

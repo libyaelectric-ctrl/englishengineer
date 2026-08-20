@@ -89,6 +89,24 @@ export const registerBillingRoutes = (
     }
   };
 
+  app.get(
+    '/api/billing/invoices',
+    requireBackendAuth,
+    rateLimiter,
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const userId = assertUserOwnership(req);
+        if (!userId) {
+          res.json([]);
+          return;
+        }
+        res.json(await billingService.listInvoices(userId));
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+
   const publicSubscriptionStatusAuth = async (req: Request, res: Response, next: NextFunction) => {
     try {
       await optionalBackendAuth(req, res, next);
