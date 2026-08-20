@@ -8,12 +8,8 @@ import {
   Globe,
   Headphones,
   PenTool,
-  Shield,
   Sparkles,
-  Target,
-  TrendingUp,
   Volume2,
-  Zap,
 } from 'lucide-react';
 
 import { useEffect, useRef } from 'react';
@@ -27,6 +23,7 @@ import { useLocalizationStore } from '@/features/localization';
 
 import { Footer } from './Footer';
 import { HeroScene } from './HeroScene';
+import { LanguageBar } from './LanguageBar';
 import { Navbar } from './Navbar';
 import { getLandingTranslations } from './landing-i18n';
 
@@ -68,40 +65,6 @@ const FEATURES = [
     key: 'grammar',
     color: 'from-pink-500 to-rose-400',
     glow: 'shadow-pink-500/25',
-  },
-] as const;
-
-const STATS = [
-  { value: '10', labelKey: 'statDisciplines', icon: Target },
-  { value: '15', labelKey: 'statLanguages', icon: Globe },
-  { value: '6', labelKey: 'statModules', icon: BookOpen },
-  { value: 'A1-C2', labelKey: 'statCefr', icon: TrendingUp },
-] as const;
-
-const WORKFLOW_STEPS = [
-  {
-    step: 1,
-    titleKey: 'step1Title',
-    descKey: 'step1Desc',
-    badgeKey: 'step1Badge',
-    icon: Zap,
-    color: 'from-yellow-500 to-orange-500',
-  },
-  {
-    step: 2,
-    titleKey: 'step2Title',
-    descKey: 'step2Desc',
-    badgeKey: 'step2Badge',
-    icon: BookOpen,
-    color: 'from-blue-500 to-cyan-500',
-  },
-  {
-    step: 3,
-    titleKey: 'step3Title',
-    descKey: 'step3Desc',
-    badgeKey: 'step3Badge',
-    icon: Sparkles,
-    color: 'from-violet-500 to-purple-500',
   },
 ] as const;
 
@@ -184,6 +147,7 @@ export const LandingPage = () => {
       data-theme="dark"
       className="min-h-screen bg-[#070a1a] text-white pb-14 overflow-x-clip"
     >
+      <LanguageBar />
       <Navbar />
 
       {/* ── HERO ─────────────────────────────────────────── */}
