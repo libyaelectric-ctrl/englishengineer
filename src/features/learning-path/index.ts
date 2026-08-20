@@ -11,6 +11,8 @@ export type { BuildLearningPathOptions } from './curriculum.service';
 export { DISCIPLINE_PALETTES, getDisciplinePalette, STATUS_COLORS } from './discipline-palette';
 export type { DisciplinePalette } from './discipline-palette';
 
+export { DISCIPLINE_TOPIC_KEYWORDS, getDisciplineTopics } from './discipline-topics';
+
 export { PathStageColumn } from './components/PathStageColumn';
 export { MasteryOverview } from './components/MasteryOverview';
 export { DashboardLearningPipeline } from './components/DashboardLearningPipeline';
