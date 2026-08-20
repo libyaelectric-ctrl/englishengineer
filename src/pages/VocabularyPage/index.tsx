@@ -138,19 +138,22 @@ const VocabularyPage = () => {
         translate={translate}
         metrics={[
           {
-            icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
-            label: translate('pipeline.metric.mastered'),
-            value: vocabularySummary.mastered,
-          },
-          {
             icon: <BookOpen className="h-4 w-4 text-cyan-400" />,
-            label: translate('pipeline.metric.learned'),
-            value: vocabularySummary.learning,
+            label: translate('pipeline.metric.totalTerms'),
+            value: vocabularySummary.total,
           },
           {
             icon: <Zap className="h-4 w-4 text-amber-400" />,
-            label: translate('pipeline.metric.dueToday'),
-            value: vocabularySummary.dueToday,
+            label: translate('pipeline.metric.activeLevel'),
+            value: vocabularyLevel,
+          },
+          {
+            icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
+            label: translate('pipeline.metric.mastery'),
+            value:
+              vocabularySummary.total > 0
+                ? `${Math.round((vocabularySummary.mastered / vocabularySummary.total) * 100)}%`
+                : '0%',
           },
         ]}
       />

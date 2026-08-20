@@ -63,7 +63,7 @@ const GrammarPage = () => {
 
   const grammarStations: PipelineStation[] = useMemo(() => {
     if (!rulesWithProgress || !rulesWithProgress.length) return [];
-    return rulesWithProgress.slice(0, 6).map((item, idx) => ({
+    return rulesWithProgress.map((item, idx) => ({
       id: item.rule.id,
       levelBadge: `G${idx + 1}`,
       title: item.rule.title,
@@ -107,19 +107,19 @@ const GrammarPage = () => {
           translate={translate}
           metrics={[
             {
-              icon: <Zap className="h-4 w-4 text-amber-400" />,
-              label: translate('pipeline.metric.learned'),
-              value: grammarLearned,
-            },
-            {
-              icon: <Flame className="h-4 w-4 text-orange-400" />,
-              label: translate('pipeline.metric.mastered'),
-              value: grammarStats.mastered,
-            },
-            {
               icon: <ShieldCheck className="h-4 w-4 text-emerald-400" />,
               label: translate('pipeline.metric.total'),
               value: totalGrammarLessons,
+            },
+            {
+              icon: <Zap className="h-4 w-4 text-amber-400" />,
+              label: translate('pipeline.metric.activeLevel'),
+              value: level,
+            },
+            {
+              icon: <Flame className="h-4 w-4 text-orange-400" />,
+              label: translate('pipeline.metric.streak'),
+              value: grammarStats.newCount,
             },
           ]}
         />

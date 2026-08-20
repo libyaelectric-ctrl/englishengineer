@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { PageHeader } from '@/shared/components/PageHeader';
 import {
   type PipelineStation,
   UniversalCyberPipeline,
@@ -118,7 +119,7 @@ const CurriculumPage = () => {
   const repeatedMistakes = mistakeLog.filter((item) => (item.repetitionCount ?? 1) >= 3).length;
 
   const curriculumStations: PipelineStation[] = useMemo(() => {
-    return missions.slice(0, 6).map((mission, idx) => ({
+    return missions.map((mission, idx) => ({
       id: mission.id,
       levelBadge: mission.cefrBand,
       title: mission.title,
@@ -136,11 +137,10 @@ const CurriculumPage = () => {
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-7 animate-in fade-in duration-300 pb-8 text-foreground relative z-10 font-sans">
-      <div className="sticky top-0 z-20 border-b border-border-soft bg-background/95 backdrop-blur-xl py-3.5 mb-6">
-        <h1 className="text-base font-bold tracking-tight text-foreground">
-          {translate('learningHub.title')}
-        </h1>
-      </div>
+      <PageHeader
+        title={translate('learningHub.title')}
+        description="Your personalized learning journey and task recommendations."
+      />
 
       <CurriculumActionsGrid
         primaryMission={primaryMission}

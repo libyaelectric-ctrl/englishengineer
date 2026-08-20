@@ -8,7 +8,6 @@ describe('main navigation configuration', () => {
       'Home',
       'Learning Path',
       'Skills',
-      'Progress',
       'Learning Hub',
       'Tools',
       'Translator',

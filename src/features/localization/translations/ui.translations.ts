@@ -27,6 +27,9 @@ const PIPELINE_EN = {
   'pipeline.metric.streak': 'Streak',
   'pipeline.metric.answered': 'Answered',
   'pipeline.metric.progress': 'Progress',
+  'pipeline.metric.totalTerms': 'Total Terms',
+  'pipeline.metric.activeLevel': 'Active Level',
+  'pipeline.metric.mastery': 'Mastery',
   'pipeline.grammar.title': 'Engineering Grammar & Reporting Pipeline',
   'pipeline.grammar.subtitle':
     'Technical specifications, FIDIC contract standards and field reporting grammar pipeline',
@@ -81,6 +84,9 @@ const PIPELINE_TR = {
   'pipeline.metric.streak': 'Seri',
   'pipeline.metric.answered': 'Cevaplanan',
   'pipeline.metric.progress': 'İlerleme',
+  'pipeline.metric.totalTerms': 'Toplam Terim',
+  'pipeline.metric.activeLevel': 'Aktif Seviye',
+  'pipeline.metric.mastery': 'Ustalık',
   'pipeline.grammar.title': 'Mühendislik Gramer & Raporlama Hattı',
   'pipeline.grammar.subtitle':
     'Teknik şartname, FIDIC sözleşme standartları ve saha raporlama dilbilgisi hattı',

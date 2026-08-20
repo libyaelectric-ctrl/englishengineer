@@ -1,6 +1,15 @@
 import { PRODUCT_VERSION } from '@/config/product.config';
 import { useAppStore } from '@/store/app.store';
-import { Bell, BookOpenCheck, ChevronRight, HardDrive, LogOut, Wallet, X } from 'lucide-react';
+import {
+  Bell,
+  BookOpenCheck,
+  ChevronRight,
+  ChevronsLeft,
+  HardDrive,
+  LogOut,
+  Wallet,
+  X,
+} from 'lucide-react';
 import { useShallow } from 'zustand/shallow';
 
 import { useEffect, useRef, useState, useTransition } from 'react';
@@ -61,8 +70,13 @@ const SIDEBAR_COPY = {
 } as const;
 
 export const Sidebar = () => {
-  const { isSidebarOpen, toggleSidebar } = useAppStore(
-    useShallow((s) => ({ isSidebarOpen: s.isSidebarOpen, toggleSidebar: s.toggleSidebar }))
+  const { isSidebarOpen, toggleSidebar, isSidebarCollapsed, toggleSidebarCollapsed } = useAppStore(
+    useShallow((s) => ({
+      isSidebarOpen: s.isSidebarOpen,
+      toggleSidebar: s.toggleSidebar,
+      isSidebarCollapsed: s.isSidebarCollapsed,
+      toggleSidebarCollapsed: s.toggleSidebarCollapsed,
+    }))
   );
   const { currentUser, logout } = useAuthStore(
     useShallow((s) => ({ currentUser: s.currentUser, logout: s.logout }))
@@ -133,14 +147,20 @@ export const Sidebar = () => {
         role="navigation"
         aria-label="Main navigation"
         className={cn(
-          'fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-border-hover bg-surface transition-transform lg:static lg:flex lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-40 flex flex-col border-r border-border-hover bg-surface transition-all duration-200 lg:static lg:flex lg:translate-x-0',
+          isSidebarCollapsed ? 'w-16' : 'w-64',
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
         <div className="flex h-screen flex-col overflow-hidden bg-surface">
-          {/* Logo */}
-          <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-border-soft px-3">
-            <div className="flex items-center gap-2">
+          {/* Logo + Collapse Toggle */}
+          <div
+            className={cn(
+              'flex h-14 shrink-0 items-center border-b border-border-soft transition-all',
+              isSidebarCollapsed ? 'justify-center px-2' : 'justify-between gap-2 px-3'
+            )}
+          >
+            <div className={cn('flex items-center gap-2', isSidebarCollapsed && 'hidden')}>
               <img src="/brand/logo.svg" alt="EngVox" className="h-7 w-7 rounded-[4px]" />
               <div className="flex flex-col leading-tight">
                 <span className="text-sm font-bold text-foreground">EngVox</span>
@@ -149,57 +169,96 @@ export const Sidebar = () => {
                 </span>
               </div>
             </div>
-            {/* Language Switcher: selected language + EN (both always visible) */}
-            <div className="flex items-center gap-1">
-              {altLang && (
+            {isSidebarCollapsed && (
+              <img
+                src="/brand/logo.svg"
+                alt="EngVox"
+                className="h-7 w-7 rounded-[4px]"
+                title="EngVox"
+              />
+            )}
+            {/* Desktop collapse toggle */}
+            <button
+              type="button"
+              onClick={toggleSidebarCollapsed}
+              className="hidden lg:flex cursor-pointer rounded-[4px] p-1.5 text-muted-copy hover:bg-surface-hover hover:text-foreground transition-colors"
+              aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              title={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {isSidebarCollapsed ? (
+                <ChevronsLeft className="h-4 w-4 rotate-180" />
+              ) : (
+                <ChevronsLeft className="h-4 w-4" />
+              )}
+            </button>
+            {/* Language Switcher (expanded only) */}
+            {!isSidebarCollapsed && (
+              <div className="flex items-center gap-1">
+                {altLang && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLanguage(altLang.id);
+                      setLastNonEnglish(altLang.id);
+                    }}
+                    className={`inline-flex h-8 items-center justify-center gap-0.5 rounded-[4px] border px-1.5 text-[9px] font-bold uppercase tracking-wide cursor-pointer select-none transition-colors ${
+                      language === altLang.id
+                        ? 'border-primary bg-primary/10 text-primary'
+                        : 'border-border-soft bg-surface text-muted-copy hover:text-foreground hover:border-primary/40'
+                    }`}
+                    aria-label={`Language: ${altLang.nativeLabel}`}
+                  >
+                    <span className="text-xs leading-none">{altLang.flag}</span>
+                    <span>{altLang.id.toUpperCase()}</span>
+                  </button>
+                )}
                 <button
                   type="button"
-                  onClick={() => {
-                    setLanguage(altLang.id);
-                    setLastNonEnglish(altLang.id);
-                  }}
-                  className={`inline-flex h-8 items-center justify-center gap-0.5 rounded-[4px] border px-1.5 text-[9px] font-bold uppercase tracking-wide cursor-pointer select-none transition-colors ${
-                    language === altLang.id
+                  onClick={() => setLanguage('en')}
+                  className={`inline-flex h-8 items-center justify-center rounded-[4px] border px-1.5 text-[9px] font-bold uppercase tracking-wide cursor-pointer select-none transition-colors ${
+                    language === 'en'
                       ? 'border-primary bg-primary/10 text-primary'
                       : 'border-border-soft bg-surface text-muted-copy hover:text-foreground hover:border-primary/40'
                   }`}
-                  aria-label={`Language: ${altLang.nativeLabel}`}
+                  aria-label="Change language to English"
                 >
-                  <span className="text-xs leading-none">{altLang.flag}</span>
-                  <span>{altLang.id.toUpperCase()}</span>
+                  EN
                 </button>
-              )}
-              <button
-                type="button"
-                onClick={() => setLanguage('en')}
-                className={`inline-flex h-8 items-center justify-center rounded-[4px] border px-1.5 text-[9px] font-bold uppercase tracking-wide cursor-pointer select-none transition-colors ${
-                  language === 'en'
-                    ? 'border-primary bg-primary/10 text-primary'
-                    : 'border-border-soft bg-surface text-muted-copy hover:text-foreground hover:border-primary/40'
-                }`}
-                aria-label="Change language to English"
-              >
-                EN
-              </button>
-              <ThemeToggle />
-              <button
-                onClick={toggleSidebar}
-                className="cursor-pointer rounded-[4px] p-1.5 text-muted-copy hover:bg-surface-hover hover:text-foreground lg:hidden"
-                aria-label={copy.close}
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
+                <ThemeToggle />
+                <button
+                  onClick={toggleSidebar}
+                  className="cursor-pointer rounded-[4px] p-1.5 text-muted-copy hover:bg-surface-hover hover:text-foreground lg:hidden"
+                  aria-label={copy.close}
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+            {isSidebarCollapsed && (
+              <div className="hidden lg:block">
+                <ThemeToggle />
+              </div>
+            )}
           </div>
 
           {/* Navigation */}
-          <div className="flex-1 overflow-y-auto custom-scrollbar px-3 py-4">
-            <Navigation onItemClick={closeSidebarOnMobile} />
+          <div
+            className={cn(
+              'flex-1 overflow-y-auto custom-scrollbar',
+              isSidebarCollapsed ? 'px-1 py-4' : 'px-3 py-4'
+            )}
+          >
+            <Navigation onItemClick={closeSidebarOnMobile} collapsed={isSidebarCollapsed} />
           </div>
 
           {/* User Info + Billing */}
           {currentUser && (
-            <div className="shrink-0 border-t border-border-soft p-4 space-y-2.5">
+            <div
+              className={cn(
+                'shrink-0 border-t border-border-soft space-y-2.5',
+                isSidebarCollapsed ? 'p-2' : 'p-4'
+              )}
+            >
               {/* Billing Hub Trigger */}
               <button
                 type="button"
@@ -207,30 +266,39 @@ export const Sidebar = () => {
                   closeSidebarOnMobile();
                   startTransition(() => navigate('/billing'));
                 }}
-                className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface px-3 text-left transition-all hover:border-primary hover:bg-primary/5 shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground"
+                className={cn(
+                  'flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface text-left transition-all hover:border-primary hover:bg-primary/5 shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground',
+                  isSidebarCollapsed ? 'justify-center px-0' : 'px-3'
+                )}
+                title={isSidebarCollapsed ? copy.billing : undefined}
               >
                 <Wallet className="h-5 w-5 shrink-0 text-muted-copy" />
-                <span className="flex-1 truncate">{copy.billing}</span>
+                {!isSidebarCollapsed && <span className="flex-1 truncate">{copy.billing}</span>}
               </button>
 
               {/* Alarm Bell */}
               <div className="relative" ref={notificationsRef}>
                 <button
                   type="button"
-                  className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface px-3 text-left transition-all hover:border-border-hover hover:bg-surface-hover shadow-sm"
+                  className={cn(
+                    'flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface text-left transition-all hover:border-border-hover hover:bg-surface-hover shadow-sm',
+                    isSidebarCollapsed ? 'justify-center px-0' : 'px-3'
+                  )}
                   aria-label={copy.notifications}
                   aria-expanded={notificationsOpen}
                   onClick={() => setNotificationsOpen((open) => !open)}
                 >
                   <Bell className="h-5 w-5 shrink-0 text-muted-copy" />
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-xs font-bold text-foreground truncate">
-                      {currentUser.displayName}
+                  {!isSidebarCollapsed && (
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-xs font-bold text-foreground truncate">
+                        {currentUser.displayName}
+                      </span>
+                      <span className="block text-[10px] font-bold text-muted-copy uppercase tracking-wider">
+                        {planName} plan
+                      </span>
                     </span>
-                    <span className="block text-[10px] font-bold text-muted-copy uppercase tracking-wider">
-                      {planName} plan
-                    </span>
-                  </span>
+                  )}
                   <span className="absolute right-3 top-3 h-1.5 w-1.5 rounded-full bg-success" />
                 </button>
 
@@ -302,10 +370,14 @@ export const Sidebar = () => {
 
               <button
                 onClick={handleLogout}
-                className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface px-3 text-left transition-all hover:border-border-hover hover:bg-surface-hover shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground"
+                className={cn(
+                  'flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface text-left transition-all hover:border-border-hover hover:bg-surface-hover shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground',
+                  isSidebarCollapsed ? 'justify-center px-0' : 'px-3'
+                )}
+                title={isSidebarCollapsed ? copy.signOut : undefined}
               >
                 <LogOut className="h-5 w-5 shrink-0 text-muted-copy" />
-                <span className="flex-1">{copy.signOut}</span>
+                {!isSidebarCollapsed && <span className="flex-1">{copy.signOut}</span>}
               </button>
             </div>
           )}

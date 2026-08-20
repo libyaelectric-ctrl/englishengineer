@@ -6,8 +6,8 @@ import type { Dispatch, SetStateAction } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Button } from '@/shared/components/Button';
-import { MetricCard } from '@/shared/components/MetricCard';
 import { PageContainer } from '@/shared/components/PageContainer';
+import { PageHeader } from '@/shared/components/PageHeader';
 import {
   type PipelineStation,
   UniversalCyberPipeline,
@@ -40,9 +40,10 @@ const EmptyMissionView = ({
   setLevelFilter: Dispatch<SetStateAction<ContentLevelFilter>>;
 }) => (
   <div className="min-h-screen bg-background pb-16 text-foreground space-y-4">
-    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <h1 className="text-base font-bold tracking-tight text-foreground">Reading</h1>
-    </div>
+    <PageHeader
+      title="Reading"
+      description="Engineering documentation & technical reading comprehension."
+    />
     <LevelContentFilter value={levelFilter} currentLevel={currentLevel} onChange={setLevelFilter} />
     <EmptyLevelState skill="Reading" />
     <Link to="/curriculum" className="inline-flex text-sm font-bold text-primary hover:underline">
@@ -56,7 +57,6 @@ const MissionsTabContent = ({
   currentLevel,
   setLevelFilter,
   finishedCount,
-  bestScoreAvg,
   visibleMissions,
   completedMissions,
   bookmarkedIds,
@@ -69,7 +69,6 @@ const MissionsTabContent = ({
   currentLevel: CefrLevel;
   setLevelFilter: Dispatch<SetStateAction<ContentLevelFilter>>;
   finishedCount: number;
-  bestScoreAvg: number;
   visibleMissions: ReturnType<typeof useReadingPage>['visibleMissions'];
   completedMissions: ReturnType<typeof useReadingPage>['completedMissions'];
   bookmarkedIds: Set<string>;
@@ -80,32 +79,6 @@ const MissionsTabContent = ({
 }) => (
   <>
     <PersonalAIPanel discipline={discipline} cefrLevel={currentLevel} userName={undefined} />
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <MetricCard
-        label="Current Level"
-        value={currentLevel}
-        icon={FileText}
-        trend="Independent Reading level"
-        trendDirection="neutral"
-        statusColor="primary"
-      />
-      <MetricCard
-        label="Avg Assessment Accuracy"
-        value={finishedCount > 0 ? `${bestScoreAvg}%` : '0%'}
-        icon={GraduationCap}
-        trend={bestScoreAvg >= 85 ? 'Meets C1 Level' : 'Developing Level'}
-        trendDirection="neutral"
-        statusColor="emerald"
-      />
-      <MetricCard
-        label="Completed Missions"
-        value={`${finishedCount}/${visibleMissions.length}`}
-        icon={BookOpen}
-        trend="Current filter progress"
-        trendDirection="neutral"
-        statusColor="cyan"
-      />
-    </div>
     <div className="space-y-6">
       <LevelContentFilter
         value={levelFilter}
@@ -260,7 +233,7 @@ const ReadingPage = () => {
   } = useReadingPage();
 
   const readingStations: PipelineStation[] = useMemo(() => {
-    return visibleMissions.slice(0, 6).map((mission) => {
+    return visibleMissions.map((mission) => {
       const score = completedMissions[mission.id];
       const isCompleted = score !== undefined;
       const isActive = mission.id === currentMission?.id;
@@ -290,27 +263,23 @@ const ReadingPage = () => {
 
   return (
     <PageContainer>
-      <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
-        <div className="flex items-center gap-3">
-          <h1 className="text-base font-bold tracking-tight text-foreground">Reading</h1>
-          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-            {currentLevel}
-          </span>
-          <p className="hidden text-[11px] font-medium text-muted-copy leading-tight sm:block">
-            Engineering documentation & technical reading comprehension.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          {aiMissionLoading && (
-            <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
-              AI lesson loading...
+      <PageHeader
+        title="Reading"
+        description="Engineering documentation & technical reading comprehension."
+        badgeText={currentLevel}
+        actions={
+          <>
+            {aiMissionLoading && (
+              <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                AI lesson loading...
+              </span>
+            )}
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy rounded-[4px] border border-border-soft bg-surface px-2.5 py-1">
+              {finishedCount}/{missions.length} Completed
             </span>
-          )}
-          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy rounded-[4px] border border-border-soft bg-surface px-2.5 py-1">
-            {finishedCount}/{missions.length} Completed
-          </span>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {activeTab === 'missions' && readingStations.length > 0 && (
         <UniversalCyberPipeline
@@ -348,7 +317,6 @@ const ReadingPage = () => {
           currentLevel={currentLevel}
           setLevelFilter={setLevelFilter}
           finishedCount={finishedCount}
-          bestScoreAvg={bestScoreAvg}
           visibleMissions={visibleMissions}
           completedMissions={completedMissions}
           bookmarkedIds={bookmarkedIds}

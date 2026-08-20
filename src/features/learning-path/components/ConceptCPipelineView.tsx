@@ -199,12 +199,6 @@ export const ConceptCPipelineView: React.FC<ConceptCPipelineViewProps> = ({
         activeStationId={selectedStationId}
         onSelectStation={setSelectedStationId}
         translate={translate}
-        tierLabels={[
-          translate('learningpath.tierEntry'),
-          translate('learningpath.tierIntermediate'),
-          translate('learningpath.tierAdvanced'),
-          translate('pipeline.tier.contractual'),
-        ]}
         metrics={[
           {
             icon: <Zap className="h-4 w-4 text-amber-400" />,

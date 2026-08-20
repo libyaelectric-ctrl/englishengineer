@@ -4,8 +4,8 @@ import { useMemo, useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { MetricCard } from '@/shared/components/MetricCard';
 import { PageContainer } from '@/shared/components/PageContainer';
+import { PageHeader } from '@/shared/components/PageHeader';
 import {
   type PipelineStation,
   UniversalCyberPipeline,
@@ -38,9 +38,7 @@ const EmptyMissionView = ({
   setLevelFilter: (v: ContentLevelFilter) => void;
 }) => (
   <div className="min-h-screen bg-background pb-16 text-foreground space-y-4">
-    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <h1 className="text-base font-bold tracking-tight text-foreground">Writing</h1>
-    </div>
+    <PageHeader title="Writing" />
     <LevelContentFilter value={levelFilter} currentLevel={currentLevel} onChange={setLevelFilter} />
     <EmptyLevelState skill="Writing" />
     <Link to="/curriculum" className="inline-flex text-sm font-bold text-primary hover:underline">
@@ -94,69 +92,6 @@ const SubTabSwitcher = ({
     </div>
   );
 };
-
-const WritingHeader = ({
-  currentLevel,
-  activeTab,
-  subTab,
-  setSubTab,
-}: {
-  currentLevel: string;
-  activeTab: string;
-  subTab: 'missions' | 'field-docs';
-  setSubTab: (v: 'missions' | 'field-docs') => void;
-}) => (
-  <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
-    <div className="flex items-center gap-3">
-      <h1 className="text-base font-bold tracking-tight text-foreground">Writing</h1>
-      <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-        {currentLevel}
-      </span>
-      <p className="hidden text-[11px] font-medium text-muted-copy leading-tight sm:block">
-        Technical report drafting, RFI & NCR writing assistant.
-      </p>
-    </div>
-
-    {activeTab === 'missions' && <SubTabSwitcher subTab={subTab} setSubTab={setSubTab} />}
-  </div>
-);
-
-const StatsBar = ({
-  finishedCount,
-  missionsLength,
-  bestScoreAvg,
-}: {
-  finishedCount: number;
-  missionsLength: number;
-  bestScoreAvg: number;
-}) => (
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <MetricCard
-      label="Drafting Practice"
-      value={`${finishedCount}/${missionsLength}`}
-      icon={FileText}
-      trend="Local mission progress"
-      trendDirection="up"
-      statusColor="primary"
-    />
-    <MetricCard
-      label="Avg Assessment Accuracy"
-      value={finishedCount > 0 ? `${bestScoreAvg}%` : '0%'}
-      icon={FileCheck}
-      trend={bestScoreAvg >= 85 ? 'Meets C1 Level' : 'Developing Level'}
-      trendDirection="neutral"
-      statusColor="emerald"
-    />
-    <MetricCard
-      label="Writing Mode"
-      value="Local"
-      icon={Layers}
-      trend="No external AI required"
-      trendDirection="neutral"
-      statusColor="cyan"
-    />
-  </div>
-);
 
 const WritingMainContent = ({
   showStatsBar,
@@ -332,7 +267,7 @@ const WritingPage = () => {
   const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
 
   const writingStations: PipelineStation[] = useMemo(() => {
-    return visibleMissions.slice(0, 6).map((mission) => {
+    return visibleMissions.map((mission) => {
       const score = completedMissions[mission.id];
       const isCompleted = score !== undefined;
       const isActive = mission.id === selectedMissionId;
@@ -364,11 +299,15 @@ const WritingPage = () => {
 
   return (
     <PageContainer>
-      <WritingHeader
-        currentLevel={currentLevel}
-        activeTab={activeTab}
-        subTab={subTab}
-        setSubTab={setSubTab}
+      <PageHeader
+        title="Writing"
+        badgeText={currentLevel}
+        description="Technical report drafting, RFI & NCR writing assistant."
+        actions={
+          activeTab === 'missions' ? (
+            <SubTabSwitcher subTab={subTab} setSubTab={setSubTab} />
+          ) : undefined
+        }
       />
 
       {showStatsBar && writingStations.length > 0 && (
@@ -401,16 +340,7 @@ const WritingPage = () => {
         />
       )}
 
-      {showStatsBar && (
-        <>
-          <PersonalAIPanel discipline={userDiscipline} cefrLevel={currentLevel} />
-          <StatsBar
-            finishedCount={finishedCount}
-            missionsLength={missions.length}
-            bestScoreAvg={bestScoreAvg}
-          />
-        </>
-      )}
+      {showStatsBar && <PersonalAIPanel discipline={userDiscipline} cefrLevel={currentLevel} />}
 
       <WritingMainContent
         showStatsBar={showStatsBar}
