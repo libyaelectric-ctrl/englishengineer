@@ -11,15 +11,15 @@ export const StatsGrid = ({ totalStudents }: StatsGridProps) => {
       </div>
       <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-4">
         <p className="text-[10px] font-bold text-muted-copy uppercase">Active Today</p>
-        <p className="mt-1 text-2xl font-bold text-emerald-600">2</p>
+        <p className="mt-1 text-2xl font-bold text-emerald-600">—</p>
       </div>
       <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-4">
         <p className="text-[10px] font-bold text-muted-copy uppercase">Pro Members</p>
-        <p className="mt-1 text-2xl font-bold text-blue-600">3</p>
+        <p className="mt-1 text-2xl font-bold text-blue-600">—</p>
       </div>
       <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-4">
         <p className="text-[10px] font-bold text-muted-copy uppercase">AI Request Count</p>
-        <p className="mt-1 text-2xl font-bold text-purple-600">1,842</p>
+        <p className="mt-1 text-2xl font-bold text-purple-600">—</p>
       </div>
     </div>
   );

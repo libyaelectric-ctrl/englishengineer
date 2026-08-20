@@ -94,11 +94,6 @@ export const QuickAITab = ({ initialDraft, status, onStatusChange }: QuickAITabP
                 tone="warning"
                 className="rounded-[4px] font-bold text-[10px] uppercase tracking-wider"
               />
-              <StatusBadge
-                label="Mock preview"
-                tone="neutral"
-                className="rounded-[4px] font-bold text-[10px] uppercase tracking-wider"
-              />
             </div>
             <div className="flex gap-3">
               <WifiOff className="mt-0.5 h-4 w-4 shrink-0 text-warning" />

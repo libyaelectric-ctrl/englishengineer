@@ -122,7 +122,7 @@ export const LandingPage = () => {
         });
       }
 
-      // Features reveal
+      // Reveal animations
       gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((section) => {
         gsap.from(section, {
           y: 40,
@@ -245,49 +245,7 @@ export const LandingPage = () => {
         </div>
       </section>
 
-      {/* ── FEATURES ─────────────────────────────────────────── */}
-      <section className="relative py-24">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16" data-reveal>
-            <span className="text-sm font-semibold uppercase tracking-wider text-primary inline-flex items-center gap-2">
-              {t.featuresHeaderBadge}
-            </span>
-            <h2 className="text-4xl md:text-5xl font-black text-white mt-4 mb-6">
-              {t.featuresTitle}
-            </h2>
-            <p className="text-lg text-white/50 max-w-2xl mx-auto">{t.featuresSubtitle}</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURES.map(({ icon: Icon, key, color, glow }) => (
-              <div key={key} className="group relative" data-reveal>
-                <div
-                  className={`absolute inset-0 bg-gradient-to-r ${color} rounded-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-xl`}
-                />
-                <div className="relative h-full p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl hover:bg-white/10 hover:-translate-y-1 transition-all duration-500">
-                  <div
-                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mb-6 shadow-lg ${glow} transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110`}
-                  >
-                    <Icon className="h-8 w-8 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-3 capitalize">
-                    {translate(`nav.${key}`)}
-                  </h3>
-                  <p className="text-white/50 leading-relaxed text-sm mt-2">
-                    {
-                      t[
-                        `feature${key.charAt(0).toUpperCase() + key.slice(1)}Desc` as keyof typeof t
-                      ]
-                    }
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── DISCIPLINES ─────────────────────────────────────── */}
+      {/* ── DISCIPLINES (TOP - BIG CARDS) ─────────────────────── */}
       <section className="relative py-24 bg-gradient-to-b from-transparent via-white/[0.03] to-transparent">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-center text-4xl md:text-5xl font-black text-white mb-16" data-reveal>
@@ -314,6 +272,41 @@ export const LandingPage = () => {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FEATURES / SKILLS (BOTTOM - SMALL CARDS, 6 IN A ROW) ─────────────────────── */}
+      <section className="relative py-24">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16" data-reveal>
+            <span className="text-sm font-semibold uppercase tracking-wider text-primary inline-flex items-center gap-2">
+              {t.featuresHeaderBadge}
+            </span>
+            <h2 className="text-4xl md:text-5xl font-black text-white mt-4 mb-6">
+              {t.featuresTitle}
+            </h2>
+            <p className="text-lg text-white/50 max-w-2xl mx-auto">{t.featuresSubtitle}</p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {FEATURES.map(({ icon: Icon, key, color, glow }) => (
+              <div key={key} className="group relative" data-reveal>
+                <div
+                  className={`absolute inset-0 bg-gradient-to-r ${color} rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-xl`}
+                />
+                <div className="relative flex flex-col items-center gap-3 p-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl hover:bg-white/10 transition-all duration-300">
+                  <div
+                    className={`w-10 h-10 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center shadow-lg ${glow} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
+                  >
+                    <Icon className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="text-base font-bold text-white text-center capitalize">
+                    {translate(`nav.${key}`)}
+                  </h3>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

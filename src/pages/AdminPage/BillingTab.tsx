@@ -17,7 +17,7 @@ export const BillingTab = () => {
             <p className="text-[10px] font-bold text-muted-copy uppercase">
               Monthly Recurring Revenue
             </p>
-            <p className="mt-1 text-xl font-bold text-foreground">$57.00</p>
+            <p className="mt-1 text-xl font-bold text-foreground">—</p>
           </div>
           <div className="rounded-[var(--radius-card)] border border-border-soft p-4 bg-surface">
             <p className="text-[10px] font-bold text-muted-copy uppercase">

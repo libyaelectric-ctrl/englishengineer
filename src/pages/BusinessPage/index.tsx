@@ -50,15 +50,15 @@ const BUSINESS_CASES = [
 ] as const;
 
 const PREVIEW_METRICS = [
-  { label: 'Active Engineers', value: '24' },
-  { label: 'Overall Readiness', value: '78%' },
-  { label: 'Risk Flags Pruned', value: '14' },
+  { label: 'Active Engineers', value: '—' },
+  { label: 'Overall Readiness', value: '—' },
+  { label: 'Risk Flags Pruned', value: '—' },
 ] as const;
 
 const PREVIEW_SKILLS = [
-  { label: 'Writing & RFI Readiness', value: 84 },
-  { label: 'Speaking & Defense Confidence', value: 72 },
-  { label: 'Technical Field Terminology', value: 91 },
+  { label: 'Writing & RFI Readiness', value: 0 },
+  { label: 'Speaking & Defense Confidence', value: 0 },
+  { label: 'Technical Field Terminology', value: 0 },
 ] as const;
 
 const ENTERPRISE_BENEFITS = [
