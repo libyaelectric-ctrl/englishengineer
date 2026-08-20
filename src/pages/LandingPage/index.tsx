@@ -16,6 +16,9 @@ import { useEffect, useRef } from 'react';
 
 import { Link } from 'react-router-dom';
 
+import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
+import { getDisciplineIcon } from '@/shared/icons/registry';
+
 import { useLocalizationStore } from '@/features/localization';
 
 import { Footer } from './Footer';
@@ -278,6 +281,37 @@ export const LandingPage = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── DISCIPLINES ─────────────────────────────────────── */}
+      <section className="relative py-24 bg-gradient-to-b from-transparent via-white/[0.03] to-transparent">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-center text-4xl md:text-5xl font-black text-white mb-16" data-reveal>
+            '10 Engineering Disciplines'
+          </h2>
+
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {ENGINEERING_DISCIPLINES.map((id, index) => {
+              const DisciplineIcon = getDisciplineIcon(id);
+              return (
+                <div
+                  key={id}
+                  className="group relative"
+                  data-reveal
+                  style={{ transitionDelay: `${index * 20}ms` }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-blue-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
+                  <div className="relative flex flex-col items-center gap-4 p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl hover:bg-white/10 transition-all duration-300">
+                    <DisciplineIcon className="h-10 w-10 text-primary transition-transform duration-300 group-hover:scale-125 group-hover:rotate-6" />
+                    <span className="text-sm font-semibold text-white text-center">
+                      {translate(`discipline.${id}`)}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
