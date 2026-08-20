@@ -124,7 +124,7 @@ export const router = createBrowserRouter([
         element: withSuspense(LearningPath),
       },
       {
-        path: 'lesson-runner/:levelId',
+        path: 'lesson-runner/:levelId?',
         element: withSuspense(LessonRunner),
       },
       {
