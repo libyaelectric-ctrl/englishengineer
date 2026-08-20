@@ -35,8 +35,8 @@ export const BillingPage = () => {
   ).length;
 
   const [cardName, setCardName] = useState(currentUser?.displayName || '');
-  const [cardNumber, setCardNumber] = useState('•••• •••• •••• 4242');
-  const [cardExpiry, setCardExpiry] = useState('12/28');
+  const [cardNumber, setCardNumber] = useState('•••• •••• •••• ••••');
+  const [cardExpiry, setCardExpiry] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
@@ -223,9 +223,7 @@ export const BillingPage = () => {
                   <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider">
                     <div>
                       <span className="block text-primary/70 text-[10px]">Cardholder</span>
-                      <span className="truncate max-w-[120px] block">
-                        {cardName || 'Guest User'}
-                      </span>
+                      <span className="truncate max-w-[120px] block">{cardName || '—'}</span>
                     </div>
                     <div>
                       <span className="block text-primary/70 text-[10px]">Expires</span>
