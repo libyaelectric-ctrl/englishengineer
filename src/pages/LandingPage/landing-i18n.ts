@@ -1,6 +1,7 @@
 import { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 
 export interface LandingTranslations {
+  // Hero
   heroBadge: string;
   heroTitle1: string;
   heroTitleHighlight: string;
@@ -9,46 +10,26 @@ export interface LandingTranslations {
   ctaSelectBranch: string;
   ctaViewPlans: string;
   badgeNoCard: string;
-  badgeLockGuarantee: string;
   badgeLanguages: string;
-  disciplinesTitle: string;
-  disciplinesSub: string;
-  disciplinesHeaderBadge: string;
-  disciplinesFormulaTitle: string;
-  disciplinesFormulaDesc: string;
-  btnSelectBranch: string;
-  workflowHeaderBadge: string;
-  workflowTitle: string;
-  workflowSub: string;
-  step1Title: string;
-  step1Desc: string;
-  step1Badge: string;
-  step2Title: string;
-  step2Desc: string;
-  step2Badge: string;
-  step3Title: string;
-  step3Desc: string;
-  step3Badge: string;
-  ctaStartFree: string;
-  testimonialsTitle?: string;
-  testimonialsSub?: string;
-  pricingTitle?: string;
-  pricingSubtitle?: string;
-  pricingFree?: string;
-  pricingPerMonth?: string;
-  pricingPerMonthAnnual?: string;
-  pricingMonthly?: string;
-  pricingAnnual?: string;
-  pricingSave20?: string;
-  pricingMostPopular?: string;
-  pricingComingSoon?: string;
-  pricingGetStarted?: string;
-  pricingStartFree?: string;
-  pricingNotifyMe?: string;
-  pricingFeature?: string;
-  pricingYear?: string;
-  pricingMonth?: string;
-  // Pricing feature labels
+
+  // Features
+  featuresHeaderBadge: string;
+  featuresTitle: string;
+  featuresSubtitle: string;
+  featureVocabularyDesc: string;
+  featureReadingDesc: string;
+  featureWritingDesc: string;
+  featureSpeakingDesc: string;
+  featureListeningDesc: string;
+  featureGrammarDesc: string;
+
+  // Final CTA
+  finalCtaTitle: string;
+  finalCtaTitleHighlight: string;
+  finalCtaSub: string;
+  finalCtaButton: string;
+
+  // Pricing feature labels (used by PricingCard)
   placementTest?: string;
   learningHub?: string;
   progress?: string;
@@ -61,165 +42,9 @@ export interface LandingTranslations {
   listening?: string;
   tool?: string;
   aiCopilot?: string;
-  finalCtaBadge?: string;
-  finalCtaTitle?: string;
-  finalCtaTitleHighlight?: string;
-  finalCtaSub?: string;
-  finalCtaNote?: string;
-  // Onboarding (new flow)
-  branchLocked?: string;
-  branchLockedDesc?: string;
-  yourWordPool?: string;
-  wordPoolFormula?: string;
-  lockWarning1?: string;
-  lockWarning1Desc?: string;
-  selectedDiscipline?: string;
-  confirmLock?: string;
-  placementComplete?: string;
-  recommendedStart?: string;
-  placementConfidence?: string;
-  placementProgress?: string;
-  placementProgressDesc?: string;
-  back?: string;
-  next?: string;
-  finish?: string;
-  stepOf?: string;
-  goals?: string;
-  goalsDesc?: string;
-  // Discipline labels
-  disciplineArchitecture?: string;
-  disciplineChemical?: string;
-  disciplineCivil?: string;
-  disciplineElectrical?: string;
-  disciplineElectronics?: string;
-  disciplineHse?: string;
-  disciplineIndustrial?: string;
-  disciplineMechanical?: string;
-  disciplineMechatronics?: string;
-  disciplineSoftware?: string;
-  // Skill labels
-  skillVocabulary?: string;
-  skillReading?: string;
-  skillWriting?: string;
-  skillSpeaking?: string;
-  skillListening?: string;
-  skillGrammar?: string;
 }
 
 export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslations> = {
-  tr: {
-    heroBadge: 'EngineerOS • 10 Mühendislik Dalı × 15 Dil Desteği',
-    heroTitle1: 'Uluslararası Projeler İçin',
-    heroTitleHighlight: 'Mühendislik İngilizcenizi',
-    heroTitle2: 'Üst Seviyeye Taşıyın',
-    heroSubtitle:
-      'Mesleğinize özel tek bir mühendislik dalını seçin, kilitleyin ve günlük akıllı egzersizlerle küresel projelerde C1 seviyesinde yetkinlik kazanın.',
-    ctaSelectBranch: 'Mühendislik Dalını Seç ve Başla',
-    ctaViewPlans: 'Planları İncele',
-    badgeNoCard: 'Kredi Kartı Gerektirmez',
-    badgeLockGuarantee: 'Kalıcı Tek Dal Seçim Garantisi',
-    badgeLanguages: '15 Dilde Kullanıcı Arayüzü',
-    disciplinesTitle: '10 Uzmanlık Alanından Kendinize Uygun Olanı Seçin',
-    disciplinesSub:
-      'Mesleğinize özel terim havuzu ile sadece ihtiyacınız olan iletişim becerilerine odaklanın.',
-    disciplinesHeaderBadge: 'Uzmanlık Odaklı Müfredat',
-    disciplinesFormulaTitle: 'Sabit Kelime Havuzu Formülü',
-    disciplinesFormulaDesc:
-      'Kelime Havuzunuz: GENERAL + ENGINEERING + [SEÇTİĞİNİZ TEK DAL] olarak kilitlenir.',
-    btnSelectBranch: 'Seç',
-    workflowHeaderBadge: 'Sistematik Öğrenme Akışı',
-    workflowTitle: '3 Adımda Profesyonel İletişim Rutini',
-    workflowSub:
-      'Günde 10 dakika ayırarak mesleğinize özel teknik terminolojiyi ve raporlama dilini otomatikleştirin.',
-    step1Title: '1. Uzmanlık Alanınızı Seçin',
-    step1Desc:
-      'Onboarding aşamasında 10 Mühendislik Dalından alanınızı seçip kilitleyin. Kelime havuzunuz doğrudan branşınıza özel yapılandırılır.',
-    step1Badge: '%100 Odaklı Mühendislik Müfredatı',
-    step2Title: '2. Günlük İlerleme Rutini Kurun',
-    step2Desc:
-      'Akıllı tekrar algoritması (SRS) ile günde 10 dakikalık egzersizler yapın. Unutmaya yakın teknik terimler zamanında önünüze gelsin.',
-    step2Badge: 'Kişiselleştirilmiş Tekrar Takibi',
-    step3Title: '3. Yapay Zeka ile Pratik Yapın',
-    step3Desc:
-      'Yapay Zeka Copilot desteğiyle teknik yazışmalarınızı, raporlarınızı ve konuşma simülasyonlarınızı gerçek zamanlı geri bildirimle geliştirin.',
-    step3Badge: 'Gelişmiş AI Dil Koçu',
-    ctaStartFree: 'Hemen Alanınızı Seçin ve Ücretsiz Başlayın',
-    testimonialsTitle: 'Mühendizleriniz Aynı Seviyeyi Yukarı Taşıyor',
-    testimonialsSub: '10 dalda binlerce mühendis profesyonel İngilizcelerini geliştiriyor.',
-    pricingTitle: 'Basit, Şeffaf Fiyatlandırma',
-    pricingSubtitle: 'Planınızı seçin. Her plan mesleğinize özel kelime havuzunu içerir.',
-    pricingFree: 'Ücretsiz',
-    pricingPerMonth: '/ay',
-    pricingPerMonthAnnual: '/ay (yıllık)',
-    pricingMonthly: 'Aylık',
-    pricingAnnual: 'Yıllık',
-    pricingSave20: '%20',
-    pricingMostPopular: 'En Popüler',
-    pricingComingSoon: 'Yakında',
-    pricingGetStarted: 'Başla',
-    pricingStartFree: 'Ücretsiz Başla',
-    pricingNotifyMe: 'Bana Bildir',
-    pricingFeature: 'Özellik',
-    pricingYear: 'yıl',
-    pricingMonth: 'ay',
-    placementTest: 'Yerleştirme Testi',
-    learningHub: 'Öğrenme Merkezi',
-    progress: 'İlerleme',
-    vocabularyPricing: 'Kelime',
-    grammarPricing: 'Dilbilgisi',
-    translator: 'Çevirmen',
-    readingPricing: 'Okuma',
-    writingPricing: 'Yazma',
-    speakingPricing: 'Konuşma',
-    listening: 'Dinleme',
-    tool: 'Araç',
-    aiCopilot: 'AI Asistanı',
-    finalCtaBadge: '15 Dil · 10 Dal · Bir Platform',
-    finalCtaTitle: 'Mühendislik Sesiniz',
-    finalCtaTitleHighlight: 'Buradan Başlıyor',
-    finalCtaSub:
-      'Mesleğinizi seçin, arayüz dilinizi belirleyin ve profesyonel mühendislik İngilizcesini geliştirmeye bugün başlayın.',
-    finalCtaNote: 'Ücretsiz plan mevcut · Kredi kartı gerektirmez · İptal serbest',
-// Discipline labels
-  disciplineArchitecture: 'Mimarlık',
-  disciplineChemical: 'Kimya Mühendisliği',
-  disciplineCivil: 'İnşaat Mühendisliği',
-  disciplineElectrical: 'Elektrik Mühendisliği',
-  disciplineElectronics: 'Elektronik Mühendisliği',
-  disciplineHse: 'İSG / HSE',
-  disciplineIndustrial: 'Endüstri Mühendisliği',
-  disciplineMechanical: 'Makine Mühendisliği',
-  disciplineMechatronics: 'Mekatronik Mühendisliği',
-  disciplineSoftware: 'Yazılım Mühendisliği',
-  // Skill labels
-  skillVocabulary: 'Kelime',
-  skillReading: 'Okuma',
-  skillWriting: 'Yazma',
-  skillSpeaking: 'Konuşma',
-  skillListening: 'Dinleme',
-  skillGrammar: 'Dilbilgisi',
-  // Onboarding (new flow)
-    branchLocked: 'Dal Kilitlendi',
-    branchLockedDesc: 'Bu seçim kalıcıdır. Sonradan değiştirilemez.',
-    yourWordPool: 'Kelime Havuzunuz',
-    wordPoolFormula: 'Kelime havuzunuz: GENERAL + ENGINEERING + [SEÇİLEN DAL] formülüne göre.',
-    lockWarning1: 'Bu Seçim Kalıcıdır',
-    lockWarning1Desc:
-      'Dalınızı seçtikten sonra değiştiremezsiniz. Kelime havuzunuz bu dala göre şekillenecektir.',
-    selectedDiscipline: 'Seçili Dal',
-    confirmLock: 'Anladım, Kilitle',
-    placementComplete: 'Yerleştirme Tamamlandı',
-    recommendedStart: 'Önerilen Başlangıç',
-    placementConfidence: 'Güven Seviyesi',
-    placementProgress: 'İlerleme',
-    placementProgressDesc: 'Soru',
-    back: 'Geri',
-    next: 'İleri',
-    finish: 'Bitir',
-    stepOf: 'Adım',
-    goals: 'Hedefler',
-    goalsDesc: 'Hangi becerileri geliştirmek istiyorsunuz?',
-  },
   en: {
     heroBadge: 'EngineerOS • 10 Engineering Disciplines × 15 Languages',
     heroTitle1: 'Master Professional',
@@ -230,52 +55,21 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaSelectBranch: 'Select Discipline & Start',
     ctaViewPlans: 'View Pricing Plans',
     badgeNoCard: 'No Credit Card Required',
-    badgeLockGuarantee: 'Permanent Single Discipline Choice',
     badgeLanguages: '15 Interface Languages',
-    disciplinesTitle: 'Choose Your Engineering Discipline',
-    disciplinesSub:
-      'Focus strictly on the communication skills required for your specific engineering field.',
-    disciplinesHeaderBadge: 'Specialized Engineering Curriculum',
-    disciplinesFormulaTitle: 'Fixed Vocabulary Formula',
-    disciplinesFormulaDesc: 'Your Pool: GENERAL + ENGINEERING + [YOUR SELECTED DISCIPLINE]',
-    btnSelectBranch: 'Select',
-    workflowHeaderBadge: 'Systematic Learning Workflow',
-    workflowTitle: 'Build a Professional Routine in 3 Steps',
-    workflowSub:
-      'Automate technical vocabulary, documentation, and presentation skills in just 10 minutes a day.',
-    step1Title: '1. Lock Your Discipline',
-    step1Desc:
-      'Select your field from 10 engineering disciplines during onboarding. Your vocabulary pool is structured exclusively for your domain.',
-    step1Badge: '100% Focused Engineering Curriculum',
-    step2Title: '2. Daily Smart Practice',
-    step2Desc:
-      'Practice 10 minutes daily with intelligent Spaced Repetition (SRS) algorithms that surface technical terms right before you forget them.',
-    step2Badge: 'Personalized Repetition Tracking',
-    step3Title: '3. AI-Powered Mastery',
-    step3Desc:
-      'Refine technical writing, reports, and speaking simulations with real-time feedback from our AI Engineering Copilot.',
-    step3Badge: 'Advanced AI Speech & Writing Coach',
-    ctaStartFree: 'Select Your Discipline & Start Free',
-    testimonialsTitle: 'Engineers Like You Are Leveling Up',
-    testimonialsSub:
-      'Join thousands of engineers across 10 disciplines who transformed their professional English.',
-    pricingTitle: 'Simple, Transparent Pricing',
-    pricingSubtitle:
-      'Choose your plan. Every plan includes your discipline-specific vocabulary pool.',
-    pricingFree: 'Free',
-    pricingPerMonth: '/mo',
-    pricingPerMonthAnnual: '/mo (annual)',
-    pricingMonthly: 'Monthly',
-    pricingAnnual: 'Annual',
-    pricingSave20: '20%',
-    pricingMostPopular: 'Most Popular',
-    pricingComingSoon: 'Coming Soon',
-    pricingGetStarted: 'Get Started',
-    pricingStartFree: 'Start Free',
-    pricingNotifyMe: 'Notify Me',
-    pricingFeature: 'Feature',
-    pricingYear: 'yr',
-    pricingMonth: 'mo',
+    featuresHeaderBadge: 'Core Learning Modules',
+    featuresTitle: 'Everything You Need, In One Place',
+    featuresSubtitle: 'Six focused modules that build real, job-ready engineering English.',
+    featureVocabularyDesc: '14,000+ technical terms, structured for your discipline.',
+    featureReadingDesc: 'Read contracts, specs, and technical documents with confidence.',
+    featureWritingDesc: 'Draft reports, emails, and technical documents like a pro.',
+    featureSpeakingDesc: 'Practice pronunciation and speaking with instant feedback.',
+    featureListeningDesc: 'Understand meetings and field conversations with ease.',
+    featureGrammarDesc: 'Master the grammar engineers actually use on the job.',
+    finalCtaTitle: 'Your Engineering Voice Starts',
+    finalCtaTitleHighlight: 'Here',
+    finalCtaSub:
+      'Select your discipline, choose your interface language, and start mastering professional engineering English today.',
+    finalCtaButton: 'Start Free',
     placementTest: 'Placement Test',
     learningHub: 'Learning Hub',
     progress: 'Progress',
@@ -288,30 +82,45 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     listening: 'Listening',
     tool: 'Tool',
     aiCopilot: 'AI Copilot',
-    finalCtaBadge: '15 Languages · 10 Disciplines · One Platform',
-    finalCtaTitle: 'Your Engineering Voice Starts',
-    finalCtaTitleHighlight: 'Here',
+  },
+  tr: {
+    heroBadge: 'EngineerOS • 10 Mühendislik Dalı × 15 Dil Desteği',
+    heroTitle1: 'Uluslararası Projeler İçin',
+    heroTitleHighlight: 'Mühendislik İngilizcenizi',
+    heroTitle2: 'Üst Seviyeye Taşıyın',
+    heroSubtitle:
+      'Mesleğinize özel tek bir mühendislik dalını seçin, kilitleyin ve günlük akıllı egzersizlerle küresel projelerde C1 seviyesinde yetkinlik kazanın.',
+    ctaSelectBranch: 'Mühendislik Dalını Seç ve Başla',
+    ctaViewPlans: 'Planları İncele',
+    badgeNoCard: 'Kredi Kartı Gerektirmez',
+    badgeLanguages: '15 Dilde Kullanıcı Arayüzü',
+    featuresHeaderBadge: 'Temel Öğrenme Modülleri',
+    featuresTitle: 'İhtiyacınız Olan Her Şey, Tek Yerde',
+    featuresSubtitle:
+      'Gerçek iş hayatına hazır mühendislik İngilizcesi geliştiren altı odaklı modül.',
+    featureVocabularyDesc: 'Dalınıza özel yapılandırılmış 14.000+ teknik terim.',
+    featureReadingDesc: 'Sözleşmeleri, şartnameleri ve teknik dokümanları güvenle okuyun.',
+    featureWritingDesc: 'Rapor, e-posta ve teknik dokümanları profesyonelce yazın.',
+    featureSpeakingDesc: 'Anında geri bildirimle telaffuz ve konuşma pratiği yapın.',
+    featureListeningDesc: 'Toplantı ve saha konuşmalarını kolayca anlayın.',
+    featureGrammarDesc: 'İş hayatında mühendislerin gerçekten kullandığı dilbilgisini öğrenin.',
+    finalCtaTitle: 'Mühendislik Sesiniz',
+    finalCtaTitleHighlight: 'Buradan Başlıyor',
     finalCtaSub:
-      'Select your discipline, choose your interface language, and start mastering professional engineering English today.',
-    finalCtaNote: 'Free plan available · No credit card · Cancel anytime',
-    // Discipline labels
-    disciplineArchitecture: 'Architecture',
-    disciplineChemical: 'Chemical Engineering',
-    disciplineCivil: 'Civil Engineering',
-    disciplineElectrical: 'Electrical Engineering',
-    disciplineElectronics: 'Electronics Engineering',
-    disciplineHse: 'HSE',
-    disciplineIndustrial: 'Industrial Engineering',
-    disciplineMechanical: 'Mechanical Engineering',
-    disciplineMechatronics: 'Mechatronics Engineering',
-    disciplineSoftware: 'Software Engineering',
-    // Skill labels
-    skillVocabulary: 'Vocabulary',
-    skillReading: 'Reading',
-    skillWriting: 'Writing',
-    skillSpeaking: 'Speaking',
-    skillListening: 'Listening',
-    skillGrammar: 'Grammar',
+      'Mesleğinizi seçin, arayüz dilinizi belirleyin ve profesyonel mühendislik İngilizcesini geliştirmeye bugün başlayın.',
+    finalCtaButton: 'Ücretsiz Başla',
+    placementTest: 'Yerleştirme Testi',
+    learningHub: 'Öğrenme Merkezi',
+    progress: 'İlerleme',
+    vocabularyPricing: 'Kelime',
+    grammarPricing: 'Dilbilgisi',
+    translator: 'Çevirmen',
+    readingPricing: 'Okuma',
+    writingPricing: 'Yazma',
+    speakingPricing: 'Konuşma',
+    listening: 'Dinleme',
+    tool: 'Araç',
+    aiCopilot: 'AI Asistanı',
   },
   de: {
     heroBadge: 'EngineerOS • 10 Ingenieurdisziplinen × 15 Sprachen',
@@ -323,30 +132,21 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaSelectBranch: 'Disziplin Wählen & Starten',
     ctaViewPlans: 'Preise Ansehen',
     badgeNoCard: 'Keine Kreditkarte Erforderlich',
-    badgeLockGuarantee: 'Dauerhafte Disziplinauswahl',
     badgeLanguages: '15 Benutzeroberflächen-Sprachen',
-    disciplinesTitle: 'Wählen Sie Ihre Fachrichtung',
-    disciplinesSub:
-      'Konzentrieren Sie sich genau auf die Begriffe, die Sie in Ihrem Ingenieurbereich benötigen.',
-    disciplinesHeaderBadge: 'Spezialisierter Lehrplan',
-    disciplinesFormulaTitle: 'Feste Wortschatz-Formel',
-    disciplinesFormulaDesc: 'Ihr Wortschatz: ALLGEMEIN + INGENIEURWESEN + [IHRE DISZIPLIN]',
-    btnSelectBranch: 'Wählen',
-    workflowHeaderBadge: 'Systematischer Lernablauf',
-    workflowTitle: 'In 3 Schritten Zur Professionellen Routine',
-    workflowSub: 'Automatisieren Sie technische Begriffe und Dokumentation in 10 Minuten pro Tag.',
-    step1Title: '1. Disziplin Wählen',
-    step1Desc:
-      'Wählen Sie Ihre Fachrichtung beim Onboarding. Ihr Wortschatz wird speziell für Ihr Fachgebiet aufgebaut.',
-    step1Badge: '100% Fokussierter Lehrplan',
-    step2Title: '2. Tägliche Praxis',
-    step2Desc: 'Üben Sie 10 Minuten täglich mit intelligenten Wiederholungsalgorithmen (SRS).',
-    step2Badge: 'Intelligentes Wiederholungssystem',
-    step3Title: '3. KI-Unterstützung',
-    step3Desc:
-      'Verbessern Sie Berichte und Verhandlungen mit Echtzeit-Feedback unseres KI-Copiloten.',
-    step3Badge: 'Fortgeschrittener KI-Coach',
-    ctaStartFree: 'Disziplin Wählen & Kostenlos Starten',
+    featuresHeaderBadge: 'Kern-Lernmodule',
+    featuresTitle: 'Alles, Was Sie Brauchen, an Einem Ort',
+    featuresSubtitle: 'Sechs fokussierte Module für berufsreifes Ingenieur-Englisch.',
+    featureVocabularyDesc: 'Über 14.000 technische Begriffe, auf Ihre Disziplin abgestimmt.',
+    featureReadingDesc: 'Lesen Sie Verträge, Spezifikationen und technische Dokumente sicher.',
+    featureWritingDesc: 'Verfassen Sie Berichte, E-Mails und technische Dokumente professionell.',
+    featureSpeakingDesc: 'Üben Sie Aussprache und Sprechen mit sofortigem Feedback.',
+    featureListeningDesc: 'Verstehen Sie Meetings und Feldgespräche mühelos.',
+    featureGrammarDesc: 'Beherrschen Sie die Grammatik, die Ingenieure wirklich brauchen.',
+    finalCtaTitle: 'Ihre Ingenieur-Stimme Beginnt',
+    finalCtaTitleHighlight: 'Hier',
+    finalCtaSub:
+      'Wählen Sie Ihre Disziplin und Oberflächensprache und meistern Sie professionelles Ingenieur-Englisch.',
+    finalCtaButton: 'Kostenlos Starten',
   },
   ar: {
     heroBadge: 'EngineerOS • 10 تخصصات هندسية × 15 لغة',
@@ -358,27 +158,20 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaSelectBranch: 'اختر التخصص وابدأ الان',
     ctaViewPlans: 'عرض خطط الأسعار',
     badgeNoCard: 'لا تتطلب بطاقة ائتمان',
-    badgeLockGuarantee: 'خيار التخصص الثابت الدائم',
     badgeLanguages: '15 لغة واجهة',
-    disciplinesTitle: 'اختر مجالك الهندسي المتخصص',
-    disciplinesSub: 'ركز فقط على مهارات التواصل المطلوبة لمجالك الهندسي الخاص.',
-    disciplinesHeaderBadge: 'منهج هندسي متخصص',
-    disciplinesFormulaTitle: 'معادلة مفردات ثابته',
-    disciplinesFormulaDesc: 'حصيلة مفرداتك: عام + هندسي + [تخصصك المختار]',
-    btnSelectBranch: 'اختيار',
-    workflowHeaderBadge: 'مسار تعلم منهجي',
-    workflowTitle: 'بناء روتين احترافي في 3 خطوات',
-    workflowSub: 'أتقن المصطلحات التقنية والتقارير في 10 دقائق فقط يومياً.',
-    step1Title: '1. حدد تخصصك الهندسي',
-    step1Desc: 'اختر مجال عملك من بين 10 تخصصات هندسية عند التسجيل لتخصيص محتواك التعليمي بالكامل.',
-    step1Badge: 'منهج هندسي مركز 100%',
-    step2Title: '2. التدريب اليومي الذكي',
-    step2Desc: 'تدرب 10 دقائق يومياً باستخدام خوارزميات التكرار المتباعد لتثبيت المصطلحات.',
-    step2Badge: 'متابعة تكرار ذكية',
-    step3Title: '3. التطوير بالذكاء الاصطناعي',
-    step3Desc: 'طوّر كتاباتك التقنية ومحادثاتك مع التقييم الفوري من المساعد الذكي.',
-    step3Badge: 'مدرب ذكاء اصطناعي متقدم',
-    ctaStartFree: 'اختر تخصصك وابدأ مجاناً',
+    featuresHeaderBadge: 'وحدات التعلم الأساسية',
+    featuresTitle: 'كل ما تحتاجه في مكان واحد',
+    featuresSubtitle: 'ست وحدات مركزة تبني إنجليزية هندسية جاهزة للحياة العملية.',
+    featureVocabularyDesc: 'أكثر من 14,000 مصطلح تقني منظم حسب تخصصك.',
+    featureReadingDesc: 'اقرأ العقود والمواصفات والمستندات التقنية بثقة.',
+    featureWritingDesc: 'صياغة التقارير والرسائل والمستندات التقنية باحترافية.',
+    featureSpeakingDesc: 'تدرب على النطق والمحادثة مع تغذية راجعة فورية.',
+    featureListeningDesc: 'افهم الاجتماعات والمحادثات الميدانية بسهولة.',
+    featureGrammarDesc: 'أتقن القواعد التي يستخدمها المهندسون فعلاً في العمل.',
+    finalCtaTitle: 'صوتك الهندسي يبدأ',
+    finalCtaTitleHighlight: 'من هنا',
+    finalCtaSub: 'اختر تخصصك ولغة الواجهة وابدأ إتقان الإنجليزية الهندسية الاحترافية اليوم.',
+    finalCtaButton: 'ابدأ مجاناً',
   },
   es: {
     heroBadge: 'EngineerOS • 10 Disciplinas × 15 Idiomas',
@@ -390,29 +183,21 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaSelectBranch: 'Seleccionar Disciplina y Empezar',
     ctaViewPlans: 'Ver Planes de Precios',
     badgeNoCard: 'Sin Tarjeta de Crédito',
-    badgeLockGuarantee: 'Elección Permanente de Disciplina',
     badgeLanguages: '15 Idiomas de Interfaz',
-    disciplinesTitle: 'Elija su Disciplina de Ingeniería',
-    disciplinesSub: 'Concéntrese estrictamente en el vocabulario necesario para su especialidad.',
-    disciplinesHeaderBadge: 'Plan de Estudios Especializado',
-    disciplinesFormulaTitle: 'Fórmula de Vocabulario Fija',
-    disciplinesFormulaDesc: 'Su Vocabulario: GENERAL + INGENIERÍA + [SU DISCIPLINA SELECCIONADA]',
-    btnSelectBranch: 'Seleccionar',
-    workflowHeaderBadge: 'Flujo de Aprendizaje Sistemático',
-    workflowTitle: 'Cree una Rutina Profesional en 3 Pasos',
-    workflowSub: 'Automatice términos técnicos y redacción en solo 10 minutos al día.',
-    step1Title: '1. Seleccione su Disciplina',
-    step1Desc:
-      'Elija su campo entre 10 disciplinas durante el inicio para estructurar su contenido.',
-    step1Badge: 'Plan 100% Enfocado en Ingeniería',
-    step2Title: '2. Práctica Diaria Inteligente',
-    step2Desc: 'Practique 10 minutos diarios con repetición espaciada (SRS).',
-    step2Badge: 'Seguimiento Personalizado',
-    step3Title: '3. Dominio con Inteligencia Artificial',
-    step3Desc:
-      'Mejore su redacción técnica e interacciones habladas con retroalimentación en tiempo real.',
-    step3Badge: 'Tutor de IA Avanzado',
-    ctaStartFree: 'Seleccione su Disciplina y Comience Gratis',
+    featuresHeaderBadge: 'Módulos de Aprendizaje Básicos',
+    featuresTitle: 'Todo lo que Necesitas, en un Solo Lugar',
+    featuresSubtitle: 'Seis módulos enfocados para un inglés técnico listo para el trabajo.',
+    featureVocabularyDesc: 'Más de 14.000 términos técnicos, estructurados para tu disciplina.',
+    featureReadingDesc: 'Lee contratos, especificaciones y documentos técnicos con confianza.',
+    featureWritingDesc: 'Redacta informes, correos y documentos técnicos como un profesional.',
+    featureSpeakingDesc: 'Practica pronunciación y conversación con feedback instantáneo.',
+    featureListeningDesc: 'Entiende reuniones y conversaciones de campo con facilidad.',
+    featureGrammarDesc: 'Domina la gramática que los ingenieros realmente usan en el trabajo.',
+    finalCtaTitle: 'Tu Voz de Ingeniería Comienza',
+    finalCtaTitleHighlight: 'Aquí',
+    finalCtaSub:
+      'Selecciona tu disciplina, elige el idioma de interfaz y domina el inglés técnico profesional hoy.',
+    finalCtaButton: 'Empezar Gratis',
   },
   fr: {
     heroBadge: 'EngineerOS • 10 Disciplines × 15 Langues',
@@ -424,27 +209,22 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaSelectBranch: 'Choisir la Discipline & Commencer',
     ctaViewPlans: 'Voir les Tarifs',
     badgeNoCard: 'Sans Carte de Crédit',
-    badgeLockGuarantee: 'Choix de Discipline Permanent',
     badgeLanguages: 'Interface en 15 Langues',
-    disciplinesTitle: "Choisissez Votre Discipline d'Ingénierie",
-    disciplinesSub: 'Concentrez-vous sur le vocabulaire précis requis dans votre secteur.',
-    disciplinesHeaderBadge: "Programme d'Ingénierie Spécialisé",
-    disciplinesFormulaTitle: 'Formule de Vocabulaire Fixe',
-    disciplinesFormulaDesc: 'Votre Vocabulaire : GÉNÉRAL + INGÉNIERIE + [VOTRE DISCIPLINE]',
-    btnSelectBranch: 'Choisir',
-    workflowHeaderBadge: 'Apprentissage Systématique',
-    workflowTitle: 'Routine Professionnelle en 3 Étapes',
-    workflowSub: 'Automatisez la terminologie technique en 10 minutes par jour.',
-    step1Title: '1. Verrouillez Votre Discipline',
-    step1Desc: 'Sélectionnez votre domaine parmi 10 spécialités pour adapter tout votre contenu.',
-    step1Badge: 'Programme 100% Dedié',
-    step2Title: '2. Pratique Quotidienne',
-    step2Desc: 'Pratiquez 10 minutes par jour grâce aux algorithmes de répétition espacée (SRS).',
-    step2Badge: 'Suivi de Répétition Intelligent',
-    step3Title: "3. Perfectionnement par l'IA",
-    step3Desc: 'Perfectionnez vos écrits techniques et présentations grâce à notre Copilote IA.',
-    step3Badge: 'Coach IA Avancé',
-    ctaStartFree: 'Choisissez Votre Discipline & Commencez Gratuitement',
+    featuresHeaderBadge: "Modules d'Apprentissage Essentiels",
+    featuresTitle: "Tout ce qu'il Vous Faut, au Même Endroit",
+    featuresSubtitle: "Six modules ciblés pour un anglais technique prêt pour l'emploi.",
+    featureVocabularyDesc: 'Plus de 14 000 termes techniques, structurés pour votre discipline.',
+    featureReadingDesc:
+      'Lisez contrats, cahiers des charges et documents techniques avec assurance.',
+    featureWritingDesc: 'Rédigez rapports, e-mails et documents techniques comme un pro.',
+    featureSpeakingDesc: 'Entraînez prononciation et expression avec un retour instantané.',
+    featureListeningDesc: 'Comprenez réunions et conversations de terrain sans effort.',
+    featureGrammarDesc: 'Maîtrisez la grammaire réellement utilisée par les ingénieurs.',
+    finalCtaTitle: "Votre Voix d'Ingénieur Commence",
+    finalCtaTitleHighlight: 'Ici',
+    finalCtaSub:
+      "Choisissez votre discipline et votre langue d'interface, et maîtrisez l'anglais technique dès aujourd'hui.",
+    finalCtaButton: 'Commencer Gratuitement',
   },
   pt: {
     heroBadge: 'EngineerOS • 10 Disciplinas × 15 Idiomas',
@@ -456,28 +236,21 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaSelectBranch: 'Selecionar Disciplina e Começar',
     ctaViewPlans: 'Ver Planos e Preços',
     badgeNoCard: 'Sem Cartão de Crédito',
-    badgeLockGuarantee: 'Escolha Permanente de Disciplina',
     badgeLanguages: '15 Idiomas de Interface',
-    disciplinesTitle: 'Escolha Sua Disciplina de Engenharia',
-    disciplinesSub: 'Foque exatamente no vocabulário necessário para sua área.',
-    disciplinesHeaderBadge: 'Currículo Especializado',
-    disciplinesFormulaTitle: 'Fórmula de Vocabulário Fixa',
-    disciplinesFormulaDesc: 'Seu Vocabulário: GERAL + ENGENHARIA + [SUA DISCIPLINA SELECIONADA]',
-    btnSelectBranch: 'Selecionar',
-    workflowHeaderBadge: 'Fluxo Sistemático de Aprendizado',
-    workflowTitle: 'Construa uma Rotina Profissional em 3 Passos',
-    workflowSub: 'Automatize termos técnicos e documentação em apenas 10 minutos por dia.',
-    step1Title: '1. Selecione Sua Disciplina',
-    step1Desc:
-      'Escolha sua área entre 10 disciplinas durante o cadastro para personalizar todo o conteúdo.',
-    step1Badge: 'Currículo 100% Focado',
-    step2Title: '2. Prática Diária Inteligente',
-    step2Desc: 'Pratique 10 minutos diários com repetição espaçada (SRS).',
-    step2Badge: 'Acompanhamento Personalizado',
-    step3Title: '3. Domínio com IA',
-    step3Desc: 'Aprimore sua escrita técnica e reuniões com feedback em tempo real da IA.',
-    step3Badge: 'Tutor de IA Avançado',
-    ctaStartFree: 'Escolha Sua Disciplina e Comece Grátis',
+    featuresHeaderBadge: 'Módulos Essenciais de Aprendizagem',
+    featuresTitle: 'Tudo o que Você Precisa, em um Só Lugar',
+    featuresSubtitle: 'Seis módulos focados para um inglês técnico pronto para o trabalho.',
+    featureVocabularyDesc: 'Mais de 14.000 termos técnicos, estruturados para sua disciplina.',
+    featureReadingDesc: 'Leia contratos, especificações e documentos técnicos com confiança.',
+    featureWritingDesc: 'Redija relatórios, e-mails e documentos técnicos como um profissional.',
+    featureSpeakingDesc: 'Pratique pronúncia e conversação com feedback imediato.',
+    featureListeningDesc: 'Entenda reuniões e conversas de campo com facilidade.',
+    featureGrammarDesc: 'Domine a gramática que os engenheiros realmente usam no trabalho.',
+    finalCtaTitle: 'Sua Voz de Engenharia Começa',
+    finalCtaTitleHighlight: 'Aqui',
+    finalCtaSub:
+      'Escolha sua disciplina e idioma de interface e domine o inglês técnico profissional hoje.',
+    finalCtaButton: 'Começar Grátis',
   },
   ru: {
     heroBadge: 'EngineerOS • 10 Инженерных Направлений × 15 Языков',
@@ -489,28 +262,22 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaSelectBranch: 'Выбрать Специальность и Начать',
     ctaViewPlans: 'Посмотреть Тарифы',
     badgeNoCard: 'Без Банковской Карты',
-    badgeLockGuarantee: 'Постоянный Выбор Специальности',
     badgeLanguages: '15 Языков Интерфейса',
-    disciplinesTitle: 'Выберите Вашу Инженерную Специальность',
-    disciplinesSub: 'Фокусируйтесь исключительно на терминологии вашего направления.',
-    disciplinesHeaderBadge: 'Специализированная Программа',
-    disciplinesFormulaTitle: 'Фиксированный Словарный Запас',
-    disciplinesFormulaDesc: 'Ваш Набор: ОБЩИЙ + ИНЖЕНЕРНЫЙ + [ВАША СПЕЦИАЛЬНОСТЬ]',
-    btnSelectBranch: 'Выбрать',
-    workflowHeaderBadge: 'Системное Обучение',
-    workflowTitle: 'Профессиональная Рутина за 3 Шага',
-    workflowSub: 'Автоматизируйте техническую терминологию за 10 минут в день.',
-    step1Title: '1. Зафиксируйте Специальность',
-    step1Desc: 'Выберите ваше направление из 10 инженерных дисциплин при регистрации.',
-    step1Badge: '100% Инженерный Фокус',
-    step2Title: '2. Ежедневная Практика',
-    step2Desc:
-      'Занимайтесь по 10 минут в день благодаря алгоритмам интервального повторения (SRS).',
-    step2Badge: 'Персонализированное Повторение',
-    step3Title: '3. Практика с ИИ-Копилотом',
-    step3Desc: 'Совершенствуйте техническую документацию и речи с помощью ИИ.',
-    step3Badge: 'Продвинутый ИИ-Тренер',
-    ctaStartFree: 'Выберите Специальность и Начните Бесплатно',
+    featuresHeaderBadge: 'Основные Учебные Модули',
+    featuresTitle: 'Всё Необходимое в Одном Месте',
+    featuresSubtitle:
+      'Шесть сфокусированных модулей для готового к работе технического английского.',
+    featureVocabularyDesc: 'Более 14 000 технических терминов под вашу специальность.',
+    featureReadingDesc: 'Читайте контракты, спецификации и техдокументацию уверенно.',
+    featureWritingDesc: 'Составляйте отчёты, письма и техдокументы профессионально.',
+    featureSpeakingDesc: 'Тренируйте произношение и разговор с мгновенной обратной связью.',
+    featureListeningDesc: 'Понимайте встречи и рабочие разговоры без труда.',
+    featureGrammarDesc: 'Освойте грамматику, которую инженеры реально используют.',
+    finalCtaTitle: 'Ваш Инженерный Голос Начинается',
+    finalCtaTitleHighlight: 'Здесь',
+    finalCtaSub:
+      'Выберите специальность и язык интерфейса и начните осваивать технический английский уже сегодня.',
+    finalCtaButton: 'Начать Бесплатно',
   },
   zh: {
     heroBadge: 'EngineerOS • 10大工程专业 × 15种界面语言',
@@ -521,27 +288,20 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaSelectBranch: '选择专业并开始',
     ctaViewPlans: '查看价格方案',
     badgeNoCard: '无需信用卡',
-    badgeLockGuarantee: '永久单一专业选择保障',
     badgeLanguages: '支持15种界面语言',
-    disciplinesTitle: '选择您的工程专业方向',
-    disciplinesSub: '精确专注于您工程领域所需的专业词汇与沟通技能。',
-    disciplinesHeaderBadge: '定制化工程课程体系',
-    disciplinesFormulaTitle: '固定词汇库公式',
-    disciplinesFormulaDesc: '您的词汇库：通用英语 + 通用工程 + [您选择的专业]',
-    btnSelectBranch: '选择',
-    workflowHeaderBadge: '系统化学习流程',
-    workflowTitle: '3步建立专业英语学习习惯',
-    workflowSub: '每天只需10分钟，掌握专业术语、技术写作与会议沟通。',
-    step1Title: '1. 锁定您的专业',
-    step1Desc: '在注册时从10大工程专业中选择您的领域，系统将为您专门生成核心词汇库。',
-    step1Badge: '100% 专注工程课程',
-    step2Title: '2. 每日智能复习',
-    step2Desc: '结合SRS间隔重复算法，在即将遗忘前提示技术词汇。',
-    step2Badge: '个性化记忆追踪',
-    step3Title: '3. AI导师实战演练',
-    step3Desc: '借助AI Copilot实时反馈，完善您的技术报告与模拟会议演讲。',
-    step3Badge: '高级AI语言教练',
-    ctaStartFree: '立即选择专业，免费体验',
+    featuresHeaderBadge: '核心学习模块',
+    featuresTitle: '您所需的一切，尽在一处',
+    featuresSubtitle: '六大专注模块，打造真正能上手的工程英语。',
+    featureVocabularyDesc: '14,000多个技术术语，按您的专业精准组织。',
+    featureReadingDesc: '自信阅读合同、规范和各类技术文档。',
+    featureWritingDesc: '专业撰写报告、邮件和技术文件。',
+    featureSpeakingDesc: '即时反馈，练就发音与会话。',
+    featureListeningDesc: '轻松听懂会议和现场沟通。',
+    featureGrammarDesc: '掌握工程师真正用得上的语法。',
+    finalCtaTitle: '您的工程之声',
+    finalCtaTitleHighlight: '从这里开始',
+    finalCtaSub: '选择专业与界面语言，今天就开始掌握专业工程英语。',
+    finalCtaButton: '免费开始',
   },
   ja: {
     heroBadge: 'EngineerOS • 10の工学分野 × 15言語対応',
@@ -553,28 +313,20 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaSelectBranch: '専攻分野を選択して開始',
     ctaViewPlans: '料金プランを見る',
     badgeNoCard: 'クレジットカード不要',
-    badgeLockGuarantee: '専攻分野の永久固定 guarantee',
     badgeLanguages: '15言語UI対応',
-    disciplinesTitle: 'あなたの工学専攻分野を選択',
-    disciplinesSub: 'あなたの専門分野に必要なコミュニケーションスキルだけに特化して学習します。',
-    disciplinesHeaderBadge: '専門工学カリキュラム',
-    disciplinesFormulaTitle: '固定単語集フォーミュラ',
-    disciplinesFormulaDesc: '単語集：一般英語 + 共通工学 + [選択した専攻分野]',
-    btnSelectBranch: '選択',
-    workflowHeaderBadge: '体系的な学習フロー',
-    workflowTitle: '3ステップで習慣化するプロフェッショナル英語',
-    workflowSub: '1日10分で専門用語、技術文書、プレゼン英語を自動化します。',
-    step1Title: '1. 専攻分野の固定',
-    step1Desc:
-      '登録時に10分野から専攻を選択。あなたの専門領域に完全に最適化された学習が始まります。',
-    step1Badge: '100% 工学特化カリキュラム',
-    step2Title: '2. 毎日のスマート練習',
-    step2Desc: '間隔反復（SRS）アルゴリズムにより、最適なタイミングで技術用語を復習します。',
-    step2Badge: 'パーソナライズ復習追跡',
-    step3Title: '3. AIによる実践トレーニング',
-    step3Desc: 'AI Copilotのリアルタイムフィードバックで、技術文書執筆や会話を磨きます。',
-    step3Badge: '高度AI言語コーチ',
-    ctaStartFree: '専攻を選択して無料体験',
+    featuresHeaderBadge: 'コア学習モジュール',
+    featuresTitle: '必要なものすべてを一か所に',
+    featuresSubtitle: '実務で使える工学英語を磨く、6つの集中モジュール。',
+    featureVocabularyDesc: '専攻分野に合わせて構成された14,000以上の専門用語。',
+    featureReadingDesc: '契約書・仕様書・技術文書を自信を持って読む。',
+    featureWritingDesc: 'レポート・メール・技術文書をプロ並みに書く。',
+    featureSpeakingDesc: '即時フィードバックで発音と会話を練習。',
+    featureListeningDesc: '会議や現場の会話をスムーズに理解。',
+    featureGrammarDesc: 'エンジニアが実際に使う文法をマスター。',
+    finalCtaTitle: 'あなたのエンジニアの声が',
+    finalCtaTitleHighlight: 'ここから始まる',
+    finalCtaSub: '専攻分野とUI言語を選び、プロフェッショナルな工学英語の習得を今日始めましょう。',
+    finalCtaButton: '無料で始める',
   },
   it: {
     heroBadge: 'EngineerOS • 10 Discipline di Ingegneria × 15 Lingue',
@@ -585,30 +337,21 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaSelectBranch: 'Seleziona Disciplina e Inizia',
     ctaViewPlans: 'Vedi i Piani',
     badgeNoCard: 'Nessuna Carta di Credito Richiesta',
-    badgeLockGuarantee: 'Scelta Disciplina Permanente',
     badgeLanguages: 'Interfaccia in 15 Lingue',
-    disciplinesTitle: 'Scegli la Tua Disciplina di Ingegneria',
-    disciplinesSub: 'Concentrati esattamente sul vocabolario richiesto nel tuo settore.',
-    disciplinesHeaderBadge: 'Curriculum di Ingegneria Specializzato',
-    disciplinesFormulaTitle: 'Formula Vocabolario Fissa',
-    disciplinesFormulaDesc: 'Il Tuo Vocabolario: GENERALE + INGEGNERIA + [DISCIPLINA SELEZIONATA]',
-    btnSelectBranch: 'Seleziona',
-    workflowHeaderBadge: 'Flusso di Apprendimento Sistematico',
-    workflowTitle: 'Crea una Routine Professionale in 3 Passaggi',
-    workflowSub: 'Automatizza i termini tecnici e la documentazione in soli 10 minuti al giorno.',
-    step1Title: '1. Seleziona la Tua Disciplina',
-    step1Desc:
-      'Scegli il tuo campo tra 10 discipline per adattare tutto il contenuto al tuo profilo.',
-    step1Badge: 'Curriculum Focalizzato al 100%',
-    step2Title: '2. Pratica Giornaliera Inteligente',
-    step2Desc:
-      'Esercitati 10 minuti al giorno grazie agli algoritmi di ripetizione dilazionata (SRS).',
-    step2Badge: 'Tracciamento Ripetizione Personalizzato',
-    step3Title: "3. Padronanza con l'IA",
-    step3Desc:
-      'Migliora la tua scrittura tecnica con il feedback in tempo reale del nostro Copilota IA.',
-    step3Badge: 'Coach IA Avanzato',
-    ctaStartFree: 'Seleziona la Tua Disciplina e Inizia Gratis',
+    featuresHeaderBadge: 'Moduli di Apprendimento Essenziali',
+    featuresTitle: 'Tutto Ciò che Ti Serve, in Un Unico Posto',
+    featuresSubtitle: 'Sei moduli mirati per un inglese tecnico pronto per il lavoro.',
+    featureVocabularyDesc: 'Oltre 14.000 termini tecnici, strutturati per la tua disciplina.',
+    featureReadingDesc: 'Leggi contratti, specifiche e documenti tecnici con sicurezza.',
+    featureWritingDesc: 'Scrivi report, e-mail e documenti tecnici come un professionista.',
+    featureSpeakingDesc: 'Esercita pronuncia e conversazione con feedback immediato.',
+    featureListeningDesc: 'Comprendi riunioni e conversazioni sul campo con facilità.',
+    featureGrammarDesc: 'Padroneggia la grammatica che gli ingegneri usano davvero.',
+    finalCtaTitle: 'La Tua Voce di Ingegnere Inizia',
+    finalCtaTitleHighlight: 'Qui',
+    finalCtaSub:
+      "Scegli la tua disciplina e la lingua dell'interfaccia e inizia a padroneggiare l'inglese tecnico oggi.",
+    finalCtaButton: 'Inizia Gratis',
   },
   vi: {
     heroBadge: 'EngineerOS • 10 Ngành Kỹ Thuật × 15 Ngôn Ngữ',
@@ -620,27 +363,21 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaSelectBranch: 'Chọn Ngành & Bắt Đầu',
     ctaViewPlans: 'Xem Bảng Giá',
     badgeNoCard: 'Không Cần Thẻ Tín Dụng',
-    badgeLockGuarantee: 'Cam Kết Chọn Ngành Cố Định',
     badgeLanguages: '15 Ngôn Ngữ Giao Diện',
-    disciplinesTitle: 'Chọn Ngành Kỹ Thuật Của Bạn',
-    disciplinesSub: 'Tập trung chính xác vào từ vựng chuyên ngành bạn cần.',
-    disciplinesHeaderBadge: 'Chương Trình Kỹ Thuật Chuyên Sâu',
-    disciplinesFormulaTitle: 'Công Thức Từ Vựng Cố Định',
-    disciplinesFormulaDesc: 'Kho Từ Vựng: TỔNG HỢP + KỸ THUẬT + [NGÀNH ĐÃ CHỌN]',
-    btnSelectBranch: 'Chọn',
-    workflowHeaderBadge: 'Quy Trình Học Hệ Thống',
-    workflowTitle: 'Xây Dựng Thói Quen 3 Bước',
-    workflowSub: 'Tự động hóa từ vựng và báo cáo kỹ thuật chỉ 10 phút mỗi ngày.',
-    step1Title: '1. Khóa Ngành Học',
-    step1Desc: 'Chọn chuyên ngành từ 10 ngành kỹ thuật khi đăng ký để tối ưu hóa kho từ vựng.',
-    step1Badge: '100% Tập Trung Chuyên Ngành',
-    step2Title: '2. Luyện Tập Mỗi Ngày',
-    step2Desc: 'Luyện tập 10 phút hàng ngày với thuật toán lặp lại ngắt quãng (SRS).',
-    step2Badge: 'Theo Dõi Theo Thời Gian Thực',
-    step3Title: '3. Làm Chủ Cùng AI',
-    step3Desc: 'Hoàn thiện kỹ năng viết và nói kỹ thuật với phản hồi tức thì từ AI Copilot.',
-    step3Badge: 'Huấn Luyện Viên AI Nâng Cao',
-    ctaStartFree: 'Chọn Ngành & Bắt Đầu Miễn Phí',
+    featuresHeaderBadge: 'Mô-đun Học Tập Cốt Lõi',
+    featuresTitle: 'Mọi Thứ Bạn Cần, Tại Một Nơi',
+    featuresSubtitle: 'Sáu mô-đun tập trung xây dựng tiếng Anh kỹ thuật sẵn sàng cho công việc.',
+    featureVocabularyDesc: 'Hơn 14.000 thuật ngữ kỹ thuật, cấu trúc theo ngành của bạn.',
+    featureReadingDesc: 'Đọc hợp đồng, thông số và tài liệu kỹ thuật một cách tự tin.',
+    featureWritingDesc: 'Soạn báo cáo, email và tài liệu kỹ thuật chuyên nghiệp.',
+    featureSpeakingDesc: 'Luyện phát âm và nói với phản hồi tức thì.',
+    featureListeningDesc: 'Hiểu cuộc họp và hội thoại công trường dễ dàng.',
+    featureGrammarDesc: 'Nắm vững ngữ pháp mà kỹ sư thực sự dùng trong công việc.',
+    finalCtaTitle: 'Giọng Nói Kỹ Thuật Của Bạn Bắt Đầu',
+    finalCtaTitleHighlight: 'Tại Đây',
+    finalCtaSub:
+      'Chọn ngành và ngôn ngữ giao diện, và bắt đầu thành thạo tiếng Anh kỹ thuật ngay hôm nay.',
+    finalCtaButton: 'Bắt Đầu Miễn Phí',
   },
   pl: {
     heroBadge: 'EngineerOS • 10 Dziedzin Inżynierii × 15 Języków',
@@ -652,27 +389,22 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaSelectBranch: 'Wybierz Specjalizację i Rozpocznij',
     ctaViewPlans: 'Zobacz Cennik',
     badgeNoCard: 'Karta Kredytowa Nie Jest Wymagana',
-    badgeLockGuarantee: 'Stały Wybór Jednej Dziedziny',
     badgeLanguages: '15 Języków Interfejsu',
-    disciplinesTitle: 'Wybierz Swoją Dziedzinę Inżynierii',
-    disciplinesSub: 'Skup się wyłącznie na słownictwie wymaganym w Twojej branży.',
-    disciplinesHeaderBadge: 'Specjalistyczny Program Inżynieryjny',
-    disciplinesFormulaTitle: 'Stały Wzór Słownictwa',
-    disciplinesFormulaDesc: 'Twój Zestaw: OGÓLNY + INŻYNIERYJNY + [TWOJA DZIEDZINA]',
-    btnSelectBranch: 'Wybierz',
-    workflowHeaderBadge: 'Systematyczny Proces Nauki',
-    workflowTitle: 'Zbuduj Profesjonalną Rutynę w 3 Krokach',
-    workflowSub: 'Zautomatyzuj terminologię techniczną w zaledwie 10 minut dziennie.',
-    step1Title: '1. Wybierz Specjalizację',
-    step1Desc: 'Wybierz swoją branżę spośród 10 dziedzin podczas rejestracji.',
-    step1Badge: 'Program w 100% Dopasowany',
-    step2Title: '2. Codzienna Praktyka',
-    step2Desc: 'Ćwicz 10 minut dziennie dzięki algorytmom powtórek odstępowych (SRS).',
-    step2Badge: 'Inteligentne Śledzenie Powtórek',
-    step3Title: '3. Doskonalenie z AI',
-    step3Desc: 'Udoskonalaj dokumentację techniczną i rozmowy z pomocą Asystenta AI.',
-    step3Badge: 'Zaawansowany Trener AI',
-    ctaStartFree: 'Wybierz Specjalizację i Zacznij Za Darmo',
+    featuresHeaderBadge: 'Podstawowe Moduły Nauki',
+    featuresTitle: 'Wszystko, Czego Potrzebujesz, w Jednym Miejscu',
+    featuresSubtitle:
+      'Sześć ukierunkowanych modułów budujących gotowy do pracy angielski techniczny.',
+    featureVocabularyDesc: 'Ponad 14 000 terminów technicznych dla Twojej dziedziny.',
+    featureReadingDesc: 'Czytaj umowy, specyfikacje i dokumenty techniczne pewnie.',
+    featureWritingDesc: 'Twórz raporty, e-maile i dokumenty techniczne jak profesjonalista.',
+    featureSpeakingDesc: 'Ćwicz wymowę i mówienie z natychmiastową informacją zwrotną.',
+    featureListeningDesc: 'Rozumiej spotkania i rozmowy w terenie bez wysiłku.',
+    featureGrammarDesc: 'Opanuj gramatykę, której inżynierowie naprawdę używają.',
+    finalCtaTitle: 'Twój Inżynierski Głos Zaczyna Się',
+    finalCtaTitleHighlight: 'Tutaj',
+    finalCtaSub:
+      'Wybierz specjalizację i język interfejsu, i zacznij opanowywać techniczny angielski już dziś.',
+    finalCtaButton: 'Zacznij Za Darmo',
   },
   id: {
     heroBadge: 'EngineerOS • 10 Disiplin Teknik × 15 Bahasa',
@@ -684,28 +416,21 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaSelectBranch: 'Pilih Disiplin & Mulai',
     ctaViewPlans: 'Lihat Paket Harga',
     badgeNoCard: 'Tanpa Kartu Kredit',
-    badgeLockGuarantee: 'Pilihan Disiplin Tunggal Permanen',
     badgeLanguages: '15 Bahasa Antarmuka',
-    disciplinesTitle: 'Pilih Disiplin Teknik Anda',
-    disciplinesSub: 'Fokus khusus pada kosakata yang dibutuhkan dalam bidang teknik Anda.',
-    disciplinesHeaderBadge: 'Kurikulum Teknik Khusus',
-    disciplinesFormulaTitle: 'Formula Kosakata Tetap',
-    disciplinesFormulaDesc: 'Kosakata Anda: UMUM + TEKNIK + [DISIPLIN PILIHAN ANDA]',
-    btnSelectBranch: 'Pilih',
-    workflowHeaderBadge: 'Alur Pembelajaran Sistematis',
-    workflowTitle: 'Bangun Rutinitas Profesional dalam 3 Langkah',
-    workflowSub: 'Otomatiskan istilah teknis dan dokumentasi hanya dalam 10 menit sehari.',
-    step1Title: '1. Kunci Disiplin Anda',
-    step1Desc: 'Pilih bidang Anda dari 10 disiplin teknik saat pendaftaran.',
-    step1Badge: 'Kurikulum 100% Terfokus',
-    step2Title: '2. Latihan Harian Cerdas',
-    step2Desc: 'Berlatih 10 menit sehari dengan algoritma pengulangan berjarak (SRS).',
-    step2Badge: 'Pelacakan Pengulangan Cerdas',
-    step3Title: '3. Penguasaan dengan AI',
-    step3Desc:
-      'Sempurnakan penulisan teknis dan percakapan dengan umpan balik langsung dari AI Copilot.',
-    step3Badge: 'Pelatih Bahasa AI Canggih',
-    ctaStartFree: 'Pilih Disiplin Anda & Mulai Gratis',
+    featuresHeaderBadge: 'Modul Pembelajaran Inti',
+    featuresTitle: 'Semua yang Anda Butuhkan, di Satu Tempat',
+    featuresSubtitle: 'Enam modul terfokus yang membangun bahasa Inggris teknik siap kerja.',
+    featureVocabularyDesc: 'Lebih dari 14.000 istilah teknis, terstruktur untuk disiplin Anda.',
+    featureReadingDesc: 'Baca kontrak, spesifikasi, dan dokumen teknis dengan percaya diri.',
+    featureWritingDesc: 'Susun laporan, email, dan dokumen teknis secara profesional.',
+    featureSpeakingDesc: 'Latih pelafalan dan berbicara dengan umpan balik instan.',
+    featureListeningDesc: 'Pahami rapat dan percakapan lapangan dengan mudah.',
+    featureGrammarDesc: 'Kuasai tata bahasa yang benar-benar digunakan insinyur.',
+    finalCtaTitle: 'Suara Teknik Anda Dimulai',
+    finalCtaTitleHighlight: 'Di Sini',
+    finalCtaSub:
+      'Pilih disiplin dan bahasa antarmuka Anda, dan mulailah menguasai bahasa Inggris teknik hari ini.',
+    finalCtaButton: 'Mulai Gratis',
   },
   nl: {
     heroBadge: 'EngineerOS • 10 Ingenieursdisciplines × 15 Talen',
@@ -717,28 +442,21 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaSelectBranch: 'Kies Discipline & Start',
     ctaViewPlans: 'Bekijk Tarieven',
     badgeNoCard: 'Geen Creditcard Nodig',
-    badgeLockGuarantee: 'Permanente Disciplinekeuze',
     badgeLanguages: '15 Interfacetalen',
-    disciplinesTitle: 'Kies Uw Ingenieursdiscipline',
-    disciplinesSub: 'Richt u uitsluitend op de woordenschat die nodig is voor uw vakgebied.',
-    disciplinesHeaderBadge: 'Gespecialiseerd Ingenieurscurriculum',
-    disciplinesFormulaTitle: 'Vaste Woordenschat Formule',
-    disciplinesFormulaDesc: 'Uw Woordenschat: ALGEMEEN + INGENIEURSWEN + [UW GEKOZEN DISCIPLINE]',
-    btnSelectBranch: 'Selecteer',
-    workflowHeaderBadge: 'Systematisch Leerproces',
-    workflowTitle: 'Bouw Een Professionele Routine in 3 Stappen',
-    workflowSub: 'Automatiseer technische termen en documentatie in slechts 10 minuten per dag.',
-    step1Title: '1. Vergrendel Uw Discipline',
-    step1Desc: 'Kies uw vakgebied uit 10 disciplines bij aanmelding.',
-    step1Badge: '100% Gefocust Curriculum',
-    step2Title: '2. Dagelijkse Slimme Training',
-    step2Desc: 'Oefen dagelijks 10 minuten met slimme herhalingsalgoritmen (SRS).',
-    step2Badge: 'Gepersonaliseerde Herhalingsanalyse',
-    step3Title: '3. Beheersing met AI',
-    step3Desc:
-      'Verbeter technische documenten en gesprekken met directe feedback van de AI Copilot.',
-    step3Badge: 'Geavanceerde AI-Taalcoach',
-    ctaStartFree: 'Kies Uw Discipline & Start Gratis',
+    featuresHeaderBadge: 'Kernleermodules',
+    featuresTitle: 'Alles Wat U Nodig Heeft, op Één Plek',
+    featuresSubtitle: 'Zes gerichte modules voor werkklare technisch Engels.',
+    featureVocabularyDesc: 'Meer dan 14.000 technische termen, afgestemd op uw discipline.',
+    featureReadingDesc: 'Lees contracten, specificaties en technische documenten vol vertrouwen.',
+    featureWritingDesc: 'Schrijf rapporten, e-mails en technische documenten als een pro.',
+    featureSpeakingDesc: 'Oefen uitspraak en spreken met directe feedback.',
+    featureListeningDesc: 'Versta vergaderingen en veldgesprekken moeiteloos.',
+    featureGrammarDesc: 'Beheers de grammatica die ingenieurs echt gebruiken.',
+    finalCtaTitle: 'Uw Ingenieursstem Begint',
+    finalCtaTitleHighlight: 'Hier',
+    finalCtaSub:
+      'Kies uw discipline en interfacetaal en beheers vandaag nog professioneel ingenieursengels.',
+    finalCtaButton: 'Gratis Starten',
   },
 };
 

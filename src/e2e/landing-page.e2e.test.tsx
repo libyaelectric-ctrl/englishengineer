@@ -34,25 +34,4 @@ describe('Landing page E2E', () => {
     expect(screen.getAllByText(/^reading$/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/^grammar$/i).length).toBeGreaterThan(0);
   });
-
-  it('shows all 5 pricing plans on landing', () => {
-    renderWithProviders(<LandingPage />);
-
-    expect(screen.getAllByText('$29').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('$59').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('$79').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('$99').length).toBeGreaterThan(0);
-    expect(screen.getByText('$$$$')).toBeInTheDocument();
-  });
-
-  it('FAQ items are clickable', async () => {
-    renderWithProviders(<LandingPage />);
-
-    const faqButton = screen.getByText(/Is there a free plan/i);
-    expect(faqButton).toBeInTheDocument();
-    fireEvent.click(faqButton);
-    await waitFor(() => {
-      expect(screen.getByText(/includes core learning modules/i)).toBeInTheDocument();
-    });
-  });
 });
