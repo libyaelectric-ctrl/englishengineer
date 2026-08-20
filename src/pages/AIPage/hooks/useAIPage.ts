@@ -59,22 +59,26 @@ const computeDocLimit = (planId: string): number | 'unlimited' => {
   return 'unlimited';
 };
 
-const computeProviderTone = (state: string): 'success' | 'danger' | 'warning' => {
-  if (state === 'backend-configured') return 'success';
+const computeProviderTone = (mode: string, state: string): 'success' | 'danger' | 'warning' => {
+  if (mode === 'backend' && state === 'backend-configured') return 'success';
   if (state === 'backend-error') return 'danger';
   return 'warning';
 };
 
-const computeConnectionValue = (state: string): string => {
-  if (state === 'backend-configured') return 'Backend';
-  if (state === 'backend-error') return 'Unavailable';
-  return 'Mock';
+const computeConnectionValue = (mode: string, state: string): string => {
+  if (mode === 'backend' && state === 'backend-configured') return 'Secure AI';
+  if (mode === 'backend' && state === 'mock-fallback') return 'Demo Mode';
+  if (state === 'backend-error') return 'Error';
+  return 'Mock AI';
 };
 
-const computeConnectionTrend = (state: string): string => {
-  if (state === 'backend-configured') return 'Protected backend proxy configured';
-  if (state === 'backend-error') return 'Backend request failed safely';
-  return 'Local deterministic fallback';
+const computeConnectionTrend = (mode: string, state: string): string => {
+  if (mode === 'backend' && state === 'backend-configured')
+    return 'Live LLM connected through protected backend proxy';
+  if (mode === 'backend' && state === 'mock-fallback')
+    return 'Backend connected but running in demo mode';
+  if (state === 'backend-error') return 'Backend connection failed — fallback responses active';
+  return 'No backend detected — local deterministic fallback';
 };
 
 export function useAIPage() {
@@ -183,9 +187,9 @@ export function useAIPage() {
     (session) => new Date(session.timestamp).toDateString() === new Date().toDateString()
   ).length;
   const aiEntitlement = canUseAICoach(subscription, todaysCoachSessions);
-  const providerTone = computeProviderTone(providerStatus.state);
-  const connectionValue = computeConnectionValue(providerStatus.state);
-  const connectionTrend = computeConnectionTrend(providerStatus.state);
+  const providerTone = computeProviderTone(providerStatus.mode, providerStatus.state);
+  const connectionValue = computeConnectionValue(providerStatus.mode, providerStatus.state);
+  const connectionTrend = computeConnectionTrend(providerStatus.mode, providerStatus.state);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

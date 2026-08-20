@@ -117,9 +117,19 @@ export interface EntitlementResult {
   requiredPlan: BillingPlanId | null;
 }
 
+export interface InvoiceRecord {
+  id: string;
+  date: string;
+  amount: string;
+  status: string;
+  invoicePdf: string | null;
+}
+
 export interface BillingState {
   subscription: SubscriptionSnapshot;
   providerStatus: BillingProviderStatus;
   isLoading: boolean;
   error: string | null;
+  invoices: InvoiceRecord[];
+  isLoadingInvoices: boolean;
 }

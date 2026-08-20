@@ -16,6 +16,8 @@ import { Link } from 'react-router-dom';
 
 import { PageMetadata } from '@/shared/components/PageMetadata';
 
+import { getTeamOverview, useTeamStore } from '@/features/team';
+
 const BUSINESS_CASES = [
   {
     icon: HardHat,
@@ -49,18 +51,6 @@ const BUSINESS_CASES = [
   },
 ] as const;
 
-const PREVIEW_METRICS = [
-  { label: 'Active Engineers', value: '—' },
-  { label: 'Overall Readiness', value: '—' },
-  { label: 'Risk Flags Pruned', value: '—' },
-] as const;
-
-const PREVIEW_SKILLS = [
-  { label: 'Writing & RFI Readiness', value: 0 },
-  { label: 'Speaking & Defense Confidence', value: 0 },
-  { label: 'Technical Field Terminology', value: 0 },
-] as const;
-
 const ENTERPRISE_BENEFITS = [
   {
     icon: Users,
@@ -80,6 +70,38 @@ const ENTERPRISE_BENEFITS = [
 ] as const;
 
 const BusinessPage = () => {
+  const { members, summaries } = useTeamStore();
+  const overview = getTeamOverview(members, summaries);
+
+  const avgSkillScore = (keys: string[]) => {
+    if (summaries.length === 0) return 0;
+    const total = summaries.reduce((sum, s) => {
+      const skillSum = keys.reduce(
+        (kSum, k) => kSum + ((s.skillScores as Record<string, number>)[k] || 0),
+        0
+      );
+      return sum + skillSum / keys.length;
+    }, 0);
+    return Math.round(total / summaries.length);
+  };
+
+  const riskFlagsPruned = [...new Set(summaries.flatMap((s) => s.mistakeCategories))].length;
+
+  const previewMetrics = [
+    { label: 'Active Engineers', value: String(overview.activeLearners) },
+    {
+      label: 'Overall Readiness',
+      value: overview.averageProgress > 0 ? `${overview.averageProgress}%` : '—',
+    },
+    { label: 'Risk Flags Pruned', value: String(riskFlagsPruned) },
+  ] as const;
+
+  const previewSkills = [
+    { label: 'Writing & RFI Readiness', value: avgSkillScore(['writing']) },
+    { label: 'Speaking & Defense Confidence', value: avgSkillScore(['speaking']) },
+    { label: 'Technical Field Terminology', value: avgSkillScore(['vocabulary']) },
+  ] as const;
+
   return (
     <main className="bg-background min-h-screen pt-20 sm:pt-24 pb-16 text-foreground">
       <PageMetadata
@@ -147,7 +169,7 @@ const BusinessPage = () => {
               </div>
 
               <div className="grid grid-cols-3 gap-2.5 mb-4">
-                {PREVIEW_METRICS.map((m) => (
+                {previewMetrics.map((m) => (
                   <div
                     key={m.label}
                     className="rounded-[var(--radius-card)] border border-border-soft bg-background p-2.5 text-center"
@@ -161,7 +183,7 @@ const BusinessPage = () => {
               </div>
 
               <div className="space-y-3">
-                {PREVIEW_SKILLS.map((s) => (
+                {previewSkills.map((s) => (
                   <div key={s.label}>
                     <div className="flex justify-between text-xs font-medium text-foreground mb-1">
                       <span>{s.label}</span>

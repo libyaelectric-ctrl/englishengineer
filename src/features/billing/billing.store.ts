@@ -9,10 +9,16 @@ import { BillingPlanId, BillingState, SubscriptionSnapshot } from './billing.typ
 interface BillingActions {
   initializeBilling: (userId: string | null) => Promise<void>;
   refreshBilling: (userId: string | null) => Promise<void>;
-  startCheckout: (userId: string, email: string, planId: BillingPlanId, billingInterval?: 'month' | 'year') => Promise<void>;
+  startCheckout: (
+    userId: string,
+    email: string,
+    planId: BillingPlanId,
+    billingInterval?: 'month' | 'year'
+  ) => Promise<void>;
   openCustomerPortal: (userId: string) => Promise<void>;
   startTopupCheckout: (userId: string, email: string) => Promise<void>;
   setSubscription: (subscription: SubscriptionSnapshot) => void;
+  fetchInvoices: (userId: string) => Promise<void>;
 }
 
 const fetchSubscription = async (
@@ -42,6 +48,8 @@ export const useBillingStore = create<BillingState & BillingActions>()(
       providerStatus: BillingService.getProviderStatus(),
       isLoading: false,
       error: null,
+      invoices: [],
+      isLoadingInvoices: false,
 
       initializeBilling: async (userId) => fetchSubscription(set, userId, 'Billing initialization'),
       refreshBilling: async (userId) => fetchSubscription(set, userId, 'Billing refresh'),
@@ -83,6 +91,16 @@ export const useBillingStore = create<BillingState & BillingActions>()(
       setSubscription: (subscription) => {
         BillingService.persistSubscription(subscription);
         set({ subscription });
+      },
+
+      fetchInvoices: async (userId) => {
+        set({ isLoadingInvoices: true });
+        try {
+          const invoices = await BillingService.fetchInvoices(userId);
+          set({ invoices, isLoadingInvoices: false });
+        } catch {
+          set({ invoices: [], isLoadingInvoices: false });
+        }
       },
     }),
     { name: 'BillingStore' }

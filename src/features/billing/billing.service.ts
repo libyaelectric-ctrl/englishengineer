@@ -9,7 +9,12 @@ import {
   getBillingApiUrl,
   getBillingProviderStatus,
 } from './billing.helpers';
-import { BillingPlanId, BillingProviderStatus, SubscriptionSnapshot } from './billing.types';
+import {
+  BillingPlanId,
+  BillingProviderStatus,
+  InvoiceRecord,
+  SubscriptionSnapshot,
+} from './billing.types';
 import { StripeBillingProvider } from './stripe.provider';
 
 const STORAGE_KEY = 'billing_subscription';
@@ -174,6 +179,16 @@ export const BillingService = {
         code: ErrorCode.NETWORK,
         message: 'Billing service is temporarily unavailable.',
       });
+    }
+  },
+
+  async fetchInvoices(userId: string): Promise<InvoiceRecord[]> {
+    const provider = getProvider();
+    if (!provider) return [];
+    try {
+      return await provider.getInvoices(userId);
+    } catch {
+      return [];
     }
   },
 };

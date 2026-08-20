@@ -2,13 +2,13 @@ import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
 
 import { logger } from '@/shared/logger';
-
 import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
 
 import {
   BillingPortalRequest,
   BillingRedirectResponse,
   BillingSessionRequest,
+  InvoiceRecord,
   SubscriptionSnapshot,
 } from './billing.types';
 
@@ -164,5 +164,9 @@ export class StripeBillingProvider {
       request,
       request.userId
     );
+  }
+
+  async getInvoices(userId: string): Promise<InvoiceRecord[]> {
+    return getJson<InvoiceRecord[]>(buildBillingEndpoint(this.billingApiUrl, 'invoices'), userId);
   }
 }

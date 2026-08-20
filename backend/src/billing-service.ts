@@ -56,6 +56,14 @@ const resolveSubscription = (
   return normalized.stripeCustomerId ? normalized : emptySubscription();
 };
 
+export interface InvoiceRecord {
+  id: string;
+  date: string;
+  amount: string;
+  status: string;
+  invoicePdf: string | null;
+}
+
 export interface BillingService {
   readonly provider: BillingProvider | null;
   createCheckoutSession(userId: string, body: CheckoutSessionBody): Promise<{ url: string }>;
@@ -65,6 +73,7 @@ export interface BillingService {
   ): Promise<{ url: string }>;
   createPortalSession(userId: string, body: PortalSessionBody): Promise<{ url: string }>;
   getSubscriptionStatus(userIdValue: string | null | undefined): Promise<SubscriptionSnapshot>;
+  listInvoices(userId: string): Promise<InvoiceRecord[]>;
   processWebhook(
     rawBody: Buffer,
     headers: Record<string, string | string[] | undefined>,
@@ -186,6 +195,28 @@ export const createBillingService = ({
         );
       }
       return resolveSubscription(sub, activeProvider?.configured === true, !!activeProvider);
+    },
+
+    async listInvoices(userId) {
+      assertBillingUser(userId);
+      const sub = await repository.getSubscriptionStatus(userId);
+      if (!sub?.stripeCustomerId) return [];
+      ensureConfigured();
+      try {
+        const invoices = await stripeClient!.invoices.list({
+          customer: sub.stripeCustomerId,
+          limit: 20,
+        });
+        return invoices.data.map((inv) => ({
+          id: inv.id ?? 'unknown',
+          date: inv.created ? new Date(inv.created * 1000).toISOString() : '',
+          amount: inv.amount_paid != null ? `$${(inv.amount_paid / 100).toFixed(2)}` : '$0.00',
+          status: inv.status ?? 'unknown',
+          invoicePdf: inv.invoice_pdf ?? null,
+        }));
+      } catch {
+        return [];
+      }
     },
 
     async processWebhook(rawBody, headers, onEventDetected) {

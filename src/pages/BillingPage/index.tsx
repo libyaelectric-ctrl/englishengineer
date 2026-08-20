@@ -9,6 +9,7 @@ import { logger } from '@/shared/logger';
 import { useAIStore } from '@/features/ai';
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
+import type { InvoiceRecord } from '@/features/billing';
 import { BillingStatusPanel } from '@/features/billing/BillingStatusPanel';
 import { useLearningCockpit } from '@/features/profile';
 
@@ -25,6 +26,9 @@ export const BillingPage = () => {
     refreshBilling,
     startCheckout,
     openCustomerPortal,
+    invoices,
+    isLoadingInvoices,
+    fetchInvoices,
   } = useBillingStore();
 
   const { memory, learningState } = useLearningCockpit(currentUser?.id);
@@ -48,8 +52,9 @@ export const BillingPage = () => {
   useEffect(() => {
     if (currentUser?.id) {
       refreshBilling(currentUser.id).catch((err) => logger.e('Billing refresh failed:', err));
+      fetchInvoices(currentUser.id).catch((err) => logger.e('Invoices fetch failed:', err));
     }
-  }, [currentUser?.id, refreshBilling]);
+  }, [currentUser?.id, refreshBilling, fetchInvoices]);
 
   const handleUpgrade = () => {
     if (!currentUser?.id || !currentUser?.email) return;
@@ -166,34 +171,73 @@ export const BillingPage = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#d9d9e3]">
-                  {([] as Array<{ id: string; date: string; amount: string; status: string }>).map(
-                    (inv) => (
+                  {isLoadingInvoices ? (
+                    <tr>
+                      <td colSpan={5} className="px-4 py-8 text-center text-xs text-muted-copy">
+                        Loading invoices...
+                      </td>
+                    </tr>
+                  ) : invoices.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="px-4 py-8 text-center text-xs text-muted-copy">
+                        No transactions yet.
+                      </td>
+                    </tr>
+                  ) : (
+                    invoices.map((inv: InvoiceRecord) => (
                       <tr key={inv.id} className="hover:bg-background transition-colors">
                         <td className="px-4 py-3 text-xs font-mono font-bold text-foreground">
                           {inv.id}
                         </td>
                         <td className="px-4 py-3 text-xs font-medium text-muted-copy">
-                          {inv.date}
+                          {inv.date
+                            ? new Intl.DateTimeFormat(undefined, {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              }).format(new Date(inv.date))
+                            : '—'}
                         </td>
                         <td className="px-4 py-3 text-xs font-bold text-foreground">
                           {inv.amount}
                         </td>
                         <td className="px-4 py-3 text-xs">
-                          <span className="inline-flex items-center rounded-[4px] bg-success/15 border border-success/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-success">
+                          <span
+                            className={`inline-flex items-center rounded-[4px] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                              inv.status === 'paid'
+                                ? 'bg-success/15 border border-success/30 text-success'
+                                : inv.status === 'open'
+                                  ? 'bg-warning/15 border border-warning/30 text-warning'
+                                  : 'bg-surface-hover border border-border-soft text-muted-copy'
+                            }`}
+                          >
                             {inv.status}
                           </span>
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <button
-                            type="button"
-                            className="inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:border-primary hover:text-primary transition-all cursor-pointer shadow-sm"
-                            aria-label="Download receipt"
-                          >
-                            <Download className="h-4 w-4" />
-                          </button>
+                          {inv.invoicePdf ? (
+                            <a
+                              href={inv.invoicePdf}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:border-primary hover:text-primary transition-all cursor-pointer shadow-sm"
+                              aria-label="Download receipt"
+                            >
+                              <Download className="h-4 w-4" />
+                            </a>
+                          ) : (
+                            <button
+                              type="button"
+                              disabled
+                              className="inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy/50 cursor-not-allowed"
+                              aria-label="No receipt available"
+                            >
+                              <Download className="h-4 w-4" />
+                            </button>
+                          )}
                         </td>
                       </tr>
-                    )
+                    ))
                   )}
                 </tbody>
               </table>
