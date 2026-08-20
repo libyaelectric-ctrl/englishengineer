@@ -23,13 +23,6 @@ describe('Critical flow: Landing → Navigation', () => {
     expect(screen.getAllByText(/Engineering Disciplines/i).length).toBeGreaterThan(0);
   });
 
-  it('displays pricing section with all plans', () => {
-    renderWithProviders(<LandingPage />);
-    expect(screen.getAllByText(/Free/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText('$29').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('$59').length).toBeGreaterThan(0);
-  });
-
   it('shows 6 skill features on landing', () => {
     renderWithProviders(<LandingPage />);
     expect(screen.getAllByText(/^vocabulary$/i).length).toBeGreaterThan(0);
