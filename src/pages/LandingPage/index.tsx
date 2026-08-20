@@ -1,3 +1,5 @@
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
   ArrowRight,
   BookOpen,
@@ -13,7 +15,6 @@ import {
   Volume2,
   Zap,
 } from 'lucide-react';
-import { motion, useInView, useScroll, useTransform } from 'motion/react';
 
 import { useEffect, useRef, useState } from 'react';
 
@@ -25,9 +26,12 @@ import { getDisciplineIcon } from '@/shared/icons/registry';
 import { useLocalizationStore } from '@/features/localization';
 
 import { Footer } from './Footer';
+import { HeroScene } from './HeroScene';
 import { Navbar } from './Navbar';
 import { PricingSection } from './PricingSection';
 import { getLandingTranslations } from './landing-i18n';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const FEATURES = [
   {
@@ -69,397 +73,400 @@ const FEATURES = [
 ] as const;
 
 const STATS = [
-  { value: '10', label: 'Mühendislik Dalı', icon: Target },
-  { value: '15', label: 'Desteklenen Dil', icon: Globe },
-  { value: '6', label: 'Öğrenme Modülü', icon: BookOpen },
-  { value: 'A1-C2', label: 'CEFR Seviyeleri', icon: TrendingUp },
-];
+  { value: '10', count: 10, label: 'Mühendislik Dalı', icon: Target },
+  { value: '15', count: 15, label: 'Desteklenen Dil', icon: Globe },
+  { value: '6', count: 6, label: 'Öğrenme Modülü', icon: BookOpen },
+  { value: 'A1-C2', count: null, label: 'CEFR Seviyeleri', icon: TrendingUp },
+] as const;
+
+function getFeatureDescription(key: string): string {
+  const descriptions: Record<string, string> = {
+    vocabulary: '14,000+ teknik terim ile mühendislik kelime dağarcığınızı geliştirin.',
+    reading: 'FIDIC sözleşmeleri ve teknik dokümanlar ile okuma pratiği yapın.',
+    writing:
+      'Profesyonel e-posta ve rapor yazım becerilerinizi, gerçek saha senaryolarıyla geliştirin.',
+    speaking: 'Sesli pratik ve telaffuz analizi ile konuşma becerilerinizi geliştirin.',
+    listening: 'İş toplantıları ve saha konuşmaları ile dinleme pratiği yapın.',
+    grammar: 'Mühendislik İngilizcesine özel dilbilgisi modülleri ile gramerinizi güçlendirin.',
+  };
+  return descriptions[key] || '';
+}
+
+// ---------------------------------------------------------------------------
+// Shared visual primitives
+// ---------------------------------------------------------------------------
 
 const GlassCard = ({
   children,
   className = '',
-  delay = 0,
 }: {
   children: React.ReactNode;
   className?: string;
-  delay?: number;
-}) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-50px' });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 40, scale: 0.95 }}
-      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 40, scale: 0.95 }}
-      transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
-      className={`relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl ${className}`}
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
-      {children}
-    </motion.div>
-  );
-};
+}) => (
+  <div
+    className={`relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 bg-[var(--color-surface)]/40 backdrop-blur-xl shadow-2xl ${className}`}
+  >
+    <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+    {children}
+  </div>
+);
 
 const FloatingElement = ({
   children,
   delay = 0,
   className = '',
+  duration = 4,
 }: {
   children: React.ReactNode;
   delay?: number;
   className?: string;
-}) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
-    className={className}
-  >
-    <motion.div
-      animate={{ y: [0, -10, 0] }}
-      transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-    >
+  duration?: number;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    if (import.meta.env.MODE === 'test') return;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    const float = gsap.to(node, {
+      y: -10,
+      duration: duration / 2,
+      yoyo: true,
+      repeat: -1,
+      ease: 'sine.inOut',
+      delay,
+    });
+    return () => {
+      float.kill();
+    };
+  }, [delay, duration]);
+
+  return (
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
-  </motion.div>
-);
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// Page
+// ---------------------------------------------------------------------------
 
 export const LandingPage = () => {
   const { language, translate } = useLocalizationStore();
   const t = getLandingTranslations(language);
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end start'],
-  });
-
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const heroContentRef = useRef<HTMLDivElement>(null);
+  const timelineLineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.title = 'EngVox — Engineering English for Global Projects';
+    const root = rootRef.current;
+    const heroContent = heroContentRef.current;
+    if (!root) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth - 0.5) * 20,
-        y: (e.clientY / window.innerHeight - 0.5) * 20,
+    const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (import.meta.env.MODE === 'test' || prefersReduced) return;
+
+    const ctx = gsap.context(() => {
+      // Reveals throughout the page – Webflow-grade ease + slight drift.
+      gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((section) => {
+        gsap.from(section, {
+          y: 44,
+          opacity: 0,
+          duration: 0.9,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: section, start: 'top 86%', once: true },
+        });
       });
-    };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+      // Stat counters count up as they enter the viewport.
+      gsap.utils.toArray<HTMLElement>('[data-count]').forEach((el) => {
+        const target = Number(el.dataset.count || '0');
+        const obj = { val: 0 };
+        gsap.to(obj, {
+          val: target,
+          duration: 1.6,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+          onUpdate: () => {
+            el.textContent = String(Math.round(obj.val));
+          },
+        });
+      });
+
+      // Hero entrance timeline – cinematic, Webflow-grade easing.
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      tl.from('[data-hero="badge"]', { y: 24, opacity: 0, duration: 0.8 })
+        .from('[data-hero="line"]', { y: 70, opacity: 0, duration: 1, stagger: 0.13 }, '-=0.4')
+        .from('[data-hero="subtitle"]', { y: 30, opacity: 0, duration: 0.9 }, '-=0.5')
+        .from('[data-hero="cta"]', { y: 24, opacity: 0, stagger: 0.12, duration: 0.7 }, '-=0.5')
+        .from('[data-hero="trust"]', { y: 16, opacity: 0, stagger: 0.08, duration: 0.6 }, '-=0.4')
+        .from('[data-hero="scroll"]', { opacity: 0, duration: 0.6 }, '-=0.2');
+
+      if (heroContent) {
+        gsap.to(heroContent, {
+          y: -120,
+          opacity: 0.15,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heroContent,
+            start: 'top top',
+            end: 'bottom 12% top',
+            scrub: true,
+          },
+        });
+      }
+
+      const scene = root.querySelector<HTMLElement>('[data-hero-scene]');
+      if (scene) {
+        gsap.to(scene.querySelector(':scope > canvas') ?? scene, {
+          scale: 1.08,
+          opacity: 0.25,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: scene,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
+      }
+
+      const line = timelineLineRef.current;
+      if (line) {
+        gsap.from(line, {
+          scaleY: 0,
+          transformOrigin: 'top center',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: line,
+            start: 'top 85%',
+            end: 'bottom 60%',
+            scrub: 0.6,
+          },
+        });
+      }
+    }, root);
+
+    ScrollTrigger.refresh();
+
+    return () => {
+      ctx.revert();
+    };
   }, []);
 
   return (
     <div
-      ref={containerRef}
-      className="min-h-screen bg-[var(--background)] pb-14 text-[var(--foreground)] transition-colors duration-300"
+      ref={rootRef}
+      data-theme="dark"
+      className="min-h-screen bg-[#070a1a] text-white pb-14 overflow-x-clip"
     >
       <Navbar />
 
-      {/* Hero with parallax and gradient mesh */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Animated gradient mesh background */}
-        <div className="absolute inset-0 overflow-hidden">
-          <motion.div
-            className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/30 rounded-full blur-3xl"
-            animate={{
-              x: [0, 100, 0],
-              y: [0, -50, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+      {/* ── HERO ─────────────────────────────────────────── */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden isolate">
+        {/* Ambient gradient aurora (pure CSS, subtle) */}
+        <div className="absolute inset-0">
+          <div className="absolute -top-32 -left-32 w-[44rem] h-[44rem] rounded-full bg-[#0b2a6b]/30 blur-3xl animate-ambient-glow" />
+          <div
+            className="absolute top-1/4 -right-40 w-[38rem] h-[38rem] rounded-full bg-[#3b0a5f]/25 blur-3xl animate-ambient-glow"
+            style={{ animationDelay: '1.4s' }}
           />
-          <motion.div
-            className="absolute top-1/3 right-1/4 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl"
-            animate={{
-              x: [0, -80, 0],
-              y: [0, 60, 0],
-              scale: [1, 0.8, 1],
-            }}
-            transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
+          <div
+            className="absolute bottom-0 left-1/3 w-[34rem] h-[34rem] rounded-full bg-[#064e77]/20 blur-3xl animate-ambient-glow"
+            style={{ animationDelay: '2.6s' }}
           />
-          <motion.div
-            className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-violet-500/20 rounded-full blur-3xl"
-            animate={{
-              x: [0, 60, 0],
-              y: [0, -40, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#070a1a]" />
         </div>
 
-        {/* Mouse-following gradient */}
-        <motion.div
-          className="absolute w-96 h-96 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-full blur-3xl pointer-events-none"
-          animate={{
-            x: mousePosition.x * 2,
-            y: mousePosition.y * 2,
-          }}
-          transition={{ type: 'spring', stiffness: 50, damping: 20 }}
-        />
+        {/* Three.js constellation globe */}
+        <HeroScene />
 
-        <motion.div
-          className="relative z-10 text-center px-4 max-w-6xl mx-auto"
-          style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
+        <div
+          ref={heroContentRef}
+          className="relative z-10 text-center px-4 max-w-6xl mx-auto will-change-transform"
         >
-          {/* Floating badge */}
-          <FloatingElement delay={0.2}>
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-6 py-3 text-sm font-semibold text-white mb-8">
-              <motion.div
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-              >
-                <Sparkles className="h-5 w-5 text-primary" />
-              </motion.div>
+          <FloatingElement delay={0.2} duration={6}>
+            <div
+              data-hero="badge"
+              className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-md px-6 py-3 text-sm font-semibold text-white/90"
+            >
+              <Sparkles className="h-5 w-5 text-primary animate-spin-slow" />
               {t.heroBadge}
             </div>
           </FloatingElement>
 
-          {/* Main heading with gradient text */}
-          <motion.h1
-            className="text-6xl md:text-8xl font-black leading-tight tracking-tight mb-8"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
+          <h1
+            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mt-8 mb-8"
+            data-hero-wrap
           >
-            <span className="text-white">{t.heroTitle1}</span>
-            <br />
-            <span className="bg-gradient-to-r from-primary via-blue-400 to-violet-400 bg-clip-text text-transparent">
+            <span data-hero="line" className="block text-white">
+              {t.heroTitle1}
+            </span>
+            <span
+              data-hero="line"
+              className="block bg-gradient-to-r from-primary via-blue-400 to-violet-400 bg-clip-text text-transparent"
+            >
               {t.heroTitleHighlight}
             </span>
-            <br />
-            <span className="text-white">{t.heroTitle2}</span>
-          </motion.h1>
+            <span data-hero="line" className="block text-white/80">
+              {t.heroTitle2}
+            </span>
+          </h1>
 
-          {/* Subtitle */}
-          <motion.p
-            className="text-xl md:text-2xl text-white/70 max-w-3xl mx-auto mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
+          <p
+            data-hero="subtitle"
+            className="text-lg md:text-xl text-white/60 max-w-3xl mx-auto mb-10"
           >
             {t.heroSubtitle}
-          </motion.p>
+          </p>
 
-          {/* CTA buttons */}
-          <motion.div
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-          >
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
+              data-hero="cta"
               to="/dashboard"
               className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-primary to-blue-600 text-white font-bold text-lg overflow-hidden transition-all hover:shadow-2xl hover:shadow-primary/50"
             >
               <span className="relative z-10 flex items-center gap-3">
                 {t.ctaSelectBranch}
-                <motion.div
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  <ArrowRight className="h-5 w-5" />
-                </motion.div>
+                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </span>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-blue-600 to-violet-600"
-                initial={{ x: '100%' }}
-                whileHover={{ x: 0 }}
-                transition={{ duration: 0.3 }}
-              />
+              <span className="absolute inset-0 bg-gradient-to-r from-blue-600 to-violet-600 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300" />
             </Link>
             <a
+              data-hero="cta"
               href="#pricing"
-              className="px-8 py-4 rounded-full border-2 border-white/30 text-white font-bold text-lg backdrop-blur-md hover:bg-white/10 hover:border-white/50 transition-all"
+              className="px-8 py-4 rounded-full border border-white/20 text-white font-bold text-lg backdrop-blur-md hover:bg-white/10 hover:border-white/40 transition-all"
             >
               {t.ctaViewPlans}
             </a>
-          </motion.div>
+          </div>
 
-          {/* Trust badges */}
-          <motion.div
-            className="mt-12 flex flex-wrap items-center justify-center gap-6 text-white/60"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.9 }}
-          >
-            <span className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-green-400" />
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-white/50">
+            <span data-hero="trust" className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-emerald-400" />
               {t.badgeNoCard}
             </span>
-            <span className="flex items-center gap-2">
+            <span data-hero="trust" className="flex items-center gap-2">
               <Globe className="h-5 w-5 text-blue-400" />
               {t.badgeLanguages}
             </span>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
+        <div
+          data-hero="scroll"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/40"
         >
-          <ChevronDown className="h-8 w-8 text-white/50" />
-        </motion.div>
-      </section>
-
-      {/* Stats section with glassmorphism */}
-      <section className="relative py-20 -mt-32 z-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <GlassCard className="p-8 md:p-12">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {STATS.map(({ value, label, icon: Icon }, index) => (
-                <motion.div
-                  key={label}
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <motion.div
-                    className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-blue-500/20 mb-4"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
-                  >
-                    <Icon className="h-7 w-7 text-primary" />
-                  </motion.div>
-                  <p className="text-3xl md:text-4xl font-black text-white mb-2">{value}</p>
-                  <p className="text-sm text-white/60">{label}</p>
-                </motion.div>
-              ))}
-            </div>
-          </GlassCard>
+          <ChevronDown className="h-8 w-8 animate-bounce" />
         </div>
       </section>
 
-      {/* Features with interactive cards */}
-      <section className="relative py-32 overflow-hidden">
+      {/* ── STATS ─────────────────────────────────────────── */}
+      <section className="relative py-6 -mt-24 z-20">
+        <div className="max-w-6xl mx-auto px-4">
+          <div data-reveal>
+            <GlassCard className="p-8 md:p-10">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                {STATS.map(({ value, count, label, icon: Icon }) => (
+                  <div key={label} className="text-center" data-reveal>
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/25 to-blue-500/25 mb-4 group-hover:scale-110 transition-transform duration-300">
+                      <Icon className="h-7 w-7 text-primary" />
+                    </div>
+                    <p className="text-3xl md:text-4xl font-black text-white mb-2">
+                      {count === null ? value : <span data-count={String(count)}>{value}</span>}
+                    </p>
+                    <p className="text-sm text-white/50">{label}</p>
+                  </div>
+                ))}
+              </div>
+            </GlassCard>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FEATURES ─────────────────────────────────────────── */}
+      <section className="relative py-24">
         <div className="max-w-7xl mx-auto px-4">
-          <motion.div
-            className="text-center mb-20"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <motion.p
-              className="text-sm font-semibold uppercase tracking-wider text-primary mb-4"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-            >
+          <div className="text-center mb-16" data-reveal>
+            <span className="text-sm font-semibold uppercase tracking-wider text-primary inline-flex items-center gap-2">
               {t.disciplinesHeaderBadge}
-            </motion.p>
-            <h2 className="text-5xl md:text-6xl font-black text-white mb-6">
+            </span>
+            <h2 className="text-4xl md:text-5xl font-black text-white mt-4 mb-6">
               {t.disciplinesTitle}
             </h2>
-            <p className="text-xl text-white/60 max-w-2xl mx-auto">{t.disciplinesSub}</p>
-          </motion.div>
+            <p className="text-lg text-white/50 max-w-2xl mx-auto">{t.disciplinesSub}</p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURES.map(({ icon: Icon, key, color, glow }, index) => (
-              <motion.div
-                key={key}
-                className="group relative"
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
+            {FEATURES.map(({ icon: Icon, key, color, glow }) => (
+              <div key={key} className="group relative" data-reveal>
                 <div
                   className={`absolute inset-0 bg-gradient-to-r ${color} rounded-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-xl`}
                 />
-                <div className="relative h-full p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl hover:bg-white/10 transition-all duration-500">
-                  <motion.div
-                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mb-6 shadow-lg ${glow}`}
-                    whileHover={{ scale: 1.1, rotate: 10 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
+                <div className="relative h-full p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl hover:bg-white/10 hover:-translate-y-1 transition-all duration-500">
+                  <div
+                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mb-6 shadow-lg ${glow} transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110`}
                   >
                     <Icon className="h-8 w-8 text-white" />
-                  </motion.div>
+                  </div>
                   <h3 className="text-2xl font-bold text-white mb-3 capitalize">
-                    {translate(`nav.${key}` as Parameters<typeof translate>[0])}
+                    {translate(`nav.${key}`)}
                   </h3>
-                  <p className="text-white/60 leading-relaxed">{getFeatureDescription(key)}</p>
+                  <p className="text-white/50 leading-relaxed">{getFeatureDescription(key)}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Disciplines showcase */}
-      <section className="relative py-32 bg-gradient-to-b from-transparent via-primary/5 to-transparent">
+      {/* ── DISCIPLINES ─────────────────────────────────────── */}
+      <section className="relative py-24 bg-gradient-to-b from-transparent via-white/[0.03] to-transparent">
         <div className="max-w-6xl mx-auto px-4">
-          <motion.h2
-            className="text-center text-5xl md:text-6xl font-black text-white mb-20"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <h2 className="text-center text-4xl md:text-5xl font-black text-white mb-16" data-reveal>
             10 Mühendislik Dalı
-          </motion.h2>
+          </h2>
 
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {ENGINEERING_DISCIPLINES.map((id, index) => {
               const DisciplineIcon = getDisciplineIcon(id);
               return (
-                <motion.div
+                <div
                   key={id}
                   className="group relative"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
+                  data-reveal
+                  style={{ transitionDelay: `${index * 20}ms` }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-blue-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
                   <div className="relative flex flex-col items-center gap-4 p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl hover:bg-white/10 transition-all duration-300">
-                    <motion.div
-                      whileHover={{ scale: 1.2, rotate: 15 }}
-                      transition={{ type: 'spring', stiffness: 400 }}
-                    >
-                      <DisciplineIcon className="h-10 w-10 text-primary" />
-                    </motion.div>
+                    <DisciplineIcon className="h-10 w-10 text-primary transition-transform duration-300 group-hover:scale-125 group-hover:rotate-6" />
                     <span className="text-sm font-semibold text-white text-center">
-                      {translate(`discipline.${id}` as Parameters<typeof translate>[0])}
+                      {translate(`discipline.${id}`)}
                     </span>
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* How it Works with timeline */}
-      <section className="relative py-32">
+      {/* ── HOW IT WORKS ─────────────────────────────────────── */}
+      <section className="relative py-24">
         <div className="max-w-5xl mx-auto px-4">
-          <motion.h2
-            className="text-center text-5xl md:text-6xl font-black text-white mb-20"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <h2 className="text-center text-4xl md:text-5xl font-black text-white mb-20" data-reveal>
             {t.workflowTitle}
-          </motion.h2>
+          </h2>
 
           <div className="relative">
-            {/* Animated timeline line */}
-            <motion.div
-              className="absolute left-8 top-0 w-0.5 h-full bg-gradient-to-b from-primary via-blue-500 to-violet-500"
-              initial={{ scaleY: 0 }}
-              whileInView={{ scaleY: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.5, ease: 'easeOut' }}
-              style={{ transformOrigin: 'top' }}
+            <div
+              ref={timelineLineRef}
+              className="absolute left-1/2 top-0 -translate-x-1/2 w-px h-full bg-gradient-to-b from-primary via-blue-500 to-violet-500"
             />
 
             <div className="space-y-16">
@@ -489,49 +496,43 @@ export const LandingPage = () => {
                   color: 'from-violet-500 to-purple-500',
                 },
               ].map(({ step, title, desc, badge, icon: Icon, color }, index) => (
-                <motion.div
+                <div
                   key={step}
                   className="relative flex gap-8 items-start"
-                  initial={{ opacity: 0, x: -50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.2, duration: 0.6 }}
+                  data-reveal
+                  style={{ transitionDelay: `${index * 120}ms` }}
                 >
-                  <motion.div
-                    className={`relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${color} text-white shadow-2xl`}
-                    whileHover={{ scale: 1.1, rotate: 10 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
+                  <div
+                    className={`relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${color} text-white shadow-2xl transition-transform duration-300 hover:scale-110 hover:rotate-6`}
                   >
                     <Icon className="h-8 w-8" />
-                  </motion.div>
-                  <div className="pt-2">
+                  </div>
+                  <div className="pt-1">
                     <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
-                    <p className="text-lg text-white/70 leading-relaxed mb-4">{desc}</p>
-                    <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md px-5 py-2 text-sm font-semibold text-white border border-white/20">
+                    <p className="text-lg text-white/50 leading-relaxed mb-4">{desc}</p>
+                    <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md px-5 py-2 text-sm font-semibold text-white border border-white/15">
                       <Shield className="h-4 w-4" />
                       {badge}
                     </span>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
         </div>
       </section>
 
-      <PricingSection />
+      {/* ── PRICING ─────────────────────────────────────────── */}
+      <div id="pricing" data-reveal>
+        <PricingSection />
+      </div>
 
-      {/* FAQ with glassmorphism */}
-      <section className="relative py-32">
+      {/* ── FAQ ─────────────────────────────────────────────── */}
+      <section className="relative py-24">
         <div className="max-w-4xl mx-auto px-4">
-          <motion.h2
-            className="text-center text-5xl md:text-6xl font-black text-white mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <h2 className="text-center text-4xl md:text-5xl font-black text-white mb-16" data-reveal>
             {translate('landing.faqTitle')}
-          </motion.h2>
+          </h2>
 
           <div className="space-y-4">
             {[
@@ -539,113 +540,63 @@ export const LandingPage = () => {
               ['landing.faq2Q', 'landing.faq2A'],
               ['landing.faq5Q', 'landing.faq5A'],
             ].map(([questionKey, answerKey], i) => (
-              <motion.div
-                key={i}
-                className="group"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden hover:bg-white/10 transition-all duration-300">
+              <div key={i} className="group" data-reveal>
+                <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden hover:bg-white/10 transition-colors duration-300">
                   <button
                     onClick={() => setFaqOpen(faqOpen === i ? null : i)}
-                    className="flex w-full items-center justify-between px-8 py-6 text-left"
+                    aria-expanded={faqOpen === i}
+                    className="flex w-full items-center justify-between px-8 py-6 text-left cursor-pointer"
                   >
                     <span className="text-lg font-semibold text-white pr-4">
-                      {translate(questionKey as Parameters<typeof translate>[0])}
+                      {translate(questionKey)}
                     </span>
-                    <motion.div
-                      animate={{ rotate: faqOpen === i ? 180 : 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="shrink-0"
-                    >
-                      <ChevronDown className="h-6 w-6 text-white/60" />
-                    </motion.div>
+                    <ChevronDown
+                      className={`h-6 w-6 text-white/50 shrink-0 transition-transform duration-300 ${
+                        faqOpen === i ? 'rotate-180' : ''
+                      }`}
+                    />
                   </button>
-                  <motion.div
-                    initial={false}
-                    animate={{
-                      height: faqOpen === i ? 'auto' : 0,
-                      opacity: faqOpen === i ? 1 : 0,
-                    }}
-                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                    className="overflow-hidden"
-                  >
-                    <p className="px-8 pb-6 text-white/70 leading-relaxed">
-                      {translate(answerKey as Parameters<typeof translate>[0])}
-                    </p>
-                  </motion.div>
+                  {faqOpen === i && (
+                    <div className="px-8 pb-6 -mt-1">
+                      <p className="text-white/60 leading-relaxed">{translate(answerKey)}</p>
+                    </div>
+                  )}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Final CTA with animated background */}
+      {/* ── FINAL CTA ─────────────────────────────────────── */}
       <section className="relative py-32 overflow-hidden">
         <div className="absolute inset-0">
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-primary/20 via-blue-500/20 to-violet-500/20"
-            animate={{
-              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-            }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
-            style={{ backgroundSize: '200% 200%' }}
-          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-blue-500/20 to-violet-500/20 animate-pulse" />
         </div>
 
-        <div className="relative max-w-4xl mx-auto px-4 text-center">
-          <motion.h2
-            className="text-5xl md:text-6xl font-black text-white mb-8"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+        <div className="relative max-w-4xl mx-auto px-4 text-center" data-reveal>
+          <h2 className="text-4xl md:text-6xl font-black text-white mb-8">
             Mühendislik İngilizcenizi
             <br />
             <span className="bg-gradient-to-r from-primary via-blue-400 to-violet-400 bg-clip-text text-transparent">
               Geliştirmeye Başlayın
             </span>
-          </motion.h2>
+          </h2>
 
-          <motion.p
-            className="text-xl text-white/70 mb-12"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
+          <p className="text-xl text-white/60 mb-12">
             Kredi kartı gerekmez. Hemen ücretsiz planla başlayın.
-          </motion.p>
+          </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-          >
+          <div>
             <Link
               to="/signup"
               className="group relative inline-flex items-center gap-4 px-12 py-6 rounded-full bg-gradient-to-r from-primary to-blue-600 text-xl font-bold text-white overflow-hidden transition-all hover:shadow-2xl hover:shadow-primary/50"
             >
               <span className="relative z-10">Ücretsiz Başla</span>
-              <motion.div
-                className="relative z-10"
-                animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              >
-                <ArrowRight className="h-6 w-6" />
-              </motion.div>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-blue-600 to-violet-600"
-                initial={{ x: '100%' }}
-                whileHover={{ x: 0 }}
-                transition={{ duration: 0.3 }}
-              />
+              <ArrowRight className="relative z-10 h-6 w-6 transition-transform group-hover:translate-x-1" />
+              <span className="absolute inset-0 bg-gradient-to-r from-blue-600 to-violet-600 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300" />
             </Link>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -653,17 +604,5 @@ export const LandingPage = () => {
     </div>
   );
 };
-
-function getFeatureDescription(key: string): string {
-  const descriptions: Record<string, string> = {
-    vocabulary: '14,000+ teknik terim ile mühendislik kelime dağarcığınızı geliştirin.',
-    reading: 'FIDIC sözleşmeleri ve teknik dokümanlar ile okuma pratiği yapın.',
-    writing: 'Profesyonel e-posta ve rapor yazım becerilerinizi提升 edin.',
-    speaking: 'Sesli pratik ve telaffuz analizi ile speaking becerilerinizi geliştirin.',
-    listening: 'İş toplantıları ve saha konuşmaları ile dinleme pratiği yapın.',
-    grammar: 'Mühendislik İngilizcesine özel dilbilgisi modülleri ile grammerinizi güçlendirin.',
-  };
-  return descriptions[key] || '';
-}
 
 export default LandingPage;

@@ -32,6 +32,24 @@ if (typeof globalThis.IntersectionObserver === 'undefined') {
   } as unknown as typeof globalThis.IntersectionObserver;
 }
 
+// Mock matchMedia for jsdom (required by GSAP ScrollTrigger)
+if (typeof window !== 'undefined' && typeof window.matchMedia !== 'function') {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: (query: string): MediaQueryList =>
+      ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: () => {},
+        removeListener: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        dispatchEvent: () => false,
+      }) as unknown as MediaQueryList,
+  });
+}
+
 // IndexedDB is intentionally NOT mocked here.
 // IndexedDB functions in indexed-db.ts check isSupported() which returns false
 // when window.indexedDB is undefined, so getCachedSeed / setCachedSeed become
