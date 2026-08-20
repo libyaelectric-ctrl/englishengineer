@@ -1,90 +1,45 @@
-import { ArrowUpDown, BarChart3, Filter } from 'lucide-react';
+import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
+import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
+import { useShallow } from 'zustand/shallow';
 
 import { useLocalizationStore } from '@/features/localization';
 import { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
+import { useSpeakingStore } from '@/features/speaking';
 
-interface SpeakingSidebarProps {
-  submissionCount?: number;
-  avgScore?: number;
-  activeFilter?: string;
-  onFilterChange?: (filter: string) => void;
-  activeSort?: string;
-  onSortChange?: (sort: string) => void;
-}
-
-export function SpeakingSidebar({
-  submissionCount = 0,
-  avgScore = 0,
-  activeFilter,
-  onFilterChange,
-  activeSort,
-  onSortChange,
-}: SpeakingSidebarProps) {
+export function SpeakingSidebar() {
   const language = useLocalizationStore((s) => s.language);
   const copy = SIDEBAR_SKILL_COPY[language] ?? SIDEBAR_SKILL_COPY.en;
-  const FILTERS = [copy.all, copy.draft, copy.submitted, copy.graded];
-  const SORTS = [copy.duration, copy.difficulty];
-
-  return (
-    <aside className="w-64 space-y-4 p-4">
-      <div className="rounded-[4px] border-2 border-primary bg-surface p-3">
-        <div className="flex items-center gap-2 mb-2">
-          <Filter className="h-3 w-3 text-primary" />
-          <span className="text-[10px] font-bold uppercase text-foreground">{copy.filter}</span>
-        </div>
-        <div className="space-y-1">
-          {FILTERS.map((f) => (
-            <button
-              key={f}
-              onClick={() => onFilterChange?.(f)}
-              className={`w-full rounded-[4px] px-2 py-1.5 text-[10px] font-medium text-left transition ${
-                activeFilter === f
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
-              }`}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="rounded-[4px] border-2 border-primary bg-surface p-3">
-        <div className="flex items-center gap-2 mb-2">
-          <ArrowUpDown className="h-3 w-3 text-primary" />
-          <span className="text-[10px] font-bold uppercase text-foreground">{copy.sort}</span>
-        </div>
-        <div className="space-y-1">
-          {SORTS.map((s) => (
-            <button
-              key={s}
-              onClick={() => onSortChange?.(s)}
-              className={`w-full rounded-[4px] px-2 py-1.5 text-[10px] font-medium text-left transition ${
-                activeSort === s
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
-              }`}
-            >
-              {s}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="rounded-[4px] border-2 border-primary bg-surface p-3">
-        <div className="flex items-center gap-2 mb-2">
-          <BarChart3 className="h-3 w-3 text-primary" />
-          <span className="text-[10px] font-bold uppercase text-foreground">{copy.progress}</span>
-        </div>
-        <div className="space-y-2 text-[10px]">
-          <div className="flex justify-between text-muted-copy">
-            <span>{copy.submissions}</span>
-            <span className="font-bold text-foreground">{submissionCount}</span>
-          </div>
-          <div className="flex justify-between text-muted-copy">
-            <span>{copy.avgScore}</span>
-            <span className="font-bold text-foreground">{avgScore}%</span>
-          </div>
-        </div>
-      </div>
-    </aside>
+  const { missions, completedMissions, recordingSeconds } = useSpeakingStore(
+    useShallow((s) => ({
+      missions: s.missions,
+      completedMissions: s.completedMissions,
+      recordingSeconds: s.recordingSeconds,
+    }))
   );
+  const done = Object.keys(completedMissions).length;
+  const total = missions.length;
+  const remaining = total - done;
+  const recordingMin = Math.round(recordingSeconds / 60);
+
+  const config: SidebarConfig = {
+    skill: 'speaking',
+    pathLabel: 'Speaking Path',
+    pathDescription: 'Roleplay simulations and defense scenario practice.',
+    currentLevel: `${done}/${total} Missions`,
+    totalItems: total,
+    stats: [
+      {
+        label: 'Remaining',
+        value: `${remaining} missions`,
+        color: remaining > 0 ? 'text-amber-500' : 'text-green-500',
+      },
+      { label: 'Recording', value: `${recordingMin} min`, color: 'text-cyan-500' },
+    ],
+    progressBars: [
+      { label: copy.progress, value: done, max: total, showPercent: true, color: 'primary' },
+    ],
+    actions: [],
+  };
+
+  return <SkillSidebar config={config} />;
 }

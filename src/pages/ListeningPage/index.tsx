@@ -11,6 +11,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
+import { PageHeader } from '@/shared/components/PageHeader';
 import { SectionCard } from '@/shared/components/SectionCard';
 import {
   type PipelineStation,
@@ -375,7 +376,7 @@ const ListeningPage = () => {
   const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
 
   const listeningStations: PipelineStation[] = useMemo(() => {
-    return visibleMissions.slice(0, 6).map((mission) => {
+    return visibleMissions.map((mission) => {
       const score = completedMissions[mission.id];
       const isCompleted = score !== undefined;
       const isActive = mission.id === currentMission?.id;
@@ -409,9 +410,10 @@ const ListeningPage = () => {
   if (!currentMission) {
     return (
       <div className="mx-auto max-w-5xl space-y-4 min-h-screen bg-background pb-16 text-foreground animate-in fade-in duration-300">
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-          <h1 className="text-base font-bold tracking-tight text-foreground">Listening</h1>
-        </div>
+        <PageHeader
+          title="Listening"
+          description="Engineering site audio, technical meeting transcripts & listening comprehension."
+        />
         <div className="space-y-6 pt-4">
           <LevelContentFilter
             value={levelFilter}
@@ -427,23 +429,17 @@ const ListeningPage = () => {
   return (
     <div className="min-h-screen bg-background pb-16 text-foreground space-y-6 animate-in fade-in duration-300">
       {/* Sticky header � clean, rigid */}
-      <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
-        <div className="flex items-center gap-3">
-          <h1 className="text-base font-bold tracking-tight text-foreground">Listening</h1>
-          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-            {currentLevel}
-          </span>
-          <p className="hidden text-[11px] font-medium text-muted-copy leading-tight sm:block">
-            Engineering site audio, technical meeting transcripts & listening comprehension.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
+      <PageHeader
+        title="Listening"
+        description="Engineering site audio, technical meeting transcripts & listening comprehension."
+        badgeText={currentLevel}
+        actions={
           <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy rounded-[4px] border border-border-soft bg-surface px-2.5 py-1">
             Mission {visibleMissions.findIndex((m) => m.id === currentMission.id) + 1}/
             {visibleMissions.length}
           </span>
-        </div>
-      </div>
+        }
+      />
       <div className="space-y-6 pt-4">
         <PersonalAIPanel
           discipline={userDiscipline}

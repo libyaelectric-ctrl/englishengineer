@@ -9,11 +9,7 @@ const DashboardSidebar = React.lazy(() =>
     default: m.DashboardSidebar,
   }))
 );
-const CurriculumSidebar = React.lazy(() =>
-  import('./sidebar/CurriculumSidebar').then((m) => ({
-    default: m.CurriculumSidebar,
-  }))
-);
+
 const VocabSidebar = React.lazy(() =>
   import('@/features/vocabulary/components/VocabSidebar').then((m) => ({
     default: m.VocabSidebar,
@@ -67,11 +63,11 @@ const PREFIX_ROUTES: [string, React.ComponentType][] = [
   ['/writing', WritingSidebar],
   ['/listening', ListeningSidebar],
   ['/speaking', SpeakingSidebar],
-  ['/curriculum', CurriculumSidebar],
+  ['/curriculum', DashboardSidebar],
   ['/tools', ToolsSidebar],
   ['/profile', ProfileSidebar],
   ['/admin', DashboardSidebar],
-  ['/progress', CurriculumSidebar],
+  ['/progress', DashboardSidebar],
 ];
 
 function getContent(path: string): React.ReactNode {

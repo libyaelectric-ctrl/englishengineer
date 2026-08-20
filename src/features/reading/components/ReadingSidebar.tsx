@@ -1,4 +1,5 @@
-import { ArrowUpDown, BarChart3, Filter } from 'lucide-react';
+import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
+import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 import { useShallow } from 'zustand/shallow';
 
 import { useLocalizationStore } from '@/features/localization';
@@ -8,77 +9,37 @@ import { useReadingStore } from '@/features/reading';
 export function ReadingSidebar() {
   const language = useLocalizationStore((s) => s.language);
   const copy = SIDEBAR_SKILL_COPY[language] ?? SIDEBAR_SKILL_COPY.en;
-  const { missions, completedMissions } = useReadingStore(
-    useShallow((s) => ({ missions: s.missions, completedMissions: s.completedMissions }))
+  const { missions, completedMissions, clickedVocab } = useReadingStore(
+    useShallow((s) => ({
+      missions: s.missions,
+      completedMissions: s.completedMissions,
+      clickedVocab: s.clickedVocab,
+    }))
   );
   const done = Object.keys(completedMissions).length;
   const total = missions.length;
-  const avgScore =
-    done > 0 ? Math.round(Object.values(completedMissions).reduce((a, b) => a + b, 0) / done) : 0;
+  const remaining = total - done;
+  const uniqueVocab = new Set(clickedVocab).size;
 
-  return (
-    <aside className="w-64 space-y-4 p-4">
-      {/* Filtreleme */}
-      <div className="rounded-[4px] border-2 border-primary bg-surface p-3">
-        <div className="flex items-center gap-2 mb-2">
-          <Filter className="h-3 w-3 text-primary" />
-          <span className="text-[10px] font-bold uppercase text-foreground">{copy.filter}</span>
-        </div>
-        <div className="space-y-1">
-          {[copy.all, copy.unread, copy.read, copy.difficult].map((f) => (
-            <button
-              key={f}
-              className="w-full rounded-[4px] px-2 py-1.5 text-[10px] font-medium text-left text-muted-copy hover:bg-surface-hover hover:text-foreground transition"
-            >
-              {f}
-            </button>
-          ))}
-        </div>
-      </div>
+  const config: SidebarConfig = {
+    skill: 'reading',
+    pathLabel: 'Reading Path',
+    pathDescription: 'Engineering documentation and technical reading comprehension.',
+    currentLevel: `${done}/${total} Missions`,
+    totalItems: total,
+    stats: [
+      {
+        label: copy.read,
+        value: `${remaining} remaining`,
+        color: remaining > 0 ? 'text-amber-500' : 'text-green-500',
+      },
+      { label: 'Vocab Clicked', value: `${uniqueVocab} terms`, color: 'text-cyan-500' },
+    ],
+    progressBars: [
+      { label: copy.progress, value: done, max: total, showPercent: true, color: 'primary' },
+    ],
+    actions: [],
+  };
 
-      {/* Sıralama */}
-      <div className="rounded-[4px] border-2 border-primary bg-surface p-3">
-        <div className="flex items-center gap-2 mb-2">
-          <ArrowUpDown className="h-3 w-3 text-primary" />
-          <span className="text-[10px] font-bold uppercase text-foreground">{copy.sort}</span>
-        </div>
-        <div className="space-y-1">
-          {[copy.duration, copy.level, copy.score].map((s) => (
-            <button
-              key={s}
-              className="w-full rounded-[4px] px-2 py-1.5 text-[10px] font-medium text-left text-muted-copy hover:bg-surface-hover hover:text-foreground transition"
-            >
-              {s}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* İlerleme Raporu */}
-      <div className="rounded-[4px] border-2 border-primary bg-surface p-3">
-        <div className="flex items-center gap-2 mb-2">
-          <BarChart3 className="h-3 w-3 text-primary" />
-          <span className="text-[10px] font-bold uppercase text-foreground">{copy.progress}</span>
-        </div>
-        <div className="space-y-2 text-[10px]">
-          <div className="flex justify-between text-muted-copy">
-            <span>{copy.read}</span>
-            <span className="font-bold text-foreground">
-              {done}/{total}
-            </span>
-          </div>
-          <div className="h-1 rounded-full bg-border-soft overflow-hidden">
-            <div
-              className="h-full bg-primary transition-all"
-              style={{ width: `${total > 0 ? (done / total) * 100 : 0}%` }}
-            />
-          </div>
-          <div className="flex justify-between text-muted-copy">
-            <span>{copy.avgScore}</span>
-            <span className="font-bold text-foreground">{avgScore}%</span>
-          </div>
-        </div>
-      </div>
-    </aside>
-  );
+  return <SkillSidebar config={config} />;
 }

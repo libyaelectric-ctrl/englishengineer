@@ -71,7 +71,7 @@ const PricingPage = () => {
 
       <Navbar />
 
-      <section className="pt-20 sm:pt-24 pb-8 px-6 md:px-12 max-w-7xl mx-auto">
+      <section className="pt-16 sm:pt-20 pb-8 px-6 md:px-12 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
             {pricingCopy.title}

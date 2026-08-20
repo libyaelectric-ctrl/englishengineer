@@ -4,6 +4,7 @@ import type { JSX } from 'react';
 import { Suspense, lazy, useMemo, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
+import { PageHeader } from '@/shared/components/PageHeader';
 import { ScoreFeedbackOverlay } from '@/shared/components/ScoreFeedbackOverlay';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
@@ -78,7 +79,7 @@ const RoleplayTab = () => {
   } = useSpeakingPage();
 
   const speakingStations: PipelineStation[] = useMemo(() => {
-    return roleplayMissions.slice(0, 6).map((mission) => {
+    return roleplayMissions.map((mission) => {
       const score = completedMissions[mission.id];
       const isCompleted = score !== undefined;
       const isActive = mission.id === activeMission?.id;
@@ -340,44 +341,38 @@ const SpeakingPage = () => {
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 pt-12 sm:pt-0 text-foreground relative z-10 font-sans pb-16 animate-in fade-in duration-300">
-      {/* Speaking sticky header */}
-      <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
-        <div className="flex items-center gap-3">
-          <h1 className="text-base font-bold tracking-tight text-foreground">Speaking</h1>
-          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-            {MAX_VOICE_MINUTES - voiceMinutesUsedThisMonth}m LEFT
-          </span>
-          <p className="hidden text-[11px] font-medium text-muted-copy leading-tight sm:block">
-            AI interview simulation & technical defense practice.
-          </p>
-        </div>
-
-        <div
-          className="flex items-center gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm overflow-x-auto"
-          role="tablist"
-          aria-label="Speaking mode"
-        >
-          {(Object.entries(TAB_CONFIG) as [SpeakingTab, (typeof TAB_CONFIG)[SpeakingTab]][]).map(
-            ([key, { label, icon: Icon }]) => (
-              <button
-                key={key}
-                role="tab"
-                type="button"
-                aria-selected={speakingTab === key}
-                onClick={() => setSpeakingTab(key)}
-                className={`flex items-center gap-1.5 px-3 py-1 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
-                  speakingTab === key
-                    ? 'bg-primary text-primary-foreground border border-primary'
-                    : 'text-muted-copy hover:bg-primary/5 hover:text-primary'
-                }`}
-              >
-                <Icon className="h-3 w-3" />
-                <span>{label}</span>
-              </button>
-            )
-          )}
-        </div>
-      </div>
+      <PageHeader
+        title="Speaking"
+        badgeText={`${MAX_VOICE_MINUTES - voiceMinutesUsedThisMonth}m LEFT`}
+        description="AI interview simulation & technical defense practice."
+        actions={
+          <div
+            className="flex items-center gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm overflow-x-auto"
+            role="tablist"
+            aria-label="Speaking mode"
+          >
+            {(Object.entries(TAB_CONFIG) as [SpeakingTab, (typeof TAB_CONFIG)[SpeakingTab]][]).map(
+              ([key, { label, icon: Icon }]) => (
+                <button
+                  key={key}
+                  role="tab"
+                  type="button"
+                  aria-selected={speakingTab === key}
+                  onClick={() => setSpeakingTab(key)}
+                  className={`flex items-center gap-1.5 px-3 py-1 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
+                    speakingTab === key
+                      ? 'bg-primary text-primary-foreground border border-primary'
+                      : 'text-muted-copy hover:bg-primary/5 hover:text-primary'
+                  }`}
+                >
+                  <Icon className="h-3 w-3" />
+                  <span>{label}</span>
+                </button>
+              )
+            )}
+          </div>
+        }
+      />
 
       <PersonalAIPanel
         discipline={userDiscipline}

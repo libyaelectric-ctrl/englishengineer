@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 
+import { PageHeader } from '@/shared/components/PageHeader';
 import { ToastContainer, showToast } from '@/shared/components/Toast';
 
 import { useBillingStore } from '@/features/billing';
@@ -33,11 +34,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
   return (
     <div className="space-y-4 animate-in fade-in duration-300 font-sans pt-8 sm:pt-0">
       <ToastContainer />
-      {!embedded && (
-        <div className="sticky top-0 z-40 flex h-14 shrink-0 items-center border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-          <h1 className="text-base font-bold tracking-tight text-foreground">AI Copilot Studio</h1>
-        </div>
-      )}
+      {!embedded && <PageHeader title="AI Copilot Studio" />}
 
       {(subscription.planId === 'specialist' ||
         subscription.planId === 'master' ||

@@ -285,9 +285,15 @@ export const UniversalCyberPipeline: React.FC<UniversalCyberPipelineProps> = ({
           </span>
         </div>
 
-        {/* İstasyonlar Hattı - Ekrana Tam Dağılır (Sıfır Scrollbar) */}
-        <div className="relative w-full overflow-hidden pb-3 pt-2">
-          <div className="relative flex w-full items-center justify-between px-2 sm:px-4">
+        {/* İstasyonlar Hattı - Scrollable (6+ istasyon destegi) */}
+        <div
+          className="relative w-full overflow-x-auto pb-3 pt-2"
+          style={{ scrollbarWidth: 'thin', scrollbarColor: '#334155 #0f172a' }}
+        >
+          <div
+            className="relative flex items-center gap-1 px-2 sm:px-4"
+            style={{ minWidth: 'max-content' }}
+          >
             {/* Arka Plan Enerji Boru Hattı */}
             <div className="absolute left-6 right-6 top-6 sm:top-7 -translate-y-1/2">
               <div className="h-2 w-full rounded-full bg-slate-800 sm:h-2.5" />
@@ -296,10 +302,7 @@ export const UniversalCyberPipeline: React.FC<UniversalCyberPipelineProps> = ({
                 style={{
                   width: `${Math.min(
                     100,
-                    Math.max(
-                      12,
-                      (activeIndex / Math.max(1, Math.min(stations.length - 1, 6))) * 100
-                    )
+                    Math.max(12, (activeIndex / Math.max(1, stations.length - 1)) * 100)
                   )}%`,
                   background: 'linear-gradient(90deg, #10B981 0%, #06B6D4 100%)',
                   boxShadow: '0 0 15px rgba(6,182,212,0.6)',
@@ -308,7 +311,7 @@ export const UniversalCyberPipeline: React.FC<UniversalCyberPipelineProps> = ({
             </div>
 
             {/* İstasyon Düğümleri */}
-            {stations.slice(0, 6).map((station) => {
+            {stations.map((station) => {
               const isCompleted = station.status === 'completed';
               const isActive = station.id === activeStation?.id;
 

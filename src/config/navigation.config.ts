@@ -8,7 +8,6 @@
  * - PROFILE_NAV_ITEMS: Personal settings, preferences, billing, and data protection
  */
 import {
-  BarChart3,
   BookMarked,
   BookOpen,
   BrainCircuit,
@@ -19,7 +18,6 @@ import {
   Home,
   Languages,
   Layers3,
-  Library,
   Map,
   Mic2,
   PenTool,
@@ -29,7 +27,6 @@ import {
   Trophy,
   User,
   Users,
-  WandSparkles,
 } from 'lucide-react';
 
 // Internal - used by NAV_ITEMS and tested in navigation.config.test.ts
@@ -42,36 +39,30 @@ export const SKILL_NAV_ITEMS = [
   { label: 'Speaking', href: '/speaking', icon: Mic2, feature: 'speaking' },
 ] as const;
 
-// 'today' has no requiredFeature — it is the free Learning Hub entry.
+// Consolidated: Today + Curriculum + Learning Memory → single Curriculum entry
 const LEARNING_HUB_NAV_ITEMS = [
-  { label: 'Today', href: '/curriculum/today', icon: Calendar },
-  { label: 'Curriculum', href: '/curriculum/full', icon: Library, feature: 'learningHub' },
-  { label: 'Learning Memory', href: '/curriculum/memory', icon: BarChart3, feature: 'learningHub' },
+  { label: 'Curriculum', href: '/curriculum/today', icon: Calendar },
   { label: 'Placement Test', href: '/placement', icon: Compass, feature: 'placementTest' },
 ] as const;
 
 const TOOLS_NAV_ITEMS = [
   { label: 'Work Tools', href: '/tools/work', icon: BriefcaseBusiness, feature: 'tool' },
-  { label: 'Quick Tools', href: '/tools/quick', icon: WandSparkles, feature: 'tool' },
   { label: 'AI Copilot', href: '/tools/ai', icon: BrainCircuit, feature: 'aiCoach' },
 ] as const;
 
+// Progress merged into Profile group
 const PROFILE_NAV_ITEMS = [
   { label: 'Overview', href: '/profile/overview', icon: User },
+  { label: 'Progress', href: '/progress/overview', icon: Target },
+  { label: 'Next Steps', href: '/progress/next-steps', icon: Trophy },
   { label: 'Preferences', href: '/profile/preferences', icon: Settings },
   { label: 'Security & Data', href: '/profile/security', icon: Shield },
-] as const;
-
-const PROGRESS_NAV_ITEMS = [
-  { label: 'Overview', href: '/progress/overview', icon: Target },
-  { label: 'Next Steps', href: '/progress/next-steps', icon: Trophy },
 ] as const;
 
 export const NAV_ITEMS = [
   { label: 'Home', href: '/dashboard', icon: Home },
   { label: 'Learning Path', href: '/learning-path', icon: Trophy },
   { label: 'Skills', href: null, icon: Layers3, children: SKILL_NAV_ITEMS },
-  { label: 'Progress', href: null, icon: Trophy, children: PROGRESS_NAV_ITEMS },
   {
     label: 'Learning Hub',
     href: null,

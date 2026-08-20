@@ -1,51 +1,162 @@
-import { Moon, Sun } from 'lucide-react';
+import { PRODUCT_VERSION } from '@/config/product.config';
+import { ChevronDown, Globe, Moon, Sun } from 'lucide-react';
 
-import { Link, useLocation } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { ClerkAuthControls } from '@/features/auth/ClerkAuthControls';
-import { useLocalizationStore } from '@/features/localization';
+import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import { useTheme } from '@/features/theme/ThemeProvider';
 
 interface NavbarProps {
+  onDemoClick?: () => void;
   onOpenProofreader?: () => void;
 }
 
-export function Navbar({ onOpenProofreader: _ }: NavbarProps) {
+export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
-  const { translate } = useLocalizationStore();
+  const { language, setLanguage, translate } = useLocalizationStore();
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
+  const langBtnRef = useRef<HTMLButtonElement>(null);
 
-  const navItems = [
-    { label: translate('landing.navLogin'), href: '/login' },
-    { label: translate('landing.tryDemo'), href: '/signup', primary: true },
-    { label: translate('landing.navPricing'), href: '/pricing' },
-  ];
+  const currentLang = INTERFACE_LANGUAGES.find((l) => l.id === language) || INTERFACE_LANGUAGES[0];
+
+  useEffect(() => {
+    if (!langOpen) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        langRef.current &&
+        !langRef.current.contains(event.target as Node) &&
+        langBtnRef.current &&
+        !langBtnRef.current.contains(event.target as Node)
+      ) {
+        setLangOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [langOpen]);
 
   return (
-    <nav className="fixed top-10 left-0 right-0 z-40 bg-background/95 backdrop-blur-md border-b border-border-soft">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border-soft bg-background/95 backdrop-blur-md shadow-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex items-center justify-between h-10">
-          <div className="flex items-center gap-2" />
-          <div className="flex items-center gap-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className={`inline-flex items-center gap-1.5 rounded-[var(--radius-card)] border px-2.5 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer ${
-                  item.primary
-                    ? 'bg-primary text-white hover:bg-primary/90 shadow-sm'
-                    : 'border-border-soft bg-surface text-foreground hover:bg-surface-hover hover:border-primary/40'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="hidden md:block h-4 w-px bg-border-soft mx-1" />
+        <div className="flex items-center gap-3 py-2 h-11">
+          {/* ── Left: Logo ── */}
+          <Link to="/" className="flex items-center gap-2 group cursor-pointer shrink-0">
+            <div className="flex h-7 w-7 items-center justify-center rounded overflow-hidden transition-transform duration-200 group-hover:scale-105">
+              <img
+                src="/brand/logo.svg"
+                alt="EngVox"
+                className="h-full w-full object-cover"
+                width="48"
+                height="48"
+              />
+            </div>
+            <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">
+              EngVox
+            </span>
+            <span className="rounded bg-soft px-1.5 py-px text-[9px] font-bold uppercase tracking-wider text-primary font-mono border border-border-soft flex items-center gap-1">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+              </span>
+              v{PRODUCT_VERSION}
+            </span>
+          </Link>
+
+          {/* ── Language Selector ── */}
+          <div className="relative" ref={langRef}>
+            <button
+              ref={langBtnRef}
+              type="button"
+              onClick={() => setLangOpen(!langOpen)}
+              className="flex items-center gap-1 rounded-[var(--radius-card)] border border-border-soft bg-surface px-2 py-1 text-sm transition-colors cursor-pointer"
+              aria-haspopup="listbox"
+              aria-expanded={langOpen}
+              aria-label="Select language"
+            >
+              <Globe className="h-4 w-4 text-muted-copy" />
+              <span className="text-sm">{currentLang.flag}</span>
+              <span className="hidden sm:inline text-sm font-medium">
+                {currentLang.id.toUpperCase()}
+              </span>
+              <ChevronDown
+                className={`h-3.5 w-3.5 text-muted-copy transition-transform ${langOpen ? 'rotate-180' : ''}`}
+              />
+            </button>
+
+            {langOpen && (
+              <div className="absolute left-0 mt-1 w-44 origin-top-left rounded-[var(--radius-card)] border border-border-soft bg-background shadow-lg animate-in fade-in-0 zoom-in-95">
+                <ul className="py-1" role="listbox">
+                  {INTERFACE_LANGUAGES.map((lang) => (
+                    <li key={lang.id}>
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={language === lang.id}
+                        onClick={() => {
+                          setLanguage(lang.id);
+                          setLangOpen(false);
+                        }}
+                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors ${
+                          language === lang.id
+                            ? 'bg-primary/10 text-primary font-semibold'
+                            : 'text-foreground hover:bg-surface'
+                        }`}
+                      >
+                        <span className="text-base">{lang.flag}</span>
+                        <span className="font-medium">{lang.nativeLabel}</span>
+                        <span className="ml-auto text-[10px] text-muted-copy">{lang.label}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* Spacer */}
+          <div className="flex-1" />
+
+          {/* Right: Nav Links + Theme + Auth */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            {!isAuthPage && (
+              <>
+                <Link
+                  to="/pricing"
+                  className="hidden md:inline-flex items-center rounded px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wide text-foreground/70 hover:text-primary hover:bg-surface transition-colors"
+                >
+                  {translate('landing.navPricing')}
+                </Link>
+
+                <div className="hidden md:block h-4 w-px bg-border-soft mx-1" />
+              </>
+            )}
+
+            {/* Try Demo Button */}
+            <button
+              type="button"
+              onClick={() => {
+                if (onDemoClick) {
+                  onDemoClick();
+                  return;
+                }
+                navigate('/signup');
+              }}
+              className="inline-flex items-center rounded border border-primary/40 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors cursor-pointer"
+            >
+              {translate('landing.tryDemo')}
+            </button>
+
             {/* Theme Toggle - shows both states with active highlighted */}
             <button
               onClick={toggleTheme}
-              className="inline-flex items-center gap-1.5 h-7 w-auto px-2 rounded-[var(--radius-card)] border border-border-soft bg-background text-muted-copy hover:text-foreground transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1 h-7 px-1.5 rounded-[var(--radius-card)] border border-border-soft bg-background text-muted-copy hover:text-foreground transition-colors cursor-pointer"
               aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               <span
@@ -57,7 +168,7 @@ export function Navbar({ onOpenProofreader: _ }: NavbarProps) {
               </span>
               <span
                 className={`flex items-center justify-center h-5 w-5 rounded transition-colors ${
-                  theme === 'light' ? 'text-slate-600 dark:text-slate-400' : 'text-muted-foreground'
+                  theme === 'light' ? 'text-slate-600' : 'text-muted-foreground'
                 }`}
               >
                 <Moon className="h-3.5 w-3.5" />
@@ -66,11 +177,12 @@ export function Navbar({ onOpenProofreader: _ }: NavbarProps) {
                 {theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               </span>
             </button>
+
             {!isAuthPage && <ClerkAuthControls />}
           </div>
         </div>
       </div>
-    </nav>
+    </header>
   );
 }
 

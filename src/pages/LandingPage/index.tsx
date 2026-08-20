@@ -23,7 +23,6 @@ import { useLocalizationStore } from '@/features/localization';
 
 import { Footer } from './Footer';
 import { HeroScene } from './HeroScene';
-import { LanguageBar } from './LanguageBar';
 import { Navbar } from './Navbar';
 import { getLandingTranslations } from './landing-i18n';
 
@@ -147,7 +146,6 @@ export const LandingPage = () => {
       data-theme="dark"
       className="min-h-screen bg-[#070a1a] text-white pb-14 overflow-x-clip"
     >
-      <LanguageBar />
       <Navbar />
 
       {/* ── HERO ─────────────────────────────────────────── */}

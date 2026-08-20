@@ -12077,10 +12077,15 @@ export const UI_TRANSLATIONS: Record<
 };
 
 export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<string, string>> = {
-  en: {},
+  en: {
+    Path: 'Path',
+    Hub: 'Hub',
+  },
   tr: {
     Home: 'Ana Sayfa',
     'Learning Hub': 'Öğrenme Merkezi',
+    Path: 'Yol',
+    Hub: 'Merkez',
     Skills: 'Beceriler',
     Reading: 'Okuma',
     Writing: 'Yazma',
@@ -12111,6 +12116,8 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Placement Test': 'اختبار التعيين',
     'Beta Program': 'برنامج بيتا',
     'Admin Panel': 'لوحة الإدارة',
+    Path: 'المسار',
+    Hub: 'المركز',
   },
   de: {
     Home: 'Startseite',
@@ -12128,6 +12135,8 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Placement Test': 'Einstufungstest',
     'Beta Program': 'Beta-Programm',
     'Admin Panel': 'Admin-Bereich',
+    Path: 'Pfad',
+    Hub: 'Hub',
   },
   es: {
     Home: 'Inicio',
@@ -12145,6 +12154,8 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Placement Test': 'Test de nivel',
     'Beta Program': 'Programa Beta',
     'Admin Panel': 'Panel de administración',
+    Path: 'Ruta',
+    Hub: 'Centro',
   },
   pt: {
     Home: 'Início',
@@ -12162,6 +12173,8 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Placement Test': 'Teste de nível',
     'Beta Program': 'Programa Beta',
     'Admin Panel': 'Painel admin',
+    Path: 'Caminho',
+    Hub: 'Hub',
   },
   fr: {
     Home: 'Accueil',
@@ -12179,6 +12192,8 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Placement Test': 'Test de positionnement',
     'Beta Program': 'Programme bêta',
     'Admin Panel': "Panneau d'administration",
+    Path: 'Parcours',
+    Hub: 'Hub',
   },
   ru: {
     Home: 'Главная',
@@ -12196,6 +12211,8 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Placement Test': 'Тест на определение уровня',
     'Beta Program': 'Бета-программа',
     'Admin Panel': 'Панель управления',
+    Path: 'Путь',
+    Hub: 'Центр',
   },
   zh: {
     Home: '首页',
@@ -12213,6 +12230,8 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Placement Test': '分级测试',
     'Beta Program': '测试计划',
     'Admin Panel': '管理面板',
+    Path: '路径',
+    Hub: '中心',
   },
   ja: {
     Home: 'ホーム',
@@ -12230,6 +12249,8 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Placement Test': 'レベルテスト',
     'Beta Program': 'ベータプログラム',
     'Admin Panel': '管理画面',
+    Path: 'パス',
+    Hub: 'ハブ',
   },
   it: {
     Home: 'Home',
@@ -12247,6 +12268,8 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Placement Test': 'Test di livello',
     'Beta Program': 'Programma beta',
     'Admin Panel': 'Pannello admin',
+    Path: 'Percorso',
+    Hub: 'Hub',
   },
   vi: {
     Home: 'Trang chủ',
@@ -12264,6 +12287,8 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Placement Test': 'Bài kiểm tra xếp lớp',
     'Beta Program': 'Chương trình beta',
     'Admin Panel': 'Bảng quản trị',
+    Path: 'Lộ trình',
+    Hub: 'Trung tâm',
   },
   pl: {
     Home: 'Strona główna',
@@ -12281,6 +12306,8 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Placement Test': 'Test poziomujący',
     'Beta Program': 'Program beta',
     'Admin Panel': 'Panel administracyjny',
+    Path: 'Ścieżka',
+    Hub: 'Centrum',
   },
   id: {
     Home: 'Beranda',
@@ -12298,6 +12325,8 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Placement Test': 'Tes penempatan',
     'Beta Program': 'Program beta',
     'Admin Panel': 'Panel admin',
+    Path: 'Jalur',
+    Hub: 'Pusat',
   },
   nl: {
     Home: 'Home',
@@ -12315,5 +12344,7 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Placement Test': 'Plaatsingstest',
     'Beta Program': 'Beta-programma',
     'Admin Panel': 'Beheerpaneel',
+    Path: 'Pad',
+    Hub: 'Hub',
   },
 };

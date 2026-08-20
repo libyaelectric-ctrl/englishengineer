@@ -20,6 +20,7 @@ import { NAVIGATION_TRANSLATIONS, useLocalizationStore } from '@/features/locali
 
 interface NavigationProps {
   onItemClick?: () => void;
+  collapsed?: boolean;
 }
 
 interface LockableItem {
@@ -30,9 +31,10 @@ interface LockableItem {
   comingSoon?: boolean;
 }
 
-const linkClasses = ({ isActive }: { isActive: boolean }) =>
+const linkClasses = ({ isActive, collapsed }: { isActive: boolean; collapsed?: boolean }) =>
   cn(
-    'group relative flex min-h-9 items-center gap-2.5 rounded-[4px] px-3 py-2 text-sm font-medium transition-all duration-150',
+    'group relative flex min-h-9 items-center gap-2.5 rounded-[4px] text-sm font-medium transition-all duration-150',
+    collapsed ? 'justify-center px-0 py-2' : 'px-3 py-2',
     isActive
       ? 'bg-primary/10 text-primary border border-primary/25 font-semibold'
       : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
@@ -44,7 +46,7 @@ const isLocked = (item: LockableItem, subscription: SubscriptionSnapshot): boole
   return !canAccessFeature(subscription, item.feature).allowed;
 };
 
-export const Navigation = React.memo(({ onItemClick }: NavigationProps) => {
+export const Navigation = React.memo(({ onItemClick, collapsed }: NavigationProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>(() => {
@@ -79,18 +81,27 @@ export const Navigation = React.memo(({ onItemClick }: NavigationProps) => {
       onClick={() =>
         setLockedItem({ label: item.label, feature: item.feature, comingSoon: item.comingSoon })
       }
-      className="group relative flex min-h-9 w-full cursor-pointer items-center gap-2.5 rounded-[4px] px-3 py-2 text-sm font-medium text-muted-copy transition-all hover:bg-surface-hover hover:text-foreground"
-      title={item.comingSoon ? 'Coming soon' : 'Upgrade required'}
+      className={cn(
+        'group relative flex min-h-9 w-full cursor-pointer items-center gap-2.5 rounded-[4px] text-sm font-medium text-muted-copy transition-all hover:bg-surface-hover hover:text-foreground',
+        collapsed ? 'justify-center px-0 py-2' : 'px-3 py-2'
+      )}
+      title={
+        collapsed
+          ? `${translate(item.label)} (${item.comingSoon ? 'Coming soon' : 'Locked'})`
+          : item.comingSoon
+            ? 'Coming soon'
+            : 'Upgrade required'
+      }
       aria-label={`${translate(item.label)} (locked)`}
     >
       <item.icon className="h-4 w-4 shrink-0" />
-      <span className="flex-1 text-left">{translate(item.label)}</span>
-      {item.comingSoon && (
+      {!collapsed && <span className="flex-1 text-left">{translate(item.label)}</span>}
+      {!collapsed && item.comingSoon && (
         <span className="rounded bg-amber-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
           Soon
         </span>
       )}
-      <LockKeyhole className="h-3.5 w-3.5 shrink-0 text-muted-copy/60" />
+      {!collapsed && <LockKeyhole className="h-3.5 w-3.5 shrink-0 text-muted-copy/60" />}
     </button>
   );
 
@@ -108,12 +119,33 @@ export const Navigation = React.memo(({ onItemClick }: NavigationProps) => {
               to={item.href}
               onClick={onItemClick}
               onMouseEnter={() => prefetchRoute(item.href)}
-              className={linkClasses}
+              className={(state) => linkClasses({ isActive: state.isActive, collapsed })}
+              title={collapsed ? translate(item.label) : undefined}
             >
               <Icon className="h-4 w-4 shrink-0" />
-              <span>{translate(item.label)}</span>
+              {!collapsed && <span>{translate(item.label)}</span>}
             </NavLink>
           );
+        }
+
+        // In collapsed mode, group items become single icon links to first child
+        if (collapsed) {
+          const firstChild = 'children' in item && item.children?.[0];
+          if (firstChild) {
+            return (
+              <NavLink
+                key={item.label}
+                to={firstChild.href}
+                onClick={onItemClick}
+                onMouseEnter={() => prefetchRoute(firstChild.href)}
+                className={(state) => linkClasses({ isActive: state.isActive, collapsed: true })}
+                title={translate(item.label)}
+              >
+                <Icon className="h-4 w-4 shrink-0" />
+              </NavLink>
+            );
+          }
+          return null;
         }
 
         const isOpen = openMenus[item.label] ?? false;
@@ -148,7 +180,7 @@ export const Navigation = React.memo(({ onItemClick }: NavigationProps) => {
                       to={child.href}
                       onClick={onItemClick}
                       onMouseEnter={() => prefetchRoute(child.href)}
-                      className={linkClasses}
+                      className={(state) => linkClasses({ isActive: state.isActive })}
                     >
                       <child.icon className="h-3.5 w-3.5 shrink-0" />
                       <span>{translate(child.label)}</span>

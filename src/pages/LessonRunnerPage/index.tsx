@@ -270,30 +270,6 @@ const LessonRunnerPage = () => {
 
   return (
     <div className="relative w-full overflow-x-hidden flex flex-col gap-6 pb-8 pt-4 font-sans text-slate-100">
-      {/* Background Telemetry Waveform */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden opacity-20">
-        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="sim-grid" width="32" height="32" patternUnits="userSpaceOnUse">
-              <path
-                d="M 32 0 L 0 0 0 32"
-                fill="none"
-                stroke="#1e293b"
-                strokeWidth="0.6"
-                strokeDasharray="2 2"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#sim-grid)" />
-          <path
-            d="M 0 60 Q 60 20, 120 60 T 240 60 T 360 20 T 480 60 T 600 60 T 720 20 T 840 60"
-            fill="none"
-            stroke="#06B6D4"
-            strokeWidth="1.5"
-          />
-        </svg>
-      </div>
-
       {/* Cyber Telemetry Top HUD Bar */}
       <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-800/80 bg-slate-950/70 p-3.5 shadow-md backdrop-blur-md">
         <button
