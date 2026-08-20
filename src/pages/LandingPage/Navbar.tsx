@@ -42,17 +42,29 @@ export function Navbar({ onOpenProofreader: _ }: NavbarProps) {
               </Link>
             ))}
             <div className="hidden md:block h-4 w-px bg-border-soft mx-1" />
-            {/* Theme Toggle */}
+            {/* Theme Toggle - shows both states with active highlighted */}
             <button
               onClick={toggleTheme}
-              className="inline-flex h-7 w-7 items-center justify-center rounded border border-border-soft bg-background text-muted-copy hover:text-foreground transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 h-7 w-auto px-2 rounded-[var(--radius-card)] border border-border-soft bg-background text-muted-copy hover:text-foreground transition-colors cursor-pointer"
               aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             >
-              {theme === 'dark' ? (
-                <Sun className="h-3.5 w-3.5 text-amber-500" />
-              ) : (
+              <span
+                className={`flex items-center justify-center h-5 w-5 rounded transition-colors ${
+                  theme === 'dark' ? 'text-amber-500' : 'text-muted-foreground'
+                }`}
+              >
+                <Sun className="h-3.5 w-3.5" />
+              </span>
+              <span
+                className={`flex items-center justify-center h-5 w-5 rounded transition-colors ${
+                  theme === 'light' ? 'text-slate-600 dark:text-slate-400' : 'text-muted-foreground'
+                }`}
+              >
                 <Moon className="h-3.5 w-3.5" />
-              )}
+              </span>
+              <span className="sr-only">
+                {theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              </span>
             </button>
             {!isAuthPage && <ClerkAuthControls />}
           </div>
