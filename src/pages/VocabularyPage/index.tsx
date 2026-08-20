@@ -1,6 +1,8 @@
 import { BookOpen, CheckCircle2, Zap } from 'lucide-react';
 
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
+
+import { useNavigate } from 'react-router-dom';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 import {
@@ -66,14 +68,7 @@ const VocabularyPage = () => {
   } = useVocabularyPage();
 
   const [selectedStationId, setSelectedStationId] = useState<string | null>(null);
-  const wordSetRef = useRef<HTMLDivElement>(null);
-
-  const handleStartExercise = () => {
-    chooseTab('New');
-    setTimeout(() => {
-      wordSetRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  };
+  const navigate = useNavigate();
 
   const vocabularySummary = useMemo(() => VocabularyMenuService.getSummary(menuState), [menuState]);
 
@@ -123,7 +118,7 @@ const VocabularyPage = () => {
         progressRatio: hasData ? learned / levelTerms.length : 0,
         totalItems: hasData ? levelTerms.length : vocabularySummary.total,
         completedItems: hasData ? mastered : 0,
-        onAction: handleStartExercise,
+        onAction: () => navigate('/lesson-runner/'),
       };
     });
   }, [terms, menuState, vocabularyLevel, userDiscipline, chooseTab, vocabularySummary, translate]);
@@ -225,21 +220,19 @@ const VocabularyPage = () => {
 
         {activeTab === 'Learned' && <QuizSection menuState={menuState} />}
 
-        <div ref={wordSetRef}>
-          <WordSetSection
-            activeTab={activeTab}
-            vocabularyProfile={vocabularyProfile}
-            loadError={loadError}
-            terms={terms}
-            wordSet={wordSet}
-            mode={mode}
-            menuState={menuState}
-            onReview={reviewWord}
-            onLearn={learnWord}
-            onExportCSV={exportCSV}
-            onLoadNextBatch={loadNextBatch}
-          />
-        </div>
+        <WordSetSection
+          activeTab={activeTab}
+          vocabularyProfile={vocabularyProfile}
+          loadError={loadError}
+          terms={terms}
+          wordSet={wordSet}
+          mode={mode}
+          menuState={menuState}
+          onReview={reviewWord}
+          onLearn={learnWord}
+          onExportCSV={exportCSV}
+          onLoadNextBatch={loadNextBatch}
+        />
 
         {activeTab === 'Mastered' && (
           <SectionCard

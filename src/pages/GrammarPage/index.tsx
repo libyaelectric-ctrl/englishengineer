@@ -77,9 +77,12 @@ const GrammarPage = () => {
       progressRatio: Math.min(1, Math.max(0.2, (item.progress?.strength ?? 40) / 100)),
       totalItems: 10,
       completedItems: item.progress?.correctUsages ?? 0,
-      onAction: () => setQuizOpen(true),
+      onAction: () => {
+        selectRule(item.rule.id);
+        setQuizOpen(true);
+      },
     }));
-  }, [rulesWithProgress, selectedRule, setQuizOpen]);
+  }, [rulesWithProgress, selectedRule, selectRule, setQuizOpen]);
 
   return (
     <PageContainer className="space-y-6 min-h-screen bg-background pb-16 text-foreground">
