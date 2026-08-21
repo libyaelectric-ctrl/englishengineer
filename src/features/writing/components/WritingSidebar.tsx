@@ -1,5 +1,5 @@
 import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
-import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
+import { createMissionSidebarConfig } from '@/layouts/sidebar/createMissionSidebarConfig';
 import { useShallow } from 'zustand/shallow';
 
 import { useLocalizationStore } from '@/features/localization';
@@ -17,28 +17,17 @@ export function WritingSidebar() {
     }))
   );
   const done = Object.keys(completedMissions).length;
-  const total = missions.length;
-  const remaining = total - done;
 
-  const config: SidebarConfig = {
+  const config = createMissionSidebarConfig({
     skill: 'writing',
     pathLabel: 'Writing Path',
     pathDescription: 'Technical writing, RFI responses and engineering documentation.',
-    currentLevel: `${done}/${total} Missions`,
-    totalItems: total,
-    stats: [
-      {
-        label: 'Remaining',
-        value: `${remaining} missions`,
-        color: remaining > 0 ? 'text-amber-500' : 'text-green-500',
-      },
-      { label: 'Auto Fixes', value: `${autoFixesUsed}`, color: 'text-cyan-500' },
-    ],
-    progressBars: [
-      { label: copy.progress, value: done, max: total, showPercent: true, color: 'primary' },
-    ],
-    actions: [],
-  };
+    done,
+    total: missions.length,
+    secondStatLabel: 'Auto Fixes',
+    secondStatValue: `${autoFixesUsed}`,
+    copy,
+  });
 
   return <SkillSidebar config={config} />;
 }
