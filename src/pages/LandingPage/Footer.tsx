@@ -28,6 +28,9 @@ export function Footer({ className = '' }: { className?: string }) {
             </div>
           </div>
           <div className="flex items-center gap-6 text-xs font-medium text-foreground/80">
+            <Link to="/pricing" className="hover:text-primary transition-colors">
+              {translate('landing.navPricing')}
+            </Link>
             <Link to="/legal/privacy" className="hover:text-primary transition-colors">
               {translate('common.privacy')}
             </Link>
