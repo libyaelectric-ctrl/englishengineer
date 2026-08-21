@@ -1,8 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react';
 
-import { Link } from 'react-router-dom';
-
 import { Button } from '@/shared/components/Button';
+import { EmptySkillPage } from '@/shared/components/EmptySkillPage';
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
@@ -12,7 +11,6 @@ import { useAuthStore } from '@/features/auth';
 import {
   type CefrLevel,
   type ContentLevelFilter,
-  EmptyLevelState,
   LevelContentFilter,
 } from '@/features/level-system';
 import type { VocabularyItem } from '@/features/reading';
@@ -21,28 +19,6 @@ import { ReadingMissionCard } from './ReadingMissionCard';
 import { ReadingWorkspace } from './ReadingWorkspace';
 import { ReaderView } from './components/ReaderView';
 import { useReadingPage } from './hooks/useReadingPage';
-
-const EmptyMissionView = ({
-  levelFilter,
-  currentLevel,
-  setLevelFilter,
-}: {
-  levelFilter: ContentLevelFilter;
-  currentLevel: CefrLevel;
-  setLevelFilter: Dispatch<SetStateAction<ContentLevelFilter>>;
-}) => (
-  <div className="min-h-screen bg-background pb-16 text-foreground space-y-4">
-    <PageHeader
-      title="Reading"
-      description="Engineering documentation & technical reading comprehension."
-    />
-    <LevelContentFilter value={levelFilter} currentLevel={currentLevel} onChange={setLevelFilter} />
-    <EmptyLevelState skill="Reading" />
-    <Link to="/curriculum" className="inline-flex text-sm font-bold text-primary hover:underline">
-      Back to Learning Hub
-    </Link>
-  </div>
-);
 
 const MissionsTabContent = ({
   levelFilter,
@@ -224,7 +200,10 @@ const ReadingPage = () => {
 
   if (!currentMission) {
     return (
-      <EmptyMissionView
+      <EmptySkillPage
+        title="Reading"
+        description="Engineering documentation & technical reading comprehension."
+        skill="Reading"
         levelFilter={levelFilter}
         currentLevel={currentLevel}
         setLevelFilter={setLevelFilter}

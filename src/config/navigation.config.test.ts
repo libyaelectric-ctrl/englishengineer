@@ -9,6 +9,7 @@ describe('main navigation configuration', () => {
       'Learning Path',
       'Skills',
       'Learning Hub',
+      'Pricing',
       'Tools',
       'Translator',
       'Team',
