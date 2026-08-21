@@ -3,16 +3,12 @@ import { describe, expect, it } from 'vitest';
 import { MAIN_NAVIGATION_LABELS, NAV_ITEMS, SKILL_NAV_ITEMS } from './navigation.config';
 
 describe('main navigation configuration', () => {
-  it('uses locked main navigation entries including Team', () => {
+  it('uses locked main navigation entries', () => {
     expect(MAIN_NAVIGATION_LABELS).toEqual([
       'Home',
-      'Learning Path',
+      'Learning',
       'Skills',
-      'Learning Hub',
-      'Pricing',
       'Tools',
-      'Translator',
-      'Team',
       'Profile',
     ]);
   });
@@ -28,7 +24,7 @@ describe('main navigation configuration', () => {
     ]);
   });
 
-  it('does not expose internal or repositioned pages as main entries', () => {
+  it('does not expose internal or repositioned pages as top-level entries', () => {
     const labels = NAV_ITEMS.map((item) => item.label);
     expect(labels).not.toEqual(
       expect.arrayContaining([
@@ -39,6 +35,12 @@ describe('main navigation configuration', () => {
         'AI Copilot',
         'Work Tools',
         'Quick Tools',
+        'Team',
+        'Pricing',
+        'Translator',
+        'Learning Path',
+        'Curriculum',
+        'Placement Test',
       ])
     );
   });
