@@ -267,13 +267,17 @@ export const Sidebar = () => {
                   startTransition(() => navigate('/billing'));
                 }}
                 className={cn(
-                  'flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface text-left transition-all hover:border-primary hover:bg-primary/5 shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground',
+                  'group relative flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface text-left transition-all hover:border-primary hover:bg-primary/5 shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground',
                   isSidebarCollapsed ? 'justify-center px-0' : 'px-3'
                 )}
-                title={isSidebarCollapsed ? copy.billing : undefined}
               >
                 <Wallet className="h-5 w-5 shrink-0 text-muted-copy" />
                 {!isSidebarCollapsed && <span className="flex-1 truncate">{copy.billing}</span>}
+                {isSidebarCollapsed && (
+                  <span role="tooltip" className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-[4px] border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-bold text-foreground shadow-lg opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                    {copy.billing}
+                  </span>
+                )}
               </button>
 
               {/* Alarm Bell */}
@@ -371,13 +375,17 @@ export const Sidebar = () => {
               <button
                 onClick={handleLogout}
                 className={cn(
-                  'flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface text-left transition-all hover:border-border-hover hover:bg-surface-hover shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground',
+                  'group relative flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface text-left transition-all hover:border-border-hover hover:bg-surface-hover shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground',
                   isSidebarCollapsed ? 'justify-center px-0' : 'px-3'
                 )}
-                title={isSidebarCollapsed ? copy.signOut : undefined}
               >
                 <LogOut className="h-5 w-5 shrink-0 text-muted-copy" />
                 {!isSidebarCollapsed && <span className="flex-1">{copy.signOut}</span>}
+                {isSidebarCollapsed && (
+                  <span role="tooltip" className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-[4px] border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-bold text-foreground shadow-lg opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                    {copy.signOut}
+                  </span>
+                )}
               </button>
             </div>
           )}

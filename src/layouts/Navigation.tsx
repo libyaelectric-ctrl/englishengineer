@@ -40,6 +40,22 @@ const linkClasses = ({ isActive, collapsed }: { isActive: boolean; collapsed?: b
       : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
   );
 
+/**
+ * Styled tooltip shown on hover in collapsed sidebar mode.
+ * Positioned to the right of the icon, with a small arrow.
+ */
+function CollapsedTooltip({ label }: { label: string }) {
+  return (
+    <span
+      role="tooltip"
+      className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-[4px] border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-bold text-foreground shadow-lg opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+    >
+      {label}
+      <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-border-soft" />
+    </span>
+  );
+}
+
 const isLocked = (item: LockableItem, subscription: SubscriptionSnapshot): boolean => {
   if (item.comingSoon) return true;
   if (!item.feature) return false;
@@ -85,13 +101,6 @@ export const Navigation = React.memo(({ onItemClick, collapsed }: NavigationProp
         'group relative flex min-h-9 w-full cursor-pointer items-center gap-2.5 rounded-[4px] text-sm font-medium text-muted-copy transition-all hover:bg-surface-hover hover:text-foreground',
         collapsed ? 'justify-center px-0 py-2' : 'px-3 py-2'
       )}
-      title={
-        collapsed
-          ? `${translate(item.label)} (${item.comingSoon ? 'Coming soon' : 'Locked'})`
-          : item.comingSoon
-            ? 'Coming soon'
-            : 'Upgrade required'
-      }
       aria-label={`${translate(item.label)} (locked)`}
     >
       <item.icon className="h-4 w-4 shrink-0" />
@@ -102,6 +111,11 @@ export const Navigation = React.memo(({ onItemClick, collapsed }: NavigationProp
         </span>
       )}
       {!collapsed && <LockKeyhole className="h-3.5 w-3.5 shrink-0 text-muted-copy/60" />}
+      {collapsed && (
+        <CollapsedTooltip
+          label={`${translate(item.label)} (${item.comingSoon ? 'Coming soon' : 'Locked'})`}
+        />
+      )}
     </button>
   );
 
@@ -120,10 +134,10 @@ export const Navigation = React.memo(({ onItemClick, collapsed }: NavigationProp
               onClick={onItemClick}
               onMouseEnter={() => prefetchRoute(item.href)}
               className={(state) => linkClasses({ isActive: state.isActive, collapsed })}
-              title={collapsed ? translate(item.label) : undefined}
             >
               <Icon className="h-4 w-4 shrink-0" />
               {!collapsed && <span>{translate(item.label)}</span>}
+              {collapsed && <CollapsedTooltip label={translate(item.label)} />}
             </NavLink>
           );
         }
@@ -139,9 +153,9 @@ export const Navigation = React.memo(({ onItemClick, collapsed }: NavigationProp
                 onClick={onItemClick}
                 onMouseEnter={() => prefetchRoute(firstChild.href)}
                 className={(state) => linkClasses({ isActive: state.isActive, collapsed: true })}
-                title={translate(item.label)}
               >
                 <Icon className="h-4 w-4 shrink-0" />
+                <CollapsedTooltip label={translate(item.label)} />
               </NavLink>
             );
           }
