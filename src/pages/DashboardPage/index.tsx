@@ -1,6 +1,6 @@
 import { ArrowRight, BookOpen, Target, TrendingUp, Zap } from 'lucide-react';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
@@ -29,6 +29,13 @@ export const DashboardPage: React.FC = () => {
   const activeMissions = useLearningStore(
     (s) => s.missions?.filter((m) => m.status === 'active').length || 0
   );
+
+  // Auto-refresh: re-read profile every 30s for cross-tab sync
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 30_000);
+    return () => clearInterval(id);
+  }, []);
 
   // Show skeleton while auth store hydrates
   if (!currentUser) {

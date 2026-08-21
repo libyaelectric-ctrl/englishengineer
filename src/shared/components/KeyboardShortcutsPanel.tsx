@@ -31,10 +31,27 @@ const SHORTCUT_GROUPS: ShortcutGroup[] = [
     ],
   },
   {
+    label: 'Learning',
+    shortcuts: [
+      { keys: ['Space'], description: 'Flip vocabulary card' },
+      { keys: ['→'], description: 'Next mission' },
+      { keys: ['←'], description: 'Previous mission' },
+      { keys: ['Enter'], description: 'Submit answer' },
+    ],
+  },
+  {
+    label: 'Personalize',
+    shortcuts: [
+      { keys: ['⌘', 'D'], description: 'Toggle dark/light mode' },
+      { keys: ['⌘', ','], description: 'Open settings' },
+    ],
+  },
+  {
     label: 'General',
     shortcuts: [
       { keys: ['Esc'], description: 'Close panel or modal' },
       { keys: ['⌘', '/'], description: 'Toggle this shortcuts panel' },
+      { keys: ['?'], description: 'Show keyboard shortcuts' },
     ],
   },
 ];
