@@ -93,6 +93,15 @@ export const LandingPage = () => {
   const prefersReduced = useReducedMotion();
   const timerRef = useRef<ReturnType<typeof setInterval>>(null);
 
+  // Block middle-click auto-scroll pan
+  useEffect(() => {
+    const prevent = (e: MouseEvent) => {
+      if (e.button === 1) e.preventDefault();
+    };
+    window.addEventListener('mousedown', prevent);
+    return () => window.removeEventListener('mousedown', prevent);
+  }, []);
+
   const totalSlides = 3;
 
   const goTo = useCallback(
@@ -134,7 +143,7 @@ export const LandingPage = () => {
 
   return (
     <div
-      className="h-dvh w-screen bg-background text-foreground overflow-hidden relative select-none"
+      className="h-dvh w-screen bg-background text-foreground overflow-hidden overscroll-none relative select-none"
       translate="no"
     >
       <Navbar />
