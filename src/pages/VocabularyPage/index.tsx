@@ -1,7 +1,5 @@
 import { CheckCircle2 } from 'lucide-react';
 
-import { useCallback, useRef } from 'react';
-
 import { SectionCard } from '@/shared/components/SectionCard';
 
 import { useLocalizationStore } from '@/features/localization';
@@ -51,19 +49,10 @@ const VocabularyPage = () => {
     closeSearchModal,
   } = useVocabularyPage();
 
-  const wordSetRef = useRef<HTMLDivElement>(null);
-  const handleStartPractice = useCallback(() => {
-    chooseTab('New');
-    setTimeout(() => {
-      wordSetRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  }, [chooseTab]);
-
   return (
     <div className="mx-auto max-w-5xl space-y-6 animate-in fade-in duration-300 relative pb-8">
       <VocabularyHeader
         vocabularyLevel={vocabularyLevel}
-        onStartPractice={handleStartPractice}
         activeTab={activeTab}
         searchInput={searchInput}
         showFilters={showFilters}
@@ -116,7 +105,6 @@ const VocabularyPage = () => {
 
         {activeTab === 'Learned' && <QuizSection menuState={menuState} />}
 
-        <div ref={wordSetRef} />
         <WordSetSection
           activeTab={activeTab}
           vocabularyProfile={vocabularyProfile}

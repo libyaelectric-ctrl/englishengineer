@@ -1,4 +1,4 @@
-import { PlayCircle, Search, Volume2, VolumeX } from 'lucide-react';
+import { Search, Volume2, VolumeX } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
@@ -39,7 +39,6 @@ interface VocabularyHeaderProps {
   onSearchSubmit: (query: string) => Promise<void>;
   onFilterChange?: (field: keyof VocabularySearchFilters, value: string) => void;
   onOpenSearch?: () => void;
-  onStartPractice?: () => void;
   menuState: VocabularyMenuState;
 }
 
@@ -68,7 +67,6 @@ export function VocabularyHeader({
   allSearchResults,
   chooseTab,
   onOpenSearch,
-  onStartPractice,
   menuState,
 }: VocabularyHeaderProps) {
   const translate = useLocalizationStore((s) => s.translate);
@@ -93,16 +91,6 @@ export function VocabularyHeader({
         badgeText={vocabularyLevel}
         actions={
           <div className="flex items-center gap-2">
-            {onStartPractice && (
-              <button
-                type="button"
-                onClick={onStartPractice}
-                className="flex items-center gap-1.5 rounded-[4px] bg-primary px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-sm hover:bg-primary-hover transition-colors cursor-pointer"
-              >
-                <PlayCircle className="h-3.5 w-3.5" />
-                Start Practice
-              </button>
-            )}
             <SoundToggle
               isMuted={isSoundMuted}
               onToggle={() => setIsSoundMuted(toggleSoundMuted())}
