@@ -1,5 +1,5 @@
 import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
-import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
+import { createMissionSidebarConfig } from '@/layouts/sidebar/createMissionSidebarConfig';
 import { useShallow } from 'zustand/shallow';
 
 import { useListeningMissionsStore } from '@/features/listening';
@@ -17,29 +17,18 @@ export function ListeningSidebar() {
     }))
   );
   const done = Object.keys(completedMissions).length;
-  const total = missions.length;
-  const remaining = total - done;
   const durationMin = Math.round(timeSpentSeconds / 60);
 
-  const config: SidebarConfig = {
+  const config = createMissionSidebarConfig({
     skill: 'listening',
     pathLabel: 'Listening Path',
     pathDescription: 'Engineering site audio and technical meeting comprehension.',
-    currentLevel: `${done}/${total} Missions`,
-    totalItems: total,
-    stats: [
-      {
-        label: 'Remaining',
-        value: `${remaining} missions`,
-        color: remaining > 0 ? 'text-amber-500' : 'text-green-500',
-      },
-      { label: copy.duration, value: `${durationMin} min`, color: 'text-cyan-500' },
-    ],
-    progressBars: [
-      { label: copy.progress, value: done, max: total, showPercent: true, color: 'primary' },
-    ],
-    actions: [],
-  };
+    done,
+    total: missions.length,
+    secondStatLabel: copy.duration,
+    secondStatValue: `${durationMin} min`,
+    copy,
+  });
 
   return <SkillSidebar config={config} />;
 }
