@@ -12078,8 +12078,24 @@ export const UI_TRANSLATIONS: Record<
 
 export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<string, string>> = {
   en: {
+    Home: 'Home',
+    'Learning Hub': 'Learning Hub',
     Path: 'Path',
     Hub: 'Hub',
+    Skills: 'Skills',
+    Reading: 'Reading',
+    Writing: 'Writing',
+    Listening: 'Listening',
+    Speaking: 'Speaking',
+    Vocabulary: 'Vocabulary',
+    Grammar: 'Grammar',
+    Tools: 'Tools',
+    Profile: 'Profile',
+    Team: 'Team & Company',
+    'Placement Test': 'Placement Test',
+    'Beta Program': 'Beta & Community',
+    'Admin Panel': 'Admin Panel',
+    Pricing: 'Pricing',
   },
   tr: {
     Home: 'Ana Sayfa',
@@ -12099,6 +12115,7 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Placement Test': 'Seviye Sınavı',
     'Beta Program': 'Beta & Topluluk',
     'Admin Panel': 'Yönetim Paneli',
+    Pricing: 'Fiyatlandırma',
   },
   ar: {
     Home: 'الرئيسية',
@@ -12118,6 +12135,7 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Admin Panel': 'لوحة الإدارة',
     Path: 'المسار',
     Hub: 'المركز',
+    Pricing: 'الأسعار',
   },
   de: {
     Home: 'Startseite',
@@ -12137,6 +12155,7 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Admin Panel': 'Admin-Bereich',
     Path: 'Pfad',
     Hub: 'Hub',
+    Pricing: 'Preise',
   },
   es: {
     Home: 'Inicio',
@@ -12156,6 +12175,7 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Admin Panel': 'Panel de administración',
     Path: 'Ruta',
     Hub: 'Centro',
+    Pricing: 'Precios',
   },
   pt: {
     Home: 'Início',
@@ -12175,6 +12195,7 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Admin Panel': 'Painel admin',
     Path: 'Caminho',
     Hub: 'Hub',
+    Pricing: 'Preços',
   },
   fr: {
     Home: 'Accueil',
@@ -12194,6 +12215,7 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Admin Panel': "Panneau d'administration",
     Path: 'Parcours',
     Hub: 'Hub',
+    Pricing: 'Tarifs',
   },
   ru: {
     Home: 'Главная',
@@ -12213,6 +12235,7 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Admin Panel': 'Панель управления',
     Path: 'Путь',
     Hub: 'Центр',
+    Pricing: 'Цены',
   },
   zh: {
     Home: '首页',
@@ -12232,6 +12255,7 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Admin Panel': '管理面板',
     Path: '路径',
     Hub: '中心',
+    Pricing: '价格',
   },
   ja: {
     Home: 'ホーム',
@@ -12251,6 +12275,7 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Admin Panel': '管理画面',
     Path: 'パス',
     Hub: 'ハブ',
+    Pricing: '料金',
   },
   it: {
     Home: 'Home',
@@ -12270,6 +12295,7 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Admin Panel': 'Pannello admin',
     Path: 'Percorso',
     Hub: 'Hub',
+    Pricing: 'Prezzi',
   },
   vi: {
     Home: 'Trang chủ',
@@ -12289,6 +12315,7 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Admin Panel': 'Bảng quản trị',
     Path: 'Lộ trình',
     Hub: 'Trung tâm',
+    Pricing: 'Bảng giá',
   },
   pl: {
     Home: 'Strona główna',
@@ -12308,6 +12335,7 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Admin Panel': 'Panel administracyjny',
     Path: 'Ścieżka',
     Hub: 'Centrum',
+    Pricing: 'Cennik',
   },
   id: {
     Home: 'Beranda',
@@ -12327,6 +12355,7 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Admin Panel': 'Panel admin',
     Path: 'Jalur',
     Hub: 'Pusat',
+    Pricing: 'Harga',
   },
   nl: {
     Home: 'Home',
@@ -12346,5 +12375,6 @@ export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<
     'Admin Panel': 'Beheerpaneel',
     Path: 'Pad',
     Hub: 'Hub',
+    Pricing: 'Prijzen',
   },
 };
