@@ -1,4 +1,4 @@
-import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
+import { createApiClient } from '@/shared/services/apiClient';
 
 import { AI_BACKEND_PROXY_CONFIG } from './ai.config';
 
@@ -45,34 +45,24 @@ const EMPTY: AiAnalyticsData = {
   byDay: [],
 };
 
+const analyticsClient = AI_BACKEND_PROXY_CONFIG.isBackendConfigured
+  ? createApiClient({ baseUrl: AI_BACKEND_PROXY_CONFIG.proxyUrl! })
+  : null;
+
 export const AiAnalyticsService = {
   async fetch(): Promise<AiAnalyticsData> {
-    if (!AI_BACKEND_PROXY_CONFIG.isBackendConfigured) return EMPTY;
-    const base = AI_BACKEND_PROXY_CONFIG.proxyUrl!.replace(/\/$/, '');
+    if (!analyticsClient) return EMPTY;
     try {
-      const authHeaders = await getBackendAuthHeaders();
-      const response = await fetch(`${base}/analytics`, {
-        method: 'GET',
-        headers: authHeaders,
-      });
-      if (!response.ok) return EMPTY;
-      return (await response.json()) as AiAnalyticsData;
+      return await analyticsClient.get<AiAnalyticsData>('/analytics');
     } catch {
       return EMPTY;
     }
   },
 
   async fetchAdmin(): Promise<AiAdminAnalytics | null> {
-    if (!AI_BACKEND_PROXY_CONFIG.isBackendConfigured) return null;
-    const base = AI_BACKEND_PROXY_CONFIG.proxyUrl!.replace(/\/$/, '');
+    if (!analyticsClient) return null;
     try {
-      const authHeaders = await getBackendAuthHeaders();
-      const response = await fetch(`${base}/analytics/admin`, {
-        method: 'GET',
-        headers: authHeaders,
-      });
-      if (!response.ok) return null;
-      const payload = (await response.json()) as { data?: AiAdminAnalytics };
+      const payload = await analyticsClient.get<{ data?: AiAdminAnalytics }>('/analytics/admin');
       return payload.data ?? null;
     } catch {
       return null;

@@ -44,7 +44,13 @@ describe('AiAnalyticsService', () => {
     expect(result.limits.remaining).toBe(1);
     expect(fetchMock).toHaveBeenCalledWith(
       'https://backend.example.com/api/v1/ai/analytics',
-      expect.objectContaining({ headers: { Authorization: 'Bearer test' } })
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer test',
+        }),
+        signal: expect.any(AbortSignal),
+      })
     );
     vi.unstubAllGlobals();
   });

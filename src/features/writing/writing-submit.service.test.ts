@@ -40,6 +40,7 @@ describe('submitWritingToBackend', () => {
           Authorization: 'Bearer test-token',
         }),
         body: JSON.stringify({ content: 'A short engineering draft.' }),
+        signal: expect.any(AbortSignal),
       })
     );
     expect(result?.score).toBe(82);

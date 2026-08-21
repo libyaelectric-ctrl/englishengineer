@@ -1,6 +1,5 @@
-import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
-
 import { AI_BACKEND_PROXY_CONFIG } from '@/shared/services/ai-proxy.config';
+import { createApiClient } from '@/shared/services/apiClient';
 
 interface WritingSubmitResponse {
   success?: boolean;
@@ -9,11 +8,6 @@ interface WritingSubmitResponse {
   feedback?: Record<string, string>;
   status?: string;
 }
-
-const resolveBackendBase = (): string | null => {
-  const proxy = AI_BACKEND_PROXY_CONFIG.proxyUrl;
-  return proxy ? proxy.replace(/\/api\/(?:v1\/)?ai\/?$/, '') : null;
-};
 
 /**
  * Sends the student's draft to POST /api/writing/submit for AI evaluation.
@@ -30,20 +24,13 @@ const resolveBackendBase = (): string | null => {
 export async function submitWritingToBackend(input: {
   content: string;
 }): Promise<WritingSubmitResponse | null> {
-  const base = resolveBackendBase();
-  if (!base) return null;
+  const proxy = AI_BACKEND_PROXY_CONFIG.proxyUrl;
+  if (!proxy) return null;
 
+  const base = proxy.replace(/\/api\/(?:v1\/)?ai\/?$/, '');
   try {
-    const response = await fetch(`${base}/api/v1/writing/submit`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(await getBackendAuthHeaders()),
-      },
-      body: JSON.stringify(input),
-    });
-    if (!response.ok) return null;
-    return (await response.json()) as WritingSubmitResponse;
+    const client = createApiClient({ baseUrl: base });
+    return await client.post<WritingSubmitResponse>('/api/v1/writing/submit', input);
   } catch {
     return null;
   }

@@ -1,6 +1,5 @@
-import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
-
 import { AI_BACKEND_PROXY_CONFIG } from '@/shared/services/ai-proxy.config';
+import { createApiClient } from '@/shared/services/apiClient';
 
 interface SpeakingSubmitResponse {
   success?: boolean;
@@ -10,30 +9,18 @@ interface SpeakingSubmitResponse {
   status?: string;
 }
 
-const resolveBackendBase = (): string | null => {
-  const proxy = AI_BACKEND_PROXY_CONFIG.proxyUrl;
-  return proxy ? proxy.replace(/\/api\/(?:v1\/)?ai\/?$/, '') : null;
-};
-
 export async function submitSpeakingToBackend(input: {
   missionId: string;
   transcript: string;
   audioUrl?: string;
 }): Promise<SpeakingSubmitResponse | null> {
-  const base = resolveBackendBase();
-  if (!base) return null;
+  const proxy = AI_BACKEND_PROXY_CONFIG.proxyUrl;
+  if (!proxy) return null;
 
+  const base = proxy.replace(/\/api\/(?:v1\/)?ai\/?$/, '');
   try {
-    const response = await fetch(`${base}/api/v1/speaking/submit`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(await getBackendAuthHeaders()),
-      },
-      body: JSON.stringify(input),
-    });
-    if (!response.ok) return null;
-    return (await response.json()) as SpeakingSubmitResponse;
+    const client = createApiClient({ baseUrl: base });
+    return await client.post<SpeakingSubmitResponse>('/api/v1/speaking/submit', input);
   } catch {
     return null;
   }

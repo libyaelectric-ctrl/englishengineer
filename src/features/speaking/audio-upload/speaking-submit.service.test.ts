@@ -47,6 +47,7 @@ describe('submitSpeakingToBackend', () => {
           transcript: 'I am an engineer.',
           audioUrl: '/uploads/speaking/user-1/abc.webm',
         }),
+        signal: expect.any(AbortSignal),
       })
     );
     expect(result?.overallScore).toBe(74);
