@@ -237,31 +237,6 @@ export function useGrammarPage() {
     setQuizAnswers({});
   };
 
-  const startQuickQuiz = () => {
-    // Prioritize rules due for review
-    const dueRule = reviewTargets[0]?.rule;
-    if (dueRule) {
-      selectRule(dueRule.id);
-      setQuizOpen(true);
-      return;
-    }
-    // Then try unlocked, not-yet-passed rules
-    const available = rulesWithProgress.filter((e) => e.isUnlocked && !e.progress.isPassed);
-    if (available.length > 0) {
-      const pick = available[Math.floor(Math.random() * available.length)];
-      selectRule(pick.rule.id);
-      setQuizOpen(true);
-      return;
-    }
-    // Fallback: any unlocked rule
-    const unlocked = rulesWithProgress.filter((e) => e.isUnlocked);
-    if (unlocked.length > 0) {
-      const pick = unlocked[Math.floor(Math.random() * unlocked.length)];
-      selectRule(pick.rule.id);
-      setQuizOpen(true);
-    }
-  };
-
   const scrollLessonStrip = (direction: 'left' | 'right') => {
     lessonStripRef.current?.scrollBy({
       left: direction === 'left' ? -420 : 420,
@@ -385,7 +360,6 @@ export function useGrammarPage() {
     reviewTargets,
     masteredCount,
     selectRule,
-    startQuickQuiz,
     scrollLessonStrip,
     recordUsage,
     quizItems,

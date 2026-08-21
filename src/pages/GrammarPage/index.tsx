@@ -44,7 +44,6 @@ const GrammarPage = () => {
     masteredCount,
     rulesWithProgress,
     selectRule,
-    startQuickQuiz,
     recordUsage,
     quizItems,
   } = useGrammarPage();
@@ -62,7 +61,6 @@ const GrammarPage = () => {
         grammarLearned={grammarLearned}
         grammarStruggling={grammarStruggling}
         onOpenQuiz={() => setQuizOpen(true)}
-        onQuickQuiz={startQuickQuiz}
         onOpenStrugglingQuiz={() => {}}
       />
 
