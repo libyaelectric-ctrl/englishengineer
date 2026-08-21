@@ -10,6 +10,7 @@ describe('main navigation configuration', () => {
       'Skills',
       'Tools',
       'Profile',
+      'Team',
     ]);
   });
 
