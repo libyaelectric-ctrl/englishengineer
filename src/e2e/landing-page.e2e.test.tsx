@@ -24,14 +24,23 @@ describe('Landing page E2E', () => {
     expect(screen.getAllByText(/Engineering Disciplines/i).length).toBeGreaterThan(0);
   });
 
-  it('displays all 6 features', () => {
+  it('displays all 6 features', async () => {
     renderWithProviders(<LandingPage />);
 
-    expect(screen.getAllByText(/^vocabulary$/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/^writing$/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/^speaking$/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/^listening$/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/^reading$/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/^grammar$/i).length).toBeGreaterThan(0);
+    // Features are on slide 2 (index 2). Navigate via slide indicators.
+    const nextButton = screen.getByRole('button', { name: /next slide/i });
+    // Click next twice to go from slide 0 → 1 → 2 (features)
+    fireEvent.click(nextButton);
+    await waitFor(() => {});
+    fireEvent.click(nextButton);
+
+    await waitFor(() => {
+      expect(screen.getAllByText(/vocabulary/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/writing/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/speaking/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/listening/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/reading/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/grammar/i).length).toBeGreaterThan(0);
+    });
   });
 });
