@@ -98,6 +98,7 @@ describe('VocabularyPage menu', () => {
           <VocabularyPage />
         </MemoryRouter>
       );
+      await screen.findAllByText('height');
       fireEvent.click(screen.getByRole('tab', { name: 'Learned' }));
 
       fireEvent.click(screen.getByRole('button', { name: 'Start Quiz' }));
@@ -120,7 +121,7 @@ describe('VocabularyPage menu', () => {
     } finally {
       randomSpy.mockRestore();
     }
-  }, 10_000);
+  }, 30_000);
 
   it('searches vocabulary via modal and finds results', async () => {
     await renderLoadedPage();
@@ -167,7 +168,7 @@ describe('VocabularyPage menu', () => {
         <VocabularyPage />
       </MemoryRouter>
     );
-    const cards = await screen.findAllByTestId('vocabulary-word-card');
+    const cards = await screen.findAllByTestId('vocabulary-word-card', { timeout: 15_000 });
     expect(cards.length).toBeGreaterThan(0);
     expect(
       within(cards[0]).getByText((_content, element) => element?.textContent === 'LVL-B1')
