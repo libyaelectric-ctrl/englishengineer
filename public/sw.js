@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v6';
+const CACHE_VERSION = 'v7';
 const CACHE_NAME = `engvox-${CACHE_VERSION}`;
 const STATIC_ASSETS = ['/', '/offline.html', '/brand/logo.svg', '/manifest.json'];
 const MAX_CACHE_ENTRIES = 200;
