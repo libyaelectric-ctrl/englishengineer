@@ -12,6 +12,9 @@ export interface LandingTranslations {
   badgeNoCard: string;
   badgeLanguages: string;
 
+  // Disciplines
+  disciplinesTitle: string;
+
   // Features
   featuresHeaderBadge: string;
   featuresTitle: string;
@@ -22,6 +25,11 @@ export interface LandingTranslations {
   featureSpeakingDesc: string;
   featureListeningDesc: string;
   featureGrammarDesc: string;
+
+  // Slide labels
+  slideHero: string;
+  slideDisciplines: string;
+  slideFeatures: string;
 
   // Final CTA
   finalCtaTitle: string;
@@ -56,6 +64,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: 'View Pricing Plans',
     badgeNoCard: 'No Credit Card Required',
     badgeLanguages: '15 Interface Languages',
+    disciplinesTitle: '10 Engineering Disciplines',
     featuresHeaderBadge: 'Core Learning Modules',
     featuresTitle: 'Everything You Need, In One Place',
     featuresSubtitle: 'Six focused modules that build real, job-ready engineering English.',
@@ -65,6 +74,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: 'Practice pronunciation and speaking with instant feedback.',
     featureListeningDesc: 'Understand meetings and field conversations with ease.',
     featureGrammarDesc: 'Master the grammar engineers actually use on the job.',
+    slideHero: 'Hero',
+    slideDisciplines: 'Disciplines',
+    slideFeatures: 'Features',
     finalCtaTitle: 'Your Engineering Voice Starts',
     finalCtaTitleHighlight: 'Here',
     finalCtaSub:
@@ -94,6 +106,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: 'Planları İncele',
     badgeNoCard: 'Kredi Kartı Gerektirmez',
     badgeLanguages: '15 Dilde Kullanıcı Arayüzü',
+    disciplinesTitle: '10 Mühendislik Dalı',
     featuresHeaderBadge: 'Temel Öğrenme Modülleri',
     featuresTitle: 'İhtiyacınız Olan Her Şey, Tek Yerde',
     featuresSubtitle:
@@ -104,6 +117,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: 'Anında geri bildirimle telaffuz ve konuşma pratiği yapın.',
     featureListeningDesc: 'Toplantı ve saha konuşmalarını kolayca anlayın.',
     featureGrammarDesc: 'İş hayatında mühendislerin gerçekten kullandığı dilbilgisini öğrenin.',
+    slideHero: 'Giriş',
+    slideDisciplines: 'Dallar',
+    slideFeatures: 'Özellikler',
     finalCtaTitle: 'Mühendislik Sesiniz',
     finalCtaTitleHighlight: 'Buradan Başlıyor',
     finalCtaSub:
@@ -133,6 +149,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: 'Preise Ansehen',
     badgeNoCard: 'Keine Kreditkarte Erforderlich',
     badgeLanguages: '15 Benutzeroberflächen-Sprachen',
+    disciplinesTitle: '10 Ingenieurdisziplinen',
     featuresHeaderBadge: 'Kern-Lernmodule',
     featuresTitle: 'Alles, Was Sie Brauchen, an Einem Ort',
     featuresSubtitle: 'Sechs fokussierte Module für berufsreifes Ingenieur-Englisch.',
@@ -142,6 +159,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: 'Üben Sie Aussprache und Sprechen mit sofortigem Feedback.',
     featureListeningDesc: 'Verstehen Sie Meetings und Feldgespräche mühelos.',
     featureGrammarDesc: 'Beherrschen Sie die Grammatik, die Ingenieure wirklich brauchen.',
+    slideHero: 'Start',
+    slideDisciplines: 'Disziplinen',
+    slideFeatures: 'Funktionen',
     finalCtaTitle: 'Ihre Ingenieur-Stimme Beginnt',
     finalCtaTitleHighlight: 'Hier',
     finalCtaSub:
@@ -159,6 +179,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: 'عرض خطط الأسعار',
     badgeNoCard: 'لا تتطلب بطاقة ائتمان',
     badgeLanguages: '15 لغة واجهة',
+    disciplinesTitle: '10 تخصصات هندسية',
     featuresHeaderBadge: 'وحدات التعلم الأساسية',
     featuresTitle: 'كل ما تحتاجه في مكان واحد',
     featuresSubtitle: 'ست وحدات مركزة تبني إنجليزية هندسية جاهزة للحياة العملية.',
@@ -168,6 +189,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: 'تدرب على النطق والمحادثة مع تغذية راجعة فورية.',
     featureListeningDesc: 'افهم الاجتماعات والمحادثات الميدانية بسهولة.',
     featureGrammarDesc: 'أتقن القواعد التي يستخدمها المهندسون فعلاً في العمل.',
+    slideHero: 'رئيسية',
+    slideDisciplines: 'التخصصات',
+    slideFeatures: 'الميزات',
     finalCtaTitle: 'صوتك الهندسي يبدأ',
     finalCtaTitleHighlight: 'من هنا',
     finalCtaSub: 'اختر تخصصك ولغة الواجهة وابدأ إتقان الإنجليزية الهندسية الاحترافية اليوم.',
@@ -184,6 +208,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: 'Ver Planes de Precios',
     badgeNoCard: 'Sin Tarjeta de Crédito',
     badgeLanguages: '15 Idiomas de Interfaz',
+    disciplinesTitle: '10 Disciplinas de Ingeniería',
     featuresHeaderBadge: 'Módulos de Aprendizaje Básicos',
     featuresTitle: 'Todo lo que Necesitas, en un Solo Lugar',
     featuresSubtitle: 'Seis módulos enfocados para un inglés técnico listo para el trabajo.',
@@ -193,6 +218,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: 'Practica pronunciación y conversación con feedback instantáneo.',
     featureListeningDesc: 'Entiende reuniones y conversaciones de campo con facilidad.',
     featureGrammarDesc: 'Domina la gramática que los ingenieros realmente usan en el trabajo.',
+    slideHero: 'Inicio',
+    slideDisciplines: 'Disciplinas',
+    slideFeatures: 'Características',
     finalCtaTitle: 'Tu Voz de Ingeniería Comienza',
     finalCtaTitleHighlight: 'Aquí',
     finalCtaSub:
@@ -210,6 +238,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: 'Voir les Tarifs',
     badgeNoCard: 'Sans Carte de Crédit',
     badgeLanguages: 'Interface en 15 Langues',
+    disciplinesTitle: "10 Disciplines d'Ingénierie",
     featuresHeaderBadge: "Modules d'Apprentissage Essentiels",
     featuresTitle: "Tout ce qu'il Vous Faut, au Même Endroit",
     featuresSubtitle: "Six modules ciblés pour un anglais technique prêt pour l'emploi.",
@@ -220,6 +249,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: 'Entraînez prononciation et expression avec un retour instantané.',
     featureListeningDesc: 'Comprenez réunions et conversations de terrain sans effort.',
     featureGrammarDesc: 'Maîtrisez la grammaire réellement utilisée par les ingénieurs.',
+    slideHero: 'Accueil',
+    slideDisciplines: 'Disciplines',
+    slideFeatures: 'Fonctionnalités',
     finalCtaTitle: "Votre Voix d'Ingénieur Commence",
     finalCtaTitleHighlight: 'Ici',
     finalCtaSub:
@@ -237,6 +269,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: 'Ver Planos e Preços',
     badgeNoCard: 'Sem Cartão de Crédito',
     badgeLanguages: '15 Idiomas de Interface',
+    disciplinesTitle: '10 Disciplinas de Engenharia',
     featuresHeaderBadge: 'Módulos Essenciais de Aprendizagem',
     featuresTitle: 'Tudo o que Você Precisa, em um Só Lugar',
     featuresSubtitle: 'Seis módulos focados para um inglês técnico pronto para o trabalho.',
@@ -246,6 +279,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: 'Pratique pronúncia e conversação com feedback imediato.',
     featureListeningDesc: 'Entenda reuniões e conversas de campo com facilidade.',
     featureGrammarDesc: 'Domine a gramática que os engenheiros realmente usam no trabalho.',
+    slideHero: 'Início',
+    slideDisciplines: 'Disciplinas',
+    slideFeatures: 'Recursos',
     finalCtaTitle: 'Sua Voz de Engenharia Começa',
     finalCtaTitleHighlight: 'Aqui',
     finalCtaSub:
@@ -263,6 +299,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: 'Посмотреть Тарифы',
     badgeNoCard: 'Без Банковской Карты',
     badgeLanguages: '15 Языков Интерфейса',
+    disciplinesTitle: '10 Инженерных Направлений',
     featuresHeaderBadge: 'Основные Учебные Модули',
     featuresTitle: 'Всё Необходимое в Одном Месте',
     featuresSubtitle:
@@ -273,6 +310,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: 'Тренируйте произношение и разговор с мгновенной обратной связью.',
     featureListeningDesc: 'Понимайте встречи и рабочие разговоры без труда.',
     featureGrammarDesc: 'Освойте грамматику, которую инженеры реально используют.',
+    slideHero: 'Главная',
+    slideDisciplines: 'Направления',
+    slideFeatures: 'Возможности',
     finalCtaTitle: 'Ваш Инженерный Голос Начинается',
     finalCtaTitleHighlight: 'Здесь',
     finalCtaSub:
@@ -289,6 +329,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: '查看价格方案',
     badgeNoCard: '无需信用卡',
     badgeLanguages: '支持15种界面语言',
+    disciplinesTitle: '10大工程专业',
     featuresHeaderBadge: '核心学习模块',
     featuresTitle: '您所需的一切，尽在一处',
     featuresSubtitle: '六大专注模块，打造真正能上手的工程英语。',
@@ -298,6 +339,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: '即时反馈，练就发音与会话。',
     featureListeningDesc: '轻松听懂会议和现场沟通。',
     featureGrammarDesc: '掌握工程师真正用得上的语法。',
+    slideHero: '首页',
+    slideDisciplines: '专业',
+    slideFeatures: '功能',
     finalCtaTitle: '您的工程之声',
     finalCtaTitleHighlight: '从这里开始',
     finalCtaSub: '选择专业与界面语言，今天就开始掌握专业工程英语。',
@@ -314,6 +358,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: '料金プランを見る',
     badgeNoCard: 'クレジットカード不要',
     badgeLanguages: '15言語UI対応',
+    disciplinesTitle: '10の工学分野',
     featuresHeaderBadge: 'コア学習モジュール',
     featuresTitle: '必要なものすべてを一か所に',
     featuresSubtitle: '実務で使える工学英語を磨く、6つの集中モジュール。',
@@ -323,6 +368,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: '即時フィードバックで発音と会話を練習。',
     featureListeningDesc: '会議や現場の会話をスムーズに理解。',
     featureGrammarDesc: 'エンジニアが実際に使う文法をマスター。',
+    slideHero: 'ホーム',
+    slideDisciplines: '分野',
+    slideFeatures: '機能',
     finalCtaTitle: 'あなたのエンジニアの声が',
     finalCtaTitleHighlight: 'ここから始まる',
     finalCtaSub: '専攻分野とUI言語を選び、プロフェッショナルな工学英語の習得を今日始めましょう。',
@@ -338,6 +386,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: 'Vedi i Piani',
     badgeNoCard: 'Nessuna Carta di Credito Richiesta',
     badgeLanguages: 'Interfaccia in 15 Lingue',
+    disciplinesTitle: '10 Discipline di Ingegneria',
     featuresHeaderBadge: 'Moduli di Apprendimento Essenziali',
     featuresTitle: 'Tutto Ciò che Ti Serve, in Un Unico Posto',
     featuresSubtitle: 'Sei moduli mirati per un inglese tecnico pronto per il lavoro.',
@@ -347,6 +396,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: 'Esercita pronuncia e conversazione con feedback immediato.',
     featureListeningDesc: 'Comprendi riunioni e conversazioni sul campo con facilità.',
     featureGrammarDesc: 'Padroneggia la grammatica che gli ingegneri usano davvero.',
+    slideHero: 'Home',
+    slideDisciplines: 'Discipline',
+    slideFeatures: 'Funzionalità',
     finalCtaTitle: 'La Tua Voce di Ingegnere Inizia',
     finalCtaTitleHighlight: 'Qui',
     finalCtaSub:
@@ -364,6 +416,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: 'Xem Bảng Giá',
     badgeNoCard: 'Không Cần Thẻ Tín Dụng',
     badgeLanguages: '15 Ngôn Ngữ Giao Diện',
+    disciplinesTitle: '10 Ngành Kỹ Thuật',
     featuresHeaderBadge: 'Mô-đun Học Tập Cốt Lõi',
     featuresTitle: 'Mọi Thứ Bạn Cần, Tại Một Nơi',
     featuresSubtitle: 'Sáu mô-đun tập trung xây dựng tiếng Anh kỹ thuật sẵn sàng cho công việc.',
@@ -373,6 +426,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: 'Luyện phát âm và nói với phản hồi tức thì.',
     featureListeningDesc: 'Hiểu cuộc họp và hội thoại công trường dễ dàng.',
     featureGrammarDesc: 'Nắm vững ngữ pháp mà kỹ sư thực sự dùng trong công việc.',
+    slideHero: 'Trang chủ',
+    slideDisciplines: 'Ngành',
+    slideFeatures: 'Tính năng',
     finalCtaTitle: 'Giọng Nói Kỹ Thuật Của Bạn Bắt Đầu',
     finalCtaTitleHighlight: 'Tại Đây',
     finalCtaSub:
@@ -390,6 +446,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: 'Zobacz Cennik',
     badgeNoCard: 'Karta Kredytowa Nie Jest Wymagana',
     badgeLanguages: '15 Języków Interfejsu',
+    disciplinesTitle: '10 Dziedzin Inżynierii',
     featuresHeaderBadge: 'Podstawowe Moduły Nauki',
     featuresTitle: 'Wszystko, Czego Potrzebujesz, w Jednym Miejscu',
     featuresSubtitle:
@@ -400,6 +457,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: 'Ćwicz wymowę i mówienie z natychmiastową informacją zwrotną.',
     featureListeningDesc: 'Rozumiej spotkania i rozmowy w terenie bez wysiłku.',
     featureGrammarDesc: 'Opanuj gramatykę, której inżynierowie naprawdę używają.',
+    slideHero: 'Start',
+    slideDisciplines: 'Dziedziny',
+    slideFeatures: 'Funkcje',
     finalCtaTitle: 'Twój Inżynierski Głos Zaczyna Się',
     finalCtaTitleHighlight: 'Tutaj',
     finalCtaSub:
@@ -417,6 +477,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: 'Lihat Paket Harga',
     badgeNoCard: 'Tanpa Kartu Kredit',
     badgeLanguages: '15 Bahasa Antarmuka',
+    disciplinesTitle: '10 Disiplin Teknik',
     featuresHeaderBadge: 'Modul Pembelajaran Inti',
     featuresTitle: 'Semua yang Anda Butuhkan, di Satu Tempat',
     featuresSubtitle: 'Enam modul terfokus yang membangun bahasa Inggris teknik siap kerja.',
@@ -426,6 +487,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: 'Latih pelafalan dan berbicara dengan umpan balik instan.',
     featureListeningDesc: 'Pahami rapat dan percakapan lapangan dengan mudah.',
     featureGrammarDesc: 'Kuasai tata bahasa yang benar-benar digunakan insinyur.',
+    slideHero: 'Beranda',
+    slideDisciplines: 'Disiplin',
+    slideFeatures: 'Fitur',
     finalCtaTitle: 'Suara Teknik Anda Dimulai',
     finalCtaTitleHighlight: 'Di Sini',
     finalCtaSub:
@@ -443,6 +507,7 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     ctaViewPlans: 'Bekijk Tarieven',
     badgeNoCard: 'Geen Creditcard Nodig',
     badgeLanguages: '15 Interfacetalen',
+    disciplinesTitle: '10 Ingenieursdisciplines',
     featuresHeaderBadge: 'Kernleermodules',
     featuresTitle: 'Alles Wat U Nodig Heeft, op Één Plek',
     featuresSubtitle: 'Zes gerichte modules voor werkklare technisch Engels.',
@@ -452,6 +517,9 @@ export const LANDING_I18N: Record<SupportedInterfaceLanguage, LandingTranslation
     featureSpeakingDesc: 'Oefen uitspraak en spreken met directe feedback.',
     featureListeningDesc: 'Versta vergaderingen en veldgesprekken moeiteloos.',
     featureGrammarDesc: 'Beheers de grammatica die ingenieurs echt gebruiken.',
+    slideHero: 'Start',
+    slideDisciplines: 'Disciplines',
+    slideFeatures: 'Functies',
     finalCtaTitle: 'Uw Ingenieursstem Begint',
     finalCtaTitleHighlight: 'Hier',
     finalCtaSub:
