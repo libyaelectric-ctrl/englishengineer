@@ -133,7 +133,10 @@ export const LandingPage = () => {
   const slideLabels = useMemo(() => [t.slideHero, t.slideDisciplines, t.slideFeatures], [t]);
 
   return (
-    <div className="h-dvh w-screen bg-background text-foreground overflow-hidden relative select-none">
+    <div
+      className="h-dvh w-screen bg-background text-foreground overflow-hidden relative select-none"
+      translate="no"
+    >
       <Navbar />
 
       {/* 3D scene stays as fixed background */}
