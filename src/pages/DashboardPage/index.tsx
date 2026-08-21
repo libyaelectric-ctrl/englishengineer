@@ -8,6 +8,7 @@ import { useLearningStore } from '@/core/learning';
 
 import { MetricCard } from '@/shared/components/MetricCard';
 import { PageContainer } from '@/shared/components/PageContainer';
+import { SkeletonPage } from '@/shared/components/Skeleton';
 import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
@@ -21,19 +22,28 @@ export const DashboardPage: React.FC = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const translate = useLocalizationStore((state) => state.translate);
 
-  const profile = LearningProfileRepository.getProfile(currentUser?.id || 'local-user');
-  const discipline = resolveDefaultDiscipline(
-    (currentUser?.engineeringDiscipline as EngineeringDiscipline) || profile?.discipline
-  );
-  const meta = DISCIPLINE_META[discipline];
-
-  // Real data from learning store
+  // Real data from learning store (must be called before any early return)
   const xp = useLearningStore((s) => s.xp);
   const streak = useLearningStore((s) => s.streak);
   const hearts = useLearningStore((s) => s.hearts);
   const activeMissions = useLearningStore(
     (s) => s.missions?.filter((m) => m.status === 'active').length || 0
   );
+
+  // Show skeleton while auth store hydrates
+  if (!currentUser) {
+    return (
+      <PageContainer className="max-w-6xl">
+        <SkeletonPage />
+      </PageContainer>
+    );
+  }
+
+  const profile = LearningProfileRepository.getProfile(currentUser.id || 'local-user');
+  const discipline = resolveDefaultDiscipline(
+    (currentUser.engineeringDiscipline as EngineeringDiscipline) || profile?.discipline
+  );
+  const meta = DISCIPLINE_META[discipline];
 
   // Real data from profile
   const vocabBand = profile?.skills?.vocabulary?.cefrBand ?? 'A1';
