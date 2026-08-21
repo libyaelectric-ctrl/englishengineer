@@ -1,10 +1,11 @@
+import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
 
 import { ProgressOverviewTab } from './ProgressOverviewTab';
 
 const ProgressPage = () => {
   return (
-    <div className="bg-background pb-16 text-foreground space-y-4 animate-in fade-in duration-300">
+    <PageContainer className="space-y-4">
       <PageHeader
         title="Progress"
         description="Track your engineering English skill development."
@@ -12,7 +13,7 @@ const ProgressPage = () => {
       <div className="mt-6">
         <ProgressOverviewTab />
       </div>
-    </div>
+    </PageContainer>
   );
 };
 

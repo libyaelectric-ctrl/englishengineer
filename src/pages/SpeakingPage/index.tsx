@@ -4,6 +4,7 @@ import type { JSX } from 'react';
 import { Suspense, lazy, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
+import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
 import { ScoreFeedbackOverlay } from '@/shared/components/ScoreFeedbackOverlay';
 import { SectionCard } from '@/shared/components/SectionCard';
@@ -277,7 +278,7 @@ const SpeakingPage = () => {
   const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 pt-12 sm:pt-0 text-foreground relative z-10 font-sans pb-16 animate-in fade-in duration-300">
+    <PageContainer className="pt-12 sm:pt-0 relative z-10 font-sans">
       <PageHeader
         title="Speaking"
         badgeText={`${MAX_VOICE_MINUTES - voiceMinutesUsedThisMonth}m LEFT`}
@@ -334,7 +335,7 @@ const SpeakingPage = () => {
       />
 
       {scoreResult && <ScoreComparison scoreResult={scoreResult} />}
-    </div>
+    </PageContainer>
   );
 };
 

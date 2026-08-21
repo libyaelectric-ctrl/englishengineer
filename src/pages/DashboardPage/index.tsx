@@ -25,8 +25,7 @@ export const DashboardPage: React.FC = () => {
     (currentUser?.engineeringDiscipline as EngineeringDiscipline) || profile?.discipline
   );
   const meta = DISCIPLINE_META[discipline];
-  const learningState = useLearningStore.getState();
-  const activeMissions = learningState.missions?.filter((m) => m.status === 'active').length || 0;
+  const activeMissions = useLearningStore((s) => s.missions?.filter((m) => m.status === 'active').length || 0);
 
   const stats = [
     {

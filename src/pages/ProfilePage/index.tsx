@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { PageContainer } from '@/shared/components/PageContainer';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
 
@@ -157,7 +158,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-10 animate-in fade-in duration-300 pt-12 sm:pt-0 text-foreground relative z-10">
+    <PageContainer className="space-y-10 pt-12 sm:pt-0 relative z-10">
       <ProfileHeader
         currentUser={currentUser}
         profile={profile}
@@ -246,7 +247,7 @@ const ProfilePage = () => {
         <h2 className="text-xl font-bold text-foreground mb-6">Progress</h2>
         <ProgressOverviewTab />
       </div>
-    </div>
+    </PageContainer>
   );
 };
 
