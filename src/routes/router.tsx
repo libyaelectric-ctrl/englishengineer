@@ -7,6 +7,7 @@ import { type ComponentType, Suspense, lazy } from 'react';
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 
 import { LoadingState } from '@/shared/components/LoadingState';
+import { PageErrorBoundary } from '@/shared/components/PageErrorBoundary';
 
 import { AuthGuard } from '@/features/auth/AuthGuard';
 import { RequireAdminRole } from '@/features/auth/RequireAdminRole';
@@ -160,7 +161,7 @@ export const router = createBrowserRouter([
         path: 'speaking',
         element: (
           <SubscriptionRouteGuard feature="speaking">
-            {withSuspense(Speaking)}
+            <PageErrorBoundary pageName="Speaking">{withSuspense(Speaking)}</PageErrorBoundary>
           </SubscriptionRouteGuard>
         ),
       },
@@ -168,33 +169,39 @@ export const router = createBrowserRouter([
         path: 'vocabulary',
         element: (
           <SubscriptionRouteGuard feature="vocabulary">
-            {withSuspense(Vocabulary)}
+            <PageErrorBoundary pageName="Vocabulary">{withSuspense(Vocabulary)}</PageErrorBoundary>
           </SubscriptionRouteGuard>
         ),
       },
       {
         path: 'grammar',
         element: (
-          <SubscriptionRouteGuard feature="grammar">{withSuspense(Grammar)}</SubscriptionRouteGuard>
+          <SubscriptionRouteGuard feature="grammar">
+            <PageErrorBoundary pageName="Grammar">{withSuspense(Grammar)}</PageErrorBoundary>
+          </SubscriptionRouteGuard>
         ),
       },
       {
         path: 'reading',
         element: (
-          <SubscriptionRouteGuard feature="reading">{withSuspense(Reading)}</SubscriptionRouteGuard>
+          <SubscriptionRouteGuard feature="reading">
+            <PageErrorBoundary pageName="Reading">{withSuspense(Reading)}</PageErrorBoundary>
+          </SubscriptionRouteGuard>
         ),
       },
       {
         path: 'writing',
         element: (
-          <SubscriptionRouteGuard feature="writing">{withSuspense(Writing)}</SubscriptionRouteGuard>
+          <SubscriptionRouteGuard feature="writing">
+            <PageErrorBoundary pageName="Writing">{withSuspense(Writing)}</PageErrorBoundary>
+          </SubscriptionRouteGuard>
         ),
       },
       {
         path: 'listening',
         element: (
           <SubscriptionRouteGuard feature="listening">
-            {withSuspense(Listening)}
+            <PageErrorBoundary pageName="Listening">{withSuspense(Listening)}</PageErrorBoundary>
           </SubscriptionRouteGuard>
         ),
       },
