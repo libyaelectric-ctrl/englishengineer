@@ -21,6 +21,7 @@ export const BillingSync = () => {
     lastUserId.current = userId;
 
     if (userId) {
+      if (userId.startsWith('demo_')) return;
       void useBillingStore.getState().initializeBilling(userId);
     } else {
       // Never leak the previous user's cached subscription into the next
