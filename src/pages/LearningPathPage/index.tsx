@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
 
+import { PageHeader } from '@/shared/components/PageHeader';
 import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
 import { useCountUp } from '@/shared/hooks/useCountUp';
 import type { CefrLevel } from '@/shared/types/domain.types';
@@ -92,11 +93,7 @@ const LearningPathPage = () => {
 
   return (
     <div className="mx-auto w-full max-w-6xl space-y-6 pb-8 font-sans">
-      <div className="sticky -top-4 z-20 border-b border-[var(--color-border-soft)] bg-[var(--background)] py-3.5 backdrop-blur-xl">
-        <h1 className="text-base font-bold tracking-tight text-[var(--foreground)]">
-          {translate('learningpath.title')}
-        </h1>
-      </div>
+      <PageHeader title={translate('learningpath.title')} />
 
       {/* Discipline hero */}
       <section

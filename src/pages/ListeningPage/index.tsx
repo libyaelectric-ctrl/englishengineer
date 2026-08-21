@@ -8,12 +8,13 @@ import {
   RefreshCw,
 } from 'lucide-react';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
 import { PageHeader } from '@/shared/components/PageHeader';
 import { SectionCard } from '@/shared/components/SectionCard';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { useAnimatedNumber } from '@/shared/hooks/useAnimatedNumber';
 
 import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
 import { useAuthStore } from '@/features/auth';
@@ -43,23 +44,7 @@ type Question = {
 };
 
 const AnimatedScore = ({ value }: { value: number }) => {
-  const [display, setDisplay] = useState(0);
-  const ref = useRef<number | null>(null);
-
-  useEffect(() => {
-    const start = performance.now();
-    const duration = 1000;
-    const animate = (now: number) => {
-      const progress = Math.min((now - start) / duration, 1);
-      setDisplay(Math.round(progress * value));
-      if (progress < 1) ref.current = requestAnimationFrame(animate);
-    };
-    ref.current = requestAnimationFrame(animate);
-    return () => {
-      if (ref.current) cancelAnimationFrame(ref.current);
-    };
-  }, [value]);
-
+  const display = useAnimatedNumber(value, 1.0);
   return <span>{display}%</span>;
 };
 

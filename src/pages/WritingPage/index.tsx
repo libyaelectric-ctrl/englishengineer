@@ -1,92 +1,16 @@
-import { ShieldCheck } from 'lucide-react';
-
-import { useState } from 'react';
-
-import { Link } from 'react-router-dom';
-
+import { EmptyMissionView } from '@/shared/components/EmptyMissionView';
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
 import { useAuthStore } from '@/features/auth';
-import {
-  type CefrLevel,
-  type ContentLevelFilter,
-  EmptyLevelState,
-  LevelContentFilter,
-} from '@/features/level-system';
+import { type CefrLevel, type ContentLevelFilter } from '@/features/level-system';
 import { type WritingCorrection, type WritingEvaluationResult } from '@/features/writing';
-import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
 
 import { MissionListTab } from './components/MissionListTab';
 import { WorkspaceTab } from './components/WorkspaceTab';
 import { useWritingPage } from './hooks/useWritingPage';
-
-const EmptyMissionView = ({
-  levelFilter,
-  currentLevel,
-  setLevelFilter,
-}: {
-  levelFilter: ContentLevelFilter;
-  currentLevel: CefrLevel;
-  setLevelFilter: (v: ContentLevelFilter) => void;
-}) => (
-  <div className="min-h-screen bg-background pb-16 text-foreground space-y-4">
-    <PageHeader title="Writing" />
-    <LevelContentFilter value={levelFilter} currentLevel={currentLevel} onChange={setLevelFilter} />
-    <EmptyLevelState skill="Writing" />
-    <Link to="/curriculum" className="inline-flex text-sm font-bold text-primary hover:underline">
-      Back to Learning Hub
-    </Link>
-  </div>
-);
-
-const SubTabSwitcher = ({
-  subTab,
-  setSubTab,
-}: {
-  subTab: 'missions' | 'field-docs';
-  setSubTab: (v: 'missions' | 'field-docs') => void;
-}) => {
-  const tabs = [
-    { key: 'missions' as const, label: 'Practice Missions', icon: null },
-    {
-      key: 'field-docs' as const,
-      label: 'Field Docs (RFI / NCR / EOT)',
-      icon: ShieldCheck,
-    },
-  ];
-
-  return (
-    <div
-      className="flex items-center gap-1.5 rounded-[var(--radius-card)] border border-border-soft bg-surface/90 p-1 shadow-sm"
-      role="tablist"
-      aria-label="Writing mode"
-    >
-      {tabs.map((tab) => {
-        const isActive = subTab === tab.key;
-        return (
-          <button
-            key={tab.key}
-            type="button"
-            role="tab"
-            aria-selected={isActive}
-            onClick={() => setSubTab(tab.key)}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-[var(--radius-card)] text-xs font-bold transition-all cursor-pointer ${
-              isActive
-                ? 'bg-primary text-white shadow-sm'
-                : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
-            }`}
-          >
-            {tab.icon && <tab.icon className="h-3.5 w-3.5" />}
-            <span>{tab.label}</span>
-          </button>
-        );
-      })}
-    </div>
-  );
-};
 
 const WritingMainContent = ({
   showStatsBar,
@@ -100,7 +24,6 @@ const WritingMainContent = ({
   resetAllWritingProgress,
   handleLaunchMission,
   activeTab,
-  subTab,
   currentMission,
   draft,
   setDraft,
@@ -141,7 +64,6 @@ const WritingMainContent = ({
   resetAllWritingProgress: () => void;
   handleLaunchMission: (id: string) => void;
   activeTab: string;
-  subTab: 'missions' | 'field-docs';
   currentMission: {
     id: string;
     title: string;
@@ -189,8 +111,6 @@ const WritingMainContent = ({
       />
     )}
 
-    {activeTab === 'missions' && subTab === 'field-docs' && <FieldDocAssistant />}
-
     {activeTab === 'workspace' && (
       <WorkspaceTab
         currentMission={currentMission}
@@ -220,8 +140,6 @@ const WritingMainContent = ({
 );
 
 const WritingPage = () => {
-  const [subTab, setSubTab] = useState<'missions' | 'field-docs'>('missions');
-
   const {
     selectedMissionId,
     draft,
@@ -261,6 +179,8 @@ const WritingPage = () => {
   if (!currentMission) {
     return (
       <EmptyMissionView
+        title="Writing"
+        skill="Writing"
         levelFilter={levelFilter}
         currentLevel={currentLevel}
         setLevelFilter={setLevelFilter}
@@ -268,7 +188,7 @@ const WritingPage = () => {
     );
   }
 
-  const showStatsBar = activeTab === 'missions' && subTab === 'missions';
+  const showStatsBar = activeTab === 'missions';
 
   return (
     <PageContainer>
@@ -276,11 +196,6 @@ const WritingPage = () => {
         title="Writing"
         badgeText={currentLevel}
         description="Technical report drafting, RFI & NCR writing assistant."
-        actions={
-          activeTab === 'missions' ? (
-            <SubTabSwitcher subTab={subTab} setSubTab={setSubTab} />
-          ) : undefined
-        }
       />
 
       {showStatsBar && <PersonalAIPanel discipline={userDiscipline} cefrLevel={currentLevel} />}
@@ -297,7 +212,6 @@ const WritingPage = () => {
         resetAllWritingProgress={resetAllWritingProgress}
         handleLaunchMission={handleLaunchMission}
         activeTab={activeTab}
-        subTab={subTab}
         currentMission={currentMission!}
         draft={draft}
         setDraft={setDraft}
