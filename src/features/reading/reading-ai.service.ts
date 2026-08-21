@@ -1,6 +1,5 @@
-import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
-
 import { AI_BACKEND_PROXY_CONFIG } from '@/shared/services/ai-proxy.config';
+import { createApiClient } from '@/shared/services/apiClient';
 
 import type { ReadingMission, ReadingQuestion, VocabularyItem } from './reading.types';
 
@@ -18,12 +17,6 @@ interface GeneratedReadingResponse {
   };
 }
 
-const resolveBackendBase = (): string | null => {
-  const proxy = AI_BACKEND_PROXY_CONFIG.proxyUrl;
-  if (!proxy) return null;
-  return proxy.replace(/\/api\/(?:v1\/)?ai\/?$/, '');
-};
-
 const fallbackQuestion = (title: string): ReadingQuestion => ({
   id: 'ai-q1',
   type: 'short_answer',
@@ -38,20 +31,13 @@ export async function generateReadingMission(params: {
   level: string;
   targetLanguage?: string;
 }): Promise<ReadingMission | null> {
-  const base = resolveBackendBase();
-  if (!base) return null;
+  const proxy = AI_BACKEND_PROXY_CONFIG.proxyUrl;
+  if (!proxy) return null;
+  const base = proxy.replace(/\/api\/(?:v1\/)?ai\/?$/, '');
 
   try {
-    const response = await fetch(`${base}/api/v1/reading/generate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(await getBackendAuthHeaders()),
-      },
-      body: JSON.stringify(params),
-    });
-    if (!response.ok) return null;
-    const payload = (await response.json()) as GeneratedReadingResponse;
+    const client = createApiClient({ baseUrl: base });
+    const payload = await client.post<GeneratedReadingResponse>('/api/v1/reading/generate', params);
     const item = payload.item;
     if (!item?.title || !item.text) return null;
 
