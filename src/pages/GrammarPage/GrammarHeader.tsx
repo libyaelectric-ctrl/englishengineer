@@ -1,4 +1,4 @@
-import { Search, Trophy } from 'lucide-react';
+import { PlayCircle, Search, Trophy } from 'lucide-react';
 
 import { PageHeader } from '@/shared/components/PageHeader';
 
@@ -12,6 +12,7 @@ export const GrammarHeader = ({
   grammarLearned,
   grammarStruggling,
   onOpenQuiz,
+  onQuickQuiz,
   onOpenStrugglingQuiz,
 }: {
   level: string;
@@ -21,6 +22,7 @@ export const GrammarHeader = ({
   grammarLearned?: number;
   grammarStruggling?: number;
   onOpenQuiz?: () => void;
+  onQuickQuiz?: () => void;
   onOpenStrugglingQuiz?: () => void;
 }) => {
   return (
@@ -30,6 +32,16 @@ export const GrammarHeader = ({
       description="Search rules and master grammar fundamentals."
       actions={
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onQuickQuiz}
+            title="Rastgele bir kural seç ve quiz'i başlat"
+            className="flex items-center gap-1.5 rounded-[4px] bg-primary px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-sm hover:bg-primary-hover cursor-pointer transition-all"
+          >
+            <PlayCircle className="h-3.5 w-3.5" aria-hidden="true" />
+            Quick Quiz
+          </button>
+
           {(grammarStruggling ?? 0) > 0 && (
             <button
               type="button"
