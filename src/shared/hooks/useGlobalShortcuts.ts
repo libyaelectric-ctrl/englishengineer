@@ -3,6 +3,7 @@ import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useCommandPalette } from '@/shared/hooks/useCommandPalette';
+import { useKeyboardShortcutsPanel } from '@/shared/hooks/useKeyboardShortcutsPanel';
 
 interface Shortcut {
   key: string;
@@ -26,11 +27,16 @@ interface Shortcut {
 export function useGlobalShortcuts() {
   const navigate = useNavigate();
   const { toggle } = useCommandPalette();
+  const { toggle: toggleShortcuts } = useKeyboardShortcutsPanel();
 
   const shortcuts: Shortcut[] = [
     // Command Palette
     { key: 'k', ctrl: true, description: 'Command Palette', action: toggle },
     { key: 'k', meta: true, description: 'Command Palette', action: toggle },
+
+    // Shortcuts Panel
+    { key: '/', ctrl: true, description: 'Keyboard Shortcuts', action: toggleShortcuts },
+    { key: '/', meta: true, description: 'Keyboard Shortcuts', action: toggleShortcuts },
 
     // Quick navigation (numbers)
     { key: '1', description: 'Dashboard', action: () => navigate('/dashboard') },
@@ -72,7 +78,7 @@ export function useGlobalShortcuts() {
         }
       }
     },
-    [navigate, toggle]
+    [navigate, toggle, toggleShortcuts]
   );
 
   useEffect(() => {
@@ -89,6 +95,7 @@ export function useGlobalShortcuts() {
 export function getShortcutList(): Array<{ key: string; description: string }> {
   return [
     { key: '⌘/Ctrl + K', description: 'Command Palette' },
+    { key: '⌘/Ctrl + /', description: 'Keyboard Shortcuts' },
     { key: '1-9', description: 'Quick navigate to pages' },
     { key: 'Esc', description: 'Close modals' },
   ];
