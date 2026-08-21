@@ -1,5 +1,5 @@
 import { CheckCircle2, Info, X, XCircle } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 import { useEffect, useState } from 'react';
 
@@ -37,6 +37,7 @@ const colors = {
 
 export const ToastContainer = () => {
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const prefersReduced = useReducedMotion();
 
   useEffect(() => {
     const timeouts = new Map<number, ReturnType<typeof setTimeout>>();
@@ -76,9 +77,10 @@ export const ToastContainer = () => {
           return (
             <motion.div
               key={toast.id}
-              initial={{ opacity: 0, x: 50, scale: 0.95 }}
+              initial={prefersReduced ? false : { opacity: 0, x: 50, scale: 0.95 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 50, scale: 0.95 }}
+              exit={prefersReduced ? undefined : { opacity: 0, x: 50, scale: 0.95 }}
+              transition={{ duration: prefersReduced ? 0 : undefined }}
               className={`flex items-center gap-3 rounded-[var(--radius-card)] border p-3 shadow-lg ${colors[toast.type]}`}
             >
               <Icon className="h-4 w-4 shrink-0" />

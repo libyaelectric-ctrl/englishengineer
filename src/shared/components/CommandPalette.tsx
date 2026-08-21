@@ -1,5 +1,5 @@
 import { ChevronRight, Command, Moon, Search, Sun } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 import type { KeyboardEvent } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -21,6 +21,7 @@ export const CommandPalette = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { currentTheme, toggleTheme } = useThemeToggle();
+  const prefersReduced = useReducedMotion();
 
   useEffect(() => {
     if (isOpen) {
@@ -148,19 +149,19 @@ export const CommandPalette = () => {
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]">
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={prefersReduced ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.12 }}
+            exit={prefersReduced ? undefined : { opacity: 0 }}
+            transition={{ duration: prefersReduced ? 0 : 0.12 }}
             className="fixed inset-0 bg-black/40 backdrop-blur-sm"
             onClick={close}
           />
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: -8 }}
+            initial={prefersReduced ? false : { opacity: 0, scale: 0.96, y: -8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: -8 }}
-            transition={{ duration: 0.15, ease: 'easeOut' }}
+            exit={prefersReduced ? undefined : { opacity: 0, scale: 0.96, y: -8 }}
+            transition={{ duration: prefersReduced ? 0 : 0.15, ease: 'easeOut' }}
             className="relative w-full max-w-xl overflow-hidden rounded-[var(--radius-card)] border border-border-soft bg-surface shadow-2xl"
           >
             <div className="flex items-center border-b border-border-soft px-4">

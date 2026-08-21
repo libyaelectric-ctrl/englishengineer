@@ -1,8 +1,12 @@
 import { Target } from 'lucide-react';
 import { motion } from 'motion/react';
+
 import { MAX_ELO, MIN_ELO } from '@/shared/constants/elo.constants';
+import { useAnimatedNumber } from '@/shared/hooks/useAnimatedNumber';
+
 import { useLocalizationStore } from '@/features/localization';
-import { CEFR_LEVELS, getCEFRBand, getCEFRIndex, getRank, useAnimatedNumber } from './utils';
+
+import { CEFR_LEVELS, getCEFRBand, getCEFRIndex, getRank } from './utils';
 
 export const HeroBanner = ({
   totalElo,
@@ -52,7 +56,9 @@ export const HeroBanner = ({
             <span className="text-3xl font-bold text-foreground tabular-nums">
               {animatedTotalElo}
             </span>
-            <span className="text-[10px] text-muted-copy font-bold uppercase">{t('progress.eloCaption')}</span>
+            <span className="text-[10px] text-muted-copy font-bold uppercase">
+              {t('progress.eloCaption')}
+            </span>
           </div>
         </div>
         <div className="flex-1 text-center md:text-left">
