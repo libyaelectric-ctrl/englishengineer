@@ -23,7 +23,7 @@ import { useLocalizationStore } from '@/features/localization';
 import { Footer } from './Footer';
 import { HeroScene } from './HeroScene';
 import { Navbar } from './Navbar';
-import { getLandingTranslations } from '@/shared/data/landing-i18n';
+import { getLandingTranslations } from '@/shared/i18n/landing-i18n';
 
 const FEATURES = [
   {
