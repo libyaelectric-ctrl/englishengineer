@@ -1,6 +1,3 @@
-import { BookOpen, FileText, GraduationCap } from 'lucide-react';
-
-import { useMemo } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 
 import { Link } from 'react-router-dom';
@@ -8,10 +5,6 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/shared/components/Button';
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
-import {
-  type PipelineStation,
-  UniversalCyberPipeline,
-} from '@/shared/components/UniversalCyberPipeline';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
@@ -22,7 +15,6 @@ import {
   EmptyLevelState,
   LevelContentFilter,
 } from '@/features/level-system';
-import { useLocalizationStore } from '@/features/localization';
 import type { VocabularyItem } from '@/features/reading';
 
 import { ReadingMissionCard } from './ReadingMissionCard';
@@ -193,7 +185,6 @@ const WorkspaceTabContent = ({
 };
 
 const ReadingPage = () => {
-  const translate = useLocalizationStore((s) => s.translate);
   const currentUser = useAuthStore((s) => s.currentUser);
   const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
 
@@ -224,32 +215,12 @@ const ReadingPage = () => {
     currentMissionIndex,
     aiMissionLoading,
     finishedCount,
-    bestScoreAvg,
 
     handleLaunchMission,
     handleSubmit,
     handleBackToMissions,
     moveMission,
   } = useReadingPage();
-
-  const readingStations: PipelineStation[] = useMemo(() => {
-    return visibleMissions.map((mission) => {
-      const score = completedMissions[mission.id];
-      const isCompleted = score !== undefined;
-      const isActive = mission.id === currentMission?.id;
-      return {
-        id: mission.id,
-        levelBadge: mission.cefrLevel,
-        title: mission.title,
-        subtitle: mission.description,
-        status: isCompleted ? 'completed' : isActive ? 'in-progress' : 'available',
-        progressRatio: isCompleted ? Math.min(1, score / 100) : isActive ? 0.4 : 0,
-        totalItems: 100,
-        completedItems: isCompleted ? score : 0,
-        onAction: () => handleLaunchMission(mission.id),
-      };
-    });
-  }, [visibleMissions, completedMissions, currentMission, handleLaunchMission]);
 
   if (!currentMission) {
     return (
@@ -280,36 +251,6 @@ const ReadingPage = () => {
           </>
         }
       />
-
-      {activeTab === 'missions' && readingStations.length > 0 && (
-        <UniversalCyberPipeline
-          title={translate('pipeline.reading.title')}
-          subtitle={translate('pipeline.reading.subtitle')}
-          badgeText={`CEFR: ${currentLevel}`}
-          icon={FileText}
-          stations={readingStations}
-          activeStationId={currentMission?.id}
-          onSelectStation={(id) => handleLaunchMission(id)}
-          translate={translate}
-          metrics={[
-            {
-              icon: <GraduationCap className="h-4 w-4 text-emerald-400" />,
-              label: translate('pipeline.metric.completed'),
-              value: finishedCount,
-            },
-            {
-              icon: <BookOpen className="h-4 w-4 text-cyan-400" />,
-              label: translate('pipeline.metric.avgScore'),
-              value: bestScoreAvg > 0 ? `${bestScoreAvg}%` : '0%',
-            },
-            {
-              icon: <FileText className="h-4 w-4 text-amber-400" />,
-              label: translate('pipeline.metric.tasks'),
-              value: `${finishedCount}/${visibleMissions.length}`,
-            },
-          ]}
-        />
-      )}
 
       {activeTab === 'missions' && (
         <MissionsTabContent

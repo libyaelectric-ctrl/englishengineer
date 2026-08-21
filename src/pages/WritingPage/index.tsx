@@ -1,15 +1,11 @@
-import { FileCheck, FileText, Layers, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
-import {
-  type PipelineStation,
-  UniversalCyberPipeline,
-} from '@/shared/components/UniversalCyberPipeline';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
@@ -20,7 +16,6 @@ import {
   EmptyLevelState,
   LevelContentFilter,
 } from '@/features/level-system';
-import { useLocalizationStore } from '@/features/localization';
 import { type WritingCorrection, type WritingEvaluationResult } from '@/features/writing';
 import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
 
@@ -225,11 +220,9 @@ const WritingMainContent = ({
 );
 
 const WritingPage = () => {
-  const translate = useLocalizationStore((s) => s.translate);
   const [subTab, setSubTab] = useState<'missions' | 'field-docs'>('missions');
 
   const {
-    missions,
     selectedMissionId,
     draft,
     setDraft,
@@ -250,7 +243,6 @@ const WritingPage = () => {
     currentMission,
     currentMissionIndex,
     finishedCount,
-    bestScoreAvg,
     activeCorrections,
     getReadabilityScore,
     handleApplyFix,
@@ -265,25 +257,6 @@ const WritingPage = () => {
 
   const currentUser = useAuthStore((s) => s.currentUser);
   const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
-
-  const writingStations: PipelineStation[] = useMemo(() => {
-    return visibleMissions.map((mission) => {
-      const score = completedMissions[mission.id];
-      const isCompleted = score !== undefined;
-      const isActive = mission.id === selectedMissionId;
-      return {
-        id: mission.id,
-        levelBadge: mission.cefrLevel,
-        title: mission.title,
-        subtitle: mission.description,
-        status: isCompleted ? 'completed' : isActive ? 'in-progress' : 'available',
-        progressRatio: isCompleted ? Math.min(1, score / 100) : isActive ? 0.4 : 0,
-        totalItems: 100,
-        completedItems: isCompleted ? score : 0,
-        onAction: () => handleLaunchMission(mission.id),
-      };
-    });
-  }, [visibleMissions, completedMissions, selectedMissionId, handleLaunchMission]);
 
   if (!currentMission) {
     return (
@@ -309,36 +282,6 @@ const WritingPage = () => {
           ) : undefined
         }
       />
-
-      {showStatsBar && writingStations.length > 0 && (
-        <UniversalCyberPipeline
-          title={translate('pipeline.writing.title')}
-          subtitle={translate('pipeline.writing.subtitle')}
-          badgeText={`CEFR: ${currentLevel}`}
-          icon={FileText}
-          stations={writingStations}
-          activeStationId={selectedMissionId}
-          onSelectStation={(id) => handleLaunchMission(id)}
-          translate={translate}
-          metrics={[
-            {
-              icon: <FileCheck className="h-4 w-4 text-emerald-400" />,
-              label: translate('pipeline.metric.completed'),
-              value: finishedCount,
-            },
-            {
-              icon: <ShieldCheck className="h-4 w-4 text-cyan-400" />,
-              label: translate('pipeline.metric.avgScore'),
-              value: bestScoreAvg > 0 ? `${bestScoreAvg}%` : '0%',
-            },
-            {
-              icon: <Layers className="h-4 w-4 text-amber-400" />,
-              label: translate('pipeline.metric.tasks'),
-              value: `${finishedCount}/${missions.length}`,
-            },
-          ]}
-        />
-      )}
 
       {showStatsBar && <PersonalAIPanel discipline={userDiscipline} cefrLevel={currentLevel} />}
 

@@ -5,28 +5,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/shared/components/Button';
 import { ProgressBar } from '@/shared/components/ProgressBar';
-import {
-  type PipelineStation,
-  UniversalCyberPipeline,
-} from '@/shared/components/UniversalCyberPipeline';
 
 import { useAuthStore } from '@/features/auth';
-import { useLocalizationStore } from '@/features/localization';
-import { interpolate } from '@/features/localization/interpolate';
 import { PLACEMENT_QUESTIONS, PlacementService, usePlacementStore } from '@/features/placement';
-
-const DIAGNOSTIC_STATIONS: Array<{ id: string; label: string; band: string; threshold: number }> = [
-  { id: 'diag-a1', label: 'A1 Diagnostic', band: 'A1', threshold: 1 },
-  { id: 'diag-a2', label: 'A2 Calibration', band: 'A2', threshold: 3 },
-  { id: 'diag-b1', label: 'B1 Core', band: 'B1', threshold: 5 },
-  { id: 'diag-b2', label: 'B2 Engineering', band: 'B2', threshold: 6 },
-  { id: 'diag-c1', label: 'C1 Advanced', band: 'C1', threshold: 7 },
-  { id: 'diag-c2', label: 'C2 Expert', band: 'C2', threshold: 8 },
-];
 
 const PlacementPage = () => {
   const navigate = useNavigate();
-  const translate = useLocalizationStore((s) => s.translate);
   const userId = useAuthStore((state) => state.currentUser?.id ?? 'local-user');
   const { currentIndex, answers, result, answer, next, previous, submit, reset } =
     usePlacementStore(
@@ -43,24 +27,6 @@ const PlacementPage = () => {
     );
   const question = PLACEMENT_QUESTIONS[currentIndex];
   const isLast = currentIndex === PLACEMENT_QUESTIONS.length - 1;
-
-  const placementStations: PipelineStation[] = DIAGNOSTIC_STATIONS.map((station, idx) => {
-    const completed = currentIndex >= station.threshold;
-    const previousThreshold = idx === 0 ? 0 : DIAGNOSTIC_STATIONS[idx - 1].threshold;
-    const isInProgress = !completed && currentIndex >= previousThreshold;
-    return {
-      id: station.id,
-      levelBadge: station.band,
-      title: station.label,
-      status: completed ? 'completed' : isInProgress ? 'in-progress' : 'available',
-      progressRatio: completed ? 1 : isInProgress ? 0.5 : 0,
-      totalItems: 1,
-      completedItems: completed ? 1 : 0,
-    };
-  });
-  const activeDiagnosticStation =
-    placementStations.find((station) => station.status === 'in-progress')?.id ??
-    placementStations[0]?.id;
 
   const continueAtA1 = () => {
     PlacementService.startAtA1(userId);
@@ -112,36 +78,6 @@ const PlacementPage = () => {
 
   return (
     <main className="mx-auto max-w-3xl py-4 sm:py-8">
-      <UniversalCyberPipeline
-        title={translate('pipeline.placement.title')}
-        subtitle={translate('pipeline.placement.subtitle')}
-        badgeText={interpolate(translate('pipeline.placement.questionBadge'), {
-          current: currentIndex + 1,
-          total: PLACEMENT_QUESTIONS.length,
-        })}
-        icon={ClipboardCheck}
-        stations={placementStations}
-        activeStationId={activeDiagnosticStation}
-        onSelectStation={() => {}}
-        translate={translate}
-        metrics={[
-          {
-            icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
-            label: translate('pipeline.metric.answered'),
-            value: currentIndex,
-          },
-          {
-            icon: <ClipboardCheck className="h-4 w-4 text-cyan-400" />,
-            label: translate('pipeline.metric.total'),
-            value: PLACEMENT_QUESTIONS.length,
-          },
-          {
-            icon: <ArrowRight className="h-4 w-4 text-amber-400" />,
-            label: translate('pipeline.metric.progress'),
-            value: `${Math.round(((currentIndex + 1) / PLACEMENT_QUESTIONS.length) * 100)}%`,
-          },
-        ]}
-      />
       <section className="overflow-hidden rounded-[var(--radius-card)] border border-border-soft bg-surface">
         <header className="border-b border-border-soft bg-surface-hover p-5 sm:p-7">
           <div className="flex items-center gap-3">

@@ -141,27 +141,23 @@ export const LandingPage = () => {
   }, []);
 
   return (
-    <div
-      ref={rootRef}
-      data-theme="dark"
-      className="min-h-screen bg-[#070a1a] text-white pb-14 overflow-x-clip"
-    >
+    <div ref={rootRef} className="min-h-screen bg-background text-foreground pb-14 overflow-x-clip">
       <Navbar />
 
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden isolate">
         {/* Ambient gradient aurora (pure CSS, subtle) */}
         <div className="absolute inset-0">
-          <div className="absolute -top-32 -left-32 w-[44rem] h-[44rem] rounded-full bg-[#0b2a6b]/30 blur-3xl animate-ambient-glow" />
+          <div className="absolute -top-32 -left-32 w-[44rem] h-[44rem] rounded-full bg-primary/20 blur-3xl animate-ambient-glow" />
           <div
-            className="absolute top-1/4 -right-40 w-[38rem] h-[38rem] rounded-full bg-[#3b0a5f]/25 blur-3xl animate-ambient-glow"
+            className="absolute top-1/4 -right-40 w-[38rem] h-[38rem] rounded-full bg-fuchsia-600/20 blur-3xl animate-ambient-glow"
             style={{ animationDelay: '1.4s' }}
           />
           <div
-            className="absolute bottom-0 left-1/3 w-[34rem] h-[34rem] rounded-full bg-[#064e77]/20 blur-3xl animate-ambient-glow"
+            className="absolute bottom-0 left-1/3 w-[34rem] h-[34rem] rounded-full bg-cyan-800/15 blur-3xl animate-ambient-glow"
             style={{ animationDelay: '2.6s' }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#070a1a]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--background)]" />
         </div>
 
         {/* Three.js particle flow field */}
@@ -173,14 +169,14 @@ export const LandingPage = () => {
         >
           <div
             data-hero="badge"
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-md px-6 py-3 text-sm font-semibold text-white/90"
+            className="inline-flex items-center gap-2 rounded-full border border-border-soft bg-surface/60 backdrop-blur-md px-6 py-3 text-sm font-semibold text-foreground/90"
           >
             <Sparkles className="h-5 w-5 text-primary animate-spin-slow" />
             {t.heroBadge}
           </div>
 
           <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mt-8 mb-8">
-            <span data-hero="line" className="block text-white">
+            <span data-hero="line" className="block text-foreground">
               {t.heroTitle1}
             </span>
             <span
@@ -189,14 +185,14 @@ export const LandingPage = () => {
             >
               {t.heroTitleHighlight}
             </span>
-            <span data-hero="line" className="block text-white/80">
+            <span data-hero="line" className="block text-foreground/80">
               {t.heroTitle2}
             </span>
           </h1>
 
           <p
             data-hero="subtitle"
-            className="text-lg md:text-xl text-white/60 max-w-3xl mx-auto mb-10"
+            className="text-lg md:text-xl text-muted-copy max-w-3xl mx-auto mb-10"
           >
             {t.heroSubtitle}
           </p>
@@ -216,13 +212,13 @@ export const LandingPage = () => {
             <a
               data-hero="cta"
               href="#pricing"
-              className="px-8 py-4 rounded-full border border-white/20 text-white font-bold text-lg backdrop-blur-md hover:bg-white/10 hover:border-white/40 transition-all"
+              className="px-8 py-4 rounded-full border border-border-soft text-foreground font-bold text-lg backdrop-blur-md hover:bg-surface-hover hover:border-primary/40 transition-all"
             >
               {t.ctaViewPlans}
             </a>
           </div>
 
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-white/50">
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-muted-copy">
             <span data-hero="trust" className="flex items-center gap-2">
               <CheckCircle2 className="h-5 w-5 text-emerald-400" />
               {t.badgeNoCard}
@@ -237,16 +233,19 @@ export const LandingPage = () => {
         {/* Scroll indicator */}
         <div
           data-hero="scroll"
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/40"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-muted-copy"
         >
           <ChevronDown className="h-8 w-8 animate-bounce" />
         </div>
       </section>
 
       {/* ── DISCIPLINES (TOP - BIG CARDS) ─────────────────────── */}
-      <section className="relative py-24 bg-gradient-to-b from-transparent via-white/[0.03] to-transparent">
+      <section className="relative py-24 bg-gradient-to-b from-transparent via-foreground/[0.04] to-transparent">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-center text-4xl md:text-5xl font-black text-white mb-16" data-reveal>
+          <h2
+            className="text-center text-4xl md:text-5xl font-black text-foreground mb-16"
+            data-reveal
+          >
             '10 Engineering Disciplines'
           </h2>
 
@@ -261,9 +260,9 @@ export const LandingPage = () => {
                   style={{ transitionDelay: `${index * 20}ms` }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-blue-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
-                  <div className="relative flex flex-col items-center gap-4 p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl hover:bg-white/10 transition-all duration-300">
+                  <div className="relative flex flex-col items-center gap-4 p-6 rounded-2xl border border-border-soft bg-surface backdrop-blur-xl hover:bg-surface-hover transition-all duration-300">
                     <DisciplineIcon className="h-10 w-10 text-primary transition-transform duration-300 group-hover:scale-125 group-hover:rotate-6" />
-                    <span className="text-sm font-semibold text-white text-center">
+                    <span className="text-sm font-semibold text-foreground text-center">
                       {translate(`discipline.${id}`)}
                     </span>
                   </div>
@@ -281,10 +280,10 @@ export const LandingPage = () => {
             <span className="text-sm font-semibold uppercase tracking-wider text-primary inline-flex items-center gap-2">
               {t.featuresHeaderBadge}
             </span>
-            <h2 className="text-4xl md:text-5xl font-black text-white mt-4 mb-6">
+            <h2 className="text-4xl md:text-5xl font-black text-foreground mt-4 mb-6">
               {t.featuresTitle}
             </h2>
-            <p className="text-lg text-white/50 max-w-2xl mx-auto">{t.featuresSubtitle}</p>
+            <p className="text-lg text-muted-copy max-w-2xl mx-auto">{t.featuresSubtitle}</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -293,13 +292,13 @@ export const LandingPage = () => {
                 <div
                   className={`absolute inset-0 bg-gradient-to-r ${color} rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-xl`}
                 />
-                <div className="relative flex flex-col items-center gap-3 p-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl hover:bg-white/10 transition-all duration-300">
+                <div className="relative flex flex-col items-center gap-3 p-5 rounded-2xl border border-border-soft bg-surface backdrop-blur-xl hover:bg-surface-hover transition-all duration-300">
                   <div
                     className={`w-10 h-10 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center shadow-lg ${glow} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
                   >
                     <Icon className="h-6 w-6 text-white" />
                   </div>
-                  <h3 className="text-base font-bold text-white text-center capitalize">
+                  <h3 className="text-base font-bold text-foreground text-center capitalize">
                     {translate(`nav.${key}`)}
                   </h3>
                 </div>

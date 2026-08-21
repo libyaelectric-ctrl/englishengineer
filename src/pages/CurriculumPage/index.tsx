@@ -1,14 +1,8 @@
-import { Bolt } from 'lucide-react';
-
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { PageHeader } from '@/shared/components/PageHeader';
-import {
-  type PipelineStation,
-  UniversalCyberPipeline,
-} from '@/shared/components/UniversalCyberPipeline';
 
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
@@ -34,7 +28,6 @@ import { SKILL_META } from './curriculum-data';
 
 const CurriculumPage = () => {
   const { section } = useParams<{ section: string }>();
-  const navigate = useNavigate();
   const activeSection = section || 'today';
   const translate = useLocalizationStore((s) => s.translate);
   const currentUser = useAuthStore((state) => state.currentUser);
@@ -118,23 +111,6 @@ const CurriculumPage = () => {
   const badges = LearningProfileEngine.getBadges(profile, memory);
   const repeatedMistakes = mistakeLog.filter((item) => (item.repetitionCount ?? 1) >= 3).length;
 
-  const curriculumStations: PipelineStation[] = useMemo(() => {
-    return missions.map((mission, idx) => ({
-      id: mission.id,
-      levelBadge: mission.cefrBand,
-      title: mission.title,
-      subtitle: mission.skill,
-      status: idx === 0 ? 'in-progress' : 'available',
-      progressRatio: idx === 0 ? 0.4 : 0,
-      totalItems: 1,
-      completedItems: 0,
-      onAction: () => navigate(mission.route),
-    }));
-  }, [missions, navigate]);
-
-  const dailyStreak = learningState?.streak ?? 0;
-  const dailyXp = learningState?.xp ?? 0;
-
   return (
     <div className="mx-auto w-full max-w-5xl space-y-7 animate-in fade-in duration-300 pb-8 text-foreground relative z-10 font-sans">
       <PageHeader
@@ -152,38 +128,6 @@ const CurriculumPage = () => {
 
       {activeSection === 'today' && (
         <>
-          {curriculumStations.length > 0 && (
-            <UniversalCyberPipeline
-              title={translate('pipeline.curriculum.title')}
-              subtitle={translate('pipeline.curriculum.subtitle')}
-              badgeText={`DAY-${dailyStreak + 1}`}
-              icon={Bolt}
-              stations={curriculumStations}
-              activeStationId={curriculumStations[0]?.id}
-              onSelectStation={(id) => {
-                const target = missions.find((m) => m.id === id);
-                if (target) navigate(target.route);
-              }}
-              translate={translate}
-              metrics={[
-                {
-                  icon: <Bolt className="h-4 w-4 text-emerald-400" />,
-                  label: translate('pipeline.metric.streak'),
-                  value: dailyStreak,
-                },
-                {
-                  icon: <Bolt className="h-4 w-4 text-cyan-400" />,
-                  label: 'XP',
-                  value: dailyXp,
-                },
-                {
-                  icon: <Bolt className="h-4 w-4 text-amber-400" />,
-                  label: translate('pipeline.metric.tasks'),
-                  value: missions.length,
-                },
-              ]}
-            />
-          )}
           <CurriculumTodayTab
             isLoading={isLoading}
             missions={missions}

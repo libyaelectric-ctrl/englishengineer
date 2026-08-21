@@ -1,13 +1,8 @@
 import { Search, Volume2, VolumeX } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
-import { msUntilRefill } from '@/core/learning/learning.hearts';
-
-import { HeartsDisplay } from '@/shared/components/HeartsDisplay';
 import { PageHeader } from '@/shared/components/PageHeader';
-import { getIcon } from '@/shared/icons/registry';
 import { getSoundMuted, toggleSoundMuted } from '@/shared/utils/sound';
 
 import { useLocalizationStore } from '@/features/localization';
@@ -17,14 +12,6 @@ import type {
   VocabularySearchFilters,
   VocabularyTerm,
 } from '@/features/vocabulary';
-
-const DOMAIN_FILTERS: Array<{ label: string; icon: string }> = [
-  { label: 'Civil', icon: 'building' },
-  { label: 'Electrical', icon: 'zap' },
-  { label: 'Software', icon: 'monitor' },
-  { label: 'Mechanical', icon: 'settings' },
-  { label: 'Safety', icon: 'shield-check' },
-];
 
 const TABS = ['New', 'Learned', 'Mastered', 'Struggling'] as const;
 const TAB_LABELS = {
@@ -53,8 +40,6 @@ interface VocabularyHeaderProps {
   onFilterChange?: (field: keyof VocabularySearchFilters, value: string) => void;
   onOpenSearch?: () => void;
   menuState: VocabularyMenuState;
-  hearts: number;
-  heartsDepletedAt: string | null;
 }
 
 export { TABS, TAB_LABELS };
@@ -83,8 +68,6 @@ export function VocabularyHeader({
   chooseTab,
   onOpenSearch,
   menuState,
-  hearts,
-  heartsDepletedAt,
 }: VocabularyHeaderProps) {
   const translate = useLocalizationStore((s) => s.translate);
   const [isSoundMuted, setIsSoundMuted] = useState(() => getSoundMuted());
@@ -106,16 +89,11 @@ export function VocabularyHeader({
       <PageHeader
         title={translate('vocabulary.title')}
         badgeText={vocabularyLevel}
-        description="Engineering terminology across CEFR proficiency levels."
         actions={
           <div className="flex items-center gap-2">
             <SoundToggle
               isMuted={isSoundMuted}
               onToggle={() => setIsSoundMuted(toggleSoundMuted())}
-            />
-            <HeartsDisplay
-              hearts={hearts}
-              msUntilRefill={msUntilRefill(heartsDepletedAt, new Date())}
             />
             <div
               className="hidden items-center gap-2 rounded-[4px] border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-600 xl:flex dark:text-emerald-400"
@@ -171,33 +149,6 @@ export function VocabularyHeader({
           </div>
         }
       />
-
-      {/* Engineering Domain Sub-Specialty Filter Bar */}
-      <div className="mb-4 flex flex-wrap items-center gap-2">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
-          {translate('vocabulary.domain')}:
-        </span>
-        {[
-          { label: translate('vocabulary.allDomains'), Icon: null },
-          ...DOMAIN_FILTERS.map((f) => ({
-            label: f.label,
-            Icon: (getIcon(f.icon) ?? Search) as LucideIcon,
-          })),
-        ].map((domain, idx) => (
-          <button
-            key={domain.label}
-            type="button"
-            className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[10px] font-bold transition-all cursor-pointer ${
-              idx === 0
-                ? 'border-primary/40 bg-primary/10 text-primary'
-                : 'border-border-soft bg-surface text-muted-copy hover:border-primary/30 hover:text-foreground'
-            }`}
-          >
-            {domain.Icon && <domain.Icon className="h-3 w-3" aria-hidden="true" />}
-            {domain.label}
-          </button>
-        ))}
-      </div>
 
       {hasSearched && searchResults && searchResults.length > 0 && (
         <p className="pb-3 text-[10px] font-medium text-muted-copy">

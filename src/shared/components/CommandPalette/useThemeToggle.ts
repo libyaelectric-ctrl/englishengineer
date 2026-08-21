@@ -1,12 +1,7 @@
-import { useAppStore } from '@/store/app.store';
+import { useTheme } from '@/features/theme/ThemeProvider';
 
 export const useThemeToggle = () => {
-  const theme = useAppStore((s) => s.theme);
-  const setTheme = useAppStore((s) => s.setTheme);
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
+  const { theme, toggleTheme } = useTheme();
 
   return { currentTheme: theme, toggleTheme };
 };

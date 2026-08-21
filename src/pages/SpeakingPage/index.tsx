@@ -1,23 +1,18 @@
 import { FileText, MessageSquareText, Mic, RotateCcw, ShieldCheck, Trophy } from 'lucide-react';
 
 import type { JSX } from 'react';
-import { Suspense, lazy, useMemo, useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
 import { PageHeader } from '@/shared/components/PageHeader';
 import { ScoreFeedbackOverlay } from '@/shared/components/ScoreFeedbackOverlay';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
-import {
-  type PipelineStation,
-  UniversalCyberPipeline,
-} from '@/shared/components/UniversalCyberPipeline';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
 import { useAuthStore } from '@/features/auth';
 import { LevelContentFilter } from '@/features/level-system';
-import { useLocalizationStore } from '@/features/localization';
 import { SPEAKING_MVP_MODE } from '@/features/speaking';
 import { DefenseSimulator } from '@/features/speaking/simulator/DefenseSimulator';
 
@@ -41,7 +36,6 @@ const InterviewSimulator = lazy(() =>
 type SpeakingTab = 'roleplay' | 'interview' | 'defense';
 
 const RoleplayTab = () => {
-  const translate = useLocalizationStore((s) => s.translate);
   const {
     ROLEPLAY_FILTERS,
     typedTranscript,
@@ -78,65 +72,8 @@ const RoleplayTab = () => {
     MAX_VOICE_MINUTES,
   } = useSpeakingPage();
 
-  const speakingStations: PipelineStation[] = useMemo(() => {
-    return roleplayMissions.map((mission) => {
-      const score = completedMissions[mission.id];
-      const isCompleted = score !== undefined;
-      const isActive = mission.id === activeMission?.id;
-      return {
-        id: mission.id,
-        levelBadge: mission.cefrLevel,
-        title: mission.title,
-        subtitle: mission.scenarioType,
-        status: isCompleted ? 'completed' : isActive ? 'in-progress' : 'available',
-        progressRatio: isCompleted ? Math.min(1, score / 100) : isActive ? 0.4 : 0,
-        totalItems: 100,
-        completedItems: isCompleted ? score : 0,
-        onAction: () => handleMissionSelect(mission.id),
-      };
-    });
-  }, [roleplayMissions, completedMissions, activeMission, handleMissionSelect]);
-
-  const speakingFinishedCount = Object.keys(completedMissions).length;
-  const speakingAvgScore =
-    speakingFinishedCount > 0
-      ? Math.round(
-          Object.values(completedMissions).reduce((a, b) => a + b, 0) / speakingFinishedCount
-        )
-      : 0;
-
   return (
     <>
-      {speakingStations.length > 0 && (
-        <UniversalCyberPipeline
-          title={translate('pipeline.speaking.title')}
-          subtitle={translate('pipeline.speaking.subtitle')}
-          badgeText={`CEFR: ${currentLevel}`}
-          icon={MessageSquareText}
-          stations={speakingStations}
-          activeStationId={activeMission?.id}
-          onSelectStation={(id) => handleMissionSelect(id)}
-          translate={translate}
-          metrics={[
-            {
-              icon: <Trophy className="h-4 w-4 text-emerald-400" />,
-              label: translate('pipeline.metric.completed'),
-              value: speakingFinishedCount,
-            },
-            {
-              icon: <MessageSquareText className="h-4 w-4 text-cyan-400" />,
-              label: translate('pipeline.metric.avgScore'),
-              value: speakingAvgScore > 0 ? `${speakingAvgScore}%` : '0%',
-            },
-            {
-              icon: <Mic className="h-4 w-4 text-amber-400" />,
-              label: translate('pipeline.metric.tasks'),
-              value: `${speakingFinishedCount}/${roleplayMissions.length}`,
-            },
-          ]}
-        />
-      )}
-
       {hasMaxAccess && subscription.planId === 'master' && (
         <VoiceMinuteWallet
           voiceMinutesUsedThisMonth={voiceMinutesUsedThisMonth}
