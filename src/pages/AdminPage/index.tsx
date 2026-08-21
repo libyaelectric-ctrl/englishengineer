@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
+import { PageContainer } from '@/shared/components/PageContainer';
 import { useAdminStore } from '@/features/admin';
 
 import { AdminHeader } from './AdminHeader';
@@ -54,7 +55,7 @@ export const AdminPage = () => {
   const isRefreshing = isLoadingUsers || isLoadingStats || isLoadingLogs;
 
   return (
-    <div className="mx-auto w-full max-w-5xl animate-aurora-fade-in space-y-6 pt-12 sm:pt-0">
+    <PageContainer className="w-full animate-aurora-fade-in space-y-6 pt-12 sm:pt-0">
       <AdminHeader
         activeTab={activeTab}
         onTabChange={setActiveTab}
@@ -71,7 +72,7 @@ export const AdminPage = () => {
       )}
       {activeTab === 'billing' && <BillingTab />}
       {activeTab === 'system' && <SystemTab systemLogs={systemLogs} isLoading={isLoadingLogs} />}
-    </div>
+    </PageContainer>
   );
 };
 

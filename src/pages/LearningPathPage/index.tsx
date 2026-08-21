@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
 
+import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
 import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
 import { useCountUp } from '@/shared/hooks/useCountUp';
@@ -92,7 +93,7 @@ const LearningPathPage = () => {
     translate(`learningpath.status${status.charAt(0).toUpperCase()}${status.slice(1)}`);
 
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-6 pb-8 font-sans">
+    <PageContainer className="w-full max-w-6xl space-y-6 pb-8 font-sans">
       <PageHeader title={translate('learningpath.title')} />
 
       {/* Discipline hero */}
@@ -211,7 +212,7 @@ const LearningPathPage = () => {
           {translate('learningpath.practice')} {translate('learningpath.contentHint')}
         </p>
       </section>
-    </div>
+    </PageContainer>
   );
 };
 

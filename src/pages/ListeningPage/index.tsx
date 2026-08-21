@@ -11,6 +11,7 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
+import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
 import { SectionCard } from '@/shared/components/SectionCard';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
@@ -357,7 +358,7 @@ const ListeningPage = () => {
 
   if (!currentMission) {
     return (
-      <div className="mx-auto max-w-5xl space-y-4 min-h-screen bg-background pb-16 text-foreground animate-in fade-in duration-300">
+      <PageContainer>
         <PageHeader
           title="Listening"
           description="Engineering site audio, technical meeting transcripts & listening comprehension."
@@ -370,12 +371,12 @@ const ListeningPage = () => {
           />
           <EmptyLevelState skill="listening" />
         </div>
-      </div>
+      </PageContainer>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background pb-16 text-foreground space-y-6 animate-in fade-in duration-300">
+    <PageContainer className="space-y-6">
       {/* Sticky header � clean, rigid */}
       <PageHeader
         title="Listening"
@@ -478,7 +479,7 @@ const ListeningPage = () => {
           />
         )}
       </div>
-    </div>
+    </PageContainer>
   );
 };
 

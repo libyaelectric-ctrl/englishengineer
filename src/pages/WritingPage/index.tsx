@@ -1,4 +1,4 @@
-import { EmptyMissionView } from '@/shared/components/EmptyMissionView';
+import { EmptySkillPage } from '@/shared/components/EmptySkillPage';
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
@@ -178,7 +178,7 @@ const WritingPage = () => {
 
   if (!currentMission) {
     return (
-      <EmptyMissionView
+      <EmptySkillPage
         title="Writing"
         skill="Writing"
         levelFilter={levelFilter}

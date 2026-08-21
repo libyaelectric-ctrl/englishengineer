@@ -44,11 +44,11 @@ vi.mock('@/features/profile', async (importOriginal) => ({
   })),
 }));
 
-vi.mock('../ProfilePage/BillingPlanCards', () => ({
+vi.mock('@/features/billing/components/BillingPlanCards', () => ({
   BillingPlanCards: () => null,
 }));
 
-vi.mock('../ProfilePage/BillingUpgradeCTA', () => ({
+vi.mock('@/features/billing/components/BillingUpgradeCTA', () => ({
   BillingUpgradeCTA: () => null,
 }));
 

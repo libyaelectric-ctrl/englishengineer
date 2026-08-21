@@ -7,7 +7,7 @@ import { type PricingTierId, getPublicPageCopy } from '@/shared/data/public-page
 
 import { useLocalizationStore } from '@/features/localization';
 
-import { getLandingTranslations } from '@/pages/LandingPage/landing-i18n';
+import { getLandingTranslations } from '@/shared/data/landing-i18n';
 
 interface PricingCardProps {
   tier: PricingTier;

@@ -2,6 +2,7 @@ import { Download, RefreshCw, ShieldCheck, Wallet } from 'lucide-react';
 
 import { useEffect } from 'react';
 
+import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { logger } from '@/shared/logger';
@@ -57,7 +58,7 @@ export const BillingPage = () => {
   };
 
   return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-10 animate-in fade-in duration-300 pt-12 sm:pt-0 text-foreground relative z-10 font-sans">
+    <PageContainer className="px-4 sm:px-6 lg:px-8 space-y-10 pt-12 sm:pt-0 relative z-10 font-sans">
       <PageHeader
         title="Billing & Subscriptions"
         description="Verify and adjust your subscription status, manage primary payment card details, and download past invoices."
@@ -217,7 +218,7 @@ export const BillingPage = () => {
           </SectionCard>
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 };
 

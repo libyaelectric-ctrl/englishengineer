@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
 
+import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
 
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
@@ -112,7 +113,7 @@ const CurriculumPage = () => {
   const repeatedMistakes = mistakeLog.filter((item) => (item.repetitionCount ?? 1) >= 3).length;
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-7 animate-in fade-in duration-300 pb-8 text-foreground relative z-10 font-sans">
+    <PageContainer className="w-full space-y-7 pb-8 relative z-10 font-sans">
       <PageHeader
         title={translate('learningHub.title')}
         description="Your personalized learning journey and task recommendations."
@@ -160,7 +161,7 @@ const CurriculumPage = () => {
           selectedMeta={selectedMeta}
         />
       )}
-    </div>
+    </PageContainer>
   );
 };
 
