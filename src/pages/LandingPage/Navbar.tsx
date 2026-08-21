@@ -5,16 +5,19 @@ import { useEffect, useRef, useState } from 'react';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
+import { storage } from '@/shared/storage';
+
 import { ClerkAuthControls } from '@/features/auth/ClerkAuthControls';
+import { useAuthStore } from '@/features/auth/auth.store';
+import { useBillingStore } from '@/features/billing';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import { useTheme } from '@/features/theme/ThemeProvider';
 
 interface NavbarProps {
-  onDemoClick?: () => void;
   onOpenProofreader?: () => void;
 }
 
-export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
+export function Navbar({ onOpenProofreader: _ }: NavbarProps) {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -25,6 +28,38 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
   const langBtnRef = useRef<HTMLButtonElement>(null);
 
   const currentLang = INTERFACE_LANGUAGES.find((l) => l.id === language) || INTERFACE_LANGUAGES[0];
+
+  const enterDemo = () => {
+    const demoId = `demo_engineer_${Date.now()}`;
+    storage.setUserId(demoId);
+    useAuthStore.setState({
+      currentUser: {
+        id: demoId,
+        displayName: 'Demo Engineer',
+        email: 'demo@engvox.com',
+        role: 'engineer',
+        isSuperUser: false,
+        engineeringDiscipline: '',
+        targetLevel: '',
+        location: '',
+        avatarInitials: 'DE',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      isAuthenticated: true,
+      isLoading: false,
+    });
+    useBillingStore.getState().setSubscription({
+      planId: 'master',
+      status: 'active',
+      currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      cancelAtPeriodEnd: false,
+      stripeCustomerId: null,
+      stripeSubscriptionId: null,
+      updatedAt: new Date().toISOString(),
+    });
+    navigate('/dashboard');
+  };
 
   useEffect(() => {
     if (!langOpen) return;
@@ -125,29 +160,10 @@ export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
 
           {/* Right: Nav Links + Theme + Auth */}
           <div className="flex items-center gap-1.5 shrink-0">
-            {!isAuthPage && (
-              <>
-                <Link
-                  to="/pricing"
-                  className="hidden md:inline-flex items-center rounded px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wide text-foreground/70 hover:text-primary hover:bg-surface transition-colors"
-                >
-                  {translate('landing.navPricing')}
-                </Link>
-
-                <div className="hidden md:block h-4 w-px bg-border-soft mx-1" />
-              </>
-            )}
-
             {/* Try Demo Button */}
             <button
               type="button"
-              onClick={() => {
-                if (onDemoClick) {
-                  onDemoClick();
-                  return;
-                }
-                navigate('/signup');
-              }}
+              onClick={enterDemo}
               className="inline-flex items-center rounded border border-primary/40 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors cursor-pointer"
             >
               {translate('landing.tryDemo')}

@@ -21,6 +21,7 @@ import {
   Map,
   Mic2,
   PenTool,
+  Receipt,
   Settings,
   Shield,
   Target,
@@ -69,6 +70,7 @@ export const NAV_ITEMS = [
     icon: Map,
     children: LEARNING_HUB_NAV_ITEMS,
   },
+  { label: 'Pricing', href: '/pricing', icon: Receipt },
   {
     label: 'Tools',
     href: null,
