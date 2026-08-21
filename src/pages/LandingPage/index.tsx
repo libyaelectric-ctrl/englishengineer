@@ -1,18 +1,17 @@
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
+  ArrowLeft,
   ArrowRight,
   BookOpen,
   CheckCircle2,
-  ChevronDown,
   Globe,
   Headphones,
   PenTool,
   Sparkles,
   Volume2,
 } from 'lucide-react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
@@ -25,8 +24,6 @@ import { Footer } from './Footer';
 import { HeroScene } from './HeroScene';
 import { Navbar } from './Navbar';
 import { getLandingTranslations } from './landing-i18n';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const FEATURES = [
   {
@@ -67,246 +64,303 @@ const FEATURES = [
   },
 ] as const;
 
+const SLIDE_INTERVAL = 6000;
+
+const slideVariants = {
+  enter: (dir: number) => ({
+    x: dir > 0 ? 300 : -300,
+    opacity: 0,
+    scale: 0.96,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+  },
+  exit: (dir: number) => ({
+    x: dir > 0 ? -300 : 300,
+    opacity: 0,
+    scale: 0.96,
+  }),
+};
+
 export const LandingPage = () => {
   const { language, translate } = useLocalizationStore();
   const t = getLandingTranslations(language);
 
-  const rootRef = useRef<HTMLDivElement>(null);
-  const heroContentRef = useRef<HTMLDivElement>(null);
+  const [slide, setSlide] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const prefersReduced = useReducedMotion();
+  const timerRef = useRef<ReturnType<typeof setInterval>>(null);
 
+  const totalSlides = 3;
+
+  const goTo = useCallback(
+    (next: number) => {
+      setDirection(next > slide ? 1 : -1);
+      setSlide(next);
+    },
+    [slide]
+  );
+
+  const next = useCallback(() => {
+    goTo((slide + 1) % totalSlides);
+  }, [slide, goTo]);
+
+  const prev = useCallback(() => {
+    goTo((slide - 1 + totalSlides) % totalSlides);
+  }, [slide, goTo]);
+
+  // Auto-advance
   useEffect(() => {
-    const root = rootRef.current;
-    const heroContent = heroContentRef.current;
-    if (!root) return;
-
-    const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (import.meta.env.MODE === 'test' || prefersReduced) return;
-
-    const ctx = gsap.context(() => {
-      // Hero entrance timeline — cinematic, Webflow-grade easing
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      tl.from('[data-hero="badge"]', { y: 24, opacity: 0, duration: 0.8 })
-        .from('[data-hero="line"]', { y: 70, opacity: 0, duration: 1, stagger: 0.13 }, '-=0.4')
-        .from('[data-hero="subtitle"]', { y: 30, opacity: 0, duration: 0.9 }, '-=0.5')
-        .from('[data-hero="cta"]', { y: 24, opacity: 0, stagger: 0.12, duration: 0.7 }, '-=0.5')
-        .from('[data-hero="trust"]', { y: 16, opacity: 0, stagger: 0.08, duration: 0.6 }, '-=0.4')
-        .from('[data-hero="scroll"]', { opacity: 0, duration: 0.6 }, '-=0.2');
-
-      if (heroContent) {
-        gsap.to(heroContent, {
-          y: -120,
-          opacity: 0.15,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: heroContent,
-            start: 'top top',
-            end: 'bottom 12% top',
-            scrub: true,
-          },
-        });
-      }
-
-      const scene = root.querySelector<HTMLElement>('[data-hero-scene]');
-      if (scene) {
-        gsap.to(scene.querySelector(':scope > canvas') ?? scene, {
-          scale: 1.08,
-          opacity: 0.25,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: scene,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true,
-          },
-        });
-      }
-
-      // Reveal animations
-      gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((section) => {
-        gsap.from(section, {
-          y: 40,
-          opacity: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: section, start: 'top 86%', once: true },
-        });
-      });
-    }, root);
-
-    ScrollTrigger.refresh();
-
+    if (prefersReduced) return;
+    timerRef.current = setInterval(next, SLIDE_INTERVAL);
     return () => {
-      ctx.revert();
+      if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, []);
+  }, [next, prefersReduced]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') next();
+      else if (e.key === 'ArrowLeft') prev();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [next, prev]);
+
+  const slideLabels = useMemo(() => ['Hero', 'Disciplines', 'Features'], []);
 
   return (
-    <div ref={rootRef} className="min-h-screen bg-background text-foreground pb-14 overflow-x-clip">
+    <div className="h-screen w-screen bg-background text-foreground overflow-hidden relative select-none">
       <Navbar />
 
-      {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden isolate">
-        {/* Ambient gradient aurora (pure CSS, subtle) */}
-        <div className="absolute inset-0">
-          <div className="absolute -top-32 -left-32 w-[44rem] h-[44rem] rounded-full bg-primary/20 blur-3xl animate-ambient-glow" />
-          <div
-            className="absolute top-1/4 -right-40 w-[38rem] h-[38rem] rounded-full bg-fuchsia-600/20 blur-3xl animate-ambient-glow"
-            style={{ animationDelay: '1.4s' }}
-          />
-          <div
-            className="absolute bottom-0 left-1/3 w-[34rem] h-[34rem] rounded-full bg-cyan-800/15 blur-3xl animate-ambient-glow"
-            style={{ animationDelay: '2.6s' }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--background)]" />
-        </div>
-
-        {/* Three.js particle flow field */}
+      {/* 3D scene stays as fixed background */}
+      <div className="absolute inset-0 z-0">
         <HeroScene />
-
+        {/* Aurora blobs */}
+        <div className="absolute -top-32 -left-32 w-[44rem] h-[44rem] rounded-full bg-primary/20 blur-3xl animate-ambient-glow" />
         <div
-          ref={heroContentRef}
-          className="relative z-10 text-center px-4 max-w-6xl mx-auto will-change-transform"
-        >
-          <div
-            data-hero="badge"
-            className="inline-flex items-center gap-2 rounded-full border border-border-soft bg-surface/60 backdrop-blur-md px-6 py-3 text-sm font-semibold text-foreground/90"
-          >
-            <Sparkles className="h-5 w-5 text-primary animate-spin-slow" />
-            {t.heroBadge}
-          </div>
-
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mt-8 mb-8">
-            <span data-hero="line" className="block text-foreground">
-              {t.heroTitle1}
-            </span>
-            <span
-              data-hero="line"
-              className="block bg-gradient-to-r from-primary via-blue-400 to-violet-400 bg-clip-text text-transparent"
-            >
-              {t.heroTitleHighlight}
-            </span>
-            <span data-hero="line" className="block text-foreground/80">
-              {t.heroTitle2}
-            </span>
-          </h1>
-
-          <p
-            data-hero="subtitle"
-            className="text-lg md:text-xl text-muted-copy max-w-3xl mx-auto mb-10"
-          >
-            {t.heroSubtitle}
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              data-hero="cta"
-              to="/dashboard"
-              className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-primary to-blue-600 text-white font-bold text-lg overflow-hidden transition-all hover:shadow-2xl hover:shadow-primary/50"
-            >
-              <span className="relative z-10 flex items-center gap-3">
-                {t.ctaSelectBranch}
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </span>
-              <span className="absolute inset-0 bg-gradient-to-r from-blue-600 to-violet-600 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300" />
-            </Link>
-            <a
-              data-hero="cta"
-              href="#pricing"
-              className="px-8 py-4 rounded-full border border-border-soft text-foreground font-bold text-lg backdrop-blur-md hover:bg-surface-hover hover:border-primary/40 transition-all"
-            >
-              {t.ctaViewPlans}
-            </a>
-          </div>
-
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-muted-copy">
-            <span data-hero="trust" className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-              {t.badgeNoCard}
-            </span>
-            <span data-hero="trust" className="flex items-center gap-2">
-              <Globe className="h-5 w-5 text-blue-400" />
-              {t.badgeLanguages}
-            </span>
-          </div>
-        </div>
-
-        {/* Scroll indicator */}
+          className="absolute top-1/4 -right-40 w-[38rem] h-[38rem] rounded-full bg-fuchsia-600/20 blur-3xl animate-ambient-glow"
+          style={{ animationDelay: '1.4s' }}
+        />
         <div
-          data-hero="scroll"
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-muted-copy"
-        >
-          <ChevronDown className="h-8 w-8 animate-bounce" />
-        </div>
-      </section>
+          className="absolute bottom-0 left-1/3 w-[34rem] h-[34rem] rounded-full bg-cyan-800/15 blur-3xl animate-ambient-glow"
+          style={{ animationDelay: '2.6s' }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--background)]" />
+      </div>
 
-      {/* ── DISCIPLINES (TOP - BIG CARDS) ─────────────────────── */}
-      <section className="relative py-24 bg-gradient-to-b from-transparent via-foreground/[0.04] to-transparent">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2
-            className="text-center text-4xl md:text-5xl font-black text-foreground mb-16"
-            data-reveal
-          >
-            '10 Engineering Disciplines'
-          </h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {ENGINEERING_DISCIPLINES.map((id, index) => {
-              const DisciplineIcon = getDisciplineIcon(id);
-              return (
+      {/* Slide content */}
+      <div className="relative z-10 h-full w-full flex items-center justify-center">
+        <AnimatePresence custom={direction} mode="wait">
+          {/* ── SLIDE 0: HERO ── */}
+          {slide === 0 && (
+            <motion.div
+              key="hero"
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+              className="absolute inset-0 flex items-center justify-center text-center px-4"
+            >
+              <div className="max-w-6xl mx-auto">
                 <div
-                  key={id}
-                  className="group relative"
-                  data-reveal
-                  style={{ transitionDelay: `${index * 20}ms` }}
+                  data-hero="badge"
+                  className="inline-flex items-center gap-2 rounded-full border border-border-soft bg-surface/60 backdrop-blur-md px-6 py-3 text-sm font-semibold text-foreground/90"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-blue-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
-                  <div className="relative flex flex-col items-center gap-4 p-6 rounded-2xl border border-border-soft bg-surface backdrop-blur-xl hover:bg-surface-hover transition-all duration-300">
-                    <DisciplineIcon className="h-10 w-10 text-primary transition-transform duration-300 group-hover:scale-125 group-hover:rotate-6" />
-                    <span className="text-sm font-semibold text-foreground text-center">
-                      {translate(`discipline.${id}`)}
-                    </span>
-                  </div>
+                  <Sparkles className="h-5 w-5 text-primary animate-spin-slow" />
+                  {t.heroBadge}
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
-      {/* ── FEATURES / SKILLS (BOTTOM - SMALL CARDS, 6 IN A ROW) ─────────────────────── */}
-      <section className="relative py-24">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16" data-reveal>
-            <span className="text-sm font-semibold uppercase tracking-wider text-primary inline-flex items-center gap-2">
-              {t.featuresHeaderBadge}
-            </span>
-            <h2 className="text-4xl md:text-5xl font-black text-foreground mt-4 mb-6">
-              {t.featuresTitle}
-            </h2>
-            <p className="text-lg text-muted-copy max-w-2xl mx-auto">{t.featuresSubtitle}</p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            {FEATURES.map(({ icon: Icon, key, color, glow }) => (
-              <div key={key} className="group relative" data-reveal>
-                <div
-                  className={`absolute inset-0 bg-gradient-to-r ${color} rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-xl`}
-                />
-                <div className="relative flex flex-col items-center gap-3 p-5 rounded-2xl border border-border-soft bg-surface backdrop-blur-xl hover:bg-surface-hover transition-all duration-300">
-                  <div
-                    className={`w-10 h-10 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center shadow-lg ${glow} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
+                <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mt-8 mb-8">
+                  <span data-hero="line" className="block text-foreground">
+                    {t.heroTitle1}
+                  </span>
+                  <span
+                    data-hero="line"
+                    className="block bg-gradient-to-r from-primary via-blue-400 to-violet-400 bg-clip-text text-transparent"
                   >
-                    <Icon className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className="text-base font-bold text-foreground text-center capitalize">
-                    {translate(`nav.${key}`)}
-                  </h3>
+                    {t.heroTitleHighlight}
+                  </span>
+                  <span data-hero="line" className="block text-foreground/80">
+                    {t.heroTitle2}
+                  </span>
+                </h1>
+
+                <p
+                  data-hero="subtitle"
+                  className="text-lg md:text-xl text-muted-copy max-w-3xl mx-auto mb-10"
+                >
+                  {t.heroSubtitle}
+                </p>
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <Link
+                    data-hero="cta"
+                    to="/dashboard"
+                    className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-primary to-blue-600 text-white font-bold text-lg overflow-hidden transition-all hover:shadow-2xl hover:shadow-primary/50"
+                  >
+                    <span className="relative z-10 flex items-center gap-3">
+                      {t.ctaSelectBranch}
+                      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    </span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-blue-600 to-violet-600 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300" />
+                  </Link>
+                  <a
+                    data-hero="cta"
+                    href="#pricing"
+                    className="px-8 py-4 rounded-full border border-border-soft text-foreground font-bold text-lg backdrop-blur-md hover:bg-surface-hover hover:border-primary/40 transition-all"
+                  >
+                    {t.ctaViewPlans}
+                  </a>
+                </div>
+
+                <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-muted-copy">
+                  <span data-hero="trust" className="flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                    {t.badgeNoCard}
+                  </span>
+                  <span data-hero="trust" className="flex items-center gap-2">
+                    <Globe className="h-5 w-5 text-blue-400" />
+                    {t.badgeLanguages}
+                  </span>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </motion.div>
+          )}
+
+          {/* ── SLIDE 1: DISCIPLINES ── */}
+          {slide === 1 && (
+            <motion.div
+              key="disciplines"
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+              className="absolute inset-0 flex items-center justify-center px-4"
+            >
+              <div className="max-w-6xl w-full">
+                <h2 className="text-center text-4xl md:text-5xl font-black text-foreground mb-12">
+                  10 Engineering Disciplines
+                </h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                  {ENGINEERING_DISCIPLINES.map((id, index) => {
+                    const DisciplineIcon = getDisciplineIcon(id);
+                    return (
+                      <motion.div
+                        key={id}
+                        className="group relative"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05, duration: 0.4 }}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-blue-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
+                        <div className="relative flex flex-col items-center gap-3 p-5 rounded-2xl border border-border-soft bg-surface/80 backdrop-blur-xl hover:bg-surface-hover transition-all duration-300">
+                          <DisciplineIcon className="h-9 w-9 text-primary transition-transform duration-300 group-hover:scale-125 group-hover:rotate-6" />
+                          <span className="text-xs font-semibold text-foreground text-center">
+                            {translate(`discipline.${id}`)}
+                          </span>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ── SLIDE 2: FEATURES ── */}
+          {slide === 2 && (
+            <motion.div
+              key="features"
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+              className="absolute inset-0 flex items-center justify-center px-4"
+            >
+              <div className="max-w-6xl w-full">
+                <div className="text-center mb-12">
+                  <span className="text-sm font-semibold uppercase tracking-wider text-primary inline-flex items-center gap-2">
+                    {t.featuresHeaderBadge}
+                  </span>
+                  <h2 className="text-4xl md:text-5xl font-black text-foreground mt-4 mb-4">
+                    {t.featuresTitle}
+                  </h2>
+                  <p className="text-lg text-muted-copy max-w-2xl mx-auto">{t.featuresSubtitle}</p>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                  {FEATURES.map(({ icon: Icon, key, color, glow }, index) => (
+                    <motion.div
+                      key={key}
+                      className="group relative"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.06, duration: 0.4 }}
+                    >
+                      <div
+                        className={`absolute inset-0 bg-gradient-to-r ${color} rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-xl`}
+                      />
+                      <div className="relative flex flex-col items-center gap-3 p-5 rounded-2xl border border-border-soft bg-surface/80 backdrop-blur-xl hover:bg-surface-hover transition-all duration-300">
+                        <div
+                          className={`w-10 h-10 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center shadow-lg ${glow} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
+                        >
+                          <Icon className="h-6 w-6 text-white" />
+                        </div>
+                        <h3 className="text-base font-bold text-foreground text-center capitalize">
+                          {translate(`nav.${key}`)}
+                        </h3>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Navigation arrows */}
+      <button
+        type="button"
+        onClick={prev}
+        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 flex h-12 w-12 items-center justify-center rounded-full border border-border-soft bg-surface/60 backdrop-blur-md text-muted-copy hover:text-foreground hover:bg-surface-hover transition-all"
+        aria-label="Previous slide"
+      >
+        <ArrowLeft className="h-5 w-5" />
+      </button>
+      <button
+        type="button"
+        onClick={next}
+        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 flex h-12 w-12 items-center justify-center rounded-full border border-border-soft bg-surface/60 backdrop-blur-md text-muted-copy hover:text-foreground hover:bg-surface-hover transition-all"
+        aria-label="Next slide"
+      >
+        <ArrowRight className="h-5 w-5" />
+      </button>
+
+      {/* Slide indicators */}
+      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+        {slideLabels.map((label, i) => (
+          <button
+            key={label}
+            type="button"
+            onClick={() => goTo(i)}
+            className={`relative h-2.5 rounded-full transition-all duration-300 ${
+              i === slide ? 'w-8 bg-primary' : 'w-2.5 bg-muted-copy/40 hover:bg-muted-copy/60'
+            }`}
+            aria-label={`Go to ${label}`}
+          />
+        ))}
+      </div>
 
       <Footer className="fixed bottom-0 inset-x-0 z-50" />
     </div>
