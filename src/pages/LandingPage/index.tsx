@@ -130,10 +130,10 @@ export const LandingPage = () => {
     return () => window.removeEventListener('keydown', handler);
   }, [next, prev]);
 
-  const slideLabels = useMemo(() => ['Hero', 'Disciplines', 'Features'], []);
+  const slideLabels = useMemo(() => [t.slideHero, t.slideDisciplines, t.slideFeatures], [t]);
 
   return (
-    <div className="h-screen w-screen bg-background text-foreground overflow-hidden relative select-none">
+    <div className="h-dvh w-screen bg-background text-foreground overflow-hidden relative select-none">
       <Navbar />
 
       {/* 3D scene stays as fixed background */}
@@ -245,9 +245,9 @@ export const LandingPage = () => {
               transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
               className="absolute inset-0 flex items-center justify-center px-4"
             >
-              <div className="max-w-6xl w-full">
+              <div className="max-w-6xl w-full max-h-[calc(100dvh-10rem)] overflow-y-auto">
                 <h2 className="text-center text-4xl md:text-5xl font-black text-foreground mb-12">
-                  10 Engineering Disciplines
+                  {t.disciplinesTitle}
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                   {ENGINEERING_DISCIPLINES.map((id, index) => {
@@ -287,7 +287,7 @@ export const LandingPage = () => {
               transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
               className="absolute inset-0 flex items-center justify-center px-4"
             >
-              <div className="max-w-6xl w-full">
+              <div className="max-w-6xl w-full max-h-[calc(100dvh-10rem)] overflow-y-auto">
                 <div className="text-center mb-12">
                   <span className="text-sm font-semibold uppercase tracking-wider text-primary inline-flex items-center gap-2">
                     {t.featuresHeaderBadge}
