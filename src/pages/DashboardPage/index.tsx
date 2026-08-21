@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Target } from 'lucide-react';
+import { ArrowRight, BookOpen, Target, TrendingUp, Zap } from 'lucide-react';
 
 import React from 'react';
 
@@ -63,9 +63,7 @@ export const DashboardPage: React.FC = () => {
               {greeting}, {currentUser?.displayName ?? ''}!
             </h1>
             {currentUser?.email && (
-              <p className="mt-0.5 text-xs font-medium text-muted-copy">
-                {currentUser.email}
-              </p>
+              <p className="mt-0.5 text-xs font-medium text-muted-copy">{currentUser.email}</p>
             )}
             {meta && (
               <p className="mt-1 text-sm text-muted-copy">
@@ -138,9 +136,7 @@ export const DashboardPage: React.FC = () => {
           <span>
             {hearts * 20}% {translate('dashboard.competencyIndex')}
           </span>
-          <span>
-            {streak > 0 && `🔥 ${streak} day streak`}
-          </span>
+          <span>{streak > 0 && `🔥 ${streak} day streak`}</span>
         </div>
       </div>
     </PageContainer>
