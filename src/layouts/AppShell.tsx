@@ -16,6 +16,7 @@ import { RightSidebar } from './RightSidebar';
 import { Sidebar } from './Sidebar';
 
 const CommandPalette = lazy(() => import('@/shared/components/CommandPalette'));
+const KeyboardShortcutsPanel = lazy(() => import('@/shared/components/KeyboardShortcutsPanel'));
 
 export const AppShell: FC = () => {
   const { toggleSidebar } = useAppStore();
@@ -55,6 +56,7 @@ export const AppShell: FC = () => {
       </a>
       <Suspense fallback={<div className="hidden" aria-hidden="true" />}>
         <CommandPalette />
+        <KeyboardShortcutsPanel />
       </Suspense>
       {/* Nav1 - Left sidebar */}
       <Sidebar />
