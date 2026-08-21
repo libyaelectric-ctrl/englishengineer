@@ -20,7 +20,7 @@ export function PageHeader({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
+    <div className="sticky -top-4 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background backdrop-blur-xl mb-6">
       <div className="flex items-center gap-3">
         {icon && (
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[4px] bg-surface border border-border-soft text-base shadow-sm">

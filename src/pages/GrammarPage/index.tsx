@@ -1,15 +1,6 @@
-import { Flame, Layers, ShieldCheck, Zap } from 'lucide-react';
-
-import { useMemo } from 'react';
-
 import { PageContainer } from '@/shared/components/PageContainer';
-import {
-  type PipelineStation,
-  UniversalCyberPipeline,
-} from '@/shared/components/UniversalCyberPipeline';
 
 import { useGrammarStore } from '@/features/grammar';
-import { useLocalizationStore } from '@/features/localization';
 
 import { GrammarEnhancementPanel } from './GrammarEnhancementPanel';
 import { GrammarHeader } from './GrammarHeader';
@@ -28,7 +19,6 @@ const getSelectedStatus = (progress: ReturnType<typeof useGrammarPage>['selected
 };
 
 const GrammarPage = () => {
-  const translate = useLocalizationStore((s) => s.translate);
   const grammarStats = useGrammarStore((s) => s.stats);
   const grammarLearned = grammarStats.learned + grammarStats.mastered;
   const grammarStruggling = grammarStats.struggling;
@@ -61,29 +51,6 @@ const GrammarPage = () => {
   const selectedStatus = getSelectedStatus(selectedProgress);
   const selectedModule = selectedRule ? getModuleLabel(selectedRule.grammarCategory) : '';
 
-  const grammarStations: PipelineStation[] = useMemo(() => {
-    if (!rulesWithProgress || !rulesWithProgress.length) return [];
-    return rulesWithProgress.map((item, idx) => ({
-      id: item.rule.id,
-      levelBadge: `G${idx + 1}`,
-      title: item.rule.title,
-      subtitle: `${getModuleLabel(item.rule.grammarCategory)} · ${(item.rule.explanation || item.rule.definition || '').slice(0, 35)}...`,
-      status:
-        item.progress?.reviewStatus === 'Strong'
-          ? 'completed'
-          : item.rule.id === selectedRule?.id
-            ? 'in-progress'
-            : 'available',
-      progressRatio: Math.min(1, Math.max(0.2, (item.progress?.strength ?? 40) / 100)),
-      totalItems: 10,
-      completedItems: item.progress?.correctUsages ?? 0,
-      onAction: () => {
-        selectRule(item.rule.id);
-        setQuizOpen(true);
-      },
-    }));
-  }, [rulesWithProgress, selectedRule, selectRule, setQuizOpen]);
-
   return (
     <PageContainer className="space-y-6 min-h-screen bg-background pb-16 text-foreground">
       <GrammarHeader
@@ -96,37 +63,6 @@ const GrammarPage = () => {
         onOpenQuiz={() => setQuizOpen(true)}
         onOpenStrugglingQuiz={() => {}}
       />
-
-      {/* Cyber Telemetry Grammar Energy Pipeline */}
-      {grammarStations.length > 0 && (
-        <UniversalCyberPipeline
-          title={translate('pipeline.grammar.title')}
-          subtitle={translate('pipeline.grammar.subtitle')}
-          badgeText={`CEFR: ${level}`}
-          icon={Layers}
-          stations={grammarStations}
-          activeStationId={selectedRule?.id}
-          onSelectStation={(id) => selectRule(id)}
-          translate={translate}
-          metrics={[
-            {
-              icon: <ShieldCheck className="h-4 w-4 text-emerald-400" />,
-              label: translate('pipeline.metric.total'),
-              value: totalGrammarLessons,
-            },
-            {
-              icon: <Zap className="h-4 w-4 text-amber-400" />,
-              label: translate('pipeline.metric.activeLevel'),
-              value: level,
-            },
-            {
-              icon: <Flame className="h-4 w-4 text-orange-400" />,
-              label: translate('pipeline.metric.streak'),
-              value: grammarStats.newCount,
-            },
-          ]}
-        />
-      )}
 
       <main className="mt-6 space-y-5">
         <section className="min-w-0 space-y-4">

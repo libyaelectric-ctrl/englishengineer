@@ -13,10 +13,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@/shared/components/Button';
 import { PageHeader } from '@/shared/components/PageHeader';
 import { SectionCard } from '@/shared/components/SectionCard';
-import {
-  type PipelineStation,
-  UniversalCyberPipeline,
-} from '@/shared/components/UniversalCyberPipeline';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
@@ -38,7 +34,6 @@ import {
   type ListeningEvaluationResult,
   type ListeningMission,
 } from '@/features/listening/listening.types';
-import { useLocalizationStore } from '@/features/localization';
 
 type Question = {
   id: string;
@@ -336,10 +331,8 @@ const WorkspaceView = ({
 };
 
 const ListeningPage = () => {
-  const translate = useLocalizationStore((s) => s.translate);
   const missions = useListeningMissionsStore((s) => s.missions);
   const selectedMissionId = useListeningMissionsStore((s) => s.selectedMissionId);
-  const completedMissions = useListeningMissionsStore((s) => s.completedMissions);
   const answers = useListeningMissionsStore((s) => s.answers);
   const summary = useListeningMissionsStore((s) => s.summary);
   const userKeywords = useListeningMissionsStore((s) => s.userKeywords);
@@ -374,36 +367,6 @@ const ListeningPage = () => {
 
   const currentUser = useAuthStore((s) => s.currentUser);
   const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
-
-  const listeningStations: PipelineStation[] = useMemo(() => {
-    return visibleMissions.map((mission) => {
-      const score = completedMissions[mission.id];
-      const isCompleted = score !== undefined;
-      const isActive = mission.id === currentMission?.id;
-      return {
-        id: mission.id,
-        levelBadge: mission.cefrLevel,
-        title: mission.title,
-        subtitle: mission.missionType,
-        status: isCompleted ? 'completed' : isActive ? 'in-progress' : 'available',
-        progressRatio: isCompleted ? Math.min(1, score / 100) : isActive ? 0.4 : 0,
-        totalItems: 100,
-        completedItems: isCompleted ? score : 0,
-        onAction: () => {
-          selectMission(mission.id);
-          setWorkspaceOpen(true);
-        },
-      };
-    });
-  }, [visibleMissions, completedMissions, currentMission, selectMission]);
-
-  const listeningFinishedCount = Object.keys(completedMissions).length;
-  const listeningAvgScore =
-    listeningFinishedCount > 0
-      ? Math.round(
-          Object.values(completedMissions).reduce((a, b) => a + b, 0) / listeningFinishedCount
-        )
-      : 0;
 
   useEffect(() => initializeStore(), [initializeStore]);
 
@@ -454,38 +417,6 @@ const ListeningPage = () => {
 
         {!workspaceOpen ? (
           <>
-            {listeningStations.length > 0 && (
-              <UniversalCyberPipeline
-                title={translate('pipeline.listening.title')}
-                subtitle={translate('pipeline.listening.subtitle')}
-                badgeText={`CEFR: ${currentLevel}`}
-                icon={Headphones}
-                stations={listeningStations}
-                activeStationId={currentMission?.id}
-                onSelectStation={(id) => {
-                  selectMission(id);
-                  setWorkspaceOpen(true);
-                }}
-                translate={translate}
-                metrics={[
-                  {
-                    icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
-                    label: translate('pipeline.metric.completed'),
-                    value: listeningFinishedCount,
-                  },
-                  {
-                    icon: <Headphones className="h-4 w-4 text-cyan-400" />,
-                    label: translate('pipeline.metric.avgScore'),
-                    value: listeningAvgScore > 0 ? `${listeningAvgScore}%` : '0%',
-                  },
-                  {
-                    icon: <FileText className="h-4 w-4 text-amber-400" />,
-                    label: translate('pipeline.metric.tasks'),
-                    value: `${listeningFinishedCount}/${visibleMissions.length}`,
-                  },
-                ]}
-              />
-            )}
             <SectionCard
               title="Transcript Tasks"
               subtitle="Choose a level-safe task; the system recommendation remains changeable"

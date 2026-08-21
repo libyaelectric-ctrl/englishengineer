@@ -7,10 +7,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
 
-import {
-  type PipelineStation,
-  UniversalCyberPipeline,
-} from '@/shared/components/UniversalCyberPipeline';
 import { resolveTermMeaningAsync } from '@/shared/services/vocabulary-translation.service';
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
 
@@ -39,13 +35,6 @@ interface LessonQuestion {
 }
 
 const CARD_TYPES: LessonCardType[] = ['mc', 'rfi', 'audio', 'diagram'];
-
-const CARD_TYPE_TITLE_KEYS: Record<LessonCardType, string> = {
-  mc: 'lesson.card.mcTitle',
-  rfi: 'lesson.card.rfiTitle',
-  audio: 'lesson.card.audioTitle',
-  diagram: 'lesson.card.diagramTitle',
-};
 
 const LessonRunnerPage = () => {
   const { levelId } = useParams<{ levelId: string }>();
@@ -254,20 +243,6 @@ const LessonRunnerPage = () => {
 
   const progressPercent = Math.round(((currentIndex + 1) / questions.length) * 100);
 
-  const lessonStations: PipelineStation[] = CARD_TYPES.map((type, idx) => {
-    const isCurrent = currentQ?.type === type;
-    const isCompleted = !isCurrent && currentIndex > idx;
-    return {
-      id: `lesson-${type}`,
-      levelBadge: `T${idx + 1}`,
-      title: translate(CARD_TYPE_TITLE_KEYS[type]),
-      status: isCompleted ? 'completed' : isCurrent ? 'in-progress' : 'available',
-      progressRatio: isCompleted ? 1 : isCurrent ? 0.5 : 0,
-      totalItems: 1,
-      completedItems: isCompleted ? 1 : 0,
-    };
-  });
-
   return (
     <div className="relative w-full overflow-x-hidden flex flex-col gap-6 pb-8 pt-4 font-sans text-slate-100">
       {/* Cyber Telemetry Top HUD Bar */}
@@ -306,33 +281,6 @@ const LessonRunnerPage = () => {
           <span className="text-xs font-black tabular-nums">{hearts * 20}%</span>
         </div>
       </div>
-
-      {/* Cyber Telemetry Lesson Task Pipeline */}
-      <UniversalCyberPipeline
-        badgeText={`${currentIndex + 1}/${questions.length}`}
-        icon={Cpu}
-        stations={lessonStations}
-        activeStationId={lessonStations.find((s) => s.status === 'in-progress')?.id}
-        onSelectStation={() => {}}
-        translate={translate}
-        metrics={[
-          {
-            icon: <Zap className="h-4 w-4 text-emerald-400" />,
-            label: translate('lesson.accuracy'),
-            value: correctCount,
-          },
-          {
-            icon: <Cpu className="h-4 w-4 text-cyan-400" />,
-            label: translate('pipeline.metric.total'),
-            value: questions.length,
-          },
-          {
-            icon: <X className="h-4 w-4 text-amber-400" />,
-            label: translate('pipeline.metric.progress'),
-            value: `${progressPercent}%`,
-          },
-        ]}
-      />
 
       {/* Simulator Question Container */}
       <div className="flex w-full flex-col items-center justify-center rounded-2xl border border-slate-800/80 bg-[#091122]/90 p-6 sm:p-8 shadow-[0_0_30px_rgba(6,182,212,0.12)] backdrop-blur-xl">
