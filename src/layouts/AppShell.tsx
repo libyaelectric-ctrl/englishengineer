@@ -5,6 +5,7 @@ import { type FC, Suspense, lazy, useEffect, useRef } from 'react';
 
 import { Outlet } from 'react-router-dom';
 
+import { useGlobalShortcuts } from '@/shared/hooks/useGlobalShortcuts';
 import { useKeyboardNavigation } from '@/shared/hooks/useKeyboardNavigation';
 
 import { BetaAnalyticsTracker, BetaFeedbackWidget } from '@/features/beta';
@@ -23,6 +24,9 @@ export const AppShell: FC = () => {
     key: 'Escape',
     onKeyPress: () => toggleSidebar(),
   });
+
+  // Global keyboard shortcuts (Ctrl+K, number navigation, etc.)
+  useGlobalShortcuts();
 
   // Block middle-click auto-scroll pan (mouse button 1 = wheel click)
   useEffect(() => {
