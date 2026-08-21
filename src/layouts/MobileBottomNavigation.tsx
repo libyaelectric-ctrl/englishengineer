@@ -9,8 +9,6 @@ import {
   Map,
   Mic2,
   PenTool,
-  Receipt,
-  Trophy,
   User,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -34,10 +32,8 @@ const SKILL_ITEMS = [
 
 const ITEMS = [
   { label: 'Home', href: '/dashboard', icon: Home },
-  { label: 'Path', href: '/learning-path', icon: Trophy },
+  { label: 'Learning', href: '/learning-path', icon: Map },
   { label: 'Skills', href: null, icon: FileText },
-  { label: 'Pricing', href: '/pricing', icon: Receipt },
-  { label: 'Hub', href: '/curriculum', icon: Map },
   { label: 'Tools', href: '/tools', icon: BriefcaseBusiness },
   { label: 'Profile', href: '/profile', icon: User },
 ] as const;
@@ -120,7 +116,7 @@ export const MobileBottomNavigation = () => {
         )}
       </AnimatePresence>
 
-      <div className="mx-auto grid max-w-lg grid-cols-7 gap-1">
+      <div className="mx-auto grid max-w-lg grid-cols-5 gap-1">
         {ITEMS.map((item) => {
           const Icon = item.icon;
           // Skills item triggers popup instead of navigation

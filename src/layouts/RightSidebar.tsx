@@ -56,7 +56,7 @@ const EXACT_ROUTES: Record<string, React.ComponentType> = {
   '/': DashboardSidebar,
 };
 
-const PREFIX_ROUTES: [string, React.ComponentType][] = [
+const PREFIX_ROUTES: [string, React.ComponentType | null][] = [
   ['/vocabulary', VocabSidebar],
   ['/grammar', GrammarSidebar],
   ['/reading', ReadingSidebar],
@@ -66,8 +66,8 @@ const PREFIX_ROUTES: [string, React.ComponentType][] = [
   ['/curriculum', DashboardSidebar],
   ['/tools', ToolsSidebar],
   ['/profile', ProfileSidebar],
-  ['/admin', DashboardSidebar],
-  ['/progress', DashboardSidebar],
+  ['/admin', null],        // admin manages its own UI
+  ['/progress', null],     // progress has its own layout
 ];
 
 function getContent(path: string): React.ReactNode {
@@ -76,7 +76,8 @@ function getContent(path: string): React.ReactNode {
   }
   const match = PREFIX_ROUTES.find(([prefix]) => path.startsWith(prefix));
   if (match) {
-    return React.createElement(match[1]);
+    const Component = match[1];
+    return Component ? React.createElement(Component) : null;
   }
   return <DashboardSidebar />;
 }
