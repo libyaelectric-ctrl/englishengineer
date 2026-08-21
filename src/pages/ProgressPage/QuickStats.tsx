@@ -8,7 +8,7 @@ import {
   TrendingUp,
   Zap,
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 
 export const QuickStats = ({
   totalElo,
@@ -29,6 +29,7 @@ export const QuickStats = ({
   grammarErrors?: number;
   advancedRules?: number;
 }) => {
+  const prefersReduced = useReducedMotion();
   const stats = [
     {
       icon: Target,
@@ -88,9 +89,9 @@ export const QuickStats = ({
       {stats.map((stat, i) => (
         <motion.div
           key={stat.label}
-          initial={{ opacity: 0, y: 8 }}
+          initial={prefersReduced ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 + i * 0.08 }}
+          transition={{ delay: prefersReduced ? 0 : 0.3 + i * 0.08 }}
           className="rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm"
         >
           <div className="flex items-center gap-1.5 mb-1">

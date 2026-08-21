@@ -1,5 +1,5 @@
 import { Target } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 
 import { MAX_ELO, MIN_ELO } from '@/shared/constants/elo.constants';
 import { useAnimatedNumber } from '@/shared/hooks/useAnimatedNumber';
@@ -16,7 +16,8 @@ export const HeroBanner = ({
   totalPercentage: number;
 }) => {
   const t = useLocalizationStore((s) => s.translate);
-  const animatedTotalElo = useAnimatedNumber(totalElo, 2.5);
+  const prefersReduced = useReducedMotion();
+  const animatedTotalElo = useAnimatedNumber(totalElo, prefersReduced ? 0 : 2.5);
   const totalCEFR = getCEFRBand(totalElo);
   const totalCEFRIdx = getCEFRIndex(totalCEFR);
   const rank = getRank(totalElo);
@@ -45,11 +46,15 @@ export const HeroBanner = ({
               strokeWidth="5"
               strokeLinecap="round"
               strokeDasharray={2 * Math.PI * 56}
-              initial={{ strokeDashoffset: 2 * Math.PI * 56 }}
+              initial={{
+                strokeDashoffset: prefersReduced
+                  ? 2 * Math.PI * 56 * (1 - totalPercentage / 100)
+                  : 2 * Math.PI * 56,
+              }}
               animate={{
                 strokeDashoffset: 2 * Math.PI * 56 * (1 - totalPercentage / 100),
               }}
-              transition={{ duration: 2, ease: 'easeOut' }}
+              transition={{ duration: prefersReduced ? 0 : 2, ease: 'easeOut' }}
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -82,11 +87,15 @@ export const HeroBanner = ({
             <span className="text-[10px] font-bold text-muted-copy">{totalCEFR}</span>
             <div className="flex-1 h-2 rounded-full bg-border-soft overflow-hidden">
               <motion.div
-                initial={{ width: 0 }}
+                initial={{
+                  width: prefersReduced
+                    ? `${Math.min(100, ((totalElo - (totalCEFRIdx * 333 + MIN_ELO)) / 333) * 100)}%`
+                    : '0%',
+                }}
                 animate={{
                   width: `${Math.min(100, ((totalElo - (totalCEFRIdx * 333 + MIN_ELO)) / 333) * 100)}%`,
                 }}
-                transition={{ duration: 1.5, ease: 'easeOut' }}
+                transition={{ duration: prefersReduced ? 0 : 1.5, ease: 'easeOut' }}
                 className="h-full rounded-full bg-primary"
               />
             </div>
@@ -94,7 +103,9 @@ export const HeroBanner = ({
           </div>
           <div className="mt-2.5 flex items-center justify-between text-[10px] font-medium text-muted-copy">
             <span className="flex items-center gap-1">
-              <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span
+                className={`inline-block h-2 w-2 rounded-full bg-emerald-500 ${prefersReduced ? '' : 'animate-pulse'}`}
+              />
               <span>
                 {t('progress.learningVelocity')} <strong>+180 {t('progress.velocityUnit')}</strong>
               </span>
