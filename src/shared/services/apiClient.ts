@@ -1,6 +1,7 @@
 import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
 
+import { showToast } from '@/shared/components/Toast';
 import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
 
 // ---------------------------------------------------------------------------
@@ -14,6 +15,8 @@ export interface ApiClientConfig {
   timeoutMs?: number;
   /** Max retries for transient failures (default 1 — no retry) */
   maxRetries?: number;
+  /** Show toast on error (default true for singleton) */
+  toastErrors?: boolean;
 }
 
 interface RequestOptions extends Omit<RequestInit, 'signal'> {
@@ -137,7 +140,12 @@ async function apiFetch<T>(
 
     return (await response.json()) as T;
   } catch (error) {
-    throw toAppError(error, url);
+    const appError = toAppError(error, url);
+    // Global toast for non-retried errors
+    if (config.toastErrors && appError.severity === 'error') {
+      showToast(appError.message, 'error');
+    }
+    throw appError;
   } finally {
     clearTimeout(timer);
   }
@@ -175,6 +183,7 @@ export function createApiClient(config?: ApiClientConfig) {
     baseUrl: resolveBase(config),
     timeoutMs: config?.timeoutMs ?? DEFAULT_TIMEOUT_MS,
     maxRetries: config?.maxRetries ?? 0,
+    toastErrors: config?.toastErrors ?? true,
   };
 
   const get = <T>(path: string, opts?: RequestOptions): Promise<T> => {
