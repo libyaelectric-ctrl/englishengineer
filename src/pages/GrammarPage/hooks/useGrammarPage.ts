@@ -83,6 +83,7 @@ export function useGrammarPage() {
   const [levelCounts, setLevelCounts] = useState<Record<CefrLevel, number>>(EMPTY_LEVEL_COUNTS);
 
   const [unlockedIds, setUnlockedIds] = useState<Set<string>>(new Set());
+  const [rulesLoaded, setRulesLoaded] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -90,6 +91,7 @@ export function useGrammarPage() {
       .then(async (all) => {
         if (!active) return;
         setRules(all);
+        setRulesLoaded(true);
         setUnlockedIds(await buildUnlockedSet(all));
         if (!selectedId) {
           const currentActive = all.find((r) => !GrammarProgressService.get(r.id).isPassed);
@@ -338,6 +340,7 @@ export function useGrammarPage() {
     level,
     grammarPoolIds,
     rules,
+    rulesLoaded,
     selectedId,
     query,
     setQuery,

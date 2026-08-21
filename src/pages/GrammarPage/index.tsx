@@ -1,4 +1,5 @@
 import { PageContainer } from '@/shared/components/PageContainer';
+import { SkeletonPage } from '@/shared/components/Skeleton';
 
 import { useGrammarStore } from '@/features/grammar';
 
@@ -25,6 +26,7 @@ const GrammarPage = () => {
   const {
     level,
     rules,
+    rulesLoaded,
     grammarPoolIds,
     query,
     setQuery,
@@ -50,6 +52,14 @@ const GrammarPage = () => {
 
   const selectedStatus = getSelectedStatus(selectedProgress);
   const selectedModule = selectedRule ? getModuleLabel(selectedRule.grammarCategory) : '';
+
+  if (!rulesLoaded) {
+    return (
+      <PageContainer className="space-y-6 min-h-screen bg-background pb-16 text-foreground">
+        <SkeletonPage />
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer className="space-y-6 min-h-screen bg-background pb-16 text-foreground">

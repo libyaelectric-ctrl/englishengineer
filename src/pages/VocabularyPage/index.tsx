@@ -1,6 +1,7 @@
 import { CheckCircle2 } from 'lucide-react';
 
 import { SectionCard } from '@/shared/components/SectionCard';
+import { SkeletonPage } from '@/shared/components/Skeleton';
 
 import { useLocalizationStore } from '@/features/localization';
 
@@ -48,6 +49,14 @@ const VocabularyPage = () => {
     openSearchModal,
     closeSearchModal,
   } = useVocabularyPage();
+
+  if (terms.length === 0 && !loadError) {
+    return (
+      <div className="mx-auto max-w-5xl animate-in fade-in duration-300 relative pb-8">
+        <SkeletonPage />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 animate-in fade-in duration-300 relative pb-8">
