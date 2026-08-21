@@ -76,6 +76,7 @@ export const NAV_ITEMS = [
     children: TOOLS_NAV_ITEMS,
   },
   { label: 'Profile', href: null, icon: User, children: PROFILE_NAV_ITEMS },
+  { label: 'Team', href: '/team', icon: User, comingSoon: false },
 ] as const;
 
 // Exported for testing only - not used by production code
