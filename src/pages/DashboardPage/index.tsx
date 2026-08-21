@@ -1,8 +1,8 @@
 import { ArrowRight, BookOpen, Target, TrendingUp, Trophy } from 'lucide-react';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
 
@@ -17,28 +17,8 @@ import type { TranslationKey } from '@/features/localization/localization.types'
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 export const DashboardPage: React.FC = () => {
-  const navigate = useNavigate();
   const currentUser = useAuthStore((state) => state.currentUser);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const isLoading = useAuthStore((state) => state.isLoading);
   const translate = useLocalizationStore((state) => state.translate);
-
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      navigate('/login', { replace: true });
-    }
-  }, [isLoading, isAuthenticated, navigate]);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
-        <div className="text-center">
-          <div className="h-8 w-8 mx-auto mb-4 animate-spin rounded-full border-2 border-[var(--color-primary)] border-t-transparent" />
-          <p className="text-[var(--color-muted-copy)]">{translate('common.loading')}</p>
-        </div>
-      </div>
-    );
-  }
 
   const profile = LearningProfileRepository.getProfile(currentUser?.id || 'local-user');
   const discipline = resolveDefaultDiscipline(

@@ -1,5 +1,6 @@
 import { AppShell } from '@/layouts/AppShell';
 import { PublicLayout } from '@/layouts/PublicLayout';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import { type ComponentType, Suspense, lazy } from 'react';
 
@@ -248,7 +249,25 @@ export const router = createBrowserRouter([
       },
       {
         path: 'team',
-        element: withSuspense(Team),
+        element: (
+          <ErrorBoundary
+            fallback={
+              <div className="flex min-h-screen items-center justify-center bg-surface text-foreground">
+                <div className="text-center space-y-4">
+                  <p className="text-lg font-bold">Team sayfası yüklenemedi.</p>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="rounded-[12px] border border-border-soft bg-surface px-5 py-2.5 text-sm font-bold transition-colors hover:bg-surface-hover"
+                  >
+                    Yeniden Dene
+                  </button>
+                </div>
+              </div>
+            }
+          >
+            {withSuspense(Team)}
+          </ErrorBoundary>
+        ),
       },
       {
         path: 'team/members/:memberId',
