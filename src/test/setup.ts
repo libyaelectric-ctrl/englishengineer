@@ -32,7 +32,7 @@ if (typeof globalThis.IntersectionObserver === 'undefined') {
   } as unknown as typeof globalThis.IntersectionObserver;
 }
 
-// Mock matchMedia for jsdom (required by GSAP ScrollTrigger)
+// Mock matchMedia for jsdom (required by prefers-reduced-motion hooks)
 if (typeof window !== 'undefined' && typeof window.matchMedia !== 'function') {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
