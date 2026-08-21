@@ -4,6 +4,7 @@ import { Button } from '@/shared/components/Button';
 import { EmptySkillPage } from '@/shared/components/EmptySkillPage';
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
+import { SkeletonPage } from '@/shared/components/Skeleton';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { PersonalAIPanel } from '@/features/ai/PersonalAIPanel';
@@ -211,6 +212,19 @@ const ReadingPage = () => {
     );
   }
 
+  if (aiMissionLoading) {
+    return (
+      <PageContainer>
+        <PageHeader
+          title="Reading"
+          description="Engineering documentation & technical reading comprehension."
+          badgeText={currentLevel}
+        />
+        <SkeletonPage />
+      </PageContainer>
+    );
+  }
+
   return (
     <PageContainer>
       <PageHeader
@@ -218,16 +232,9 @@ const ReadingPage = () => {
         description="Engineering documentation & technical reading comprehension."
         badgeText={currentLevel}
         actions={
-          <>
-            {aiMissionLoading && (
-              <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
-                AI lesson loading...
-              </span>
-            )}
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy rounded-[4px] border border-border-soft bg-surface px-2.5 py-1">
-              {finishedCount}/{missions.length} Completed
-            </span>
-          </>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy rounded-[4px] border border-border-soft bg-surface px-2.5 py-1">
+            {finishedCount}/{missions.length} Completed
+          </span>
         }
       />
 
