@@ -34,6 +34,21 @@ vi.mock('@clerk/clerk-react', () => ({
   useClerk: () => ({ signOut: vi.fn() }),
 }));
 
+// Mock localization store for tests - provides getState and selector support
+const mockLocalizationState = {
+  language: 'en',
+  translate: (key: string) => key,
+  setLanguage: vi.fn(),
+};
+vi.mock('@/features/localization', () => ({
+  useLocalizationStore: vi.fn((selector?: (state: typeof mockLocalizationState) => unknown) =>
+    selector ? selector(mockLocalizationState) : mockLocalizationState
+  ),
+  INTERFACE_LANGUAGES: [
+    { id: 'en', flag: '🇬🇧', label: 'English', nativeLabel: 'English', available: true, dir: 'ltr' },
+  ],
+}));
+
 type NodeFileSystem = {
   readFileSync: (filePath: string, encoding: 'utf-8') => string;
 };
