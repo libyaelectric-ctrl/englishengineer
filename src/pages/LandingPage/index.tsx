@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
@@ -22,8 +22,9 @@ import { getDisciplineIcon } from '@/shared/icons/registry';
 import { useLocalizationStore } from '@/features/localization';
 
 import { Footer } from './Footer';
-import { HeroScene } from './HeroScene';
 import { Navbar } from './Navbar';
+
+const HeroScene = lazy(() => import('./HeroScene'));
 
 const FEATURES = [
   {
@@ -150,7 +151,9 @@ export const LandingPage = () => {
 
       {/* 3D scene stays as fixed background */}
       <div className="absolute inset-0 z-0">
-        <HeroScene />
+        <Suspense fallback={null}>
+          <HeroScene />
+        </Suspense>
         {/* Aurora blobs */}
         <div className="absolute -top-32 -left-32 w-[44rem] h-[44rem] rounded-full bg-primary/20 blur-3xl animate-ambient-glow" />
         <div
