@@ -268,6 +268,67 @@
   animation: engmascot-blink-kf 1.4s ease-in-out infinite;
 }
 
+/* ---- Settings panel ---- */
+.engmascot-settings {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 8px;
+  background: var(--surface, #fff);
+  color: var(--foreground, #12151b);
+  border: 1px solid var(--color-border-soft, rgba(0, 0, 0, 0.08));
+  border-radius: 12px;
+  padding: 10px 12px;
+  min-width: 160px;
+  box-shadow: 0 10px 26px -8px rgba(0, 0, 0, 0.35);
+  z-index: 10;
+}
+
+/* ---- High contrast mode ---- */
+.engmascot-high-contrast .engmascot-bubble {
+  border-width: 2px;
+  border-color: #000;
+  background: #fff;
+  color: #000;
+  font-weight: 700;
+}
+.engmascot-high-contrast .engmascot-bubble-tail {
+  border-color: #000;
+}
+.engmascot-high-contrast .engmascot-figure {
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) contrast(1.2);
+}
+.engmascot-high-contrast .engmascot-mini-btn {
+  border-width: 2px;
+  border-color: #000;
+  font-weight: 700;
+}
+.engmascot-high-contrast .engmascot-settings {
+  border-width: 2px;
+  border-color: #000;
+}
+
+.dark .engmascot-high-contrast .engmascot-bubble {
+  background: #000;
+  color: #fff;
+  border-color: #fff;
+}
+.dark .engmascot-high-contrast .engmascot-bubble-tail {
+  background: #000;
+  border-color: #fff;
+}
+.dark .engmascot-high-contrast .engmascot-figure {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4)) contrast(1.2);
+}
+.dark .engmascot-high-contrast .engmascot-mini-btn {
+  border-color: #fff;
+  color: #fff;
+}
+.dark .engmascot-high-contrast .engmascot-settings {
+  border-color: #fff;
+  background: #111;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .engmascot-figure,
   .engmascot-figure * {

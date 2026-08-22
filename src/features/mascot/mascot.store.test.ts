@@ -2,7 +2,6 @@ import { describe, expect, it, beforeEach } from 'vitest';
 
 import { useMascotStore } from './mascot.store';
 
-// Reset store between tests
 beforeEach(() => {
   useMascotStore.setState({
     state: 'idle',
@@ -11,6 +10,9 @@ beforeEach(() => {
     minimized: false,
     position: { right: 22, bottom: 22 },
     soundEnabled: true,
+    soundVolume: 'high',
+    toastEnabled: true,
+    contrastMode: false,
     lastInteractionAt: Date.now(),
   });
 });
@@ -76,6 +78,35 @@ describe('MascotStore', () => {
     expect(useMascotStore.getState().soundEnabled).toBe(false);
     useMascotStore.getState().setSoundEnabled(true);
     expect(useMascotStore.getState().soundEnabled).toBe(true);
+  });
+
+  it('setSoundVolume changes volume and syncs soundEnabled', () => {
+    useMascotStore.getState().setSoundVolume('low');
+    expect(useMascotStore.getState().soundVolume).toBe('low');
+    expect(useMascotStore.getState().soundEnabled).toBe(true);
+
+    useMascotStore.getState().setSoundVolume('off');
+    expect(useMascotStore.getState().soundVolume).toBe('off');
+    expect(useMascotStore.getState().soundEnabled).toBe(false);
+
+    useMascotStore.getState().setSoundVolume('high');
+    expect(useMascotStore.getState().soundVolume).toBe('high');
+    expect(useMascotStore.getState().soundEnabled).toBe(true);
+  });
+
+  it('setToastEnabled toggles toast', () => {
+    useMascotStore.getState().setToastEnabled(false);
+    expect(useMascotStore.getState().toastEnabled).toBe(false);
+    useMascotStore.getState().setToastEnabled(true);
+    expect(useMascotStore.getState().toastEnabled).toBe(true);
+  });
+
+  it('toggleContrastMode flips contrast', () => {
+    expect(useMascotStore.getState().contrastMode).toBe(false);
+    useMascotStore.getState().toggleContrastMode();
+    expect(useMascotStore.getState().contrastMode).toBe(true);
+    useMascotStore.getState().toggleContrastMode();
+    expect(useMascotStore.getState().contrastMode).toBe(false);
   });
 
   it('touch updates lastInteractionAt', () => {
