@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/node';
+import compression from 'compression';
 import cors from 'cors';
 import express, {
   type Express,
@@ -161,6 +162,20 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
   }
 
   app.disable('x-powered-by');
+
+  // Response compression — gzip for all responses > 1KB
+  app.use(
+    compression({
+      threshold: 1024,
+      level: 6, // balanced speed/ratio
+      filter: (req, res) => {
+        // Don't compress webhook raw body responses
+        if (req.path.includes('/webhooks/')) return false;
+        return compression.filter(req, res);
+      },
+    })
+  );
+
   SECURITY_HEADERS.contentSecurityPolicy.directives.connectSrc = [
     "'self'",
     config.appOrigin,
