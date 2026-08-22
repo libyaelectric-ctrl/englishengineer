@@ -1,0 +1,276 @@
+/* Styles + keyframe animations for EngMascot. Scoped via the engmascot-*
+   class prefix so nothing here leaks into the rest of the app's styles. */
+
+.engmascot-figure {
+  position: relative;
+  display: inline-block;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.28));
+  touch-action: none;
+}
+.engmascot-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* Eye-blink overlay. Position tuned to this specific artwork's eye area. */
+.engmascot-blink {
+  position: absolute;
+  left: 27%;
+  top: 32%;
+  width: 44%;
+  height: 9%;
+  border-radius: 50%;
+  background: #c79b78;
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: center;
+  animation: engmascot-blink-kf 4.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.engmascot-ring {
+  position: absolute;
+  left: 50%;
+  top: 36%;
+  width: 46%;
+  height: 46%;
+  margin-left: -23%;
+  margin-top: -23%;
+  border: 2px solid #5aa7ff;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.engmascot-fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+.engmascot-fx span {
+  position: absolute;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* ---- Speech bubble ---- */
+.engmascot-bubble {
+  position: relative;
+  background: var(--surface, #fff);
+  color: var(--foreground, #12151b);
+  border: 1px solid var(--color-border-soft, rgba(0, 0, 0, 0.08));
+  border-radius: 14px;
+  padding: 10px 13px;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.45;
+  max-width: 200px;
+  margin-bottom: 8px;
+  box-shadow: 0 10px 26px -8px rgba(0, 0, 0, 0.35);
+  min-height: 1.4em;
+}
+.engmascot-bubble-tail {
+  position: absolute;
+  bottom: -6px;
+  right: 22px;
+  width: 12px;
+  height: 12px;
+  background: var(--surface, #fff);
+  border-right: 1px solid var(--color-border-soft, rgba(0, 0, 0, 0.08));
+  border-bottom: 1px solid var(--color-border-soft, rgba(0, 0, 0, 0.08));
+  transform: rotate(45deg);
+}
+
+.engmascot-mini-btn {
+  appearance: none;
+  border: 1px solid var(--color-border-soft, rgba(0, 0, 0, 0.12));
+  background: var(--surface, #fff);
+  color: var(--muted-copy, #667);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 12px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px -3px rgba(0, 0, 0, 0.3);
+  margin-bottom: 4px;
+}
+.engmascot-mini-btn:hover {
+  border-color: #5aa7ff;
+}
+.engmascot-restore {
+  width: 34px;
+  height: 34px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* ---- Keyframes ---- */
+@keyframes engmascot-fx-float {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-80px) translateX(var(--dx, 0px)) rotate(var(--rot, 180deg));
+    opacity: 0;
+  }
+}
+
+@keyframes engmascot-blink-kf {
+  0%,
+  92%,
+  100% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  94%,
+  97% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes engmascot-idle-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(-1deg);
+  }
+}
+
+@keyframes engmascot-celebrate-jump {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  20% {
+    transform: translateY(-20px) rotate(-6deg) scale(1.04);
+  }
+  40% {
+    transform: translateY(-2px) rotate(4deg) scale(0.99);
+  }
+  60% {
+    transform: translateY(-13px) rotate(-3deg) scale(1.02);
+  }
+  80% {
+    transform: translateY(0) rotate(2deg) scale(1);
+  }
+}
+
+@keyframes engmascot-shake {
+  0%,
+  100% {
+    transform: translateY(3px) rotate(0deg);
+  }
+  20% {
+    transform: translateY(3px) rotate(-4deg);
+  }
+  40% {
+    transform: translateY(3px) rotate(3deg);
+  }
+  60% {
+    transform: translateY(3px) rotate(-3deg);
+  }
+  80% {
+    transform: translateY(3px) rotate(2deg);
+  }
+}
+
+@keyframes engmascot-think-tilt {
+  0%,
+  100% {
+    transform: rotate(-3deg) translateY(0);
+  }
+  50% {
+    transform: rotate(3deg) translateY(-2px);
+  }
+}
+
+@keyframes engmascot-point-bounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.03);
+  }
+}
+
+@keyframes engmascot-sleep-sway {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(2px) rotate(2deg);
+  }
+}
+
+@keyframes engmascot-ring-pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* ---- State classes ---- */
+.engmascot-idle {
+  animation: engmascot-idle-bob 3.2s ease-in-out infinite;
+}
+.engmascot-celebrate {
+  animation:
+    engmascot-celebrate-jump 1s cubic-bezier(0.34, 1.56, 0.64, 1) 1,
+    engmascot-idle-bob 3.2s ease-in-out 1s infinite;
+}
+.engmascot-concerned {
+  animation:
+    engmascot-shake 0.5s ease-in-out 2,
+    engmascot-idle-bob 3.4s ease-in-out 1s infinite;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.28)) saturate(0.75) brightness(0.97);
+}
+.engmascot-thinking {
+  animation: engmascot-think-tilt 2s ease-in-out infinite;
+}
+.engmascot-point {
+  animation: engmascot-point-bounce 1.5s ease-in-out infinite;
+}
+.engmascot-point .engmascot-ring {
+  animation: engmascot-ring-pulse 1.5s ease-out infinite;
+}
+.engmascot-sleeping {
+  animation: engmascot-sleep-sway 3.6s ease-in-out infinite;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.28)) saturate(0.7) brightness(0.9);
+}
+.engmascot-sleeping .engmascot-blink {
+  opacity: 0.9;
+  transform: scaleY(1);
+  animation: none;
+}
+.engmascot-celebrate .engmascot-blink {
+  animation: engmascot-blink-kf 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .engmascot-figure,
+  .engmascot-figure * {
+    animation: none !important;
+  }
+}

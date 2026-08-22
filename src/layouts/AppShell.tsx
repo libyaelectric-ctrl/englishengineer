@@ -10,6 +10,7 @@ import { useKeyboardNavigation } from '@/shared/hooks/useKeyboardNavigation';
 import { usePageTracking } from '@/shared/hooks/usePageTracking';
 
 import { BetaAnalyticsTracker, BetaFeedbackWidget } from '@/features/beta';
+import { EngMascot } from '@/features/mascot/EngMascot';
 
 import { MobileBottomNavigation } from './MobileBottomNavigation';
 import { RightSidebar } from './RightSidebar';
@@ -82,6 +83,7 @@ export const AppShell: FC = () => {
           </div>
         </main>
         <BetaFeedbackWidget />
+        <EngMascot />
         <MobileBottomNavigation />
       </div>
 
