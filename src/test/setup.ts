@@ -47,10 +47,11 @@ vi.mock('@/features/localization', () => ({
   LocalizationService: {
     translate: (key: string) => key,
     setLanguage: vi.fn(),
-    getSupportedLanguages: () => ['en'],
+    getSupportedLanguages: () => ['en', 'tr'],
   },
   INTERFACE_LANGUAGES: [
     { id: 'en', flag: '🇬🇧', label: 'English', nativeLabel: 'English', available: true, dir: 'ltr' },
+    { id: 'tr', flag: '🇹🇷', label: 'Turkish', nativeLabel: 'Türkçe', available: true, dir: 'ltr' },
   ],
 }));
 

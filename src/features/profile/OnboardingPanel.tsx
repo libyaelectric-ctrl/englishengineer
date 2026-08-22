@@ -39,7 +39,7 @@ const DISCIPLINE_ACCENTS: Record<EngineeringDiscipline, string> = {
  * unlocks. Styled after the Clerk palette (indigo/violet) so the first-run
  * experience feels consistent with sign-in.
  */
-export const OnboardingPanel = () => {
+export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}) => {
   const translate = useLocalizationStore((state) => state.translate);
   const setLanguage = useLocalizationStore((state) => state.setLanguage);
   const currentUser = useAuthStore((state) => state.currentUser);
@@ -66,6 +66,7 @@ export const OnboardingPanel = () => {
         },
       });
       useLearningStore.getState().resetAll();
+      onComplete?.();
     } finally {
       setIsSaving(false);
     }
