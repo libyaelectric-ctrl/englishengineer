@@ -1,0 +1,52 @@
+# ──────────────────────────────────────────────────────
+# EngVox — Production Docker Compose Overrides
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# ──────────────────────────────────────────────────────
+
+services:
+  frontend:
+    image: ${REGISTRY:-ghcr.io}/${IMAGE_PREFIX:-engvox}/frontend:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+  backend:
+    image: ${REGISTRY:-ghcr.io}/${IMAGE_PREFIX:-engvox}/backend:${TAG:-latest}
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: production
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    logging:
+      driver: json-file
+      options:
+        max-size: '50m'
+        max-file: '5'
+
+  redis:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
