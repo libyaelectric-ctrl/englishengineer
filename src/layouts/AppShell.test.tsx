@@ -45,6 +45,19 @@ vi.mock('@/config/navigation.config', () => ({
   NAV_ITEMS: [],
 }));
 
+vi.mock('@/features/mascot', () => ({
+  EngMascot: () => null,
+  useMascotEvents: vi.fn(),
+}));
+
+vi.mock('@/core/learning', () => ({
+  useLearningStore: vi.fn(() => ({ xp: 0, streak: 0, level: 1, studySessions: [] })),
+}));
+
+vi.mock('@/features/learning-intelligence', () => ({
+  useLearningIntelligenceStore: vi.fn(() => ({ mistakeLog: [] })),
+}));
+
 vi.mock('@/features/localization', () => ({
   useLocalizationStore: vi.fn(() => ({ language: 'en' })),
   NAVIGATION_TRANSLATIONS: { en: {} },
