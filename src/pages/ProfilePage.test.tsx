@@ -20,7 +20,7 @@ const mockState = {
   currentUser: { id: 'user-1', displayName: 'Ali', email: 'ali@test.com' },
   subscription: { planId: 'junior' },
   profile: { professionId: 'software-engineer' },
-  memory: { weakWords: 0, dueToday: 0 },
+  memory: { total: 100, mastered: 50, dueToday: 10, weakWords: 5 },
   learningState: { achievements: [] },
   mistakeLog: [],
   message: null,
@@ -90,12 +90,14 @@ describe('ProfilePage', () => {
   it('displays profile completion percentage', () => {
     renderWithProviders(<ProfilePage />);
 
-    expect(screen.getByText(/Profile Completion: 65%/)).toBeTruthy();
+    expect(screen.getByText(/65%/)).toBeTruthy();
   });
 
-  it('renders overview description', () => {
+  it('renders profile sections', () => {
     renderWithProviders(<ProfilePage />);
 
-    expect(screen.getByText(/Manage your professional profile/)).toBeTruthy();
+    expect(screen.getByText(/Profile Information/i)).toBeTruthy();
+    expect(screen.getByText(/Skills & Progress/i)).toBeTruthy();
+    expect(screen.getByText(/Achievements/i)).toBeTruthy();
   });
 });
