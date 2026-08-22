@@ -20,7 +20,7 @@ test.describe('Progress Flow', () => {
   });
 
   test('profile page loads', async ({ page }) => {
-    await page.goto('/profile/overview');
+    await page.goto('/profile');
     await page.waitForLoadState('networkidle');
 
     // Check page loads without error

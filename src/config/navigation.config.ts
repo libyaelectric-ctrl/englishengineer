@@ -5,7 +5,6 @@
  * - SKILL_NAV_ITEMS: Core language practicing categories (vocabulary, grammar, writing, etc.)
  * - LEARNING_NAV_ITEMS: Learning path, curriculum, and placement test
  * - TOOLS_NAV_ITEMS: Templates, AI copilot, translator, and developer scenario builder
- * - PROFILE_NAV_ITEMS: Personal settings, preferences, and data protection
  */
 import {
   BookMarked,
@@ -22,8 +21,6 @@ import {
   Map,
   Mic2,
   PenTool,
-  Settings,
-  Target,
   Trophy,
   User,
 } from 'lucide-react';
@@ -53,13 +50,6 @@ const TOOLS_NAV_ITEMS = [
   { label: 'Translator', href: '/translator', icon: Languages, feature: 'translator' },
 ] as const;
 
-// Simplified: Overview + Progress + Preferences (Security moved to Profile page)
-const PROFILE_NAV_ITEMS = [
-  { label: 'Overview', href: '/profile/overview', icon: User },
-  { label: 'Progress', href: '/progress/overview', icon: Target },
-  { label: 'Preferences', href: '/profile/preferences', icon: Settings },
-] as const;
-
 export const NAV_ITEMS = [
   { label: 'Home', href: '/dashboard', icon: Home },
   {
@@ -69,13 +59,8 @@ export const NAV_ITEMS = [
     children: LEARNING_NAV_ITEMS,
   },
   { label: 'Skills', href: null, icon: Layers3, children: SKILL_NAV_ITEMS },
-  {
-    label: 'Tools',
-    href: null,
-    icon: BriefcaseBusiness,
-    children: TOOLS_NAV_ITEMS,
-  },
-  { label: 'Profile', href: null, icon: User, children: PROFILE_NAV_ITEMS },
+  { label: 'Tools', href: null, icon: BriefcaseBusiness, children: TOOLS_NAV_ITEMS },
+  { label: 'Profile', href: '/profile', icon: User },
   { label: 'Team', href: '/team', icon: User, comingSoon: false },
 ] as const;
 

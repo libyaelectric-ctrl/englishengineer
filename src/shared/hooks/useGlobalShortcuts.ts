@@ -47,7 +47,7 @@ export function useGlobalShortcuts() {
     { key: '6', description: 'Listening', action: () => navigate('/listening') },
     { key: '7', description: 'Speaking', action: () => navigate('/speaking') },
     { key: '8', description: 'Learning Path', action: () => navigate('/learning-path') },
-    { key: '9', description: 'Profile', action: () => navigate('/profile/overview') },
+    { key: '9', description: 'Profile', action: () => navigate('/profile') },
 
     // Escape — close command palette if open
     { key: 'Escape', description: 'Close', action: () => {} },

@@ -102,7 +102,7 @@ test.describe('EngineerOS Olympus real browser verification (Clerk + free tier)'
   });
 
   test('profile overview renders and navigation shell works', async ({ page }) => {
-    await authenticatedPage(page, '/profile/overview');
+    await authenticatedPage(page, '/profile');
     await expect(page.getByRole('heading', { name: /profile overview/i })).toBeVisible({
       timeout: 20_000,
     });

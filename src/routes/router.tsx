@@ -131,7 +131,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'profile',
-        element: <Navigate to="/profile/overview" replace />,
+        element: withSuspense(Profile),
       },
       {
         path: 'profile/:section',

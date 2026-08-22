@@ -14,7 +14,7 @@ vi.mock('./useProfilePage', () => ({
     currentUser: { id: 'user-1', displayName: 'Test User' },
     subscription: { planId: 'starter' },
     profile: { professionId: null, skills: {} },
-    memory: { weakWords: [], dueToday: 0 },
+    memory: { weakWords: [], dueToday: 0, mastered: 0, learning: 0, new: 0 },
     learningState: { achievements: [], studySessions: [] },
     mistakeLog: [],
     message: null,
@@ -61,24 +61,21 @@ vi.mock('./useProfilePage', () => ({
   })),
 }));
 
-vi.mock('./ProfileOverviewSection', () => ({
-  ProfileOverviewSection: () => null,
-}));
-
-vi.mock('./SkillsProgressSection', () => ({
-  SkillsProgressSection: () => null,
-}));
-
-vi.mock('./LearningPreferencesSection', () => ({
-  LearningPreferencesSection: () => null,
-}));
-
-vi.mock('./SecuritySection', () => ({
-  SecuritySection: () => null,
-}));
+// Old section components removed — single-page design renders inline
 
 vi.mock('@/features/profile/profile.preferences', () => ({
   PROFESSIONS: [{ id: 'eng', label: 'Engineer' }],
+  LEARNING_GOALS: [
+    { id: 'speaking', label: 'Speaking' },
+    { id: 'writing', label: 'Writing' },
+    { id: 'travel', label: 'Travel' },
+  ],
+  COMMUNICATION_GOALS: [
+    { id: 'business', label: 'Business' },
+    { id: 'casual', label: 'Casual' },
+  ],
+  DAILY_DURATION_OPTIONS: [15, 30, 45, 60],
+  DAILY_TASK_COUNT_OPTIONS: [3, 5, 7, 10],
 }));
 
 describe('ProfilePage', () => {

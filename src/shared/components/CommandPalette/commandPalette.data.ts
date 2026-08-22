@@ -148,15 +148,15 @@ export const COMMANDS = [
   {
     id: 'profile-overview',
     label: 'Profile',
-    href: '/profile/overview',
+    href: '/profile',
     icon: 'User',
     category: 'Account',
     keywords: ['hesap'],
   },
   {
-    id: 'profile-preferences',
+    id: 'profile-settings',
     label: 'Settings',
-    href: '/profile/preferences',
+    href: '/profile#preferences',
     icon: 'Settings',
     category: 'Account',
     keywords: ['ayarlar'],

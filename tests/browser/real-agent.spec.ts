@@ -205,7 +205,7 @@ test.describe('Real User Agent', () => {
     await page.getByRole('button', { name: /try demo mode/i }).click();
     await page.waitForURL(/\/dashboard/, { timeout: 15000 });
 
-    await page.goto(SITE + '/profile/overview');
+    await page.goto(SITE + '/profile');
     await page.waitForTimeout(2000);
 
     const sections = await page.locator('section').count();
