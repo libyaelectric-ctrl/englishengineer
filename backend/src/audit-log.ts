@@ -104,4 +104,58 @@ export const AUDIT_ACTIONS = {
   WORKSPACE_DELETED: 'workspace_deleted',
   RATE_LIMIT_EXCEEDED: 'rate_limit_exceeded',
   ADMIN_ACCESS: 'admin_access',
+  // Data mutation tracking
+  DATA_CREATED: 'data_created',
+  DATA_UPDATED: 'data_updated',
+  DATA_DELETED: 'data_deleted',
+  DATA_EXPORTED: 'data_exported',
+  PROFILE_UPDATED: 'profile_updated',
+  SETTINGS_CHANGED: 'settings_changed',
+  PASSWORD_CHANGED: 'password_changed',
+  TEAM_MEMBER_ADDED: 'team_member_added',
+  TEAM_MEMBER_REMOVED: 'team_member_removed',
+  PLAN_CHANGED: 'plan_changed',
+  GRACE_PERIOD_STARTED: 'grace_period_started',
 } as const;
+
+/**
+ * Enhanced audit log for data mutations with before/after tracking.
+ * Records the old and new values for each changed field.
+ */
+export const auditDataMutation = (params: {
+  userId?: string;
+  action: string;
+  resource: string;
+  resourceId?: string;
+  before?: Record<string, unknown>;
+  after?: Record<string, unknown>;
+  ip?: string;
+  requestId?: string;
+  severity?: string;
+}): AuditLogEntry => {
+  // Compute changed fields
+  const changedFields: Record<string, { from: unknown; to: unknown }> = {};
+  if (params.before && params.after) {
+    const allKeys = new Set([...Object.keys(params.before), ...Object.keys(params.after)]);
+    for (const key of allKeys) {
+      const oldVal = params.before[key];
+      const newVal = params.after[key];
+      if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) {
+        changedFields[key] = { from: oldVal, to: newVal };
+      }
+    }
+  }
+
+  return auditLog({
+    action: params.action,
+    userId: params.userId,
+    severity: params.severity ?? 'info',
+    resource: params.resource,
+    resourceId: params.resourceId,
+    before: params.before,
+    after: params.after,
+    changedFields,
+    ip: params.ip,
+    requestId: params.requestId,
+  });
+};
