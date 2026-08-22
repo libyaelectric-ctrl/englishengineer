@@ -101,6 +101,8 @@ export const handleSubscriptionUpdated = async (
   );
 };
 
+const GRACE_PERIOD_DAYS = 3;
+
 export const handlePaymentFailed = async (
   repository: BillingRepository,
   object: WebhookObject
@@ -109,9 +111,33 @@ export const handlePaymentFailed = async (
   if (!userId) return;
 
   const current = (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
+
+  // If already in grace period, check if it has expired
+  if (current.gracePeriodEndsAt) {
+    const graceEnds = new Date(current.gracePeriodEndsAt);
+    if (new Date() < graceEnds) {
+      // Still within grace period — keep as-is with warning
+      return;
+    }
+    // Grace period expired — now truly past_due
+    await repository.upsertSubscriptionStatus(userId, {
+      ...current,
+      status: 'past_due',
+      gracePeriodEndsAt: null,
+      updatedAt: new Date().toISOString(),
+      source: 'stripe_webhook',
+    });
+    return;
+  }
+
+  // First payment failure — start grace period
+  const gracePeriodEndsAt = new Date();
+  gracePeriodEndsAt.setDate(gracePeriodEndsAt.getDate() + GRACE_PERIOD_DAYS);
+
   await repository.upsertSubscriptionStatus(userId, {
     ...current,
     status: 'past_due',
+    gracePeriodEndsAt: gracePeriodEndsAt.toISOString(),
     updatedAt: new Date().toISOString(),
     source: 'stripe_webhook',
   });

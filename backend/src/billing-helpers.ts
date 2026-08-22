@@ -13,6 +13,8 @@ export interface SubscriptionSnapshot {
   updatedAt: string;
   source: string;
   topupCredits: number;
+  /** ISO timestamp when the grace period ends after a payment failure. null if not in grace. */
+  gracePeriodEndsAt?: string | null;
 }
 
 export const requireText = (value: unknown, field: string): string => {
@@ -20,6 +22,12 @@ export const requireText = (value: unknown, field: string): string => {
     throw new ApiError(400, 'invalid_request', `${field} is required.`);
   }
   return value.trim();
+};
+
+/** Check if a subscription is still within its grace period after payment failure */
+export const isInGracePeriod = (subscription: SubscriptionSnapshot): boolean => {
+  if (!subscription.gracePeriodEndsAt) return false;
+  return new Date() < new Date(subscription.gracePeriodEndsAt);
 };
 
 export const emptySubscription = (): SubscriptionSnapshot => ({

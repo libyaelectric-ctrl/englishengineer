@@ -1,10 +1,41 @@
-import { ArrowRight, LogIn, UserPlus } from 'lucide-react';
+import { ArrowRight, BookOpen, Brain, LogIn, Target, UserPlus } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuthStore } from '@/features/auth';
+
+const ONBOARDING_STEPS = [
+  {
+    step: 1,
+    icon: Target,
+    title: 'Pick your discipline',
+    description:
+      'Choose from 10+ engineering fields — Civil, Mechanical, Electrical, and more. Your content adapts to your specialty.',
+    color: 'from-blue-500 to-cyan-400',
+    glow: 'shadow-blue-500/20',
+  },
+  {
+    step: 2,
+    icon: BookOpen,
+    title: 'Try a lesson',
+    description:
+      'Dive into vocabulary, grammar, reading, or writing — all tailored to real engineering documentation.',
+    color: 'from-emerald-500 to-teal-400',
+    glow: 'shadow-emerald-500/20',
+  },
+  {
+    step: 3,
+    icon: Brain,
+    title: 'Track your growth',
+    description:
+      'See your ELO score climb, maintain streaks, and unlock achievements as your engineering English improves.',
+    color: 'from-violet-500 to-purple-400',
+    glow: 'shadow-violet-500/20',
+  },
+] as const;
 
 const StartPage = () => {
   const navigate = useNavigate();
@@ -15,6 +46,18 @@ const StartPage = () => {
       navigate('/dashboard', { replace: true });
     }
   }, [isAuthenticated, currentUser, navigate]);
+
+  const prefersReduced = useReducedMotion();
+  const [activeStep, setActiveStep] = useState(0);
+
+  // Auto-advance tour steps
+  useEffect(() => {
+    if (prefersReduced) return;
+    const id = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % ONBOARDING_STEPS.length);
+    }, 4000);
+    return () => clearInterval(id);
+  }, [prefersReduced]);
 
   return (
     <main className="min-h-screen bg-transparent px-4 py-10 sm:px-6 text-foreground">
@@ -29,6 +72,48 @@ const StartPage = () => {
               Sign up with a Clerk-managed account to keep your progress synced and accessible.
             </p>
           </div>
+        </div>
+
+        {/* Onboarding Tour */}
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {ONBOARDING_STEPS.map((step, index) => {
+            const Icon = step.icon;
+            const isActive = index === activeStep;
+            return (
+              <motion.div
+                key={step.step}
+                initial={prefersReduced ? false : { opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: prefersReduced ? 0 : index * 0.1, duration: 0.4 }}
+                onClick={() => setActiveStep(index)}
+                className={`relative rounded-[var(--radius-card)] border p-5 transition-all duration-300 cursor-pointer ${
+                  isActive
+                    ? 'border-primary/40 bg-primary/5 shadow-lg'
+                    : 'border-border-soft bg-surface hover:border-border-hover'
+                }`}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div
+                    className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${step.color} shadow-md ${step.glow}`}
+                  >
+                    <Icon className="h-5 w-5 text-white" />
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+                    Step {step.step}
+                  </span>
+                </div>
+                <h3 className="text-sm font-bold text-foreground">{step.title}</h3>
+                <p className="mt-1 text-xs text-muted-copy leading-relaxed">{step.description}</p>
+                {isActive && (
+                  <motion.div
+                    layoutId="tour-indicator"
+                    className="absolute -bottom-px left-4 right-4 h-0.5 bg-primary rounded-full"
+                    transition={{ duration: 0.3 }}
+                  />
+                )}
+              </motion.div>
+            );
+          })}
         </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-2">
