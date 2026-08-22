@@ -28,6 +28,7 @@ import {
   UserRound,
   Zap,
 } from 'lucide-react';
+import { ThemeToggle } from '@/shared/components/ThemeToggle';
 
 import React from 'react';
 
@@ -130,6 +131,7 @@ const ProfileHero = ({
             </div>
             <p className="text-[10px] font-bold text-muted-copy uppercase">Hearts</p>
           </div>
+          <ThemeToggle />
         </div>
       </div>
 
