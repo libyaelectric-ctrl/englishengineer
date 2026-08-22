@@ -22,10 +22,16 @@ import type { BackendAuthConfig } from './auth.js';
 import { registerBillingRoutes } from './billing-routes.js';
 import { createBillingService, createStripeClient } from './billing-service.js';
 import type { BillingServiceConfig } from './billing-service.js';
-import { getPoolConfig } from './cache/connection-pool.js';
+import {
+  getPoolConfig,
+  getPoolMetrics,
+  startPoolHealthCheck,
+  stopPoolHealthCheck,
+} from './cache/connection-pool.js';
 import { initRedisCache } from './cache/redis-cache.service.js';
 import { toPublicHealth } from './config.js';
 import { ApiError, toErrorResponse } from './errors.js';
+import { registerExportRoutes } from './export-routes.js';
 import { registerGrammarRoutes } from './grammar-routes.js';
 import { createI18nMiddleware } from './i18n.js';
 import { registerListeningRoutes } from './listening-routes.js';
@@ -468,6 +474,7 @@ const registerRoutes = (
         heapTotalMB: Math.round(mem.heapTotal / 1048576),
         rssMB: Math.round(mem.rss / 1048576),
       },
+      pool: getPoolMetrics(),
       uptime: Math.round(process.uptime()),
       nodeVersion: process.version,
     });
@@ -640,15 +647,26 @@ const registerRoutes = (
     requireBackendAuth,
     limiters.grammar
   );
+
+  // GDPR data export routes
+  registerExportRoutes(
+    app,
+    requireBackendAuth,
+    config as unknown as { workspace?: Record<string, unknown> }
+  );
 };
 
 const initConnectionPool = (config: BackendConfig) => {
   const poolConfig = getPoolConfig({
     maxConnections: config.environment === 'production' ? 20 : 5,
+    minConnections: config.environment === 'production' ? 4 : 1,
   });
+  startPoolHealthCheck(poolConfig);
   logger.info('[Pool] Connection pool initialized', {
     max: poolConfig.maxConnections,
+    min: poolConfig.minConnections,
     timeout: poolConfig.connectionTimeoutMs,
+    healthCheckInterval: poolConfig.healthCheckIntervalMs,
   });
 };
 

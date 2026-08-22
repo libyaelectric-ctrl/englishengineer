@@ -8,6 +8,7 @@ import { EntitlementGate } from '@/features/billing';
 
 import { useTeamStore } from '../team.store';
 import { BulkLicenseAssign } from './BulkLicenseAssign';
+import { TeamLeaderboard } from './TeamLeaderboard';
 import { TeamMemberList } from './TeamMemberList';
 import { TeamStats } from './TeamStats';
 
@@ -68,7 +69,8 @@ export const TeamDashboard: FC = () => {
                 <div className="lg:col-span-3">
                   <TeamMemberList members={members} summaries={summaries} />
                 </div>
-                <div className="lg:col-span-2">
+                <div className="lg:col-span-2 space-y-6">
+                  <TeamLeaderboard members={members} summaries={summaries} />
                   <BulkLicenseAssign />
                 </div>
               </div>

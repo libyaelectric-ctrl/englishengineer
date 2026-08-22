@@ -1,4 +1,5 @@
 import { createApp } from './app.js';
+import { stopPoolHealthCheck } from './cache/connection-pool.js';
 import { createBackendConfig } from './config.js';
 import { logger } from './logger.js';
 
@@ -37,6 +38,9 @@ const shutdown = (signal: string) => {
 
   logger.info(`Received ${signal}. Starting graceful shutdown...`);
   logger.info(`Active connections: ${activeConnections}`);
+
+  // Stop pool health checks
+  stopPoolHealthCheck();
 
   // Stop accepting new connections
   server.close(() => {
