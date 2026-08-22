@@ -838,3 +838,5 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
     />
   );
 };
+
+export default HeroScene;
