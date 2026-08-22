@@ -5,6 +5,35 @@ import React from 'react';
 
 import { logger } from '@/shared/logger';
 
+// Mock Clerk for tests - provides ClerkProvider and components
+vi.mock('@clerk/clerk-react', () => ({
+  ClerkProvider: ({
+    children,
+    publishableKey,
+  }: {
+    children: React.ReactNode;
+    publishableKey?: string;
+  }) =>
+    publishableKey
+      ? React.createElement('div', { 'data-clerk-provider': true }, children)
+      : children,
+  SignedIn: ({ children }: { children: React.ReactNode }) =>
+    React.createElement('div', { 'data-clerk-signed-in': true }, children),
+  SignedOut: ({ children }: { children: React.ReactNode }) =>
+    React.createElement('div', { 'data-clerk-signed-out': true }, children),
+  UserButton: () => React.createElement('button', { 'data-clerk-user-button': true }, 'User'),
+  SignIn: () => React.createElement('div', { 'data-clerk-sign-in': true }, 'Sign In'),
+  SignUp: () => React.createElement('div', { 'data-clerk-sign-up': true }, 'Sign Up'),
+  useAuth: () => ({
+    isLoaded: true,
+    isSignedIn: false,
+    userId: null,
+    getToken: vi.fn().mockResolvedValue(null),
+  }),
+  useUser: () => ({ user: null, isLoaded: true }),
+  useClerk: () => ({ signOut: vi.fn() }),
+}));
+
 type NodeFileSystem = {
   readFileSync: (filePath: string, encoding: 'utf-8') => string;
 };

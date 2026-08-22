@@ -10,7 +10,7 @@ import { useKeyboardNavigation } from '@/shared/hooks/useKeyboardNavigation';
 import { usePageTracking } from '@/shared/hooks/usePageTracking';
 
 import { BetaAnalyticsTracker, BetaFeedbackWidget } from '@/features/beta';
-import { EngMascot } from '@/features/mascot/EngMascot';
+import { EngMascot, useMascotEvents } from '@/features/mascot';
 
 import { MobileBottomNavigation } from './MobileBottomNavigation';
 import { RightSidebar } from './RightSidebar';
@@ -33,6 +33,9 @@ export const AppShell: FC = () => {
 
   // Automatic page visit + time tracking
   usePageTracking();
+
+  // Mascot event integration (XP, streak, level-up, farewell)
+  useMascotEvents();
 
   // Block middle-click auto-scroll pan (mouse button 1 = wheel click)
   useEffect(() => {
