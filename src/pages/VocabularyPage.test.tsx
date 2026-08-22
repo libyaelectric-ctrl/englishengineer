@@ -98,7 +98,9 @@ describe('VocabularyPage menu', () => {
           <VocabularyPage />
         </MemoryRouter>
       );
-      await screen.findAllByText('height');
+      await waitFor(() =>
+        expect(screen.getAllByTestId('vocabulary-word-card').length).toBeGreaterThan(0)
+      );
       fireEvent.click(screen.getByRole('tab', { name: 'Learned' }));
 
       fireEvent.click(screen.getByRole('button', { name: 'Start Quiz' }));

@@ -19,6 +19,7 @@ vi.mock('./GrammarPage/hooks/useGrammarPage', () => ({
   useGrammarPage: vi.fn(() => ({
     level: 'A1',
     rules: [],
+    rulesLoaded: true,
     grammarPoolIds: [],
     query: '',
     setQuery: vi.fn(),
