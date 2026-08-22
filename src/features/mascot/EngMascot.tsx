@@ -4,17 +4,16 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useLocalizationStore } from '@/features/localization';
 import { MASCOT_COPY } from '@/features/localization/translations/mascot.translations';
+import { showToast } from '@/shared/components/Toast';
 
 import './engmascot.css';
-import { type MascotState, useMascotStore } from './mascot.store';
+import { type MascotState, type SoundVolume, useMascotStore } from './mascot.store';
 
 const MASCOT_IMG = '/mascot/engmascot.webp';
-const SLEEP_AFTER_MS = 90_000; // "falls asleep" after 90s of no mascot activity
+const SLEEP_AFTER_MS = 90_000;
 
 // ---------------------------------------------------------------------------
-// Sound effects — synthesized with the Web Audio API so no audio asset files
-// are needed (keeps this feature self-contained and avoids licensing any
-// third-party sound clips).
+// Sound effects — Web Audio API (self-contained, no external audio files)
 // ---------------------------------------------------------------------------
 let audioCtx: AudioContext | null = null;
 const getAudioCtx = (): AudioContext | null => {
@@ -27,34 +26,35 @@ const getAudioCtx = (): AudioContext | null => {
   return audioCtx;
 };
 
-const playTone = (freqs: number[], durationMs = 140, type: OscillatorType = 'sine') => {
+const VOLUME_MAP: Record<SoundVolume, number> = { off: 0, low: 0.02, high: 0.06 };
+
+const playTone = (
+  freqs: number[],
+  durationMs = 140,
+  type: OscillatorType = 'sine',
+  volume: SoundVolume = 'high'
+) => {
   const ctx = getAudioCtx();
-  if (!ctx) return;
+  if (!ctx || volume === 'off') return;
+  const gain = VOLUME_MAP[volume];
   const now = ctx.currentTime;
   freqs.forEach((freq, i) => {
     const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+    const g = ctx.createGain();
     osc.type = type;
     osc.frequency.value = freq;
     const start = now + i * (durationMs / 1000) * 0.85;
-    gain.gain.setValueAtTime(0, start);
-    gain.gain.linearRampToValueAtTime(0.06, start + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.0001, start + durationMs / 1000);
-    osc.connect(gain).connect(ctx.destination);
+    g.gain.setValueAtTime(0, start);
+    g.gain.linearRampToValueAtTime(gain, start + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, start + durationMs / 1000);
+    osc.connect(g).connect(ctx.destination);
     osc.start(start);
     osc.stop(start + durationMs / 1000 + 0.02);
   });
 };
 
-const SOUNDS = {
-  click: () => playTone([440], 90, 'sine'),
-  celebrate: () => playTone([523.25, 659.25, 783.99], 140, 'sine'),
-  concerned: () => playTone([300, 220], 160, 'sine'),
-  levelUp: () => playTone([392, 523.25, 659.25, 783.99], 110, 'triangle'),
-};
-
 // ---------------------------------------------------------------------------
-// Typewriter hook — reveals speech-bubble text character by character.
+// Typewriter hook
 // ---------------------------------------------------------------------------
 const useTypewriter = (text: string, speedMs = 18) => {
   const [shown, setShown] = useState('');
@@ -108,10 +108,18 @@ const stateAnimClass: Record<MascotState, string> = {
   sleeping: 'engmascot-sleeping',
 };
 
+/** Maps mascot state → toast type */
+const stateToastMap: Partial<Record<MascotState, { type: 'success' | 'error' | 'info'; icon: string }>> = {
+  celebrate: { type: 'success', icon: '🎉' },
+  streak: { type: 'success', icon: '🔥' },
+  levelUp: { type: 'success', icon: '🏆' },
+  concerned: { type: 'error', icon: '😅' },
+  streakDanger: { type: 'error', icon: '⚠️' },
+  point: { type: 'info', icon: '💡' },
+};
+
 export interface EngMascotProps {
-  /** Render inline within a page instead of as a floating corner widget. */
   inline?: boolean;
-  /** Fixed size in pixels for the character image (widget default: 64). */
   size?: number;
 }
 
@@ -126,12 +134,17 @@ export const EngMascot: React.FC<EngMascotProps> = ({ inline = false, size = 64 
     minimized,
     position,
     soundEnabled,
+    soundVolume,
+    toastEnabled,
+    contrastMode,
     lastInteractionAt,
     setState,
     say,
     toggleMinimized,
     setPosition,
-    setSoundEnabled,
+    setSoundVolume,
+    setToastEnabled,
+    toggleContrastMode,
     touch,
   } = useMascotStore();
 
@@ -143,9 +156,11 @@ export const EngMascot: React.FC<EngMascotProps> = ({ inline = false, size = 64 
     origBottom: number;
   } | null>(null);
   const [dragging, setDragging] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const fxRef = useRef<HTMLDivElement>(null);
   const prevStateRef = useRef<MascotState>(state);
 
+  // Confetti on positive states
   useEffect(() => {
     if (prevStateRef.current === state) return;
     prevStateRef.current = state;
@@ -154,7 +169,26 @@ export const EngMascot: React.FC<EngMascotProps> = ({ inline = false, size = 64 
     }
   }, [state]);
 
-  // ---- Sleep after inactivity (only for the persistent corner widget) ----
+  // Toast notifications on state changes
+  useEffect(() => {
+    if (!toastEnabled) return;
+    const toastConfig = stateToastMap[state];
+    if (!toastConfig) return;
+    const displayMessage =
+      message ??
+      (state === 'thinking'
+        ? copy.thinking
+        : state === 'sleeping'
+          ? copy.sleeping
+          : state === 'empty'
+            ? copy.empty
+            : null);
+    if (displayMessage) {
+      showToast(`${toastConfig.icon} ${displayMessage}`, toastConfig.type);
+    }
+  }, [state, message, toastEnabled, copy]);
+
+  // Sleep after inactivity
   useEffect(() => {
     if (inline) return;
     const id = setInterval(() => {
@@ -165,15 +199,18 @@ export const EngMascot: React.FC<EngMascotProps> = ({ inline = false, size = 64 
     return () => clearInterval(id);
   }, [inline, lastInteractionAt, state, setState]);
 
-  // ---- Play a sound whenever the mascot enters a new emotional state ----
+  // Sound on state change
   useEffect(() => {
     if (!soundEnabled) return;
     if (prevStateRef.current === state) return;
     prevStateRef.current = state;
-    if (state === 'celebrate' || state === 'streak') SOUNDS.celebrate();
-    else if (state === 'levelUp') SOUNDS.levelUp();
-    else if (state === 'concerned' || state === 'streakDanger') SOUNDS.concerned();
-  }, [state, soundEnabled]);
+    const vol = soundVolume;
+    if (state === 'celebrate' || state === 'streak')
+      playTone([523.25, 659.25, 783.99], 140, 'sine', vol);
+    else if (state === 'levelUp') playTone([392, 523.25, 659.25, 783.99], 110, 'triangle', vol);
+    else if (state === 'concerned' || state === 'streakDanger')
+      playTone([300, 220], 160, 'sine', vol);
+  }, [state, soundEnabled, soundVolume]);
 
   const displayMessage =
     message ??
@@ -187,10 +224,9 @@ export const EngMascot: React.FC<EngMascotProps> = ({ inline = false, size = 64 
 
   const typed = useTypewriter(displayMessage ?? '', 16);
 
-  // ---- Tap-for-random-tip interaction ----
   const handleTap = useCallback(() => {
     touch();
-    if (soundEnabled) SOUNDS.click();
+    if (soundEnabled) playTone([440], 90, 'sine', soundVolume);
     if (state === 'sleeping') {
       say(copy.wake, 'idle');
       return;
@@ -198,9 +234,9 @@ export const EngMascot: React.FC<EngMascotProps> = ({ inline = false, size = 64 
     const pool = copy.idle;
     const pick = pool[Math.floor(Math.random() * pool.length)];
     say(pick, 'idle');
-  }, [state, copy, say, touch, soundEnabled]);
+  }, [state, copy, say, touch, soundEnabled, soundVolume]);
 
-  // ---- Drag to reposition (corner widget only) ----
+  // Drag handlers
   const onPointerDown = (e: React.PointerEvent) => {
     if (inline) return;
     (e.target as Element).setPointerCapture(e.pointerId);
@@ -250,15 +286,15 @@ export const EngMascot: React.FC<EngMascotProps> = ({ inline = false, size = 64 
   return (
     <div
       ref={dockRef}
-      className={inline ? 'relative inline-flex flex-col items-center' : 'select-none'}
+      className={`${inline ? 'relative inline-flex flex-col items-center' : 'select-none'} ${contrastMode ? 'engmascot-high-contrast' : ''}`}
       style={containerStyle}
     >
-      {/* aria-live region: announces mascot messages to screen readers without
-          requiring the sighted-only speech bubble to be present in the DOM */}
+      {/* Screen reader announcement */}
       <div className="sr-only" role="status" aria-live="polite">
         {copy.ariaGreeting}: {displayMessage ?? ''}
       </div>
 
+      {/* Speech bubble */}
       <AnimatePresence>
         {displayMessage && !minimized && (
           <motion.div
@@ -275,19 +311,95 @@ export const EngMascot: React.FC<EngMascotProps> = ({ inline = false, size = 64 
         )}
       </AnimatePresence>
 
+      {/* Settings panel */}
+      <AnimatePresence>
+        {settingsOpen && !minimized && (
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.94 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 4, scale: 0.96 }}
+            className="engmascot-settings"
+          >
+            <div className="space-y-3">
+              {/* Sound toggle */}
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-xs font-bold text-foreground">🔊 Sound</span>
+                <div className="flex gap-1">
+                  {(['off', 'low', 'high'] as SoundVolume[]).map((vol) => (
+                    <button
+                      key={vol}
+                      type="button"
+                      onClick={() => setSoundVolume(vol)}
+                      className={`rounded px-2 py-0.5 text-[10px] font-bold transition ${
+                        soundVolume === vol
+                          ? 'bg-primary text-white'
+                          : 'bg-surface-hover text-muted-copy hover:bg-surface'
+                      }`}
+                    >
+                      {vol === 'off' ? '🔇' : vol === 'low' ? '🔈' : '🔊'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Toast toggle */}
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-xs font-bold text-foreground">💬 Toast</span>
+                <button
+                  type="button"
+                  onClick={() => setToastEnabled(!toastEnabled)}
+                  className={`relative h-5 w-9 rounded-full transition ${
+                    toastEnabled ? 'bg-primary' : 'bg-surface-hover'
+                  }`}
+                >
+                  <span
+                    className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
+                      toastEnabled ? 'translate-x-4' : 'translate-x-0.5'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {/* Contrast mode */}
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-xs font-bold text-foreground">🔲 Contrast</span>
+                <button
+                  type="button"
+                  onClick={toggleContrastMode}
+                  className={`relative h-5 w-9 rounded-full transition ${
+                    contrastMode ? 'bg-primary' : 'bg-surface-hover'
+                  }`}
+                >
+                  <span
+                    className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
+                      contrastMode ? 'translate-x-4' : 'translate-x-0.5'
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="flex items-end gap-2">
+        {/* Settings button */}
         {!inline && !minimized && (
           <button
             type="button"
-            onClick={() => setSoundEnabled(!soundEnabled)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setSettingsOpen(!settingsOpen);
+            }}
             className="engmascot-mini-btn"
-            aria-label={soundEnabled ? 'Mute mascot sounds' : 'Unmute mascot sounds'}
-            title={soundEnabled ? 'Mute' : 'Unmute'}
+            aria-label="Mascot settings"
+            title="Settings"
           >
-            {soundEnabled ? '🔊' : '🔇'}
+            ⚙️
           </button>
         )}
 
+        {/* Mascot figure */}
         <div
           className={`engmascot-figure ${stateAnimClass[state]}`}
           style={{ width: imgSize, cursor: inline ? 'default' : dragging ? 'grabbing' : 'grab' }}
@@ -314,6 +426,7 @@ export const EngMascot: React.FC<EngMascotProps> = ({ inline = false, size = 64 
           <div className="engmascot-fx" aria-hidden="true" ref={fxRef} />
         </div>
 
+        {/* Minimize / restore */}
         {!inline && !minimized && (
           <button
             type="button"
