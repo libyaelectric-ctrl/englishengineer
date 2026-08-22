@@ -91,7 +91,7 @@ export const CurriculumMemoryTab = ({
               </p>
             </div>
             <Link
-              to="/progress/next-steps"
+              to="/progress"
               className="text-xs font-bold uppercase tracking-wider text-primary hover:underline cursor-pointer"
             >
               {translate('curriculum.viewPlan')}

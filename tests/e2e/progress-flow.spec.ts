@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Progress Flow', () => {
   test('progress page loads', async ({ page }) => {
-    await page.goto('/progress/overview');
+    await page.goto('/progress');
     await page.waitForLoadState('networkidle');
 
     // Check page loads without error

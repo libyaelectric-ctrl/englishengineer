@@ -61,10 +61,10 @@ test.describe('Authenticated route rendering (free tier)', () => {
 });
 
 test.describe('Route redirects', () => {
-  test('/analytics redirects to /progress/overview', async ({ page }) => {
+  test('/analytics redirects to /progress', async ({ page }) => {
     await page.goto('/dashboard');
     await page.goto('/analytics');
-    await expect(page).toHaveURL(/\/progress\/overview/);
+    await expect(page).toHaveURL(/\/progress/);
   });
 
   test('/ai redirects to /pricing (AI Copilot requires Master)', async ({ page }) => {
@@ -73,16 +73,16 @@ test.describe('Route redirects', () => {
     await expect(page).toHaveURL(/\/pricing/);
   });
 
-  test('/curriculum redirects to /curriculum/today', async ({ page }) => {
+  test('/curriculum renders directly', async ({ page }) => {
     await page.goto('/dashboard');
     await page.goto('/curriculum');
-    await expect(page).toHaveURL(/\/curriculum\/today/);
+    await expect(page).toHaveURL(/\/curriculum/);
   });
 
-  test('/learning-plan redirects to /progress/next-steps', async ({ page }) => {
+  test('/learning-plan redirects to /progress', async ({ page }) => {
     await page.goto('/dashboard');
     await page.goto('/learning-plan');
-    await expect(page).toHaveURL(/\/progress\/next-steps/);
+    await expect(page).toHaveURL(/\/progress/);
   });
 
   test('/tools redirects to /pricing (tools require Master)', async ({ page }) => {
@@ -97,10 +97,10 @@ test.describe('Route redirects', () => {
     await expect(page).toHaveURL(/\/profile/);
   });
 
-  test('/progress redirects to /progress/overview', async ({ page }) => {
+  test('/progress renders directly', async ({ page }) => {
     await page.goto('/dashboard');
     await page.goto('/progress');
-    await expect(page).toHaveURL(/\/progress\/overview/);
+    await expect(page).toHaveURL(/\/progress/);
   });
 
   test('/dashboard redirects to login when unauthenticated', async ({ browser }) => {
