@@ -43,9 +43,19 @@ export const AdminHeader = ({
             </span>
           </div>
           <h1 className="mt-4 text-2xl font-bold text-foreground">EngVox Command Console</h1>
-          <Button variant="ghost" size="sm" onClick={onLogout} className="mt-2 text-xs">
-            <LogOut className="h-3.5 w-3.5" /> Logout
-          </Button>
+          <div className="flex items-center gap-2 mt-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => window.location.assign('/dashboard')}
+              className="text-xs"
+            >
+              ← Dashboard
+            </Button>
+            <Button variant="ghost" size="sm" onClick={onLogout} className="text-xs">
+              <LogOut className="h-3.5 w-3.5" /> Logout
+            </Button>
+          </div>
           <div className="flex items-center gap-2 mt-2">
             <button
               onClick={onManualRefresh}
