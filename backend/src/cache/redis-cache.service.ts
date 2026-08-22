@@ -93,3 +93,67 @@ export const getOrSet = async <T>(
 
   return { value, fromCache: false };
 };
+
+/** Invalidate a specific cache key */
+export const invalidateCache = async (key: string): Promise<void> => {
+  memoryCache.delete(key);
+  if (redisUrl && redisToken) {
+    try {
+      await fetch(redisUrl, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${redisToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(['DEL', key]),
+        signal: AbortSignal.timeout(3000),
+      });
+    } catch {
+      // Best effort
+    }
+  }
+};
+
+/** Invalidate all keys matching a prefix */
+export const invalidateByPrefix = async (prefix: string): Promise<void> => {
+  // Clear memory cache entries matching prefix
+  for (const key of memoryCache.keys()) {
+    if (key.startsWith(prefix)) {
+      memoryCache.delete(key);
+    }
+  }
+  // Redis: scan and delete matching keys
+  if (redisUrl && redisToken) {
+    try {
+      const response = await fetch(redisUrl, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${redisToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(['SCAN', '0', 'MATCH', `${prefix}*`, 'COUNT', '100']),
+        signal: AbortSignal.timeout(5000),
+      });
+      if (response.ok) {
+        const payload = (await response.json()) as { result?: [string, string[]] };
+        const keys = payload?.result?.[1] ?? [];
+        for (const key of keys) {
+          await redisSet(key, '', 1); // Set to expire immediately
+        }
+      }
+    } catch {
+      // Best effort
+    }
+  }
+};
+
+/** Get cache statistics */
+export const getCacheStats = (): {
+  memoryEntries: number;
+  redisConfigured: boolean;
+} => {
+  return {
+    memoryEntries: memoryCache.size,
+    redisConfigured: Boolean(redisUrl && redisToken),
+  };
+};

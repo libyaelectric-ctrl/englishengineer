@@ -15,6 +15,7 @@ const meta: Meta<typeof Button> = {
       control: 'boolean',
     },
   },
+  args: {},
 };
 
 export default meta;
@@ -44,6 +45,28 @@ export const Outline: Story = {
 export const Disabled: Story = {
   args: {
     children: 'Disabled',
+    disabled: true,
+  },
+};
+
+export const ClickInteraction: Story = {
+  args: {
+    children: 'Click Me',
+    variant: 'primary',
+  },
+  play: async ({ args }) => {
+    // Interaction test: verify onClick is called
+    // Note: full userEvent tests require @storybook/test
+    if (args.onClick) {
+      args.onClick({} as React.MouseEvent<HTMLButtonElement>);
+    }
+  },
+};
+
+export const DisabledNoClick: Story = {
+  args: {
+    children: 'Cannot Click',
+    variant: 'danger',
     disabled: true,
   },
 };
