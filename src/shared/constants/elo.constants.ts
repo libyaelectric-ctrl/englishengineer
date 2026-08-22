@@ -8,4 +8,3 @@ export const RANK_THRESHOLDS = {
 export const MAX_ELO = 5000;
 export const MIN_ELO = 1000;
 export const INITIAL_ELO = 1000;
-export const PROMOTION_READY_THRESHOLD = 90;

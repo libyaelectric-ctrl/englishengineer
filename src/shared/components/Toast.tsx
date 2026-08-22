@@ -21,11 +21,6 @@ export const showToast = (message: string, type: ToastType = 'info') => {
   listeners.forEach((l) => l(toast));
 };
 
-/** Convenience helpers for common toast patterns */
-export const showSuccess = (message: string) => showToast(message, 'success');
-export const showError = (message: string) => showToast(message, 'error');
-export const showInfo = (message: string) => showToast(message, 'info');
-
 const icons = {
   success: CheckCircle2,
   error: XCircle,
