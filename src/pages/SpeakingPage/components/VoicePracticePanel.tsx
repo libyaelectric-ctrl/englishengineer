@@ -4,19 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/shared/components/Button';
 
-// SpeechRecognition API hook for real-time voice input
-function useSpeechRecognition() {
-  const recognition =
-    typeof window !== 'undefined' &&
-    (window as unknown as { webkitSpeechRecognition?: new () => SpeechRecognition })
-      .webkitSpeechRecognition
-      ? new (
-          window as unknown as { webkitSpeechRecognition: new () => SpeechRecognition }
-        ).webkitSpeechRecognition()
-      : null;
-  return recognition;
-}
-
 interface VoicePracticePanelProps {
   hasMaxAccess: boolean;
   isRecording: boolean;

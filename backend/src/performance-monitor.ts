@@ -1,5 +1,7 @@
 interface RequestMetric {
   duration: number;
+  path?: string;
+  method?: string;
 }
 
 interface RateLimitMetric {
@@ -42,10 +44,17 @@ interface PerformanceMetricsResult {
   p95Duration: number;
   p99Duration: number;
   memoryUsage: NodeJS.MemoryUsage;
+  responseTimeHistogram: Array<{ bucket: string; count: number; percentage: string }>;
+  slowestEndpoints: Array<{ endpoint: string; avgDurationMs: number; requestCount: number }>;
 }
 
-export const recordRequest = (duration: number, isError: boolean): void => {
-  metricsState.requests.push({ duration });
+export const recordRequest = (
+  duration: number,
+  isError: boolean,
+  method?: string,
+  path?: string
+): void => {
+  metricsState.requests.push({ duration, path, method });
   if (metricsState.requests.length > MAX_REQUESTS) {
     metricsState.requests = metricsState.requests.slice(-MAX_REQUESTS);
   }
@@ -70,6 +79,49 @@ export const getPerformanceMetrics = (): PerformanceMetricsResult => {
       ? (metricsState.system.errorCount / metricsState.system.requestCount) * 100
       : 0;
 
+  // Response time histogram buckets (ms)
+  const histogramBuckets = [
+    { label: '0-50ms', min: 0, max: 50, count: 0 },
+    { label: '50-100ms', min: 50, max: 100, count: 0 },
+    { label: '100-200ms', min: 100, max: 200, count: 0 },
+    { label: '200-500ms', min: 200, max: 500, count: 0 },
+    { label: '500ms-1s', min: 500, max: 1000, count: 0 },
+    { label: '1s-5s', min: 1000, max: 5000, count: 0 },
+    { label: '>5s', min: 5000, max: Infinity, count: 0 },
+  ];
+  for (const d of durations) {
+    for (const bucket of histogramBuckets) {
+      if (d >= bucket.min && d < bucket.max) {
+        bucket.count++;
+        break;
+      }
+    }
+  }
+  const responseTimeHistogram = histogramBuckets.map(({ label, count }) => ({
+    bucket: label,
+    count,
+    percentage: durations.length > 0 ? ((count / durations.length) * 100).toFixed(1) + '%' : '0%',
+  }));
+
+  // Slowest endpoints
+  const endpointStats = new Map<string, { total: number; count: number }>();
+  for (const r of metricsState.requests) {
+    if (!r.path || !r.method) continue;
+    const key = `${r.method} ${r.path}`;
+    const existing = endpointStats.get(key) ?? { total: 0, count: 0 };
+    existing.total += r.duration;
+    existing.count++;
+    endpointStats.set(key, existing);
+  }
+  const slowestEndpoints = [...endpointStats.entries()]
+    .map(([endpoint, stats]) => ({
+      endpoint,
+      avgDurationMs: Math.round(stats.total / stats.count),
+      requestCount: stats.count,
+    }))
+    .sort((a, b) => b.avgDurationMs - a.avgDurationMs)
+    .slice(0, 10);
+
   return {
     uptime,
     requestCount: metricsState.system.requestCount,
@@ -79,6 +131,8 @@ export const getPerformanceMetrics = (): PerformanceMetricsResult => {
     p95Duration: Math.round(p95),
     p99Duration: Math.round(p99),
     memoryUsage: process.memoryUsage(),
+    responseTimeHistogram,
+    slowestEndpoints,
   };
 };
 
