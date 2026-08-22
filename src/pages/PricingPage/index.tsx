@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
+import { ExitIntentModal } from '@/shared/components/ExitIntentModal';
 import { PageMetadata } from '@/shared/components/PageMetadata';
 import { getPricingCopy } from '@/shared/data/pricing-copy';
 import { PRICING_FEATURE_ORDER, PRICING_TIERS } from '@/shared/data/pricing.data';
@@ -210,6 +211,7 @@ const PricingPage = () => {
         </div>
       </section>
 
+      <ExitIntentModal />
       <Footer className="fixed bottom-0 inset-x-0 z-50" />
     </main>
   );
