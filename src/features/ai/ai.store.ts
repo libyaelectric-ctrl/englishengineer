@@ -330,3 +330,8 @@ export const useAIStore = create<AIStoreState>()(
     { name: 'AIStore' }
   )
 );
+
+/** Convenience helper — reads the current usage summary from the store. */
+export const getStoredAIUsageSummary = () => {
+  return useAIStore.getState().getUsageSummary();
+};

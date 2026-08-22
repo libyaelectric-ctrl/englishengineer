@@ -1,4 +1,5 @@
-import { Timestamp } from '../entities/entity.types';
+/** ISO 8601 string representation of a point in time. */
+export type Timestamp = string;
 
 export const XP_PER_LEVEL = 500;
 
