@@ -2,6 +2,7 @@ import { BriefcaseBusiness, Home, Map, User } from 'lucide-react';
 
 import { NavLink } from 'react-router-dom';
 
+import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { cn } from '@/shared/utils/cn';
 
 import { NAVIGATION_TRANSLATIONS, useLocalizationStore } from '@/features/localization';
@@ -50,6 +51,9 @@ export const MobileBottomNavigation = () => {
             </NavLink>
           );
         })}
+        <div className="flex min-h-11 min-w-0 flex-col items-center justify-center">
+          <ThemeToggle />
+        </div>
       </div>
     </nav>
   );
