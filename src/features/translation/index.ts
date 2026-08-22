@@ -5,5 +5,3 @@ export type {
   TranslationResult,
   WordAnalysis,
 } from './services/translation.service';
-
-export { DashboardTranslatorWidget } from './components/DashboardTranslatorWidget';

@@ -1,3 +1,4 @@
+import { logger } from '@/shared/logger';
 import {
   getSupabaseClient,
   isSupabaseConfigured,
@@ -93,7 +94,7 @@ export const AdminService = {
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Failed to fetch admin users:', error.message);
+        logger.e('Failed to fetch admin users:', error.message);
         return [];
       }
 
