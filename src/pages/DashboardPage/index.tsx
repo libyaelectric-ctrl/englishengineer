@@ -19,6 +19,7 @@ import { useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization/localization.types';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
+import { DailyChallenge } from './DailyChallenge';
 import { DailyDigest } from './DailyDigest';
 import { ProgressNudge } from './ProgressNudge';
 
@@ -144,6 +145,9 @@ export const DashboardPage: React.FC = () => {
 
       {/* Daily Digest */}
       <DailyDigest />
+
+      {/* Daily Challenge */}
+      <DailyChallenge />
 
       {/* Progress Nudge */}
       <ProgressNudge />
