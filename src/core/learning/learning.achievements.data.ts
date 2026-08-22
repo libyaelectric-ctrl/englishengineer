@@ -254,4 +254,13 @@ export const DEFAULT_ACHIEVEMENTS: Achievement[] = [
     unlocked: false,
     unlockedAt: null,
   },
+  {
+    id: 'ach_legend_7_streak_90_acc',
+    title: 'Legend Engineer',
+    description: 'Maintain a 7+ day streak with 90%+ accuracy',
+    criteriaType: 'legend_combo',
+    criteriaValue: 1,
+    unlocked: false,
+    unlockedAt: null,
+  },
 ];
