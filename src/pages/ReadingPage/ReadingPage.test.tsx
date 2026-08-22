@@ -71,10 +71,6 @@ vi.mock('@/features/level-system', async (importOriginal) => ({
   EmptyLevelState: () => null,
 }));
 
-vi.mock('@/shared/utils/progression-lock.helpers', () => ({
-  isProgressionBypassed: vi.fn(() => true),
-}));
-
 vi.mock('@/shared/components/PageContainer', () => ({
   PageContainer: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));

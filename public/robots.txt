@@ -5,16 +5,16 @@ Allow: /
 Disallow: /admin$
 Disallow: /api$
 Disallow: /login$
-Disallow: /auth/callback$
-Disallow: /auth/signup$
+Disallow: /signup$
 
-# Allow important pages
-Allow: /
-Allow: /$
-Allow: /welcome$
+# Public pages (indexable)
+Allow: /start$
+Allow: /pricing$
+Allow: /business$
+Allow: /legal$
 Allow: /dashboard$
-Allow: /profile$
 Allow: /learning-path$
+Allow: /curriculum$
 Allow: /lesson-runner$
 Allow: /vocabulary$
 Allow: /grammar$
@@ -24,23 +24,20 @@ Allow: /speaking$
 Allow: /listening$
 Allow: /progress$
 Allow: /tools$
-Allow: /profile$
-Allow: /profile/overview$
-Allow: /profile/:section$
 Allow: /billing$
 Allow: /placement$
 Allow: /translator$
-Allow: /ai$
-Allow: /tools/work$
-Allow: /tools/:section$
-Allow: /learning-plan$
-Allow: /beta-program$
 Allow: /team$
-Allow: /team/members/:memberId$
 
-# Block private or draft content
-Disallow: /dashboard/onboarding$
-Disallow: /dashboard/:step$
+# Redirect-only paths — not indexable
+Disallow: /ai$
+Disallow: /analytics$
+Disallow: /gamification$
+Disallow: /learning-plan$
+Disallow: /beta-program$
+Disallow: /demo$
+Disallow: /onboarding$
+Disallow: /curriculum$
 
 # Sitemap
 Sitemap: https://eng-vox.vercel.app/sitemap.xml
