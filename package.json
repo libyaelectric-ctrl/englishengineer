@@ -45,8 +45,10 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "analyze": "ANALYZE=true npm run build",
+    "check:bundle": "node scripts/check-bundle-size.mjs",
     "check:licenses": "license-checker --production --csv --out licenses.csv",
     "check:licenses:reject": "license-checker --production --failOn 'GPL-3.0;AGPL-3.0'",
+    "a11y:audit": "node scripts/a11y-audit.mjs",
     "content:validate": "node scripts/verify-release.mjs"
   },
   "engines": {
