@@ -19,7 +19,7 @@ describe('BetaFeedbackWidget', () => {
     renderWidget();
     fireEvent.click(screen.getByRole('button', { name: /open closed beta feedback/i }));
     expect(screen.getByRole('dialog')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    fireEvent.click(screen.getByRole('button', { name: 'feedback.cancel' }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
@@ -28,7 +28,7 @@ describe('BetaFeedbackWidget', () => {
     const open = () =>
       fireEvent.click(screen.getByRole('button', { name: /open closed beta feedback/i }));
     open();
-    fireEvent.click(screen.getByRole('button', { name: /close feedback form/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Close feedback form/i }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     open();
     fireEvent.keyDown(window, { key: 'Escape' });
@@ -38,10 +38,10 @@ describe('BetaFeedbackWidget', () => {
   it('closes after a valid submission', () => {
     renderWidget();
     fireEvent.click(screen.getByRole('button', { name: /open closed beta feedback/i }));
-    fireEvent.change(screen.getByLabelText(/feedback message/i), {
+    fireEvent.change(screen.getByLabelText(/feedback\.message/i), {
       target: { value: 'The task flow is clear.' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /submit feedback/i }));
+    fireEvent.click(screen.getByRole('button', { name: /feedback\.submit/i }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 });
