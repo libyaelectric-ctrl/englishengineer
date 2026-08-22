@@ -1,4 +1,12 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "cleanUrls": true,
+  "trailingSlash": false,
+
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+
   "redirects": [
     {
       "source": "/demo",
@@ -7,47 +15,108 @@
     },
     {
       "source": "/learning",
-      "destination": "/progress/next-steps",
+      "destination": "/progress",
+      "permanent": false
+    },
+    {
+      "source": "/progress/overview",
+      "destination": "/progress",
+      "permanent": true
+    },
+    {
+      "source": "/progress/next-steps",
+      "destination": "/progress",
+      "permanent": true
+    },
+    {
+      "source": "/curriculum/today",
+      "destination": "/curriculum",
+      "permanent": true
+    },
+    {
+      "source": "/curriculum/memory",
+      "destination": "/curriculum",
+      "permanent": true
+    },
+    {
+      "source": "/curriculum/full",
+      "destination": "/curriculum",
+      "permanent": true
+    },
+    {
+      "source": "/profile/overview",
+      "destination": "/profile",
+      "permanent": true
+    },
+    {
+      "source": "/profile/preferences",
+      "destination": "/profile",
+      "permanent": true
+    },
+    {
+      "source": "/analytics",
+      "destination": "/progress",
+      "permanent": false
+    },
+    {
+      "source": "/gamification",
+      "destination": "/progress",
       "permanent": false
     }
   ],
+
   "rewrites": [
     {
-      "source": "/((?!api/|assets/).*)",
+      "source": "/assets/(.*)",
+      "destination": "/assets/$1"
+    },
+    {
+      "source": "/mascot/(.*)",
+      "destination": "/mascot/$1"
+    },
+    {
+      "source": "/((?!api/|assets/|mascot/).*)",
       "destination": "/index.html"
     }
   ],
+
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "X-Frame-Options",
-          "value": "SAMEORIGIN"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Strict-Transport-Security",
-          "value": "max-age=31536000; includeSubDomains; preload"
-        }
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(self), geolocation=()" },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" }
       ]
     },
     {
       "source": "/assets/(.*)",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/mascot/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "source": "/index.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+        { "key": "Pragma", "value": "no-cache" },
+        { "key": "Expires", "value": "0" }
+      ]
+    },
+    {
+      "source": "/favicon.ico",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
       ]
     }
-  ],
-  "framework": "vite"
+  ]
 }
