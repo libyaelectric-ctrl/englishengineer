@@ -42,7 +42,7 @@ const NotFoundPage = () => {
     } else if (q.includes('price') || q.includes('plan')) {
       navigate('/pricing');
     } else if (q.includes('profile')) {
-      navigate('/profile/overview');
+      navigate('/profile');
     } else if (q.includes('progress')) {
       navigate('/progress/overview');
     } else if (q.includes('team')) {

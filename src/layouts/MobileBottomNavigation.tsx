@@ -1,9 +1,5 @@
-import {
-  Home,
-  Map,
-  BriefcaseBusiness,
-  User,
-} from 'lucide-react';
+import { BriefcaseBusiness, Home, Map, User } from 'lucide-react';
+
 import { NavLink } from 'react-router-dom';
 
 import { cn } from '@/shared/utils/cn';
@@ -14,7 +10,7 @@ const ITEMS = [
   { label: 'Home', href: '/dashboard', icon: Home },
   { label: 'Learning Path', href: '/learning-path', icon: Map },
   { label: 'Tools', href: '/tools', icon: BriefcaseBusiness },
-  { label: 'Profile', href: '/profile/overview', icon: User },
+  { label: 'Profile', href: '/profile', icon: User },
 ] as const;
 
 export const MobileBottomNavigation = () => {

@@ -91,10 +91,10 @@ test.describe('Route redirects', () => {
     await expect(page).toHaveURL(/\/pricing/);
   });
 
-  test('/profile redirects to /profile/overview', async ({ page }) => {
+  test('/profile renders ProfilePage directly', async ({ page }) => {
     await page.goto('/dashboard');
     await page.goto('/profile');
-    await expect(page).toHaveURL(/\/profile\/overview/);
+    await expect(page).toHaveURL(/\/profile/);
   });
 
   test('/progress redirects to /progress/overview', async ({ page }) => {

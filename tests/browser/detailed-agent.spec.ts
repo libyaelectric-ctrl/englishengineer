@@ -171,7 +171,7 @@ test.describe('Detailed Agent Report', () => {
 
     // 12. Profile
     await runTest('Profile Page', async () => {
-      await page.goto(SITE + '/profile/overview');
+      await page.goto(SITE + '/profile');
       await page.waitForTimeout(2000);
       const name = await page
         .getByText(/demo engineer/i)

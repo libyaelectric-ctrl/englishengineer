@@ -102,10 +102,10 @@ describe('Navigation E2E: Main routes render without errors', () => {
 });
 
 describe('Navigation E2E: Profile and Progress routes', () => {
-  it('/profile/overview renders ProfilePage', async () => {
-    renderWithRouter(<ProfilePage />, ['/profile/overview']);
+  it('/profile renders ProfilePage', async () => {
+    renderWithRouter(<ProfilePage />, ['/profile']);
     await waitFor(() => {
-      expect(screen.getByText(/Manage your professional profile/i)).toBeInTheDocument();
+      expect(screen.getByText(/Profile Information/i)).toBeInTheDocument();
     });
   });
 
