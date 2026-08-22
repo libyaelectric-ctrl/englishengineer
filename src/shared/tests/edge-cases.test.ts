@@ -2,8 +2,6 @@ import { describe, expect, it } from 'vitest';
 
 import { AppError, ErrorCode } from '@/core/errors';
 
-import { isFeatureEnabled, overrideFeatureFlag } from '@/shared/feature-flags';
-
 describe('AppError Edge Cases', () => {
   it('should handle empty message', () => {
     const error = new AppError({
@@ -71,47 +69,5 @@ describe('AppError Edge Cases', () => {
   });
 });
 
-describe('Feature Flags Edge Cases', () => {
-  it('should handle rapid flag toggles', () => {
-    overrideFeatureFlag('newDashboard', true);
-    expect(isFeatureEnabled('newDashboard')).toBe(true);
-    overrideFeatureFlag('newDashboard', false);
-    expect(isFeatureEnabled('newDashboard')).toBe(false);
-    overrideFeatureFlag('newDashboard', true);
-    expect(isFeatureEnabled('newDashboard')).toBe(true);
-  });
-
-  it('should handle unknown flag gracefully', () => {
-    expect(isFeatureEnabled('totallyUnknownFlag123' as any)).toBe(false);
-  });
-
-  it('should handle null/undefined in getCurrentUserId', () => {
-    localStorage.removeItem('user_id');
-    // With no user_id, rollout percentage features should be disabled
-    expect(isFeatureEnabled('betaWritingReview')).toBe(false);
-  });
-
-  it('should handle all feature flags without crashing', () => {
-    const flags = [
-      'aiClaudeProvider',
-      'aiOpenAIProvider',
-      'aiGeminiProvider',
-      'newDashboard',
-      'teamManagement',
-      'advancedAnalytics',
-      'abTestingFramework',
-      'darkMode',
-      'offlineGrammar',
-      'betaWritingReview',
-    ] as const;
-
-    flags.forEach((flag) => {
-      expect(() => isFeatureEnabled(flag)).not.toThrow();
-    });
-  });
-
-  it('should handle environment edge cases', () => {
-    // Note: Cannot modify import.meta.env in tests, but function handles it
-    expect(isFeatureEnabled('aiGeminiProvider')).toBe(false); // dev/staging only
-  });
-});
+// Feature flags module was moved to A/B Testing backend service.
+// Frontend feature checks are now handled via API responses.
