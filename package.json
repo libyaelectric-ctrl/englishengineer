@@ -45,7 +45,6 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "analyze": "ANALYZE=true npm run build",
-    "download:seed": "node scripts/download-seed-data.mjs",
     "check:licenses": "license-checker --production --csv --out licenses.csv",
     "check:licenses:reject": "license-checker --production --failOn 'GPL-3.0;AGPL-3.0'",
     "content:validate": "node scripts/verify-release.mjs"
@@ -66,10 +65,8 @@
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "react-error-boundary": "^6.1.2",
-    "react-force-graph-2d": "^1.29.1",
     "react-hook-form": "^7.85.0",
     "react-router-dom": "^7.18.2",
-    "react-virtuoso": "^4.18.10",
     "tailwind-merge": "^3.6.0",
     "three": "^0.185.1",
     "zod": "^3.25.76",

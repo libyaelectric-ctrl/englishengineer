@@ -103,10 +103,6 @@ vi.mock('@/features/billing', async (importOriginal) => ({
   })),
 }));
 
-vi.mock('@/shared/utils/progression-lock.helpers', () => ({
-  isProgressionBypassed: vi.fn(() => true),
-}));
-
 vi.mock('@/shared/components/Button', () => ({
   Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
     <button {...props}>{children}</button>

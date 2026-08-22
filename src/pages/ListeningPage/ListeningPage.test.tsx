@@ -60,10 +60,6 @@ vi.mock('@/features/level-system', async (importOriginal) => ({
   LevelAccessBadge: () => null,
 }));
 
-vi.mock('@/shared/utils/progression-lock.helpers', () => ({
-  isProgressionBypassed: vi.fn(() => true),
-}));
-
 vi.mock('@/shared/components/Button', () => ({
   Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
     <button {...props}>{children}</button>
