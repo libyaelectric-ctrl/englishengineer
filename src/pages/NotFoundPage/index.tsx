@@ -44,7 +44,7 @@ const NotFoundPage = () => {
     } else if (q.includes('profile')) {
       navigate('/profile');
     } else if (q.includes('progress')) {
-      navigate('/progress/overview');
+      navigate('/progress');
     } else if (q.includes('team')) {
       navigate('/team');
     } else if (q.includes('bill')) {

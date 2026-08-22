@@ -27,14 +27,14 @@ function computeNudge(state: {
       return {
         message: `Your ${streak}-day streak is at risk! A quick 10-min session keeps it alive.`,
         actionLabel: 'Keep Streak',
-        actionTo: '/curriculum/today',
+        actionTo: '/curriculum',
       };
     }
     if (daysSince >= 3) {
       return {
         message: `It's been ${daysSince} days. Jump back in — your engineering English awaits!`,
         actionLabel: 'Resume Learning',
-        actionTo: '/curriculum/today',
+        actionTo: '/curriculum',
       };
     }
   }
@@ -45,7 +45,7 @@ function computeNudge(state: {
     return {
       message: 'Start your first mission to begin earning XP!',
       actionLabel: 'Start First Mission',
-      actionTo: '/curriculum/today',
+      actionTo: '/curriculum',
     };
   }
 
@@ -54,7 +54,7 @@ function computeNudge(state: {
     return {
       message: "You've run out of hearts. Come back tomorrow for a fresh start!",
       actionLabel: 'View Progress',
-      actionTo: '/progress/overview',
+      actionTo: '/progress',
     };
   }
 

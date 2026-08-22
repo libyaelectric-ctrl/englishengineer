@@ -211,27 +211,21 @@ export const router = createBrowserRouter([
       },
       {
         path: 'analytics',
-        element: <Navigate to="/progress/overview" replace />,
+        element: <Navigate to="/progress" replace />,
       },
       {
         path: 'progress',
-        element: <Navigate to="/progress/overview" replace />,
+        element: withSuspense(Progress),
       },
       {
         path: 'progress/:section',
         element: withSuspense(Progress),
       },
       {
-        path: 'gamification',
-        element: <Navigate to="/progress/next-steps" replace />,
-      },
-      {
         path: 'curriculum',
-        element: <Navigate to="/curriculum/today" replace />,
+        element: <CurriculumSectionGuard>{withSuspense(Curriculum)}</CurriculumSectionGuard>,
       },
       {
-        // Today is the free Learning Hub entry; the full curriculum and
-        // learning memory require a paid plan (Learning Hub feature).
         path: 'curriculum/:section',
         element: <CurriculumSectionGuard>{withSuspense(Curriculum)}</CurriculumSectionGuard>,
       },
@@ -248,7 +242,7 @@ export const router = createBrowserRouter([
 
       {
         path: 'learning-plan',
-        element: <Navigate to="/progress/next-steps" replace />,
+        element: <Navigate to="/progress" replace />,
       },
       {
         path: 'beta-program',

@@ -1,6 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+/**
+ * Curriculum Page — Modern Single Page Design
+ *
+ * All sections scroll vertically:
+ * 1. Learning Hub Header
+ * 2. Actions Grid (quick actions)
+ * 3. Today's Tasks & Missions
+ * 4. Memory & Review Queue
+ * 5. Full Curriculum & Recommendations
+ */
 
-import { useParams } from 'react-router-dom';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
@@ -28,8 +37,6 @@ import { CurriculumTodayTab } from './CurriculumTodayTab';
 import { SKILL_META } from './curriculum-data';
 
 const CurriculumPage = () => {
-  const { section } = useParams<{ section: string }>();
-  const activeSection = section || 'today';
   const translate = useLocalizationStore((s) => s.translate);
   const currentUser = useAuthStore((state) => state.currentUser);
   const { profile, memory, missions, isLoading, learningState } = useLearningCockpit(
@@ -45,6 +52,7 @@ const CurriculumPage = () => {
       setDomain(profile.discipline);
     }
   }, [profile?.discipline, domain]);
+
   const [recommendation, setRecommendation] = useState<LearningTaskRecommendation | null>(null);
   const [recommendationLoading, setRecommendationLoading] = useState(true);
   const [unifiedReviewQueue, setUnifiedReviewQueue] = useState<UnifiedReviewItem[]>([]);
@@ -113,31 +121,54 @@ const CurriculumPage = () => {
   const repeatedMistakes = mistakeLog.filter((item) => (item.repetitionCount ?? 1) >= 3).length;
 
   return (
-    <PageContainer className="w-full space-y-7 pb-8 relative z-10 font-sans">
+    <PageContainer className="w-full space-y-7 pb-8 relative z-10 font-sans pt-12 sm:pt-0">
+      {/* ─── Learning Hub Header ────────────────────────── */}
       <PageHeader
         title={translate('learningHub.title')}
         description="Your personalized learning journey and task recommendations."
       />
 
-      <CurriculumActionsGrid
-        primaryMission={primaryMission}
-        weakestSkill={weakestSkill}
-        currentSkillProfile={currentSkillProfile}
-        memory={memory}
-        setSelectedSkill={setSelectedSkill}
-      />
+      {/* ─── Quick Nav Anchors ──────────────────────────── */}
+      <div className="flex flex-wrap gap-2">
+        <a href="#actions" className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all">
+          Actions
+        </a>
+        <a href="#today" className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all">
+          Today
+        </a>
+        <a href="#memory" className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all">
+          Memory
+        </a>
+        <a href="#full" className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all">
+          Full Curriculum
+        </a>
+      </div>
 
-      {activeSection === 'today' && (
-        <>
-          <CurriculumTodayTab
-            isLoading={isLoading}
-            missions={missions}
-            learningState={learningState}
-          />
-        </>
-      )}
+      {/* ─── Actions Grid ───────────────────────────────── */}
+      <div id="actions">
+        <CurriculumActionsGrid
+          primaryMission={primaryMission}
+          weakestSkill={weakestSkill}
+          currentSkillProfile={currentSkillProfile}
+          memory={memory}
+          setSelectedSkill={setSelectedSkill}
+        />
+      </div>
 
-      {activeSection === 'memory' && (
+      {/* ─── Today's Tasks ──────────────────────────────── */}
+      <div id="today">
+        <CurriculumTodayTab
+          isLoading={isLoading}
+          missions={missions}
+          learningState={learningState}
+        />
+      </div>
+
+      {/* ═══ DIVIDER ══════════════════════════════════════════ */}
+      <div className="border-t border-border-soft" />
+
+      {/* ─── Memory & Review Queue ──────────────────────── */}
+      <div id="memory">
         <CurriculumMemoryTab
           memory={memory}
           grammarSummary={grammarSummary}
@@ -146,9 +177,13 @@ const CurriculumPage = () => {
           unifiedReviewQueue={unifiedReviewQueue}
           reviewPriorities={reviewPriorities}
         />
-      )}
+      </div>
 
-      {activeSection === 'full' && (
+      {/* ═══ DIVIDER ══════════════════════════════════════════ */}
+      <div className="border-t border-border-soft" />
+
+      {/* ─── Full Curriculum ────────────────────────────── */}
+      <div id="full">
         <CurriculumFullTab
           profile={profile}
           selectedSkill={selectedSkill}
@@ -160,7 +195,7 @@ const CurriculumPage = () => {
           recommendationLoading={recommendationLoading}
           selectedMeta={selectedMeta}
         />
-      )}
+      </div>
     </PageContainer>
   );
 };

@@ -109,9 +109,9 @@ describe('Navigation E2E: Profile and Progress routes', () => {
     });
   });
 
-  it('/progress/overview renders', async () => {
+  it('/progress renders', async () => {
     const { default: ProgressPage } = await import('@/pages/ProgressPage');
-    renderWithRouter(<ProgressPage />, ['/progress/overview']);
+    renderWithRouter(<ProgressPage />, ['/progress']);
     await waitFor(() => {
       expect(screen.getAllByText(/Progress/i).length).toBeGreaterThan(0);
     });
@@ -154,14 +154,14 @@ describe('Navigation E2E: Lazy-loaded pages', () => {
 });
 
 describe('Navigation E2E: Redirect routes', () => {
-  it('/analytics redirects to /progress/overview', async () => {
+  it('/analytics redirects to /progress', async () => {
     const { default: ProgressPage } = await import('@/pages/ProgressPage');
     render(
       <QueryClientProvider client={createTestQueryClient()}>
         <MemoryRouter initialEntries={['/analytics']}>
           <Routes>
             <Route path="/analytics" element={<ProgressPage />} />
-            <Route path="/progress/overview" element={<ProgressPage />} />
+            <Route path="/progress" element={<ProgressPage />} />
           </Routes>
         </MemoryRouter>
       </QueryClientProvider>

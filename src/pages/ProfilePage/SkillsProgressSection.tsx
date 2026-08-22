@@ -242,7 +242,7 @@ export const SkillsProgressSection = ({
           <Heatmap sessions={learningState.studySessions} />
           <div className="flex justify-end mt-2">
             <Link
-              to="/progress/overview"
+              to="/progress"
               className="inline-flex min-h-9 items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-4 text-xs font-bold uppercase tracking-wider text-primary hover:bg-primary/5 transition-colors cursor-pointer shadow-sm"
             >
               View Detailed Analytics <ArrowRight className="h-3.5 w-3.5" />

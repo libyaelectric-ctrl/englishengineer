@@ -84,7 +84,7 @@ export const COMMANDS = [
   {
     id: 'curriculum-today',
     label: "Today's Curriculum",
-    href: '/curriculum/today',
+    href: '/curriculum',
     icon: 'Calendar',
     category: 'Learning Hub',
     keywords: ['bugün', 'plan'],
@@ -92,7 +92,7 @@ export const COMMANDS = [
   {
     id: 'curriculum-full',
     label: 'Full Curriculum',
-    href: '/curriculum/full',
+    href: '/curriculum',
     icon: 'Library',
     category: 'Learning Hub',
     keywords: ['müfredat'],
@@ -100,7 +100,7 @@ export const COMMANDS = [
   {
     id: 'curriculum-memory',
     label: 'Learning Memory',
-    href: '/curriculum/memory',
+    href: '/curriculum',
     icon: 'BarChart3',
     category: 'Learning Hub',
     keywords: ['bellek'],
@@ -108,7 +108,7 @@ export const COMMANDS = [
   {
     id: 'progress-overview',
     label: 'Progress Overview',
-    href: '/progress/overview',
+    href: '/progress',
     icon: 'Target',
     category: 'Progress',
     keywords: ['ilerleme'],
@@ -116,7 +116,7 @@ export const COMMANDS = [
   {
     id: 'progress-next-steps',
     label: 'Next Steps',
-    href: '/progress/next-steps',
+    href: '/progress',
     icon: 'Trophy',
     category: 'Progress',
     keywords: ['sonraki', 'adım'],

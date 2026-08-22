@@ -98,7 +98,7 @@ export const DashboardPage: React.FC = () => {
             )}
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <Link
-                to="/curriculum/today"
+                to="/curriculum"
                 aria-label={translate('dashboard.startHere')}
                 className="inline-flex items-center gap-1.5 rounded-[var(--radius-card)] bg-surface border border-border-soft px-5 py-2.5 text-sm font-bold text-foreground hover:bg-surface-hover transition-colors"
               >
