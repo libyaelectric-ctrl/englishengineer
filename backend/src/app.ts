@@ -54,6 +54,7 @@ import { registerSpeakingRoutes } from './speaking-routes.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
 import { createSubscriptionRepository } from './subscription-repository.js';
 import { swaggerSpec } from './swagger.js';
+import { registerTeamAnalyticsRoutes } from './team-analytics.js';
 import type { VocabularyCache } from './vocabulary-service.js';
 import {
   createUpstashVocabularyCache,
@@ -646,14 +647,15 @@ const registerRoutes = (
     v1RouterAdapter as unknown as Express,
     requireBackendAuth,
     limiters.grammar
-  );
-
-  // GDPR data export routes
+  ); // GDPR data export routes
   registerExportRoutes(
     app,
     requireBackendAuth,
     config as unknown as { workspace?: Record<string, unknown> }
   );
+
+  // Team analytics routes
+  registerTeamAnalyticsRoutes(app, requireBackendAuth, limiters.global);
 };
 
 const initConnectionPool = (config: BackendConfig) => {
