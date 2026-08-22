@@ -10,6 +10,15 @@ import {
 } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 
+import { useCountUp } from '@/shared/hooks/useCountUp';
+
+/** Animated numeric stat that counts up from 0 */
+const AnimatedStatValue = ({ value, color }: { value: number; color: string }) => {
+  const prefersReduced = useReducedMotion();
+  const animated = useCountUp(value, prefersReduced ? 0 : 900);
+  return <p className={`text-base font-bold ${color} tabular-nums`}>{animated}</p>;
+};
+
 export const QuickStats = ({
   totalElo,
   highestSkillLabel,
@@ -34,26 +43,26 @@ export const QuickStats = ({
     {
       icon: Target,
       label: 'Avg Elo',
-      value: totalElo,
+      numericValue: totalElo,
       color: 'text-primary',
     },
     {
       icon: TrendingUp,
       label: 'Best',
-      value: highestSkillLabel,
+      displayValue: highestSkillLabel,
       color: 'text-success',
     },
-    { icon: Zap, label: 'Peak', value: peakElo, color: 'text-warning' },
+    { icon: Zap, label: 'Peak', numericValue: peakElo, color: 'text-warning' },
     {
       icon: Clock,
       label: 'Sessions',
-      value: sessionsCount,
+      numericValue: sessionsCount,
       color: 'text-error',
     },
     {
       icon: Layers,
       label: 'Knowledge Pool',
-      value: knowledgePoolSize,
+      numericValue: knowledgePoolSize,
       color: 'text-primary',
     },
     ...(grammarMastered !== undefined
@@ -61,7 +70,7 @@ export const QuickStats = ({
           {
             icon: BookOpen,
             label: 'Grammar Mastered',
-            value: grammarMastered,
+            numericValue: grammarMastered,
             color: 'text-emerald-600',
           },
         ]
@@ -69,7 +78,7 @@ export const QuickStats = ({
     {
       icon: AlertTriangle,
       label: 'Grammar Errors',
-      value: grammarErrors ?? 0,
+      numericValue: grammarErrors ?? 0,
       color: 'text-amber-600',
     },
     ...(advancedRules !== undefined && advancedRules > 0
@@ -77,7 +86,7 @@ export const QuickStats = ({
           {
             icon: Brain,
             label: 'Advanced Rules',
-            value: advancedRules,
+            numericValue: advancedRules,
             color: 'text-violet-600',
           },
         ]
@@ -100,7 +109,11 @@ export const QuickStats = ({
               {stat.label}
             </span>
           </div>
-          <p className={`text-base font-bold ${stat.color}`}>{stat.value}</p>
+          {'numericValue' in stat && stat.numericValue !== undefined ? (
+            <AnimatedStatValue value={stat.numericValue} color={stat.color} />
+          ) : (
+            <p className={`text-base font-bold ${stat.color}`}>{stat.displayValue}</p>
+          )}
         </motion.div>
       ))}
     </div>

@@ -29,11 +29,13 @@ import { registerGrammarRoutes } from './grammar-routes.js';
 import { createI18nMiddleware } from './i18n.js';
 import { registerListeningRoutes } from './listening-routes.js';
 import { logger } from './logger.js';
+import { correlationId } from './middleware/correlation.middleware.js';
 import { csrfProtection } from './middleware/csrf.middleware.js';
 import {
   createIdempotencyStore,
   setGlobalIdempotencyStore,
 } from './middleware/idempotency.middleware.js';
+import { inputSanitization } from './middleware/sanitize.middleware.js';
 import { requireTenantContext } from './middleware/tenant.middleware.js';
 import { recordRequest } from './performance-monitor.js';
 import { registerProgressRoutes } from './progress-routes.js';
@@ -179,10 +181,17 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
   ].filter(Boolean) as string[];
 
   if (config.environment === 'production') {
+    // Force HTTPS for all non-GET requests
     app.use((req: Request, res: Response, next: NextFunction) => {
       if (req.headers['x-forwarded-proto'] !== 'https' && req.method !== 'GET') {
         return res.redirect(301, `https://${req.headers.host}${req.url}`);
       }
+      next();
+    });
+    // Remove unnecessary headers in production
+    app.use((_req: Request, res: Response, next: NextFunction) => {
+      res.removeHeader('X-Powered-By');
+      res.removeHeader('Server');
       next();
     });
   }
@@ -214,6 +223,7 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
         'X-EngVox-AI-Contract',
         'X-EngVox-Request-Id',
         'X-CSRF-Token',
+        'x-request-id',
       ],
     })
   );
@@ -228,6 +238,8 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
   }
   app.use(webhookRawRouter);
   app.use(express.json({ limit: '256kb' }));
+  app.use(correlationId);
+  app.use(inputSanitization);
   app.use(csrfProtection);
 
   app.use((req: Request, res: Response, next: NextFunction) => {
@@ -236,12 +248,15 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
       const diff = process.hrtime(start);
       const timeMs = parseFloat((diff[0] * 1e3 + diff[1] * 1e-6).toFixed(2));
       const isError = res.statusCode >= 400;
-      recordRequest(timeMs, isError);
+      recordRequest(timeMs, isError, req.method, req.route?.path || req.originalUrl);
       recordEndpoint(req.method, req.route?.path || req.originalUrl, timeMs, isError);
       logger.info('Timing', {
         method: req.method,
         path: req.originalUrl,
+        status: res.statusCode,
         timeMs,
+        requestId: req.id,
+        userId: req.auth?.userId,
       });
     });
     next();
@@ -423,12 +438,23 @@ const registerRoutes = (
     if (config.supabase?.configured) await checkSupabaseHealth(config, checks, health);
     await checkUpstashHealth(config, checks, health);
     const responseTime = Date.now() - startTime;
+    const mem = process.memoryUsage();
     response.json({
       ...health,
       checks,
       responseTimeMs: responseTime,
       timestamp: new Date().toISOString(),
       stripeConfigured: (checks.stripe as { configured?: boolean })?.configured ?? false,
+      aiConfigured: config.ai.configured,
+      aiModel: config.ai.model ?? 'unknown',
+      billingProvider: config.billing.provider ?? 'none',
+      memory: {
+        heapUsedMB: Math.round(mem.heapUsed / 1048576),
+        heapTotalMB: Math.round(mem.heapTotal / 1048576),
+        rssMB: Math.round(mem.rss / 1048576),
+      },
+      uptime: Math.round(process.uptime()),
+      nodeVersion: process.version,
     });
   };
 

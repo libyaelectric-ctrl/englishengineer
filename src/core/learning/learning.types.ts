@@ -38,7 +38,13 @@ export interface Achievement {
   title: string;
   description: string;
   criteriaType:
-    'first_mission' | 'module_count' | 'streak' | 'xp_earned' | 'perfect_score' | 'fast_learner';
+    | 'first_mission'
+    | 'module_count'
+    | 'streak'
+    | 'xp_earned'
+    | 'perfect_score'
+    | 'fast_learner'
+    | 'legend_combo';
   criteriaValue: number;
   moduleFilter?: MissionModule;
   unlocked: boolean;

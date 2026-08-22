@@ -3,6 +3,8 @@ import type { AuthenticatedUser } from '../types.js';
 declare global {
   namespace Express {
     interface Request {
+      /** Unique correlation ID assigned to this request. */
+      id?: string;
       validatedBody?: Record<string, unknown>;
       validatedQuery?: Record<string, unknown>;
       auth?: AuthenticatedUser;

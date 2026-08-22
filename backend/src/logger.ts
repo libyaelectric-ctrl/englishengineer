@@ -28,6 +28,8 @@ export interface Logger {
   info: (msg: string, meta?: LogMeta) => void;
   warn: (msg: string, meta?: LogMeta) => void;
   error: (msg: string, meta?: LogMeta, err?: Error) => void;
+  /** Create a child logger that always includes the given correlation context. */
+  child: (context: LogMeta) => Logger;
   /**
    * Short aliases for info/warn/error. Several call sites across the
    * codebase (job-processor.ts, request-logger.ts, prompt-version.ts,
@@ -78,6 +80,32 @@ export const logger: Logger = {
   },
   e(msg: string, meta?: LogMeta, err?: Error) {
     this.error(msg, meta, err);
+  },
+  child(context: LogMeta): Logger {
+    const merge = (meta?: LogMeta): LogMeta => ({ ...context, ...meta });
+    return {
+      debug: (msg: string, meta?: LogMeta) => winstonLogger.debug(msg, merge(meta)),
+      info: (msg: string, meta?: LogMeta) => winstonLogger.info(msg, merge(meta)),
+      warn: (msg: string, meta?: LogMeta) => winstonLogger.warn(msg, merge(meta)),
+      error: (msg: string, meta?: LogMeta, err?: Error) => {
+        const logData: LogMeta = { ...merge(meta) };
+        if (err) {
+          logData.error = err.message;
+          logData.stack = err.stack;
+        }
+        winstonLogger.error(msg, logData);
+      },
+      i(msg: string, meta?: LogMeta) {
+        this.info(msg, meta);
+      },
+      w(msg: string, meta?: LogMeta) {
+        this.warn(msg, meta);
+      },
+      e(msg: string, meta?: LogMeta, err?: Error) {
+        this.error(msg, meta, err);
+      },
+      child: (ctx: LogMeta) => logger.child({ ...context, ...ctx }),
+    };
   },
 };
 

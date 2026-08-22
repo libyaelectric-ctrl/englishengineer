@@ -11,6 +11,7 @@ import { PageContainer } from '@/shared/components/PageContainer';
 import { SkeletonPage } from '@/shared/components/Skeleton';
 import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { useShortcutHint } from '@/shared/hooks/useShortcutHint';
 
 import { useAuthStore } from '@/features/auth';
 import { resolveDefaultDiscipline } from '@/features/learning-path';
@@ -18,9 +19,14 @@ import { useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization/localization.types';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
+import { ProgressNudge } from './ProgressNudge';
+
 export const DashboardPage: React.FC = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const translate = useLocalizationStore((state) => state.translate);
+
+  // Show Ctrl+K shortcut hint on first visit
+  useShortcutHint();
 
   // Real data from learning store (must be called before any early return)
   const xp = useLearningStore((s) => s.xp);
@@ -134,6 +140,9 @@ export const DashboardPage: React.FC = () => {
           icon={TrendingUp}
         />
       </div>
+
+      {/* Progress Nudge */}
+      <ProgressNudge />
 
       {/* Quick Progress Overview */}
       <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-5">
