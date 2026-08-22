@@ -1,49 +1,72 @@
+# ──────────────────────────────────────────────────────
+# EngVox — Health Check & Uptime Monitoring
+# Runs periodically to ensure production services are healthy
+# ──────────────────────────────────────────────────────
 name: Health Check
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # Her 6 saatte bir (gununde 4 kez)
+    - cron: '*/15 * * * *' # Every 15 minutes
   workflow_dispatch:
 
 jobs:
   health-check:
-    name: Production Health Check
+    name: Production Health
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Check Backend Health
-        run: |
-          echo "Checking backend health..."
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer-backend.onrender.com/api/health)
-          if [ "$RESPONSE" -ne 200 ]; then
-            echo "FAIL: Backend health check returned $RESPONSE"
-            exit 1
-          fi
-          echo "Backend healthy (HTTP $RESPONSE)"
-
       - name: Check Frontend
         run: |
-          echo "Checking frontend..."
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://eng-vox.vercel.app)
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 https://eng-vox.vercel.app/)
+          echo "Frontend: HTTP $RESPONSE"
           if [ "$RESPONSE" -ne 200 ]; then
-            echo "FAIL: Frontend returned $RESPONSE"
+            echo "::error::Frontend health check failed (HTTP $RESPONSE)"
             exit 1
           fi
-          echo "Frontend healthy (HTTP $RESPONSE)"
 
-      - name: Check API Docs
+      - name: Check Backend API
         run: |
-          echo "Checking API docs..."
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer-backend.onrender.com/api-docs)
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 https://englishengineer-backend.onrender.com/api/health)
+          echo "Backend: HTTP $RESPONSE"
           if [ "$RESPONSE" -ne 200 ]; then
-            echo "WARN: API docs returned $RESPONSE"
-          else
-            echo "API docs accessible"
+            echo "::error::Backend health check failed (HTTP $RESPONSE)"
+            exit 1
           fi
 
-      - name: Report Status
-        if: failure()
+      - name: Check Backend Health Details
         run: |
-          echo "::error::Production health check failed!"
-          echo "Backend: https://englishengineer-backend.onrender.com/api/health"
-          echo "Frontend: https://eng-vox.vercel.app"
+          HEALTH=$(curl -s --max-time 10 https://englishengineer-backend.onrender.com/api/health)
+          echo "$HEALTH" | jq .
+          STATUS=$(echo "$HEALTH" | jq -r '.status')
+          if [ "$STATUS" != "ok" ]; then
+            echo "::error::Backend status is $STATUS"
+            exit 1
+          fi
+
+      - name: Check API Response Time
+        run: |
+          START=$(date +%s%N)
+          curl -s -o /dev/null --max-time 10 https://englishengineer-backend.onrender.com/api/health
+          END=$(date +%s%N)
+          DURATION_MS=$(( (END - START) / 1000000 ))
+          echo "Response time: ${DURATION_MS}ms"
+          if [ "$DURATION_MS" -gt 5000 ]; then
+            echo "::warning::Backend response time is slow (${DURATION_MS}ms)"
+          fi
+
+  # Notify on failure (requires SLACK_WEBHOOK secret)
+  notify:
+    name: Notify on Failure
+    needs: health-check
+    if: failure()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Send Slack Notification
+        if: env.SLACK_WEBHOOK != ''
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        run: |
+          curl -s -X POST "$SLACK_WEBHOOK" \
+            -H 'Content-type: application/json' \
+            -d '{"text":"🚨 EngVox health check failed! Check: https://github.com/'${{ github.repository }}'/actions/workflows/health-check.yml"}'

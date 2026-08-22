@@ -29,8 +29,6 @@ coverage/
 bundle-report.html
 opencode.json
 railway.toml
-docker-compose.yml
-Dockerfile
 stryker.config.mjs
 CONTRIBUTING.md
 pipeline.md
