@@ -16,6 +16,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
+import { getLandingTranslations } from '@/shared/i18n/landing-i18n';
 import { getDisciplineIcon } from '@/shared/icons/registry';
 
 import { useLocalizationStore } from '@/features/localization';
@@ -23,7 +24,6 @@ import { useLocalizationStore } from '@/features/localization';
 import { Footer } from './Footer';
 import { HeroScene } from './HeroScene';
 import { Navbar } from './Navbar';
-import { getLandingTranslations } from '@/shared/i18n/landing-i18n';
 
 const FEATURES = [
   {
@@ -221,6 +221,16 @@ export const LandingPage = () => {
                       <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                     </span>
                     <span className="absolute inset-0 bg-gradient-to-r from-blue-600 to-violet-600 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300" />
+                  </Link>
+                  <Link
+                    data-hero="cta-demo"
+                    to="/vocabulary"
+                    className="group px-8 py-4 rounded-full border-2 border-dashed border-primary/40 text-primary font-bold text-lg backdrop-blur-md hover:bg-primary/10 hover:border-primary/60 transition-all"
+                  >
+                    <span className="flex items-center gap-3">
+                      <Sparkles className="h-5 w-5" />
+                      {t.ctaTryDemo}
+                    </span>
                   </Link>
                   <a
                     data-hero="cta"

@@ -8,6 +8,7 @@ export interface LandingTranslations {
   heroTitle2: string;
   heroSubtitle: string;
   ctaSelectBranch: string;
+  ctaTryDemo: string;
   ctaViewPlans: string;
   badgeNoCard: string;
   badgeLanguages: string;
@@ -48,6 +49,7 @@ const EN: LandingTranslations = {
   heroSubtitle:
     'Structured learning paths, real-time AI coaching, and discipline-specific vocabulary for engineers.',
   ctaSelectBranch: 'Select Your Branch',
+  ctaTryDemo: 'Try a Sample Lesson',
   ctaViewPlans: 'View Plans',
   badgeNoCard: 'No credit card required',
   badgeLanguages: '15 interface languages',
@@ -85,6 +87,7 @@ const TR: LandingTranslations = {
   heroSubtitle:
     'Yapılandırılmış öğrenme yolları, gerçek zamanlı AI koçluk ve disipline özgü kelime hazinesi.',
   ctaSelectBranch: 'Dalınızı Seçin',
+  ctaTryDemo: 'Örneği Dene',
   ctaViewPlans: 'Planları Görüntüle',
   badgeNoCard: 'Kredi kartı gerekmez',
   badgeLanguages: '15 arayüz dili',
@@ -97,8 +100,7 @@ const TR: LandingTranslations = {
 
   featuresHeaderBadge: 'Neden EngineerOS?',
   featuresTitle: 'İhtiyacınız Her Şey',
-  featuresSubtitle:
-    'Altı temel beceri, tek platform — her modül AI tarafından desteklenir.',
+  featuresSubtitle: 'Altı temel beceri, tek platform — her modül AI tarafından desteklenir.',
 
   placementTest: 'Seviye Testi',
   learningHub: 'Öğrenme Merkezi',
@@ -119,9 +121,9 @@ const AR: LandingTranslations = {
   heroTitle1: 'أتقن الإنجليزية',
   heroTitleHighlight: 'لتخصصك الهندسي',
   heroTitle2: 'إنجليزية مهنية مصممة لك',
-  heroSubtitle:
-    'مسارات تعلم منظمة وتدريب بالذكاء الاصطناعي ومفردات متخصصة للمهندسين.',
+  heroSubtitle: 'مسارات تعلم منظمة وتدريب بالذكاء الاصطناعي ومفردات متخصصة للمهندسين.',
   ctaSelectBranch: 'اختر تخصصك',
+  ctaTryDemo: 'جرّب درساً تجريبياً',
   ctaViewPlans: 'عرض الخطط',
   badgeNoCard: 'لا حاجة لبطاقة ائتمان',
   badgeLanguages: '15 لغة واجهة',
@@ -134,8 +136,7 @@ const AR: LandingTranslations = {
 
   featuresHeaderBadge: 'لماذا EngineerOS؟',
   featuresTitle: 'كل ما تحتاجه',
-  featuresSubtitle:
-    'ستة مهارات أساسية، منصة واحدة — كل وحدة مدعومة بالذكاء الاصطناعي.',
+  featuresSubtitle: 'ستة مهارات أساسية، منصة واحدة — كل وحدة مدعومة بالذكاء الاصطناعي.',
 
   placementTest: 'اختبار تحديد المستوى',
   learningHub: 'مركز التعلم',
@@ -156,9 +157,9 @@ const DE: LandingTranslations = {
   heroTitle1: 'Englisch meistern für',
   heroTitleHighlight: 'Ihr Ingenieur-Fachgebiet',
   heroTitle2: 'Professionelles Englisch, maßgeschneidert',
-  heroSubtitle:
-    'Strukturierte Lernpfade, Echtzeit-KI-Coaching und fachspezifisches Vokabular.',
+  heroSubtitle: 'Strukturierte Lernpfade, Echtzeit-KI-Coaching und fachspezifisches Vokabular.',
   ctaSelectBranch: 'Fachgebiet wählen',
+  ctaTryDemo: 'Beispiellektion testen',
   ctaViewPlans: 'Pläne ansehen',
   badgeNoCard: 'Keine Kreditkarte nötig',
   badgeLanguages: '15 Oberflächensprachen',
@@ -171,8 +172,7 @@ const DE: LandingTranslations = {
 
   featuresHeaderBadge: 'Warum EngineerOS?',
   featuresTitle: 'Alles was Sie brauchen',
-  featuresSubtitle:
-    'Sechs Kernkompetenzen, eine Plattform — jedes Modul von KI gestützt.',
+  featuresSubtitle: 'Sechs Kernkompetenzen, eine Plattform — jedes Modul von KI gestützt.',
 
   placementTest: 'Einstufungstest',
   learningHub: 'Lernzentrum',
@@ -193,9 +193,9 @@ const ES: LandingTranslations = {
   heroTitle1: 'Domina el inglés para',
   heroTitleHighlight: 'Tu rama de ingeniería',
   heroTitle2: 'Inglés profesional, adaptado a ti',
-  heroSubtitle:
-    'Rutas de aprendizaje estructuradas, coaching con IA y vocabulario específico.',
+  heroSubtitle: 'Rutas de aprendizaje estructuradas, coaching con IA y vocabulario específico.',
   ctaSelectBranch: 'Elige tu rama',
+  ctaTryDemo: 'Probar una lección',
   ctaViewPlans: 'Ver planes',
   badgeNoCard: 'Sin tarjeta de crédito',
   badgeLanguages: '15 idiomas de interfaz',
@@ -208,8 +208,7 @@ const ES: LandingTranslations = {
 
   featuresHeaderBadge: '¿Por qué EngineerOS?',
   featuresTitle: 'Todo lo que necesitas',
-  featuresSubtitle:
-    'Seis habilidades clave, una plataforma — cada módulo impulsado por IA.',
+  featuresSubtitle: 'Seis habilidades clave, una plataforma — cada módulo impulsado por IA.',
 
   placementTest: 'Test de nivel',
   learningHub: 'Centro de aprendizaje',
@@ -243,8 +242,6 @@ const TRANSLATIONS: Record<string, LandingTranslations> = {
   nl: EN,
 };
 
-export function getLandingTranslations(
-  language: SupportedInterfaceLanguage
-): LandingTranslations {
+export function getLandingTranslations(language: SupportedInterfaceLanguage): LandingTranslations {
   return TRANSLATIONS[language] ?? EN;
 }
