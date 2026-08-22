@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -11,7 +11,7 @@ import { LearningProfileRepository } from '@/features/profile/profile.repository
 
 import { OnboardingGate } from './OnboardingGate';
 
-const Guarded = () => <div>GUARDED CONTENT</div>;
+const Guarded = () => <div data-testid="guarded-content">GUARDED CONTENT</div>;
 
 const renderGate = (initialPath: string) =>
   render(
@@ -78,44 +78,50 @@ describe('OnboardingGate', () => {
     });
 
     renderGate('/dashboard');
-    await act(async () => {
-      expect(await screen.findByText('GUARDED CONTENT')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('guarded-content')).toBeInTheDocument();
     });
-    expect(screen.queryByRole('button', { name: /Start/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'onboarding.start' })).not.toBeInTheDocument();
   });
 
   it('shows the centered selection panel when onboarding is incomplete', async () => {
     renderGate('/dashboard');
-    await act(async () => {
-      // The "Start" button uses translation key "onboarding.start" and is disabled until discipline selected
-      expect(await screen.findByRole('button', { name: 'onboarding.start' })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'onboarding.start' })).toBeInTheDocument();
     });
-    // Discipline button has name "discipline.architecture discipline.architecture.desc"
     expect(screen.getByRole('button', { name: /discipline\.architecture/ })).toBeInTheDocument();
-    expect(screen.queryByText('GUARDED CONTENT')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('guarded-content')).not.toBeInTheDocument();
   });
 
   it('gates every app route, not just the dashboard', async () => {
     renderGate('/vocabulary');
-    await act(async () => {
-      expect(await screen.findByRole('button', { name: 'onboarding.start' })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'onboarding.start' })).toBeInTheDocument();
     });
-    expect(screen.queryByText('GUARDED CONTENT')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('guarded-content')).not.toBeInTheDocument();
   });
 
   it('unlocks the app on the same mounted gate once the panel is completed (no stale cache)', async () => {
     const user = userEvent.setup();
     renderGate('/dashboard');
-    // Click Architecture discipline button (uses translation key)
-    await act(async () => {
-      await user.click(screen.getByRole('button', { name: /discipline\.architecture/ }));
+
+    // Click Architecture discipline button
+    await waitFor(() => {
+      const btn = screen.getByRole('button', { name: /discipline\.architecture/ });
+      expect(btn).toBeInTheDocument();
+      userEvent.click(btn);
     });
-    // Click the Start button (translation key "onboarding.start") - it should be enabled now
-    await act(async () => {
-      await user.click(screen.getByRole('button', { name: 'onboarding.start' }));
+
+    // Click the Start button - it should be enabled now
+    await waitFor(() => {
+      const startBtn = screen.getByRole('button', { name: 'onboarding.start' });
+      expect(startBtn).not.toBeDisabled();
+      userEvent.click(startBtn);
     });
-    await act(async () => {
-      expect(await screen.findByText('GUARDED CONTENT')).toBeInTheDocument();
+
+    // Wait for guarded content to appear
+    await waitFor(() => {
+      expect(screen.getByTestId('guarded-content')).toBeInTheDocument();
     });
     expect(screen.queryByRole('button', { name: 'onboarding.start' })).not.toBeInTheDocument();
   });
