@@ -48,7 +48,10 @@ describe('VocabularyPage menu', () => {
 
   it('opens on New tab with cards visible', async () => {
     await renderLoadedPage();
-    expect(screen.getByRole('tab', { name: 'New' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tab', { name: 'vocabulary.tabNew' })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
 
     await startWordSet();
     const firstCard = screen.getAllByTestId('vocabulary-word-card')[0];
@@ -73,15 +76,15 @@ describe('VocabularyPage menu', () => {
       status: 'Learned',
       correctReviews: 0,
     });
-    fireEvent.click(screen.getByRole('tab', { name: 'Learned' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'vocabulary.tabLearned' }));
     expect(screen.getAllByText('height').length).toBeGreaterThan(0);
   }, 10_000);
 
   it('allows quiz to be started without word requirements', async () => {
     await renderLoadedPage();
-    fireEvent.click(screen.getByRole('tab', { name: 'Learned' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'vocabulary.tabLearned' }));
 
-    expect(screen.getByRole('button', { name: 'Start Quiz' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'vocabulary.startQuiz' })).toBeEnabled();
   }, 10_000);
 
   it('moves quiz answers through the learned pools in one completed quiz', async () => {
@@ -101,10 +104,10 @@ describe('VocabularyPage menu', () => {
       await waitFor(() =>
         expect(screen.getAllByTestId('vocabulary-word-card').length).toBeGreaterThan(0)
       );
-      fireEvent.click(screen.getByRole('tab', { name: 'Learned' }));
+      fireEvent.click(screen.getByRole('tab', { name: 'vocabulary.tabLearned' }));
 
-      fireEvent.click(screen.getByRole('button', { name: 'Start Quiz' }));
-      const firstInput = await screen.findByLabelText('Question 1 / 10');
+      fireEvent.click(screen.getByRole('button', { name: 'vocabulary.startQuiz' }));
+      const firstInput = await screen.findByLabelText(/vocabulary\.question 1 \/ 10/);
       const question = firstInput.parentElement;
       const termLabel = question?.querySelector('p')?.textContent;
       const selectedTerm = terms.find((term) => term.term === termLabel);
@@ -113,9 +116,9 @@ describe('VocabularyPage menu', () => {
       fireEvent.change(firstInput, {
         target: { value: selectedTerm?.turkishMeaning },
       });
-      fireEvent.click(screen.getByRole('button', { name: 'Finish Quiz' }));
+      fireEvent.click(screen.getByRole('button', { name: 'vocabulary.finishQuiz' }));
 
-      await screen.findByText('Quiz Complete');
+      await screen.findByText('vocabulary.quizComplete');
       const statuses = Object.values(VocabularyMenuService.getState().progress);
       expect(statuses.filter((word) => word.status === 'Mastered')).toHaveLength(1);
       expect(statuses.filter((word) => word.status === 'Struggling')).toHaveLength(0);

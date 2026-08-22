@@ -44,6 +44,11 @@ vi.mock('@/features/localization', () => ({
   useLocalizationStore: vi.fn((selector?: (state: typeof mockLocalizationState) => unknown) =>
     selector ? selector(mockLocalizationState) : mockLocalizationState
   ),
+  LocalizationService: {
+    translate: (key: string) => key,
+    setLanguage: vi.fn(),
+    getSupportedLanguages: () => ['en'],
+  },
   INTERFACE_LANGUAGES: [
     { id: 'en', flag: '🇬🇧', label: 'English', nativeLabel: 'English', available: true, dir: 'ltr' },
   ],
