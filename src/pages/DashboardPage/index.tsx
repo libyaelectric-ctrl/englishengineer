@@ -19,6 +19,7 @@ import { useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization/localization.types';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
+import { DailyDigest } from './DailyDigest';
 import { ProgressNudge } from './ProgressNudge';
 
 export const DashboardPage: React.FC = () => {
@@ -140,6 +141,9 @@ export const DashboardPage: React.FC = () => {
           icon={TrendingUp}
         />
       </div>
+
+      {/* Daily Digest */}
+      <DailyDigest />
 
       {/* Progress Nudge */}
       <ProgressNudge />
