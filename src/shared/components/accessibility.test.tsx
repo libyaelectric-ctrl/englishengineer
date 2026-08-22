@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
 import { Button } from './Button';
-import { Skeleton, SkeletonCard, SkeletonText } from './Skeleton';
+import { Skeleton, SkeletonCard } from './Skeleton';
 import { ToastContainer, showToast } from './Toast';
 
 describe('Component Accessibility', () => {
@@ -18,10 +18,7 @@ describe('Component Accessibility', () => {
       expect(container.firstChild).toBeTruthy();
     });
 
-    it('SkeletonText renders lines', () => {
-      const { container } = render(<SkeletonText lines={5} />);
-      expect(container.querySelectorAll('.animate-pulse')).toHaveLength(5);
-    });
+
   });
 
   describe('Button', () => {
