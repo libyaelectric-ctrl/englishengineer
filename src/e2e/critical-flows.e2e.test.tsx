@@ -11,7 +11,7 @@ vi.mock('@/pages/LandingPage/Navbar', () => ({
 }));
 
 vi.mock('@/pages/LandingPage/HeroScene', () => ({
-  HeroScene: () => <div data-testid="mock-hero-scene" />,
+  default: () => <div data-testid="mock-hero-scene" />,
 }));
 
 const createTestQueryClient = () =>
