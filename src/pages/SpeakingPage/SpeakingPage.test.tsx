@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { describe, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -123,10 +123,12 @@ vi.mock('@/shared/components/ScoreFeedbackOverlay', () => ({
 
 describe('SpeakingPage', () => {
   it('renders without crashing', () => {
-    render(
-      <MemoryRouter initialEntries={['/speaking']}>
-        <SpeakingPage />
-      </MemoryRouter>
-    );
+    act(() => {
+      render(
+        <MemoryRouter initialEntries={['/speaking']}>
+          <SpeakingPage />
+        </MemoryRouter>
+      );
+    });
   });
 });

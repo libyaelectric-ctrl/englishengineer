@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -81,15 +81,17 @@ vi.mock('@/config/product.config', () => ({
 
 describe('AppShell', () => {
   const renderShell = () =>
-    render(
-      <MemoryRouter initialEntries={['/dashboard']}>
-        <Routes>
-          <Route element={<AppShell />}>
-            <Route path="/dashboard" element={<div>Main Content</div>} />
-          </Route>
-        </Routes>
-      </MemoryRouter>
-    );
+    act(() => {
+      render(
+        <MemoryRouter initialEntries={['/dashboard']}>
+          <Routes>
+            <Route element={<AppShell />}>
+              <Route path="/dashboard" element={<div>Main Content</div>} />
+            </Route>
+          </Routes>
+        </MemoryRouter>
+      );
+    });
 
   it('renders sidebar, main content outlet, and bottom navigation', () => {
     renderShell();
