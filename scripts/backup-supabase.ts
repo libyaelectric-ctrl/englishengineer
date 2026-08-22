@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { execSync } from 'child_process';
-import { mkdirSync, writeFileSync } from 'fs';
+import { mkdirSync } from 'fs';
 import { join } from 'path';
 
 const SUPABASE_URL = process.env.SUPABASE_URL as string;
