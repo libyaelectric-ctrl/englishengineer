@@ -21,4 +21,5 @@ interface ImportMetaEnv {
   VITE_PRODUCT_ANALYTICS_PROVIDER?: string;
   VITE_SITE_URL?: string;
   VITE_ALLOW_LOCAL_AUTH?: string;
+  VITE_BACKEND_URL?: string;
 }

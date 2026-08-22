@@ -5,7 +5,7 @@ import ts from 'typescript';
 const requiredPaths = [
   'package-lock.json',
   'backend/package-lock.json',
-  'backend/server.js',
+  'backend/src/server.ts',
   'supabase/migrations',
   '.env.example',
   'src/features/level-system/level-system.types.ts',

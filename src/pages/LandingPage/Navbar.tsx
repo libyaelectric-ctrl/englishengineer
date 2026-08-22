@@ -116,9 +116,9 @@ export function Navbar({ onOpenProofreader: _ }: NavbarProps) {
               aria-label="Select language"
             >
               <Globe className="h-4 w-4 text-muted-copy" />
-              <span className="text-sm">{currentLang.flag}</span>
+              <span className="text-sm">{currentLang?.flag || '🌐'}</span>
               <span className="hidden sm:inline text-sm font-medium">
-                {currentLang.id.toUpperCase()}
+                {currentLang?.id ? currentLang.id.toUpperCase() : 'EN'}
               </span>
               <ChevronDown
                 className={`h-3.5 w-3.5 text-muted-copy transition-transform ${langOpen ? 'rotate-180' : ''}`}

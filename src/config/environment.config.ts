@@ -21,6 +21,7 @@ export interface EngVoxEnv {
   VITE_LOG_LEVEL?: string;
   VITE_PRODUCT_ANALYTICS_ENABLED?: string;
   VITE_PRODUCT_ANALYTICS_PROVIDER?: string;
+  VITE_BACKEND_URL?: string;
 }
 
 export interface EnvironmentValidationResult {

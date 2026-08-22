@@ -49,6 +49,15 @@ vi.mock('@/core/learning', () => ({
   ProgressService: {
     getSummary: vi.fn(() => ({ averageScore: 75, completedTasks: 10 })),
   },
+  useLearningStore: vi.fn((selector) => {
+    const state = {
+      xp: 150,
+      streak: 3,
+      hearts: 5,
+      missions: [],
+    };
+    return typeof selector === 'function' ? selector(state) : state;
+  }),
 }));
 
 vi.mock('@/features/learning-orchestrator', () => ({

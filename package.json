@@ -24,6 +24,7 @@
     "e2e:browser": "playwright test",
     "backend:install": "npm --prefix backend install --no-audit",
     "backend:test": "npm --prefix backend test",
+    "backend:typecheck": "npm --prefix backend run typecheck",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "verify:release": "node scripts/verify-release.mjs",

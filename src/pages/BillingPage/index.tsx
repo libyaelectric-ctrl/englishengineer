@@ -40,8 +40,8 @@ export const BillingPage = () => {
 
   useEffect(() => {
     if (currentUser?.id) {
-      refreshBilling(currentUser.id).catch((err) => logger.e('Billing refresh failed:', err));
-      fetchInvoices(currentUser.id).catch((err) => logger.e('Invoices fetch failed:', err));
+      refreshBilling?.(currentUser.id)?.catch((err) => logger.e('Billing refresh failed:', err));
+      fetchInvoices?.(currentUser.id)?.catch((err) => logger.e('Invoices fetch failed:', err));
     }
   }, [currentUser?.id, refreshBilling, fetchInvoices]);
 
@@ -150,14 +150,14 @@ export const BillingPage = () => {
                         Loading invoices...
                       </td>
                     </tr>
-                  ) : invoices.length === 0 ? (
+                  ) : (invoices ?? []).length === 0 ? (
                     <tr>
                       <td colSpan={5} className="px-4 py-8 text-center text-xs text-muted-copy">
                         No transactions yet.
                       </td>
                     </tr>
                   ) : (
-                    invoices.map((inv: InvoiceRecord) => (
+                    (invoices ?? []).map((inv: InvoiceRecord) => (
                       <tr key={inv.id} className="hover:bg-background transition-colors">
                         <td className="px-4 py-3 text-xs font-mono font-bold text-foreground">
                           {inv.id}
