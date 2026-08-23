@@ -1,6 +1,7 @@
 import { AppProvider } from '@/providers';
 import { router } from '@/routes/router';
 import { ClerkProvider } from '@clerk/clerk-react';
+import { lazy, Suspense } from 'react';
 import * as Sentry from '@sentry/react';
 
 import { RouterProvider } from 'react-router-dom';
@@ -17,8 +18,9 @@ import {
   CLERK_SIGN_UP_URL,
 } from '@/features/auth/clerk.config';
 import { CLERK_THEME } from '@/features/auth/clerk.theme';
-import { BillingSync } from '@/features/billing/BillingSync';
 import { ThemeProvider } from '@/features/theme/ThemeProvider';
+
+const BillingSync = lazy(() => import('@/features/billing/BillingSync').then(m => ({ default: m.BillingSync })));
 
 const AppContent = () => {
   useDirection();
@@ -36,7 +38,7 @@ const AppContent = () => {
             signUpFallbackRedirectUrl={CLERK_SIGN_UP_FALLBACK_REDIRECT_URL ?? '/dashboard'}
           >
             <ClerkBridge />
-            <BillingSync />
+            <Suspense fallback={null}><BillingSync /></Suspense>
             <RouterProvider router={router} />
           </ClerkProvider>
           <ToastContainer />

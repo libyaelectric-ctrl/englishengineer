@@ -420,7 +420,7 @@ export const EngMascot: React.FC<EngMascotProps> = ({ inline = false, size = 64 
             }
           }}
         >
-          <img src={MASCOT_IMG} alt="" draggable={false} />
+          <img src={MASCOT_IMG} alt="" draggable={false} loading="lazy" decoding="async" />
           <span className="engmascot-blink" aria-hidden="true" />
           <span className="engmascot-ring" aria-hidden="true" />
           <div className="engmascot-fx" aria-hidden="true" ref={fxRef} />

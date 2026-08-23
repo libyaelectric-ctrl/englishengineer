@@ -9,13 +9,15 @@ import { useGlobalShortcuts } from '@/shared/hooks/useGlobalShortcuts';
 import { useKeyboardNavigation } from '@/shared/hooks/useKeyboardNavigation';
 import { usePageTracking } from '@/shared/hooks/usePageTracking';
 
-import { BetaAnalyticsTracker, BetaFeedbackWidget } from '@/features/beta';
-import { EngMascot, useMascotEvents } from '@/features/mascot';
+import { useMascotEvents } from '@/features/mascot';
 
 import { MobileBottomNavigation } from './MobileBottomNavigation';
 import { RightSidebar } from './RightSidebar';
 import { Sidebar } from './Sidebar';
 
+const BetaAnalyticsTracker = lazy(() => import('@/features/beta').then(m => ({ default: m.BetaAnalyticsTracker })));
+const BetaFeedbackWidget = lazy(() => import('@/features/beta').then(m => ({ default: m.BetaFeedbackWidget })));
+const EngMascot = lazy(() => import('@/features/mascot').then(m => ({ default: m.EngMascot })));
 const CommandPalette = lazy(() => import('@/shared/components/CommandPalette'));
 const KeyboardShortcutsPanel = lazy(() => import('@/shared/components/KeyboardShortcutsPanel'));
 
@@ -67,7 +69,7 @@ export const AppShell: FC = () => {
 
       {/* Main content */}
       <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-hidden">
-        <BetaAnalyticsTracker />
+        <Suspense fallback={null}><BetaAnalyticsTracker /></Suspense>
         <button
           onClick={toggleSidebar}
           className="fixed left-2 top-2 z-50 cursor-pointer rounded-[var(--radius-card)] p-2 text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground lg:hidden"
@@ -85,8 +87,8 @@ export const AppShell: FC = () => {
             <Outlet />
           </div>
         </main>
-        <BetaFeedbackWidget />
-        <EngMascot />
+        <Suspense fallback={null}><BetaFeedbackWidget /></Suspense>
+        <Suspense fallback={null}><EngMascot /></Suspense>
         <MobileBottomNavigation />
       </div>
 

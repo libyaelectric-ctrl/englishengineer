@@ -161,7 +161,7 @@ export const Sidebar = () => {
             )}
           >
             <div className={cn('flex items-center gap-2', isSidebarCollapsed && 'hidden')}>
-              <img src="/brand/logo.svg" alt="EngVox" className="h-7 w-7 rounded-[4px]" />
+              <img src="/brand/logo.svg" alt="EngVox" className="h-7 w-7 rounded-[4px]" loading="lazy" decoding="async" />
               <div className="flex flex-col leading-tight">
                 <span className="text-sm font-bold text-foreground">EngVox</span>
                 <span className="text-[9px] font-bold text-primary font-mono">
