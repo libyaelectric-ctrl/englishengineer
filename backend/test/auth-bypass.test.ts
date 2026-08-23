@@ -32,6 +32,21 @@ const start = async (
   return `http://127.0.0.1:${address.port}`;
 };
 
+const fetchCsrfToken = async (url: string): Promise<{ cookie: string; token: string }> => {
+  const response = await fetch(`${url}/api/health`, { method: 'GET' });
+  const setCookie = response.headers.get('set-cookie') ?? '';
+  const match = /eos_csrf=([^;]+)/.exec(setCookie);
+  if (!match) {
+    // csrfProtection short-circuits (no cookie issued) when
+    // process.env.NODE_ENV === 'test', which is always the case under
+    // `npm test` (see package.json: `cross-env NODE_ENV=test tsx --test`)
+    // regardless of the NODE_ENV passed into createBackendConfig above.
+    // CSRF isn't enforced in that case, so there's nothing to send.
+    return { cookie: '', token: '' };
+  }
+  return { cookie: `eos_csrf=${match[1]}`, token: match[1] };
+};
+
 test('insecure dev auth is blocked in production by default', async () => {
   const url = await start({
     NODE_ENV: 'production',
@@ -39,12 +54,15 @@ test('insecure dev auth is blocked in production by default', async () => {
   });
 
   // Try to access an authenticated endpoint (e.g., AI Writing Review) using headers bypass
+  const { cookie, token } = await fetchCsrfToken(url);
   const response = await fetch(`${url}/api/ai/writing-review`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-Forwarded-Proto': 'https',
       'X-EngineerOS-User-Id': 'demo_user_123',
+      Cookie: cookie,
+      'x-csrf-token': token,
     },
     body: JSON.stringify({ prompt: 'Test' }),
   });
@@ -80,11 +98,14 @@ test('demo engineer profiles are blocked from creating checkout sessions in the 
     STRIPE_PRICE_JUNIOR_MONTHLY: 'price_mock',
   });
 
+  const { cookie, token } = await fetchCsrfToken(url);
   const response = await fetch(`${url}/api/billing/create-checkout-session`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-EngineerOS-User-Id': 'demo_engineer_abc123',
+      Cookie: cookie,
+      'x-csrf-token': token,
     },
     body: JSON.stringify({
       email: 'demo@engineer.com',
@@ -107,11 +128,14 @@ test('demo engineer profiles are blocked from creating billing portal sessions i
     STRIPE_PRICE_JUNIOR_MONTHLY: 'price_mock',
   });
 
+  const { cookie, token } = await fetchCsrfToken(url);
   const response = await fetch(`${url}/api/billing/create-customer-portal-session`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-EngineerOS-User-Id': 'demo_engineer_abc123',
+      Cookie: cookie,
+      'x-csrf-token': token,
     },
     body: JSON.stringify({
       returnUrl: 'http://localhost:3000/profile',
