@@ -16,6 +16,7 @@ export interface LandingTranslations {
   // Slides
   slideHero: string;
   slideDisciplines: string;
+  slideHowItWorks: string;
   slideFeatures: string;
 
   // Disciplines
@@ -25,6 +26,17 @@ export interface LandingTranslations {
   featuresHeaderBadge: string;
   featuresTitle: string;
   featuresSubtitle: string;
+
+  // How It Works
+  howItWorksHeaderBadge: string;
+  howItWorksTitle: string;
+  howItWorksSubtitle: string;
+  howItWorksStep1Title: string;
+  howItWorksStep1Desc: string;
+  howItWorksStep2Title: string;
+  howItWorksStep2Desc: string;
+  howItWorksStep3Title: string;
+  howItWorksStep3Desc: string;
 
   // Pricing feature labels
   placementTest: string;
@@ -56,6 +68,7 @@ const EN: LandingTranslations = {
 
   slideHero: 'Hero',
   slideDisciplines: 'Disciplines',
+  slideHowItWorks: 'How It Works',
   slideFeatures: 'Features',
 
   disciplinesTitle: 'Choose Your Engineering Discipline',
@@ -64,6 +77,17 @@ const EN: LandingTranslations = {
   featuresTitle: 'Everything You Need',
   featuresSubtitle:
     'Six core skills, one platform — each module powered by AI and tailored to your discipline.',
+
+  howItWorksHeaderBadge: 'How It Works',
+  howItWorksTitle: 'Learn in 3 Steps',
+  howItWorksSubtitle:
+    'Pick your discipline, practice with AI, track your progress — all in one flow.',
+  howItWorksStep1Title: 'Choose Your Path',
+  howItWorksStep1Desc: 'Select your engineering discipline and target English level.',
+  howItWorksStep2Title: 'Practice with AI',
+  howItWorksStep2Desc: 'Real-time coaching in vocabulary, grammar, speaking, and writing.',
+  howItWorksStep3Title: 'Track & Grow',
+  howItWorksStep3Desc: 'Streak, XP, and skill analytics keep you moving forward.',
 
   placementTest: 'Placement Test',
   learningHub: 'Learning Hub',
@@ -94,6 +118,7 @@ const TR: LandingTranslations = {
 
   slideHero: 'Giriş',
   slideDisciplines: 'Dallar',
+  slideHowItWorks: 'Nasıl Çalışır',
   slideFeatures: 'Özellikler',
 
   disciplinesTitle: 'Mühendislik Dalınızı Seçin',
@@ -101,6 +126,16 @@ const TR: LandingTranslations = {
   featuresHeaderBadge: 'Neden EngineerOS?',
   featuresTitle: 'İhtiyacınız Her Şey',
   featuresSubtitle: 'Altı temel beceri, tek platform — her modül AI tarafından desteklenir.',
+
+  howItWorksHeaderBadge: 'Nasıl Çalışır',
+  howItWorksTitle: '3 Adımda Öğren',
+  howItWorksSubtitle: 'Dalinizi seçin, AI ile pratiğin, ilerleyi takip et — hepsi tek akışta.',
+  howItWorksStep1Title: 'Yolunuzu Seçin',
+  howItWorksStep1Desc: 'Mühendislik dalınızı ve hedef İngilizce seviyenizi belirleyin.',
+  howItWorksStep2Title: 'AI ile Pratik Yapın',
+  howItWorksStep2Desc: 'Kelime, dilbilgisi, konuşma ve yazmada gerçek zamanlı koçluk.',
+  howItWorksStep3Title: 'Takip Edin ve Büyüyün',
+  howItWorksStep3Desc: 'Seri, XP ve beceri analitikleri sizi ileri taşır.',
 
   placementTest: 'Seviye Testi',
   learningHub: 'Öğrenme Merkezi',
@@ -130,6 +165,7 @@ const AR: LandingTranslations = {
 
   slideHero: 'رئيسي',
   slideDisciplines: 'التخصصات',
+  slideHowItWorks: 'كيف يعمل',
   slideFeatures: 'الميزات',
 
   disciplinesTitle: 'اختر تخصصك الهندسي',
@@ -137,6 +173,16 @@ const AR: LandingTranslations = {
   featuresHeaderBadge: 'لماذا EngineerOS؟',
   featuresTitle: 'كل ما تحتاجه',
   featuresSubtitle: 'ستة مهارات أساسية، منصة واحدة — كل وحدة مدعومة بالذكاء الاصطناعي.',
+
+  howItWorksHeaderBadge: 'كيف يعمل',
+  howItWorksTitle: 'تعلم في 3 خطوات',
+  howItWorksSubtitle: 'اختر تخصصك، تدرب مع الذكاء الاصطناعي، وتابع تقدمك — كل ذلك في تدفق واحد.',
+  howItWorksStep1Title: 'اختر مسارك',
+  howItWorksStep1Desc: 'اختر تخصصك الهندسي ومستوى الإنجليزية المستهدف.',
+  howItWorksStep2Title: 'تدرب مع الذكاء الاصطناعي',
+  howItWorksStep2Desc: 'تدريب فوري في المفردات، القواعد، التحدث، والكتابة.',
+  howItWorksStep3Title: 'تتبع وتطور',
+  howItWorksStep3Desc: 'السلاسل، XP، وتحليلات المهارات تبقيك تتقدم.',
 
   placementTest: 'اختبار تحديد المستوى',
   learningHub: 'مركز التعلم',
@@ -166,6 +212,7 @@ const DE: LandingTranslations = {
 
   slideHero: 'Start',
   slideDisciplines: 'Fachgebiete',
+  slideHowItWorks: 'Wie es funktioniert',
   slideFeatures: 'Funktionen',
 
   disciplinesTitle: 'Wählen Sie Ihr Ingenieur-Fachgebiet',
@@ -173,6 +220,17 @@ const DE: LandingTranslations = {
   featuresHeaderBadge: 'Warum EngineerOS?',
   featuresTitle: 'Alles was Sie brauchen',
   featuresSubtitle: 'Sechs Kernkompetenzen, eine Plattform — jedes Modul von KI gestützt.',
+
+  howItWorksHeaderBadge: 'Wie es funktioniert',
+  howItWorksTitle: 'In 3 Schritten lernen',
+  howItWorksSubtitle:
+    'Fachgebiet wählen, mit KI üben, Fortschritt verfolgen — alles in einem Fluss.',
+  howItWorksStep1Title: 'Pfad wählen',
+  howItWorksStep1Desc: 'Ihr Ingenieur-Fachgebiet und Ziel-Englisch-Level auswählen.',
+  howItWorksStep2Title: 'Mit KI üben',
+  howItWorksStep2Desc: 'Echtzeit-Coaching bei Vokabular, Grammatik, Sprechen und Schreiben.',
+  howItWorksStep3Title: 'Fortschritt & Wachsen',
+  howItWorksStep3Desc: 'Serien, XP und Skill-Analysen halten Sie auf Kurs.',
 
   placementTest: 'Einstufungstest',
   learningHub: 'Lernzentrum',
@@ -202,6 +260,7 @@ const ES: LandingTranslations = {
 
   slideHero: 'Inicio',
   slideDisciplines: 'Ramas',
+  slideHowItWorks: 'Cómo funciona',
   slideFeatures: 'Características',
 
   disciplinesTitle: 'Elige tu rama de ingeniería',
@@ -209,6 +268,16 @@ const ES: LandingTranslations = {
   featuresHeaderBadge: '¿Por qué EngineerOS?',
   featuresTitle: 'Todo lo que necesitas',
   featuresSubtitle: 'Seis habilidades clave, una plataforma — cada módulo impulsado por IA.',
+
+  howItWorksHeaderBadge: 'Cómo funciona',
+  howItWorksTitle: 'Aprende en 3 pasos',
+  howItWorksSubtitle: 'Elige tu rama, practica con IA, sigue tu progreso — todo en un flujo.',
+  howItWorksStep1Title: 'Elige tu camino',
+  howItWorksStep1Desc: 'Selecciona tu rama de ingeniería y nivel de inglés objetivo.',
+  howItWorksStep2Title: 'Practica con IA',
+  howItWorksStep2Desc: 'Coaching en tiempo real en vocabulario, gramática, habla y escritura.',
+  howItWorksStep3Title: 'Rastrea y crece',
+  howItWorksStep3Desc: 'Rachas, XP y analíticas de habilidades te mantienen avanzando.',
 
   placementTest: 'Test de nivel',
   learningHub: 'Centro de aprendizaje',

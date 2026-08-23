@@ -31,12 +31,6 @@ export function Footer({ className = '' }: { className?: string }) {
             <Link to="/pricing" className="hover:text-primary transition-colors">
               {translate('landing.navPricing')}
             </Link>
-            <Link to="/learning-path" className="hover:text-primary transition-colors">
-              {translate('learningPath')}
-            </Link>
-            <Link to="/profile" className="hover:text-primary transition-colors">
-              {translate('profile')}
-            </Link>
             <Link to="/tools" className="hover:text-primary transition-colors">
               {translate('tools')}
             </Link>
