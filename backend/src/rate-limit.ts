@@ -86,7 +86,7 @@ export const createRateLimitStore = (
   if (config.storeMode === 'memory') {
     if (process.env.NODE_ENV === 'production') {
       throw new Error(
-        'CRITICAL: Rate-limit store cannot be "memory" in PRODUCTION. Configure UPSTASH_URL and UPSTASH_TOKEN.'
+        'CRITICAL: Rate-limit store cannot be "memory" in PRODUCTION. Configure UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.'
       );
     }
     logger.warn(
@@ -98,7 +98,7 @@ export const createRateLimitStore = (
     if (!config.upstashUrl || !config.upstashToken) {
       if (process.env.NODE_ENV === 'production') {
         throw new Error(
-          'Rate-limit store mode is "upstash" but UPSTASH_URL or UPSTASH_TOKEN is missing. Cannot start without rate-limit store in production.'
+          'Rate-limit store mode is "upstash" but UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN is missing. Cannot start without rate-limit store in production.'
         );
       }
       logger.warn(

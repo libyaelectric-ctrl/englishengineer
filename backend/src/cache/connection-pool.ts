@@ -150,6 +150,10 @@ export const startPoolHealthCheck = (config: PoolConfig): void => {
       });
     }
   }, config.healthCheckIntervalMs);
+  // Don't let this background timer alone keep the process alive (e.g. after
+  // the HTTP server closes in tests) — stopPoolHealthCheck() still clears it
+  // explicitly during a normal graceful shutdown.
+  healthCheckTimer.unref();
 };
 
 /**
