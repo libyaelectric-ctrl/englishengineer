@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { ExitIntentModal } from '@/shared/components/ExitIntentModal';
+import { GlowingOrb } from '@/shared/components/GlowingOrb';
 import { PageMetadata } from '@/shared/components/PageMetadata';
 import { getPricingCopy } from '@/shared/data/pricing-copy';
 import { PRICING_FEATURE_ORDER, PRICING_TIERS } from '@/shared/data/pricing.data';
@@ -69,6 +70,12 @@ const PricingPage = () => {
         title="Pricing Plans — EngVox"
         description="Choose the plan that fits your engineering communication goals."
       />
+
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-30">
+          <GlowingOrb size="lg" />
+        </div>
+      </div>
 
       <Navbar />
 

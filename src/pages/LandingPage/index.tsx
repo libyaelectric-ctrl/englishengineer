@@ -15,6 +15,7 @@ import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } fro
 
 import { Link } from 'react-router-dom';
 
+import { GlowingOrb } from '@/shared/components/GlowingOrb';
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
 import { getLandingTranslations } from '@/shared/i18n/landing-i18n';
 import { getDisciplineIcon } from '@/shared/icons/registry';
@@ -270,7 +271,10 @@ export const LandingPage = () => {
               transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
               className="absolute inset-0 flex items-center justify-center px-4"
             >
-              <div className="max-w-6xl w-full max-h-[calc(100dvh-10rem)] overflow-y-auto">
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
+                <GlowingOrb size="lg" />
+              </div>
+              <div className="max-w-6xl w-full max-h-[calc(100dvh-10rem)] overflow-y-auto relative z-10">
                 <h2 className="text-center text-4xl md:text-5xl font-black text-foreground mb-12">
                   {t.disciplinesTitle}
                 </h2>
