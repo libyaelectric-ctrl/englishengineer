@@ -408,7 +408,13 @@ export const registerSpeakingRoutes = (
 
         // Development fallback only: local disk is ephemeral on Render and
         // must not be used as the production persistence layer.
-        const userDir = path.join(UPLOAD_ROOT, userId);
+        // Defense-in-depth: even though userId is already restricted to safe
+        // characters at auth time, re-verify the resolved path stays inside
+        // UPLOAD_ROOT before touching the filesystem.
+        const userDir = path.resolve(UPLOAD_ROOT, userId);
+        if (userDir !== UPLOAD_ROOT && !userDir.startsWith(UPLOAD_ROOT + path.sep)) {
+          throw new ApiError(400, 'invalid_authenticated_user', 'Invalid user identifier.');
+        }
         await mkdir(userDir, { recursive: true });
         await writeFile(path.join(userDir, fileName), buffer);
 

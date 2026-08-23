@@ -149,7 +149,8 @@ const normalizeIssuer = (value: string): string => value.replace(/\/+$/, '');
 
 const hasValidClerkClaims = (payload: ClerkClaims, issuer: string, now: number): boolean => {
   if (typeof payload.sub !== 'string' || !payload.sub) return false;
-  if (typeof payload.iss !== 'string' || normalizeIssuer(payload.iss) !== normalizeIssuer(issuer)) return false;
+  if (typeof payload.iss !== 'string' || normalizeIssuer(payload.iss) !== normalizeIssuer(issuer))
+    return false;
   if (typeof payload.exp === 'number' && payload.exp < now) return false;
   if (typeof payload.nbf === 'number' && payload.nbf > now) return false;
   return true;
@@ -205,6 +206,14 @@ const verifyClerkToken = async (
     return null;
   }
 };
+
+// Restricts user IDs accepted from the internal-secret auth path to safe
+// identifier characters. This value can end up in filesystem paths (see
+// speaking-routes.ts local-disk upload fallback), so it must never contain
+// path separators, "..", or other characters that could enable path
+// traversal or header/log injection. Covers UUID, Clerk ("user_xxx"), and
+// Supabase-style identifiers.
+const SAFE_USER_ID_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
 
 const secretsMatch = (
   left: string | null | undefined,
@@ -275,8 +284,16 @@ export const createBackendAuth = (
         'X-EngineerOS-User-Id is required for internal authentication.'
       );
     }
+    const trimmedUserId = userId.trim();
+    if (!SAFE_USER_ID_PATTERN.test(trimmedUserId)) {
+      throw new ApiError(
+        400,
+        'invalid_authenticated_user',
+        'X-EngineerOS-User-Id contains invalid characters.'
+      );
+    }
     return {
-      userId: userId.trim(),
+      userId: trimmedUserId,
       email:
         typeof request.headers['x-engineeros-user-email'] === 'string'
           ? request.headers['x-engineeros-user-email']

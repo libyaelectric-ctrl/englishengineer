@@ -1,3 +1,21 @@
+// Best-effort in-memory rate limit. Serverless instances are ephemeral and
+// may be scaled horizontally, so this does NOT provide a hard guarantee --
+// it only throttles abuse within a single warm instance. For a durable
+// limit, back this with the same Upstash-backed limiter used in
+// backend/src/rate-limit.ts.
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX_REQUESTS = 30;
+const MAX_TEXT_LENGTH = 2000;
+const requestLog = new Map();
+
+const isRateLimited = (key) => {
+  const now = Date.now();
+  const timestamps = (requestLog.get(key) || []).filter((ts) => now - ts < RATE_LIMIT_WINDOW_MS);
+  timestamps.push(now);
+  requestLog.set(key, timestamps);
+  return timestamps.length > RATE_LIMIT_MAX_REQUESTS;
+};
+
 export default async function handler(req, res) {
   const ALLOWED_ORIGINS = ['https://eng-vox.vercel.app', 'http://localhost:5173'];
   const origin = req.headers.origin || '';
@@ -12,10 +30,21 @@ export default async function handler(req, res) {
     return;
   }
 
+  const clientKey =
+    req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
+  if (isRateLimited(clientKey)) {
+    return res.status(429).json({ error: 'Too many requests. Please slow down.' });
+  }
+
   const { text, sl, tl } = req.query;
 
   if (!text || !sl || !tl) {
     return res.status(400).json({ error: 'Missing parameters: text, sl, tl are required.' });
+  }
+  if (typeof text !== 'string' || text.length > MAX_TEXT_LENGTH) {
+    return res
+      .status(400)
+      .json({ error: `text must be a string up to ${MAX_TEXT_LENGTH} characters.` });
   }
 
   try {

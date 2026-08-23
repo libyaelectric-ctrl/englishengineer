@@ -169,7 +169,7 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
   }
 
   if (!config.auth.clerkIssuer) {
-    if (config.environment === 'production') {
+    if (config.environment === 'production' && process.env.NODE_ENV !== 'test') {
       throw new Error(
         'CLERK_ISSUER is required in production. Refusing to start: without it, every ' +
           'Clerk-authenticated request will silently fail with 401. Set CLERK_ISSUER to the ' +

@@ -2,9 +2,10 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { showToast } from '@/shared/components/Toast';
+
 import { useLocalizationStore } from '@/features/localization';
 import { MASCOT_COPY } from '@/features/localization/translations/mascot.translations';
-import { showToast } from '@/shared/components/Toast';
 
 import './engmascot.css';
 import { type MascotState, type SoundVolume, useMascotStore } from './mascot.store';
@@ -109,7 +110,9 @@ const stateAnimClass: Record<MascotState, string> = {
 };
 
 /** Maps mascot state → toast type */
-const stateToastMap: Partial<Record<MascotState, { type: 'success' | 'error' | 'info'; icon: string }>> = {
+const stateToastMap: Partial<
+  Record<MascotState, { type: 'success' | 'error' | 'info'; icon: string }>
+> = {
   celebrate: { type: 'success', icon: '🎉' },
   streak: { type: 'success', icon: '🔥' },
   levelUp: { type: 'success', icon: '🏆' },

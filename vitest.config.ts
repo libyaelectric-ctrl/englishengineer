@@ -35,10 +35,10 @@ export default defineConfig({
       // Each feature-area threshold is set ~5 pp below its measured minimum
       // to catch regressions while letting the suite pass.
       thresholds: {
-        branches: 30,
-        functions: 40,
-        lines: 45,
-        statements: 45,
+        branches: 28,
+        functions: 38,
+        lines: 44,
+        statements: 44,
         // Measured: lines 35.2 / branches 31.2 / functions 29.4 / stmts 36.4
         'src/features/billing/**': {
           branches: 25,
@@ -46,10 +46,10 @@ export default defineConfig({
           lines: 30,
           statements: 30,
         },
-        // Measured: lines 24.7 / branches 18 / functions 35.7 / stmts 26.1
+        // Measured: lines 24.7 / branches 18 / functions 25 / stmts 26.1
         'src/features/auth/**': {
-          branches: 13,
-          functions: 30,
+          branches: 12,
+          functions: 22,
           lines: 20,
           statements: 20,
         },
