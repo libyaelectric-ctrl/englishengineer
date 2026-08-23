@@ -98,19 +98,20 @@ interface ClerkClaims {
 let clerkJwksCache: { issuer: string; keys: ClerkJwk[]; fetchedAt: number } | null = null;
 
 const fetchClerkJwks = async (issuer: string, fetchImpl: typeof fetch): Promise<ClerkJwk[]> => {
+  const normalizedIssuer = normalizeIssuer(issuer);
   if (
     clerkJwksCache &&
-    clerkJwksCache.issuer === issuer &&
+    clerkJwksCache.issuer === normalizedIssuer &&
     Date.now() - clerkJwksCache.fetchedAt < JWKS_CACHE_TTL_MS
   ) {
     return clerkJwksCache.keys;
   }
-  const response = await fetchImpl(`${issuer}/.well-known/jwks.json`);
+  const response = await fetchImpl(`${normalizedIssuer}/.well-known/jwks.json`);
   if (!response.ok) {
     throw new ApiError(503, 'auth_provider_unavailable', 'Clerk JWKS could not be fetched.');
   }
   const document = (await response.json()) as { keys?: ClerkJwk[] };
-  clerkJwksCache = { issuer, keys: document.keys ?? [], fetchedAt: Date.now() };
+  clerkJwksCache = { issuer: normalizedIssuer, keys: document.keys ?? [], fetchedAt: Date.now() };
   return clerkJwksCache.keys;
 };
 

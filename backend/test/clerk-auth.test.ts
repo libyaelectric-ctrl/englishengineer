@@ -221,4 +221,107 @@ describe('createBackendAuth with Clerk issuer', () => {
     const error = errors[0] as Error & { status?: number };
     assert.equal(error.status, 401);
   });
+
+  it('accepts token when issuer has trailing slash but config does not', async () => {
+    const keyPair = await createClerkKeyPair('clerk-kid-slash-v2');
+    const issuerConfig = 'https://clerk-trailing-slash.clerk.accounts.dev';
+    const issuerToken = 'https://clerk-trailing-slash.clerk.accounts.dev/'; // trailing slash
+    const token = await signClerkJwt(keyPair, {
+      sub: 'clerk-user-slash',
+      iss: issuerToken,
+      exp: nowSeconds() + 3600,
+      nbf: nowSeconds() - 60,
+    });
+
+    const { requireBackendAuth } = createBackendAuth(
+      { clerkIssuer: issuerConfig } as unknown as BackendAuthConfig,
+      createJwksFetch([{ ...keyPair.publicJwk, kid: keyPair.kid, use: 'sig', alg: 'RS256' }])
+    );
+
+    const { next, errors } = captureNext();
+    const req = createMockRequest({ authorization: `Bearer ${token}` });
+    await requireBackendAuth(req, mockResponse, next);
+
+    assert.deepEqual(errors, []);
+    assert.ok(req.auth);
+    assert.equal(req.auth?.userId, 'clerk-user-slash');
+    assert.equal(req.auth?.source, 'clerk-jwt');
+  });
+
+  it('accepts token when config has trailing slash but token does not', async () => {
+    const keyPair = await createClerkKeyPair('clerk-kid-noslash-v2');
+    const issuerConfig = 'https://clerk-noslash.clerk.accounts.dev/'; // trailing slash in config
+    const issuerToken = 'https://clerk-noslash.clerk.accounts.dev'; // no trailing slash in token
+    const token = await signClerkJwt(keyPair, {
+      sub: 'clerk-user-noslash',
+      iss: issuerToken,
+      exp: nowSeconds() + 3600,
+      nbf: nowSeconds() - 60,
+    });
+
+    const { requireBackendAuth } = createBackendAuth(
+      { clerkIssuer: issuerConfig } as unknown as BackendAuthConfig,
+      createJwksFetch([{ ...keyPair.publicJwk, kid: keyPair.kid, use: 'sig', alg: 'RS256' }])
+    );
+
+    const { next, errors } = captureNext();
+    const req = createMockRequest({ authorization: `Bearer ${token}` });
+    await requireBackendAuth(req, mockResponse, next);
+
+    assert.deepEqual(errors, []);
+    assert.ok(req.auth);
+    assert.equal(req.auth?.userId, 'clerk-user-noslash');
+    assert.equal(req.auth?.source, 'clerk-jwt');
+  });
+
+  it('accepts token when both config and token have trailing slashes', async () => {
+    const keyPair = await createClerkKeyPair('clerk-kid-both-v2');
+    const issuer = 'https://clerk-both-slash.clerk.accounts.dev/';
+    const token = await signClerkJwt(keyPair, {
+      sub: 'clerk-user-both',
+      iss: issuer,
+      exp: nowSeconds() + 3600,
+      nbf: nowSeconds() - 60,
+    });
+
+    const { requireBackendAuth } = createBackendAuth(
+      { clerkIssuer: issuer } as unknown as BackendAuthConfig,
+      createJwksFetch([{ ...keyPair.publicJwk, kid: keyPair.kid, use: 'sig', alg: 'RS256' }])
+    );
+
+    const { next, errors } = captureNext();
+    const req = createMockRequest({ authorization: `Bearer ${token}` });
+    await requireBackendAuth(req, mockResponse, next);
+
+    assert.deepEqual(errors, []);
+    assert.ok(req.auth);
+    assert.equal(req.auth?.userId, 'clerk-user-both');
+    assert.equal(req.auth?.source, 'clerk-jwt');
+  });
+
+  it('rejects token when issuer domains differ even after normalization', async () => {
+    const keyPair = await createClerkKeyPair('clerk-kid-diff');
+    const token = await signClerkJwt(keyPair, {
+      sub: 'clerk-user-diff',
+      iss: 'https://other.clerk.accounts.dev/',
+      exp: nowSeconds() + 3600,
+      nbf: nowSeconds() - 60,
+    });
+
+    const { requireBackendAuth } = createBackendAuth(
+      { clerkIssuer: 'https://clerk.test.clerk.accounts.dev/' } as unknown as BackendAuthConfig,
+      createJwksFetch([{ ...keyPair.publicJwk, kid: keyPair.kid, use: 'sig', alg: 'RS256' }])
+    );
+
+    const { next, errors } = captureNext();
+    await requireBackendAuth(
+      createMockRequest({ authorization: `Bearer ${token}` }),
+      mockResponse,
+      next
+    );
+
+    assert.equal(errors.length, 1);
+    const error = errors[0] as Error & { status?: number };
+    assert.equal(error.status, 401);
+  });
 });
