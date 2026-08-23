@@ -1,0 +1,27 @@
+# Gitleaks configuration — exclude false positives
+# https://github.com/gitleaks/gitleaks
+
+[allowlist]
+  paths = [
+    '''docs/CLERK_PRODUCTION_MIGRATION\.md$''',
+    '''docs/final-evidence/.*''',
+    '''\.env\.example$''',
+    '''backend/\.env\.example$''',
+    '''scripts/\.env\.example$''',
+  ]
+
+[[rules]]
+  id = "docs-clerk-example"
+  description = "Allow Clerk migration doc examples"
+  regex = '''(?i)(clerk\.engvox\.com|sk_test_|pk_test_)'''
+  paths = [
+    '''docs/.*''',
+  ]
+
+[[rules]]
+  id = "test-fake-api-keys"
+  description = "Allow fake/test API keys in component fixtures"
+  regex = '''(?i)(fake[-_]?api[-_]?key|test[-_]?token|mock[-_]?secret)'''
+  paths = [
+    '''src/.*''',
+  ]
