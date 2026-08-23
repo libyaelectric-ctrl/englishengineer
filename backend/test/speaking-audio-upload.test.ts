@@ -32,6 +32,7 @@ const start = async (environment = {}, dependencies = {}) => {
 
 const productionAuthEnvironment = {
   NODE_ENV: 'production',
+  CLERK_ISSUER: 'https://clerk.test.example.com',
   ENGINEEROS_INTERNAL_API_SECRET: 'internal-test-secret',
   ALLOW_MEMORY_BILLING_REPOSITORY: 'true',
   RATE_LIMIT_STORE: 'memory',

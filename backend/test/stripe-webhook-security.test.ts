@@ -190,6 +190,7 @@ test('webhook is not redirected to /api/v1 by legacy redirect middleware in prod
   const url = await start(
     {
       NODE_ENV: 'production',
+      CLERK_ISSUER: 'https://clerk.test.example.com',
       BILLING_REPOSITORY: 'memory',
       ALLOW_MEMORY_BILLING_REPOSITORY: 'true',
     },

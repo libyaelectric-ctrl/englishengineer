@@ -326,6 +326,7 @@ test('vocabulary lookup reuses a successful cached result', async () => {
 
 const productionAuthEnvironment = {
   NODE_ENV: 'production',
+  CLERK_ISSUER: 'https://clerk.test.example.com',
   ENGINEEROS_INTERNAL_API_SECRET: 'internal-test-secret',
   ALLOW_MEMORY_BILLING_REPOSITORY: 'true',
   RATE_LIMIT_STORE: 'memory',
@@ -616,6 +617,7 @@ test('Anthropic requires an explicit model while OpenAI keeps its stable default
 test('production selects Supabase billing persistence when configured', () => {
   const config = createBackendConfig({
     NODE_ENV: 'production',
+    CLERK_ISSUER: 'https://clerk.test.example.com',
     SUPABASE_URL: 'https://project.supabase.co',
     SUPABASE_SERVICE_ROLE_KEY: 'service-role-test-key',
     RATE_LIMIT_STORE: 'memory',
@@ -626,7 +628,14 @@ test('production selects Supabase billing persistence when configured', () => {
 });
 
 test('production requires an explicitly configured external rate-limit store', () => {
-  assert.throws(() => createBackendConfig({ NODE_ENV: 'production' }), /UPSTASH_REDIS_REST_URL/);
+  assert.throws(
+    () =>
+      createBackendConfig({
+        NODE_ENV: 'production',
+        CLERK_ISSUER: 'https://clerk.test.example.com',
+      }),
+    /UPSTASH_REDIS_REST_URL/
+  );
   // Memory rate limit in production now warns instead of throwing
   const originalWarn = logger.warn;
   let warningMessage = '';
@@ -636,6 +645,7 @@ test('production requires an explicitly configured external rate-limit store', (
   try {
     createBackendConfig({
       NODE_ENV: 'production',
+      CLERK_ISSUER: 'https://clerk.test.example.com',
       RATE_LIMIT_STORE: 'memory',
     });
     assert.ok(
@@ -650,6 +660,7 @@ test('production requires an explicitly configured external rate-limit store', (
 test('production accepts Upstash rate limiting without exposing its token', () => {
   const config = createBackendConfig({
     NODE_ENV: 'production',
+    CLERK_ISSUER: 'https://clerk.test.example.com',
     RATE_LIMIT_STORE: 'upstash',
     UPSTASH_REDIS_REST_URL: 'https://rate-limit.example.test/',
     UPSTASH_REDIS_REST_TOKEN: 'server-only-token',

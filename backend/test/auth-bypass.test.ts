@@ -16,6 +16,7 @@ const start = async (
 ) => {
   const config = createBackendConfig({
     NODE_ENV: 'production',
+    CLERK_ISSUER: 'https://clerk.test.example.com',
     RATE_LIMIT_STORE: 'memory',
     ALLOW_IN_MEMORY_RATE_LIMIT_IN_PRODUCTION: 'true',
     ALLOW_MEMORY_BILLING_REPOSITORY: 'true',
@@ -77,6 +78,7 @@ test('config throws when allowInsecureDevAuth is true in production', () => {
     () => {
       createBackendConfig({
         NODE_ENV: 'production',
+        CLERK_ISSUER: 'https://clerk.test.example.com',
         ALLOW_INSECURE_DEV_AUTH: 'true',
         RATE_LIMIT_STORE: 'memory',
         ALLOW_IN_MEMORY_RATE_LIMIT_IN_PRODUCTION: 'true',
