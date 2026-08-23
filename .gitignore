@@ -30,7 +30,6 @@ bundle-report.html
 opencode.json
 railway.toml
 stryker.config.mjs
-CONTRIBUTING.md
 pipeline.md
 vite.config.ts.bak
 *.zip

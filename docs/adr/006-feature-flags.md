@@ -2,7 +2,9 @@
 
 ## Status
 
-Accepted
+Accepted — **not yet implemented**. `src/shared/feature-flags/` does not
+exist in the codebase yet; tracked as [TD-014](../TECH_DEBT.md) (open).
+This ADR documents the intended design for when that work is picked up.
 
 ## Context
 
