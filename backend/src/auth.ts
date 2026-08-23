@@ -144,9 +144,11 @@ const decodeClerkToken = (token: string): DecodedClerkToken | null => {
   }
 };
 
+const normalizeIssuer = (value: string): string => value.replace(/\/+$/, '');
+
 const hasValidClerkClaims = (payload: ClerkClaims, issuer: string, now: number): boolean => {
   if (typeof payload.sub !== 'string' || !payload.sub) return false;
-  if (typeof payload.iss !== 'string' || payload.iss !== issuer) return false;
+  if (typeof payload.iss !== 'string' || normalizeIssuer(payload.iss) !== normalizeIssuer(issuer)) return false;
   if (typeof payload.exp === 'number' && payload.exp < now) return false;
   if (typeof payload.nbf === 'number' && payload.nbf > now) return false;
   return true;

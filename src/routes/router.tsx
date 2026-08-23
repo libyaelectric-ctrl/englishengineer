@@ -11,6 +11,7 @@ import { PageErrorBoundary } from '@/shared/components/PageErrorBoundary';
 
 import { AuthGuard } from '@/features/auth/AuthGuard';
 import { RequireAdminRole } from '@/features/auth/RequireAdminRole';
+import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
 import { CurriculumSectionGuard, SubscriptionRouteGuard } from '@/features/billing';
 import { OnboardingGate } from '@/features/profile';
 
@@ -276,7 +277,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: '/login',
+    path: CLERK_SIGN_IN_URL,
     errorElement: <RouteErrorPage />,
     element: (
       <Suspense fallback={<LoadingState />}>
@@ -285,7 +286,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/signup',
+    path: CLERK_SIGN_UP_URL,
     errorElement: <RouteErrorPage />,
     element: (
       <Suspense fallback={<LoadingState />}>

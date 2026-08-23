@@ -24,6 +24,8 @@ export default tseslint.config(
       '.playwright-cli/**',
       'src/core/architecture.test.ts',
       'backend/src/errors.ts',
+      '.record.cjs',
+      '*.debug.cjs',
     ],
   },
   {

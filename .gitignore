@@ -100,6 +100,11 @@ eslint-output.json
 eslint_complexity.json
 lint-output.txt
 
+# Local debug / recording scripts (accidentally committed once, broke CI lint)
+.record.cjs
+*.debug.cjs
+/video/
+
 # Temporary notes
 Usta-Faz2.txt
 

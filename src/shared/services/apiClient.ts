@@ -127,10 +127,17 @@ async function apiFetch<T>(
             ? ErrorCode.NETWORK
             : ErrorCode.NETWORK;
 
+      // 401/403 must be visible to the user — a silently-failing auth error
+      // looks like "my progress isn't saving" with zero diagnostic signal.
+      const severity: AppError['severity'] =
+        response.status >= 500 || response.status === 401 || response.status === 403
+          ? 'error'
+          : 'warning';
+
       throw new AppError({
         code,
         message,
-        severity: response.status >= 500 ? 'error' : 'warning',
+        severity,
         metadata: { status: response.status, url },
       });
     }

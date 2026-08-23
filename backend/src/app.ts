@@ -168,6 +168,20 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
     );
   }
 
+  if (!config.auth.clerkIssuer) {
+    if (config.environment === 'production') {
+      throw new Error(
+        'CLERK_ISSUER is required in production. Refusing to start: without it, every ' +
+          'Clerk-authenticated request will silently fail with 401. Set CLERK_ISSUER to the ' +
+          "exact value of your Clerk instance's issuer (e.g. https://clerk.<your-domain>.com), " +
+          'no trailing slash.'
+      );
+    }
+    logger.warn(
+      'CLERK_ISSUER is not set. Clerk-authenticated requests will fail in this environment.'
+    );
+  }
+
   app.disable('x-powered-by');
 
   // Response compression — gzip for all responses > 1KB
