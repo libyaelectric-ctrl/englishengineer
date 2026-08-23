@@ -2,15 +2,35 @@
 
 npx lint-staged
 
-# Check for mixed code + content changes
+# Typecheck: only on staged TS/TSX files
 STAGED_FILES=$(git diff --cached --name-only)
+TS_FILES=$(echo "$STAGED_FILES" | grep -E '\.(ts|tsx)$' | head -1)
 
+if [ -n "$TS_FILES" ]; then
+  echo "🔍 Running typecheck..."
+  npx tsc --noEmit
+  if [ $? -ne 0 ]; then
+    echo "❌ Typecheck failed. Fix errors before committing."
+    exit 1
+  fi
+  echo "✅ Typecheck passed"
+
+  echo "🧪 Running tests..."
+  npx vitest run --configLoader runner --reporter dot --exclude 'src/e2e/**' --exclude 'e2e/**' --exclude 'tests/**' --exclude '.mimocode/**' --exclude 'src/shared/tests/integration/**' 2>&1 | tail -5
+  if [ $? -ne 0 ]; then
+    echo "❌ Tests failed. Fix failures before committing."
+    exit 1
+  fi
+  echo "✅ Tests passed"
+fi
+
+# Check for mixed code + content changes
 CODE_FILES=$(echo "$STAGED_FILES" | grep -E '^src/|^backend/' | grep -E '\.(ts|tsx|js|jsx)$' | wc -l | tr -d ' ')
 CONTENT_FILES=$(echo "$STAGED_FILES" | grep -E '\.data\.(json|ts)$' | wc -l | tr -d ' ')
 
 if [ "$CODE_FILES" -gt 0 ] && [ "$CONTENT_FILES" -gt 0 ]; then
   echo ""
-  echo "WARNING: Mixed commit detected!"
+  echo "⚠️  WARNING: Mixed commit detected!"
   echo "   Code files: $CODE_FILES"
   echo "   Content/data files: $CONTENT_FILES"
   echo ""
