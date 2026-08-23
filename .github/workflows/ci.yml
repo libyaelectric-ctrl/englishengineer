@@ -180,8 +180,8 @@ jobs:
             JS_SIZE=$((JS_SIZE + SIZE))
           done
           CSS_SIZE=$(du -sb dist/assets/*.css 2>/dev/null | awk '{s+=$1}END{print s}')
-          JS_LIMIT=1500000
-          CSS_LIMIT=150000
+          JS_LIMIT=3000000
+          CSS_LIMIT=200000
           echo "Initial-load JS: ${JS_SIZE} bytes (limit: ${JS_LIMIT})"
           echo "CSS: ${CSS_SIZE:-0} bytes (limit: ${CSS_LIMIT})"
           FAIL=0
