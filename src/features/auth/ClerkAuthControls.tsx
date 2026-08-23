@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 import { useLocalizationStore } from '@/features/localization';
 
-import { CLERK_PUBLISHABLE_KEY } from './clerk.config';
+import { CLERK_PUBLISHABLE_KEY, CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from './clerk.config';
 
 /**
  * Swallows the "no ClerkProvider detected" error so auth controls render
@@ -36,13 +36,13 @@ export const ClerkAuthControls = () => {
   const appAuthLinks = (
     <>
       <Link
-        to="/login"
+        to={CLERK_SIGN_IN_URL}
         className="hidden sm:inline-flex items-center rounded border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-semibold text-foreground hover:bg-surface-hover hover:border-primary/40 transition-colors ml-1"
       >
         {translate('common.login') || 'Log in'}
       </Link>
       <Link
-        to="/signup"
+        to={CLERK_SIGN_UP_URL}
         className="inline-flex items-center gap-1 rounded bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground shadow-sm hover:bg-primary-hover transition-colors ml-0.5"
       >
         {translate('landing.startFree')}

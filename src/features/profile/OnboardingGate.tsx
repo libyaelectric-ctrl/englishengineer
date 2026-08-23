@@ -5,12 +5,13 @@ import { useLocation } from 'react-router-dom';
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
 
 import { useAuthStore } from '@/features/auth';
+import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
 import { INTERFACE_LANGUAGES } from '@/features/localization';
 
 import { OnboardingPanel } from './OnboardingPanel';
 import { LearningProfileRepository } from './profile.repository';
 
-const BYPASS_PATHS = ['/billing', '/profile', '/login', '/signup'];
+const BYPASS_PATHS = ['/billing', '/profile', CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL];
 
 /**
  * Gates the entire authenticated app: users who have not selected both a

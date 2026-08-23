@@ -7,6 +7,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { LoadingState } from '@/shared/components/LoadingState';
 
 import { useAuthStore } from './auth.store';
+import { CLERK_SIGN_IN_URL } from './clerk.config';
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -49,7 +50,7 @@ export const AuthGuard = ({ children }: AuthGuardProps) => {
         />
       );
     }
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to={CLERK_SIGN_IN_URL} state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

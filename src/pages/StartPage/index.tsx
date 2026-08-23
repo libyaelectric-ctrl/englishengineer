@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuthStore } from '@/features/auth';
+import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
 
 const ONBOARDING_STEPS = [
   {
@@ -125,7 +126,7 @@ const StartPage = () => {
               persistence.
             </p>
             <Link
-              to="/signup"
+              to={CLERK_SIGN_UP_URL}
               className="public-primary-action mt-5 w-full text-center py-2 text-xs min-h-10 flex items-center justify-center gap-2"
             >
               Create account <ArrowRight className="h-4 w-4" />
@@ -139,7 +140,7 @@ const StartPage = () => {
               Continue with an existing verified account.
             </p>
             <Link
-              to="/login"
+              to={CLERK_SIGN_IN_URL}
               className="public-secondary-action mt-5 w-full text-center py-2 text-xs min-h-10 flex items-center justify-center gap-2"
             >
               Log in <LogIn className="h-4 w-4" />

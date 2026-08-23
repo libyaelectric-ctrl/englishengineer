@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 
 import { PageMetadata } from '@/shared/components/PageMetadata';
 
+import { CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
 import { getTeamOverview, useTeamStore } from '@/features/team';
 
 const BUSINESS_CASES = [
@@ -129,7 +130,7 @@ const BusinessPage = () => {
 
             <div className="pt-2 flex flex-wrap items-center gap-3">
               <Link
-                to="/signup"
+                to={CLERK_SIGN_UP_URL}
                 className="inline-flex items-center gap-2 rounded-[var(--radius-card)] bg-primary px-5 py-2.5 text-xs font-bold text-primary-foreground shadow transition-all hover:bg-primary/95"
               >
                 Explore Team Workspace <ArrowRight className="h-4 w-4" />

@@ -4,7 +4,9 @@ import { useLocation } from 'react-router-dom';
 
 import {
   CLERK_SIGN_IN_FALLBACK_REDIRECT_URL,
+  CLERK_SIGN_IN_URL,
   CLERK_SIGN_UP_FALLBACK_REDIRECT_URL,
+  CLERK_SIGN_UP_URL,
 } from '@/features/auth/clerk.config';
 
 interface ClerkAuthPageProps {
@@ -22,7 +24,7 @@ const getReturnTarget = (search: string, state: ClerkLocationState): string | un
   const redirectUrl = new URLSearchParams(search).get('redirect_url');
   if (redirectUrl?.startsWith('/')) return redirectUrl;
   const fromPath = state?.from?.pathname;
-  if (fromPath && fromPath !== '/login' && fromPath !== '/signup') return fromPath;
+  if (fromPath && fromPath !== CLERK_SIGN_IN_URL && fromPath !== CLERK_SIGN_UP_URL) return fromPath;
   return undefined;
 };
 

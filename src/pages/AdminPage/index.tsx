@@ -25,6 +25,7 @@ import { Button } from '@/shared/components/Button';
 import { PageContainer } from '@/shared/components/PageContainer';
 
 import { useAdminStore } from '@/features/admin';
+import { CLERK_SIGN_IN_URL } from '@/features/auth/clerk.config';
 
 import { BillingTab } from './BillingTab';
 import { StatsGrid } from './StatsGrid';
@@ -71,7 +72,7 @@ export const AdminPage = () => {
     return () => clearInterval(id);
   }, [autoRefresh, refreshAll]);
 
-  const handleLogout = () => navigate('/login');
+  const handleLogout = () => navigate(CLERK_SIGN_IN_URL);
   const isRefreshing = isLoadingUsers || isLoadingStats || isLoadingLogs;
 
   return (

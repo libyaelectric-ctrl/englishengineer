@@ -6,6 +6,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 
 import { cn } from '@/shared/utils/cn';
 
+import { CLERK_SIGN_IN_URL } from '@/features/auth/clerk.config';
 import { useTheme } from '@/features/theme/ThemeProvider';
 
 const links = [
@@ -107,7 +108,7 @@ export const PublicLayout = () => {
                 {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </button>
               <Link
-                to="/login"
+                to={CLERK_SIGN_IN_URL}
                 className="inline-flex items-center rounded border border-border-soft bg-surface px-4 py-2 text-xs font-semibold text-foreground hover:bg-surface-hover hover:border-primary/40 transition-colors shadow-sm"
               >
                 Log in
@@ -143,7 +144,7 @@ export const PublicLayout = () => {
                   </Link>
                 ))}
                 <div className="mt-2 grid grid-cols-2 gap-2 border-t border-border-soft pt-4">
-                  <Link to="/login" className="public-secondary-action px-4 py-3">
+                  <Link to={CLERK_SIGN_IN_URL} className="public-secondary-action px-4 py-3">
                     Log in
                   </Link>
                   <Link to="/start" className="public-primary-action px-4 py-3">

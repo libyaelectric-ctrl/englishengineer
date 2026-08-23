@@ -20,6 +20,7 @@ import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { cn } from '@/shared/utils/cn';
 
 import { useAuthStore } from '@/features/auth';
+import { CLERK_SIGN_IN_URL } from '@/features/auth/clerk.config';
 import { useBillingStore } from '@/features/billing';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import { SIDEBAR_EXTRA_COPY } from '@/features/localization';
@@ -122,7 +123,7 @@ export const Sidebar = () => {
 
   const handleLogout = async () => {
     await logout();
-    startTransition(() => navigate('/login'));
+    startTransition(() => navigate(CLERK_SIGN_IN_URL));
   };
 
   return (
@@ -161,7 +162,13 @@ export const Sidebar = () => {
             )}
           >
             <div className={cn('flex items-center gap-2', isSidebarCollapsed && 'hidden')}>
-              <img src="/brand/logo.svg" alt="EngVox" className="h-7 w-7 rounded-[4px]" loading="lazy" decoding="async" />
+              <img
+                src="/brand/logo.svg"
+                alt="EngVox"
+                className="h-7 w-7 rounded-[4px]"
+                loading="lazy"
+                decoding="async"
+              />
               <div className="flex flex-col leading-tight">
                 <span className="text-sm font-bold text-foreground">EngVox</span>
                 <span className="text-[9px] font-bold text-primary font-mono">
@@ -274,7 +281,10 @@ export const Sidebar = () => {
                 <Wallet className="h-5 w-5 shrink-0 text-muted-copy" />
                 {!isSidebarCollapsed && <span className="flex-1 truncate">{copy.billing}</span>}
                 {isSidebarCollapsed && (
-                  <span role="tooltip" className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-[4px] border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-bold text-foreground shadow-lg opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                  <span
+                    role="tooltip"
+                    className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-[4px] border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-bold text-foreground shadow-lg opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+                  >
                     {copy.billing}
                   </span>
                 )}
@@ -382,7 +392,10 @@ export const Sidebar = () => {
                 <LogOut className="h-5 w-5 shrink-0 text-muted-copy" />
                 {!isSidebarCollapsed && <span className="flex-1">{copy.signOut}</span>}
                 {isSidebarCollapsed && (
-                  <span role="tooltip" className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-[4px] border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-bold text-foreground shadow-lg opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                  <span
+                    role="tooltip"
+                    className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-[4px] border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-bold text-foreground shadow-lg opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+                  >
                     {copy.signOut}
                   </span>
                 )}

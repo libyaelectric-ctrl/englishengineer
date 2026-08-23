@@ -15,6 +15,7 @@ import { getPublicPageCopy } from '@/shared/data/public-page-copy';
 
 import { ProductAnalyticsService } from '@/features/analytics';
 import { useAuthStore } from '@/features/auth';
+import { CLERK_SIGN_IN_URL } from '@/features/auth/clerk.config';
 import { useBillingStore } from '@/features/billing/billing.store';
 import type { BillingPlanId } from '@/features/billing/billing.types';
 import { CurrencyConfig } from '@/features/billing/currency.config';
@@ -45,7 +46,7 @@ const PricingPage = () => {
   const handleSelectPlan = async (tierId: string) => {
     setCheckoutError(null);
     if (!currentUser) {
-      navigate('/login', { state: { from: location } });
+      navigate(CLERK_SIGN_IN_URL, { state: { from: location } });
       return;
     }
     if (currentUser.id.startsWith('demo_engineer_')) {

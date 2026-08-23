@@ -11,6 +11,7 @@ import { ClerkAuthControls } from '@/features/auth/ClerkAuthControls';
 import { useAuthStore } from '@/features/auth/auth.store';
 import { useBillingStore } from '@/features/billing';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
+import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
 import { useTheme } from '@/features/theme/ThemeProvider';
 
 interface NavbarProps {
@@ -21,7 +22,7 @@ export function Navbar({ onOpenProofreader: _ }: NavbarProps) {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
+  const isAuthPage = location.pathname === CLERK_SIGN_IN_URL || location.pathname === CLERK_SIGN_UP_URL;
   const { language, setLanguage, translate } = useLocalizationStore();
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
