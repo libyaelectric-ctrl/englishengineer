@@ -45,11 +45,11 @@ const KEY_REGISTRY: Record<string, { maxAgeDays: number; description: string }> 
   RESEND_API_KEY: { maxAgeDays: 180, description: 'Email sending (Resend)' },
   SENTRY_DSN: { maxAgeDays: 365, description: 'Error tracking (Sentry)' },
   CLERK_SECRET_KEY: { maxAgeDays: 180, description: 'Authentication (Clerk)' },
-  UPSTASH_TOKEN: { maxAgeDays: 90, description: 'Rate limiting (Upstash Redis)' },
+  UPSTASH_REDIS_REST_TOKEN: { maxAgeDays: 90, description: 'Rate limiting (Upstash Redis)' },
   OPENAI_API_KEY: { maxAgeDays: 90, description: 'AI provider (OpenAI)' },
   GEMINI_API_KEY: { maxAgeDays: 90, description: 'AI provider (Google Gemini)' },
-  DODO_API_KEY: { maxAgeDays: 180, description: 'Alternative billing (Dodo)' },
-  DODO_WEBHOOK_SECRET: { maxAgeDays: 180, description: 'Dodo webhook verification' },
+  DODO_PAYMENTS_API_KEY: { maxAgeDays: 180, description: 'Alternative billing (Dodo)' },
+  DODO_PAYMENTS_WEBHOOK_KEY: { maxAgeDays: 180, description: 'Dodo webhook verification' },
 };
 
 /**

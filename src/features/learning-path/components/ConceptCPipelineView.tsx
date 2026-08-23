@@ -21,8 +21,9 @@ import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
+import { buildLearningPath, resolveDefaultDiscipline } from '../curriculum.service';
 import { getDisciplineTopics } from '../discipline-topics';
-import { type LearningPath, buildLearningPath, resolveDefaultDiscipline } from '../index';
+import type { LearningPath } from '../learning-path.types';
 
 export interface ConceptCPipelineViewProps {
   disciplineOverride?: EngineeringDiscipline;

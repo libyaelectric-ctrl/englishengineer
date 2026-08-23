@@ -1,7 +1,6 @@
 /**
  * Shared IndexedDB helper — provides a reusable openDB with singleton caching.
  */
-import { logger } from '@/shared/logger';
 
 interface IDBOpenOptions {
   dbName: string;
@@ -41,42 +40,3 @@ export const openIDB = (options: IDBOpenOptions): Promise<IDBDatabase> => {
 };
 
 export const isIDBSupported = (): boolean => typeof indexedDB !== 'undefined';
-
-export const idbGet = async <T>(
-  dbName: string,
-  storeName: string,
-  key: string
-): Promise<T | null> => {
-  try {
-    const db = await openIDB({ dbName, dbVersion: 1 });
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(storeName, 'readonly');
-      const req = tx.objectStore(storeName).get(key);
-      req.onsuccess = () => resolve(req.result?.value ?? req.result ?? null);
-      req.onerror = () => reject(req.error);
-    });
-  } catch (e) {
-    logger.w(`[IDB] Read failed for ${storeName}/${key}:`, e);
-    return null;
-  }
-};
-
-export const idbSet = async <T>(
-  dbName: string,
-  storeName: string,
-  key: string,
-  value: T
-): Promise<boolean> => {
-  try {
-    const db = await openIDB({ dbName, dbVersion: 1 });
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(storeName, 'readwrite');
-      const req = tx.objectStore(storeName).put({ key, value, updatedAt: Date.now() });
-      req.onsuccess = () => resolve(true);
-      req.onerror = () => reject(req.error);
-    });
-  } catch (e) {
-    logger.w(`[IDB] Write failed for ${storeName}/${key}:`, e);
-    return false;
-  }
-};

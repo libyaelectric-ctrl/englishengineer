@@ -15,8 +15,6 @@ const DANGEROUS_PATTERNS = [
   /<embed\b/gi, // embed injection
 ];
 
-const MAX_STRING_LENGTH = 10_000;
-
 /**
  * Recursively sanitize all string values in an object.
  */
@@ -26,10 +24,11 @@ const sanitizeValue = (value: unknown): unknown => {
     for (const pattern of DANGEROUS_PATTERNS) {
       sanitized = sanitized.replace(pattern, '');
     }
-    // Truncate overly long strings (possible abuse)
-    if (sanitized.length > MAX_STRING_LENGTH) {
-      sanitized = sanitized.slice(0, MAX_STRING_LENGTH);
-    }
+    // Length limits are enforced per-field by Zod schemas in validation.ts
+    // (with proper 400 error responses), and the request body as a whole is
+    // capped by express.json({ limit: '256kb' }) in app.ts. Truncating here
+    // would silently corrupt legitimate large fields (e.g. saved documents)
+    // instead of validating or rejecting them properly.
     return sanitized;
   }
   if (Array.isArray(value)) {
@@ -50,11 +49,23 @@ const sanitizeValue = (value: unknown): unknown => {
  * XSS and injection attacks. Runs before route handlers.
  */
 export const inputSanitization = (req: Request, _res: Response, next: NextFunction): void => {
-  if (req.body && typeof req.body === 'object') {
+  // Webhook routes (Stripe/Dodo) use express.raw() to preserve the exact
+  // bytes needed for signature verification — a Buffer must pass through
+  // untouched. (Buffer is `typeof 'object'`, so without this check it would
+  // fall into the generic object branch below and get destructured via
+  // Object.entries into a plain {0: byte, 1: byte, ...} object.)
+  if (req.body && typeof req.body === 'object' && !Buffer.isBuffer(req.body)) {
     req.body = sanitizeValue(req.body);
   }
+  // Express 5's `req.query` is a getter-only property computed from the URL
+  // (no setter), so `req.query = ...` throws. Sanitize its keys in place on
+  // the existing object instead of replacing the reference.
   if (req.query && typeof req.query === 'object') {
-    req.query = sanitizeValue(req.query) as Record<string, string>;
+    const sanitizedQuery = sanitizeValue(req.query) as Record<string, unknown>;
+    for (const key of Object.keys(req.query as Record<string, unknown>)) {
+      delete (req.query as Record<string, unknown>)[key];
+    }
+    Object.assign(req.query as Record<string, unknown>, sanitizedQuery);
   }
   if (req.params && typeof req.params === 'object') {
     req.params = sanitizeValue(req.params) as Record<string, string>;
