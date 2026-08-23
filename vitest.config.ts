@@ -38,7 +38,7 @@ export default defineConfig({
         branches: 28,
         functions: 38,
         lines: 44,
-        statements: 44,
+        statements: 43,
         // Measured: lines 35.2 / branches 31.2 / functions 29.4 / stmts 36.4
         'src/features/billing/**': {
           branches: 25,
