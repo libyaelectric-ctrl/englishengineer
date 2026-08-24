@@ -11,7 +11,7 @@ import type { EngineeringDiscipline } from '@/shared/constants/engineering-disci
 import { useAuthStore } from '@/features/auth';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
-import type { TranslationKey } from '@/features/localization/localization.types';
+
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 /* ------------------------------------------------------------------ */
@@ -47,6 +47,22 @@ const DISCipline_SVGs: Record<string, string> = {
 };
 
 const CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="#020617" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
+
+/* ------------------------------------------------------------------ */
+/* English-only discipline names (disciplines always show in English)   */
+/* ------------------------------------------------------------------ */
+const DISCIPLINE_EN: Record<EngineeringDiscipline, string> = {
+  architecture: 'Architecture',
+  chemical: 'Chemical Engineering',
+  civil: 'Civil Engineering',
+  electrical: 'Electrical Engineering',
+  electronics: 'Electronics Engineering',
+  hse: 'HSE Engineering',
+  industrial: 'Industrial Engineering',
+  mechanical: 'Mechanical Engineering',
+  mechatronics: 'Mechatronics / Robotics',
+  software: 'Software Engineering',
+};
 
 
 
@@ -213,8 +229,8 @@ const OrbCanvas = () => {
       ref={containerRef}
       className="orb-container"
       style={{
-        width: 280,
-        height: 280,
+        width: 240,
+        height: 240,
         position: 'relative',
         borderRadius: '9999px',
         backgroundColor: 'rgba(15,23,42,0.3)',
@@ -297,12 +313,12 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
         }
         .onb-layout {
           display: grid;
-          grid-template-columns: 1fr 340px 1fr;
-          gap: 32px;
+          grid-template-columns: 1fr 280px 1fr;
+          gap: 24px;
           max-width: 1400px;
           margin: 0 auto;
           align-items: start;
-          padding: 48px 32px 64px;
+          padding: 48px 24px 64px;
         }
         .onb-col { min-width: 0; }
         .onb-col-title {
@@ -413,13 +429,14 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
         .onb-center-col {
           display: flex; flex-direction: column; align-items: center;
           transform: translateX(0);
+          padding-top: 40px;
         }
         .onb-bottom-block {
           display: flex; flex-direction: column; align-items: center;
           width: 100%; margin-top: auto; padding-top: 32px;
         }
         .onb-summary {
-          width: 100%; max-width: 280px;
+          width: 100%; max-width: 240px;
           display: flex; flex-direction: column; gap: 10px;
         }
         .onb-summary-row {
@@ -439,7 +456,7 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
         .onb-summary-value.empty { color: #94a3b8; font-weight: 500; font-family: 'Inter', ui-sans-serif, sans-serif; }
         .onb-continue {
           all: unset;
-          margin-top: 18px; width: 100%; max-width: 280px;
+          margin-top: 18px; width: 100%; max-width: 240px;
           text-align: center; cursor: pointer;
           padding: 14px 20px; border-radius: 14px;
           font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
@@ -501,7 +518,7 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
                   />
                   <span className="onb-card-text">
                     <span className="onb-card-title">
-                      {translate(meta.labelKey as TranslationKey)}
+                      {DISCIPLINE_EN[id]}
                     </span>
                   </span>
                   <span className="onb-check" dangerouslySetInnerHTML={{ __html: CHECK_SVG }} />
@@ -523,7 +540,7 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
                 </span>
                 <span className={`onb-summary-value${!selectedDiscipline ? ' empty' : ''}`}>
                   {disciplineMeta
-                    ? translate(disciplineMeta.labelKey as TranslationKey)
+                    ? DISCIPLINE_EN[selectedDiscipline!]
                     : translate('onboarding.selectDiscipline')}
                 </span>
               </div>
