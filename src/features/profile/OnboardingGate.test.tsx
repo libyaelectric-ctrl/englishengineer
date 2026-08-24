@@ -81,13 +81,13 @@ describe('OnboardingGate', () => {
     await waitFor(() => {
       expect(screen.getByTestId('guarded-content')).toBeInTheDocument();
     });
-    expect(screen.queryByRole('button', { name: 'onboarding.start' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /ENTER ►/ })).not.toBeInTheDocument();
   });
 
   it('shows the centered selection panel when onboarding is incomplete', async () => {
     renderGate('/dashboard');
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'onboarding.start' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /ENTER ►/ })).toBeInTheDocument();
     });
     expect(screen.getByRole('button', { name: /Architecture/ })).toBeInTheDocument();
     expect(screen.queryByTestId('guarded-content')).not.toBeInTheDocument();
@@ -96,7 +96,7 @@ describe('OnboardingGate', () => {
   it('gates every app route, not just the dashboard', async () => {
     renderGate('/vocabulary');
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'onboarding.start' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /ENTER ►/ })).toBeInTheDocument();
     });
     expect(screen.queryByTestId('guarded-content')).not.toBeInTheDocument();
   });
@@ -112,17 +112,17 @@ describe('OnboardingGate', () => {
       userEvent.click(btn);
     });
 
-    // Click the Start button - it should be enabled now
+    // Click the Enter button - it should be enabled now
     await waitFor(() => {
-      const startBtn = screen.getByRole('button', { name: 'onboarding.start' });
-      expect(startBtn).not.toBeDisabled();
-      userEvent.click(startBtn);
+      const enterBtn = screen.getByRole('button', { name: /ENTER ►/ });
+      expect(enterBtn).not.toBeDisabled();
+      userEvent.click(enterBtn);
     });
 
     // Wait for guarded content to appear
     await waitFor(() => {
       expect(screen.getByTestId('guarded-content')).toBeInTheDocument();
     });
-    expect(screen.queryByRole('button', { name: 'onboarding.start' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /ENTER ►/ })).not.toBeInTheDocument();
   });
 });

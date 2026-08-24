@@ -8,7 +8,7 @@ import { useAuthStore } from '@/features/auth';
 import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
 import { INTERFACE_LANGUAGES } from '@/features/localization';
 
-import { OnboardingPanel } from './OnboardingPanel';
+import { NeuralOrbPanel } from './NeuralOrbPanel';
 import { LearningProfileRepository } from './profile.repository';
 
 const BYPASS_PATHS = ['/billing', '/profile', CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL];
@@ -43,5 +43,5 @@ export const OnboardingGate = ({ children }: { children: ReactNode }) => {
     return children;
   }
 
-  return <OnboardingPanel onComplete={refresh} />;
+  return <NeuralOrbPanel onComplete={refresh} />;
 };
