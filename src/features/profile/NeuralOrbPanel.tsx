@@ -479,59 +479,82 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
 
       initNeuralLinks();
 
-      /* ---- Font Loading: Add text labels async ---- */
-      const allItems = [
-        ...DISCIPLINES_DATA.map((d) => ({ ...d, segment: 1 })),
-        ...LANGUAGES_DATA.map((l) => ({ ...l, segment: 2 })),
-      ];
+      /* ---- Canvas Text Sprite Helper ---- */
+      function createTextSprite(
+        text: string,
+        opts: {
+          fontSize?: number;
+          color?: string;
+          bgColor?: string;
+          padding?: number;
+          scale?: number;
+        } = {},
+      ) {
+        const fontSize = opts.fontSize ?? 48;
+        const color = opts.color ?? '#ffffff';
+        const bgColor = opts.bgColor ?? 'transparent';
+        const padding = opts.padding ?? 10;
+        const spriteScale = opts.scale ?? 1;
 
-      Promise.all([
-        import('three/examples/jsm/loaders/FontLoader.js').catch(() => null),
-        import('three/examples/jsm/geometries/TextGeometry.js').catch(() => null),
-      ]).then(([fontMod, textGeoMod]) => {
-        if (disposed || !fontMod || !textGeoMod) return;
-        const { FontLoader } = fontMod;
-        const { TextGeometry } = textGeoMod;
-        const fontLoader = new FontLoader();
-        fontLoader.load(
-          'https://unpkg.com/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json',
-          (font) => {
-            if (disposed) return;
-            const textMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d')!;
+        const font = `bold ${fontSize}px monospace`;
+        ctx.font = font;
+        const metrics = ctx.measureText(text);
+        const textWidth = metrics.width;
+        const textHeight = fontSize * 1.3;
 
-            /* EN Text on center sun */
-            const enGeo = new TextGeometry('EN', {
-              font,
-              size: 0.675,
-              depth: 0.05,
-              curveSegments: 8,
-            });
-            enGeo.computeBoundingBox();
-            const enOffset = new THREE.Vector3();
-            enGeo.boundingBox!.getCenter(enOffset);
-            const enMesh = new THREE.Mesh(enGeo, textMat);
-            enMesh.position.set(-enOffset.x, -enOffset.y, -enOffset.z);
-            centerSun.add(enMesh);
+        canvas.width = textWidth + padding * 2;
+        canvas.height = textHeight + padding * 2;
 
-            /* Add text labels to each orb pivot */
-            pivotGroups.forEach((pivot, idx) => {
-              if (idx >= allItems.length) return;
-              const item = allItems[idx];
-              const tGeo = new TextGeometry(item.code, {
-                font,
-                size: 0.3,
-                depth: 0.02,
-                curveSegments: 8,
-              });
-              tGeo.computeBoundingBox();
-              const off = new THREE.Vector3();
-              tGeo.boundingBox!.getCenter(off);
-              const tMesh = new THREE.Mesh(tGeo, textMat);
-              tMesh.position.set(-off.x, -off.y, 0.1);
-              pivot.add(tMesh);
-            });
-          },
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.font = font;
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.minFilter = THREE.LinearFilter;
+        const material = new THREE.SpriteMaterial({
+          map: texture,
+          transparent: true,
+          depthWrite: false,
+        });
+        const sprite = new THREE.Sprite(material);
+        sprite.scale.set(
+          (canvas.width / canvas.height) * spriteScale,
+          spriteScale,
+          1,
         );
+        return sprite;
+      }
+
+      /* ---- EN Text on Center Sun ---- */
+      const enSprite = createTextSprite('EN', {
+        fontSize: 64,
+        color: '#ffffff',
+        scale: 1.6,
+      });
+      centerSun.add(enSprite);
+
+      /* ---- Text Labels on Orbiting Orbs ---- */
+      pivotGroups.forEach((pivot, idx) => {
+        const allItems = [
+          ...DISCIPLINES_DATA.map((d) => ({ ...d, segment: 1 })),
+          ...LANGUAGES_DATA.map((l) => ({ ...l, segment: 2 })),
+        ];
+        if (idx >= allItems.length) return;
+        const item = allItems[idx];
+        const isSeg2 = item.segment === 2;
+        const label = createTextSprite(item.code, {
+          fontSize: 36,
+          color: isSeg2 ? '#c084fc' : '#38bdf8',
+          scale: 0.9,
+        });
+        label.position.set(0, 0, 0.1);
+        pivot.add(label);
       });
 
       /* ---- Animation Loop ---- */
