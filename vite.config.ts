@@ -43,12 +43,25 @@ export default defineConfig(() => {
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes('node_modules')) return 'vendor';
-            const byLangMatch = id.match(/translations[/\\]by-lang[/\\]([a-z]{2})\.json/i);
-            if (byLangMatch) return `translation-corpus-${byLangMatch[1]}`;
-            if (id.includes('/data/') && id.includes('by-level/'))
-              return getDataChunk(id) ?? 'seed-data';
-            if (id.includes('/data/') || id.includes('seed')) return 'seed-data';
+            if (!id.includes('node_modules')) {
+              const byLangMatch = id.match(/translations[/\\]by-lang[/\\]([a-z]{2})\.json/i);
+              if (byLangMatch) return `translation-corpus-${byLangMatch[1]}`;
+              if (id.includes('/data/') && id.includes('by-level/'))
+                return getDataChunk(id) ?? 'seed-data';
+              if (id.includes('/data/') || id.includes('seed')) return 'seed-data';
+              return;
+            }
+            // Split vendor into smaller chunks
+            if (id.includes('@clerk')) return 'vendor-clerk';
+            if (id.includes('three')) return 'vendor-three';
+            if (id.includes('react-router') || id.includes('react-router-dom') || id.includes('@remix-run')) return 'vendor-router';
+            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) return 'vendor-react';
+            if (id.includes('zustand') || id.includes('@tanstack/react-query')) return 'vendor-state';
+            if (id.includes('framer-motion') || id.includes('motion')) return 'vendor-motion';
+            if (id.includes('@supabase')) return 'vendor-supabase';
+            if (id.includes('@opentelemetry') || id.includes('@sentry')) return 'vendor-telemetry';
+            return 'vendor-other';
+
           },
         },
         onwarn(warning, warn) {
