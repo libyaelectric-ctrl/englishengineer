@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -67,13 +67,26 @@ vi.mock('@/features/localization', () => ({
   ],
 }));
 
-vi.mock('@/layouts/MobileBottomNavigation', () => ({
-  MobileBottomNavigation: () => <div>Mobile Bottom Nav</div>,
+vi.mock('./Sidebar', () => ({
+  Sidebar: () => <div data-testid="app-sidebar">EngVox</div>,
 }));
-
+vi.mock('@/layouts/Sidebar', () => ({
+  Sidebar: () => <div data-testid="app-sidebar">EngVox</div>,
+}));
 vi.mock('@/layouts/RightSidebar', () => ({
   RightSidebar: () => <div>Right Sidebar</div>,
 }));
+vi.mock('./RightSidebar', () => ({
+  RightSidebar: () => <div>Right Sidebar</div>,
+}));
+vi.mock('@/layouts/MobileBottomNavigation', () => ({
+  MobileBottomNavigation: () => <div>Mobile Bottom Nav</div>,
+}));
+vi.mock('./MobileBottomNavigation', () => ({
+  MobileBottomNavigation: () => <div>Mobile Bottom Nav</div>,
+}));
+
+
 
 vi.mock('@/config/product.config', () => ({
   PRODUCT_VERSION: '1.0.0',
@@ -93,19 +106,23 @@ describe('AppShell', () => {
       );
     });
 
-  it('renders sidebar, main content outlet, and bottom navigation', () => {
+  it('renders sidebar, main content outlet, and bottom navigation', async () => {
     renderShell();
 
-    expect(screen.getByTestId('app-sidebar')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('app-sidebar')).toBeInTheDocument();
+    });
     expect(screen.getByText('Main Content')).toBeInTheDocument();
     expect(screen.getByText('Mobile Bottom Nav')).toBeInTheDocument();
     expect(screen.getByText('Right Sidebar')).toBeInTheDocument();
   });
 
-  it('renders EngVox branding in sidebar', () => {
+  it('renders EngVox branding in sidebar', async () => {
     renderShell();
 
-    expect(screen.getByText('EngVox')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('EngVox')).toBeInTheDocument();
+    });
   });
 
   it('renders skip to content link', () => {

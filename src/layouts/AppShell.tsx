@@ -11,9 +11,9 @@ import { usePageTracking } from '@/shared/hooks/usePageTracking';
 
 import { useMascotEvents } from '@/features/mascot';
 
-import { MobileBottomNavigation } from './MobileBottomNavigation';
-import { RightSidebar } from './RightSidebar';
-import { Sidebar } from './Sidebar';
+const Sidebar = lazy(() => import('./Sidebar').then(m => ({ default: m.Sidebar })));
+const RightSidebar = lazy(() => import('./RightSidebar').then(m => ({ default: m.RightSidebar })));
+const MobileBottomNavigation = lazy(() => import('./MobileBottomNavigation').then(m => ({ default: m.MobileBottomNavigation })));
 
 const BetaAnalyticsTracker = lazy(() =>
   import('@/features/beta').then((m) => ({ default: m.BetaAnalyticsTracker }))
@@ -69,7 +69,9 @@ export const AppShell: FC = () => {
         <KeyboardShortcutsPanel />
       </Suspense>
       {/* Nav1 - Left sidebar */}
-      <Sidebar />
+      <Suspense fallback={<div className="hidden" aria-hidden="true" />}>
+        <Sidebar />
+      </Suspense>
 
       {/* Main content */}
       <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-hidden">
@@ -99,11 +101,15 @@ export const AppShell: FC = () => {
         <Suspense fallback={null}>
           <EngMascot />
         </Suspense>
-        <MobileBottomNavigation />
+        <Suspense fallback={null}>
+          <MobileBottomNavigation />
+        </Suspense>
       </div>
 
       {/* Nav2 - Right sidebar */}
-      <RightSidebar />
+      <Suspense fallback={<div className="hidden" aria-hidden="true" />}>
+        <RightSidebar />
+      </Suspense>
     </div>
   );
 };
