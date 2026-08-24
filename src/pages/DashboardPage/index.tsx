@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Target, TrendingUp, Zap } from 'lucide-react';
+import { ArrowRight, BookOpen, Globe, Hash, Settings, Target, TrendingUp, Zap } from 'lucide-react';
 
 import React, { useEffect, useState } from 'react';
 
@@ -15,7 +15,7 @@ import { useShortcutHint } from '@/shared/hooks/useShortcutHint';
 
 import { useAuthStore } from '@/features/auth';
 import { resolveDefaultDiscipline } from '@/features/learning-path';
-import { useLocalizationStore } from '@/features/localization';
+import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization/localization.types';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
@@ -26,6 +26,7 @@ import { ProgressNudge } from './ProgressNudge';
 export const DashboardPage: React.FC = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const translate = useLocalizationStore((state) => state.translate);
+  const currentLanguage = useLocalizationStore((state) => state.language);
 
   // Show Ctrl+K shortcut hint on first visit
   useShortcutHint();
@@ -116,6 +117,78 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
       </header>
+
+      {/* Profile Summary Card — discipline + language + word count */}
+      <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
+            <Settings className="h-4 w-4 text-primary" aria-hidden="true" />
+            {translate('dashboard.myDiscipline')}
+          </h2>
+          <Link
+            to="/profile"
+            className="text-xs font-bold text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+          >
+            {translate('profile.save')}
+            <ArrowRight className="h-3 w-3" aria-hidden="true" />
+          </Link>
+        </div>
+        <div className="flex flex-wrap items-center gap-4">
+          {/* Discipline */}
+          <div className="flex items-center gap-3 flex-1 min-w-[200px]">
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary">
+              <BookOpen className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs text-muted-copy font-medium">
+                {translate('onboarding.selectDiscipline')}
+              </p>
+              <p className="text-sm font-bold text-foreground truncate">
+                {meta ? translate(meta.labelKey as TranslationKey) : discipline}
+              </p>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="hidden sm:block w-px h-10 bg-border-soft" />
+
+          {/* Interface Language */}
+          <div className="flex items-center gap-3 flex-1 min-w-[160px]">
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400">
+              <Globe className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs text-muted-copy font-medium">
+                {translate('onboarding.selectLanguageTitle')}
+              </p>
+              <p className="text-sm font-bold text-foreground truncate">
+                {(() => {
+                  const langOption = INTERFACE_LANGUAGES.find((l) => l.id === currentLanguage);
+                  return langOption ? `${langOption.nativeLabel} (${langOption.id.toUpperCase()})` : currentLanguage ?? '—';
+                })()}
+              </p>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="hidden sm:block w-px h-10 bg-border-soft" />
+
+          {/* Word Count */}
+          <div className="flex items-center gap-3 flex-1 min-w-[140px]">
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-violet-500/10 text-violet-400">
+              <Hash className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs text-muted-copy font-medium">
+                {translate('dashboard.words')}
+              </p>
+              <p className="text-sm font-bold text-foreground">
+                {meta?.wordCount?.toLocaleString() ?? '—'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Stats Grid — all real data */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
