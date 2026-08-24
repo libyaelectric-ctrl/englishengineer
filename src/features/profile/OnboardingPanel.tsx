@@ -15,7 +15,7 @@ import type { SupportedInterfaceLanguage } from '@/features/localization/localiz
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 /* ------------------------------------------------------------------ */
-/* Discipline accent colours (kept from original for icon-box tints)   */
+/* Discipline accent colours                                           */
 /* ------------------------------------------------------------------ */
 const DISCIPLINE_ACCENTS: Record<EngineeringDiscipline, { bg: string; fg: string }> = {
   architecture: { bg: 'rgba(217,119,6,0.18)', fg: '#f59e0b' },
@@ -31,7 +31,7 @@ const DISCIPLINE_ACCENTS: Record<EngineeringDiscipline, { bg: string; fg: string
 };
 
 /* ------------------------------------------------------------------ */
-/* SVG icons for disciplines (inline, lightweight)                     */
+/* SVG icons for disciplines                                           */
 /* ------------------------------------------------------------------ */
 const DISCipline_SVGs: Record<string, string> = {
   Building2: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V7l8-4 8 4v14"/><path d="M4 21h16"/><path d="M9 21V12h6v9"/></svg>`,
@@ -49,25 +49,23 @@ const DISCipline_SVGs: Record<string, string> = {
 const CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="#020617" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
 
 /* ------------------------------------------------------------------ */
-/* English-only discipline names (disciplines always show in English)   */
+/* English-only discipline names                                       */
 /* ------------------------------------------------------------------ */
 const DISCIPLINE_EN: Record<EngineeringDiscipline, string> = {
   architecture: 'Architecture',
-  chemical: 'Chemical Engineering',
-  civil: 'Civil Engineering',
-  electrical: 'Electrical Engineering',
-  electronics: 'Electronics Engineering',
-  hse: 'HSE Engineering',
-  industrial: 'Industrial Engineering',
-  mechanical: 'Mechanical Engineering',
-  mechatronics: 'Mechatronics / Robotics',
-  software: 'Software Engineering',
+  chemical: 'Chemical',
+  civil: 'Civil',
+  electrical: 'Electrical',
+  electronics: 'Electronics',
+  hse: 'HSE',
+  industrial: 'Industrial',
+  mechanical: 'Mechanical',
+  mechatronics: 'Mechatronics',
+  software: 'Software',
 };
 
-
-
 /* ------------------------------------------------------------------ */
-/* Three.js Orb (dynamic import, no audio — pure visual)               */
+/* Three.js Orb                                                        */
 /* ------------------------------------------------------------------ */
 const OrbCanvas = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -79,7 +77,6 @@ const OrbCanvas = () => {
     let animId = 0;
 
     import('three').then((THREE) => {
-      // Gracefully handle environments without WebGL (e.g. jsdom in tests)
       try {
         const testCanvas = document.createElement('canvas');
         const gl = testCanvas.getContext('webgl') || testCanvas.getContext('webgl2');
@@ -220,7 +217,6 @@ const OrbCanvas = () => {
       };
       window.addEventListener('resize', onResize);
 
-      // Store cleanup for unmount
       (container as unknown as { __cleanup?: () => void }).__cleanup = () => {
         window.removeEventListener('resize', onResize);
         cancelAnimationFrame(animId);
@@ -233,7 +229,6 @@ const OrbCanvas = () => {
     };
   }, []);
 
-  // Fallback when WebGL is not available (e.g. tests)
   const [hasWebGL, setHasWebGL] = useState(true);
   useEffect(() => {
     try {
@@ -248,9 +243,8 @@ const OrbCanvas = () => {
   if (!hasWebGL) {
     return (
       <div
-        className="orb-container"
         style={{
-          width: 240, height: 240,
+          width: 200, height: 200,
           borderRadius: '9999px',
           background: 'linear-gradient(135deg, rgba(139,92,246,0.3), rgba(56,189,248,0.3))',
           border: '1px solid rgba(255,255,255,0.05)',
@@ -263,10 +257,9 @@ const OrbCanvas = () => {
   return (
     <div
       ref={containerRef}
-      className="orb-container"
       style={{
-        width: 240,
-        height: 240,
+        width: 200,
+        height: 200,
         position: 'relative',
         borderRadius: '9999px',
         backgroundColor: 'rgba(15,23,42,0.3)',
@@ -323,6 +316,10 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
     return INTERFACE_LANGUAGES.find((l) => l.id === selectedLanguage);
   }, [selectedLanguage]);
 
+  /* Circle positioning: 10 disciplines evenly spaced around the orb */
+  const ORB_RADIUS = 220; // px from center to discipline button center
+  const DISCIPLINE_COUNT = ENGINEERING_DISCIPLINES.length;
+
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto" style={{ background: '#020617' }}>
       <style>{`
@@ -334,165 +331,180 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
           text-transform: uppercase;
           color: #94a3b8;
           margin-bottom: 8px;
+          padding-top: 32px;
         }
         .onb-headline {
           text-align: center;
           font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
           font-weight: 600;
-          font-size: 28px;
+          font-size: 26px;
           letter-spacing: -0.01em;
-          margin: 0 0 40px;
+          margin: 0 0 24px;
           background: linear-gradient(90deg, #fff, #cdd6f4 55%, #a5b4fc);
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
+          padding: 0 24px;
         }
-        .onb-layout {
-          display: grid;
-          grid-template-columns: 1fr 280px 1fr;
-          gap: 24px;
+        .onb-main {
+          display: flex;
+          gap: 32px;
           max-width: 1400px;
           margin: 0 auto;
-          align-items: start;
-          padding: 48px 24px 64px;
+          padding: 0 24px 64px;
+          align-items: flex-start;
         }
-        .onb-col { min-width: 0; }
-        .onb-col-title {
+        .onb-orb-section {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          min-width: 0;
+        }
+        .onb-wheel {
+          position: relative;
+          width: 540px;
+          height: 540px;
+          flex-shrink: 0;
+        }
+        .onb-orb-center {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 2;
+        }
+        .onb-orb-label {
+          position: absolute;
+          bottom: -8px;
+          left: 50%;
+          transform: translateX(-50%);
           font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
-          font-weight: 600;
-          font-size: 13px;
-          letter-spacing: 0.16em;
+          font-weight: 700;
+          font-size: 11px;
+          letter-spacing: 0.12em;
+          color: rgba(255,255,255,0.5);
           text-transform: uppercase;
-          color: #94a3b8;
-          margin: 0 0 16px;
-          padding-left: 4px;
+          white-space: nowrap;
         }
-        .onb-col-hint {
-          font-family: 'Inter', ui-sans-serif, sans-serif;
-          font-size: 12.5px;
-          color: #94a3b8;
-          margin: -10px 0 16px;
-          padding-left: 4px;
-          line-height: 1.5;
+        /* Discipline node positioned on the circle */
+        .onb-node {
+          position: absolute;
+          transform: translate(-50%, -50%);
+          z-index: 3;
         }
-        .onb-disciplines { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .onb-card {
+        .onb-node-btn {
           all: unset;
           cursor: pointer;
           display: flex;
           align-items: center;
-          gap: 12px;
-          padding: 14px;
-          border-radius: 16px;
+          gap: 8px;
+          padding: 10px 14px;
+          border-radius: 14px;
           border: 1px solid rgba(148,163,184,0.14);
-          background: rgba(15,23,42,0.45);
-          backdrop-filter: blur(6px);
+          background: rgba(15,23,42,0.65);
+          backdrop-filter: blur(8px);
           transition: border-color .2s, box-shadow .25s, transform .15s, background .2s;
-          box-shadow: 0 0 0 0 rgba(139,92,246,0);
+          white-space: nowrap;
         }
-        .onb-card:hover {
-          background: rgba(30,27,75,0.55);
-          transform: translateY(-1px);
-          border-color: rgba(148,163,184,0.28);
+        .onb-node-btn:hover {
+          background: rgba(30,27,75,0.75);
+          transform: scale(1.05);
+          border-color: rgba(148,163,184,0.3);
         }
-        .onb-card:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
-        .onb-card.selected {
+        .onb-node-btn:focus-visible {
+          outline: 2px solid #38bdf8;
+          outline-offset: 2px;
+        }
+        .onb-node-btn.selected {
           border-color: transparent;
           background: linear-gradient(#1e1b4b, #1e1b4b) padding-box,
                       linear-gradient(120deg, #8b5cf6, #38bdf8) border-box;
           border: 1px solid transparent;
-          box-shadow: 0 0 22px -6px rgba(139,92,246,0.55), 0 0 34px -12px rgba(56,189,248,0.35);
+          box-shadow: 0 0 22px -6px rgba(139,92,246,0.6), 0 0 40px -12px rgba(56,189,248,0.4);
+          transform: scale(1.08);
         }
-        .onb-icon-box {
+        .onb-node-icon {
           flex: 0 0 auto;
-          width: 36px; height: 36px;
-          border-radius: 10px;
+          width: 28px; height: 28px;
+          border-radius: 8px;
           display: flex; align-items: center; justify-content: center;
         }
-        .onb-icon-box svg { width: 18px; height: 18px; }
-        .onb-card-text { min-width: 0; flex: 1; overflow: hidden; }
-        .onb-card-title {
+        .onb-node-icon svg { width: 14px; height: 14px; }
+        .onb-node-name {
           font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
-          font-weight: 600; font-size: 13.5px; color: #e9edf5;
-          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+          font-weight: 600; font-size: 12px; color: #e9edf5;
         }
-
-        .onb-check {
-          margin-left: auto; flex: 0 0 auto;
-          width: 16px; height: 16px;
+        .onb-node-check {
+          flex: 0 0 auto;
+          width: 14px; height: 14px;
           border-radius: 50%;
           display: flex; align-items: center; justify-content: center;
           background: linear-gradient(120deg, #8b5cf6, #38bdf8);
           opacity: 0; transform: scale(.6);
           transition: opacity .2s, transform .2s;
+          margin-left: 4px;
         }
-        .onb-card.selected .onb-check { opacity: 1; transform: scale(1); }
-        .onb-check svg { width: 10px; height: 10px; }
-        .onb-languages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .onb-lang-card {
-          all: unset;
-          cursor: pointer;
-          display: flex; flex-direction: column; align-items: center; justify-content: center;
-          gap: 6px; padding: 18px 8px;
-          border-radius: 16px;
-          border: 1px solid rgba(148,163,184,0.14);
-          background: rgba(15,23,42,0.45);
-          backdrop-filter: blur(6px);
-          transition: border-color .2s, box-shadow .25s, transform .15s, background .2s;
-          text-align: center;
+        .onb-node-btn.selected .onb-node-check { opacity: 1; transform: scale(1); }
+        .onb-node-check svg { width: 8px; height: 8px; }
+
+        /* SVG lines from orb to each node */
+        .onb-lines {
+          position: absolute;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          pointer-events: none;
+          z-index: 1;
         }
-        .onb-lang-card:hover {
-          background: rgba(30,27,75,0.55);
-          transform: translateY(-1px);
-          border-color: rgba(148,163,184,0.28);
+        .onb-line {
+          stroke: rgba(148,163,184,0.1);
+          stroke-width: 1;
+          transition: stroke .3s;
         }
-        .onb-lang-card:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
-        .onb-lang-card.selected {
-          border-color: transparent;
-          background: linear-gradient(#1e1b4b, #1e1b4b) padding-box,
-                      linear-gradient(120deg, #8b5cf6, #38bdf8) border-box;
-          border: 1px solid transparent;
-          box-shadow: 0 0 22px -6px rgba(139,92,246,0.55), 0 0 34px -12px rgba(56,189,248,0.35);
+        .onb-line.active {
+          stroke: rgba(139,92,246,0.4);
+          stroke-width: 1.5;
+          filter: drop-shadow(0 0 4px rgba(139,92,246,0.3));
         }
-        .onb-lang-code {
-          font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
-          font-weight: 700; font-size: 15px; letter-spacing: 0.03em; color: #e9edf5;
-        }
-        .onb-lang-native {
-          font-family: 'Inter', ui-sans-serif, sans-serif;
-          font-size: 12.5px; color: #94a3b8;
-        }
-        .onb-center-col {
-          display: flex; flex-direction: column; align-items: center;
-          transform: translateX(0);
-          padding-top: 40px;
-        }
-        .onb-bottom-block {
-          display: flex; flex-direction: column; align-items: center;
-          width: 100%; margin-top: auto; padding-top: 32px;
+
+        /* Bottom summary + continue */
+        .onb-bottom {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+          margin-top: 16px;
         }
         .onb-summary {
-          width: 100%; max-width: 240px;
-          display: flex; flex-direction: column; gap: 10px;
+          width: 100%;
+          max-width: 340px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
         }
         .onb-summary-row {
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 11px 16px; border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px 16px;
+          border-radius: 12px;
           border: 1px solid rgba(148,163,184,0.14);
           background: rgba(15,23,42,0.45);
-          font-family: 'Inter', ui-sans-serif, sans-serif; font-size: 13px;
+          font-family: 'Inter', ui-sans-serif, sans-serif;
+          font-size: 13px;
         }
         .onb-summary-label { color: #94a3b8; }
         .onb-summary-value {
           font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
           font-weight: 600; color: #e9edf5;
-          max-width: 190px; text-align: right;
+          max-width: 180px; text-align: right;
           white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .onb-summary-value.empty { color: #94a3b8; font-weight: 500; font-family: 'Inter', ui-sans-serif, sans-serif; }
         .onb-continue {
           all: unset;
-          margin-top: 18px; width: 100%; max-width: 240px;
+          margin-top: 16px;
+          width: 100%; max-width: 340px;
           text-align: center; cursor: pointer;
           padding: 14px 20px; border-radius: 14px;
           font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
@@ -512,13 +524,74 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
           box-shadow: none;
         }
         .onb-continue:focus-visible { outline: 2px solid #38bdf8; outline-offset: 3px; }
-        @media (max-width: 1080px) {
-          .onb-layout { grid-template-columns: 1fr; }
-          .onb-center-col { order: -1; margin-bottom: 12px; transform: none; }
+
+        /* RIGHT: Languages */
+        .onb-lang-section {
+          width: 300px;
+          flex-shrink: 0;
+          padding-top: 8px;
         }
-        @media (max-width: 480px) {
-          .onb-disciplines { grid-template-columns: 1fr; }
+        .onb-col-title {
+          font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
+          font-weight: 600; font-size: 13px;
+          letter-spacing: 0.16em; text-transform: uppercase;
+          color: #94a3b8; margin: 0 0 12px; padding-left: 4px;
+        }
+        .onb-col-hint {
+          font-family: 'Inter', ui-sans-serif, sans-serif;
+          font-size: 12px; color: #64748b;
+          margin: -6px 0 14px; padding-left: 4px; line-height: 1.5;
+        }
+        .onb-languages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .onb-lang-card {
+          all: unset;
+          cursor: pointer;
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
+          gap: 4px; padding: 14px 6px;
+          border-radius: 14px;
+          border: 1px solid rgba(148,163,184,0.14);
+          background: rgba(15,23,42,0.45);
+          backdrop-filter: blur(6px);
+          transition: border-color .2s, box-shadow .25s, transform .15s, background .2s;
+          text-align: center;
+        }
+        .onb-lang-card:hover {
+          background: rgba(30,27,75,0.55);
+          transform: translateY(-1px);
+          border-color: rgba(148,163,184,0.28);
+        }
+        .onb-lang-card:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
+        .onb-lang-card.selected {
+          border-color: transparent;
+          background: linear-gradient(#1e1b4b, #1e1b4b) padding-box,
+                      linear-gradient(120deg, #8b5cf6, #38bdf8) border-box;
+          border: 1px solid transparent;
+          box-shadow: 0 0 18px -6px rgba(139,92,246,0.5);
+        }
+        .onb-lang-code {
+          font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
+          font-weight: 700; font-size: 14px; letter-spacing: 0.03em; color: #e9edf5;
+        }
+        .onb-lang-native {
+          font-family: 'Inter', ui-sans-serif, sans-serif;
+          font-size: 11px; color: #94a3b8;
+        }
+
+        @media (max-width: 1100px) {
+          .onb-main { flex-direction: column; align-items: center; }
+          .onb-lang-section { width: 100%; max-width: 540px; }
+          .onb-wheel { width: 420px; height: 420px; }
+        }
+        @media (max-width: 520px) {
+          .onb-wheel { width: 340px; height: 340px; }
           .onb-languages { grid-template-columns: repeat(2, 1fr); }
+          .onb-node-btn { padding: 8px 10px; gap: 6px; }
+          .onb-node-name { font-size: 10px; }
+          .onb-node-icon { width: 22px; height: 22px; }
+          .onb-node-icon svg { width: 11px; height: 11px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .onb-node-btn, .onb-lang-card, .onb-continue { transition: none; }
         }
       `}</style>
 
@@ -527,48 +600,70 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
         {translate('onboarding.selectDisciplineDesc')}
       </h1>
 
-      <div className="onb-layout">
-        {/* LEFT: Disciplines */}
-        <div className="onb-col">
-          <p className="onb-col-title">{translate('onboarding.selectDiscipline')}</p>
-          <div className="onb-disciplines">
-            {ENGINEERING_DISCIPLINES.map((id) => {
-              const meta = DISCIPLINE_META[id];
+      <div className="onb-main">
+        {/* LEFT/CENTER: Orb wheel + summary + continue */}
+        <div className="onb-orb-section">
+          <div className="onb-wheel">
+            {/* SVG connecting lines */}
+            <svg className="onb-lines" viewBox="0 0 540 540">
+              {ENGINEERING_DISCIPLINES.map((id, i) => {
+                const angle = (2 * Math.PI * i) / DISCIPLINE_COUNT - Math.PI / 2;
+                const cx = 270 + ORB_RADIUS * Math.cos(angle);
+                const cy = 270 + ORB_RADIUS * Math.sin(angle);
+                const isActive = selectedDiscipline === id;
+                return (
+                  <line
+                    key={id}
+                    x1={270} y1={270}
+                    x2={cx} y2={cy}
+                    className={`onb-line${isActive ? ' active' : ''}`}
+                  />
+                );
+              })}
+            </svg>
+
+            {/* Center orb */}
+            <div className="onb-orb-center">
+              <OrbCanvas />
+              <span className="onb-orb-label">ENG</span>
+            </div>
+
+            {/* Discipline nodes around the circle */}
+            {ENGINEERING_DISCIPLINES.map((id, i) => {
+              const angle = (2 * Math.PI * i) / DISCIPLINE_COUNT - Math.PI / 2;
+              const x = 50 + (ORB_RADIUS / 540) * 100 * Math.cos(angle);
+              const y = 50 + (ORB_RADIUS / 540) * 100 * Math.sin(angle);
               const accent = DISCIPLINE_ACCENTS[id];
               const isSelected = selectedDiscipline === id;
-              const svgKey = meta.icon;
-              const svgHtml = DISCipline_SVGs[svgKey] ?? DISCipline_SVGs.Code2;
+              const svgHtml = DISCipline_SVGs[DISCIPLINE_META[id].icon] ?? DISCipline_SVGs.Code2;
 
               return (
-                <button
+                <div
                   key={id}
-                  type="button"
-                  onClick={() => setSelectedDiscipline(id)}
-                  aria-pressed={isSelected}
-                  className={`onb-card${isSelected ? ' selected' : ''}`}
+                  className="onb-node"
+                  style={{ left: `${x}%`, top: `${y}%` }}
                 >
-                  <span
-                    className="onb-icon-box"
-                    style={{ background: accent.bg, color: accent.fg }}
-                    dangerouslySetInnerHTML={{ __html: svgHtml }}
-                  />
-                  <span className="onb-card-text">
-                    <span className="onb-card-title">
-                      {DISCIPLINE_EN[id]}
-                    </span>
-                  </span>
-                  <span className="onb-check" dangerouslySetInnerHTML={{ __html: CHECK_SVG }} />
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedDiscipline(id)}
+                    aria-pressed={isSelected}
+                    className={`onb-node-btn${isSelected ? ' selected' : ''}`}
+                  >
+                    <span
+                      className="onb-node-icon"
+                      style={{ background: accent.bg, color: accent.fg }}
+                      dangerouslySetInnerHTML={{ __html: svgHtml }}
+                    />
+                    <span className="onb-node-name">{DISCIPLINE_EN[id]}</span>
+                    <span className="onb-node-check" dangerouslySetInnerHTML={{ __html: CHECK_SVG }} />
+                  </button>
+                </div>
               );
             })}
           </div>
-        </div>
 
-        {/* CENTER: Orb + Summary + Continue */}
-        <div className="onb-col onb-center-col">
-          <OrbCanvas />
-
-          <div className="onb-bottom-block">
+          {/* Bottom: summary + continue */}
+          <div className="onb-bottom">
             <div className="onb-summary">
               <div className="onb-summary-row">
                 <span className="onb-summary-label">
@@ -604,7 +699,7 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
         </div>
 
         {/* RIGHT: Languages */}
-        <div className="onb-col">
+        <div className="onb-lang-section">
           <p className="onb-col-title">{translate('onboarding.selectLanguageTitle')}</p>
           <p className="onb-col-hint">
             {translate('onboarding.selectLanguage')} ({translate('onboarding.englishFixedTarget')})
