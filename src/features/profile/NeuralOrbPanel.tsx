@@ -440,12 +440,56 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
       };
       el.addEventListener('pointerdown', onPointerDown);
 
-      /* ---- Font Loading & Orb Creation ---- */
+      /* ---- Create Orbs Immediately (text labels added async after font loads) ---- */
+      const pivotGroups: THREE.Group[] = [];
+
+      DISCIPLINES_DATA.forEach((item, i) => {
+        const angle = (i / DISCIPLINES_DATA.length) * Math.PI * 2;
+        const pivot = new THREE.Group();
+        pivot.position.set(
+          Math.cos(angle) * orbitRadius1,
+          Math.sin(angle) * orbitRadius1,
+          0,
+        );
+        const orb = new THREE.Mesh(sphereGeo, orbMaterial.clone());
+        orb.scale.set(smallOrbRadius, smallOrbRadius, smallOrbRadius);
+        orb.userData = { code: item.code, full: item.full, segment: 1 };
+        pivot.add(orb);
+        allInteractiveOrbs.push(orb);
+        orbitGroup1.add(pivot);
+        pivotGroups.push(pivot);
+      });
+
+      LANGUAGES_DATA.forEach((item, i) => {
+        const angle = (i / LANGUAGES_DATA.length) * Math.PI * 2;
+        const pivot = new THREE.Group();
+        pivot.position.set(
+          Math.cos(angle) * orbitRadius2,
+          Math.sin(angle) * orbitRadius2,
+          0,
+        );
+        const orb = new THREE.Mesh(sphereGeo, orbMaterial.clone());
+        orb.scale.set(smallOrbRadius, smallOrbRadius, smallOrbRadius);
+        orb.userData = { code: item.code, full: item.full, segment: 2 };
+        pivot.add(orb);
+        allInteractiveOrbs.push(orb);
+        orbitGroup2.add(pivot);
+        pivotGroups.push(pivot);
+      });
+
+      initNeuralLinks();
+
+      /* ---- Font Loading: Add text labels async ---- */
+      const allItems = [
+        ...DISCIPLINES_DATA.map((d) => ({ ...d, segment: 1 })),
+        ...LANGUAGES_DATA.map((l) => ({ ...l, segment: 2 })),
+      ];
+
       Promise.all([
-        import('three/examples/jsm/loaders/FontLoader.js'),
-        import('three/examples/jsm/geometries/TextGeometry.js'),
+        import('three/examples/jsm/loaders/FontLoader.js').catch(() => null),
+        import('three/examples/jsm/geometries/TextGeometry.js').catch(() => null),
       ]).then(([fontMod, textGeoMod]) => {
-        if (disposed) return;
+        if (disposed || !fontMod || !textGeoMod) return;
         const { FontLoader } = fontMod;
         const { TextGeometry } = textGeoMod;
         const fontLoader = new FontLoader();
@@ -469,22 +513,10 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
             enMesh.position.set(-enOffset.x, -enOffset.y, -enOffset.z);
             centerSun.add(enMesh);
 
-            /* Segment 1 — Disciplines */
-            DISCIPLINES_DATA.forEach((item) => {
-              const angle =
-                (DISCIPLINES_DATA.indexOf(item) / DISCIPLINES_DATA.length) * Math.PI * 2;
-              const pivot = new THREE.Group();
-              pivot.position.set(
-                Math.cos(angle) * orbitRadius1,
-                Math.sin(angle) * orbitRadius1,
-                0,
-              );
-              const orb = new THREE.Mesh(sphereGeo, orbMaterial.clone());
-              orb.scale.set(smallOrbRadius, smallOrbRadius, smallOrbRadius);
-              orb.userData = { code: item.code, full: item.full, segment: 1 };
-              pivot.add(orb);
-              allInteractiveOrbs.push(orb);
-
+            /* Add text labels to each orb pivot */
+            pivotGroups.forEach((pivot, idx) => {
+              if (idx >= allItems.length) return;
+              const item = allItems[idx];
               const tGeo = new TextGeometry(item.code, {
                 font,
                 size: 0.3,
@@ -497,41 +529,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
               const tMesh = new THREE.Mesh(tGeo, textMat);
               tMesh.position.set(-off.x, -off.y, 0.1);
               pivot.add(tMesh);
-              orbitGroup1.add(pivot);
             });
-
-            /* Segment 2 — Languages */
-            LANGUAGES_DATA.forEach((item) => {
-              const angle =
-                (LANGUAGES_DATA.indexOf(item) / LANGUAGES_DATA.length) * Math.PI * 2;
-              const pivot = new THREE.Group();
-              pivot.position.set(
-                Math.cos(angle) * orbitRadius2,
-                Math.sin(angle) * orbitRadius2,
-                0,
-              );
-              const orb = new THREE.Mesh(sphereGeo, orbMaterial.clone());
-              orb.scale.set(smallOrbRadius, smallOrbRadius, smallOrbRadius);
-              orb.userData = { code: item.code, full: item.full, segment: 2 };
-              pivot.add(orb);
-              allInteractiveOrbs.push(orb);
-
-              const tGeo = new TextGeometry(item.code, {
-                font,
-                size: 0.3,
-                depth: 0.02,
-                curveSegments: 8,
-              });
-              tGeo.computeBoundingBox();
-              const off = new THREE.Vector3();
-              tGeo.boundingBox!.getCenter(off);
-              const tMesh = new THREE.Mesh(tGeo, textMat);
-              tMesh.position.set(-off.x, -off.y, 0.1);
-              pivot.add(tMesh);
-              orbitGroup2.add(pivot);
-            });
-
-            initNeuralLinks();
           },
         );
       });
@@ -672,7 +670,6 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
         {/* Bottom Section */}
         <div className="bottom-section">
           <div id="cipher-console">
-            <div className="console-line">{'> SYSTEM READY...'}</div>
             <div className="console-line" style={{ color: statusColor }}>
               {consoleMsg}
             </div>
