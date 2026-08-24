@@ -48,21 +48,7 @@ const DISCipline_SVGs: Record<string, string> = {
 
 const CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="#020617" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
 
-/* ------------------------------------------------------------------ */
-/* Discipline descriptions (fallback English)                          */
-/* ------------------------------------------------------------------ */
-const DISCIPLINE_DESCS: Record<EngineeringDiscipline, string> = {
-  architecture: 'Design, Spatial & BIM',
-  chemical: 'Process, Refining & Safety',
-  civil: 'Infrastructure & Structures',
-  electrical: 'Power Systems & Grid',
-  electronics: 'Semiconductors & Embedded',
-  hse: 'Safety, Health & Compliance',
-  industrial: 'Lean, Operations & Supply',
-  mechanical: 'HVAC, Fluid Dynamics & Design',
-  mechatronics: 'Automation, Control & Systems',
-  software: 'Architecture, Cloud & Code',
-};
+
 
 /* ------------------------------------------------------------------ */
 /* Three.js Orb (dynamic import, no audio — pure visual)               */
@@ -227,8 +213,8 @@ const OrbCanvas = () => {
       ref={containerRef}
       className="orb-container"
       style={{
-        width: 340,
-        height: 340,
+        width: 280,
+        height: 280,
         position: 'relative',
         borderRadius: '9999px',
         backgroundColor: 'rgba(15,23,42,0.3)',
@@ -311,11 +297,11 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
         }
         .onb-layout {
           display: grid;
-          grid-template-columns: 1fr 420px 1fr;
-          gap: 64px;
+          grid-template-columns: 1fr 340px 1fr;
+          gap: 32px;
           max-width: 1400px;
           margin: 0 auto;
-          align-items: stretch;
+          align-items: start;
           padding: 48px 32px 64px;
         }
         .onb-col { min-width: 0; }
@@ -372,18 +358,13 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
           display: flex; align-items: center; justify-content: center;
         }
         .onb-icon-box svg { width: 18px; height: 18px; }
-        .onb-card-text { min-width: 0; display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+        .onb-card-text { min-width: 0; flex: 1; overflow: hidden; }
         .onb-card-title {
           font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
           font-weight: 600; font-size: 13.5px; color: #e9edf5;
           white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-        .onb-card-sub {
-          font-family: 'Inter', ui-sans-serif, sans-serif;
-          font-size: 11px; color: #94a3b8;
-          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-          margin-top: 2px;
-        }
+
         .onb-check {
           margin-left: auto; flex: 0 0 auto;
           width: 16px; height: 16px;
@@ -431,14 +412,14 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
         }
         .onb-center-col {
           display: flex; flex-direction: column; align-items: center;
-          height: 100%; transform: translateX(60px);
+          transform: translateX(0);
         }
         .onb-bottom-block {
           display: flex; flex-direction: column; align-items: center;
           width: 100%; margin-top: auto; padding-top: 32px;
         }
         .onb-summary {
-          width: 100%; max-width: 340px;
+          width: 100%; max-width: 280px;
           display: flex; flex-direction: column; gap: 10px;
         }
         .onb-summary-row {
@@ -458,7 +439,7 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
         .onb-summary-value.empty { color: #94a3b8; font-weight: 500; font-family: 'Inter', ui-sans-serif, sans-serif; }
         .onb-continue {
           all: unset;
-          margin-top: 18px; width: 100%; max-width: 340px;
+          margin-top: 18px; width: 100%; max-width: 280px;
           text-align: center; cursor: pointer;
           padding: 14px 20px; border-radius: 14px;
           font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
@@ -490,11 +471,7 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
 
       <p className="onb-eyebrow">{translate('onboarding.title')}</p>
       <h1 className="onb-headline">
-        {selectedLanguage === 'en'
-          ? 'Choose your discipline and language'
-          : selectedLanguage === 'tr'
-            ? 'Disiplinini ve dilini seç'
-            : translate('onboarding.selectDisciplineDesc')}
+        {translate('onboarding.selectDisciplineDesc')}
       </h1>
 
       <div className="onb-layout">
@@ -526,7 +503,6 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
                     <span className="onb-card-title">
                       {translate(meta.labelKey as TranslationKey)}
                     </span>
-                    <span className="onb-card-sub">{DISCIPLINE_DESCS[id]}</span>
                   </span>
                   <span className="onb-check" dangerouslySetInnerHTML={{ __html: CHECK_SVG }} />
                 </button>
