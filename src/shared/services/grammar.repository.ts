@@ -1,5 +1,3 @@
-import { loadGrammarRulesByLevel } from '@/data/grammar';
-
 import {
   extractCefrFromId,
   getLevelsThrough,
@@ -8,6 +6,12 @@ import {
 import type { LearningDataSkill } from '@/core/learning/spaced-repetition.types';
 
 import { CEFR_LEVELS, type CefrLevel } from '@/shared/types/domain.types';
+
+// Dynamic import: seed data loaded on-demand, not in initial bundle
+const loadGrammarRulesByLevel = async (level: CefrLevel) => {
+  const mod = await import('@/data/grammar');
+  return mod.loadGrammarRulesByLevel(level);
+};
 import { assertGrammarRules } from '@/shared/types/grammar.schema';
 import type { GrammarRule } from '@/shared/types/grammar.types';
 
