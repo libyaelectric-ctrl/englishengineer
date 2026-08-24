@@ -65,7 +65,7 @@
 
   "rewrites": [
     {
-      "source": "/((?!api|assets|mascot)(.*))",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
