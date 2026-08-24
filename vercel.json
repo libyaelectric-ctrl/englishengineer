@@ -1,8 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
-  "cleanUrls": true,
-  "trailingSlash": false,
 
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
@@ -67,15 +65,7 @@
 
   "rewrites": [
     {
-      "source": "/assets/(.*)",
-      "destination": "/assets/$1"
-    },
-    {
-      "source": "/mascot/(.*)",
-      "destination": "/mascot/$1"
-    },
-    {
-      "source": "/((?!api/|assets/|mascot/).*)",
+      "source": "/((?!api|assets|mascot)(.*))",
       "destination": "/index.html"
     }
   ],
