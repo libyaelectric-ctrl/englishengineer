@@ -25,7 +25,7 @@ const BYPASS_PATHS = ['/billing', '/profile', CLERK_SIGN_IN_URL, CLERK_SIGN_UP_U
 export const OnboardingGate = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
   const currentUser = useAuthStore((state) => state.currentUser);
-  // Force re-render when OnboardingPanel completes (localStorage write alone
+  // Force re-render when NeuralOrbPanel completes (localStorage write alone
   // doesn't trigger a React re-render of this component).
   const [, setRefresh] = useState(0);
   const refresh = useCallback(() => setRefresh((n) => n + 1), []);
