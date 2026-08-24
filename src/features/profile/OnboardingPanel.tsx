@@ -372,7 +372,7 @@ export const OnboardingPanel = ({ onComplete }: { onComplete?: () => void } = {}
           display: flex; align-items: center; justify-content: center;
         }
         .onb-icon-box svg { width: 18px; height: 18px; }
-        .onb-card-text { min-width: 0; }
+        .onb-card-text { min-width: 0; display: flex; flex-direction: column; flex: 1; overflow: hidden; }
         .onb-card-title {
           font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
           font-weight: 600; font-size: 13.5px; color: #e9edf5;
