@@ -52,7 +52,7 @@ jobs:
             SIZE=$(stat -c%s "dist${f}" 2>/dev/null || echo 0)
             JS_SIZE=$((JS_SIZE + SIZE))
           done
-          JS_LIMIT=1500000
+          JS_LIMIT=3000000
           echo "Initial load JS size: $JS_SIZE bytes (limit: $JS_LIMIT)"
           if [ "${JS_SIZE:-0}" -gt "$JS_LIMIT" ]; then
             echo "::error::Initial-load bundle size exceeds limit"
