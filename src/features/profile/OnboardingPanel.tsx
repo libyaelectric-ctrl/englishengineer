@@ -79,6 +79,15 @@ const OrbCanvas = () => {
     let animId = 0;
 
     import('three').then((THREE) => {
+      // Gracefully handle environments without WebGL (e.g. jsdom in tests)
+      try {
+        const testCanvas = document.createElement('canvas');
+        const gl = testCanvas.getContext('webgl') || testCanvas.getContext('webgl2');
+        if (!gl) return;
+      } catch {
+        return;
+      }
+
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(
         45,
@@ -223,6 +232,33 @@ const OrbCanvas = () => {
       (container as unknown as { __cleanup?: () => void }).__cleanup?.();
     };
   }, []);
+
+  // Fallback when WebGL is not available (e.g. tests)
+  const [hasWebGL, setHasWebGL] = useState(true);
+  useEffect(() => {
+    try {
+      const c = document.createElement('canvas');
+      const gl = c.getContext('webgl') || c.getContext('webgl2');
+      if (!gl) setHasWebGL(false);
+    } catch {
+      setHasWebGL(false);
+    }
+  }, []);
+
+  if (!hasWebGL) {
+    return (
+      <div
+        className="orb-container"
+        style={{
+          width: 240, height: 240,
+          borderRadius: '9999px',
+          background: 'linear-gradient(135deg, rgba(139,92,246,0.3), rgba(56,189,248,0.3))',
+          border: '1px solid rgba(255,255,255,0.05)',
+          boxShadow: '0 0 80px -10px rgba(139,92,246,0.4), 0 0 120px -20px rgba(56,189,248,0.2)',
+        }}
+      />
+    );
+  }
 
   return (
     <div

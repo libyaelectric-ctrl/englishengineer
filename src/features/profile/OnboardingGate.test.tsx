@@ -89,7 +89,7 @@ describe('OnboardingGate', () => {
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'onboarding.start' })).toBeInTheDocument();
     });
-    expect(screen.getByRole('button', { name: /discipline\.architecture/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Architecture/ })).toBeInTheDocument();
     expect(screen.queryByTestId('guarded-content')).not.toBeInTheDocument();
   });
 
@@ -107,7 +107,7 @@ describe('OnboardingGate', () => {
 
     // Click Architecture discipline button
     await waitFor(() => {
-      const btn = screen.getByRole('button', { name: /discipline\.architecture/ });
+      const btn = screen.getByRole('button', { name: /Architecture/ });
       expect(btn).toBeInTheDocument();
       userEvent.click(btn);
     });
