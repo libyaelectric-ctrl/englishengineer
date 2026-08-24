@@ -1,0 +1,10 @@
+node_modules
+backend
+.git
+.github
+*.md
+.vercel
+test
+tests
+coverage
+.env*
