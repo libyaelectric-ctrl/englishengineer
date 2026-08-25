@@ -23,7 +23,7 @@ describe(
 
       const { requireBackendAuth } = createBackendAuth(
         {
-          clerkIssuer: 'https://dominant-cricket-288.clerk.accounts.dev',
+          clerkIssuer: 'https://clerk.engvox.com',
         } as unknown as BackendAuthConfig,
         fetch
       );
