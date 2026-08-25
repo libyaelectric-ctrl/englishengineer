@@ -126,11 +126,9 @@ requestIdleCallback(() => {
   );
 });
 
-// Register service worker for PWA
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch((err) => {
-      logger.d('Service worker registration failed:', err);
-    });
-  });
-}
+// Service worker DISABLED — was causing stale-cache SYSTEM FAULT errors.
+// Re-enable only after implementing proper cache-busting (content-hashed filenames
+// are already handled by Vite; SW was redundant and harmful).
+//
+
+void 0;

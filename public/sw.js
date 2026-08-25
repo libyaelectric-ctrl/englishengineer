@@ -1,19 +1,19 @@
-const CACHE_NAME = 'engvox-v1';
-const CACHE_URLS = ['/', '/index.html', '/src/main.tsx', '/manifest.json', '/brand/logo.svg'];
+// SERVICE WORKER DISABLED — purges itself and all caches on load.
+// Content-hashed filenames from Vite make SW caching redundant.
+// Re-enable only if offline-first support is needed.
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', () => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
-      .open(CACHE_NAME)
-      .then((cache) => cache.addAll(CACHE_URLS))
-      .catch(() => {})
+      .keys()
+      .then((names) => Promise.all(names.map((n) => caches.delete(n))))
+      .then(() => self.clients.claim())
+      .then(() => self.registration.unregister())
   );
 });
 
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      return cached || fetch(event.request);
-    })
-  );
-});
+// No fetch handler = network always wins.
