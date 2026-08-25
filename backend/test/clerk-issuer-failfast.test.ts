@@ -38,7 +38,7 @@ const productionConfigWithIssuer = {
   ...minimalProductionConfig,
   auth: {
     ...minimalProductionConfig.auth,
-    clerkIssuer: 'https://clerk.engvox.com',
+    clerkIssuer: 'https://engvox.com',
   },
 } as unknown as BackendConfig;
 

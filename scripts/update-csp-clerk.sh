@@ -1,7 +1,7 @@
 #!/bin/bash
 # Update CSP headers with production Clerk domain
 # Usage: bash scripts/update-csp-clerk.sh <clerk-fapi-domain>
-# Example: bash scripts/update-csp-clerk.sh clerk.engvox.com
+# Example: bash scripts/update-csp-clerk.sh engvox.com
 
 set -euo pipefail
 
@@ -9,7 +9,7 @@ CLERK_DOMAIN="${1:-}"
 
 if [ -z "$CLERK_DOMAIN" ]; then
   echo "❌ Usage: bash scripts/update-csp-clerk.sh <clerk-fapi-domain>"
-  echo "   Example: bash scripts/update-csp-clerk.sh clerk.engvox.com"
+  echo "   Example: bash scripts/update-csp-clerk.sh engvox.com"
   exit 1
 fi
 

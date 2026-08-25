@@ -23,7 +23,7 @@
 - [ ] Go to [Clerk Dashboard](https://dashboard.clerk.com/apps/app_3I251yNGqaZVZWzccI00jRzihhp)
 - [ ] Click **Development** dropdown → **Create production instance**
 - [ ] Select **"Clone from development instance"**
-- [ ] Note the new instance domain (e.g., `clerk.engvox.com`)
+- [ ] Note the new instance domain (e.g., `engvox.com`)
 
 ### Step 2: Configure Paths
 
@@ -49,7 +49,7 @@
 - [ ] Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
 - [ ] Create new **OAuth 2.0 Client ID** (Web application)
 - [ ] Add Authorized redirect URIs:
-  - `https://clerk.engvox.com/v1/oauth_callback`
+  - `https://engvox.com/v1/oauth_callback`
 - [ ] Note **Client ID** and **Client Secret**
 
 ### Step 5: Configure Google in Clerk
@@ -76,7 +76,7 @@
 - [ ] Go to Render → Service → Environment
 - [ ] Update `CLERK_ISSUER`:
   ```
-  https://clerk.engvox.com
+  https://engvox.com
   ```
 - [ ] Save and redeploy
 
@@ -103,7 +103,7 @@
 
 - [ ] Run migration script:
   ```bash
-  bash scripts/clerk-production-migrate.sh engvox.com clerk.engvox.com
+  bash scripts/clerk-production-migrate.sh engvox.com engvox.com
   ```
 - [ ] Or manually update `index.html`, `nginx.conf`, `backend/src/app.ts`
 - [ ] Commit and push

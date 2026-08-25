@@ -67,7 +67,7 @@ Add these DNS records to your domain registrar:
 > ⏱️ DNS propagation can take up to 48 hours. Use `dig` to verify:
 >
 > ```bash
-> dig clerk.engvox.com +short CAA
+> dig engvox.com +short CAA
 > ```
 
 ---
@@ -83,10 +83,10 @@ Add these DNS records to your domain registrar:
 3. Set **Authorized redirect URIs** to:
 
    ```
-   https://clerk.engvox.com/v1/oauth_callback
+   https://engvox.com/v1/oauth_callback
    ```
 
-   > Replace `clerk.engvox.com` with your actual Clerk FAPI domain
+   > Replace `engvox.com` with your actual Clerk FAPI domain
 
 4. Note the **Client ID** and **Client Secret**
 
@@ -116,7 +116,7 @@ Update these in Render → Service → Environment:
 
 | Variable       | Development                                       | Production                 |
 | -------------- | ------------------------------------------------- | -------------------------- |
-| `CLERK_ISSUER` | `https://dominant-cricket-288.clerk.accounts.dev` | `https://clerk.engvox.com` |
+| `CLERK_ISSUER` | `https://dominant-cricket-288.clerk.accounts.dev` | `https://engvox.com` |
 
 > `CLERK_SECRET_KEY` is not currently set on Render. If you add it for backend API calls, use the `sk_live_` version.
 
@@ -164,8 +164,8 @@ If you have Clerk webhooks configured:
 If your app uses CSP headers, add the production Clerk domains:
 
 ```
-script-src 'self' https://clerk.engvox.com https://js.clerk.com;
-connect-src 'self' https://clerk.engvox.com https://api.clerk.com;
+script-src 'self' https://engvox.com https://js.clerk.com;
+connect-src 'self' https://engvox.com https://api.clerk.com;
 img-src 'self' https://img.clerk.com;
 style-src 'self' 'unsafe-inline';
 ```

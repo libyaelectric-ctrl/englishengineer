@@ -7,11 +7,11 @@ set -euo pipefail
 
 # ─── Configuration ───────────────────────────────────────────────────────
 PRODUCTION_DOMAIN="${1:-}"
-CLERK_FAPI_DOMAIN="${2:-}"  # e.g., clerk.engvox.com
+CLERK_FAPI_DOMAIN="${2:-}"  # e.g., engvox.com
 
 if [ -z "$PRODUCTION_DOMAIN" ] || [ -z "$CLERK_FAPI_DOMAIN" ]; then
   echo "❌ Usage: bash scripts/clerk-production-migrate.sh <production-domain> <clerk-fapi-domain>"
-  echo "   Example: bash scripts/clerk-production-migrate.sh engvox.com clerk.engvox.com"
+  echo "   Example: bash scripts/clerk-production-migrate.sh engvox.com engvox.com"
   exit 1
 fi
 
