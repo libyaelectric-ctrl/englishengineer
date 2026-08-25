@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const SITE = 'https://eng-vox.vercel.app';
+const SITE = 'https://engvox.com';
 
 test.describe('Comprehensive E2E', () => {
   test('Landing page loads correctly', async ({ page }) => {

@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 
-const SITE = 'https://eng-vox.vercel.app';
+const SITE = 'https://engvox.com';
 const results: string[] = [];
 
 function log(msg: string) {

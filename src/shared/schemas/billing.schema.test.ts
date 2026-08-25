@@ -43,8 +43,8 @@ describe('checkoutSessionSchema', () => {
     email: 'test@example.com',
     planId: 'junior',
     billingInterval: 'month',
-    successUrl: 'https://eng-vox.vercel.app/billing?billing=success',
-    cancelUrl: 'https://eng-vox.vercel.app/billing?billing=cancelled',
+    successUrl: 'https://engvox.com/billing?billing=success',
+    cancelUrl: 'https://engvox.com/billing?billing=cancelled',
   };
 
   it('accepts valid checkout session', () => {
@@ -81,14 +81,14 @@ describe('customerPortalSchema', () => {
   it('accepts valid portal request', () => {
     const result = customerPortalSchema.parse({
       userId: 'user_456',
-      returnUrl: 'https://eng-vox.vercel.app/billing',
+      returnUrl: 'https://engvox.com/billing',
     });
     expect(result.userId).toBe('user_456');
   });
 
   it('rejects empty userId', () => {
     expect(() =>
-      customerPortalSchema.parse({ userId: '', returnUrl: 'https://eng-vox.vercel.app' })
+      customerPortalSchema.parse({ userId: '', returnUrl: 'https://engvox.com' })
     ).toThrow();
   });
 
@@ -104,8 +104,8 @@ describe('topupCheckoutSchema', () => {
     const result = topupCheckoutSchema.parse({
       userId: 'user_789',
       email: 'topup@example.com',
-      successUrl: 'https://eng-vox.vercel.app/billing?topup=success',
-      cancelUrl: 'https://eng-vox.vercel.app/billing?topup=cancelled',
+      successUrl: 'https://engvox.com/billing?topup=success',
+      cancelUrl: 'https://engvox.com/billing?topup=cancelled',
     });
     expect(result.userId).toBe('user_789');
     expect(result.email).toBe('topup@example.com');
@@ -116,8 +116,8 @@ describe('topupCheckoutSchema', () => {
       topupCheckoutSchema.parse({
         userId: 'user_1',
         email: '',
-        successUrl: 'https://eng-vox.vercel.app',
-        cancelUrl: 'https://eng-vox.vercel.app',
+        successUrl: 'https://engvox.com',
+        cancelUrl: 'https://engvox.com',
       })
     ).toThrow();
   });

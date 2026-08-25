@@ -12,7 +12,7 @@ v2Router.get('/version', (req: Request, res: Response) => {
 
 v2Router.use((req: Request, res: Response, next) => {
   res.setHeader('Deprecation', 'false');
-  res.setHeader('Link', '<https://eng-vox.vercel.app/api/v2>; rel="successor-version"');
+  res.setHeader('Link', '<https://engvox.com/api/v2>; rel="successor-version"');
   next();
 });
 

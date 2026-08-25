@@ -36,7 +36,7 @@ interface NotificationConfig {
 
 const getConfig = (): NotificationConfig => ({
   transport: (process.env.EMAIL_TRANSPORT as EmailTransport) || 'console',
-  fromAddress: process.env.EMAIL_FROM_ADDRESS || 'hello@eng-vox.vercel.app',
+  fromAddress: process.env.EMAIL_FROM_ADDRESS || 'hello@engvox.com',
   fromName: process.env.EMAIL_FROM_NAME || 'EngVox',
   sendgridApiKey: process.env.SENDGRID_API_KEY,
   resendApiKey: process.env.RESEND_API_KEY,
@@ -137,8 +137,8 @@ export const notificationService = {
   async sendWelcome(email: string, displayName: string): Promise<boolean> {
     const template = emailTemplates.welcome({
       displayName,
-      loginUrl: `${process.env.APP_ORIGIN || 'https://eng-vox.vercel.app'}/dashboard`,
-      dashboardUrl: `${process.env.APP_ORIGIN || 'https://eng-vox.vercel.app'}/dashboard`,
+      loginUrl: `${process.env.APP_ORIGIN || 'https://engvox.com'}/dashboard`,
+      dashboardUrl: `${process.env.APP_ORIGIN || 'https://engvox.com'}/dashboard`,
     });
     return sendEmail({ to: email, subject: template.subject, html: template.html });
   },
@@ -147,7 +147,7 @@ export const notificationService = {
     const template = emailTemplates.streakReminder({
       displayName,
       streak,
-      dashboardUrl: `${process.env.APP_ORIGIN || 'https://eng-vox.vercel.app'}/dashboard`,
+      dashboardUrl: `${process.env.APP_ORIGIN || 'https://engvox.com'}/dashboard`,
     });
     return sendEmail({ to: email, subject: template.subject, html: template.html });
   },
@@ -166,7 +166,7 @@ export const notificationService = {
   ): Promise<boolean> {
     const template = emailTemplates.weeklyReport({
       ...data,
-      dashboardUrl: `${process.env.APP_ORIGIN || 'https://eng-vox.vercel.app'}/dashboard`,
+      dashboardUrl: `${process.env.APP_ORIGIN || 'https://engvox.com'}/dashboard`,
     });
     return sendEmail({ to: email, subject: template.subject, html: template.html });
   },

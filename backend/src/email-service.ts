@@ -33,7 +33,7 @@ export async function sendWeeklyDigest(
     <p>Streak: ${data.streak} days</p>
     <p>XP earned: ${data.xp}</p>
     <p>Lessons completed: ${data.lessons}</p>
-    <p><a href="https://eng-vox.vercel.app/dashboard">View Dashboard</a></p>
+    <p><a href="https://engvox.com/dashboard">View Dashboard</a></p>
   `;
   return sendEmail(to, 'Your EngVox Weekly Digest', html);
 }
@@ -42,7 +42,7 @@ export async function sendStreakBrokenAlert(to: string, streak: number) {
   const html = `
     <h2>Streak Broken!</h2>
     <p>Your ${streak}-day streak has ended.</p>
-    <p><a href="https://eng-vox.vercel.app/learning-path">Resume Learning</a></p>
+    <p><a href="https://engvox.com/learning-path">Resume Learning</a></p>
   `;
   return sendEmail(to, 'EngVox: Streak Alert', html);
 }

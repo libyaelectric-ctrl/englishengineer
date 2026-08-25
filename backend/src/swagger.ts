@@ -5,7 +5,7 @@ export const swaggerSpec = {
     version: '4.0.22',
     description:
       'Backend API for EngineerOS English learning platform. Covers AI coaching, vocabulary, grammar, reading, writing, speaking, listening, billing, workspace, and admin endpoints.',
-    contact: { name: 'EngVox Support', url: 'https://eng-vox.vercel.app' },
+    contact: { name: 'EngVox Support', url: 'https://engvox.com' },
   },
   servers: [
     { url: 'https://englishengineer-backend.onrender.com', description: 'Production' },

@@ -136,7 +136,7 @@ const BusinessPage = () => {
                 Explore Team Workspace <ArrowRight className="h-4 w-4" />
               </Link>
               <a
-                href="mailto:sales@eng-vox.vercel.app?subject=EngVox%20Enterprise%20Inquiry"
+                href="mailto:sales@engvox.com?subject=EngVox%20Enterprise%20Inquiry"
                 className="inline-flex items-center gap-2 rounded-[var(--radius-card)] bg-surface border border-border-soft px-5 py-2.5 text-xs font-bold text-foreground hover:bg-surface-hover transition-colors"
               >
                 <Mail className="h-4 w-4 text-primary" /> Contact Enterprise Sales

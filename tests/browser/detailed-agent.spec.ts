@@ -1,7 +1,7 @@
 ﻿/* eslint-disable @typescript-eslint/no-require-imports */
 import { expect, test } from '@playwright/test';
 
-const SITE = 'https://eng-vox.vercel.app';
+const SITE = 'https://engvox.com';
 
 interface TestResult {
   test: string;

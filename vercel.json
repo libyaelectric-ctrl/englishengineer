@@ -3,6 +3,12 @@
 
   "redirects": [
     {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "eng-vox.vercel.app" }],
+      "destination": "https://engvox.com/:1",
+      "permanent": true
+    },
+    {
       "source": "/demo",
       "destination": "/start",
       "permanent": false

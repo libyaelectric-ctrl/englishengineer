@@ -6,7 +6,7 @@ import type { BackendConfig } from '../types.js';
 
 const minimalProductionConfig = {
   port: 8787,
-  appOrigin: 'https://eng-vox.vercel.app',
+  appOrigin: 'https://engvox.com',
   environment: 'production',
   version: '4.0.22',
   sentry: { dsn: null, environment: 'production', tracesSampleRate: 0.1 },
