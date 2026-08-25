@@ -43,9 +43,9 @@ const ClerkAuthPage = ({ mode }: ClerkAuthPageProps) => {
       <div className="flex min-h-full items-center justify-center px-4 py-8">
         <div className="w-full max-w-[26rem] animate-in fade-in zoom-in-50 duration-200">
           {mode === 'sign-in' ? (
-            <SignIn afterSignInUrl={signInAfter} />
+            <SignIn fallbackRedirectUrl={signInAfter} />
           ) : (
-            <SignUp afterSignUpUrl={signUpAfter} />
+            <SignUp fallbackRedirectUrl={signUpAfter} />
           )}
         </div>
       </div>
