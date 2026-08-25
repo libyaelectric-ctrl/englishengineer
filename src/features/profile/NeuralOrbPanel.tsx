@@ -10,7 +10,7 @@ import type { SupportedInterfaceLanguage } from '@/features/localization/localiz
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 /* ------------------------------------------------------------------ */
-/* Discipline data for the 3D scene                                    */
+/* Discipline / Language data                                          */
 /* ------------------------------------------------------------------ */
 const DISCIPLINES_DATA = [
   { code: 'AR', full: 'Architecture', id: 'architecture' as EngineeringDiscipline },
@@ -32,7 +32,43 @@ const LANGUAGES_DATA = INTERFACE_LANGUAGES.filter((l) => l.available).map((l) =>
 }));
 
 /* ------------------------------------------------------------------ */
-/* NeuralOrbPanel Component                                            */
+/* Canvas-texture sprite helper (replaces FontLoader + TextGeometry)   */
+/* ------------------------------------------------------------------ */
+function makeTextSprite(
+  THREE: typeof import('three'),
+  text: string,
+  opts: { fontSize?: number; color?: string; scale?: number } = {},
+) {
+  const fontSize = opts.fontSize ?? 48;
+  const color = opts.color ?? '#ffffff';
+  const scale = opts.scale ?? 1;
+
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d')!;
+  const font = `bold ${fontSize}px monospace`;
+  ctx.font = font;
+  const m = ctx.measureText(text);
+  const pad = fontSize * 0.3;
+
+  canvas.width = Math.ceil(m.width + pad * 2);
+  canvas.height = Math.ceil(fontSize * 1.4 + pad * 2);
+
+  ctx.font = font;
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.minFilter = THREE.LinearFilter;
+  const mat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
+  const sprite = new THREE.Sprite(mat);
+  sprite.scale.set((canvas.width / canvas.height) * scale, scale, 1);
+  return sprite;
+}
+
+/* ------------------------------------------------------------------ */
+/* NeuralOrbPanel                                                      */
 /* ------------------------------------------------------------------ */
 export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {}) => {
   const setLanguage = useLocalizationStore((s) => s.setLanguage);
@@ -41,32 +77,39 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
   const [selectedDiscipline, setSelectedDiscipline] = useState<EngineeringDiscipline | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<SupportedInterfaceLanguage>('tr');
   const [isSaving, setIsSaving] = useState(false);
-  const [consoleMsg, setConsoleMsg] = useState('> SYSTEM READY...');
-  const [statusColor, setStatusColor] = useState('#38bdf8');
+  const [consoleLines, setConsoleLines] = useState([
+    '> SYSTEM READY...',
+    '> SELECT 1 ORB PER SEGMENT',
+  ]);
+  const [statusColor, setStatusColor] = useState('#22c55e');
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef<{
+  const sceneApi = useRef<{
     triggerOrbSelection: (code: string, segment: number) => void;
     clearSelection: () => void;
   } | null>(null);
 
-  /* ---- ENTER handler ---- */
+  /* ---- helpers to update console ---- */
+  const pushConsole = useCallback((line: string, color = '#22c55e') => {
+    setConsoleLines((prev) => [prev[1] ?? '', line]);
+    setStatusColor(color);
+  }, []);
+
+  /* ---- ENTER ---- */
   const handleEnter = useCallback(async () => {
     if (!selectedDiscipline || !currentUser) {
-      setConsoleMsg('> ERROR: SELECT 1 DISCIPLINE!');
-      setStatusColor('#f43f5e');
+      pushConsole('> ERROR: SELECT 1 DISCIPLINE!', '#f43f5e');
       return;
     }
     if (!selectedLanguage) {
-      setConsoleMsg('> ERROR: SELECT 1 LANGUAGE!');
-      setStatusColor('#f43f5e');
+      pushConsole('> ERROR: SELECT 1 LANGUAGE!', '#f43f5e');
       return;
     }
-
     setIsSaving(true);
-    setConsoleMsg(`> EXEC: [${selectedDiscipline}] + [${selectedLanguage}] GRANTED!`);
-    setStatusColor('#22c55e');
-
+    pushConsole(
+      `> EXEC: [${selectedDiscipline}] + [${selectedLanguage}] GRANTED!`,
+      '#22c55e',
+    );
     try {
       setLanguage(selectedLanguage);
       LearningProfileRepository.updatePreferences(currentUser.id, {
@@ -86,79 +129,78 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
     } finally {
       setIsSaving(false);
     }
-  }, [selectedDiscipline, selectedLanguage, currentUser, setLanguage, onComplete]);
+  }, [selectedDiscipline, selectedLanguage, currentUser, setLanguage, onComplete, pushConsole]);
 
-  /* ---- BACK handler ---- */
+  /* ---- BACK ---- */
   const handleBack = useCallback(() => {
     setSelectedDiscipline(null);
     setSelectedLanguage('tr');
-    setConsoleMsg('> CLEARED. AWAITING INPUT...');
-    setStatusColor('#f43f5e');
-    sceneRef.current?.clearSelection();
-  }, []);
+    pushConsole('> CLEARED. AWAITING INPUT...', '#f43f5e');
+    sceneApi.current?.clearSelection();
+  }, [pushConsole]);
 
-  /* ---- Orb selection callback ---- */
+  /* ---- orb selection callback ---- */
   const handleOrbSelect = useCallback(
     (code: string, segment: number) => {
       if (segment === 1) {
         const d = DISCIPLINES_DATA.find((x) => x.code === code);
         if (d) {
           setSelectedDiscipline(d.id);
-          setConsoleMsg(`> DISCIPLINE: [${d.code}] — ${d.full}`);
-          setStatusColor('#c084fc');
+          pushConsole(`> DISCIPLINE: [${d.code}] — ${d.full}`, '#c084fc');
         }
       } else {
         const l = LANGUAGES_DATA.find((x) => x.code === code);
         if (l) {
           setSelectedLanguage(l.id);
-          setConsoleMsg(`> LANGUAGE: [${l.code}] — ${l.id.toUpperCase()}`);
-          setStatusColor('#38bdf8');
+          pushConsole(`> LANGUAGE: [${l.code}] — ${l.id.toUpperCase()}`, '#38bdf8');
         }
       }
     },
-    [],
+    [pushConsole],
   );
 
-  /* ---- Menu click handlers ---- */
+  /* ---- menu click ---- */
   const handleMenuClick = useCallback(
     (code: string, segment: number) => {
-      sceneRef.current?.triggerOrbSelection(code, segment);
+      sceneApi.current?.triggerOrbSelection(code, segment);
       handleOrbSelect(code, segment);
     },
     [handleOrbSelect],
   );
 
-  /* ---- Three.js Scene ---- */
+  /* ================================================================ */
+  /* Three.js Scene (dynamic import for code-splitting)               */
+  /* ================================================================ */
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    let animId = 0;
-    let disposed = false;
+  let animId = 0;
+  let destroyed = false;
 
-    import('three').then((THREE: typeof import('three')) => {
-      if (disposed || !container) return;
-      const el = container;
+  import('three').then((THREE) => {
+    if (destroyed || !container) return;
+    const el = container;
 
-      /* ---- Scene Setup ---- */
+      /* ---- Scene / Camera / Renderer ---- */
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(
         45,
-        el.clientWidth / el.clientHeight,
+        container.clientWidth / container.clientHeight,
         0.1,
         1000,
       );
 
-      let renderer: THREE.WebGLRenderer;
+      let r: THREE.WebGLRenderer;
       try {
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        r = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       } catch {
-        console.warn('[NeuralOrbPanel] WebGL not available');
-        return () => { disposed = true; sceneRef.current = null; };
+        console.warn('[NeuralOrbPanel] WebGL unavailable');
+        return;
       }
-      renderer.setSize(el.clientWidth, el.clientHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      el.appendChild(renderer.domElement);
+      r.setSize(el.clientWidth, el.clientHeight);
+      r.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      el.appendChild(r.domElement);
 
       function adjustCamera() {
         const aspect = el.clientWidth / el.clientHeight;
@@ -166,7 +208,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
       }
       adjustCamera();
 
-      /* ---- Orb Shader Material ---- */
+      /* ---- Shared orb shader material ---- */
       const orbMaterial = new THREE.ShaderMaterial({
         vertexShader: `
           uniform float uTime;
@@ -189,7 +231,10 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
             vec3 x2=x0-i2+C.yyy;
             vec3 x3=x0-D.yyy;
             i=mod289(i);
-            vec4 p=permute(permute(permute(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
+            vec4 p=permute(permute(permute(
+              i.z+vec4(0.,i1.z,i2.z,1.))
+              +i.y+vec4(0.,i1.y,i2.y,1.))
+              +i.x+vec4(0.,i1.x,i2.x,1.));
             float n_=.142857142857;
             vec3 ns=n_*D.wyz-D.xzx;
             vec4 j=p-49.*floor(p*ns.z*ns.z);
@@ -249,329 +294,247 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
         blending: THREE.AdditiveBlending,
       });
 
+      /* ---- Geometry & constants ---- */
       const sphereGeo = new THREE.SphereGeometry(1, 48, 48);
-      const centerSunRadius = 2.0;
-      const orbitRadius1 = 5.8;
-      const orbitRadius2 = 8.8;
-      const smallOrbRadius = 0.6;
+      const CENTER_R = 2.0;
+      const ORBIT_R1 = 5.8;
+      const ORBIT_R2 = 8.8;
+      const SMALL_R = 0.6;
 
       /* ---- Center Sun ---- */
       const centerSun = new THREE.Mesh(sphereGeo, orbMaterial);
-      centerSun.scale.set(centerSunRadius, centerSunRadius, centerSunRadius);
+      centerSun.scale.setScalar(CENTER_R);
       scene.add(centerSun);
 
-      /* ---- Orbit Rings ---- */
-      function createOrbitRing(radius: number) {
-        const points: THREE.Vector3[] = [];
-        for (let i = 0; i <= 128; i++) {
-          const theta = (i / 128) * Math.PI * 2;
-          points.push(new THREE.Vector3(Math.cos(theta) * radius, Math.sin(theta) * radius, 0));
-        }
-        const geo = new THREE.BufferGeometry().setFromPoints(points);
-        const mat = new THREE.LineBasicMaterial({
-          color: 0x38bdf8,
-          transparent: true,
-          opacity: 0.15,
-        });
-        return new THREE.Line(geo, mat);
-      }
-      scene.add(createOrbitRing(orbitRadius1));
-      scene.add(createOrbitRing(orbitRadius2));
+      /* ---- EN label on center sun ---- */
+      const enLabel = makeTextSprite(THREE, 'EN', { fontSize: 64, color: '#ffffff', scale: 1.6 });
+      centerSun.add(enLabel);
 
-      const orbitGroup1 = new THREE.Group();
-      const orbitGroup2 = new THREE.Group();
+      /* ---- Orbit rings (decorative) ---- */
+      function addRing(radius: number) {
+        const pts: THREE.Vector3[] = [];
+        for (let i = 0; i <= 128; i++) {
+          const t = (i / 128) * Math.PI * 2;
+          pts.push(new THREE.Vector3(Math.cos(t) * radius, Math.sin(t) * radius, 0));
+        }
+        scene.add(
+          new THREE.Line(
+            new THREE.BufferGeometry().setFromPoints(pts),
+            new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.15 }),
+          ),
+        );
+      }
+      addRing(ORBIT_R1);
+      addRing(ORBIT_R2);
+
+      /* ---- Orbit groups ---- */
+      const orbitGroup1 = new THREE.Group(); // disciplines
+      const orbitGroup2 = new THREE.Group(); // languages
       scene.add(orbitGroup1);
       scene.add(orbitGroup2);
 
-      const allInteractiveOrbs: THREE.Mesh[] = [];
+      /* ---- Track interactive orbs ---- */
+      const interactiveOrbs: THREE.Mesh[] = [];
       const linkPairs: { inner: THREE.Object3D; outer: THREE.Object3D }[] = [];
-      let selectedOrbSeg1: THREE.Mesh | null = null;
-      let selectedOrbSeg2: THREE.Mesh | null = null;
+      let sel1: THREE.Mesh | null = null;
+      let sel2: THREE.Mesh | null = null;
 
-      /* ---- Neural Link Lines ---- */
-      let neuralLinesMesh: THREE.LineSegments | null = null;
+      /* ---- Create discipline orbs (inner ring) ---- */
+      DISCIPLINES_DATA.forEach((item, i) => {
+        const angle = (i / DISCIPLINES_DATA.length) * Math.PI * 2;
+        const pivot = new THREE.Group();
+        pivot.position.set(Math.cos(angle) * ORBIT_R1, Math.sin(angle) * ORBIT_R1, 0);
 
-      function initNeuralLinks() {
-        const innerOrbs = allInteractiveOrbs.filter((o) => o.userData.segment === 1);
-        const outerOrbs = allInteractiveOrbs.filter((o) => o.userData.segment === 2);
-        for (let i = 0; i < innerOrbs.length; i++) {
-          linkPairs.push({
-            inner: innerOrbs[i],
-            outer: outerOrbs[Math.floor(Math.random() * outerOrbs.length)],
-          });
-          linkPairs.push({
-            inner: innerOrbs[i],
-            outer: outerOrbs[Math.floor(Math.random() * outerOrbs.length)],
-          });
+        const orb = new THREE.Mesh(sphereGeo, orbMaterial.clone());
+        orb.scale.setScalar(SMALL_R);
+        orb.userData = { code: item.code, full: item.full, segment: 1 };
+        pivot.add(orb);
+
+        const label = makeTextSprite(THREE, item.code, { fontSize: 36, color: '#38bdf8', scale: 0.9 });
+        label.position.z = 0.1;
+        pivot.add(label);
+
+        interactiveOrbs.push(orb);
+        orbitGroup1.add(pivot);
+      });
+
+      /* ---- Create language orbs (outer ring) ---- */
+      LANGUAGES_DATA.forEach((item, i) => {
+        const angle = (i / LANGUAGES_DATA.length) * Math.PI * 2;
+        const pivot = new THREE.Group();
+        pivot.position.set(Math.cos(angle) * ORBIT_R2, Math.sin(angle) * ORBIT_R2, 0);
+
+        const orb = new THREE.Mesh(sphereGeo, orbMaterial.clone());
+        orb.scale.setScalar(SMALL_R);
+        orb.userData = { code: item.code, full: item.full, segment: 2 };
+        pivot.add(orb);
+
+        const label = makeTextSprite(THREE, item.code, { fontSize: 36, color: '#c084fc', scale: 0.9 });
+        label.position.z = 0.1;
+        pivot.add(label);
+
+        interactiveOrbs.push(orb);
+        orbitGroup2.add(pivot);
+      });
+
+      /* ---- Neural link lines ---- */
+      const innerOrbs = interactiveOrbs.filter((o) => o.userData.segment === 1);
+      const outerOrbs = interactiveOrbs.filter((o) => o.userData.segment === 2);
+      for (const inner of innerOrbs) {
+        linkPairs.push({ inner, outer: outerOrbs[Math.floor(Math.random() * outerOrbs.length)] });
+        linkPairs.push({ inner, outer: outerOrbs[Math.floor(Math.random() * outerOrbs.length)] });
+      }
+
+      const linkGeo = new THREE.BufferGeometry();
+      linkGeo.setAttribute(
+        'position',
+        new THREE.BufferAttribute(new Float32Array(linkPairs.length * 2 * 3), 3),
+      );
+      const neuralLines = new THREE.LineSegments(
+        linkGeo,
+        new THREE.LineBasicMaterial({
+          color: 0x38bdf8,
+          transparent: true,
+          opacity: 0.15,
+          blending: THREE.AdditiveBlending,
+        }),
+      );
+      scene.add(neuralLines);
+
+      function updateNeuralLinks() {
+        const pos = (neuralLines.geometry.attributes.position as THREE.BufferAttribute)
+          .array as Float32Array;
+        const a = new THREE.Vector3();
+        const b = new THREE.Vector3();
+        let idx = 0;
+        for (const pair of linkPairs) {
+          pair.inner.getWorldPosition(a);
+          pair.outer.getWorldPosition(b);
+          pos[idx++] = a.x;
+          pos[idx++] = a.y;
+          pos[idx++] = a.z;
+          pos[idx++] = b.x;
+          pos[idx++] = b.y;
+          pos[idx++] = b.z;
         }
-        const geo = new THREE.BufferGeometry();
-        geo.setAttribute(
-          'position',
-          new THREE.BufferAttribute(new Float32Array(linkPairs.length * 2 * 3), 3),
-        );
-        neuralLinesMesh = new THREE.LineSegments(
-          geo,
-          new THREE.LineBasicMaterial({
-            color: 0x38bdf8,
+        neuralLines.geometry.attributes.position.needsUpdate = true;
+      }
+
+      /* ---- Whip beam helpers ---- */
+      function makeWhipBeam(color: number) {
+        const m = new THREE.Mesh(
+          new THREE.BufferGeometry(),
+          new THREE.MeshBasicMaterial({
+            color,
             transparent: true,
-            opacity: 0.15,
+            opacity: 0.9,
             blending: THREE.AdditiveBlending,
           }),
         );
-        scene.add(neuralLinesMesh);
+        m.visible = false;
+        scene.add(m);
+        return m;
       }
+      const whip1 = makeWhipBeam(0x38bdf8);
+      const whip2 = makeWhipBeam(0xc084fc);
 
-      function updateNeuralLinks() {
-        if (!neuralLinesMesh || linkPairs.length === 0) return;
-        const positions = (
-          neuralLinesMesh.geometry.attributes.position as THREE.BufferAttribute
-        ).array as Float32Array;
-        const posInner = new THREE.Vector3();
-        const posOuter = new THREE.Vector3();
-        let idx = 0;
-        linkPairs.forEach((pair) => {
-          pair.inner.getWorldPosition(posInner);
-          pair.outer.getWorldPosition(posOuter);
-          positions[idx++] = posInner.x;
-          positions[idx++] = posInner.y;
-          positions[idx++] = posInner.z;
-          positions[idx++] = posOuter.x;
-          positions[idx++] = posOuter.y;
-          positions[idx++] = posOuter.z;
-        });
-        neuralLinesMesh.geometry.attributes.position.needsUpdate = true;
-      }
-
-      /* ---- Whip Beam Effect ---- */
-      const whipBeam1 = createWhipBeam(0x38bdf8);
-      const whipBeam2 = createWhipBeam(0xc084fc);
-
-      function createWhipBeam(colorHex: number) {
-        const mat = new THREE.MeshBasicMaterial({
-          color: colorHex,
-          transparent: true,
-          opacity: 0.9,
-          blending: THREE.AdditiveBlending,
-        });
-        const mesh = new THREE.Mesh(new THREE.BufferGeometry(), mat);
-        mesh.visible = false;
-        scene.add(mesh);
-        return mesh;
-      }
-
-      function updateWhipBeam(
-        beamMesh: THREE.Mesh,
-        orb: THREE.Mesh | null,
-        timeOffset: number,
-      ) {
+      function updateWhip(beam: THREE.Mesh, orb: THREE.Mesh | null, tOff: number) {
         if (!orb) {
-          beamMesh.visible = false;
+          beam.visible = false;
           return;
         }
-        beamMesh.visible = true;
-        const orbPos = new THREE.Vector3();
-        orb.getWorldPosition(orbPos);
-        const dir = new THREE.Vector3().subVectors(orbPos, new THREE.Vector3(0, 0, 0)).normalize();
-        const startPt = dir.clone().multiplyScalar(centerSunRadius);
-        const endPt = orbPos.clone().sub(dir.clone().multiplyScalar(orb.scale.x));
-        const pts = 20;
-        const points: THREE.Vector3[] = [];
-        const time = Date.now() * 0.006 + timeOffset;
+        beam.visible = true;
+        const oPos = new THREE.Vector3();
+        orb.getWorldPosition(oPos);
+        const dir = oPos.clone().normalize();
+        const start = dir.clone().multiplyScalar(CENTER_R);
+        const end = oPos.clone().sub(dir.clone().multiplyScalar(orb.scale.x));
+        const n = 20;
+        const pts: THREE.Vector3[] = [];
+        const time = Date.now() * 0.006 + tOff;
         const perp = new THREE.Vector3(-dir.y, dir.x, 0).normalize();
-        for (let i = 0; i < pts; i++) {
-          const t = i / (pts - 1);
-          const p = new THREE.Vector3().lerpVectors(startPt, endPt, t);
-          const wave = Math.sin(t * 8 - time) * 0.18 * Math.sin(t * Math.PI);
-          p.add(perp.clone().multiplyScalar(wave));
-          points.push(p);
+        for (let i = 0; i < n; i++) {
+          const t = i / (n - 1);
+          const p = new THREE.Vector3().lerpVectors(start, end, t);
+          p.add(perp.clone().multiplyScalar(Math.sin(t * 8 - time) * 0.18 * Math.sin(t * Math.PI)));
+          pts.push(p);
         }
-        const curve = new THREE.CatmullRomCurve3(points);
-        beamMesh.geometry.dispose();
-        beamMesh.geometry = new THREE.TubeGeometry(curve, 24, 0.075, 8, false);
+        beam.geometry.dispose();
+        beam.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 24, 0.075, 8, false);
       }
 
-      /* ---- Public API for React ---- */
-      sceneRef.current = {
-        triggerOrbSelection(code: string, segment: number) {
-          const orb = allInteractiveOrbs.find(
+      /* ---- Scene API for React ---- */
+      sceneApi.current = {
+        triggerOrbSelection(code, segment) {
+          const orb = interactiveOrbs.find(
             (o) => o.userData.code === code && o.userData.segment === segment,
           );
           if (!orb) return;
-          const seg = orb.userData.segment;
-          if (seg === 1) {
-            if (selectedOrbSeg1)
-              selectedOrbSeg1.scale.set(smallOrbRadius, smallOrbRadius, smallOrbRadius);
-            selectedOrbSeg1 = orb;
-            selectedOrbSeg1.scale.set(0.85, 0.85, 0.85);
+          if (segment === 1) {
+            if (sel1) sel1.scale.setScalar(SMALL_R);
+            sel1 = orb;
+            sel1.scale.setScalar(0.85);
           } else {
-            if (selectedOrbSeg2)
-              selectedOrbSeg2.scale.set(smallOrbRadius, smallOrbRadius, smallOrbRadius);
-            selectedOrbSeg2 = orb;
-            selectedOrbSeg2.scale.set(0.85, 0.85, 0.85);
+            if (sel2) sel2.scale.setScalar(SMALL_R);
+            sel2 = orb;
+            sel2.scale.setScalar(0.85);
           }
         },
         clearSelection() {
-          if (selectedOrbSeg1)
-            selectedOrbSeg1.scale.set(smallOrbRadius, smallOrbRadius, smallOrbRadius);
-          if (selectedOrbSeg2)
-            selectedOrbSeg2.scale.set(smallOrbRadius, smallOrbRadius, smallOrbRadius);
-          selectedOrbSeg1 = null;
-          selectedOrbSeg2 = null;
+          if (sel1) sel1.scale.setScalar(SMALL_R);
+          if (sel2) sel2.scale.setScalar(SMALL_R);
+          sel1 = null;
+          sel2 = null;
         },
       };
 
-      /* ---- 3D Click / Raycast ---- */
+      /* ---- 3D click / raycast ---- */
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
-
-      const onPointerDown = (event: PointerEvent) => {
-        const rect = renderer.domElement.getBoundingClientRect();
-        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      const onPointerDown = (e: PointerEvent) => {
+        const rect = r.domElement.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
         raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(allInteractiveOrbs);
-        if (intersects.length > 0) {
-          const orb = intersects[0].object;
-          const code = orb.userData.code;
-          const seg = orb.userData.segment;
-          sceneRef.current?.triggerOrbSelection(code, seg);
-          handleOrbSelect(code, seg);
+        const hits = raycaster.intersectObjects(interactiveOrbs);
+        if (hits.length > 0) {
+          const { code, segment } = hits[0].object.userData;
+          sceneApi.current?.triggerOrbSelection(code, segment);
+          handleOrbSelect(code, segment);
         }
       };
       el.addEventListener('pointerdown', onPointerDown);
 
-      /* ---- Create Orbs Immediately (text labels added async after font loads) ---- */
-      const pivotGroups: THREE.Group[] = [];
-
-      DISCIPLINES_DATA.forEach((item, i) => {
-        const angle = (i / DISCIPLINES_DATA.length) * Math.PI * 2;
-        const pivot = new THREE.Group();
-        pivot.position.set(
-          Math.cos(angle) * orbitRadius1,
-          Math.sin(angle) * orbitRadius1,
-          0,
-        );
-        const orb = new THREE.Mesh(sphereGeo, orbMaterial.clone());
-        orb.scale.set(smallOrbRadius, smallOrbRadius, smallOrbRadius);
-        orb.userData = { code: item.code, full: item.full, segment: 1 };
-        pivot.add(orb);
-        allInteractiveOrbs.push(orb);
-        orbitGroup1.add(pivot);
-        pivotGroups.push(pivot);
-      });
-
-      LANGUAGES_DATA.forEach((item, i) => {
-        const angle = (i / LANGUAGES_DATA.length) * Math.PI * 2;
-        const pivot = new THREE.Group();
-        pivot.position.set(
-          Math.cos(angle) * orbitRadius2,
-          Math.sin(angle) * orbitRadius2,
-          0,
-        );
-        const orb = new THREE.Mesh(sphereGeo, orbMaterial.clone());
-        orb.scale.set(smallOrbRadius, smallOrbRadius, smallOrbRadius);
-        orb.userData = { code: item.code, full: item.full, segment: 2 };
-        pivot.add(orb);
-        allInteractiveOrbs.push(orb);
-        orbitGroup2.add(pivot);
-        pivotGroups.push(pivot);
-      });
-
-      initNeuralLinks();
-
-      /* ---- Canvas Text Sprite Helper ---- */
-      function createTextSprite(
-        text: string,
-        opts: {
-          fontSize?: number;
-          color?: string;
-          bgColor?: string;
-          padding?: number;
-          scale?: number;
-        } = {},
-      ) {
-        const fontSize = opts.fontSize ?? 48;
-        const color = opts.color ?? '#ffffff';
-        const bgColor = opts.bgColor ?? 'transparent';
-        const padding = opts.padding ?? 10;
-        const spriteScale = opts.scale ?? 1;
-
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d')!;
-        const font = `bold ${fontSize}px monospace`;
-        ctx.font = font;
-        const metrics = ctx.measureText(text);
-        const textWidth = metrics.width;
-        const textHeight = fontSize * 1.3;
-
-        canvas.width = textWidth + padding * 2;
-        canvas.height = textHeight + padding * 2;
-
-        ctx.fillStyle = bgColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.font = font;
-        ctx.fillStyle = color;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-
-        const texture = new THREE.CanvasTexture(canvas);
-        texture.minFilter = THREE.LinearFilter;
-        const material = new THREE.SpriteMaterial({
-          map: texture,
-          transparent: true,
-          depthWrite: false,
-        });
-        const sprite = new THREE.Sprite(material);
-        sprite.scale.set(
-          (canvas.width / canvas.height) * spriteScale,
-          spriteScale,
-          1,
-        );
-        return sprite;
-      }
-
-      /* ---- EN Text on Center Sun ---- */
-      const enSprite = createTextSprite('EN', {
-        fontSize: 64,
-        color: '#ffffff',
-        scale: 1.6,
-      });
-      centerSun.add(enSprite);
-
-      /* ---- Text Labels on Orbiting Orbs ---- */
-      pivotGroups.forEach((pivot, idx) => {
-        const allItems = [
-          ...DISCIPLINES_DATA.map((d) => ({ ...d, segment: 1 })),
-          ...LANGUAGES_DATA.map((l) => ({ ...l, segment: 2 })),
-        ];
-        if (idx >= allItems.length) return;
-        const item = allItems[idx];
-        const isSeg2 = item.segment === 2;
-        const label = createTextSprite(item.code, {
-          fontSize: 36,
-          color: isSeg2 ? '#c084fc' : '#38bdf8',
-          scale: 0.9,
-        });
-        label.position.set(0, 0, 0.1);
-        pivot.add(label);
-      });
-
-      /* ---- Animation Loop ---- */
+      /* ---- Animation loop ---- */
       const clock = new THREE.Clock();
       function animate() {
         animId = requestAnimationFrame(animate);
-        const delta = clock.getDelta();
-        orbMaterial.uniforms.uTime.value += delta;
-        centerSun.rotation.y += delta * 0.2;
-        orbitGroup1.rotation.z += delta * 0.04;
-        orbitGroup2.rotation.z -= delta * 0.025;
-        orbitGroup1.children.forEach((p) => (p.rotation.z = -orbitGroup1.rotation.z));
-        orbitGroup2.children.forEach((p) => (p.rotation.z = -orbitGroup2.rotation.z));
+        const dt = clock.getDelta();
+
+        // Update ALL orb materials' time uniform
+        orbMaterial.uniforms.uTime.value += dt;
+        for (const orb of interactiveOrbs) {
+          const mat = orb.material as THREE.ShaderMaterial;
+          if (mat.uniforms?.uTime) mat.uniforms.uTime.value += dt;
+        }
+
+        centerSun.rotation.y += dt * 0.2;
+        orbitGroup1.rotation.z += dt * 0.04;
+        orbitGroup2.rotation.z -= dt * 0.025;
+
+        // Counter-rotate pivots so text stays upright
+        orbitGroup1.children.forEach((p) => {
+          p.rotation.z = -orbitGroup1.rotation.z;
+        });
+        orbitGroup2.children.forEach((p) => {
+          p.rotation.z = -orbitGroup2.rotation.z;
+        });
+
         updateNeuralLinks();
-        updateWhipBeam(whipBeam1, selectedOrbSeg1, 0);
-        updateWhipBeam(whipBeam2, selectedOrbSeg2, 100);
-        renderer.render(scene, camera);
+        updateWhip(whip1, sel1, 0);
+        updateWhip(whip2, sel2, 100);
+
+        r.render(scene, camera);
       }
       animate();
 
@@ -579,7 +542,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
       const onResize = () => {
         const w = el.clientWidth;
         const h = el.clientHeight;
-        renderer.setSize(w, h);
+        r.setSize(w, h);
         camera.aspect = w / h;
         adjustCamera();
         camera.updateProjectionMatrix();
@@ -588,24 +551,26 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
 
       /* ---- Cleanup ---- */
       return () => {
-        disposed = true;
+        destroyed = true;
         cancelAnimationFrame(animId);
         window.removeEventListener('resize', onResize);
         el.removeEventListener('pointerdown', onPointerDown);
-        renderer.dispose();
-        el.removeChild(renderer.domElement);
-        sceneRef.current = null;
+        r.dispose();
+        el.removeChild(r.domElement);
+        sceneApi.current = null;
       };
     });
 
     return () => {
-      disposed = true;
+      destroyed = true;
       cancelAnimationFrame(animId);
-      sceneRef.current = null;
+      sceneApi.current = null;
     };
   }, [handleOrbSelect]);
 
-  /* ---- JSX ---- */
+  /* ================================================================ */
+  /* JSX                                                              */
+  /* ================================================================ */
   return (
     <div
       style={{
@@ -619,10 +584,10 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
         margin: 0,
       }}
     >
-      {/* 3D Canvas */}
+      {/* ---- 3D Canvas ---- */}
       <div ref={containerRef} style={{ flex: '0 0 73%', height: '100%', position: 'relative' }} />
 
-      {/* UI Panel */}
+      {/* ---- UI Panel ---- */}
       <div
         style={{
           flex: '0 0 27%',
@@ -690,19 +655,17 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
           </div>
         </div>
 
-        {/* Bottom Section */}
+        {/* Bottom */}
         <div className="bottom-section">
           <div id="cipher-console">
-            <div className="console-line" style={{ color: statusColor }}>
-              {consoleMsg}
-            </div>
+            {consoleLines.map((line, i) => (
+              <div key={`${i}-${line}`} className="console-line" style={{ color: i === 1 ? statusColor : undefined }}>
+                {line}
+              </div>
+            ))}
           </div>
           <div className="button-group">
-            <button
-              type="button"
-              className="cyber-btn btn-back"
-              onClick={handleBack}
-            >
+            <button type="button" className="cyber-btn btn-back" onClick={handleBack}>
               ◄ BACK
             </button>
             <button
@@ -717,7 +680,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
         </div>
       </div>
 
-      {/* Inline Styles for Panel CSS */}
+      {/* ---- Panel CSS ---- */}
       <style>{`
         .cyber-header {
           font-size: 0.75rem;
@@ -792,7 +755,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
           font-family: monospace;
           font-size: 0.65rem;
           color: #22c55e;
-          height: 38px;
+          min-height: 38px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
