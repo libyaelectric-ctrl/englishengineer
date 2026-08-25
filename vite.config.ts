@@ -51,16 +51,23 @@ export default defineConfig(() => {
               if (id.includes('/data/') || id.includes('seed')) return 'seed-data';
               return;
             }
-            // Split vendor into smaller chunks
+            // Split vendor into smaller chunks.
+            // NOTE: react/react-dom/scheduler, framer-motion, and the catch-all
+            // bucket must NOT be split apart from each other — several of these
+            // packages reference each other's exports at module-init time, and
+            // splitting them into separate chunks produces circular CHUNK
+            // dependencies (Rollup warns: "Circular chunk: vendor-other ->
+            // vendor-react -> vendor-other"). Depending on the resulting load
+            // order in the browser, this crashes with errors like
+            // "Cannot set properties of undefined (setting 'Activity')" and
+            // renders a white screen. Keep them together in 'vendor-react'.
             if (id.includes('@clerk')) return 'vendor-clerk';
             if (id.includes('three')) return 'vendor-three';
             if (id.includes('react-router') || id.includes('react-router-dom') || id.includes('@remix-run')) return 'vendor-router';
-            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) return 'vendor-react';
             if (id.includes('zustand') || id.includes('@tanstack/react-query')) return 'vendor-state';
-            if (id.includes('framer-motion') || id.includes('motion')) return 'vendor-motion';
             if (id.includes('@supabase')) return 'vendor-supabase';
             if (id.includes('@opentelemetry') || id.includes('@sentry')) return 'vendor-telemetry';
-            return 'vendor-other';
+            return 'vendor-react';
 
           },
         },
