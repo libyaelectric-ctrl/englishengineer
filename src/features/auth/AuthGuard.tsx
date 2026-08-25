@@ -1,5 +1,6 @@
 import { useAuth } from '@clerk/clerk-react';
 
+import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 
 import { Navigate, useLocation } from 'react-router-dom';
@@ -8,6 +9,9 @@ import { LoadingState } from '@/shared/components/LoadingState';
 
 import { useAuthStore } from './auth.store';
 import { CLERK_SIGN_IN_URL } from './clerk.config';
+
+/** How long to wait for Clerk to load before showing the timeout fallback. */
+const CLERK_TIMEOUT_MS = 8_000;
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -27,12 +31,32 @@ export const AuthGuard = ({ children }: AuthGuardProps) => {
 
   const hasSession = isAuthenticated || Boolean(currentUser) || hasClerkSession;
 
+  // Timeout: if Clerk doesn't load within CLERK_TIMEOUT_MS, show an error
+  // instead of an infinite spinner. This happens when ad-blockers or privacy
+  // extensions block clerk.engvox.com / *.clerk.accounts.dev.
+  const [clerkTimedOut, setClerkTimedOut] = useState(false);
+
+  useEffect(() => {
+    if (clerkLoaded) return; // Clerk already loaded — nothing to time out.
+    const timer = setTimeout(() => setClerkTimedOut(true), CLERK_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, [clerkLoaded]);
+
   // While Clerk is still loading we cannot know whether the user is signed
   // in. Redirecting to /login in this window races Clerk's session restore:
   // /login sees the signed-in session and bounces back to /dashboard, which
   // bounces to /login again — an infinite reload loop. Wait for Clerk before
   // ever deciding the user is signed out.
   if (!clerkLoaded) {
+    if (clerkTimedOut) {
+      return (
+        <LoadingState
+          variant="error"
+          title="Connection problem"
+          description="Unable to reach the authentication service. This is usually caused by an ad blocker or privacy extension. Please disable it for this site and reload the page."
+        />
+      );
+    }
     return (
       <LoadingState
         title="Opening EngVox"
