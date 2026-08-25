@@ -3,6 +3,7 @@ import { useAuth } from '@clerk/clerk-react';
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 
+import * as Sentry from '@sentry/react';
 import { Navigate, useLocation } from 'react-router-dom';
 
 import { LoadingState } from '@/shared/components/LoadingState';
@@ -38,9 +39,20 @@ export const AuthGuard = ({ children }: AuthGuardProps) => {
 
   useEffect(() => {
     if (clerkLoaded) return; // Clerk already loaded — nothing to time out.
-    const timer = setTimeout(() => setClerkTimedOut(true), CLERK_TIMEOUT_MS);
+    const timer = setTimeout(() => {
+      Sentry.withScope((scope) => {
+        scope.setTag('clerk.timeout', true);
+        scope.setTag('clerk.timeout_ms', CLERK_TIMEOUT_MS);
+        scope.setTag('route', location.pathname);
+        scope.setLevel('warning');
+      });
+      Sentry.captureMessage(
+        'Clerk failed to load within timeout — likely blocked by ad blocker or privacy extension',
+      );
+      setClerkTimedOut(true);
+    }, CLERK_TIMEOUT_MS);
     return () => clearTimeout(timer);
-  }, [clerkLoaded]);
+  }, [clerkLoaded, location.pathname]);
 
   // While Clerk is still loading we cannot know whether the user is signed
   // in. Redirecting to /login in this window races Clerk's session restore:
