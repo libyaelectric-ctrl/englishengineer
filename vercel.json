@@ -3,9 +3,9 @@
 
   "redirects": [
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "has": [{ "type": "host", "value": "eng-vox.vercel.app" }],
-      "destination": "https://engvox.com/:1",
+      "destination": "https://engvox.com/:path*",
       "permanent": true
     },
     {
