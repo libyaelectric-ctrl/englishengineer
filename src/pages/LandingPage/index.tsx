@@ -1,3 +1,4 @@
+import { PRODUCT_VERSION } from '@/config/product.config';
 import {
   ArrowLeft,
   ArrowRight,
@@ -389,6 +390,13 @@ export const LandingPage = () => {
             aria-label={`Go to ${label}`}
           />
         ))}
+      </div>
+
+      {/* Watermark */}
+      <div className="fixed bottom-3 right-4 z-50 flex items-center gap-1.5 pointer-events-none select-none opacity-30 hover:opacity-60 transition-opacity duration-500">
+        <img src="/brand/logo.svg" alt="" className="h-4 w-4" width="16" height="16" />
+        <span className="text-[10px] font-bold text-foreground tracking-wide">EngVox</span>
+        <span className="text-[9px] font-mono font-bold text-primary">v{PRODUCT_VERSION}</span>
       </div>
 
       <Footer className="fixed bottom-0 inset-x-0 z-50" />

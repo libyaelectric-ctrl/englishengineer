@@ -1,6 +1,8 @@
-import { SignIn, SignUp } from '@clerk/clerk-react';
+import { SignIn, SignUp, useAuth } from '@clerk/clerk-react';
 
-import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import {
   CLERK_SIGN_IN_FALLBACK_REDIRECT_URL,
@@ -30,10 +32,19 @@ const getReturnTarget = (search: string, state: ClerkLocationState): string | un
 
 const ClerkAuthPage = ({ mode }: ClerkAuthPageProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isLoaded, isSignedIn } = useAuth();
   const returnTarget = getReturnTarget(location.search, location.state as ClerkLocationState);
 
   const signInAfter = returnTarget ?? CLERK_SIGN_IN_FALLBACK_REDIRECT_URL;
   const signUpAfter = returnTarget ?? CLERK_SIGN_UP_FALLBACK_REDIRECT_URL;
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      const target = mode === 'sign-in' ? signInAfter : signUpAfter;
+      navigate(target, { replace: true });
+    }
+  }, [isLoaded, isSignedIn, mode, signInAfter, signUpAfter, navigate]);
 
   return (
     // The overlay itself scrolls: after the email step Clerk grows the card
