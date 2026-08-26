@@ -8,9 +8,9 @@ import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 
 let clerkLoaded = false;
 let clerkSignedIn = false;
-let isAuthenticated = false;
-let isLoading = false;
-let currentUser: unknown = null;
+let isStoreAuthenticated = false;
+let isStoreLoading = false;
+let storeCurrentUser: unknown = null;
 
 vi.mock('@clerk/clerk-react', () => ({
   useAuth: () => ({ isLoaded: clerkLoaded, isSignedIn: clerkSignedIn }),
@@ -18,9 +18,9 @@ vi.mock('@clerk/clerk-react', () => ({
 
 vi.mock('./auth.store', () => ({
   useAuthStore: () => ({
-    isAuthenticated,
-    isLoading,
-    currentUser,
+    isAuthenticated: isStoreAuthenticated,
+    isLoading: isStoreLoading,
+    currentUser: storeCurrentUser,
   }),
 }));
 
@@ -61,6 +61,9 @@ describe('AuthGuard – Clerk timeout fallback', () => {
   beforeEach(() => {
     clerkLoaded = false;
     clerkSignedIn = false;
+    isStoreAuthenticated = false;
+    isStoreLoading = false;
+    storeCurrentUser = null;
     vi.useFakeTimers({ shouldAdvanceTime: true });
   });
 
@@ -325,5 +328,72 @@ describe('AuthGuard – Clerk timeout fallback', () => {
 
     const scopeMock = vi.mocked(Sentry.withScope).mock.results[0].value;
     expect(scopeMock.setTag).toHaveBeenCalledWith('route', '/sign-in');
+  });
+
+  // --- !hasSession branch coverage ---
+
+  it('shows loading when clerk loaded but store is still loading (no session yet)', () => {
+    // Clerk loaded, no session, store still loading
+    clerkLoaded = true;
+    clerkSignedIn = false;
+    isStoreLoading = true;
+
+    renderGuard();
+
+    expect(screen.getByText('Opening EngVox')).toBeInTheDocument();
+    expect(screen.getByText('Restoring your professional learning workspace.')).toBeInTheDocument();
+    expect(screen.queryByTestId('child')).not.toBeInTheDocument();
+  });
+
+  it('redirects to /sign-in when clerk loaded but no session and not loading', async () => {
+    // Clerk loaded, no session, store not loading → should redirect
+    clerkLoaded = true;
+    clerkSignedIn = false;
+    isStoreLoading = false;
+
+    render(
+      <MemoryRouter initialEntries={['/dashboard']}>
+        <AuthGuard>
+          <div data-testid="child">Protected content</div>
+        </AuthGuard>
+      </MemoryRouter>,
+    );
+
+    // Should redirect to /sign-in (Navigate component replaces the view)
+    await waitFor(() => {
+      expect(screen.queryByTestId('child')).not.toBeInTheDocument();
+    });
+    expect(screen.queryByText('Opening EngVox')).not.toBeInTheDocument();
+  });
+
+  it('shows children when clerk loaded and has session via store', () => {
+    clerkLoaded = true;
+    clerkSignedIn = false;
+    isStoreAuthenticated = true;
+
+    renderGuard();
+
+    expect(screen.getByTestId('child')).toBeInTheDocument();
+    expect(screen.queryByText('Opening EngVox')).not.toBeInTheDocument();
+  });
+
+  it('shows children when clerk loaded and has clerk session', () => {
+    clerkLoaded = true;
+    clerkSignedIn = true;
+
+    renderGuard();
+
+    expect(screen.getByTestId('child')).toBeInTheDocument();
+    expect(screen.queryByText('Opening EngVox')).not.toBeInTheDocument();
+  });
+
+  it('shows children when clerk loaded and has currentUser in store', () => {
+    clerkLoaded = true;
+    clerkSignedIn = false;
+    storeCurrentUser = { id: 'user_123' };
+
+    renderGuard();
+
+    expect(screen.getByTestId('child')).toBeInTheDocument();
   });
 });
