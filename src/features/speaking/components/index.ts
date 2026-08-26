@@ -1,1 +1,0 @@
-export { SpeakingSidebar } from './SpeakingSidebar';
