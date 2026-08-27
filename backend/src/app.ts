@@ -498,6 +498,11 @@ const registerRoutes = (
   v1Router.get('/health', healthHandler);
   app.get('/api/health', healthHandler);
 
+  // Root route — Render health check hits /
+  app.get('/', (_req: Request, res: Response) => {
+    res.json({ ok: true, service: 'englishengineer-backend', health: '/api/health' });
+  });
+
   // Prometheus metrics endpoint
   app.get('/api/metrics', (_req: Request, res: Response) => {
     res.setHeader('Content-Type', 'text/plain; version=0.0.4');
