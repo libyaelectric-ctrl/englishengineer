@@ -1,20 +1,42 @@
+import type { GrammarRule } from '@/shared/types/grammar.types';
 import type { ReadingMission } from '@/shared/types/reading.types';
+import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
 import type { WritingMission } from '@/shared/types/writing.types';
+
+/** Feature flag for unified difficulty scoring across all content types */
+export const USE_UNIFIED_DIFFICULTY_SCORING = false;
 
 export interface KnowledgePoolEntry {
   content_type: string;
   content_id: string;
 }
 
+/** Extract vocabulary words from any content type */
+function extractVocabularyWords(
+  content: ReadingMission | WritingMission | VocabularyTerm | GrammarRule
+): string[] {
+  if ('vocabulary' in content && Array.isArray(content.vocabulary)) {
+    return content.vocabulary.map((v) => v.term);
+  }
+  if ('targetVocabulary' in content && Array.isArray(content.targetVocabulary)) {
+    return content.targetVocabulary;
+  }
+  if ('term' in content && typeof content.term === 'string') {
+    return [content.term];
+  }
+  if ('structure' in content && typeof content.structure === 'string') {
+    // Grammar rules: use structure as a proxy for vocabulary matching
+    return content.structure.split(/\s+/).filter((w) => w.length > 3);
+  }
+  return [];
+}
+
 function scoreContentByPoolRatio(
-  content: ReadingMission | WritingMission,
+  content: ReadingMission | WritingMission | VocabularyTerm | GrammarRule,
   pool: KnowledgePoolEntry[],
   targetRatio: number = 0.75
 ): { score: number; actualRatio: number } {
-  const contentWords =
-    (content as ReadingMission).vocabulary?.map((v) => v.term) ??
-    (content as WritingMission).targetVocabulary ??
-    [];
+  const contentWords = extractVocabularyWords(content);
   const normalizedPool = new Set(pool.map((item) => item.content_id.trim().toLowerCase()));
   const knownCount = contentWords.filter((word) =>
     normalizedPool.has(word.trim().toLowerCase())
@@ -24,12 +46,10 @@ function scoreContentByPoolRatio(
   return { score, actualRatio };
 }
 
-export function sortContentByPoolRatio<T extends ReadingMission | WritingMission>(
-  content: T[],
-  pool: KnowledgePoolEntry[],
-  targetRatio = 0.75
-): T[] {
-  if (pool.length === 0) return content;
+export function sortContentByPoolRatio<
+  T extends ReadingMission | WritingMission | VocabularyTerm | GrammarRule
+>(content: T[], pool: KnowledgePoolEntry[], targetRatio = 0.75): T[] {
+  if (pool.length === 0 || !USE_UNIFIED_DIFFICULTY_SCORING) return content;
   return [...content].sort((a, b) => {
     const scoreA = scoreContentByPoolRatio(a, pool, targetRatio).score;
     const scoreB = scoreContentByPoolRatio(b, pool, targetRatio).score;
