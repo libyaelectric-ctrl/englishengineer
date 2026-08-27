@@ -123,16 +123,16 @@ var INFO = {
   liStore:    {t:'Learning Intelligence store', f:'shared/stores/learning-intelligence.store.ts', d:'Kariyer rolü, mistake log, 7 günlük rapor. ProfileEngine\'in günlük görev üretimini besliyor.', changed:true},
   featureFlags:{t:'Feature Flags', f:'shared/feature-flags.ts', d:'TEAM_BETA (VITE_FEATURE_FLAG_TEAM_BETA) ile Team sayfalarının görünürlüğünü kontrol ediyor; varsayılan kapalı.', changed:true},
   router:     {t:'React Router v7', f:'src/routes/router.tsx', d:'AuthGuard, OnboardingGate, SubscriptionRouteGuard katmanları. team route\'ları FEATURE_FLAGS.TEAM_BETA kontrolünden geçiyor.', changed:true},
-  dashboard:  {t:'Dashboard', f:'src/pages/DashboardPage', d:'Genel özet ve DailyChallenge adlı günlük rastgele mini-quiz özelliği.'},
+  dashboard:  {t:'Dashboard', f:'src/pages/DashboardPage', d:'Genel özet ve DailyChallenge adlı günlük rastgele mini-quiz özelliği. Router tarafından sunulur,其他 motor veya store ile doğrudan bağlantısı yoktur — izoledir.'},
   curriculum: {t:'Curriculum / Today Tab', f:'src/pages/CurriculumPage/CurriculumTodayTab.tsx', d:'generateDailyMissions\'ın ürettiği DailyMission[] listesi. personalReason doluysa kişisel gerekçe satırı render ediliyor.', changed:true},
   vocabPage:  {t:'Vocabulary sayfası', f:'src/pages/VocabularyPage', d:'VocabularyEngine\'den gelen pool-ratio\'ya göre sıralı terimleri gösterir.'},
   gramPage:   {t:'Grammar sayfası', f:'src/pages/GrammarPage', d:'GrammarEngine\'in seçtiği pool-ratio\'ya göre sıralı kuralı alıştırmaya çevirir.'},
   readPage:   {t:'Reading sayfası', f:'src/pages/ReadingPage', d:'Content Selection Service\'in %75 bilinen-kelime oranına göre sıraladığı okuma görevlerini sunar.'},
   writePage:  {t:'Writing sayfası', f:'src/pages/WritingPage', d:'25 mühendislik yazma görevi; hedef kelime/gramer Content Selection + Grammar Engine\'den gelir.'},
-  listenPage: {t:'Listening sayfası', f:'src/pages/ListeningPage', d:'30 dinleme senaryosu; ses motoru ile transkript vurgulama ve tekrar özellikleri.'},
-  speakPage:  {t:'Speaking sayfası', f:'src/pages/SpeakingPage', d:'Konuşma pratiği görevleri.'},
+  listenPage: {t:'Listening sayfası', f:'src/pages/ListeningPage', d:'30 dinleme senaryosu; ses motoru ile transkript vurgulama ve tekrar özellikleri. Kendi motoru yok — doğrudan learningStore\'a yazar, ses oynatma features/listening/ içindeki AudioPlayer tarafından yönetilir.'},
+  speakPage:  {t:'Speaking sayfası', f:'src/pages/SpeakingPage', d:'Konuşma pratiği görevleri. Kendi motoru yok — doğrudan learningStore\'a yazar.'},
   workTools:  {t:'Work Tools sayfası', f:'src/pages/WorkToolsPage', d:'Mühendislik iletişim şablonları, e-posta şablonları, cümle kütüphanesi ve PR Review Coach. 5 sekmeli yapıda (templates/emails/phrases/review-coach/field-docs).'},
-  admin:      {t:'Admin Panel', f:'src/pages/AdminPage', d:'Yönetim paneli: kullanıcı yönetimi, fatura/Stripe entegrasyonu, sistem logları. Clerk auth ile korunuyor.'},
+  admin:      {t:'Admin Panel', f:'src/pages/AdminPage', d:'Yönetim paneli: kullanıcı yönetimi, fatura/Stripe entegrasyonu, sistem logları. Clerk auth ile korunuyor. Router tarafından sunulur,其他 motor ile doğrudan bağlantısı yoktur — izoledir.'},
   progress:   {t:'Progress / Analytics', f:'src/pages/ProgressPage', d:'learning.store + learning-intelligence.store\'dan beceri matrisini, CEFR/ELO trendini ve hata günlüğünü sunar.'},
   aiTools:    {t:'AI Copilot', f:'src/pages/AIPage · features/ai', d:'12 mühendislik moduna göre yapılandırılmış AI çıktısı üretir.'},
   profilePage:{t:'Profile sayfası', f:'src/pages/ProfilePage', d:'Kullanıcının dal/seviye/rozet bilgisini gösterir.'},
@@ -262,7 +262,7 @@ nodes.forEach(function(n){
   });
 });
 edges.forEach(function(e){
-  edges.update({id:e.id, arrows:'to', color: e.color || {color:'#4a5063'}, width: e.dashes?1:1.3, smooth:{type:'cubicBezier', roundness:0.5}});
+  edges.update({id:e.id, arrows:'to', color: e.color || {color:'#4a5063'}, width: e.dashes?1:1.3, smooth:{type:'cubicBezier', roundness:0.5}, font:{size:9, color:'#9aa0ac', strokeWidth:0, align:'middle'}});
 });
 
 
@@ -270,9 +270,10 @@ var container = document.getElementById('network');
 var data = {nodes: nodes, edges: edges};
 var options = {
   layout:{ improvedLayout:true },
-  physics:{ solver:'forceAtlas2Based', forceAtlas2Based:{gravitationalConstant:-100, springLength:120, springConstant:0.06, avoidOverlap:0.6}, stabilization:{iterations:350} },
-  interaction:{ hover:true, tooltipDelay:120 },
+  physics:{ solver:'forceAtlas2Based', forceAtlas2Based:{gravitationalConstant:-100, springLength:120, springConstant:0.06, avoidOverlap:0.6}, stabilization:{iterations:150} },
+  interaction:{ hover:true, tooltipDelay:200 },
   nodes:{ font:{size:12}, widthConstraint:{minimum:100,maximum:140} },
+  edges:{ font:{size:9, color:'#9aa0ac', strokeWidth:0, align:'middle'} },
 };
 var network = new vis.Network(container, data, options);
 
