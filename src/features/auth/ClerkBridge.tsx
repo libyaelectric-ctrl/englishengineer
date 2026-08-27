@@ -122,15 +122,19 @@ export const ClerkBridge = () => {
       if (current && bridgedUserId.current && current.id === bridgedUserId.current) {
         bridgedUserId.current = null;
         storage.setUserId(null);
+        useAuthStore.setState({
+          currentUser: null,
+          isAuthenticated: false,
+          isLoading: false,
+        });
+        useAuthStore.getState().setClerkUserSync(null);
+        useAuthStore.getState().setClerkSignOut(null);
+        setClerkTokenGetter(null);
+      } else if (!current) {
+        useAuthStore.setState({
+          isLoading: false,
+        });
       }
-      useAuthStore.setState({
-        currentUser: null,
-        isAuthenticated: false,
-        isLoading: false,
-      });
-      useAuthStore.getState().setClerkUserSync(null);
-      useAuthStore.getState().setClerkSignOut(null);
-      setClerkTokenGetter(null);
     }
   }, [isLoaded, isSignedIn, user, signOut, getToken]);
 

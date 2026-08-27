@@ -1,8 +1,9 @@
 import { SignIn, SignUp, useAuth } from '@clerk/clerk-react';
+import { ArrowLeft } from 'lucide-react';
 
 import { useEffect } from 'react';
 
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import {
   CLERK_SIGN_IN_FALLBACK_REDIRECT_URL,
@@ -19,7 +20,7 @@ type ClerkLocationState = { from?: { pathname?: string } } | null;
 
 /**
  * Honor the page the user originally tried to reach (passed by <AuthGuard>
- * via router `state.from`, or carsried in a `?redirect_url=` query) so a
+ * via router `state.from`, or carried in a `?redirect_url=` query) so a
  * sign-in returns to the original destination instead of always `/dashboard`.
  */
 const getReturnTarget = (search: string, state: ClerkLocationState): string | undefined => {
@@ -47,16 +48,33 @@ const ClerkAuthPage = ({ mode }: ClerkAuthPageProps) => {
   }, [isLoaded, isSignedIn, mode, signInAfter, signUpAfter, navigate]);
 
   return (
-    // The overlay itself scrolls: after the email step Clerk grows the card
-    // (password / code input) and a non-scrollable fixed container would clip
-    // that second step off-screen, leaving the user with nothing to type into.
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-zinc-950/60 backdrop-blur-sm">
-      <div className="flex min-h-full items-center justify-center px-4 py-8">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-zinc-950/70 backdrop-blur-md">
+      <div className="flex min-h-full flex-col items-center justify-center px-4 py-8">
+        <div className="mb-4 flex w-full max-w-[26rem] justify-start">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border-soft bg-surface/80 px-3.5 py-1.5 text-xs font-semibold text-foreground backdrop-blur-sm transition-colors hover:bg-surface-hover hover:border-primary/40"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>EngVox Home</span>
+          </Link>
+        </div>
+
         <div className="w-full max-w-[26rem] animate-in fade-in zoom-in-50 duration-200">
           {mode === 'sign-in' ? (
-            <SignIn fallbackRedirectUrl={signInAfter} />
+            <SignIn
+              routing="path"
+              path={CLERK_SIGN_IN_URL}
+              signUpUrl={CLERK_SIGN_UP_URL}
+              fallbackRedirectUrl={signInAfter}
+            />
           ) : (
-            <SignUp fallbackRedirectUrl={signUpAfter} />
+            <SignUp
+              routing="path"
+              path={CLERK_SIGN_UP_URL}
+              signInUrl={CLERK_SIGN_IN_URL}
+              fallbackRedirectUrl={signUpAfter}
+            />
           )}
         </div>
       </div>

@@ -18,12 +18,29 @@ import {
   CLERK_SIGN_UP_FALLBACK_REDIRECT_URL,
   CLERK_SIGN_UP_URL,
 } from '@/features/auth/clerk.config';
-import { CLERK_THEME } from '@/features/auth/clerk.theme';
-import { ThemeProvider } from '@/features/theme/ThemeProvider';
+import { getClerkTheme } from '@/features/auth/clerk.theme';
+import { ThemeProvider, useTheme } from '@/features/theme/ThemeProvider';
 
 const BillingSync = lazy(() =>
   import('@/features/billing/BillingSync').then((m) => ({ default: m.BillingSync }))
 );
+
+const ThemedClerkProvider = ({ children }: { children: React.ReactNode }) => {
+  const { theme } = useTheme();
+
+  return (
+    <ClerkProvider
+      publishableKey={CLERK_PUBLISHABLE_KEY!}
+      appearance={getClerkTheme(theme)}
+      signInUrl={CLERK_SIGN_IN_URL ?? '/sign-in'}
+      signUpUrl={CLERK_SIGN_UP_URL ?? '/sign-up'}
+      signInFallbackRedirectUrl={CLERK_SIGN_IN_FALLBACK_REDIRECT_URL ?? '/dashboard'}
+      signUpFallbackRedirectUrl={CLERK_SIGN_UP_FALLBACK_REDIRECT_URL ?? '/dashboard'}
+    >
+      {children}
+    </ClerkProvider>
+  );
+};
 
 const AppContent = () => {
   useDirection();
@@ -32,20 +49,13 @@ const AppContent = () => {
     <Sentry.ErrorBoundary fallback={<div>An error occurred. Please refresh the page.</div>}>
       <ThemeProvider>
         <AppProvider>
-          <ClerkProvider
-            publishableKey={CLERK_PUBLISHABLE_KEY!}
-            appearance={CLERK_THEME}
-            signInUrl={CLERK_SIGN_IN_URL ?? '/sign-in'}
-            signUpUrl={CLERK_SIGN_UP_URL ?? '/sign-up'}
-            signInFallbackRedirectUrl={CLERK_SIGN_IN_FALLBACK_REDIRECT_URL ?? '/dashboard'}
-            signUpFallbackRedirectUrl={CLERK_SIGN_UP_FALLBACK_REDIRECT_URL ?? '/dashboard'}
-          >
+          <ThemedClerkProvider>
             <ClerkBridge />
             <Suspense fallback={null}>
               <BillingSync />
             </Suspense>
             <RouterProvider router={router} />
-          </ClerkProvider>
+          </ThemedClerkProvider>
           <ToastContainer />
         </AppProvider>
       </ThemeProvider>

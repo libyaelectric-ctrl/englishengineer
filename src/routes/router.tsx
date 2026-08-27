@@ -8,13 +8,13 @@ import { Navigate, createBrowserRouter } from 'react-router-dom';
 
 import { LoadingState } from '@/shared/components/LoadingState';
 import { PageErrorBoundary } from '@/shared/components/PageErrorBoundary';
+import { FEATURE_FLAGS } from '@/shared/feature-flags';
 
 import { AuthGuard } from '@/features/auth/AuthGuard';
 import { RequireAdminRole } from '@/features/auth/RequireAdminRole';
 import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
 import { CurriculumSectionGuard, SubscriptionRouteGuard } from '@/features/billing';
 import { OnboardingGate } from '@/features/profile';
-import { FEATURE_FLAGS } from '@/shared/feature-flags';
 
 import { RouteErrorPage } from './RouteErrorPage';
 
@@ -267,7 +267,9 @@ export const router = createBrowserRouter([
       },
       {
         path: 'team/members/:memberId',
-        element: FEATURE_FLAGS.TEAM_BETA ? withSuspense(TeamMember) : (
+        element: FEATURE_FLAGS.TEAM_BETA ? (
+          withSuspense(TeamMember)
+        ) : (
           <Navigate to="/dashboard" replace />
         ),
       },
@@ -283,7 +285,79 @@ export const router = createBrowserRouter([
     ),
   },
   {
+    path: `${CLERK_SIGN_IN_URL}/*`,
+    errorElement: <RouteErrorPage />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <ClerkAuthPage mode="sign-in" />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/login',
+    errorElement: <RouteErrorPage />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <ClerkAuthPage mode="sign-in" />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/login/*',
+    errorElement: <RouteErrorPage />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <ClerkAuthPage mode="sign-in" />
+      </Suspense>
+    ),
+  },
+  {
     path: CLERK_SIGN_UP_URL,
+    errorElement: <RouteErrorPage />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <ClerkAuthPage mode="sign-up" />
+      </Suspense>
+    ),
+  },
+  {
+    path: `${CLERK_SIGN_UP_URL}/*`,
+    errorElement: <RouteErrorPage />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <ClerkAuthPage mode="sign-up" />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/signup',
+    errorElement: <RouteErrorPage />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <ClerkAuthPage mode="sign-up" />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/signup/*',
+    errorElement: <RouteErrorPage />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <ClerkAuthPage mode="sign-up" />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/register',
+    errorElement: <RouteErrorPage />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <ClerkAuthPage mode="sign-up" />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/register/*',
     errorElement: <RouteErrorPage />,
     element: (
       <Suspense fallback={<LoadingState />}>
