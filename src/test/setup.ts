@@ -5,6 +5,34 @@ import React from 'react';
 
 import { logger } from '@/shared/logger';
 
+// Mock canvas for THREE/WebGL tests (minimal mock, no canvas pkg dependency)
+globalThis.HTMLCanvasElement = class MockCanvas {
+  width = 300;
+  height = 150;
+  getContext() {
+    return {
+      canvas: this,
+      fillRect: () => {},
+      clearRect: () => {},
+      drawImage: () => {},
+      getImageData: () => ({ data: [] }),
+      putImageData: () => {},
+      createLinearGradient: () => ({ addColorStop: () => {} }),
+      createRadialGradient: () => ({ addColorStop: () => {} }),
+      createPattern: () => null,
+      setTransform: () => {},
+      resetTransform: () => {},
+      scale: () => {},
+      rotate: () => {},
+      translate: () => {},
+      transform: () => {},
+    };
+  }
+  toDataURL() {
+    return '';
+  }
+} as unknown as typeof HTMLCanvasElement;
+
 // Mock Clerk for tests - provides ClerkProvider and components
 vi.mock('@clerk/clerk-react', () => ({
   ClerkProvider: ({
