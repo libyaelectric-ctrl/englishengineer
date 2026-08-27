@@ -52,21 +52,6 @@ const metrics: PoolMetrics = {
 
 export const getPoolMetrics = (): Readonly<PoolMetrics> => ({ ...metrics });
 
-export const recordAcquire = (): void => {
-  metrics.activeConnections++;
-  metrics.idleConnections = Math.max(0, metrics.idleConnections - 1);
-  metrics.totalAcquired++;
-};
-
-export const recordRelease = (): void => {
-  metrics.activeConnections = Math.max(0, metrics.activeConnections - 1);
-  metrics.idleConnections++;
-  metrics.totalReleased++;
-};
-
-export const recordTimeout = (): void => {
-  metrics.totalTimedOut++;
-};
 
 export const recordHealthCheck = (success: boolean): void => {
   metrics.totalHealthChecks++;

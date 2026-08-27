@@ -53,25 +53,6 @@ export const estimateTokenCost = (
   return (inputTokens * rates.input + outputTokens * rates.output) / 1000;
 };
 
-export const recordUsage = (
-  userId: string,
-  meta?: { tokensInput?: number; tokensOutput?: number; model?: string }
-): void => {
-  const estimatedCostUsd =
-    meta?.tokensInput && meta?.tokensOutput && meta?.model
-      ? estimateTokenCost(meta.model, meta.tokensInput, meta.tokensOutput)
-      : undefined;
-  usage.push({
-    timestamp: new Date().toISOString(),
-    userId,
-    tokensInput: meta?.tokensInput,
-    tokensOutput: meta?.tokensOutput,
-    model: meta?.model,
-    estimatedCostUsd,
-  });
-  if (usage.length > 10000) pruneOldRecords();
-};
-
 export const checkUserLimits = (userId: string): { allowed: boolean; reason?: string } => {
   pruneOldRecords();
 
@@ -92,21 +73,4 @@ export const checkUserLimits = (userId: string): { allowed: boolean; reason?: st
   }
 
   return { allowed: true };
-};
-
-/** Get aggregated usage stats for a user */
-export const getUserUsageStats = (userId: string) => {
-  pruneOldRecords();
-  const userRecords = usage.filter((r) => r.userId === userId);
-  const today = new Date().toISOString().split('T')[0];
-  const dailyRecords = userRecords.filter((r) => r.timestamp.startsWith(today));
-
-  return {
-    dailyRequests: dailyRecords.length,
-    totalTokensInput: userRecords.reduce((sum, r) => sum + (r.tokensInput ?? 0), 0),
-    totalTokensOutput: userRecords.reduce((sum, r) => sum + (r.tokensOutput ?? 0), 0),
-    totalEstimatedCostUsd: userRecords.reduce((sum, r) => sum + (r.estimatedCostUsd ?? 0), 0),
-    dailyLimit: USER_DAILY_LIMIT,
-    monthlyCostLimit: USER_MONTHLY_COST_LIMIT,
-  };
 };

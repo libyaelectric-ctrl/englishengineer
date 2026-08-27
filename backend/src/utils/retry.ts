@@ -40,47 +40,14 @@ export const withRetry = async <T>(
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
-interface RetryWrapperOptions {
-  maxRetries?: number;
-  baseDelay?: number;
-  retryableErrors?: string[];
-}
-
-export const createRetryWrapper = (service_name: string, options: RetryWrapperOptions = {}) => {
-  const {
-    maxRetries = 3,
-    baseDelay = 1000,
-    retryableErrors = ['ECONNRESET', 'ETIMEDOUT', '502', '503', '429'],
-  } = options;
-
-  return async <T>(fn: () => Promise<T>): Promise<T> => {
-    return withRetry(fn, {
-      maxRetries,
-      baseDelay,
-      shouldRetry: (error: unknown) => {
-        const err = error as Record<string, unknown>;
-        if (retryableErrors.some((code) => err.code === code)) {
-          return true;
-        }
-        if (err.status && retryableErrors.includes(String(err.status))) {
-          return true;
-        }
-        if (
-          typeof err.status === 'number' &&
-          err.status >= 400 &&
-          err.status < 500 &&
-          err.status !== 429
-        ) {
-          return false;
-        }
-        return true;
-      },
-    });
-  };
-};
-
-export const stripeRetry = createRetryWrapper('stripe', {
-  maxRetries: 3,
-  baseDelay: 1000,
-  retryableErrors: ['429', '500', '502', '503'],
-});
+/** Pre-configured retry wrapper for Stripe API calls */
+export const stripeRetry = <T>(fn: () => Promise<T>): Promise<T> =>
+  withRetry(fn, {
+    maxRetries: 3,
+    baseDelay: 1000,
+    shouldRetry: (error: unknown) => {
+      const err = error as Record<string, unknown>;
+      const code = String(err.status ?? err.code ?? '');
+      return ['429', '500', '502', '503'].includes(code);
+    },
+  });

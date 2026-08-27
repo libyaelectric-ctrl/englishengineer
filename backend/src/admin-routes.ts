@@ -1,6 +1,7 @@
 import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
 
 import { getAuditLogs } from './audit-log.js';
+import { getCacheStats } from './cache/redis-cache.service.js';
 import { requireRole } from './middleware/rbac.middleware.js';
 import { getPerformanceMetrics, getRateLimitMetrics } from './performance-monitor.js';
 import { AdminAuditLogsQuerySchema, validateQuery } from './validation.js';
@@ -71,6 +72,21 @@ export const registerAdminRoutes = (
       try {
         const metrics = getRateLimitMetrics();
         res.json({ success: true, data: metrics });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+
+  app.get(
+    '/api/admin/cache-stats',
+    requireBackendAuth,
+    requireRole(['admin']),
+    rateLimiter,
+    async (_req: Request, res: Response, next: NextFunction) => {
+      try {
+        const stats = getCacheStats();
+        res.json({ success: true, data: stats });
       } catch (error) {
         next(error);
       }

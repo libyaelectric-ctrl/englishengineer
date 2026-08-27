@@ -24,12 +24,6 @@ export const requireText = (value: unknown, field: string): string => {
   return value.trim();
 };
 
-/** Check if a subscription is still within its grace period after payment failure */
-export const isInGracePeriod = (subscription: SubscriptionSnapshot): boolean => {
-  if (!subscription.gracePeriodEndsAt) return false;
-  return new Date() < new Date(subscription.gracePeriodEndsAt);
-};
-
 export const emptySubscription = (): SubscriptionSnapshot => ({
   planId: 'free',
   status: 'none',
