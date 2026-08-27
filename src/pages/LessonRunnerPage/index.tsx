@@ -250,7 +250,7 @@ const LessonRunnerPage = () => {
         <button
           type="button"
           onClick={() => navigate('/learning-path')}
-          className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-900 text-slate-400 transition-all hover:bg-slate-800 hover:text-white"
+          className="flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-900 text-slate-400 transition-all hover:bg-slate-800 hover:text-white"
           title={translate('lesson.exitSimulator')}
         >
           <X className="h-4 w-4" />
