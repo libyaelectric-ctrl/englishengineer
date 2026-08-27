@@ -125,7 +125,7 @@ const PlacementPage = () => {
           <Button
             variant="ghost"
             onClick={currentIndex === 0 ? continueAtA1 : previous}
-            className="rounded-[4px] border border-border-soft bg-surface hover:bg-background text-xs font-bold uppercase tracking-wider text-primary cursor-pointer shadow-sm min-h-9 px-4"
+            className="rounded-[4px] border border-border-soft bg-surface hover:bg-background text-xs font-bold uppercase tracking-wider text-primary cursor-pointer shadow-sm min-h-11 px-4"
           >
             <ArrowLeft className="h-4 w-4" />
             {currentIndex === 0 ? 'Start at A1' : 'Previous'}

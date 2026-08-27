@@ -100,14 +100,14 @@ export const AdminPage = () => {
               <button
                 onClick={refreshAll}
                 disabled={isRefreshing}
-                className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all cursor-pointer shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-2.5 py-1 min-h-11 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all cursor-pointer shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <RefreshCw className={`h-3 w-3 ${isRefreshing ? 'animate-spin' : ''}`} />
                 Refresh
               </button>
               <button
                 onClick={() => setAutoRefresh(!autoRefresh)}
-                className={`inline-flex items-center gap-1.5 rounded-[4px] border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm ${
+                className={`inline-flex items-center gap-1.5 rounded-[4px] border px-2.5 py-1 min-h-11 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm ${
                   autoRefresh
                     ? 'border-emerald-500/30 bg-emerald-500/5 text-emerald-600'
                     : 'border-border-soft bg-surface text-muted-copy hover:bg-surface-hover'

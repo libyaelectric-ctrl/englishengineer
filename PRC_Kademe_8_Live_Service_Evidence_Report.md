@@ -2,9 +2,9 @@
 
 ## Evidence Decision
 
-**BLOCKED**
+**PARTIAL**
 
-Deployment credentials required. Live service verification was not run and no evidence was fabricated.
+At least one real staging or quality check was not verified. No failed check is reported as passed.
 
 ## Locally Verified Evidence
 
@@ -20,7 +20,25 @@ Deployment credentials required. Live service verification was not run and no ev
 
 ## Staging Verified Evidence
 
-- Live verification: **NOT RUN**
+- Supabase two-user authentication: **PASS**
+- Supabase session restore: **PASS**
+- Supabase cloud snapshot save/load: **PASS**
+- Supabase live RLS isolation across private tables: **PASS**
+- Stripe backend configuration: **PASS**
+- Stripe test-mode Checkout Session: **PASS**
+- Stripe test-mode Customer Portal: **PASS**
+- Stripe webhook signature and idempotency: **PASS**
+- Stripe webhook entitlement update: **PASS**
+- Stripe verifier-event cleanup: **PASS**
+- Stripe test-customer cleanup: **PASS**
+- Backend-only real AI provider request: **PASS**
+- AI proxy invalid-token handling: **PASS**
+- AI provider-failure and malformed-provider live injection: **NOT RUN (unsafe to alter staging credentials)**
+- AI provider key exposure to frontend: **PASS (no key in response)**
+- Upstash REST availability: **PASS**
+- Upstash shared counter behavior: **PASS**
+- Upstash verifier-key cleanup: **PASS**
+- Upstash dashboard evidence: **NOT VERIFIED (REST verification only)**
 
 The report never treats Stripe Dashboard/CLI delivery, provider-failure injection, or service dashboards as verified unless those actions actually ran.
 
@@ -41,9 +59,9 @@ The report never treats Stripe Dashboard/CLI delivery, provider-failure injectio
 | `VITE_AUTH_PROVIDER`          | frontend | required    | OK           |
 | `VITE_SUPABASE_URL`           | frontend | required    | OK           |
 | `VITE_SUPABASE_ANON_KEY`      | frontend | required    | OK           |
-| `VITE_BILLING_API_URL`        | frontend | required    | PLACEHOLDER  |
+| `VITE_BILLING_API_URL`        | frontend | required    | OK           |
 | `VITE_AI_PROVIDER`            | frontend | required    | OK           |
-| `VITE_AI_PROXY_URL`           | frontend | required    | PLACEHOLDER  |
+| `VITE_AI_PROXY_URL`           | frontend | required    | OK           |
 | `SUPABASE_URL`                | backend  | required    | OK           |
 | `SUPABASE_ANON_KEY`           | backend  | required    | OK           |
 | `SUPABASE_SERVICE_ROLE_KEY`   | backend  | required    | OK           |
@@ -65,9 +83,10 @@ Only availability is shown. No value, token, key or secret is written to this re
 
 ## Commands Run
 
-| Command                                                 | Exit code | Result            |
-| ------------------------------------------------------- | --------: | ----------------- |
-| `node scripts/prc-kademe-8-live-verify.mjs --env-check` |         0 | BLOCKED_ENV_CHECK |
+| Command             | Exit code | Result |
+| ------------------- | --------: | ------ |
+| `npm run typecheck` |         0 | PASS   |
+| `npm test`          |         1 | FAIL   |
 
 The external invocation required for this report is `npm run kademe8:verify`.
 
@@ -80,8 +99,7 @@ The external invocation required for this report is `npm run kademe8:verify`.
 
 ## Remaining Blockers
 
-- Placeholder required variable: `VITE_BILLING_API_URL`
-- Placeholder required variable: `VITE_AI_PROXY_URL`
+- npm test exited with code 1.
 
 ## Next Decision
 

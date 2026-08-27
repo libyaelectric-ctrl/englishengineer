@@ -1,13 +1,13 @@
 import type { LearningState, MissionModule } from '@/core/learning/learning.types';
 
-import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
+import { type EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { logger } from '@/shared/logger';
 import { GrammarEngine } from '@/shared/services/grammar.engine';
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
-import { VocabularyEngine } from '@/shared/services/vocabulary.engine';
 import { VocabularyMenuService } from '@/shared/services/vocabulary-menu.service';
-import { logger } from '@/shared/logger';
+import { VocabularyEngine } from '@/shared/services/vocabulary.engine';
+import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import type { CefrLevel } from '@/shared/types/domain.types';
-import { type EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 import {
   type CefrBand,
   type DailyMission,
@@ -68,7 +68,9 @@ export const getDisciplineDomains = async (
 
   if (!resolvedDiscipline || resolvedDiscipline === 'general') {
     if (process.env.NODE_ENV === 'development') {
-      logger.d(`[ProfileEngine] User ${userId} selected domains: [general, engineering] (no discipline)`);
+      logger.d(
+        `[ProfileEngine] User ${userId} selected domains: [general, engineering] (no discipline)`
+      );
     }
     return [...BASE_DOMAINS];
   }
@@ -78,7 +80,9 @@ export const getDisciplineDomains = async (
 
     if (disciplineTerms.length === 0) {
       if (process.env.NODE_ENV === 'development') {
-        logger.d(`[ProfileEngine] User ${userId} selected domains: [general, engineering] (empty discipline: ${resolvedDiscipline})`);
+        logger.d(
+          `[ProfileEngine] User ${userId} selected domains: [general, engineering] (empty discipline: ${resolvedDiscipline})`
+        );
       }
       return [...BASE_DOMAINS];
     }
@@ -90,7 +94,9 @@ export const getDisciplineDomains = async (
     return domains;
   } catch {
     if (process.env.NODE_ENV === 'development') {
-      logger.d(`[ProfileEngine] User ${userId} selected domains: [general, engineering] (error fallback)`);
+      logger.d(
+        `[ProfileEngine] User ${userId} selected domains: [general, engineering] (error fallback)`
+      );
     }
     return [...BASE_DOMAINS];
   }
@@ -230,14 +236,28 @@ export const LearningProfileEngine = {
       const key = entry.category;
       mistakeCounts[key] = (mistakeCounts[key] ?? 0) + 1;
     }
-    const grammarMistakes = (mistakeCounts['grammar'] ?? 0) + (mistakeCounts['missing article'] ?? 0);
-    const vocabularyMistakes = (mistakeCounts['Vocabulary'] ?? 0) + (mistakeCounts['word choice'] ?? 0);
+    const grammarMistakes =
+      (mistakeCounts['grammar'] ?? 0) +
+      (mistakeCounts['repeated phrase issue'] ?? 0) +
+      (mistakeCounts['unclear sentence'] ?? 0);
+    const vocabularyMistakes =
+      (mistakeCounts['word choice'] ?? 0) + (mistakeCounts['repeated vocabulary gap'] ?? 0);
     const weakest = [...SKILL_NAMES]
       .map((skill) => profile.skills[skill])
       .sort((a, b) => {
         // Weight by mistake frequency: grammar/vocabulary mistakes boost respective skills
-        const aMistakeBoost = a.skill === 'grammar' ? grammarMistakes * 2 : a.skill === 'vocabulary' ? vocabularyMistakes * 2 : 0;
-        const bMistakeBoost = b.skill === 'grammar' ? grammarMistakes * 2 : b.skill === 'vocabulary' ? vocabularyMistakes * 2 : 0;
+        const aMistakeBoost =
+          a.skill === 'grammar'
+            ? grammarMistakes * 2
+            : a.skill === 'vocabulary'
+              ? vocabularyMistakes * 2
+              : 0;
+        const bMistakeBoost =
+          b.skill === 'grammar'
+            ? grammarMistakes * 2
+            : b.skill === 'vocabulary'
+              ? vocabularyMistakes * 2
+              : 0;
         const aScore = a.completedTasks - aMistakeBoost;
         const bScore = b.completedTasks - bMistakeBoost;
         return aScore - bScore || b.weaknessScore - a.weaknessScore;
@@ -255,7 +275,14 @@ export const LearningProfileEngine = {
         undefined,
         grammarMix
       ),
-      VocabularyEngine.selectVocabularyForTask('vocabulary', vocabularyLevel, undefined, undefined, undefined, branchDomains),
+      VocabularyEngine.selectVocabularyForTask(
+        'vocabulary',
+        vocabularyLevel,
+        undefined,
+        undefined,
+        undefined,
+        branchDomains
+      ),
     ]);
     const grammarFocus =
       grammarRules[0] ??
@@ -269,11 +296,11 @@ export const LearningProfileEngine = {
         )
       )[0];
     // Build personal reasons from mistake log
-    const topMistakeCategory = Object.entries(mistakeCounts)
-      .sort(([, a], [, b]) => b - a)[0];
-    const personalReason = recentMistakes.length > 0 && topMistakeCategory
-      ? `Son 7 günde ${topMistakeCategory[0]} kategorisinde ${topMistakeCategory[1]} hata yaptın.`
-      : undefined;
+    const topMistakeCategory = Object.entries(mistakeCounts).sort(([, a], [, b]) => b - a)[0];
+    const personalReason =
+      recentMistakes.length > 0 && topMistakeCategory
+        ? `Son 7 günde ${topMistakeCategory[0]} kategorisinde ${topMistakeCategory[1]} hata yaptın.`
+        : undefined;
 
     return [
       buildSkillMission(weakest.skill, weakest.completedTasks, weakest.cefrBand, personalReason),

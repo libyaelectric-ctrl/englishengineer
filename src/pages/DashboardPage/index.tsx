@@ -18,6 +18,7 @@ import { resolveDefaultDiscipline } from '@/features/learning-path';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization/localization.types';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
+import { useLearningCockpit } from '@/features/profile/useLearningCockpit';
 
 import { DailyChallenge } from './DailyChallenge';
 import { DailyDigest } from './DailyDigest';
@@ -38,6 +39,8 @@ export const DashboardPage: React.FC = () => {
   const activeMissions = useLearningStore(
     (s) => s.missions?.filter((m) => m.status === 'active').length || 0
   );
+
+  const { missions } = useLearningCockpit(currentUser?.id);
 
   // Auto-refresh: re-read profile every 30s for cross-tab sync
   const [, setTick] = useState(0);
@@ -164,7 +167,9 @@ export const DashboardPage: React.FC = () => {
               <p className="text-sm font-bold text-foreground truncate">
                 {(() => {
                   const langOption = INTERFACE_LANGUAGES.find((l) => l.id === currentLanguage);
-                  return langOption ? `${langOption.nativeLabel} (${langOption.id.toUpperCase()})` : currentLanguage ?? '—';
+                  return langOption
+                    ? `${langOption.nativeLabel} (${langOption.id.toUpperCase()})`
+                    : (currentLanguage ?? '—');
                 })()}
               </p>
             </div>
@@ -179,9 +184,7 @@ export const DashboardPage: React.FC = () => {
               <Hash className="h-5 w-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">
-              <p className="text-xs text-muted-copy font-medium">
-                {translate('dashboard.words')}
-              </p>
+              <p className="text-xs text-muted-copy font-medium">{translate('dashboard.words')}</p>
               <p className="text-sm font-bold text-foreground">
                 {meta?.wordCount?.toLocaleString() ?? '—'}
               </p>
@@ -218,6 +221,21 @@ export const DashboardPage: React.FC = () => {
 
       {/* Daily Digest */}
       <DailyDigest />
+
+      {/* Personal Reason Nudge — shown when mistake log has data */}
+      {missions?.find((m) => m.personalReason) && (
+        <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface px-4 py-3">
+          <p className="text-xs text-primary font-semibold">
+            {missions.find((m) => m.personalReason)?.personalReason}
+          </p>
+          <Link
+            to="/curriculum"
+            className="text-xs underline mt-1 inline-block text-muted-copy hover:text-primary transition-colors"
+          >
+            Bugünkü kişisel planını gör →
+          </Link>
+        </div>
+      )}
 
       {/* Daily Challenge */}
       <DailyChallenge />

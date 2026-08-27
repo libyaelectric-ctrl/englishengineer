@@ -148,7 +148,7 @@ export const CurriculumMemoryTab = ({
                     {'route' in item && (
                       <Button
                         variant="ghost"
-                        className="mt-4 w-full h-8 inline-flex items-center justify-center rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[10px] font-bold uppercase tracking-wider text-primary cursor-pointer shadow-sm gap-1.5"
+                        className="mt-4 w-full min-h-11 inline-flex items-center justify-center rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[10px] font-bold uppercase tracking-wider text-primary cursor-pointer shadow-sm gap-1.5"
                         onClick={() => navigate((item as UnifiedReviewItem).route)}
                       >
                         {translate('curriculum.practiceNow')} <ArrowRight className="h-3.5 w-3.5" />

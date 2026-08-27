@@ -162,7 +162,7 @@ export const CurriculumTodayTab = ({ isLoading, missions, learningState }: Props
 
                     <Button
                       variant={isActive ? 'primary' : 'ghost'}
-                      className={`mt-4 w-full h-9 inline-flex items-center justify-center rounded-[4px] text-xs font-bold uppercase tracking-wider cursor-pointer shadow-sm gap-1.5 border transition-all ${
+                      className={`mt-4 w-full min-h-11 inline-flex items-center justify-center rounded-[4px] text-xs font-bold uppercase tracking-wider cursor-pointer shadow-sm gap-1.5 border transition-all ${
                         isActive
                           ? 'bg-primary hover:bg-primary/90 border-primary text-white'
                           : 'bg-surface hover:bg-surface-hover border-border-soft text-primary'

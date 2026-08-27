@@ -136,7 +136,7 @@ export const UsersTab = ({ users, onPromote, isLoading }: UsersTabProps) => {
                   <td className="py-3.5 px-4 text-right">
                     <Button
                       variant="ghost"
-                      className="h-8 px-2.5 text-[11px]"
+                      className="min-h-11 px-2.5 text-[11px]"
                       onClick={() => onPromote(u.id)}
                     >
                       Toggle Plan
@@ -158,7 +158,7 @@ export const UsersTab = ({ users, onPromote, isLoading }: UsersTabProps) => {
           <div className="flex items-center gap-1.5">
             <Button
               variant="ghost"
-              className="h-8 px-2.5 text-[11px]"
+              className="min-h-11 px-2.5 text-[11px]"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={safePage <= 1}
             >
@@ -186,7 +186,7 @@ export const UsersTab = ({ users, onPromote, isLoading }: UsersTabProps) => {
                   <button
                     key={item}
                     onClick={() => setPage(item)}
-                    className={`h-8 min-w-[32px] rounded-[4px] px-2 text-[11px] font-bold transition-all cursor-pointer ${
+                    className={`min-h-11 min-w-[32px] rounded-[4px] px-2 text-[11px] font-bold transition-all cursor-pointer ${
                       item === safePage
                         ? 'bg-primary text-primary-foreground'
                         : 'border border-border-soft bg-surface text-foreground hover:bg-surface-hover'
@@ -198,7 +198,7 @@ export const UsersTab = ({ users, onPromote, isLoading }: UsersTabProps) => {
               )}
             <Button
               variant="ghost"
-              className="h-8 px-2.5 text-[11px]"
+              className="min-h-11 px-2.5 text-[11px]"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={safePage >= totalPages}
             >

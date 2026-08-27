@@ -114,7 +114,7 @@ export const PRReviewCoach = () => {
                 key={i}
                 type="button"
                 onClick={() => handleSample(sample)}
-                className="rounded-[4px] border border-border-soft bg-surface-hover px-2.5 py-1 text-[10px] text-muted-copy transition-colors hover:border-primary hover:text-primary cursor-pointer font-bold uppercase tracking-wider shadow-sm"
+                className="rounded-[4px] border border-border-soft bg-surface-hover px-2.5 py-1 min-h-11 text-[10px] text-muted-copy transition-colors hover:border-primary hover:text-primary cursor-pointer font-bold uppercase tracking-wider shadow-sm"
               >
                 Sample {i + 1}
               </button>

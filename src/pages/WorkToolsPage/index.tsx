@@ -420,7 +420,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               type="button"
               aria-selected={tab === id}
               onClick={() => setTab(id)}
-              className={`flex shrink-0 items-center gap-1.5 rounded-[4px] border px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-wider transition-colors cursor-pointer ${
+              className={`flex shrink-0 items-center gap-1.5 rounded-[4px] border px-3 py-2 min-h-11 text-[10px] font-sans font-bold uppercase tracking-wider transition-colors cursor-pointer ${
                 tab === id
                   ? 'border-primary/40 bg-primary/5 text-primary'
                   : 'border-border-soft bg-surface-hover text-muted-copy hover:text-foreground hover:bg-surface-hover'
