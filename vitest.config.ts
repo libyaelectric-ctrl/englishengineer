@@ -26,6 +26,7 @@ export default defineConfig({
       'backend/**',
       '.mimocode/**',
       'src/shared/tests/integration/**',
+      'test/integration/**',
       'src/features/profile/OnboardingGate.test.tsx',
       'src/features/auth/AuthGuard.test.tsx',
       'src/shared/components/accessibility.test.tsx',
