@@ -78,7 +78,7 @@ export function LearnedCard({ term, index }: LearnedCardProps) {
                 e.stopPropagation();
                 PronunciationService.speak(meaning);
               }}
-              className="flex h-6 w-6 items-center justify-center rounded text-muted-copy hover:text-foreground transition-colors cursor-pointer"
+              className="flex min-h-10 min-w-10 items-center justify-center rounded text-muted-copy hover:text-foreground transition-colors cursor-pointer"
               aria-label={`Listen to ${term.term}`}
             >
               <Volume2 className="h-3.5 w-3.5" />

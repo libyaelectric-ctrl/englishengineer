@@ -104,7 +104,7 @@ export const ScoreFeedbackOverlay = React.memo(
           </div>
 
           {/* Rewards */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-3 text-center">
               <Zap className="h-4 w-4 text-warning mx-auto" />
               <p className="mt-1 text-[10px] text-muted-copy">XP</p>

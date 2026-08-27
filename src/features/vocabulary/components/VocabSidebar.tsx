@@ -34,7 +34,7 @@ function getVocabLevel(mastered: number): string {
 function VocabLevelGrid({ mastered }: { mastered: number }) {
   const currentLevel = getVocabLevel(mastered);
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
       {VOCAB_LEVELS.map((level, index) => {
         const isActive = level.id === currentLevel;
         const isCompleted = mastered >= level.max;

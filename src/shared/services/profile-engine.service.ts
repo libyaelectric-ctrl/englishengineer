@@ -125,7 +125,8 @@ const withEvidence = (profile: SkillProfile, state: LearningState): SkillProfile
 const buildSkillMission = (
   skill: SkillName,
   completedTasks: number,
-  cefrBand: CefrBand
+  cefrBand: CefrBand,
+  personalReason?: string
 ): DailyMission => {
   const label = skill.charAt(0).toUpperCase() + skill.slice(1);
   const lessonNum = getSkillLessonNumber(completedTasks);
@@ -142,6 +143,7 @@ const buildSkillMission = (
         ? `Build the first reliable ${label} baseline.`
         : `${label} is on lesson ${lessonNum} and has the clearest catch-up opportunity.`,
     route: ROUTE_BY_SKILL[skill],
+    personalReason,
   };
 };
 
@@ -220,7 +222,7 @@ export const LearningProfileEngine = {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const recentMistakes = intelligence.mistakeLog.filter(
-      (e) => new Date(e.timestamp) >= sevenDaysAgo
+      (e) => new Date(e.createdAt) >= sevenDaysAgo
     );
     // Count mistake frequency by category to weight skill selection
     const mistakeCounts: Record<string, number> = {};
@@ -266,8 +268,15 @@ export const LearningProfileEngine = {
           grammarMix
         )
       )[0];
+    // Build personal reasons from mistake log
+    const topMistakeCategory = Object.entries(mistakeCounts)
+      .sort(([, a], [, b]) => b - a)[0];
+    const personalReason = recentMistakes.length > 0 && topMistakeCategory
+      ? `Son 7 günde ${topMistakeCategory[0]} kategorisinde ${topMistakeCategory[1]} hata yaptın.`
+      : undefined;
+
     return [
-      buildSkillMission(weakest.skill, weakest.completedTasks, weakest.cefrBand),
+      buildSkillMission(weakest.skill, weakest.completedTasks, weakest.cefrBand, personalReason),
       buildVocabularyMission(memory, profile.skills.vocabulary.cefrBand, vocabularyTerms.length),
       buildGrammarMission(grammarFocus, profile.skills.grammar.cefrBand, grammarMix),
     ];

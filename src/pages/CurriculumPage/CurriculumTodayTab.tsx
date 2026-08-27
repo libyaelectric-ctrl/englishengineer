@@ -154,6 +154,11 @@ export const CurriculumTodayTab = ({ isLoading, missions, learningState }: Props
                     <p className="mt-2 flex-1 text-xs leading-5 text-muted-copy font-medium">
                       {mission.reason}
                     </p>
+                    {mission.personalReason && (
+                      <p className="mt-1 text-xs leading-5 text-primary font-semibold">
+                        💡 {mission.personalReason}
+                      </p>
+                    )}
 
                     <Button
                       variant={isActive ? 'primary' : 'ghost'}

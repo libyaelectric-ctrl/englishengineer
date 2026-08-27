@@ -48,7 +48,7 @@ export const TeamLeaderboard = ({ members, summaries }: TeamLeaderboardProps) =>
 
       {/* Top 3 podium */}
       {ranked.length >= 3 && (
-        <div className="grid grid-cols-3 gap-3 mb-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5">
           {[1, 0, 2].map((rankIdx) => {
             const entry = ranked[rankIdx];
             if (!entry) return <div key={rankIdx} className="hidden sm:block" />;

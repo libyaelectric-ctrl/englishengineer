@@ -192,6 +192,7 @@ export interface DailyMission {
   reason: string;
   route: string;
   itemCount?: number;
+  personalReason?: string;
 }
 
 export interface AdaptivePaceInput {

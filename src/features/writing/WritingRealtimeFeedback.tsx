@@ -54,7 +54,7 @@ export const WritingRealtimeFeedback = ({ draft }: WritingRealtimeFeedbackProps)
   return (
     <div className="space-y-4">
       {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-3 text-center">
           <p className="text-[10px] font-mono text-muted-copy uppercase">Words</p>
           <p className="text-lg font-bold text-foreground">{analysis.wordCount}</p>

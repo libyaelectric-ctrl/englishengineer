@@ -135,8 +135,8 @@ export const DashboardPage: React.FC = () => {
         </div>
         <div className="flex flex-wrap items-center gap-4">
           {/* Discipline */}
-          <div className="flex items-center gap-3 flex-1 min-w-[200px]">
-            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary">
+          <div className="flex items-center gap-3 flex-1 min-w-0 sm:min-w-[200px]">
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary shrink-0">
               <BookOpen className="h-5 w-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">
@@ -153,8 +153,8 @@ export const DashboardPage: React.FC = () => {
           <div className="hidden sm:block w-px h-10 bg-border-soft" />
 
           {/* Interface Language */}
-          <div className="flex items-center gap-3 flex-1 min-w-[160px]">
-            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400">
+          <div className="flex items-center gap-3 flex-1 min-w-0 sm:min-w-[160px]">
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 shrink-0">
               <Globe className="h-5 w-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">
@@ -174,7 +174,7 @@ export const DashboardPage: React.FC = () => {
           <div className="hidden sm:block w-px h-10 bg-border-soft" />
 
           {/* Word Count */}
-          <div className="flex items-center gap-3 flex-1 min-w-[140px]">
+          <div className="flex items-center gap-3 flex-1 min-w-0 sm:min-w-[140px]">
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-violet-500/10 text-violet-400">
               <Hash className="h-5 w-5" aria-hidden="true" />
             </div>

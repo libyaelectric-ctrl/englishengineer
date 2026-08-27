@@ -169,7 +169,7 @@ const BusinessPage = () => {
                 </span>
               </div>
 
-              <div className="grid grid-cols-3 gap-2.5 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-4">
                 {previewMetrics.map((m) => (
                   <div
                     key={m.label}

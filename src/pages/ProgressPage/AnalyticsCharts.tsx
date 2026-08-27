@@ -29,7 +29,7 @@ export const StudyHeatmap = ({ values }: { values: Array<{ date: string; count: 
     <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-bold">
       Study Heatmap
     </p>
-    <div className="grid grid-cols-7 gap-2 mt-5">
+    <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 gap-2 mt-5">
       {values.map((item) => (
         <div
           key={item.date}

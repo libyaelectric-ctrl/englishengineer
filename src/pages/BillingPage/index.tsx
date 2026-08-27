@@ -122,7 +122,7 @@ export const BillingPage = () => {
             subtitle="Historical transaction ledger and secure receipt download operations"
             icon={Download}
           >
-            <div className="rounded-[4px] border border-border-soft bg-surface overflow-hidden shadow-sm">
+            <div className="rounded-[4px] border border-border-soft bg-surface overflow-x-auto shadow-sm">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-border-soft bg-background">

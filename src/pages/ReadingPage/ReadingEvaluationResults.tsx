@@ -93,7 +93,7 @@ export const ReadingEvaluationResults = ({
             <Award className="h-4.5 w-4.5" />
             <span>{translate('reading.scoringRewardsClaimed')}</span>
           </h5>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="rounded-[4px] border border-border-soft bg-surface p-3 text-center shadow-sm">
               <span className="text-[10px] font-mono text-muted-copy uppercase block">
                 XP gained

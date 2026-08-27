@@ -56,7 +56,7 @@ export const RouteErrorPage = () => {
       <div className="p-6 bg-surface-hover rounded-[var(--radius-card)] mb-8 text-muted-copy">
         <AlertTriangle className="h-16 w-16" />
       </div>
-      <h1 className="text-6xl font-medium tracking-tighter">SYSTEM FAULT</h1>
+      <h1 className="text-4xl sm:text-6xl font-medium tracking-tighter">SYSTEM FAULT</h1>
       <p className="text-muted-copy mt-4 max-w-md text-lg">{message}</p>
       <Link to="/dashboard" className="mt-12">
         <Button variant="outline" className="gap-3 px-8 h-14 text-lg rounded-[var(--radius-card)]">

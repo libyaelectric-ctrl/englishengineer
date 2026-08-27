@@ -76,7 +76,7 @@ export const AnalyticsChartsSection = ({
                   </div>
                   <div className="mt-4 space-y-3">
                     <AnalyticsProgress label="Average Score" value={skill.averageScore} />
-                    <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center text-xs">
                       <MiniStat label="Missions" value={`${skill.completedMissions}`} />
                       <MiniStat label="Sessions" value={`${skill.sessionCount}`} />
                       <MiniStat label="Minutes" value={`${skill.totalMinutes}`} />

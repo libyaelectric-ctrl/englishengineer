@@ -59,7 +59,7 @@ const NotFoundPage = () => {
       <div className="p-6 bg-surface-hover rounded-[var(--radius-card)] mb-8 text-muted-copy">
         <ShieldAlert className="h-16 w-16" />
       </div>
-      <h1 className="text-6xl font-medium tracking-tighter">404</h1>
+      <h1 className="text-4xl sm:text-6xl font-medium tracking-tighter">404</h1>
       <p className="text-muted-copy mt-4 max-w-md text-lg">
         This page doesn't exist or has been moved. Let's get you back on track.
       </p>
