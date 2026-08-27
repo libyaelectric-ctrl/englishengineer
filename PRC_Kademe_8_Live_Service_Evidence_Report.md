@@ -44,20 +44,22 @@ The report never treats Stripe Dashboard/CLI delivery, provider-failure injectio
 | `VITE_BILLING_API_URL`        | frontend | required    | PLACEHOLDER  |
 | `VITE_AI_PROVIDER`            | frontend | required    | OK           |
 | `VITE_AI_PROXY_URL`           | frontend | required    | PLACEHOLDER  |
-| `SUPABASE_URL`                | backend  | required    | PLACEHOLDER  |
-| `SUPABASE_ANON_KEY`           | backend  | required    | PLACEHOLDER  |
-| `SUPABASE_SERVICE_ROLE_KEY`   | backend  | required    | PLACEHOLDER  |
+| `SUPABASE_URL`                | backend  | required    | OK           |
+| `SUPABASE_ANON_KEY`           | backend  | required    | OK           |
+| `SUPABASE_SERVICE_ROLE_KEY`   | backend  | required    | OK           |
 | `BILLING_REPOSITORY`          | backend  | required    | OK           |
-| `STRIPE_SECRET_KEY`           | backend  | required    | PLACEHOLDER  |
-| `STRIPE_WEBHOOK_SECRET`       | backend  | required    | PLACEHOLDER  |
-| `STRIPE_PRICE_JUNIOR_MONTHLY` | backend  | required    | PLACEHOLDER  |
+| `BILLING_PROVIDER`            | backend  | required    | OK           |
+| `DODO_PAYMENTS_API_KEY`       | backend  | required    | OK           |
+| `DODO_PAYMENTS_WEBHOOK_KEY`   | backend  | required    | OK           |
+| `DODO_PAYMENTS_ENVIRONMENT`   | backend  | required    | OK           |
+| `DODO_PRODUCT_JUNIOR_MONTHLY` | backend  | required    | OK           |
 | `AI_PROVIDER`                 | backend  | required    | OK           |
+| `GEMINI_API_KEY`              | backend  | required    | OK           |
 | `OPENAI_API_KEY`              | backend  | optional    | MISSING      |
 | `ANTHROPIC_API_KEY`           | backend  | optional    | MISSING      |
-| `GEMINI_API_KEY`              | backend  | required    | PLACEHOLDER  |
 | `RATE_LIMIT_STORE`            | backend  | required    | OK           |
-| `UPSTASH_REDIS_REST_URL`      | backend  | required    | PLACEHOLDER  |
-| `UPSTASH_REDIS_REST_TOKEN`    | backend  | required    | PLACEHOLDER  |
+| `UPSTASH_REDIS_REST_URL`      | backend  | required    | OK           |
+| `UPSTASH_REDIS_REST_TOKEN`    | backend  | required    | OK           |
 
 Only availability is shown. No value, token, key or secret is written to this report.
 
@@ -80,15 +82,6 @@ The external invocation required for this report is `npm run kademe8:verify`.
 
 - Placeholder required variable: `VITE_BILLING_API_URL`
 - Placeholder required variable: `VITE_AI_PROXY_URL`
-- Placeholder required variable: `SUPABASE_URL`
-- Placeholder required variable: `SUPABASE_ANON_KEY`
-- Placeholder required variable: `SUPABASE_SERVICE_ROLE_KEY`
-- Placeholder required variable: `STRIPE_SECRET_KEY`
-- Placeholder required variable: `STRIPE_WEBHOOK_SECRET`
-- Placeholder required variable: `STRIPE_PRICE_JUNIOR_MONTHLY`
-- Placeholder required variable: `GEMINI_API_KEY`
-- Placeholder required variable: `UPSTASH_REDIS_REST_URL`
-- Placeholder required variable: `UPSTASH_REDIS_REST_TOKEN`
 
 ## Next Decision
 
