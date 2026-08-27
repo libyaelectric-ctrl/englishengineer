@@ -136,9 +136,9 @@ var INFO = {
   progress:   {t:'Progress / Analytics', f:'src/pages/ProgressPage', d:'learning.store + learning-intelligence.store\'dan beceri matrisini, CEFR/ELO trendini ve hata günlüğünü sunar.'},
   aiTools:    {t:'AI Copilot', f:'src/pages/AIPage · features/ai', d:'12 mühendislik moduna göre yapılandırılmış AI çıktısı üretir.'},
   profilePage:{t:'Profile sayfası', f:'src/pages/ProfilePage', d:'Kullanıcının dal/seviye/rozet bilgisini gösterir.'},
-  billing:    {t:'Billing / Subscription', f:'src/pages/BillingPage · features/billing', d:'Stripe Checkout + SubscriptionRouteGuard. Kademe 8 canlıya geçiş kapısı BLOCKED.', changed:true},
+  billing:    {t:'Billing / Subscription', f:'src/pages/BillingPage · features/billing', d:'DodoPayments Checkout + SubscriptionRouteGuard. Kademe 8 canlıya geçiş kapısı BLOCKED.', changed:true},
   team:       {t:'Team sayfası', f:'src/pages/TeamPage', d:'FEATURE_FLAGS.TEAM_BETA flag\'i arkasında; flag kapalıyken dashboard\'a yönleniyor.', changed:true},
-  kademe8:    {t:'Kademe 8 Canlı Servis Doğrulama', f:'scripts/prc-kademe-8-live-verify.mjs', d:'Supabase/Stripe/Upstash/AI için 17 zorunlu ortam değişkenini kontrol ediyor.', changed:true},
+  kademe8:    {t:'Kademe 8 Canlı Servis Doğrulama', f:'scripts/prc-kademe-8-live-verify.mjs', d:'Supabase/DodoPayments/Upstash/AI için 17 zorunlu ortam değişkenini kontrol ediyor.', changed:true},
 };
 
 
@@ -206,8 +206,8 @@ var edges = new vis.DataSet([
 
   {from:'learningStore', to:'vocabEngine', label:'vocabularyPool', color:{color:'#7fc55b'}},
   {from:'learningStore', to:'gramEngine', label:'vocabularyPool', color:{color:'#7fc55b'}},
-  {from:'contentSelect', to:'vocabEngine', label:'sortByPoolRatio + domain filtresi', color:{color:'#7fc55b'}},
-  {from:'contentSelect', to:'gramEngine', label:'sortByPoolRatio', color:{color:'#7fc55b'}},
+  {from:'contentSelect', to:'vocabEngine', label:'sortByPoolRatio + domain uygula', color:{color:'#7fc55b'}},
+  {from:'contentSelect', to:'gramEngine', label:'sortByPoolRatio uygula', color:{color:'#7fc55b'}},
 
   {from:'profileStore', to:'profileEngine'},
   {from:'profileEngine', to:'contentSelect', label:'dal domain listesi'},
