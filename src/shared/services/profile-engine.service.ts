@@ -2,6 +2,7 @@ import type { LearningState, MissionModule } from '@/core/learning/learning.type
 
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import { GrammarEngine } from '@/shared/services/grammar.engine';
+import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { VocabularyEngine } from '@/shared/services/vocabulary.engine';
 import { VocabularyMenuService } from '@/shared/services/vocabulary-menu.service';
 import { logger } from '@/shared/logger';
@@ -215,9 +216,30 @@ export const LearningProfileEngine = {
     profile: UserLearningProfile,
     memory: VocabularyMemorySummary
   ): Promise<DailyMission[]> {
+    const intelligence = LearningIntelligenceService.load();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const recentMistakes = intelligence.mistakeLog.filter(
+      (e) => new Date(e.timestamp) >= sevenDaysAgo
+    );
+    // Count mistake frequency by category to weight skill selection
+    const mistakeCounts: Record<string, number> = {};
+    for (const entry of recentMistakes) {
+      const key = entry.category;
+      mistakeCounts[key] = (mistakeCounts[key] ?? 0) + 1;
+    }
+    const grammarMistakes = (mistakeCounts['grammar'] ?? 0) + (mistakeCounts['missing article'] ?? 0);
+    const vocabularyMistakes = (mistakeCounts['Vocabulary'] ?? 0) + (mistakeCounts['word choice'] ?? 0);
     const weakest = [...SKILL_NAMES]
       .map((skill) => profile.skills[skill])
-      .sort((a, b) => a.completedTasks - b.completedTasks || b.weaknessScore - a.weaknessScore)[0];
+      .sort((a, b) => {
+        // Weight by mistake frequency: grammar/vocabulary mistakes boost respective skills
+        const aMistakeBoost = a.skill === 'grammar' ? grammarMistakes * 2 : a.skill === 'vocabulary' ? vocabularyMistakes * 2 : 0;
+        const bMistakeBoost = b.skill === 'grammar' ? grammarMistakes * 2 : b.skill === 'vocabulary' ? vocabularyMistakes * 2 : 0;
+        const aScore = a.completedTasks - aMistakeBoost;
+        const bScore = b.completedTasks - bMistakeBoost;
+        return aScore - bScore || b.weaknessScore - a.weaknessScore;
+      })[0];
     const weakestLevel = toCefrLevel(weakest.cefrBand);
     const grammarLevel = toCefrLevel(profile.skills.grammar.cefrBand);
     const vocabularyLevel = toCefrLevel(profile.skills.vocabulary.cefrBand);
