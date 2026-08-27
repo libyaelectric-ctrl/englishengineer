@@ -50,7 +50,8 @@
     "check:licenses:reject": "license-checker --production --failOn 'GPL-3.0;AGPL-3.0'",
     "a11y:audit": "node scripts/a11y-audit.mjs",
     "content:validate": "node scripts/verify-release.mjs",
-    "check:dead-code": "knip --no-progress"
+    "check:dead-code": "knip --no-progress",
+    "check-languages": "node scripts/verify-language-completeness.mjs"
   },
   "engines": {
     "node": ">=22.0.0"
