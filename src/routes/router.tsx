@@ -241,14 +241,6 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: 'learning-plan',
-        element: <Navigate to="/progress" replace />,
-      },
-      {
-        path: 'beta-program',
-        element: <Navigate to="/dashboard" replace />,
-      },
-      {
         path: 'team',
         element: (
           <ErrorBoundary
