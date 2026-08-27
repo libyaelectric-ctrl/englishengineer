@@ -27,6 +27,7 @@
     "**/*.e2e.test.tsx",
     "tests/**",
     "backend/**",
+    "yap/**",
     "englishengineer/**"
   ]
 }

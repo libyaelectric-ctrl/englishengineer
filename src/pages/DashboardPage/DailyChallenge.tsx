@@ -323,6 +323,9 @@ export const DailyChallenge = memo(() => {
         <div className="flex items-center gap-2">
           <Target className="h-4 w-4 text-primary" />
           <h2 className="text-sm font-bold text-foreground">Daily Challenge</h2>
+          <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-600 uppercase tracking-wider">
+            Gamification
+          </span>
         </div>
         {isTodayCompleted && (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 text-green-500 text-[10px] font-bold">
@@ -331,6 +334,15 @@ export const DailyChallenge = memo(() => {
           </span>
         )}
       </div>
+
+      {/* Clarification banner */}
+      {state.status === 'idle' && !isTodayCompleted && (
+        <div className="rounded-[4px] bg-primary/5 border border-primary/15 px-3 py-2">
+          <p className="text-[10px] text-primary font-semibold">
+            Your personalized daily plan is in Curriculum → Today.
+          </p>
+        </div>
+      )}
 
       {/* Idle State */}
       {state.status === 'idle' && !isTodayCompleted && (

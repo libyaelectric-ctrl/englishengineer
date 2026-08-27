@@ -10,6 +10,8 @@ export interface PathStageColumnProps {
   /** Translated term-count label. */
   termsLabel: string;
   onSelectLevel: (levelId: string) => void;
+  /** When true, render levels top-to-bottom (default). When false, bottom-to-top (snake). */
+  reverse?: boolean;
 }
 
 /** One CEFR band column of the roadmap (Gantt-style stage). */
@@ -18,9 +20,12 @@ export const PathStageColumn = ({
   title,
   termsLabel,
   onSelectLevel,
+  reverse = false,
 }: PathStageColumnProps) => {
   const masteredRatio =
     stage.totalTerms > 0 ? Math.round((stage.masteredTerms / stage.totalTerms) * 100) : 0;
+
+  const levels = reverse ? [...stage.levels].reverse() : stage.levels;
 
   return (
     <div className="flex min-w-[7rem] flex-col items-center gap-4">
@@ -42,7 +47,7 @@ export const PathStageColumn = ({
         </div>
       </div>
       <div className="flex flex-col items-center gap-3">
-        {stage.levels.map((level, index) => (
+        {levels.map((level, index) => (
           <Fragment key={level.id}>
             {index > 0 && (
               <div className="h-3 w-0.5 shrink-0 rounded-full bg-[var(--color-border-soft)]" />
