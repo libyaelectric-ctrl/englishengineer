@@ -133,7 +133,7 @@ export const ScoreFeedbackOverlay = React.memo(
               <p className="mt-1 text-sm text-foreground leading-relaxed">{result.feedback}</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <p className="text-xs font-medium text-success">Strengths</p>
                 <ul className="mt-1 space-y-1 text-xs text-muted-copy">
