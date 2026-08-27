@@ -14,6 +14,7 @@ import { RequireAdminRole } from '@/features/auth/RequireAdminRole';
 import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
 import { CurriculumSectionGuard, SubscriptionRouteGuard } from '@/features/billing';
 import { OnboardingGate } from '@/features/profile';
+import { FEATURE_FLAGS } from '@/shared/feature-flags';
 
 import { RouteErrorPage } from './RouteErrorPage';
 
@@ -242,7 +243,7 @@ export const router = createBrowserRouter([
 
       {
         path: 'team',
-        element: (
+        element: FEATURE_FLAGS.TEAM_BETA ? (
           <ErrorBoundary
             fallback={
               <div className="flex min-h-screen items-center justify-center bg-surface text-foreground">
@@ -260,11 +261,15 @@ export const router = createBrowserRouter([
           >
             {withSuspense(Team)}
           </ErrorBoundary>
+        ) : (
+          <Navigate to="/dashboard" replace />
         ),
       },
       {
         path: 'team/members/:memberId',
-        element: withSuspense(TeamMember),
+        element: FEATURE_FLAGS.TEAM_BETA ? withSuspense(TeamMember) : (
+          <Navigate to="/dashboard" replace />
+        ),
       },
     ],
   },
