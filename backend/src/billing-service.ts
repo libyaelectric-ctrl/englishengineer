@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { logger } from './logger.js';
 
 import type { DodoConfig, PlanId } from '../types.js';
 import { emptySubscription, requireText } from './billing-helpers.js';

@@ -34,7 +34,7 @@ const redisGet = async (key: string): Promise<string | null> => {
     if (!response.ok) return null;
     const payload = (await response.json()) as { result?: string };
     return typeof payload?.result === 'string' ? payload.result : null;
-  } catch {
+  } catch { /* graceful degradation: cache miss */
     return null;
   }
 };
@@ -52,7 +52,7 @@ const redisSet = async (key: string, value: string, ttlSeconds: number): Promise
       signal: AbortSignal.timeout(3000),
     });
     return response.ok;
-  } catch {
+  } catch { /* graceful degradation: cache miss */
     return false;
   }
 };
@@ -71,7 +71,7 @@ export const getOrSet = async <T>(
   if (cached) {
     try {
       return { value: JSON.parse(cached) as T, fromCache: true };
-    } catch {
+    } catch { /* graceful degradation: cache miss */
       // fall through
     }
   }
@@ -108,7 +108,7 @@ export const invalidateCache = async (key: string): Promise<void> => {
         body: JSON.stringify(['DEL', key]),
         signal: AbortSignal.timeout(3000),
       });
-    } catch {
+    } catch { /* graceful degradation: cache miss */
       // Best effort
     }
   }
@@ -141,7 +141,7 @@ export const invalidateByPrefix = async (prefix: string): Promise<void> => {
           await redisSet(key, '', 1); // Set to expire immediately
         }
       }
-    } catch {
+    } catch { /* graceful degradation: cache miss */
       // Best effort
     }
   }

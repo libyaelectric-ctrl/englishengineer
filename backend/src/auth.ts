@@ -61,6 +61,7 @@ const verifyJwtLocally = async (
       ? { userId: payload.sub, email: payload.email, role: payload.role, source: 'local-jwt' }
       : null;
   } catch {
+    logger.warn('Failed to parse local JWT payload');
     return null;
   }
 };
@@ -141,6 +142,7 @@ const decodeClerkToken = (token: string): DecodedClerkToken | null => {
       signature: base64UrlBytes(signatureB64!),
     };
   } catch {
+    logger.warn('Failed to parse Clerk JWT parts');
     return null;
   }
 };
@@ -203,6 +205,7 @@ const verifyClerkToken = async (
     if (!valid) return null;
     return toAuthenticatedUser(decoded.payload);
   } catch {
+    logger.warn('Clerk JWT verification failed');
     return null;
   }
 };
