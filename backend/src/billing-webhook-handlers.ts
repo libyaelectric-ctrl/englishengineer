@@ -72,7 +72,7 @@ const buildSubscriptionUpdate = (
   stripeCustomerId: object.customer || current.stripeCustomerId,
   stripeSubscriptionId: object.id || current.stripeSubscriptionId,
   updatedAt: new Date().toISOString(),
-  source: 'stripe_webhook',
+  source: 'dodo_webhook',
 });
 
 const parsePeriodEnd = (object: WebhookObject): string | null => {
@@ -91,7 +91,7 @@ export const handleCheckoutCompleted = async (
     ...current,
     ...buildCheckoutUpdate(current, object),
     updatedAt: new Date().toISOString(),
-    source: 'stripe_webhook',
+    source: 'dodo_webhook',
   });
 };
 
@@ -132,7 +132,7 @@ export const handlePaymentFailed = async (
       status: 'past_due',
       gracePeriodEndsAt: null,
       updatedAt: new Date().toISOString(),
-      source: 'stripe_webhook',
+      source: 'dodo_webhook',
     });
     return;
   }
@@ -146,7 +146,7 @@ export const handlePaymentFailed = async (
     status: 'past_due',
     gracePeriodEndsAt: gracePeriodEndsAt.toISOString(),
     updatedAt: new Date().toISOString(),
-    source: 'stripe_webhook',
+    source: 'dodo_webhook',
   });
 };
 
@@ -163,6 +163,6 @@ export const handleSubscriptionDeleted = async (
     status: 'canceled',
     cancelAtPeriodEnd: false,
     updatedAt: new Date().toISOString(),
-    source: 'stripe_webhook',
+    source: 'dodo_webhook',
   });
 };
