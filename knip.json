@@ -1,0 +1,21 @@
+{
+  "$schema": "https://unjs.github.io/knip/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": ["api/translate.js"],
+      "ignoreDependencies": ["lint-staged"]
+    },
+    "backend": {
+      "entry": ["src/app.ts"]
+    }
+  },
+  "include": ["files", "dependencies"],
+  "ignoreFiles": [
+    "scripts/**",
+    "public/**",
+    ".lighthouserc.cjs",
+    "tests/**",
+    "backend/scripts/**",
+    "src/shared/types/analytics.types.ts"
+  ]
+}

@@ -5,25 +5,25 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - "docs/**"
-      - "**.md"
-      - ".vscode/**"
-      - "public/mascot/**"
-      - "public/agentic/**"
-      - "public/brand/**"
-      - "storybook-static/**"
-      - ".storybook/**"
+      - 'docs/**'
+      - '**.md'
+      - '.vscode/**'
+      - 'public/mascot/**'
+      - 'public/agentic/**'
+      - 'public/brand/**'
+      - 'storybook-static/**'
+      - '.storybook/**'
   pull_request:
     branches: [main]
     paths-ignore:
-      - "docs/**"
-      - "**.md"
-      - ".vscode/**"
-      - "public/mascot/**"
-      - "public/agentic/**"
-      - "public/brand/**"
-      - "storybook-static/**"
-      - ".storybook/**"
+      - 'docs/**'
+      - '**.md'
+      - '.vscode/**'
+      - 'public/mascot/**'
+      - 'public/agentic/**'
+      - 'public/brand/**'
+      - 'storybook-static/**'
+      - '.storybook/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -74,6 +74,9 @@ jobs:
 
       - name: Architecture Check
         run: npx depcruise src backend/src --config .dependency-cruiser.mjs
+
+      - name: Dead Code Detection
+        run: npm run check:dead-code
 
   # ─── Parallel: Tests (no dependency on quality) ───
   test:
