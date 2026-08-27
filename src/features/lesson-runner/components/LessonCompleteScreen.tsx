@@ -37,7 +37,7 @@ export const LessonCompleteScreen = ({
         </p>
       </div>
 
-      <div className="grid w-full max-w-sm grid-cols-2 gap-4">
+      <div className="grid w-full max-w-sm grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="rounded-2xl border border-amber-500/20 bg-black/40 p-4 text-center">
           <div className="flex items-center justify-center gap-1.5 text-2xl font-black text-yellow-300">
             <Zap className="h-5 w-5 text-yellow-300" />

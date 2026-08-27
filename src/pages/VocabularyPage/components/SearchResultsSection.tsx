@@ -149,7 +149,7 @@ export function SearchResultsSection({
                 className="mt-1 min-h-11 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
               />
             </label>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label className="text-sm font-semibold">
                 CEFR
                 <select
