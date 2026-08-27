@@ -1,9 +1,14 @@
 import {
+  type KnowledgePoolEntry,
+  sortContentByPoolRatio,
+} from '@/core/content-selection/personalized-content.service';
+import {
   type LearningDataSkill,
   type UserSkillProfile,
   includesNormalized,
   isCefrAtOrBelow,
 } from '@/core/learning';
+import { useLearningStore } from '@/core/learning/learning.store';
 
 import { GrammarProgressService } from '@/shared/services/grammar-progress.service';
 import { GrammarRepository } from '@/shared/services/grammar.repository';
@@ -47,7 +52,7 @@ export const GrammarEngine = {
     mix?: GrammarTaskMix
   ): Promise<GrammarRule[]> {
     const rules = await GrammarRepository.getGrammarRulesByLevel(level);
-    return applyTaskMix(
+    const filtered = applyTaskMix(
       rules.filter(
         (rule) =>
           this.validateGrammarEligibility(rule, skill, level) &&
@@ -56,6 +61,11 @@ export const GrammarEngine = {
       ),
       mix
     );
+    const pool: KnowledgePoolEntry[] = useLearningStore.getState().vocabularyPool.map((id) => ({
+      content_type: 'vocabulary',
+      content_id: id,
+    }));
+    return sortContentByPoolRatio(filtered, pool);
   },
 
   selectGrammarForUserProfile(

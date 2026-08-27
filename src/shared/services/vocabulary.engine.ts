@@ -1,7 +1,12 @@
+import {
+  type KnowledgePoolEntry,
+  sortContentByPoolRatio,
+} from '@/core/content-selection/personalized-content.service';
 import { type LearningDataSkill, includesNormalized, isCefrAtOrBelow } from '@/core/learning';
+import { useLearningStore } from '@/core/learning/learning.store';
 
-import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import { resolveTermMeaningAsync } from '@/shared/services/vocabulary-translation.service';
+import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import type { CefrLevel } from '@/shared/types/domain.types';
 import type { GrammarRule } from '@/shared/types/grammar.types';
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
@@ -17,7 +22,7 @@ export const VocabularyEngine = {
   ): Promise<VocabularyTerm[]> {
     const terms = await VocabularyRepository.getVocabularyByLevel(level);
     const activeDomains = domains && domains.length > 0 ? domains : domain ? [domain] : undefined;
-    return terms.filter(
+    const filtered = terms.filter(
       (term) =>
         this.validateVocabularyEligibility(term, skill, level) &&
         (!activeDomains ||
@@ -25,6 +30,11 @@ export const VocabularyEngine = {
         (!contentDomain || term.contentDomain.toLowerCase() === contentDomain.toLowerCase()) &&
         (!lifeContext || term.lifeContext.toLowerCase() === lifeContext.toLowerCase())
     );
+    const pool: KnowledgePoolEntry[] = useLearningStore.getState().vocabularyPool.map((id) => ({
+      content_type: 'vocabulary',
+      content_id: id,
+    }));
+    return sortContentByPoolRatio(filtered, pool);
   },
 
   async selectVocabularyForGrammar(
