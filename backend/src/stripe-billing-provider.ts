@@ -256,6 +256,14 @@ export const createStripeBillingProvider = ({
         cancel_url: body.cancelUrl,
         client_reference_id: userId,
         metadata: { userId, planId },
+        // IMPORTANT: Stripe does NOT copy Checkout Session metadata onto the
+        // Subscription object it creates. Without this, every later webhook
+        // whose payload is the Subscription itself (customer.subscription.
+        // created/updated/deleted) or an Invoice for it has no way to resolve
+        // which app user it belongs to, so those events are silently dropped.
+        subscription_data: {
+          metadata: { userId, planId },
+        },
       });
       if (!session.url) {
         throw new ApiError(502, 'stripe_invalid_response', 'Stripe did not return a checkout URL.');

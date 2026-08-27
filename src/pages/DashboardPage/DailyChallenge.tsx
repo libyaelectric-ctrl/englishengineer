@@ -15,6 +15,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useLearningStore } from '@/core/learning';
 
+import { useLocalizationStore } from '@/features/localization';
 import { VocabularyRepository } from '@/features/vocabulary';
 
 interface ChallengeQuestion {
@@ -187,6 +188,7 @@ const saveChallengeState = (state: ChallengeState): void => {
 
 export const DailyChallenge = memo(() => {
   const streak = useLearningStore((s) => s.streak);
+  const translate = useLocalizationStore((s) => s.translate);
 
   const [state, setState] = useState<ChallengeState>(
     () =>
@@ -324,7 +326,7 @@ export const DailyChallenge = memo(() => {
           <Target className="h-4 w-4 text-primary" />
           <h2 className="text-sm font-bold text-foreground">Daily Challenge</h2>
           <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-600 uppercase tracking-wider">
-            Gamification
+            {translate('dailyChallenge.gamification')}
           </span>
         </div>
         {isTodayCompleted && (
@@ -339,7 +341,7 @@ export const DailyChallenge = memo(() => {
       {state.status === 'idle' && !isTodayCompleted && (
         <div className="rounded-[4px] bg-primary/5 border border-primary/15 px-3 py-2">
           <p className="text-[10px] text-primary font-semibold">
-            Your personalized daily plan is in Curriculum → Today.
+            {translate('dailyChallenge.planInCurriculum')}
           </p>
         </div>
       )}

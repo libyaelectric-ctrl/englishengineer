@@ -825,6 +825,8 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'ELO/week',
     'progress.estTarget': '⏱️ Est. ~3.8 weeks to C1 Target',
     'curriculum.todaysBestTask': "Today's Best Task",
+    'dailyChallenge.gamification': 'Gamification',
+    'dailyChallenge.planInCurriculum': 'Your personalized daily plan is in Curriculum → Today.',
     ...PIPELINE_EN,
   },
   tr: {
@@ -837,6 +839,9 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'ELO/hafta',
     'progress.estTarget': '⏱️ C1 hedefine tahmini ~3.8 hafta',
     'curriculum.todaysBestTask': 'Bugünün En İyi Görevi',
+    'dailyChallenge.gamification': 'Oyunlaştırma',
+    'dailyChallenge.planInCurriculum':
+      'Kişiselleştirilmiş günlük planın Curriculum → Bugün bölümünde.',
     ...PIPELINE_TR,
   },
   ar: {
@@ -849,6 +854,8 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'نقطة/أسبوع',
     'progress.estTarget': '⏱️ حوالي 3.8 أسابيع للوصول إلى هدف C1',
     'curriculum.todaysBestTask': 'أفضل مهمة اليوم',
+    'dailyChallenge.gamification': 'الترفيه',
+    'dailyChallenge.planInCurriculum': 'خطتك اليومية المخصصة في Curriculum → اليوم.',
     ...PIPELINE_AR,
   },
   de: {
@@ -861,6 +868,8 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'ELO/Woche',
     'progress.estTarget': '⏱️ Geschätzt ~3,8 Wochen bis zum C1-Ziel',
     'curriculum.todaysBestTask': 'Beste Aufgabe des Tages',
+    'dailyChallenge.gamification': 'Gamification',
+    'dailyChallenge.planInCurriculum': 'Dein persönlicher Tagesplan ist in Curriculum → Heute.',
     ...PIPELINE_DE,
   },
   es: {
@@ -873,6 +882,8 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'ELO/semana',
     'progress.estTarget': '⏱️ Estimado ~3.8 semanas para el objetivo C1',
     'curriculum.todaysBestTask': 'Mejor Tarea de Hoy',
+    'dailyChallenge.gamification': 'Gamificación',
+    'dailyChallenge.planInCurriculum': 'Tu plan diario personalizado está en Curriculum → Hoy.',
     ...PIPELINE_ES,
   },
   pt: {
@@ -885,6 +896,8 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'ELO/semana',
     'progress.estTarget': '⏱️ Estimado ~3,8 semanas para a meta C1',
     'curriculum.todaysBestTask': 'Melhor Tarefa de Hoje',
+    'dailyChallenge.gamification': 'Gamificação',
+    'dailyChallenge.planInCurriculum': 'Seu plano diário personalizado está em Curriculum → Hoje.',
     ...PIPELINE_PT,
   },
   fr: {
@@ -898,6 +911,9 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'ELO/semaine',
     'progress.estTarget': "⏱️ Estimé ~3,8 semaines pour l'objectif C1",
     'curriculum.todaysBestTask': 'Meilleure Tâche du Jour',
+    'dailyChallenge.gamification': 'Ludification',
+    'dailyChallenge.planInCurriculum':
+      "Votre plan quotidien personnalisé est dans Curriculum → Aujourd'hui.",
     ...PIPELINE_FR,
   },
   ru: {
@@ -911,6 +927,8 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'ELO/неделю',
     'progress.estTarget': '⏱️ Приблизительно ~3,8 недели до цели C1',
     'curriculum.todaysBestTask': 'Лучшее задание на сегодня',
+    'dailyChallenge.gamification': 'Игрофикация',
+    'dailyChallenge.planInCurriculum': 'Ваш персональный план на сегодня в Curriculum → Сегодня.',
     ...PIPELINE_RU,
   },
   zh: {
@@ -923,6 +941,8 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'ELO/周',
     'progress.estTarget': '⏱️ 预计约 3.8 周达到 C1 目标',
     'curriculum.todaysBestTask': '今日最佳任务',
+    'dailyChallenge.gamification': '游戏化',
+    'dailyChallenge.planInCurriculum': '您的个性化每日计划在 Curriculum → 今天。',
     ...PIPELINE_ZH,
   },
   ja: {
@@ -935,6 +955,9 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'ELO/週',
     'progress.estTarget': '⏱️ C1 目標まで推定約 3.8 週間',
     'curriculum.todaysBestTask': '今日のベストタスク',
+    'dailyChallenge.gamification': 'ゲーミフィケーション',
+    'dailyChallenge.planInCurriculum':
+      'あなたのパーソナライズされた毎日の計画は Curriculum → 今日 にあります。',
     ...PIPELINE_JA,
   },
   it: {
@@ -948,6 +971,9 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'ELO/settimana',
     'progress.estTarget': "⏱️ Stimato ~3,8 settimane per l'obiettivo C1",
     'curriculum.todaysBestTask': 'Migliore Attività di Oggi',
+    'dailyChallenge.gamification': 'Gamificazione',
+    'dailyChallenge.planInCurriculum':
+      'Il tuo piano giornaliero personalizzato è in Curriculum → Oggi.',
     ...PIPELINE_IT,
   },
   vi: {
@@ -961,6 +987,9 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'ELO/tuần',
     'progress.estTarget': '⏱️ Ước tính ~3,8 tuần để đạt mục tiêu C1',
     'curriculum.todaysBestTask': 'Nhiệm vụ tốt nhất hôm nay',
+    'dailyChallenge.gamification': 'Trò chơi hóa',
+    'dailyChallenge.planInCurriculum':
+      'Kế hoạch hàng ngày cá nhân hóa của bạn nằm ở Curriculum → Hôm nay.',
     ...PIPELINE_VI,
   },
   pl: {
@@ -973,6 +1002,9 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'ELO/tydzień',
     'progress.estTarget': '⏱️ Szacunkowo ~3,8 tygodnia do celu C1',
     'curriculum.todaysBestTask': 'Najlepsze zadanie dnia',
+    'dailyChallenge.gamification': 'Gryfikacja',
+    'dailyChallenge.planInCurriculum':
+      'Twój spersonalizowany plan na dziś znajdziesz w Curriculum → Dziś.',
     ...PIPELINE_PL,
   },
   id: {
@@ -985,6 +1017,8 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'ELO/minggu',
     'progress.estTarget': '⏱️ Estimasi ~3,8 minggu untuk target C1',
     'curriculum.todaysBestTask': 'Tugas Terbaik Hari Ini',
+    'dailyChallenge.gamification': 'Gamifikasi',
+    'dailyChallenge.planInCurriculum': 'Rencana harian personal Anda ada di Curriculum → Hari Ini.',
     ...PIPELINE_ID,
   },
   nl: {
@@ -997,6 +1031,9 @@ export const EXTRA_UI_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<st
     'progress.velocityUnit': 'ELO/week',
     'progress.estTarget': '⏱️ Geschat ~3,8 weken tot het C1-doel',
     'curriculum.todaysBestTask': 'Beste taak van vandaag',
+    'dailyChallenge.gamification': 'Gamification',
+    'dailyChallenge.planInCurriculum':
+      'Je gepersonaliseerde dagplan staat in Curriculum → Vandaag.',
     ...PIPELINE_NL,
   },
 };

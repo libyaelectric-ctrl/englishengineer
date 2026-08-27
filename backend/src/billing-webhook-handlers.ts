@@ -11,6 +11,10 @@ export interface WebhookObject {
   current_period_end?: number;
   cancel_at_period_end?: boolean;
   id?: string;
+  // Present on some Invoice payloads in newer Stripe API versions; mirrors
+  // the metadata of the Subscription the invoice belongs to. Used as a
+  // fallback when the invoice's own top-level metadata is empty.
+  subscription_details?: { metadata?: Record<string, string> };
 }
 
 export interface BillingRepository {
@@ -21,7 +25,10 @@ export interface BillingRepository {
 }
 
 const getUserId = (object: WebhookObject): string | null =>
-  object.metadata?.userId || object.client_reference_id || null;
+  object.metadata?.userId ||
+  object.client_reference_id ||
+  object.subscription_details?.metadata?.userId ||
+  null;
 
 const buildCheckoutUpdate = (current: SubscriptionSnapshot, object: WebhookObject) => {
   const meta = object.metadata ?? {};

@@ -208,13 +208,25 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
     Boolean
   ) as string[];
 
-  const allowedOrigins = [
-    ...new Set([
-      ...configuredOrigins,
-      'https://engvox.com',
-      'https://www.engvox.com',
-    ]),
-  ].filter(Boolean) as string[];
+  // Automatically allow the www./non-www. counterpart of every configured
+  // origin, so a domain migration only requires updating APP_ORIGIN (and/or
+  // CORS_ALLOWED_ORIGINS) — no code change or redeploy-of-a-hardcoded-list
+  // is needed. This is what actually caused a production outage previously:
+  // the origin was migrated but the old hardcoded fallback here still only
+  // matched the old domain.
+  const withWwwVariants = configuredOrigins.flatMap((origin) => {
+    try {
+      const url = new URL(origin);
+      const alt = url.hostname.startsWith('www.')
+        ? `${url.protocol}//${url.hostname.slice(4)}${url.port ? `:${url.port}` : ''}`
+        : `${url.protocol}//www.${url.hostname}${url.port ? `:${url.port}` : ''}`;
+      return [origin, alt];
+    } catch {
+      return [origin];
+    }
+  });
+
+  const allowedOrigins = [...new Set(withWwwVariants)].filter(Boolean) as string[];
 
   if (config.environment === 'production') {
     // Force HTTPS for all non-GET requests

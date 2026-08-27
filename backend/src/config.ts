@@ -24,6 +24,11 @@ export const createBackendConfig = (environment: Env = process.env): BackendConf
     appOrigin: environment.APP_ORIGIN || 'http://localhost:3000',
     environment: runtimeEnv,
     version: environment.APP_VERSION || '4.0.22',
+    corsAllowedOrigins: hasText(environment.CORS_ALLOWED_ORIGINS)
+      ? environment.CORS_ALLOWED_ORIGINS!.split(',')
+          .map((origin) => origin.trim())
+          .filter(Boolean)
+      : [],
     sentry: {
       dsn: hasText(environment.SENTRY_DSN) ? environment.SENTRY_DSN!.trim() : null,
       environment: runtimeEnv,
