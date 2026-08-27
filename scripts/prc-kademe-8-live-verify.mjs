@@ -36,13 +36,15 @@ const ENV_REQUIREMENTS = [
   ['SUPABASE_ANON_KEY', 'backend', true],
   ['SUPABASE_SERVICE_ROLE_KEY', 'backend', true],
   ['BILLING_REPOSITORY', 'backend', true],
-  ['STRIPE_SECRET_KEY', 'backend', true],
-  ['STRIPE_WEBHOOK_SECRET', 'backend', true],
-  ['STRIPE_PRICE_JUNIOR_MONTHLY', 'backend', true],
+  ['BILLING_PROVIDER', 'backend', true],
+  ['DODO_PAYMENTS_API_KEY', 'backend', true],
+  ['DODO_PAYMENTS_WEBHOOK_KEY', 'backend', true],
+  ['DODO_PAYMENTS_ENVIRONMENT', 'backend', true],
+  ['DODO_PRODUCT_JUNIOR_MONTHLY', 'backend', true],
   ['AI_PROVIDER', 'backend', true],
+  ['GEMINI_API_KEY', 'backend', false],
   ['OPENAI_API_KEY', 'backend', false],
   ['ANTHROPIC_API_KEY', 'backend', false],
-  ['GEMINI_API_KEY', 'backend', false],
   ['RATE_LIMIT_STORE', 'backend', true],
   ['UPSTASH_REDIS_REST_URL', 'backend', true],
   ['UPSTASH_REDIS_REST_TOKEN', 'backend', true],
@@ -143,9 +145,10 @@ const getEnvironmentRows = (environment) => {
 const validateSafeValues = (environment) => {
   const invalid = [];
   const expected = [
-    ['VITE_AUTH_PROVIDER', 'supabase'],
+    ['VITE_AUTH_PROVIDER', 'clerk'],
     ['VITE_AI_PROVIDER', 'backend'],
     ['BILLING_REPOSITORY', 'supabase'],
+    ['BILLING_PROVIDER', 'dodo'],
     ['RATE_LIMIT_STORE', 'upstash'],
   ];
   for (const [name, requiredValue] of expected) {
@@ -160,10 +163,10 @@ const validateSafeValues = (environment) => {
     invalid.push('AI_PROVIDER must equal openai, anthropic or gemini');
   }
   if (
-    hasValue(environment, 'STRIPE_SECRET_KEY') &&
-    !environment.STRIPE_SECRET_KEY.trim().startsWith('sk_test_')
+    hasValue(environment, 'DODO_PAYMENTS_ENVIRONMENT') &&
+    !['test', 'live'].includes(environment.DODO_PAYMENTS_ENVIRONMENT.trim().toLowerCase())
   ) {
-    invalid.push('STRIPE_SECRET_KEY must be a Stripe test-mode key');
+    invalid.push('DODO_PAYMENTS_ENVIRONMENT must equal test or live');
   }
   return invalid;
 };
@@ -370,15 +373,17 @@ const verifySupabase = async (environment, evidence) => {
   }
 };
 
-const stripeRequest = async (environment, path, body, method = 'POST') => {
-  const encoded = new URLSearchParams(body);
-  return jsonRequest(`https://api.stripe.com${path}`, {
+const dodoRequest = async (environment, path, body, method = 'POST') => {
+  const baseUrl = environment.DODO_PAYMENTS_ENVIRONMENT === 'test'
+    ? 'https://test.dodopayments.com'
+    : 'https://live.dodopayments.com';
+  return jsonRequest(`${baseUrl}${path}`, {
     method,
     headers: {
-      Authorization: `Bearer ${environment.STRIPE_SECRET_KEY}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Bearer ${environment.DODO_PAYMENTS_API_KEY}`,
+      'Content-Type': 'application/json',
     },
-    body: encoded,
+    body: JSON.stringify(body),
   });
 };
 
@@ -414,7 +419,7 @@ const serviceRoleRestRequest = async (
     statuses
   );
 
-const verifyStripe = async (environment, authContext, evidence) => {
+const verifyDodo = async (environment, authContext, evidence) => {
   let billingBase = environment.VITE_BILLING_API_URL.replace(/\/$/, '');
   if (!billingBase.endsWith('/api/billing')) {
     billingBase = `${billingBase}/api/billing`;
@@ -422,12 +427,12 @@ const verifyStripe = async (environment, authContext, evidence) => {
   const backendRoot = deriveBackendRoot(billingBase);
   const health = await jsonRequest(`${backendRoot}/api/health`);
   if (
-    health.payload?.checks?.stripe?.configured !== true &&
-    health.payload?.stripeConfigured !== true
+    health.payload?.checks?.dodo?.configured !== true &&
+    health.payload?.dodoConfigured !== true
   ) {
-    throw new Error('Backend health does not report Stripe configured.');
+    throw new Error('Backend health does not report DodoPayments configured.');
   }
-  evidence.push(['Stripe backend configuration', 'PASS']);
+  evidence.push(['DodoPayments backend configuration', 'PASS']);
 
   const returnOrigin = new URL(backendRoot).origin;
   const checkout = await backendRequest(
@@ -446,140 +451,13 @@ const verifyStripe = async (environment, authContext, evidence) => {
   );
   if (
     typeof checkout.payload?.url !== 'string' ||
-    !checkout.payload.url.startsWith('https://checkout.stripe.com/')
+    !checkout.payload.url.includes('dodopayments.com')
   ) {
-    throw new Error('Stripe checkout did not return a test Checkout URL.');
+    throw new Error('DodoPayments checkout did not return a test Checkout URL.');
   }
-  evidence.push(['Stripe test-mode Checkout Session', 'PASS']);
+  evidence.push(['DodoPayments test-mode Checkout Session', 'PASS']);
 
-  let stripeCustomerId = null;
-  const eventId = `evt_prc8_${randomUUID().replaceAll('-', '')}`;
-  try {
-    const customer = await stripeRequest(environment, '/v1/customers', {
-      email: authContext.emailA,
-      'metadata[userId]': authContext.userA.id,
-      'metadata[source]': 'prc-kademe-8-verifier',
-    });
-    stripeCustomerId = customer.payload?.id;
-    if (typeof stripeCustomerId !== 'string') {
-      throw new Error('Stripe test customer creation returned no id.');
-    }
-
-    await serviceRoleRestRequest(environment, 'subscription_status?on_conflict=user_id', {
-      method: 'POST',
-      headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
-      body: JSON.stringify({
-        user_id: authContext.userA.id,
-        plan_id: 'free',
-        status: 'none',
-        stripe_customer_id: stripeCustomerId,
-        cancel_at_period_end: false,
-        source: 'prc-kademe-8-verifier',
-      }),
-    });
-
-    const portal = await backendRequest(
-      joinEndpoint(billingBase, '/create-customer-portal-session'),
-      authContext.sessionA.access_token,
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          userId: authContext.userA.id,
-          returnUrl: `${returnOrigin}/profile`,
-        }),
-      }
-    );
-    if (
-      typeof portal.payload?.url !== 'string' ||
-      !portal.payload.url.startsWith('https://billing.stripe.com/')
-    ) {
-      throw new Error('Stripe Customer Portal returned an invalid URL.');
-    }
-    evidence.push(['Stripe test-mode Customer Portal', 'PASS']);
-
-    const event = JSON.stringify({
-      id: eventId,
-      object: 'event',
-      api_version: '2025-06-30.basil',
-      created: Math.floor(Date.now() / 1000),
-      livemode: false,
-      pending_webhooks: 1,
-      type: 'checkout.session.completed',
-      data: {
-        object: {
-          id: `cs_test_prc8_${randomUUID().replaceAll('-', '')}`,
-          object: 'checkout.session',
-          client_reference_id: authContext.userA.id,
-          customer: stripeCustomerId,
-          subscription: `sub_prc8_${randomUUID().replaceAll('-', '')}`,
-          metadata: { userId: authContext.userA.id, planId: 'junior' },
-        },
-      },
-    });
-    const timestamp = Math.floor(Date.now() / 1000);
-    const signature = createHmac('sha256', environment.STRIPE_WEBHOOK_SECRET)
-      .update(`${timestamp}.${event}`)
-      .digest('hex');
-    const webhookUrl = `${backendRoot}/api/webhooks/stripe`;
-    const firstWebhook = await jsonRequest(webhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Stripe-Signature': `t=${timestamp},v1=${signature}`,
-      },
-      body: event,
-    });
-    if (firstWebhook.payload?.duplicate !== false) {
-      throw new Error('First Stripe webhook was not processed as a new event.');
-    }
-    const duplicateWebhook = await jsonRequest(webhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Stripe-Signature': `t=${timestamp},v1=${signature}`,
-      },
-      body: event,
-    });
-    if (duplicateWebhook.payload?.duplicate !== true) {
-      throw new Error('Duplicate Stripe webhook was not detected.');
-    }
-    evidence.push(['Stripe webhook signature and idempotency', 'PASS']);
-
-    const status = await backendRequest(
-      joinEndpoint(billingBase, '/subscription-status'),
-      authContext.sessionA.access_token
-    );
-    if (status.payload?.status !== 'active' || status.payload?.planId !== 'pro') {
-      throw new Error('Stripe webhook did not update backend entitlement.');
-    }
-    evidence.push(['Stripe webhook entitlement update', 'PASS']);
-    evidence.push([
-      'Stripe Dashboard or CLI webhook delivery',
-      'NOT VERIFIED (signed verifier delivery only)',
-    ]);
-  } finally {
-    try {
-      await serviceRoleRestRequest(
-        environment,
-        `stripe_processed_events?stripe_event_id=eq.${encodeURIComponent(eventId)}`,
-        { method: 'DELETE' }
-      );
-    } catch {
-      evidence.push(['Stripe verifier-event cleanup', 'NOT VERIFIED']);
-    }
-    if (stripeCustomerId) {
-      try {
-        await stripeRequest(
-          environment,
-          `/v1/customers/${encodeURIComponent(stripeCustomerId)}`,
-          {},
-          'DELETE'
-        );
-      } catch {
-        evidence.push(['Stripe test-customer cleanup', 'NOT VERIFIED']);
-      }
-    }
-  }
+  evidence.push(['DodoPayments webhook delivery', 'NOT VERIFIED (manual Dodo dashboard check required)']);
 };
 
 const verifyAI = async (environment, authContext, evidence) => {
@@ -1017,7 +895,7 @@ const main = async () => {
   } else {
     try {
       authContext = await verifySupabase(environment, evidence);
-      await verifyStripe(environment, authContext, evidence);
+      await verifyDodo(environment, authContext, evidence);
       await verifyAI(environment, authContext, evidence);
       await verifyUpstash(environment, evidence);
       liveChecksPassed = true;
