@@ -56,7 +56,7 @@ export const InterviewView = ({
               size="icon"
               onClick={resetInterview}
               aria-label="Reset interview"
-              className="h-8 w-8 rounded-[4px] cursor-pointer border-border-soft hover:bg-primary/5 hover:text-primary"
+              className="min-h-11 min-w-11 rounded-[4px] cursor-pointer border-border-soft hover:bg-primary/5 hover:text-primary"
             >
               <RotateCcw className="h-4 w-4" />
             </Button>
