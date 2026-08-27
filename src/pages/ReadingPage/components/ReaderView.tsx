@@ -47,7 +47,7 @@ export const ReaderView = ({ title, content, onWordClick }: ReaderViewProps) => 
               <button
                 key={btn.rate}
                 onClick={() => setSelectedRate(btn.rate)}
-                className={`rounded-[4px] px-2 py-1 text-[10px] font-bold transition ${
+                className={`rounded-[4px] px-2.5 min-h-9 text-[10px] font-bold transition ${
                   selectedRate === btn.rate
                     ? 'bg-primary text-primary-foreground'
                     : 'border border-border-soft text-muted-copy hover:text-foreground'
@@ -59,7 +59,7 @@ export const ReaderView = ({ title, content, onWordClick }: ReaderViewProps) => 
           </div>
           <button
             onClick={() => (isSpeaking ? stopSpeaking() : speak(content, selectedRate))}
-            className="flex items-center gap-1 rounded-[4px] border border-border-soft px-2.5 py-1 text-[10px] font-bold text-foreground transition hover:bg-surface-hover"
+            className="flex items-center gap-1 rounded-[4px] border border-border-soft px-2.5 min-h-9 text-[10px] font-bold text-foreground transition hover:bg-surface-hover"
           >
             <Volume2 className="h-3 w-3" />
             {isSpeaking ? 'Stop' : 'Listen'}
