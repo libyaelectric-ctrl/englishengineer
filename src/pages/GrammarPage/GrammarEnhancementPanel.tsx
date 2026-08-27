@@ -313,7 +313,7 @@ export const GrammarEnhancementPanel = ({
               key={id}
               type="button"
               onClick={() => setMode(id)}
-              className={`inline-flex min-h-9 items-center justify-center gap-1.5 rounded-[4px] border px-2 text-[10px] font-bold uppercase tracking-wide transition-colors ${
+              className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-[4px] border px-2 text-[10px] font-bold uppercase tracking-wide transition-colors ${
                 mode === id
                   ? 'border-primary bg-primary text-white'
                   : 'border-border-soft bg-background text-muted-copy hover:border-primary/40 hover:text-primary'

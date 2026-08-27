@@ -122,7 +122,7 @@ const ListeningPage = () => {
                     key={cat}
                     type="button"
                     onClick={() => setCategoryFilter(cat)}
-                    className={`min-h-9 rounded-[4px] px-3.5 text-xs font-bold transition-all cursor-pointer border ${
+                    className={`min-h-11 rounded-[4px] px-3.5 text-xs font-bold transition-all cursor-pointer border ${
                       categoryFilter === cat
                         ? 'bg-primary border-primary text-primary-foreground shadow-sm'
                         : 'text-muted-copy border-border-soft bg-surface hover:bg-primary/5 hover:text-primary'

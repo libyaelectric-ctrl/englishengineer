@@ -1,11 +1,4 @@
-import {
-  CheckCircle2,
-  FileText,
-  Gauge,
-  KeyRound,
-  ListChecks,
-  RefreshCw,
-} from 'lucide-react';
+import { CheckCircle2, FileText, Gauge, KeyRound, ListChecks, RefreshCw } from 'lucide-react';
 
 import { useState } from 'react';
 
@@ -20,7 +13,7 @@ import type {
 } from '@/features/listening/listening.types';
 
 import { AnimatedScore } from './AnimatedScore';
-import { QuestionField, type Question } from './QuestionField';
+import { type Question, QuestionField } from './QuestionField';
 
 export function WorkspaceView({
   currentMission,
@@ -78,7 +71,7 @@ export function WorkspaceView({
               key={speed}
               type="button"
               onClick={() => setPlaybackSpeed(speed)}
-              className={`rounded-[4px] px-3 py-1.5 text-xs font-bold transition-colors cursor-pointer border ${
+              className={`rounded-[4px] px-3 py-2.5 min-h-11 text-xs font-bold transition-colors cursor-pointer border ${
                 playbackSpeed === speed
                   ? 'bg-primary text-primary-foreground border-primary'
                   : 'bg-surface-hover border-border-soft text-muted-copy hover:bg-primary/5 hover:text-primary'
