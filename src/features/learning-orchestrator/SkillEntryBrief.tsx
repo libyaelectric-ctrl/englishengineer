@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
 
-import { LearningProfileEngine } from '@/shared/services/learning-profile-engine.service';
+import { LearningProfileEngine } from '@/shared/services/profile-engine.service';
 import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
 import type { SkillName } from '@/shared/types/domain.types';
 
