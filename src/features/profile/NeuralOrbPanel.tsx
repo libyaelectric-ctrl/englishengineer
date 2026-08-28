@@ -2,6 +2,8 @@ import type * as THREE from 'three';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { logger } from '@/shared/logger';
+
 import { useLearningStore } from '@/core/learning';
 
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
@@ -194,7 +196,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
       try {
         r = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       } catch {
-        console.warn('[NeuralOrbPanel] WebGL unavailable');
+        logger.w('[NeuralOrbPanel] WebGL unavailable');
         return;
       }
       r.setSize(el.clientWidth, el.clientHeight);

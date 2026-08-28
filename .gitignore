@@ -169,3 +169,8 @@ opencode.json
 ```
 monitoring/grafana_data/
 monitoring/prometheus_data/
+
+# Runtime dirs (must not be committed)
+logs/
+test/
+uploads/
