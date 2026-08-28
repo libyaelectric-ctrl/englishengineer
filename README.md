@@ -41,6 +41,7 @@ cp .env.example .env.local
 | `SUPABASE_SERVICE_ROLE_KEY`  | ⚠️       | Supabase service role key (optional)                                           |
 | `DODO_PAYMENTS_API_KEY`      | ⚠️       | Dodo Payments API key (test mode)                                              |
 | `DODO_PAYMENTS_WEBHOOK_KEY`  | ⚠️       | Dodo Payments webhook secret                                                   |
+| `METRICS_TOKEN`              | \-       | Optional: bearer token protecting `/api/metrics` (recommended in production)   |
 
 ### Development
 

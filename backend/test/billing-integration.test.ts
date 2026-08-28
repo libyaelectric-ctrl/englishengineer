@@ -12,7 +12,6 @@
  *
  * All tests run locally with mocked external services — no real API calls.
  */
-
 import assert from 'node:assert/strict';
 import { createHmac } from 'node:crypto';
 import { describe, test } from 'node:test';
@@ -21,8 +20,8 @@ import { createApp } from '../src/app.js';
 import { createBackendConfig } from '../src/config.js';
 import { createDodoBillingProvider } from '../src/dodo-billing-provider.js';
 import { ApiError } from '../src/errors.js';
-import type { DodoConfig, SubscriptionSnapshot } from '../types.js';
 import { createMemorySubscriptionRepository } from '../src/subscription-repository.js';
+import type { DodoConfig, SubscriptionSnapshot } from '../types.js';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -98,7 +97,11 @@ describe('Checkout Sessions', () => {
   const PLANS = [
     { planId: 'junior' as const, monthly: 'pdt_junior_monthly', annual: 'pdt_junior_annual' },
     { planId: 'senior' as const, monthly: 'pdt_senior_monthly', annual: 'pdt_senior_annual' },
-    { planId: 'specialist' as const, monthly: 'pdt_specialist_monthly', annual: 'pdt_specialist_annual' },
+    {
+      planId: 'specialist' as const,
+      monthly: 'pdt_specialist_monthly',
+      annual: 'pdt_specialist_annual',
+    },
     { planId: 'master' as const, monthly: 'pdt_master_monthly', annual: 'pdt_master_annual' },
     { planId: 'team' as const, monthly: 'pdt_team_monthly', annual: 'pdt_team_annual' },
   ];
@@ -106,7 +109,9 @@ describe('Checkout Sessions', () => {
   for (const { planId, monthly, annual } of PLANS) {
     test(`${planId} monthly checkout sends correct product ID`, async () => {
       const { impl, calls } = makeFetch([
-        { body: { session_id: `cks_${planId}_m`, checkout_url: `https://checkout.dodo/${planId}` } },
+        {
+          body: { session_id: `cks_${planId}_m`, checkout_url: `https://checkout.dodo/${planId}` },
+        },
       ]);
       const provider = createDodoBillingProvider({
         config: makeDodoConfig(),
@@ -130,7 +135,12 @@ describe('Checkout Sessions', () => {
 
     test(`${planId} annual checkout sends correct product ID`, async () => {
       const { impl, calls } = makeFetch([
-        { body: { session_id: `cks_${planId}_a`, checkout_url: `https://checkout.dodo/${planId}_annual` } },
+        {
+          body: {
+            session_id: `cks_${planId}_a`,
+            checkout_url: `https://checkout.dodo/${planId}_annual`,
+          },
+        },
       ]);
       const provider = createDodoBillingProvider({
         config: makeDodoConfig(),
@@ -236,7 +246,7 @@ describe('Checkout Sessions', () => {
     const provider = createDodoBillingProvider({
       config: makeDodoConfig({ configured: false, apiKey: null, baseUrl: null }),
       repository: createMemorySubscriptionRepository(),
-      fetchImpl: (async () => ({})) as typeof fetch,
+      fetchImpl: (async () => ({})) as unknown as typeof fetch,
     });
 
     assert.equal(provider.configured, false);
@@ -721,14 +731,26 @@ describe('Subscription Status Repository', () => {
   test('upsert overwrites existing subscription', async () => {
     const repo = createMemorySubscriptionRepository();
     const first: SubscriptionSnapshot = {
-      planId: 'junior', status: 'active', currentPeriodEnd: null,
-      cancelAtPeriodEnd: false, stripeCustomerId: 'cus_1', stripeSubscriptionId: 'sub_1',
-      updatedAt: '2026-01-01', source: 'test', topupCredits: 0,
+      planId: 'junior',
+      status: 'active',
+      currentPeriodEnd: null,
+      cancelAtPeriodEnd: false,
+      stripeCustomerId: 'cus_1',
+      stripeSubscriptionId: 'sub_1',
+      updatedAt: '2026-01-01',
+      source: 'test',
+      topupCredits: 0,
     };
     const second: SubscriptionSnapshot = {
-      planId: 'master', status: 'active', currentPeriodEnd: null,
-      cancelAtPeriodEnd: false, stripeCustomerId: 'cus_2', stripeSubscriptionId: 'sub_2',
-      updatedAt: '2026-02-01', source: 'test', topupCredits: 50,
+      planId: 'master',
+      status: 'active',
+      currentPeriodEnd: null,
+      cancelAtPeriodEnd: false,
+      stripeCustomerId: 'cus_2',
+      stripeSubscriptionId: 'sub_2',
+      updatedAt: '2026-02-01',
+      source: 'test',
+      topupCredits: 50,
     };
 
     await repo.upsertSubscriptionStatus('user_overwrite', first);
@@ -898,7 +920,8 @@ describe('End-to-End App Wiring', () => {
 
       // Should NOT get csrf_token_missing error
       const body = (await res.json()) as Record<string, unknown>;
-      assert.notEqual(body.error?.code, 'csrf_token_missing');
+      const webhookError = body.error as { code?: string } | undefined;
+      assert.notEqual(webhookError?.code, 'csrf_token_missing');
       assert.equal((body as { received: boolean }).received, true);
     } finally {
       server.close();

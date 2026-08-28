@@ -173,6 +173,8 @@ monitoring/prometheus_data/
 # Runtime dirs (must not be committed)
 logs/
 test/
+!backend/test/
+!backend/test/**
 uploads/
 
 # Auto-generated reports

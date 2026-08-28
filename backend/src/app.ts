@@ -22,11 +22,7 @@ import type { BackendAuthConfig } from './auth.js';
 import { registerBillingRoutes } from './billing-routes.js';
 import { createBillingService, createStripeClient } from './billing-service.js';
 import type { BillingServiceConfig } from './billing-service.js';
-import {
-  getPoolConfig,
-  getPoolMetrics,
-  startPoolHealthCheck,
-} from './cache/connection-pool.js';
+import { getPoolConfig, getPoolMetrics, startPoolHealthCheck } from './cache/connection-pool.js';
 import { initRedisCache } from './cache/redis-cache.service.js';
 import { toPublicHealth } from './config.js';
 import { ApiError, toErrorResponse } from './errors.js';
@@ -250,7 +246,7 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
         callback: (err: Error | null, allow?: boolean) => void
       ) => {
         if (!origin || allowedOrigins.includes(origin)) callback(null, true);
-        else callback(new Error('Not allowed by CORS'));
+        else callback(null, false);
       },
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       allowedHeaders: [
@@ -274,6 +270,16 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
       ],
     })
   );
+
+  // Explicit 403 for disallowed origins: cors() with callback(null, false) just
+  // omits the CORS headers; this gives non-browser callers a clear, shaped error.
+  app.use((req: Request, _res: Response, next: NextFunction) => {
+    const origin = req.headers.origin;
+    if (origin && !allowedOrigins.includes(origin)) {
+      return next(new ApiError(403, 'origin_not_allowed', 'Origin not allowed by CORS.'));
+    }
+    return next();
+  });
 
   const webhookRawRouter = express.Router();
   for (const webhookPath of ['/api/webhooks/stripe', '/api/webhooks/dodo']) {
@@ -431,6 +437,29 @@ const registerRoutes = (
   rateLimitStore: UpstashRateLimitStore | null
 ) => {
   const v1Router = express.Router();
+
+  // Global limiter must be mounted BEFORE the versioned router. It used to be
+  // registered after every route, so /api/v1 traffic never reached it and the
+  // global budget was effectively dead. Machine-to-machine traffic is exempt:
+  // payment webhooks, health probes, metrics scraping, CSP reports.
+  const globalApiLimiter = createRateLimiter({
+    windowMs: config.rateLimit.windowMs,
+    max: config.rateLimit.max * 2,
+    scope: 'global',
+    store: rateLimitStore,
+  });
+  app.use('/api', (req: Request, res: Response, next: NextFunction) => {
+    if (
+      req.path.startsWith('/webhooks/') ||
+      req.path === '/health' ||
+      req.path === '/metrics' ||
+      req.path === '/csp-report'
+    ) {
+      return next();
+    }
+    return globalApiLimiter(req, res, next);
+  });
+
   app.use('/api/v1', v1Router);
 
   const adaptPath = (path: string) => {
@@ -514,14 +543,43 @@ const registerRoutes = (
     res.json({ ok: true, service: 'englishengineer-backend', health: '/api/health' });
   });
 
-  // Prometheus metrics endpoint
-  app.get('/api/metrics', (_req: Request, res: Response) => {
+  // Prometheus metrics endpoint. Internal telemetry: when METRICS_TOKEN is set,
+  // require it via Authorization: Bearer <token> or ?token=. Without a token the
+  // endpoint stays open for backwards compatibility, but production should set one.
+  const metricsToken = process.env.METRICS_TOKEN?.trim() || null;
+  app.get('/api/metrics', (req: Request, res: Response, next: NextFunction) => {
+    if (metricsToken) {
+      const bearer = req.headers.authorization?.startsWith('Bearer ')
+        ? req.headers.authorization.slice(7).trim()
+        : undefined;
+      const queryToken = typeof req.query.token === 'string' ? req.query.token : undefined;
+      if ((bearer ?? queryToken) !== metricsToken) {
+        return next(new ApiError(403, 'metrics_forbidden', 'Metrics require a valid token.'));
+      }
+    }
     res.setHeader('Content-Type', 'text/plain; version=0.0.4');
     res.send(getPrometheusMetrics());
   });
 
   app.get('/api-docs.json', (_req: Request, res: Response) => res.json(swaggerSpec));
   app.get('/api-docs', (_req: Request, res: Response) => {
+    // /api-docs loads Swagger UI from unpkg with an inline bootstrap script; the
+    // global CSP (script-src 'self') would break it. Relax the policy for this
+    // docs page only.
+    res.setHeader(
+      'Content-Security-Policy',
+      [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline' https://unpkg.com",
+        "style-src 'self' 'unsafe-inline' https://unpkg.com",
+        "img-src 'self' data: https:",
+        "connect-src 'self'",
+        "font-src 'self' https://fonts.gstatic.com",
+        "object-src 'none'",
+        "frame-ancestors 'none'",
+        "base-uri 'self'",
+      ].join('; ')
+    );
     res.send(
       `<!DOCTYPE html><html><head><title>EngineerOS API Docs</title><link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"></head><body><div id="swagger-ui"></div><script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script><script>SwaggerUIBundle({url:'/api-docs.json',dom_id:'#swagger-ui'})</script></body></html>`
     );
@@ -637,8 +695,6 @@ const registerRoutes = (
       repository: resolvedWorkspaceRepository,
     }
   );
-
-  app.use('/api', limiters.global);
 
   registerAdminRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, limiters.global);
 
