@@ -174,3 +174,6 @@ monitoring/prometheus_data/
 logs/
 test/
 uploads/
+
+# Auto-generated reports
+PRC_Kademe_8_Live_Service_Evidence_Report.md
