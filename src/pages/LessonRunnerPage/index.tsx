@@ -247,14 +247,27 @@ const LessonRunnerPage = () => {
     <div className="relative w-full overflow-x-hidden flex flex-col gap-6 pb-8 pt-4 font-sans text-slate-100">
       {/* Cyber Telemetry Top HUD Bar */}
       <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-800/80 bg-slate-950/70 p-3.5 shadow-md backdrop-blur-md">
-        <button
-          type="button"
-          onClick={() => navigate('/learning-path')}
-          className="flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-900 text-slate-400 transition-all hover:bg-slate-800 hover:text-white"
-          title={translate('lesson.exitSimulator')}
-        >
-          <X className="h-4 w-4" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => navigate('/learning-path')}
+            className="flex min-h-11 items-center gap-1.5 rounded-xl border border-slate-700/60 bg-slate-900 px-3 text-slate-400 transition-all hover:bg-slate-800 hover:text-white"
+            title={translate('lesson.backToRoadmap')}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span className="hidden text-xs font-bold sm:inline">
+              {translate('lesson.backToRoadmap')}
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/learning-path')}
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-900 text-slate-400 transition-all hover:bg-slate-800 hover:text-white"
+            title={translate('lesson.exitSimulator')}
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
 
         {/* Progress Conduit */}
         <div className="flex flex-1 flex-col gap-1.5 px-2">
