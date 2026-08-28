@@ -14,20 +14,20 @@ const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 const filename = `supabase-backup-${timestamp}.sql`;
 const filepath = join(BACKUP_DIR, filename);
 
-console.log('Starting Supabase backup...');
+console.log('Starting Supabase backup...'); // eslint-disable-line no-console
 
 try {
   execSync(`pg_dump "${SUPABASE_URL}" --no-owner --no-privileges -f "${filepath}"`, {
     env: { ...process.env, PGPASSWORD: SUPABASE_SERVICE_KEY },
     stdio: 'inherit',
   });
-  console.log(`Backup saved: ${filepath}`);
+  console.log(`Backup saved: ${filepath}`); // eslint-disable-line no-console
 
   if (S3_BUCKET) {
     execSync(`aws s3 cp "${filepath}" "s3://${S3_BUCKET}/${filename}"`, { stdio: 'inherit' });
-    console.log(`Uploaded to S3: s3://${S3_BUCKET}/${filename}`);
+    console.log(`Uploaded to S3: s3://${S3_BUCKET}/${filename}`); // eslint-disable-line no-console
   }
 } catch (err) {
-  console.error('Backup failed:', err);
+  console.error('Backup failed:', err); // eslint-disable-line no-console
   process.exit(1);
 }

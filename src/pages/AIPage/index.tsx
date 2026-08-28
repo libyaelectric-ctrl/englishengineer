@@ -29,7 +29,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
         'error'
       );
     }
-  }, [h.isLimitedResponse, showToast]);
+  }, [h.isLimitedResponse]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="space-y-4 animate-in fade-in duration-300 font-sans pt-8 sm:pt-0">

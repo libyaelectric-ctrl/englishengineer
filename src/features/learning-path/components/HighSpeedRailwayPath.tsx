@@ -179,8 +179,14 @@ export const HighSpeedRailwayPath: React.FC<HighSpeedRailwayPathProps> = React.m
                       key={level.id}
                       className="flex shrink-0 flex-col items-center"
                       style={{ width: NODE_W }}
+                      role="button"
+                      tabIndex={0}
                       onMouseEnter={() => setHovered(level.id)}
                       onMouseLeave={() => setHovered(null)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') setHovered(level.id);
+                        if (e.key === 'Escape') setHovered(null);
+                      }}
                     >
                       {/* Train indicator above active node */}
                       {hasTrain && (

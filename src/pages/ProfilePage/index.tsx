@@ -607,10 +607,11 @@ const SecuritySection = ({
 
       {showClearConfirmation && (
         <div className="p-4 rounded-[var(--radius-card)] border border-rose-500/25 bg-rose-500/5">
-          <label className="text-xs font-bold text-rose-600 block mb-2">
+          <label htmlFor="clear-confirm" className="text-xs font-bold text-rose-600 block mb-2">
             Type CLEAR to confirm
           </label>
           <input
+            id="clear-confirm"
             value={clearConfirmation}
             onChange={(e) => setClearConfirmation(e.target.value.toUpperCase())}
             className="w-full rounded-[var(--radius-card)] border border-rose-500/25 bg-surface px-3 py-2 text-sm text-foreground outline-none focus:border-rose-500 mb-3"

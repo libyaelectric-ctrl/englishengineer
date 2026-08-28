@@ -78,7 +78,7 @@ export function useGlobalShortcuts() {
         }
       }
     },
-    [navigate, toggle, toggleShortcuts]
+    [navigate, toggle, toggleShortcuts, shortcuts]
   );
 
   useEffect(() => {
