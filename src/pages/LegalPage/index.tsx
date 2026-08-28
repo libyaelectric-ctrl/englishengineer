@@ -20,8 +20,8 @@ const documents: Record<LegalDocument, DocumentContent> = {
   privacy: {
     title: 'Privacy Policy & Data Protection Standard',
     summary:
-      'How EngVox collects, processes, stores, and protects your personal and engineering data in full compliance with EU GDPR (2016/679), CCPA/CPRA, Turkish KVKK, and SOC-2 Type II security guidelines.',
-    badge: 'GDPR / CCPA / KVKK / SOC-2 Compliant',
+      'How EngVox collects, processes, stores, and protects your personal and engineering data in full compliance with EU GDPR (2016/679), CCPA/CPRA, Turkish KVKK, and SOC-2 aligned security practices.',
+    badge: 'GDPR / CCPA / KVKK Compliant',
     lastUpdated: 'July 31, 2026',
     sections: [
       [
@@ -38,11 +38,11 @@ const documents: Record<LegalDocument, DocumentContent> = {
       ],
       [
         '4. AI Privacy Guarantee & Zero Model Training Pledge',
-        'We strictly enforce enterprise AI privacy standards under ISO/IEC 27001 guidelines. Your technical document uploads, FIDIC contract drafts, engineering scenarios, and oral defense transcripts are processed via private API endpoints and are NEVER utilized by EngVox or any third-party AI providers to train, fine-tune, or improve public AI or Machine Learning models.',
+        'We strictly enforce enterprise AI privacy standards. Your technical document uploads, FIDIC contract drafts, engineering scenarios, and oral defense transcripts are processed via private API endpoints and are NEVER utilized by EngVox or any third-party AI providers to train, fine-tune, or improve public AI or Machine Learning models.',
       ],
       [
         '5. Data Storage, Encryption & Security Standards',
-        'All cloud data in transit is encrypted using Industry-standard TLS 1.3 protocols. Data at rest is encrypted with AES-256 bit encryption within SOC-2 Type II certified database infrastructure (Supabase PostgreSQL with strict Row Level Security policies). Access is governed by RBAC (Role-Based Access Control) and multi-factor authentication.',
+        'All cloud data in transit is encrypted using Industry-standard TLS 1.3 protocols. Data at rest is encrypted with AES-256 bit encryption within SOC-2 aligned database infrastructure (Supabase PostgreSQL with strict Row Level Security policies). Access is governed by RBAC (Role-Based Access Control) and multi-factor authentication.',
       ],
       [
         '6. Data Retention & Permanent Account Erasure',
@@ -50,7 +50,7 @@ const documents: Record<LegalDocument, DocumentContent> = {
       ],
       [
         '7. International Data Transfers & Safeguards',
-        'EngVox operates globally. Where personal data is transferred outside the European Economic Area (EEA) or Turkey, we ensure equivalent protection through standard contractual clauses (SCCs) approved by the European Commission and compliant data processing addendums with our cloud sub-processors (Supabase, Stripe).',
+        'EngVox operates globally. Where personal data is transferred outside the European Economic Area (EEA) or Turkey, we ensure equivalent protection through standard contractual clauses (SCCs) approved by the European Commission and compliant data processing addendums with our cloud sub-processors (Supabase, DodoPayments).',
       ],
       [
         '8. Your Global Privacy Rights (GDPR / CCPA / KVKK)',
@@ -86,8 +86,8 @@ const documents: Record<LegalDocument, DocumentContent> = {
         'You are responsible for maintaining the confidentiality of your authentication credentials and for all activities conducted under your account. Single-user licenses are restricted to individual natural persons. Shared, pooled, or resold credentials are strictly prohibited and subject to immediate account termination without refund.',
       ],
       [
-        '4. Subscription Billing, Upgrades & Stripe PCI-DSS Compliance',
-        'Paid subscriptions (Junior, Senior, Specialist, Master, Team) are processed via Stripe in compliance with PCI-DSS Level 1 security. Subscriptions auto-renew monthly. You may cancel auto-renewal at any time via your Billing settings with zero cancellation fees. Access remains active until the expiration of the current prepaid billing period.',
+        '4. Subscription Billing, Upgrades & PCI-DSS Compliance',
+        'Paid subscriptions (Junior, Senior, Specialist, Master, Team) are processed via DodoPayments in compliance with PCI-DSS Level 1 security. Subscriptions auto-renew monthly. You may cancel auto-renewal at any time via your Billing settings with zero cancellation fees. Access remains active until the expiration of the current prepaid billing period.',
       ],
       [
         '5. Fair Usage Policy & API Rate Controls',
@@ -103,7 +103,7 @@ const documents: Record<LegalDocument, DocumentContent> = {
       ],
       [
         '8. Privacy, Data Protection & Zero AI Model Training Guarantee',
-        'Your usage of the Service is governed by our Privacy Policy. In accordance with ISO/IEC 27001 and SOC-2 guidelines, EngVox guarantees that your user-submitted text, documents, and voice recordings are NEVER used to train public LLM models.',
+        'Your usage of the Service is governed by our Privacy Policy. EngVox follows SOC-2 aligned security practices and guarantees that your user-submitted text, documents, and voice recordings are NEVER used to train public LLM models.',
       ],
       [
         '9. Limitation of Liability & Warranty Disclaimer',
@@ -175,7 +175,7 @@ const LegalPage = ({ document = 'privacy' }: { document?: LegalDocument }) => {
               <CheckCircle2 className="h-4 w-4 text-primary" /> International SaaS Standard
             </span>
             <span className="flex items-center gap-1.5 text-foreground">
-              <CheckCircle2 className="h-4 w-4 text-primary" /> Stripe PCI-DSS Level 1
+              <CheckCircle2 className="h-4 w-4 text-primary" /> DodoPayments PCI-DSS Level 1
             </span>
             <span className="flex items-center gap-1.5 text-foreground">
               <CheckCircle2 className="h-4 w-4 text-primary" /> User Data Ownership (100%)

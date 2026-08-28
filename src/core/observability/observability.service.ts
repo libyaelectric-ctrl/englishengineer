@@ -35,6 +35,16 @@ let sentryInitialized = false;
 
 const initSentry = () => {
   if (sentryInitialized) return;
+  // Respect cookie consent — don't init Sentry if user rejected analytics
+  try {
+    const consent = localStorage.getItem('engvox_cookie_consent');
+    if (consent === 'rejected') {
+      logger.d('[Observability] Cookie consent rejected, skipping Sentry init.');
+      return;
+    }
+  } catch {
+    // localStorage unavailable, proceed normally
+  }
   sentryInitialized = true;
 
   const dsn = env?.VITE_SENTRY_DSN;

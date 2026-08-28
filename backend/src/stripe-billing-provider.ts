@@ -1,3 +1,13 @@
+/**
+ * Stripe Billing Provider (Legacy Fallback)
+ *
+ * This file is retained as a fallback billing provider. The primary billing
+ * provider is now DodoPayments (see dodo-billing-provider.ts). This Stripe
+ * provider is only activated when BILLING_PROVIDER=stripe in the environment
+ * configuration. It is NOT used in the current production deployment.
+ *
+ * Safe to remove once Stripe is fully decommissioned.
+ */
 import Stripe from 'stripe';
 
 import { requireText } from './billing-helpers.js';
