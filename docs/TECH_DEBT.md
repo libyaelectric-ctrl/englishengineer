@@ -141,6 +141,11 @@ expensive setup into `beforeAll`; consider a trimmed/mock vocabulary fixture
 for unit tests instead of the full production dataset.
 **Found during:** 2026-08-10 repo audit (see `DENETIM_RAPORU.md`).
 
+**Root cause identified (2026-08-29):** the underlying bottleneck is ~72 MB of
+learning content shipped inside the repo/bundle (49.8 MB translation JSON +
+22.0 MB vocabulary seed TS). Moving content to Supabase/CDN and fetching it at
+runtime (same pattern as `public/data/grammar/*.json`) closes this item for good.
+
 ### TD-017: `navigation.e2e.test.tsx` `/dashboard renders` — Resolved ✅
 
 **File:** `src/e2e/navigation.e2e.test.tsx`, `src/pages/DashboardPage/index.tsx`
@@ -197,6 +202,36 @@ audit touched (pinned `useBillingStore`/`useAuthStore` state explicitly
 where needed) but the systemic gap remains.
 **Found during:** 2026-08-10 repo audit (see `DENETIM_RAPORU.md`).
 
+### TD-019: Deduplicate /api + /api/v1 route registration
+
+**File:** `backend/src/app.ts`
+**Issue:** `v1RouterAdapter` registers every route on both `/api/*` and
+`/api/v1/*`, while a separate legacy-redirect middleware already forwards
+`/api/*` to `/api/v1/*` (307 + Deprecation headers). Three overlapping
+mechanisms for the same goal; in production the app-level registrations are
+unreachable because the redirect middleware fires first, and they mainly exist
+so tests can call `/api/...` directly.
+**Impact:** Maintenance risk, confusing route table.
+**Effort:** 1-2 days (test callers must move to `/api/v1/*`).
+**Action:** Remove the dual registration, keep the redirect, migrate test
+callers to `/api/v1/*`.
+**Found during:** 2026-08-29 code review.
+
+### TD-020: Pre-commit hook swallows vitest exit code (pipe to tail)
+
+**File:** `.husky/pre-commit`
+**Issue:** The vitest run is piped through `tail -5` and the hook checks `$?`,
+which reflects the exit code of `tail`, not vitest. A failing suite therefore
+passes the pre-commit gate. Observed live on 2026-08-29: 1 test failed | 1081
+passed and the hook still printed "Tests passed". The failing test name was
+lost to the same pipe (tail -5), which also makes diagnosis impossible.
+**Impact:** False green light at commit time; flaky failures (see TD-018)
+become invisible instead of actionable.
+**Effort:** 0.2 days.
+**Action:** Redirect vitest output to a temp log, check the real exit code,
+then tail the log. Implemented on 2026-08-29.
+**Found during:** 2026-08-29 commit run.
+
 ## Tracking
 
 | ID     | Priority | Status      | Assigned | Due Date |
@@ -218,13 +253,15 @@ where needed) but the systemic gap remains.
 | TD-015 | Low      | 🟡 Open     | TBD      | TBD      |
 | TD-016 | Medium   | 🟡 Open     | TBD      | TBD      |
 | TD-017 | Low      | ✅ Resolved | TBD      | TBD      |
+| TD-019 | Medium   | Open        | TBD      | TBD      |
+| TD-020 | Medium   | Open        | TBD      | TBD      |
 
 ## Stats
 
-- **Total Items:** 15
-- **Resolved:** 7 (47%)
-- **Partially Resolved:** 1 (7%)
-- **Open:** 7 (47%)
+- **Total Items:** 17
+- **Resolved:** 7 (41%)
+- **Partially Resolved:** 1 (6%)
+- **Open:** 9 (53%)
 
 ## Last Updated
 
