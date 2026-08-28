@@ -11,3 +11,9 @@ CREATE INDEX IF NOT EXISTS idx_billing_customers_dodo_customer_id
 
 COMMENT ON COLUMN public.billing_customers.dodo_customer_id IS 'DodoPayments customer ID (cus_xxx format)';
 COMMENT ON COLUMN public.billing_customers.stripe_customer_id IS 'Legacy Stripe customer ID (kept for backward compatibility)';
+
+-- Drop foreign key constraints on billing tables so webhook handlers
+-- can write customer/subscription data for any user (including those
+-- not yet in auth.users). RLS still protects row-level access.
+ALTER TABLE public.billing_customers DROP CONSTRAINT IF EXISTS billing_customers_user_id_fkey;
+ALTER TABLE public.subscription_status DROP CONSTRAINT IF EXISTS subscription_status_user_id_fkey;
