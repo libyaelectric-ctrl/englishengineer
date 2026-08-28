@@ -60,7 +60,7 @@ interface PublicHealth {
   environment: RuntimeEnvironment;
   checks: {
     ai: HealthCheck;
-    stripe: HealthCheck;
+    billing: HealthCheck;
     supabase: HealthCheck;
     rateLimit: HealthCheck;
     [key: string]: HealthCheck;
@@ -71,7 +71,7 @@ interface PublicHealth {
 export const toPublicHealth = (config: BackendConfig): PublicHealth => {
   const checks: PublicHealth['checks'] = {
     ai: { configured: config.ai.configured },
-    stripe: { configured: config.stripe.configured },
+    billing: { configured: config.stripe.configured },
     supabase: { configured: config.supabase.configured },
     rateLimit: { configured: config.rateLimit.storeMode === 'upstash' },
   };

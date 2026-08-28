@@ -45,7 +45,7 @@ test('health returns public configuration status', async () => {
   assert.equal(body.version, '4.0.1');
   assert.equal(body.environment, 'staging');
   assert.equal(body.checks.ai.configured, false);
-  assert.equal(body.checks.stripe.configured, false);
+  assert.equal(body.checks.billing.configured, false);
   assert.equal(body.checks.supabase.configured, false);
   assert.equal(body.mockMode, true);
 });
@@ -77,7 +77,7 @@ test('health never exposes secret values', async () => {
   assert.doesNotMatch(text, /secret-ai-value|secret-stripe-value|secret-service-role/);
   const body = JSON.parse(text);
   assert.equal(body.checks.ai.configured, true);
-  assert.equal(body.checks.stripe.configured, true);
+  assert.equal(body.checks.billing.configured, true);
   assert.equal(body.checks.supabase.configured, true);
 });
 

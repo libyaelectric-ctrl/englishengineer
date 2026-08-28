@@ -202,9 +202,7 @@ export const registerAIRoutes = (
     workspace: config.workspace,
     ledger: { filePath: config.ledger?.filePath ?? process.env.AI_LEDGER_FILE },
   } as unknown as Parameters<typeof createAiLedger>[0]);
-  const configured = Boolean(
-    config.stripe && (config.stripe as Record<string, unknown>).configured
-  );
+  const configured = Boolean(config.stripe?.configured);
 
   const validateOperation = (body: Record<string, unknown>, defaultOp: string) => {
     if (body?.operation !== undefined && body.operation !== defaultOp) {

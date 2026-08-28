@@ -10,6 +10,7 @@ describe('health endpoint', () => {
     version: '4.0.1',
     environment: 'test',
     ai: { configured: true },
+    billing: { configured: true },
     stripe: { configured: true },
     supabase: { configured: true },
     rateLimit: { storeMode: 'upstash' },
@@ -43,7 +44,7 @@ describe('health endpoint', () => {
     const health = toPublicHealth(config);
     assert.deepEqual(health.checks, {
       ai: { configured: true },
-      stripe: { configured: true },
+      billing: { configured: true },
       supabase: { configured: true },
       rateLimit: { configured: true },
     });
