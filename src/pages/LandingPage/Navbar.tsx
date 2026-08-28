@@ -1,4 +1,5 @@
 import { PRODUCT_VERSION } from '@/config/product.config';
+import { useAuth } from '@clerk/clerk-react';
 import { ChevronDown, Globe, Moon, Sun } from 'lucide-react';
 
 import { useEffect, useRef, useState } from 'react';
@@ -22,12 +23,19 @@ export function Navbar({ onOpenProofreader: _ }: NavbarProps) {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
+  const { isSignedIn } = useAuth();
   const isAuthPage =
     location.pathname === CLERK_SIGN_IN_URL || location.pathname === CLERK_SIGN_UP_URL;
   const { language, setLanguage, translate } = useLocalizationStore();
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
   const langBtnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (isSignedIn) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [isSignedIn, navigate]);
 
   const currentLang = INTERFACE_LANGUAGES.find((l) => l.id === language) || INTERFACE_LANGUAGES[0];
 

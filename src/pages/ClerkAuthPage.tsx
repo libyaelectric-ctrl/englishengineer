@@ -1,9 +1,7 @@
-import { SignIn, SignUp, useAuth } from '@clerk/clerk-react';
+import { SignIn, SignUp } from '@clerk/clerk-react';
 import { ArrowLeft } from 'lucide-react';
 
-import { useEffect } from 'react';
-
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import {
   CLERK_SIGN_IN_FALLBACK_REDIRECT_URL,
@@ -33,19 +31,10 @@ const getReturnTarget = (search: string, state: ClerkLocationState): string | un
 
 const ClerkAuthPage = ({ mode }: ClerkAuthPageProps) => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { isLoaded, isSignedIn } = useAuth();
   const returnTarget = getReturnTarget(location.search, location.state as ClerkLocationState);
 
   const signInAfter = returnTarget ?? CLERK_SIGN_IN_FALLBACK_REDIRECT_URL;
   const signUpAfter = returnTarget ?? CLERK_SIGN_UP_FALLBACK_REDIRECT_URL;
-
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      const target = mode === 'sign-in' ? signInAfter : signUpAfter;
-      navigate(target, { replace: true });
-    }
-  }, [isLoaded, isSignedIn, mode, signInAfter, signUpAfter, navigate]);
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-zinc-950/70 backdrop-blur-md">
@@ -67,6 +56,7 @@ const ClerkAuthPage = ({ mode }: ClerkAuthPageProps) => {
               path={CLERK_SIGN_IN_URL}
               signUpUrl={CLERK_SIGN_UP_URL}
               fallbackRedirectUrl={signInAfter}
+              afterSignInUrl={signInAfter}
             />
           ) : (
             <SignUp
@@ -74,6 +64,7 @@ const ClerkAuthPage = ({ mode }: ClerkAuthPageProps) => {
               path={CLERK_SIGN_UP_URL}
               signInUrl={CLERK_SIGN_IN_URL}
               fallbackRedirectUrl={signUpAfter}
+              afterSignUpUrl={signUpAfter}
             />
           )}
         </div>
