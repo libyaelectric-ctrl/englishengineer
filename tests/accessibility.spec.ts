@@ -1,5 +1,5 @@
 import { checkA11y, injectAxe } from '@axe-core/playwright';
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test.describe('Accessibility Audit', () => {
   test.beforeEach(async ({ page }) => {

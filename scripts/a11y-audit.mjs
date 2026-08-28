@@ -117,7 +117,7 @@ async function getTsxFiles(dir) {
  */
 async function checkFile(filePath, verbose) {
   const content = await readFile(filePath, 'utf-8');
-  const lines = content.split('\n');
+
   const issues = [];
   const seen = new Set();
 

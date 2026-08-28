@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { UserSkillProfile } from '@/core/learning';
-import type { LearningDataSkill } from '@/core/learning';
 import { useLearningStore } from '@/core/learning/learning.store';
 
 import { GrammarProgressService } from '@/shared/services/grammar-progress.service';

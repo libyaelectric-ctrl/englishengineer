@@ -373,20 +373,7 @@ const verifySupabase = async (environment, evidence) => {
   }
 };
 
-const dodoRequest = async (environment, path, body, method = 'POST') => {
-  const baseUrl =
-    environment.DODO_PAYMENTS_ENVIRONMENT === 'test'
-      ? 'https://test.dodopayments.com'
-      : 'https://live.dodopayments.com';
-  return jsonRequest(`${baseUrl}${path}`, {
-    method,
-    headers: {
-      Authorization: `Bearer ${environment.DODO_PAYMENTS_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
-};
+
 
 const backendRequest = async (url, token, init = {}, statuses = [200]) =>
   jsonRequest(
@@ -402,23 +389,7 @@ const backendRequest = async (url, token, init = {}, statuses = [200]) =>
     statuses
   );
 
-const serviceRoleRestRequest = async (
-  environment,
-  tableAndQuery,
-  init = {},
-  statuses = [200, 201, 204]
-) =>
-  jsonRequest(
-    `${environment.SUPABASE_URL.replace(/\/$/, '')}/rest/v1/${tableAndQuery}`,
-    {
-      ...init,
-      headers: {
-        ...supabaseHeaders(environment.SUPABASE_SERVICE_ROLE_KEY),
-        ...init.headers,
-      },
-    },
-    statuses
-  );
+
 
 const verifyDodo = async (environment, authContext, evidence) => {
   let billingBase = environment.VITE_BILLING_API_URL.replace(/\/$/, '');

@@ -1,12 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { GrammarEngine } from '@/shared/services/grammar.engine';
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import {
   LearningProfileEngine,
   getDisciplineDomains,
 } from '@/shared/services/profile-engine.service';
-import { VocabularyEngine } from '@/shared/services/vocabulary.engine';
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import type {
   SkillName,
