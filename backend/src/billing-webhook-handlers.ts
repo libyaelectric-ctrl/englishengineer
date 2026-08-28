@@ -17,9 +17,17 @@ export interface WebhookObject {
   subscription_details?: { metadata?: Record<string, string> };
 }
 
+export interface BillingCustomerData {
+  userId: string;
+  dodoCustomerId?: string | null;
+  stripeCustomerId?: string | null;
+  billingEmail?: string | null;
+}
+
 export interface BillingRepository {
   getSubscriptionStatus(userId: string): Promise<SubscriptionSnapshot | null>;
   upsertSubscriptionStatus(userId: string, snapshot: SubscriptionSnapshot): Promise<void>;
+  upsertBillingCustomer(data: BillingCustomerData): Promise<void>;
   hasStripeEventBeenProcessed(eventId: string): Promise<boolean>;
   markStripeEventProcessed(eventId: string, metadata?: Record<string, unknown>): Promise<void>;
 }
@@ -93,6 +101,16 @@ export const handleCheckoutCompleted = async (
     updatedAt: new Date().toISOString(),
     source: 'dodo_webhook',
   });
+
+  // Save customer data to billing_customers for future reference
+  const customerId = object.customer ?? null;
+  if (customerId) {
+    await repository.upsertBillingCustomer({
+      userId,
+      dodoCustomerId: customerId,
+      stripeCustomerId: customerId,
+    });
+  }
 };
 
 export const handleSubscriptionUpdated = async (
@@ -106,6 +124,16 @@ export const handleSubscriptionUpdated = async (
     userId,
     buildSubscriptionUpdate(current, object, parsePeriodEnd(object))
   );
+
+  // Save customer data to billing_customers if present
+  const customerId = object.customer ?? null;
+  if (customerId) {
+    await repository.upsertBillingCustomer({
+      userId,
+      dodoCustomerId: customerId,
+      stripeCustomerId: customerId,
+    });
+  }
 };
 
 const GRACE_PERIOD_DAYS = 3;

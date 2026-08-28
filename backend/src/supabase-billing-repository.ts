@@ -73,10 +73,18 @@ const handleDbError = (error: {
   return dbError;
 };
 
+interface BillingCustomerData {
+  userId: string;
+  dodoCustomerId?: string | null;
+  stripeCustomerId?: string | null;
+  billingEmail?: string | null;
+}
+
 interface BillingRepository {
   mode: string;
   getSubscriptionStatus(userId: string): Promise<SubscriptionSnapshot | null>;
   upsertSubscriptionStatus(userId: string, snapshot: SubscriptionSnapshot): Promise<void>;
+  upsertBillingCustomer(data: BillingCustomerData): Promise<void>;
   hasStripeEventBeenProcessed(eventId: string): Promise<boolean>;
   markStripeEventProcessed(eventId: string, metadata?: Record<string, unknown>): Promise<void>;
 }
@@ -167,6 +175,23 @@ export const createSupabaseBillingRepository = (
         throw handleDbError(error);
       }
       return !!data;
+    },
+    async upsertBillingCustomer(data) {
+      const row: Record<string, unknown> = {
+        user_id: data.userId,
+        updated_at: new Date().toISOString(),
+      };
+      if (data.dodoCustomerId) row.dodo_customer_id = data.dodoCustomerId;
+      if (data.stripeCustomerId) row.stripe_customer_id = data.stripeCustomerId;
+      if (data.billingEmail) row.billing_email = data.billingEmail;
+
+      const { error } = await supabase.from('billing_customers').upsert(row, {
+        onConflict: 'user_id',
+      });
+      if (error) {
+        logger.warn('Failed to upsert billing customer', { error: error.message, userId: data.userId });
+        // Non-fatal: billing_customers is supplementary data
+      }
     },
     async markStripeEventProcessed(eventId, metadata = {}) {
       const { error } = await supabase.from('stripe_processed_events').upsert(

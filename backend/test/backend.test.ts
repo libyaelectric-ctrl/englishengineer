@@ -982,6 +982,9 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
     async hasStripeEventBeenProcessed(eventId: string) {
       return db.processedEvents.has(eventId);
     },
+    async upsertBillingCustomer() {
+      // no-op in test
+    },
     async markStripeEventProcessed(eventId: string) {
       db.processedEvents.add(eventId);
     },
