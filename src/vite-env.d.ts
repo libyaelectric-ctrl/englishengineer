@@ -9,8 +9,7 @@ interface ImportMetaEnv {
   VITE_SUPABASE_URL?: string;
   VITE_SUPABASE_ANON_KEY?: string;
   VITE_BILLING_API_URL?: string;
-  VITE_ENABLE_MOCK_BILLING?: string;
-  VITE_STRIPE_PUBLISHABLE_KEY?: string;
+
   VITE_ERROR_MONITORING_PROVIDER?: string;
   VITE_SENTRY_DSN?: string;
   VITE_ERROR_MONITORING_SAMPLE_RATE?: string;

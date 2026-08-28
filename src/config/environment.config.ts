@@ -11,8 +11,7 @@ export interface EngVoxEnv {
   VITE_SUPABASE_URL?: string;
   VITE_SUPABASE_ANON_KEY?: string;
   VITE_BILLING_API_URL?: string;
-  VITE_ENABLE_MOCK_BILLING?: string;
-  VITE_STRIPE_PUBLISHABLE_KEY?: string;
+
   VITE_ERROR_MONITORING_PROVIDER?: string;
   VITE_SENTRY_DSN?: string;
   VITE_ERROR_MONITORING_SAMPLE_RATE?: string;
@@ -38,7 +37,7 @@ export interface EnvironmentValidationResult {
     hasSupabaseUrl: boolean;
     hasSupabaseAnonKey: boolean;
     hasBillingApiUrl: boolean;
-    hasStripePublishableKey: boolean;
+
   };
 }
 
@@ -149,7 +148,7 @@ const readEnvValues = (source: EngVoxEnv | undefined) => {
     hasSupabaseUrl: isConfiguredPublicUrl(v.VITE_SUPABASE_URL),
     hasSupabaseAnonKey: Boolean(v.VITE_SUPABASE_ANON_KEY),
     hasBillingApiUrl: isConfiguredPublicUrl(v.VITE_BILLING_API_URL),
-    hasStripePublishableKey: Boolean(v.VITE_STRIPE_PUBLISHABLE_KEY),
+
   };
 };
 
@@ -195,7 +194,7 @@ export const validateEnvironment = (
       hasSupabaseUrl: cfg.hasSupabaseUrl,
       hasSupabaseAnonKey: cfg.hasSupabaseAnonKey,
       hasBillingApiUrl: cfg.hasBillingApiUrl,
-      hasStripePublishableKey: cfg.hasStripePublishableKey,
+
     },
   };
 };

@@ -56,7 +56,7 @@ const parseErrorMessage = async (response: Response): Promise<string> => {
     if (data.error?.message) return data.error.message;
     return data.message || `Billing backend returned ${response.status}.`;
   } catch (e) {
-    logger.w('[STRIPE] Failed to parse error response', e);
+    logger.w('[BILLING] Failed to parse error response', e);
     return `Billing backend returned ${response.status}.`;
   }
 };
