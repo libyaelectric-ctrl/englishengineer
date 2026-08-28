@@ -19,11 +19,12 @@ const audioFiles = existsSync(resolve('public/audio'))
 const readJson = (path) => JSON.parse(readFileSync(resolve(path), 'utf8'));
 const frontendPackage = readJson('package.json');
 const backendPackage = readJson('backend/package.json');
-const expectedVersion = '4.0.22';
 
-if (frontendPackage.version !== expectedVersion || backendPackage.version !== expectedVersion) {
-  missing.push('frontend and backend versions must both be ' + expectedVersion);
+// Dynamic version check — frontend and backend must match
+if (frontendPackage.version !== backendPackage.version) {
+  missing.push(`Version mismatch: frontend=${frontendPackage.version} backend=${backendPackage.version}`);
 }
+const expectedVersion = frontendPackage.version;
 
 const backendEnv = readFileSync(resolve('backend/.env.example'), 'utf8');
 if (!backendEnv.includes(`APP_VERSION=${expectedVersion}`)) {

@@ -102,6 +102,9 @@ jobs:
       - name: Test Coverage
         run: npm run test:coverage
 
+      - name: Verify Release Consistency
+        run: node scripts/verify-release.mjs
+
       - name: Enforce Coverage Thresholds
         run: |
           echo "=== Coverage Threshold Enforcement ==="
