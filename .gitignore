@@ -105,6 +105,9 @@ lint-output.txt
 *.debug.cjs
 /video/
 
+# Hook scratch output
+.vitest-commit.log
+
 # Temporary notes
 Usta-Faz2.txt
 

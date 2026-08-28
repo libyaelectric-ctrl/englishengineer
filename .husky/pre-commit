@@ -16,8 +16,11 @@ if [ -n "$TS_FILES" ]; then
   echo "✅ Typecheck passed"
 
   echo "🧪 Running tests..."
-  npx vitest run --configLoader runner --reporter dot --exclude 'src/e2e/**' --exclude 'e2e/**' --exclude 'tests/**' --exclude '.mimocode/**' --exclude 'src/shared/tests/integration/**' 2>&1 | tail -5
-  if [ $? -ne 0 ]; then
+  npx vitest run --configLoader runner --reporter dot --exclude 'src/e2e/**' --exclude 'e2e/**' --exclude 'tests/**' --exclude '.mimocode/**' --exclude 'src/shared/tests/integration/**' > .vitest-commit.log 2>&1
+  VITEST_EXIT=$?
+  tail -15 .vitest-commit.log
+  rm -f .vitest-commit.log
+  if [ $VITEST_EXIT -ne 0 ]; then
     echo "❌ Tests failed. Fix failures before committing."
     exit 1
   fi
