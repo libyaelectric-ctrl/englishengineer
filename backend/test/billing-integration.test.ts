@@ -22,6 +22,7 @@ import { createBackendConfig } from '../src/config.js';
 import { createDodoBillingProvider } from '../src/dodo-billing-provider.js';
 import { ApiError } from '../src/errors.js';
 import type { DodoConfig, SubscriptionSnapshot } from '../types.js';
+import { createMemorySubscriptionRepository } from '../src/subscription-repository.js';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
