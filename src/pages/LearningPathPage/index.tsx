@@ -9,17 +9,14 @@ import { useLearningStore } from '@/core/learning';
 
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
-import {
-  DISCIPLINE_META,
-  type EngineeringDiscipline,
-} from '@/shared/constants/engineering-disciplines';
+import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
 import { useCountUp } from '@/shared/hooks/useCountUp';
 import type { CefrLevel } from '@/shared/types/domain.types';
 
 import { useAuthStore } from '@/features/auth';
 import {
+  HighSpeedRailwayPath,
   MasteryOverview,
-  MountainRailwayPath,
   PathStageColumn,
   buildLearningPath,
   getDisciplinePalette,
@@ -51,18 +48,14 @@ const LearningPathPage = () => {
   );
 
   const profile = LearningProfileRepository.getProfile(currentUser?.id || 'local-user');
-  const userDiscipline = resolveDefaultDiscipline(profile.discipline);
-  const [selectedDiscipline, setSelectedDiscipline] =
-    useState<EngineeringDiscipline>(userDiscipline);
-  const [viewMode, setViewMode] = useState<'mountain' | 'columns'>('mountain');
-
-  const discipline = selectedDiscipline || userDiscipline;
+  const discipline = resolveDefaultDiscipline(profile.discipline);
   const palette = getDisciplinePalette(discipline);
   const disciplineMeta = DISCIPLINE_META[discipline];
   const currentBand = (profile.skills.vocabulary.cefrBand.replace('+', '') as CefrLevel) ?? 'A1';
 
   const [path, setPath] = useState<LearningPath | null>(null);
   const [failed, setFailed] = useState(false);
+  const [viewMode, setViewMode] = useState<'railway' | 'columns'>('railway');
 
   const animatedXp = useCountUp(xp);
   const prevXpRef = useRef(xp);
@@ -110,15 +103,15 @@ const LearningPathPage = () => {
         <div className="flex items-center gap-1 rounded-xl border border-border-soft bg-surface p-1 shadow-sm">
           <button
             type="button"
-            onClick={() => setViewMode('mountain')}
+            onClick={() => setViewMode('railway')}
             className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
-              viewMode === 'mountain'
+              viewMode === 'railway'
                 ? 'bg-primary text-white shadow-sm'
                 : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
             }`}
           >
             <Train className="h-4 w-4" />
-            <span>Mountain Rail (0m–5000m)</span>
+            <span>Industrial High-Speed Rail (A1–C2)</span>
           </button>
           <button
             type="button"
@@ -141,14 +134,9 @@ const LearningPathPage = () => {
       >
         <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="rounded bg-white/20 px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-white">
-                10 Engineering Disciplines
-              </span>
-              <p className="text-xs font-semibold uppercase tracking-widest text-white/80">
-                {translate('learningpath.subtitle')}
-              </p>
-            </div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-white/80">
+              {translate('learningpath.subtitle')}
+            </p>
             <h2 className="mt-2 text-2xl sm:text-3xl font-black">
               {translate(disciplineMeta.labelKey)}
             </h2>
@@ -205,12 +193,10 @@ const LearningPathPage = () => {
         <p className="py-16 text-center text-sm text-[var(--color-muted-copy)]">
           {translate('learningpath.loading')}
         </p>
-      ) : viewMode === 'mountain' ? (
-        <MountainRailwayPath
+      ) : viewMode === 'railway' ? (
+        <HighSpeedRailwayPath
           path={path}
           onSelectLevel={(levelId) => navigate(`/lesson-runner/${levelId}`)}
-          selectedDiscipline={discipline}
-          onDisciplineChange={(newDisc) => setSelectedDiscipline(newDisc)}
         />
       ) : (
         /* Classic Columns View */
