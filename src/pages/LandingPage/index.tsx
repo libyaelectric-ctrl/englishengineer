@@ -96,6 +96,22 @@ export const LandingPage = () => {
   const prefersReduced = useReducedMotion();
   const timerRef = useRef<ReturnType<typeof setInterval>>(null);
 
+  // Defer the 3D hero scene until first idle: the interactive shell paints
+  // first, then the three.js chunk loads in the background.
+  const [sceneReady, setSceneReady] = useState(false);
+  useEffect(() => {
+    const w = window as Window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    if (typeof w.requestIdleCallback === 'function') {
+      const id = w.requestIdleCallback(() => setSceneReady(true), { timeout: 2000 });
+      return () => w.cancelIdleCallback?.(id);
+    }
+    const t = window.setTimeout(() => setSceneReady(true), 300);
+    return () => window.clearTimeout(t);
+  }, []);
+
   // Block middle-click auto-scroll pan
   useEffect(() => {
     const prevent = (e: MouseEvent) => {
@@ -153,9 +169,7 @@ export const LandingPage = () => {
 
       {/* 3D scene stays as fixed background */}
       <div className="absolute inset-0 z-0">
-        <Suspense fallback={null}>
-          <HeroScene />
-        </Suspense>
+        <Suspense fallback={null}>{sceneReady && <HeroScene />}</Suspense>
         {/* Aurora blobs */}
         <div className="absolute -top-32 -left-32 w-[44rem] h-[44rem] rounded-full bg-primary/20 blur-3xl animate-ambient-glow" />
         <div

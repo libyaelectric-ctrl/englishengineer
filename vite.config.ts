@@ -48,7 +48,8 @@ export default defineConfig(() => {
               if (byLangMatch) return `translation-corpus-${byLangMatch[1]}`;
               if (id.includes('/data/') && id.includes('by-level/'))
                 return getDataChunk(id) ?? 'seed-data';
-              if (id.includes('/data/') || id.includes('seed')) return 'seed-data';
+              if ((id.includes('/data/') || id.includes('seed')) && !id.includes('/localization/'))
+                return 'seed-data';
               return;
             }
             // Split vendor into smaller chunks.
