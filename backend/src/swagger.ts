@@ -661,7 +661,7 @@ export const swaggerSpec = {
     '/api/billing/create-checkout-session': {
       post: {
         tags: ['Billing'],
-        summary: 'Create Stripe checkout session',
+        summary: 'Create checkout session (DodoPayments)',
         security: [{ bearerAuth: [] }],
         requestBody: {
           required: true,
@@ -710,7 +710,7 @@ export const swaggerSpec = {
     '/api/billing/create-customer-portal-session': {
       post: {
         tags: ['Billing'],
-        summary: 'Create Stripe customer portal session',
+        summary: 'Create customer portal session (DodoPayments)',
         security: [{ bearerAuth: [] }],
         requestBody: {
           required: true,
