@@ -38,6 +38,7 @@ for (const command of commands) {
     : command.args;
   const result = spawnSync(executable, args, {
     stdio: 'inherit',
+    env: { ...process.env, NODE_OPTIONS: '--max-old-space-size=4096' },
     ...(command.timeoutMs ? { timeout: command.timeoutMs, killSignal: 'SIGTERM' } : {}),
   });
 
