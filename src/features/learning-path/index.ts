@@ -17,5 +17,6 @@ export { PathStageColumn } from './components/PathStageColumn';
 export { MasteryOverview } from './components/MasteryOverview';
 export { DashboardLearningPipeline } from './components/DashboardLearningPipeline';
 export { ConceptCPipelineView } from './components/ConceptCPipelineView';
+export { MountainRailwayPath } from './components/MountainRailwayPath';
 
 export type { LearningPath, PathLevel, PathLevelStatus, PathStage } from './learning-path.types';

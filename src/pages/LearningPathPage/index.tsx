@@ -1,4 +1,4 @@
-import { Flame, Heart, Zap } from 'lucide-react';
+import { Flame, Heart, LayoutGrid, Train, Zap } from 'lucide-react';
 import { useShallow } from 'zustand/shallow';
 
 import { useEffect, useRef, useState } from 'react';
@@ -9,13 +9,17 @@ import { useLearningStore } from '@/core/learning';
 
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
-import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
+import {
+  DISCIPLINE_META,
+  type EngineeringDiscipline,
+} from '@/shared/constants/engineering-disciplines';
 import { useCountUp } from '@/shared/hooks/useCountUp';
 import type { CefrLevel } from '@/shared/types/domain.types';
 
 import { useAuthStore } from '@/features/auth';
 import {
   MasteryOverview,
+  MountainRailwayPath,
   PathStageColumn,
   buildLearningPath,
   getDisciplinePalette,
@@ -47,7 +51,12 @@ const LearningPathPage = () => {
   );
 
   const profile = LearningProfileRepository.getProfile(currentUser?.id || 'local-user');
-  const discipline = resolveDefaultDiscipline(profile.discipline);
+  const userDiscipline = resolveDefaultDiscipline(profile.discipline);
+  const [selectedDiscipline, setSelectedDiscipline] =
+    useState<EngineeringDiscipline>(userDiscipline);
+  const [viewMode, setViewMode] = useState<'mountain' | 'columns'>('mountain');
+
+  const discipline = selectedDiscipline || userDiscipline;
   const palette = getDisciplinePalette(discipline);
   const disciplineMeta = DISCIPLINE_META[discipline];
   const currentBand = (profile.skills.vocabulary.cefrBand.replace('+', '') as CefrLevel) ?? 'A1';
@@ -93,25 +102,63 @@ const LearningPathPage = () => {
     translate(`learningpath.status${status.charAt(0).toUpperCase()}${status.slice(1)}`);
 
   return (
-    <PageContainer className="w-full max-w-6xl space-y-6 pb-8 font-sans">
-      <PageHeader title={translate('learningpath.title')} />
+    <PageContainer className="w-full max-w-6xl space-y-6 pb-12 font-sans">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <PageHeader title={translate('learningpath.title')} />
+
+        {/* View Mode Toggle Button */}
+        <div className="flex items-center gap-1 rounded-xl border border-border-soft bg-surface p-1 shadow-sm">
+          <button
+            type="button"
+            onClick={() => setViewMode('mountain')}
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+              viewMode === 'mountain'
+                ? 'bg-primary text-white shadow-sm'
+                : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
+            }`}
+          >
+            <Train className="h-4 w-4" />
+            <span>Mountain Rail (0m–5000m)</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('columns')}
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+              viewMode === 'columns'
+                ? 'bg-primary text-white shadow-sm'
+                : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
+            }`}
+          >
+            <LayoutGrid className="h-4 w-4" />
+            <span>Columns View</span>
+          </button>
+        </div>
+      </div>
 
       {/* Discipline hero */}
       <section
-        className={`relative overflow-hidden rounded-[var(--radius-card)] bg-gradient-to-br ${palette.gradient} p-6 text-white shadow-lg`}
+        className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${palette.gradient} p-6 text-white shadow-xl`}
       >
         <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-white/70">
-              {translate('learningpath.subtitle')}
-            </p>
-            <h2 className="mt-1 text-2xl font-extrabold">{translate(disciplineMeta.labelKey)}</h2>
-            <p className="mt-1 text-sm text-white/80">
+            <div className="flex items-center gap-2">
+              <span className="rounded bg-white/20 px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-white">
+                10 Engineering Disciplines
+              </span>
+              <p className="text-xs font-semibold uppercase tracking-widest text-white/80">
+                {translate('learningpath.subtitle')}
+              </p>
+            </div>
+            <h2 className="mt-2 text-2xl sm:text-3xl font-black">
+              {translate(disciplineMeta.labelKey)}
+            </h2>
+            <p className="mt-1 text-sm text-white/85">
               {translate(`learningpath.currentBand`)} ·{' '}
-              <span className="font-bold">{bandTitle(currentBand)}</span>
+              <span className="font-bold">{bandTitle(currentBand)}</span> ·{' '}
+              <span className="text-white/80">{disciplineMeta.wordCount} Specialized Terms</span>
             </p>
           </div>
-          <div className="flex items-center gap-5 rounded-xl bg-black/20 px-5 py-3 backdrop-blur">
+          <div className="flex items-center gap-5 rounded-2xl bg-black/25 px-5 py-3.5 backdrop-blur-md border border-white/15 shadow-lg">
             <div className="relative flex flex-col items-center">
               {xpGain && (
                 <span
@@ -149,69 +196,75 @@ const LearningPathPage = () => {
         </div>
       </section>
 
-      {/* Roadmap */}
-      <section className="rounded-[var(--radius-card)] border border-[var(--color-border-soft)] bg-[var(--surface)] p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
-          <h3 className="text-sm font-bold text-[var(--foreground)]">
-            {translate('learningpath.legend')}
-          </h3>
-          <div className="flex flex-wrap items-center gap-4 text-[11px] text-[var(--color-muted-copy)]">
-            {(['available', 'in-progress', 'completed', 'locked'] as const).map((status) => (
-              <span key={status} className="flex items-center gap-1.5">
-                <span
-                  className="inline-block h-2.5 w-2.5 rounded-full"
-                  style={{ backgroundColor: STATUS_DOT[status] }}
-                />
-                {statusKey(status)}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {failed ? (
-          <p className="py-16 text-center text-sm text-[var(--color-muted-copy)]">
-            {translate('learningpath.error')}
-          </p>
-        ) : !path ? (
-          <p className="py-16 text-center text-sm text-[var(--color-muted-copy)]">
-            {translate('learningpath.loading')}
-          </p>
-        ) : (
-          <>
-            <MasteryOverview
-              percent={
-                path.totalTerms > 0 ? Math.round((path.masteredTerms / path.totalTerms) * 100) : 0
-              }
-              levelsCompleted={path.stages.reduce(
-                (count, stage) =>
-                  count + stage.levels.filter((level) => level.status === 'completed').length,
-                0
-              )}
-              levelsTotal={path.totalLevels}
-              accent={palette.primary}
-            />
-            <div className="scrollbar-thin flex gap-2 overflow-x-auto pb-3">
-              {path.stages.map((stage) => (
-                <div key={stage.id} className="flex items-start">
-                  <PathStageColumn
-                    stage={stage}
-                    title={bandTitle(stage.cefrLevel)}
-                    termsLabel={termsLabel}
-                    onSelectLevel={(levelId) => navigate(`/lesson-runner/${levelId}`)}
+      {/* Main Path Section */}
+      {failed ? (
+        <p className="py-16 text-center text-sm text-[var(--color-muted-copy)]">
+          {translate('learningpath.error')}
+        </p>
+      ) : !path ? (
+        <p className="py-16 text-center text-sm text-[var(--color-muted-copy)]">
+          {translate('learningpath.loading')}
+        </p>
+      ) : viewMode === 'mountain' ? (
+        <MountainRailwayPath
+          path={path}
+          onSelectLevel={(levelId) => navigate(`/lesson-runner/${levelId}`)}
+          selectedDiscipline={discipline}
+          onDisciplineChange={(newDisc) => setSelectedDiscipline(newDisc)}
+        />
+      ) : (
+        /* Classic Columns View */
+        <section className="rounded-2xl border border-border-soft bg-surface p-6 shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
+            <h3 className="text-sm font-bold text-foreground">
+              {translate('learningpath.legend')}
+            </h3>
+            <div className="flex flex-wrap items-center gap-4 text-[11px] text-muted-copy">
+              {(['available', 'in-progress', 'completed', 'locked'] as const).map((status) => (
+                <span key={status} className="flex items-center gap-1.5">
+                  <span
+                    className="inline-block h-2.5 w-2.5 rounded-full"
+                    style={{ backgroundColor: STATUS_DOT[status] }}
                   />
-                  {stage.cefrLevel !== 'C2' && (
-                    <div className="mt-[5.75rem] h-0.5 w-6 shrink-0 bg-[var(--color-border-soft)]" />
-                  )}
-                </div>
+                  {statusKey(status)}
+                </span>
               ))}
             </div>
-          </>
-        )}
+          </div>
 
-        <p className="mt-4 border-t border-[var(--color-border-soft)] pt-3 text-[11px] text-[var(--color-muted-copy)]">
-          {translate('learningpath.practice')} {translate('learningpath.contentHint')}
-        </p>
-      </section>
+          <MasteryOverview
+            percent={
+              path.totalTerms > 0 ? Math.round((path.masteredTerms / path.totalTerms) * 100) : 0
+            }
+            levelsCompleted={path.stages.reduce(
+              (count, stage) =>
+                count + stage.levels.filter((level) => level.status === 'completed').length,
+              0
+            )}
+            levelsTotal={path.totalLevels}
+            accent={palette.primary}
+          />
+          <div className="scrollbar-thin flex gap-2 overflow-x-auto pb-3">
+            {path.stages.map((stage) => (
+              <div key={stage.id} className="flex items-start">
+                <PathStageColumn
+                  stage={stage}
+                  title={bandTitle(stage.cefrLevel)}
+                  termsLabel={termsLabel}
+                  onSelectLevel={(levelId) => navigate(`/lesson-runner/${levelId}`)}
+                />
+                {stage.cefrLevel !== 'C2' && (
+                  <div className="mt-[5.75rem] h-0.5 w-6 shrink-0 bg-border-soft" />
+                )}
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-4 border-t border-border-soft pt-3 text-[11px] text-muted-copy">
+            {translate('learningpath.practice')} {translate('learningpath.contentHint')}
+          </p>
+        </section>
+      )}
     </PageContainer>
   );
 };

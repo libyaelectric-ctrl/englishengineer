@@ -2,11 +2,10 @@ import type * as THREE from 'three';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { logger } from '@/shared/logger';
-
 import { useLearningStore } from '@/core/learning';
 
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { logger } from '@/shared/logger';
 
 import { useAuthStore } from '@/features/auth';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';

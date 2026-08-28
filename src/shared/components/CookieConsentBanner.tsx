@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const STORAGE_KEY = 'engvox_cookie_consent';
 
@@ -52,7 +52,8 @@ const CookieConsentBanner = () => {
     <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-border-soft bg-surface/95 backdrop-blur-sm shadow-lg">
       <div className="mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-4 py-3 sm:px-6 max-w-7xl">
         <p className="text-xs sm:text-sm text-muted-copy leading-relaxed">
-          Bu site deneyimi iyileştirmek için çerez kullanır. Analitik çerezler yalnızca onayınızla etkinleştirilir.{' '}
+          Bu site deneyimi iyileştirmek için çerez kullanır. Analitik çerezler yalnızca onayınızla
+          etkinleştirilir.{' '}
           <a href="/privacy" className="underline text-primary hover:text-primary/80">
             Detaylı bilgi
           </a>

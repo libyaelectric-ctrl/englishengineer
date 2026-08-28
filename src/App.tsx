@@ -7,6 +7,7 @@ import { Suspense, lazy } from 'react';
 
 import { RouterProvider } from 'react-router-dom';
 
+import CookieConsentBanner from '@/shared/components/CookieConsentBanner';
 import { ToastContainer } from '@/shared/components/Toast';
 import { useDirection } from '@/shared/hooks/useDirection';
 
@@ -20,7 +21,6 @@ import {
 } from '@/features/auth/clerk.config';
 import { getClerkTheme } from '@/features/auth/clerk.theme';
 import { ThemeProvider, useTheme } from '@/features/theme/ThemeProvider';
-import CookieConsentBanner from '@/shared/components/CookieConsentBanner';
 
 const BillingSync = lazy(() =>
   import('@/features/billing/BillingSync').then((m) => ({ default: m.BillingSync }))

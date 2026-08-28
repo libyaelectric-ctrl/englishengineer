@@ -189,7 +189,10 @@ export const createSupabaseBillingRepository = (
         onConflict: 'user_id',
       });
       if (error) {
-        logger.warn('Failed to upsert billing customer', { error: error.message, userId: data.userId });
+        logger.warn('Failed to upsert billing customer', {
+          error: error.message,
+          userId: data.userId,
+        });
         // Non-fatal: billing_customers is supplementary data
       }
     },

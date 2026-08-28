@@ -22,7 +22,9 @@ const backendPackage = readJson('backend/package.json');
 
 // Dynamic version check — frontend and backend must match
 if (frontendPackage.version !== backendPackage.version) {
-  missing.push(`Version mismatch: frontend=${frontendPackage.version} backend=${backendPackage.version}`);
+  missing.push(
+    `Version mismatch: frontend=${frontendPackage.version} backend=${backendPackage.version}`
+  );
 }
 const expectedVersion = frontendPackage.version;
 

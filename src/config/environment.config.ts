@@ -37,7 +37,6 @@ export interface EnvironmentValidationResult {
     hasSupabaseUrl: boolean;
     hasSupabaseAnonKey: boolean;
     hasBillingApiUrl: boolean;
-
   };
 }
 
@@ -148,7 +147,6 @@ const readEnvValues = (source: EngVoxEnv | undefined) => {
     hasSupabaseUrl: isConfiguredPublicUrl(v.VITE_SUPABASE_URL),
     hasSupabaseAnonKey: Boolean(v.VITE_SUPABASE_ANON_KEY),
     hasBillingApiUrl: isConfiguredPublicUrl(v.VITE_BILLING_API_URL),
-
   };
 };
 
@@ -194,7 +192,6 @@ export const validateEnvironment = (
       hasSupabaseUrl: cfg.hasSupabaseUrl,
       hasSupabaseAnonKey: cfg.hasSupabaseAnonKey,
       hasBillingApiUrl: cfg.hasBillingApiUrl,
-
     },
   };
 };

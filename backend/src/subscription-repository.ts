@@ -5,7 +5,12 @@ export interface SubscriptionRepository {
   mode: string;
   getSubscriptionStatus(userId: string): Promise<SubscriptionSnapshot | null>;
   upsertSubscriptionStatus(userId: string, snapshot: SubscriptionSnapshot): Promise<void>;
-  upsertBillingCustomer(data: { userId: string; dodoCustomerId?: string | null; stripeCustomerId?: string | null; billingEmail?: string | null }): Promise<void>;
+  upsertBillingCustomer(data: {
+    userId: string;
+    dodoCustomerId?: string | null;
+    stripeCustomerId?: string | null;
+    billingEmail?: string | null;
+  }): Promise<void>;
   hasStripeEventBeenProcessed(eventId: string): Promise<boolean>;
   markStripeEventProcessed(eventId: string, metadata?: Record<string, unknown>): Promise<void>;
   getProcessedEventCount?(): number;
