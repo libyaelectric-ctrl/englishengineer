@@ -341,6 +341,9 @@ export type TranslationKey =
   | 'learningpath.band.b2'
   | 'learningpath.band.c1'
   | 'learningpath.band.c2'
+  | 'learningpath.apexTerminal'
+  | 'learningpath.apexDescription'
+  | 'learningpath.viewMode'
   // Rebranding labels
   | 'learningpath.careerPoints'
   | 'learningpath.shiftDays'
@@ -375,6 +378,8 @@ export type TranslationKey =
   | 'lesson.returnToControl'
   | 'lesson.correctTitle'
   | 'lesson.incorrectTitle'
+  | 'lesson.correctSubmission'
+  | 'lesson.incorrectSubmission'
   | 'lesson.correctAnswer'
   | 'lesson.tip'
   | 'lesson.continue'

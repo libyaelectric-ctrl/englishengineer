@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { createHmac, randomBytes, randomUUID } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { basename, extname, resolve } from 'node:path';
 import { format as formatWithPrettier } from 'prettier';

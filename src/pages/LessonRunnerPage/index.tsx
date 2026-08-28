@@ -59,6 +59,7 @@ const LessonRunnerPage = () => {
   const discipline = resolveDefaultDiscipline(profile.discipline);
 
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [questions, setQuestions] = useState<LessonQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -137,7 +138,10 @@ const LessonRunnerPage = () => {
         setQuestions(questionList);
         setLoading(false);
       } catch {
-        if (active) setLoading(false);
+        if (active) {
+          setLoading(false);
+          setLoadError(true);
+        }
       }
     };
 
@@ -178,7 +182,8 @@ const LessonRunnerPage = () => {
     } else {
       const termIds = questions.map((q) => q.term.id);
       masterTerms(termIds);
-      const result = completeGenericPractice('Vocabulary', 90, 5);
+      const score = questions.length > 0 ? Math.round((correctCount / questions.length) * 100) : 0;
+      const result = completeGenericPractice('Vocabulary', score, questions.length);
       setEarnedCp(result.xp);
       setCompleted(true);
     }
@@ -186,16 +191,32 @@ const LessonRunnerPage = () => {
 
   if (loading) {
     return (
-      <div className="flex h-96 w-full flex-col items-center justify-center gap-3 font-sans text-sm text-cyan-400">
+      <div className="flex h-96 w-full flex-col items-center justify-center gap-3 font-sans text-sm text-[var(--color-primary)]">
         <Cpu className="h-8 w-8 animate-pulse" />
         <p className="font-bold tracking-wider uppercase text-xs">{translate('lesson.loading')}</p>
       </div>
     );
   }
 
+  if (loadError) {
+    return (
+      <div className="flex h-96 w-full flex-col items-center justify-center gap-4 font-sans text-sm text-[var(--color-muted-copy)]">
+        <ShieldAlert className="h-10 w-10 text-rose-400" />
+        <p>{translate('learningpath.error')}</p>
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="flex items-center gap-2 rounded-xl border border-[var(--color-border-soft)] bg-[var(--surface)] px-5 py-2.5 text-xs font-bold text-[var(--foreground)] shadow hover:bg-[var(--surface-hover)]"
+        >
+          <RotateCcw className="h-4 w-4" /> {translate('lesson.backToRoadmap')}
+        </button>
+      </div>
+    );
+  }
+
   if (hearts <= 0) {
     return (
-      <div className="mx-auto mt-12 flex max-w-lg flex-col items-center gap-6 rounded-2xl border border-rose-500/40 bg-[#120509]/90 p-8 text-center font-sans shadow-[0_0_35px_rgba(244,63,94,0.25)] backdrop-blur-xl">
+      <div className="mx-auto mt-12 flex max-w-lg flex-col items-center gap-6 rounded-2xl border border-rose-500/40 bg-rose-950/30 p-8 text-center font-sans shadow-[0_0_35px_rgba(244,63,94,0.25)] backdrop-blur-xl">
         <ShieldAlert className="h-16 w-16 animate-pulse text-rose-400" />
         <div>
           <h2 className="text-2xl font-black text-rose-100">{translate('lesson.depletedTitle')}</h2>
@@ -228,12 +249,12 @@ const LessonRunnerPage = () => {
 
   if (!currentQ) {
     return (
-      <div className="flex h-96 w-full flex-col items-center justify-center gap-4 font-sans text-sm text-slate-400">
+      <div className="flex h-96 w-full flex-col items-center justify-center gap-4 font-sans text-sm text-[var(--color-muted-copy)]">
         <p>{translate('lesson.noTerms')}</p>
         <button
           type="button"
           onClick={() => navigate('/learning-path')}
-          className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-800 px-5 py-2.5 text-xs font-bold text-white shadow hover:bg-slate-700"
+          className="flex items-center gap-2 rounded-xl border border-[var(--color-border-soft)] bg-[var(--surface)] px-5 py-2.5 text-xs font-bold text-[var(--foreground)] shadow hover:bg-[var(--surface-hover)]"
         >
           <ArrowLeft className="h-4 w-4" /> {translate('lesson.backToRoadmap')}
         </button>
@@ -244,14 +265,14 @@ const LessonRunnerPage = () => {
   const progressPercent = Math.round(((currentIndex + 1) / questions.length) * 100);
 
   return (
-    <div className="relative w-full overflow-x-hidden flex flex-col gap-6 pb-8 pt-4 font-sans text-slate-100">
+    <div className="relative w-full overflow-x-hidden flex flex-col gap-6 pb-8 pt-4 font-sans text-[var(--foreground)]">
       {/* Cyber Telemetry Top HUD Bar */}
-      <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-800/80 bg-slate-950/70 p-3.5 shadow-md backdrop-blur-md">
+      <div className="flex items-center justify-between gap-4 rounded-2xl border border-[var(--color-border-soft)] bg-[var(--surface)] p-3.5 shadow-md backdrop-blur-md">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => navigate('/learning-path')}
-            className="flex min-h-11 items-center gap-1.5 rounded-xl border border-slate-700/60 bg-slate-900 px-3 text-slate-400 transition-all hover:bg-slate-800 hover:text-white"
+            className="flex min-h-11 items-center gap-1.5 rounded-xl border border-[var(--color-border-soft)] bg-[var(--surface-hover)] px-3 text-[var(--color-muted-copy)] transition-all hover:bg-[var(--surface)] hover:text-[var(--foreground)]"
             title={translate('lesson.backToRoadmap')}
           >
             <ArrowLeft className="h-4 w-4" />
@@ -262,7 +283,7 @@ const LessonRunnerPage = () => {
           <button
             type="button"
             onClick={() => navigate('/learning-path')}
-            className="flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-900 text-slate-400 transition-all hover:bg-slate-800 hover:text-white"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-[var(--color-border-soft)] bg-[var(--surface-hover)] text-[var(--color-muted-copy)] transition-all hover:bg-[var(--surface)] hover:text-[var(--foreground)]"
             title={translate('lesson.exitSimulator')}
           >
             <X className="h-4 w-4" />
@@ -271,19 +292,23 @@ const LessonRunnerPage = () => {
 
         {/* Progress Conduit */}
         <div className="flex flex-1 flex-col gap-1.5 px-2">
-          <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400 tabular-nums">
-            <span className="flex items-center gap-1.5 text-cyan-300">
+          <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[var(--color-muted-copy)] tabular-nums">
+            <span className="flex items-center gap-1.5 text-[var(--color-primary)]">
               <Cpu className="h-3.5 w-3.5" />
               {translate('lesson.taskProgress')
                 .replace('{current}', String(currentIndex + 1))
                 .replace('{total}', String(questions.length))}
             </span>
-            <span className="font-extrabold text-white">{progressPercent}%</span>
+            <span className="font-extrabold text-[var(--foreground)]">{progressPercent}%</span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--surface-hover)]">
             <div
               className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.8)] transition-[width] duration-500 ease-out"
               style={{ width: `${progressPercent}%` }}
+              role="progressbar"
+              aria-valuenow={progressPercent}
+              aria-valuemin={0}
+              aria-valuemax={100}
             />
           </div>
         </div>
@@ -296,7 +321,7 @@ const LessonRunnerPage = () => {
       </div>
 
       {/* Simulator Question Container */}
-      <div className="flex w-full flex-col items-center justify-center rounded-2xl border border-slate-800/80 bg-[#091122]/90 p-6 sm:p-8 shadow-[0_0_30px_rgba(6,182,212,0.12)] backdrop-blur-xl">
+      <div className="flex w-full flex-col items-center justify-center rounded-2xl border border-[var(--color-border-soft)] bg-[var(--surface)] p-6 sm:p-8 shadow-[0_0_30px_rgba(6,182,212,0.12)] backdrop-blur-xl">
         <div className="w-full flex justify-center">
           {currentQ.type === 'mc' && (
             <MultipleChoiceCard
@@ -320,6 +345,7 @@ const LessonRunnerPage = () => {
               options={currentQ.options}
               onSelectOption={handleSelectOption}
               disabled={isAnswerChecked}
+              learningLanguage={learningLanguage}
             />
           )}
           {currentQ.type === 'diagram' && (
@@ -334,7 +360,7 @@ const LessonRunnerPage = () => {
 
         {/* In-Card Verification Action Bar (Never covers sidebar or bottom footer) */}
         {!isAnswerChecked && (
-          <div className="mt-8 flex w-full max-w-xl items-center justify-end border-t border-slate-800/60 pt-5">
+          <div className="mt-8 flex w-full max-w-xl items-center justify-end border-t border-[var(--color-border-soft)] pt-5">
             <button
               type="button"
               disabled={!selectedAnswer}
@@ -349,6 +375,8 @@ const LessonRunnerPage = () => {
         {/* In-Card Feedback Drawer/Panel */}
         {isAnswerChecked && (
           <div
+            role="alert"
+            aria-live="assertive"
             className="mt-6 w-full max-w-xl rounded-xl border p-4 backdrop-blur-md transition-all animate-in fade-in zoom-in-95 duration-200"
             style={{
               borderColor: isCorrect ? 'rgba(16,185,129,0.5)' : 'rgba(244,63,94,0.5)',
@@ -360,16 +388,16 @@ const LessonRunnerPage = () => {
                 <p
                   className={`text-sm font-black uppercase tracking-wider ${isCorrect ? 'text-emerald-300' : 'text-rose-300'}`}
                 >
-                  {isCorrect ? 'Correct Submission' : 'Incorrect Submission'}
+                  {isCorrect ? translate('lesson.correctSubmission') : translate('lesson.incorrectSubmission')}
                 </p>
                 {!isCorrect && (
-                  <p className="mt-1 text-xs text-slate-300">
-                    Correct Answer:{' '}
-                    <strong className="text-white font-bold">{currentQ.correctAnswer}</strong>
+                  <p className="mt-1 text-xs text-[var(--color-muted-copy)]">
+                    {translate('lesson.correctAnswer')}:{' '}
+                    <strong className="text-[var(--foreground)] font-bold">{currentQ.correctAnswer}</strong>
                   </p>
                 )}
                 {currentQ.term.definition && (
-                  <p className="mt-1 text-[11px] text-slate-400 line-clamp-2">
+                  <p className="mt-1 text-[11px] text-[var(--color-muted-copy)] line-clamp-2">
                     {currentQ.term.definition}
                   </p>
                 )}

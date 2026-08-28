@@ -100,11 +100,13 @@ const LearningPathPage = () => {
         <PageHeader title={translate('learningpath.title')} />
 
         {/* View Mode Toggle Button */}
-        <div className="flex items-center gap-1 rounded-xl border border-border-soft bg-surface p-1 shadow-sm">
+        <div role="tablist" aria-label={translate('learningpath.viewMode')} className="flex items-center gap-1 rounded-xl border border-border-soft bg-surface p-1 shadow-sm">
           <button
             type="button"
+            role="tab"
+            aria-selected={viewMode === 'railway'}
             onClick={() => setViewMode('railway')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-2 min-h-11 text-xs font-bold transition-all cursor-pointer ${
               viewMode === 'railway'
                 ? 'bg-primary text-white shadow-sm'
                 : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
@@ -115,8 +117,10 @@ const LearningPathPage = () => {
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={viewMode === 'columns'}
             onClick={() => setViewMode('columns')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-2 min-h-11 text-xs font-bold transition-all cursor-pointer ${
               viewMode === 'columns'
                 ? 'bg-primary text-white shadow-sm'
                 : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'

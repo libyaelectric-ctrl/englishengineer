@@ -26,7 +26,6 @@ import {
   getPoolConfig,
   getPoolMetrics,
   startPoolHealthCheck,
-  stopPoolHealthCheck,
 } from './cache/connection-pool.js';
 import { initRedisCache } from './cache/redis-cache.service.js';
 import { toPublicHealth } from './config.js';

@@ -12,8 +12,6 @@ import {
 } from './billing-provider.js';
 import type { BillingRepository } from './billing-webhook-handlers.js';
 import { ApiError } from './errors.js';
-import { logger } from './logger.js';
-
 const WEBHOOK_PATH = '/api/webhooks/dodo';
 
 /** Standard Webhooks headers Dodo sends on every webhook delivery. */

@@ -23,7 +23,8 @@ export const RfiFillBlankCard = ({
   const [selected, setSelected] = useState<string | null>(null);
 
   const rawExample = term.exampleSentence || term.definition || term.term;
-  const parts = rawExample.split(new RegExp(`(${term.term})`, 'gi'));
+  const escapedTerm = term.term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const parts = rawExample.split(new RegExp(`(${escapedTerm})`, 'gi'));
 
   const handleSelect = (option: string) => {
     if (disabled) return;

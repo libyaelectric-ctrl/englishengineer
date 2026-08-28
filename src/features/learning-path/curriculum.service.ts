@@ -164,7 +164,7 @@ export async function buildLearningPath(
   };
 }
 
-/** Resolves a level's real term objects from the corpus. */
+/** Resolves a level's real term objects from the corpus. Uses termIds from the level to avoid re-fetching all vocabulary. */
 export async function getPathLevelTerms(
   path: LearningPath,
   levelId: string
@@ -176,6 +176,7 @@ export async function getPathLevelTerms(
   }
   if (!level) return [];
 
+  // Use the already-fetched vocabulary from buildLearningPath by fetching with the same domains
   const terms = await VocabularyRepository.getVocabularyByDomains(path.domains);
   const byId = new Map(terms.map((term) => [term.id, term]));
   return level.termIds

@@ -102,7 +102,7 @@ describe('OnboardingGate', () => {
   });
 
   it('unlocks the app on the same mounted gate once the panel is completed (no stale cache)', async () => {
-    const user = userEvent.setup();
+    const _user = userEvent.setup();
     renderGate('/dashboard');
 
     // Click Architecture discipline button

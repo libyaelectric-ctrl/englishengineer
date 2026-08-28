@@ -71,7 +71,7 @@ const NODE_H = 80;
 const H_GAP = 20; // horizontal gap between nodes
 const ROW_H = 140; // vertical height per row (node + label + connector)
 
-export const HighSpeedRailwayPath: React.FC<HighSpeedRailwayPathProps> = ({
+export const HighSpeedRailwayPath: React.FC<HighSpeedRailwayPathProps> = React.memo(({
   path,
   onSelectLevel,
 }) => {
@@ -92,9 +92,6 @@ export const HighSpeedRailwayPath: React.FC<HighSpeedRailwayPathProps> = ({
     }
     return path.stages[0]?.levels[0] ?? null;
   }, [path]);
-
-  // Global motif counter
-  let motifIdx = 0;
 
   return (
     <div className="w-full space-y-0 select-none font-sans" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -160,12 +157,12 @@ export const HighSpeedRailwayPath: React.FC<HighSpeedRailwayPathProps> = ({
 
               {/* Nodes row */}
               <div
-                className={`relative z-10 flex flex-nowrap items-end gap-0 overflow-x-auto pb-2 ${ltr ? 'flex-row' : 'flex-row-reverse'}`}
+                className={`relative z-10 flex flex-nowrap items-end gap-0 overflow-x-auto pb-2 scroll-fade-x ${ltr ? 'flex-row' : 'flex-row-reverse'}`}
                 style={{ gap: H_GAP }}
               >
                 {levels.map((level: PathLevel, lvlIdx: number) => {
-                  const motif = MOTIFS[motifIdx % MOTIFS.length];
-                  motifIdx++;
+                  const globalIdx = path.stages.slice(0, stageIdx).reduce((acc, s) => acc + s.levels.length, 0) + lvlIdx;
+                  const motif = MOTIFS[globalIdx % MOTIFS.length];
                   const MotifIcon = motif.icon;
                   const done = level.status === 'completed';
                   const active = level.status === 'in-progress';
@@ -212,6 +209,7 @@ export const HighSpeedRailwayPath: React.FC<HighSpeedRailwayPathProps> = ({
                         type="button"
                         onClick={() => !locked && onSelectLevel(level.id)}
                         disabled={locked}
+                        aria-label={`${level.cefrLevel} ${level.index + 1} - ${level.termCount} ${translate('learningpath.terms')} (${level.status})`}
                         style={{
                           width: NODE_W,
                           height: NODE_H,
@@ -314,7 +312,7 @@ export const HighSpeedRailwayPath: React.FC<HighSpeedRailwayPathProps> = ({
                   style={{ transform: isRTL ? 'scaleX(-1)' : undefined }}
                 >
                   <Train className="h-3.5 w-3.5 shrink-0" />
-                  <span>Switch → {path.stages[stageIdx + 1].cefrLevel} Line</span>
+                  <span>Switch → {translate(`learningpath.band.${path.stages[stageIdx + 1].cefrLevel.toLowerCase()}`)}</span>
                 </div>
               </div>
             )}
@@ -330,13 +328,13 @@ export const HighSpeedRailwayPath: React.FC<HighSpeedRailwayPathProps> = ({
         >
           <Train className="h-7 w-7" />
         </div>
-        <h3 className="text-lg font-black text-foreground">C2 Chief Engineer Grand Terminal</h3>
+        <h3 className="text-lg font-black text-foreground">{translate('learningpath.apexTerminal')}</h3>
         <p className="mt-1 text-xs text-muted-copy max-w-xs mx-auto">
-          All engineering disciplines mastered · International fluency achieved
+          {translate('learningpath.apexDescription')}
         </p>
       </div>
     </div>
   );
-};
+});
 
 export default HighSpeedRailwayPath;

@@ -12,11 +12,11 @@
  *
  * Usage: node scripts/a11y-audit.mjs [--fix] [--json] [--verbose]
  */
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 
 const args = process.argv.slice(2);
-const FIX_MODE = args.includes('--fix');
+
 const JSON_OUTPUT = args.includes('--json');
 const VERBOSE = args.includes('--verbose');
 const SRC_DIR = resolve(process.cwd(), 'src');

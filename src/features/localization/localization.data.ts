@@ -410,6 +410,9 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.band.b2': 'B2 · Advanced Core',
     'learningpath.band.c1': 'C1 · Proficient',
     'learningpath.band.c2': 'C2 · Expert',
+    'learningpath.apexTerminal': 'C2 Chief Engineer Grand Terminal',
+    'learningpath.apexDescription': 'All engineering disciplines mastered · International fluency achieved',
+    'learningpath.viewMode': 'View mode',
     'landing.workflowStep1Desc':
       'Establish your exact engineering discipline, site role, and project target to auto-generate personalized technical drills.',
     'beta.pathDemo': 'Explore demo content',
@@ -828,6 +831,8 @@ export const UI_TRANSLATIONS: Record<
     'lesson.returnToControl': 'Return to control center',
     'lesson.correctTitle': 'Correct inspection',
     'lesson.incorrectTitle': 'Incorrect submittal',
+    'lesson.correctSubmission': 'Correct Submission',
+    'lesson.incorrectSubmission': 'Incorrect Submission',
     'lesson.correctAnswer': 'Correct answer:',
     'lesson.tip': 'Tip',
     'lesson.continue': 'Continue',
@@ -1280,6 +1285,9 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.band.b2': 'B2 · İleri Çekirdek',
     'learningpath.band.c1': 'C1 · Uzman',
     'learningpath.band.c2': 'C2 · Uzman',
+    'learningpath.apexTerminal': 'C2 Baş Mühendislik Terminali',
+    'learningpath.apexDescription': 'Tüm mühendislik disiplinlerinde ustalık · Uluslararası dil yeterliliği',
+    'learningpath.viewMode': 'Görünüm modu',
     'landing.workflowStep1Desc':
       'Kişiselleştirilmiş teknik alıştırmaları otomatik oluşturmak için tam mühendislik disiplininizi, saha rolünüzü ve proje hedefinizi belirleyin.',
     'beta.pathDemo': 'Demo içeriği keşfet',

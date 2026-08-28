@@ -200,7 +200,7 @@ describe('AuthGuard – Clerk timeout fallback', () => {
   });
 
   it('reload button is accessible (keyboard navigable)', async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const _user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
     renderGuard();
     vi.advanceTimersByTime(8_000);

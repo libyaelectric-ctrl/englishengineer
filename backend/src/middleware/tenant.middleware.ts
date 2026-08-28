@@ -27,7 +27,7 @@ export const getTenantConfig = (tenantId: string): TenantContext | undefined => 
 /** Validate tenant exists and user has access */
 const validateTenantAccess = (
   tenantId: string,
-  userId: string
+  _userId: string
 ): { allowed: boolean; reason?: string } => {
   // In production, this would check Supabase for tenant membership
   // For now, allow all access in dev mode

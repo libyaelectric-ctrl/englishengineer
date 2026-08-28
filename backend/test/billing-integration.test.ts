@@ -21,11 +21,6 @@ import { createApp } from '../src/app.js';
 import { createBackendConfig } from '../src/config.js';
 import { createDodoBillingProvider } from '../src/dodo-billing-provider.js';
 import { ApiError } from '../src/errors.js';
-import {
-  type BillingCustomerData,
-  type BillingRepository,
-} from '../src/billing-webhook-handlers.js';
-import { createMemorySubscriptionRepository } from '../src/subscription-repository.js';
 import type { DodoConfig, SubscriptionSnapshot } from '../types.js';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
