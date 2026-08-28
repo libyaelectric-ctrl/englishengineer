@@ -37,6 +37,30 @@ vi.mock('@/features/profile', async (importOriginal) => ({
   SKILL_NAMES: ['reading', 'writing', 'listening', 'speaking', 'vocabulary', 'grammar'],
 }));
 
+vi.mock('@/features/profile/useLearningCockpit', () => ({
+  useLearningCockpit: vi.fn(() => ({
+    profile: {
+      skills: {
+        reading: { completedTasks: 5, weaknessScore: 0.3, skill: 'reading' },
+        writing: { completedTasks: 3, weaknessScore: 0.5, skill: 'writing' },
+        listening: { completedTasks: 2, weaknessScore: 0.6, skill: 'listening' },
+        speaking: { completedTasks: 1, weaknessScore: 0.7, skill: 'speaking' },
+        vocabulary: { completedTasks: 10, weaknessScore: 0.2, skill: 'vocabulary' },
+        grammar: { completedTasks: 8, weaknessScore: 0.4, skill: 'grammar' },
+      },
+    },
+    memory: { weakWords: [], dueToday: 0 },
+    missions: [],
+    learningState: { studySessions: [] },
+  })),
+}));
+
+vi.mock('@/features/profile/profile.repository', () => ({
+  LearningProfileRepository: {
+    getProfile: vi.fn(() => Promise.resolve(null)),
+  },
+}));
+
 vi.mock('@/features/learning-intelligence', async (importOriginal) => ({
   ...(await importOriginal()),
   useLearningIntelligenceStore: vi.fn(() => ({

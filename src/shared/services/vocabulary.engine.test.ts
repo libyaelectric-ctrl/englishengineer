@@ -41,7 +41,6 @@ describe('VocabularyEngine integration with UNIFIED_DIFFICULTY_SCORING', () => {
   });
 
   beforeEach(() => {
-    vi.resetModules();
     vi.stubEnv('VITE_FEATURE_FLAG_UNIFIED_DIFFICULTY', 'false');
     vi.clearAllMocks();
   });
@@ -53,8 +52,8 @@ describe('VocabularyEngine integration with UNIFIED_DIFFICULTY_SCORING', () => {
   describe('selectVocabularyForTask with flag false', () => {
     it('returns filtered terms without sorting by pool ratio', async () => {
       const terms = [
-        mockTerm({ id: 'z-term', term: 'zebra', vocabulary: ['unknown'] }),
-        mockTerm({ id: 'a-term', term: 'apple', vocabulary: ['known'] }),
+        mockTerm({ id: 'z-term', term: 'zebra' }),
+        mockTerm({ id: 'a-term', term: 'apple' }),
       ];
       (VocabularyRepository.getVocabularyByLevel as vi.Mock).mockResolvedValue(terms);
       (useLearningStore.getState as vi.Mock).mockReturnValue({
@@ -107,25 +106,25 @@ describe('VocabularyEngine integration with UNIFIED_DIFFICULTY_SCORING', () => {
 
     it('sorts terms by pool ratio when flag is enabled', async () => {
       const terms = [
-        mockTerm({ id: 't1', term: 'no-match', vocabulary: ['unknown'] }),
-        mockTerm({ id: 't2', term: 'partial', vocabulary: ['known', 'unknown'] }),
-        mockTerm({ id: 't3', term: 'full-match', vocabulary: ['known', 'words'] }),
+        mockTerm({ id: 't1', term: 'zebra' }),
+        mockTerm({ id: 't2', term: 'known' }),
+        mockTerm({ id: 't3', term: 'apple' }),
       ];
       (VocabularyRepository.getVocabularyByLevel as vi.Mock).mockResolvedValue(terms);
       (useLearningStore.getState as vi.Mock).mockReturnValue({
-        vocabularyPool: ['known', 'words'],
+        vocabularyPool: ['known'],
       });
 
       const result = await VocabularyEngine.selectVocabularyForTask('vocabulary', 'A1');
 
-      // Should be sorted by pool ratio (highest overlap first)
-      expect(result[0].id).toBe('t3');
-      expect(result[1].id).toBe('t2');
-      expect(result[2].id).toBe('t1');
+      // VocabularyTerm has single-word extraction via `term` field.
+      // t2 ('known') matches pool → score 0.75; t1, t3 don't match → score 0.25
+      // Pool-matching term must sort first
+      expect(result[0].id).toBe('t2');
     });
 
     it('uses vocabularyPool from learning store', async () => {
-      const terms = [mockTerm({ id: 't1', term: 'test', vocabulary: ['pool-term'] })];
+      const terms = [mockTerm({ id: 't1', term: 'pool-term' })];
       (VocabularyRepository.getVocabularyByLevel as vi.Mock).mockResolvedValue(terms);
       (useLearningStore.getState as vi.Mock).mockReturnValue({
         vocabularyPool: ['pool-term', 'other-term'],
@@ -138,10 +137,7 @@ describe('VocabularyEngine integration with UNIFIED_DIFFICULTY_SCORING', () => {
     });
 
     it('handles empty pool gracefully', async () => {
-      const terms = [
-        mockTerm({ id: 't1', term: 'test', vocabulary: ['known'] }),
-        mockTerm({ id: 't2', term: 'test2', vocabulary: ['unknown'] }),
-      ];
+      const terms = [mockTerm({ id: 't1', term: 'test' }), mockTerm({ id: 't2', term: 'test2' })];
       (VocabularyRepository.getVocabularyByLevel as vi.Mock).mockResolvedValue(terms);
       (useLearningStore.getState as vi.Mock).mockReturnValue({
         vocabularyPool: [],

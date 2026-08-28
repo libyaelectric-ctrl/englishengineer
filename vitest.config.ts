@@ -17,7 +17,7 @@ export default defineConfig({
     testTimeout: 60_000,
     hookTimeout: 120_000,
     teardownTimeout: 30_000,
-    isolate: false,
+    isolate: true,
     exclude: [
       'node_modules/**',
       'dist/**',
@@ -27,30 +27,11 @@ export default defineConfig({
       '.mimocode/**',
       'src/shared/tests/integration/**',
       'test/integration/**',
-      'src/features/profile/OnboardingGate.test.tsx',
+      // AuthGuard uses dynamic `await import('./AuthGuard')` with Clerk mocks
+      // and vi.useFakeTimers. The dynamic import hangs indefinitely in the
+      // Vitest worker because Clerk's module initialization never resolves
+      // under the mock. Requires Clerk runtime or a different mock strategy.
       'src/features/auth/AuthGuard.test.tsx',
-      'src/shared/components/accessibility.test.tsx',
-      'src/features/learning-intelligence/decisions-61-70.test.ts',
-      'src/core/architecture.test.ts',
-      'src/layouts/AppShell.test.tsx',
-      'src/pages/PricingPage.test.tsx',
-      'src/pages/ToolsPage.test.tsx',
-      'src/pages/QuickToolsPage.test.tsx',
-      'src/features/beta/BetaFeedbackWidget.test.tsx',
-      'src/features/billing/billing-flow.test.tsx',
-      'src/features/billing/SubscriptionRouteGuard.test.tsx',
-      'src/features/learning-path/curriculum.service.test.ts',
-      'src/pages/DashboardPage/DashboardPage.test.tsx',
-      'src/shared/services/profile-engine.test.ts',
-      'src/features/writing/writing-submit.service.test.ts',
-      'src/pages/VocabularyPage.test.tsx',
-      'src/features/speaking/audio-upload/speaking-submit.service.test.ts',
-      'src/features/billing/stripe.provider.test.ts',
-      'src/pages/WorkToolsPage.test.tsx',
-      'src/features/listening/listening.service.test.ts',
-      'src/features/writing/writing.evaluator.test.ts',
-      'src/shared/services/vocabulary.engine.test.ts',
-      'src/shared/services/grammar.engine.test.ts',
     ],
     coverage: {
       provider: 'v8',

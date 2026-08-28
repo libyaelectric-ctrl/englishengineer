@@ -49,54 +49,16 @@ describe('GrammarEngine integration with UNIFIED_DIFFICULTY_SCORING', () => {
   });
 
   const mockSkillProfile = (overrides: Partial<UserSkillProfile> = {}): UserSkillProfile => ({
-    vocabulary: {
-      cefrLevel: 'A1',
-      elo: 1000,
-      weaknessScore: 0,
-      progressToNextBand: 0,
-      completedTasks: 0,
-    },
-    grammar: {
-      cefrLevel: 'A1',
-      elo: 1000,
-      weaknessScore: 0,
-      progressToNextBand: 0,
-      completedTasks: 0,
-    },
-    reading: {
-      cefrLevel: 'A1',
-      elo: 1000,
-      weaknessScore: 0,
-      progressToNextBand: 0,
-      completedTasks: 0,
-    },
-    writing: {
-      cefrLevel: 'A1',
-      elo: 1000,
-      weaknessScore: 0,
-      progressToNextBand: 0,
-      completedTasks: 0,
-    },
-    listening: {
-      cefrLevel: 'A1',
-      elo: 1000,
-      weaknessScore: 0,
-      progressToNextBand: 0,
-      completedTasks: 0,
-    },
-    speaking: {
-      cefrLevel: 'A1',
-      elo: 1000,
-      weaknessScore: 0,
-      progressToNextBand: 0,
-      completedTasks: 0,
-    },
-    discipline: 'general',
+    vocabulary: 'A1',
+    grammar: 'A1',
+    reading: 'A1',
+    writing: 'A1',
+    listening: 'A1',
+    speaking: 'A1',
     ...overrides,
   });
 
   beforeEach(() => {
-    vi.resetModules();
     vi.stubEnv('VITE_FEATURE_FLAG_UNIFIED_DIFFICULTY', 'false');
     vi.clearAllMocks();
   });
@@ -108,8 +70,13 @@ describe('GrammarEngine integration with UNIFIED_DIFFICULTY_SCORING', () => {
   describe('selectGrammarForTask with flag false', () => {
     it('returns filtered rules without sorting by pool ratio', async () => {
       const rules = [
-        mockRule({ id: 'z-rule', title: 'Z Rule', structure: 'subject verb object' }),
-        mockRule({ id: 'a-rule', title: 'A Rule', structure: 'subject verb' }),
+        mockRule({
+          id: 'z-rule',
+          title: 'Z Rule',
+          difficulty: 1,
+          structure: 'subject verb object',
+        }),
+        mockRule({ id: 'a-rule', title: 'A Rule', difficulty: 3, structure: 'subject verb' }),
       ];
       (GrammarRepository.getGrammarRulesByLevel as vi.Mock).mockResolvedValue(rules);
       (GrammarProgressService.get as vi.Mock).mockReturnValue({ reviewStatus: 'New' });
@@ -119,7 +86,8 @@ describe('GrammarEngine integration with UNIFIED_DIFFICULTY_SCORING', () => {
 
       const result = await GrammarEngine.selectGrammarForTask('grammar', 'A1', 'fill-blank');
 
-      // Should return filtered rules in original order (no pool sorting)
+      // sortByCurriculumOrder always applies (difficulty asc → title asc)
+      // z-rule (difficulty 1) before a-rule (difficulty 3), no pool-ratio sorting
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe('z-rule');
       expect(result[1].id).toBe('a-rule');
@@ -238,9 +206,8 @@ describe('GrammarEngine integration with UNIFIED_DIFFICULTY_SCORING', () => {
     });
 
     it('returns empty array for missing skill profile', async () => {
-      const profile = { ...mockSkillProfile(), grammar: undefined };
       const result = await GrammarEngine.selectGrammarForUserProfile(
-        profile as UserSkillProfile,
+        { grammar: undefined } as UserSkillProfile,
         'grammar',
         'fill-blank'
       );

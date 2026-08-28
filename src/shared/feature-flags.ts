@@ -9,10 +9,14 @@
 
 export const FEATURE_FLAGS = {
   /** Team feature is in beta — flag controls visibility in router */
-  TEAM_BETA: import.meta.env.VITE_FEATURE_FLAG_TEAM_BETA === 'true',
+  get TEAM_BETA() {
+    return import.meta.env.VITE_FEATURE_FLAG_TEAM_BETA === 'true';
+  },
 
   /** Unified difficulty scoring — sorts content by knowledge pool ratio */
-  UNIFIED_DIFFICULTY_SCORING: import.meta.env.VITE_FEATURE_FLAG_UNIFIED_DIFFICULTY === 'true',
+  get UNIFIED_DIFFICULTY_SCORING() {
+    return import.meta.env.VITE_FEATURE_FLAG_UNIFIED_DIFFICULTY === 'true';
+  },
 } as const;
 
 export type FeatureFlag = keyof typeof FEATURE_FLAGS;
