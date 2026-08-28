@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { act } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { act } from 'react';
 
 import { useCountUp } from './useCountUp';
 

@@ -19,7 +19,11 @@ describe('curriculum.service (real vocabulary database)', () => {
     expect(path.stages).toHaveLength(6);
     expect(path.totalLevels).toBeGreaterThan(30);
 
-    const all = await VocabularyRepository.getVocabularyByDomains(['general', 'engineering', 'electrical']);
+    const all = await VocabularyRepository.getVocabularyByDomains([
+      'general',
+      'engineering',
+      'electrical',
+    ]);
     expect(path.totalTerms).toBe(all.length);
     // general (2327) + engineering (1104) + electrical (1492)
     expect(path.totalTerms).toBeGreaterThanOrEqual(4900);

@@ -63,12 +63,17 @@ export default defineConfig(() => {
             // renders a white screen. Keep them together in 'vendor-react'.
             if (id.includes('@clerk')) return 'vendor-clerk';
             if (id.includes('three')) return 'vendor-three';
-            if (id.includes('react-router') || id.includes('react-router-dom') || id.includes('@remix-run')) return 'vendor-router';
-            if (id.includes('zustand') || id.includes('@tanstack/react-query')) return 'vendor-state';
+            if (
+              id.includes('react-router') ||
+              id.includes('react-router-dom') ||
+              id.includes('@remix-run')
+            )
+              return 'vendor-router';
+            if (id.includes('zustand') || id.includes('@tanstack/react-query'))
+              return 'vendor-state';
             if (id.includes('@supabase')) return 'vendor-supabase';
             if (id.includes('@opentelemetry') || id.includes('@sentry')) return 'vendor-telemetry';
             return 'vendor-react';
-
           },
         },
         onwarn(warning, warn) {

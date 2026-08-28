@@ -7,7 +7,7 @@ import { SectionCard } from '@/shared/components/SectionCard';
 import { playSound } from '@/shared/utils/sound';
 
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
-import { useLocalizationStore, INTERFACE_LANGUAGES } from '@/features/localization';
+import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import type { VocabularyMenuState, VocabularyTerm } from '@/features/vocabulary';
 
 import type { VocabularyUIState } from '../VocabularyPageReducer';

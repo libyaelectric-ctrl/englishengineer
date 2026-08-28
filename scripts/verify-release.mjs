@@ -19,7 +19,7 @@ const audioFiles = existsSync(resolve('public/audio'))
 const readJson = (path) => JSON.parse(readFileSync(resolve(path), 'utf8'));
 const frontendPackage = readJson('package.json');
 const backendPackage = readJson('backend/package.json');
-const expectedVersion = '2.4.7';
+const expectedVersion = '4.0.22';
 
 if (frontendPackage.version !== expectedVersion || backendPackage.version !== expectedVersion) {
   missing.push('frontend and backend versions must both be ' + expectedVersion);
@@ -217,10 +217,7 @@ for (const [key, minimum] of Object.entries(minimums)) {
   if (content[key] < minimum) missing.push(`${key} must be at least ${minimum}`);
 }
 
-const levelSource = readFileSync(
-  resolve('src/features/level-system/level-system.types.ts'),
-  'utf8'
-);
+const levelSource = readFileSync(resolve('src/shared/types/domain.types.ts'), 'utf8');
 if (!levelSource.includes("['A1', 'A2', 'B1', 'B2', 'C1', 'C2']")) {
   missing.push('CEFR level order must be A1, A2, B1, B2, C1, C2');
 }

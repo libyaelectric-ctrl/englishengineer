@@ -3,10 +3,10 @@ import { useMemo } from 'react';
 import { useLearningStore } from '@/core/learning';
 
 import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
+import { LearningProfileEngine } from '@/shared/services/profile-engine.service';
 import { getBaseCefrLevel } from '@/shared/utils/profile.utils';
 
 import { useAuthStore } from '@/features/auth';
-import { LearningProfileEngine } from '@/shared/services/profile-engine.service';
 
 import type { SkillKey } from './level-system.types';
 

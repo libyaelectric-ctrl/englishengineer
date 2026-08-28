@@ -1,15 +1,14 @@
 import type { LearningDataSkill } from '@/core/learning/spaced-repetition.types';
 
+import { GrammarEngine } from '@/shared/services/grammar.engine';
 import { GrammarRepository } from '@/shared/services/grammar.repository';
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
+import { getPreferredDomains } from '@/shared/services/profile-preferences.service';
+import { VocabularyMenuService } from '@/shared/services/vocabulary-menu.service';
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import type { CefrLevel, SkillName, UserLearningProfile } from '@/shared/types/domain.types';
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
 import { getBaseCefrLevel, getNextCefrBand, getTaskBandMix } from '@/shared/utils/profile.utils';
-
-import { GrammarEngine } from '@/shared/services/grammar.engine';
-import { getPreferredDomains } from '@/shared/services/profile-preferences.service';
-import { VocabularyMenuService } from '@/shared/services/vocabulary-menu.service';
 
 import type {
   LearningTaskRecommendation,

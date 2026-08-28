@@ -93,6 +93,7 @@ export const getPreferredDomains = (
     return [profile.discipline, 'general', 'engineering'];
   }
   const professionDomains =
-    PROFESSIONS.find((profession) => profession.id === profile.professionId)?.preferredDomains ?? [];
+    PROFESSIONS.find((profession) => profession.id === profile.professionId)?.preferredDomains ??
+    [];
   return [...new Set([...professionDomains, 'general', 'engineering'])];
 };

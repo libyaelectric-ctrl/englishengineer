@@ -95,20 +95,20 @@ for every feature area (`billing`, `auth`, `ai`, `vocabulary`, `grammar`,
 
 Measured on the same green 981-test run (`npm run test:coverage`, v8):
 
-| Area (threshold 80%) | Lines | Functions | Statements | Branches | Status |
-| --- | --- | --- | --- | --- | --- |
-| `src/core/**` | 76.5 | 69.0 | 74.6 | 60.5 | ❌ closest |
-| `src/features/grammar/**` | 67.3 | 66.2 | 67.7 | 57.1 | ❌ |
-| `src/features/vocabulary/**` | 66.3 | 63.0 | 65.2 | 54.8 | ❌ |
-| `src/shared/**` | 57.5 | 54.3 | 55.8 | 51.4 | ❌ |
-| `src/features/writing/**` | 56.4 | 46.6 | 56.1 | 36.8 | ❌ |
-| `src/features/ai/**` | 49.7 | 41.8 | 48.2 | 32.0 | ❌ |
-| `src/features/speaking/**` | 48.3 | 44.3 | 48.4 | 32.6 | ❌ |
-| `src/features/billing/**` | 36.4 | 29.4 | 35.2 | 31.2 | ❌ |
-| `src/features/auth/**` | 26.1 | 35.7 | 24.7 | 18.0 | ❌ |
-| `src/features/listening/**` | 21.3 | 24.8 | 19.8 | 14.1 | ❌ |
-| `src/features/reading/**` | 3.4 | 8.3 | 3.4 | 1.6 | ❌ lowest |
-| **Total `src/**` (threshold 75%)** | **46.9** | **42.0** | **46.0** | **34.9** | ❌ |
+| Area (threshold 80%)               | Lines    | Functions | Statements | Branches | Status     |
+| ---------------------------------- | -------- | --------- | ---------- | -------- | ---------- |
+| `src/core/**`                      | 76.5     | 69.0      | 74.6       | 60.5     | ❌ closest |
+| `src/features/grammar/**`          | 67.3     | 66.2      | 67.7       | 57.1     | ❌         |
+| `src/features/vocabulary/**`       | 66.3     | 63.0      | 65.2       | 54.8     | ❌         |
+| `src/shared/**`                    | 57.5     | 54.3      | 55.8       | 51.4     | ❌         |
+| `src/features/writing/**`          | 56.4     | 46.6      | 56.1       | 36.8     | ❌         |
+| `src/features/ai/**`               | 49.7     | 41.8      | 48.2       | 32.0     | ❌         |
+| `src/features/speaking/**`         | 48.3     | 44.3      | 48.4       | 32.6     | ❌         |
+| `src/features/billing/**`          | 36.4     | 29.4      | 35.2       | 31.2     | ❌         |
+| `src/features/auth/**`             | 26.1     | 35.7      | 24.7       | 18.0     | ❌         |
+| `src/features/listening/**`        | 21.3     | 24.8      | 19.8       | 14.1     | ❌         |
+| `src/features/reading/**`          | 3.4      | 8.3       | 3.4        | 1.6      | ❌ lowest  |
+| **Total `src/**` (threshold 75%)** | **46.9** | **42.0**  | **46.0**   | **34.9** | ❌         |
 
 **Finding:** every configured threshold is currently unmet, so
 `npm run test:coverage` exits non-zero and the CI `Test Coverage` step fails

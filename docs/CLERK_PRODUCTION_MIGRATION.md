@@ -114,8 +114,8 @@ Update these in Vercel → Settings → Environment Variables:
 
 Update these in Render → Service → Environment:
 
-| Variable       | Development                                       | Production                 |
-| -------------- | ------------------------------------------------- | -------------------------- |
+| Variable       | Development                                       | Production           |
+| -------------- | ------------------------------------------------- | -------------------- |
 | `CLERK_ISSUER` | `https://dominant-cricket-288.clerk.accounts.dev` | `https://engvox.com` |
 
 > `CLERK_SECRET_KEY` is not currently set on Render. If you add it for backend API calls, use the `sk_live_` version.

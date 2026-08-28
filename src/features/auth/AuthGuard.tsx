@@ -1,9 +1,9 @@
 import { useAuth } from '@clerk/clerk-react';
+import * as Sentry from '@sentry/react';
 
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 
-import * as Sentry from '@sentry/react';
 import { Navigate, useLocation } from 'react-router-dom';
 
 import { LoadingState } from '@/shared/components/LoadingState';
@@ -47,7 +47,7 @@ export const AuthGuard = ({ children }: AuthGuardProps) => {
         scope.setLevel('warning');
       });
       Sentry.captureMessage(
-        'Clerk failed to load within timeout — likely blocked by ad blocker or privacy extension',
+        'Clerk failed to load within timeout — likely blocked by ad blocker or privacy extension'
       );
       setClerkTimedOut(true);
     }, CLERK_TIMEOUT_MS);

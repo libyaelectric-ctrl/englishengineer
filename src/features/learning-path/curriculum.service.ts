@@ -184,6 +184,8 @@ export async function getPathLevelTerms(
 }
 
 /** Stable default for users without a persisted discipline. */
-export function resolveDefaultDiscipline(discipline?: EngineeringDiscipline): EngineeringDiscipline {
+export function resolveDefaultDiscipline(
+  discipline?: EngineeringDiscipline
+): EngineeringDiscipline {
   return discipline ?? 'electrical';
 }

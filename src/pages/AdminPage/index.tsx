@@ -8,17 +8,10 @@
  * 4. Billing Overview
  * 5. System Logs
  */
+import { LogOut, RefreshCw, Settings, Shield, Users, Wallet } from 'lucide-react';
 
 import { useEffect } from 'react';
 
-import {
-  LogOut,
-  RefreshCw,
-  Settings,
-  Shield,
-  Users,
-  Wallet,
-} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/shared/components/Button';
@@ -89,7 +82,12 @@ export const AdminPage = () => {
             </div>
             <h1 className="mt-4 text-2xl font-bold text-foreground">EngVox Command Console</h1>
             <div className="flex items-center gap-2 mt-2">
-              <Button variant="ghost" size="sm" onClick={() => window.location.assign('/dashboard')} className="text-xs">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => window.location.assign('/dashboard')}
+                className="text-xs"
+              >
                 ← Dashboard
               </Button>
               <Button variant="ghost" size="sm" onClick={handleLogout} className="text-xs">
@@ -113,7 +111,9 @@ export const AdminPage = () => {
                     : 'border-border-soft bg-surface text-muted-copy hover:bg-surface-hover'
                 }`}
               >
-                <span className={`h-1.5 w-1.5 rounded-full ${autoRefresh ? 'bg-emerald-500 animate-pulse' : 'bg-muted-copy/50'}`} />
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${autoRefresh ? 'bg-emerald-500 animate-pulse' : 'bg-muted-copy/50'}`}
+                />
                 Auto {autoRefresh ? 'ON' : 'OFF'}
               </button>
               <span className="text-[10px] font-bold text-muted-copy">
@@ -124,16 +124,28 @@ export const AdminPage = () => {
 
           {/* Quick Nav Anchors */}
           <div className="flex flex-wrap gap-2">
-            <a href="#stats" className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all">
+            <a
+              href="#stats"
+              className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all"
+            >
               <Shield className="h-3 w-3" /> Stats
             </a>
-            <a href="#users" className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all">
+            <a
+              href="#users"
+              className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all"
+            >
               <Users className="h-3 w-3" /> Users
             </a>
-            <a href="#billing" className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all">
+            <a
+              href="#billing"
+              className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all"
+            >
               <Wallet className="h-3 w-3" /> Billing
             </a>
-            <a href="#system" className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all">
+            <a
+              href="#system"
+              className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all"
+            >
               <Settings className="h-3 w-3" /> System
             </a>
           </div>

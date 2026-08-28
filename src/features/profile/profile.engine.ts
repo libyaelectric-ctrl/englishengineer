@@ -1,3 +1,1 @@
-export {
-  LearningProfileEngine,
-} from '@/shared/services/profile-engine.service';
+export { LearningProfileEngine } from '@/shared/services/profile-engine.service';

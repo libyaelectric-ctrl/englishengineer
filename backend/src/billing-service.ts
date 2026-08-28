@@ -1,5 +1,4 @@
 import Stripe from 'stripe';
-import { logger } from './logger.js';
 
 import type { DodoConfig, PlanId } from '../types.js';
 import { emptySubscription, requireText } from './billing-helpers.js';
@@ -13,6 +12,7 @@ import {
 import type { BillingRepository } from './billing-webhook-handlers.js';
 import { createDodoBillingProvider } from './dodo-billing-provider.js';
 import { ApiError } from './errors.js';
+import { logger } from './logger.js';
 import { StripeProviderConfig, createStripeBillingProvider } from './stripe-billing-provider.js';
 
 export type { BillingProviderName } from './billing-provider.js';

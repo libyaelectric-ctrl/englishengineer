@@ -106,8 +106,7 @@ export const PRReviewCoachService = {
       const text = response.text.replace('AI REFINEMENT:\n', '').trim();
 
       const structured = response.structuredResult as
-        | { toneFeedback?: string; strengths?: string[] }
-        | undefined;
+        { toneFeedback?: string; strengths?: string[] } | undefined;
 
       const toneFeedback =
         typeof structured?.toneFeedback === 'string'

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { logger } from '@/shared/logger';
 
+import { useLearningLanguage } from '@/features/profile/use-learning-language';
 import {
   PronunciationService,
   type VocabularyMenuProgress,
@@ -11,7 +12,6 @@ import {
   repairVocabularyText,
 } from '@/features/vocabulary';
 import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
-import { useLearningLanguage } from '@/features/profile/use-learning-language';
 
 interface WordCardHeaderProps {
   term: VocabularyTerm;

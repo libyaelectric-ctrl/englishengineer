@@ -70,9 +70,8 @@ export const DISCIPLINE_PALETTES: Record<EngineeringDiscipline, DisciplinePalett
   },
 };
 
-export const getDisciplinePalette = (
-  discipline: EngineeringDiscipline
-): DisciplinePalette => DISCIPLINE_PALETTES[discipline];
+export const getDisciplinePalette = (discipline: EngineeringDiscipline): DisciplinePalette =>
+  DISCIPLINE_PALETTES[discipline];
 
 /** Status color mapping for path level nodes (generic progress semantics). */
 export const STATUS_COLORS: Record<'locked' | 'available' | 'in-progress' | 'completed', string> = {

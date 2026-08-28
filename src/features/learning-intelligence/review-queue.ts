@@ -1,10 +1,12 @@
 import { GrammarProgressService } from '@/shared/services/grammar-progress.service';
 import { GrammarRepository } from '@/shared/services/grammar.repository';
+import {
+  VocabularyMenuService,
+  isVocabularyProgressDue,
+} from '@/shared/services/vocabulary-menu.service';
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import type { UserLearningProfile } from '@/shared/types/domain.types';
 import { SKILL_NAMES } from '@/shared/types/domain.types';
-
-import { isVocabularyProgressDue, VocabularyMenuService } from '@/shared/services/vocabulary-menu.service';
 
 import { LearningIntelligenceService } from './learning-intelligence.service';
 import type { ReviewPriorityCandidate, UnifiedReviewItem } from './learning-intelligence.types';

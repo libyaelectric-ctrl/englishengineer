@@ -1,13 +1,13 @@
 import { ChevronDown } from 'lucide-react';
 import { Volume2 } from 'lucide-react';
 
+import { useLearningLanguage } from '@/features/profile/use-learning-language';
 import {
   PronunciationService,
   type VocabularyTerm,
   repairVocabularyText,
 } from '@/features/vocabulary';
 import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
-import { useLearningLanguage } from '@/features/profile/use-learning-language';
 
 import { SentencePanel } from './SentencePanel';
 
@@ -38,9 +38,7 @@ export const WordCardDetails = ({ term, showDetails, onToggle }: WordCardDetails
         <>
           {/* Meaning in selected language */}
           <div className="mt-4 mb-3 flex items-center justify-between">
-            <p className="text-xl font-bold text-foreground">
-              {repairVocabularyText(meaning)}
-            </p>
+            <p className="text-xl font-bold text-foreground">{repairVocabularyText(meaning)}</p>
             <button
               type="button"
               onClick={() => PronunciationService.speak(meaning)}
@@ -65,11 +63,7 @@ export const WordCardDetails = ({ term, showDetails, onToggle }: WordCardDetails
           </dl>
 
           {/* Example sentences */}
-          <SentencePanel
-            word={term.term}
-            partOfSpeech={term.partOfSpeech}
-            meaning={meaning}
-          />
+          <SentencePanel word={term.term} partOfSpeech={term.partOfSpeech} meaning={meaning} />
         </>
       )}
     </div>

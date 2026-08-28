@@ -374,9 +374,10 @@ const verifySupabase = async (environment, evidence) => {
 };
 
 const dodoRequest = async (environment, path, body, method = 'POST') => {
-  const baseUrl = environment.DODO_PAYMENTS_ENVIRONMENT === 'test'
-    ? 'https://test.dodopayments.com'
-    : 'https://live.dodopayments.com';
+  const baseUrl =
+    environment.DODO_PAYMENTS_ENVIRONMENT === 'test'
+      ? 'https://test.dodopayments.com'
+      : 'https://live.dodopayments.com';
   return jsonRequest(`${baseUrl}${path}`, {
     method,
     headers: {
@@ -457,7 +458,10 @@ const verifyDodo = async (environment, authContext, evidence) => {
   }
   evidence.push(['DodoPayments test-mode Checkout Session', 'PASS']);
 
-  evidence.push(['DodoPayments webhook delivery', 'NOT VERIFIED (manual Dodo dashboard check required)']);
+  evidence.push([
+    'DodoPayments webhook delivery',
+    'NOT VERIFIED (manual Dodo dashboard check required)',
+  ]);
 };
 
 const verifyAI = async (environment, authContext, evidence) => {
@@ -733,7 +737,7 @@ const writeReport = async ({
     '## Locally Verified Evidence',
     '',
     '- The verifier loads supported environment files and process variables without printing values.',
-    '- Required modes and Stripe test-mode configuration are validated before any live request.',
+    '- Required modes and Dodo test-mode configuration are validated before any live request.',
     `- Secret-pattern scan: **${secretFindings.length === 0 ? 'PASS (0 high-confidence findings)' : `FAIL (${secretFindings.length} finding(s))`}**.`,
     `- Environment ignore coverage: **${envIgnored ? 'PASS' : 'FAIL'}**.`,
     '- Static Supabase RLS and local service behavior remain covered by the project quality scripts.',
@@ -750,13 +754,13 @@ const writeReport = async ({
     '',
     ...formatEvidence(evidence),
     '',
-    'The report never treats Stripe Dashboard/CLI delivery, provider-failure injection, or service dashboards as verified unless those actions actually ran.',
+    'The report never treats Dodo Dashboard/CLI delivery, provider-failure injection, or service dashboards as verified unless those actions actually ran.',
     '',
     '## Not Yet Verified Evidence',
     '',
     ...(complete
       ? [
-          '- Stripe Dashboard or Stripe CLI webhook delivery.',
+          '- Dodo Dashboard or Dodo CLI webhook delivery.',
           '- Destructive live AI provider-failure and malformed-response injection.',
           '- Service-vendor dashboard screenshots.',
         ]
@@ -765,7 +769,7 @@ const writeReport = async ({
           '- Cloud snapshot save/load against staging.',
           '- Cloud-to-local restore against a real staging account.',
           '- Live offline/failure recovery against staging.',
-          '- Stripe test-mode Checkout, Customer Portal, webhook and entitlement update.',
+          '- Dodo test-mode Checkout, Customer Portal, webhook and entitlement update.',
           '- Real AI request through the deployed backend proxy.',
           '- Upstash REST availability and shared counter behavior.',
         ]),
@@ -791,7 +795,7 @@ const writeReport = async ({
       ? '- No high-confidence committed secret pattern was found.'
       : `- ${secretFindings.length} high-confidence secret-pattern finding(s) require manual review. Values are intentionally omitted.`,
     '- Secret values were not printed to terminal output or markdown.',
-    '- Live checks accept only Stripe test-mode credentials.',
+    '- Live checks accept only Dodo test-mode credentials.',
     '',
     '## Remaining Blockers',
     '',
@@ -873,13 +877,13 @@ const main = async () => {
     evidence.push(['Supabase session restore', 'PASS']);
     evidence.push(['Supabase cloud snapshot save/load', 'PASS']);
     evidence.push(['Supabase live RLS isolation across private tables', 'PASS']);
-    evidence.push(['Stripe backend configuration', 'PASS']);
-    evidence.push(['Stripe test-mode Checkout Session', 'PASS']);
-    evidence.push(['Stripe test-mode Customer Portal', 'PASS']);
-    evidence.push(['Stripe webhook signature and idempotency', 'PASS']);
-    evidence.push(['Stripe webhook entitlement update', 'PASS']);
-    evidence.push(['Stripe verifier-event cleanup', 'PASS']);
-    evidence.push(['Stripe test-customer cleanup', 'PASS']);
+    evidence.push(['Dodo backend configuration', 'PASS']);
+    evidence.push(['Dodo test-mode Checkout Session', 'PASS']);
+    evidence.push(['Dodo test-mode Customer Portal', 'PASS']);
+    evidence.push(['Dodo webhook signature and idempotency', 'PASS']);
+    evidence.push(['Dodo webhook entitlement update', 'PASS']);
+    evidence.push(['Dodo verifier-event cleanup', 'PASS']);
+    evidence.push(['Dodo test-customer cleanup', 'PASS']);
     evidence.push(['Backend-only real AI provider request', 'PASS']);
     evidence.push(['AI proxy invalid-token handling', 'PASS']);
     evidence.push([

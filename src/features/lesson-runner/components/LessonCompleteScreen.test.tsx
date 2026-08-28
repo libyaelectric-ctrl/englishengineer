@@ -16,11 +16,13 @@ const translate = (key: string) => {
   return map[key] ?? key;
 };
 
-const renderScreen = (overrides: {
-  earnedCp?: number;
-  correctCount?: number;
-  totalCount?: number;
-} = {}) => {
+const renderScreen = (
+  overrides: {
+    earnedCp?: number;
+    correctCount?: number;
+    totalCount?: number;
+  } = {}
+) => {
   const onContinue = vi.fn();
   const onBackToRoadmap = vi.fn();
   render(
@@ -42,7 +44,9 @@ describe('LessonCompleteScreen', () => {
 
     expect(screen.getByText('+120')).toBeTruthy();
     expect(screen.getByText('90%')).toBeTruthy();
-    expect(screen.getByText('You successfully verified 10 technical specification items.')).toBeTruthy();
+    expect(
+      screen.getByText('You successfully verified 10 technical specification items.')
+    ).toBeTruthy();
   });
 
   it('handles a perfect score of 100%', () => {

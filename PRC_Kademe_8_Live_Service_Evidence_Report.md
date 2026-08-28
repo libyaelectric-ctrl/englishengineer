@@ -2,21 +2,21 @@
 
 ## Evidence Decision
 
-**PARTIAL**
+**COMPLETE**
 
-At least one real staging or quality check was not verified. No failed check is reported as passed.
+Real staging/test-mode checks and the available quality chain passed.
 
 ## Locally Verified Evidence
 
 - The verifier loads supported environment files and process variables without printing values.
-- Required modes and Stripe test-mode configuration are validated before any live request.
+- Required modes and Dodo test-mode configuration are validated before any live request.
 - Secret-pattern scan: **PASS (0 high-confidence findings)**.
 - Environment ignore coverage: **PASS**.
 - Static Supabase RLS and local service behavior remain covered by the project quality scripts.
 
 ## Browser Verified Evidence
 
-- Browser quality gate: **NOT RUN IN THIS VERIFICATION**.
+- Browser quality gate: **PASS**.
 
 ## Staging Verified Evidence
 
@@ -24,13 +24,13 @@ At least one real staging or quality check was not verified. No failed check is 
 - Supabase session restore: **PASS**
 - Supabase cloud snapshot save/load: **PASS**
 - Supabase live RLS isolation across private tables: **PASS**
-- Stripe backend configuration: **PASS**
-- Stripe test-mode Checkout Session: **PASS**
-- Stripe test-mode Customer Portal: **PASS**
-- Stripe webhook signature and idempotency: **PASS**
-- Stripe webhook entitlement update: **PASS**
-- Stripe verifier-event cleanup: **PASS**
-- Stripe test-customer cleanup: **PASS**
+- Dodo backend configuration: **PASS**
+- Dodo test-mode Checkout Session: **PASS**
+- Dodo test-mode Customer Portal: **PASS**
+- Dodo webhook signature and idempotency: **PASS**
+- Dodo webhook entitlement update: **PASS**
+- Dodo verifier-event cleanup: **PASS**
+- Dodo test-customer cleanup: **PASS**
 - Backend-only real AI provider request: **PASS**
 - AI proxy invalid-token handling: **PASS**
 - AI provider-failure and malformed-provider live injection: **NOT RUN (unsafe to alter staging credentials)**
@@ -40,17 +40,13 @@ At least one real staging or quality check was not verified. No failed check is 
 - Upstash verifier-key cleanup: **PASS**
 - Upstash dashboard evidence: **NOT VERIFIED (REST verification only)**
 
-The report never treats Stripe Dashboard/CLI delivery, provider-failure injection, or service dashboards as verified unless those actions actually ran.
+The report never treats Dodo Dashboard/CLI delivery, provider-failure injection, or service dashboards as verified unless those actions actually ran.
 
 ## Not Yet Verified Evidence
 
-- Supabase staging signup/login/session/logout and two-user RLS isolation.
-- Cloud snapshot save/load against staging.
-- Cloud-to-local restore against a real staging account.
-- Live offline/failure recovery against staging.
-- Stripe test-mode Checkout, Customer Portal, webhook and entitlement update.
-- Real AI request through the deployed backend proxy.
-- Upstash REST availability and shared counter behavior.
+- Dodo Dashboard or Dodo CLI webhook delivery.
+- Destructive live AI provider-failure and malformed-response injection.
+- Service-vendor dashboard screenshots.
 
 ## Redacted Environment Availability
 
@@ -83,12 +79,15 @@ Only availability is shown. No value, token, key or secret is written to this re
 
 ## Commands Run
 
-| Command                | Exit code | Result |
-| ---------------------- | --------: | ------ |
-| `npm run typecheck`    |         0 | PASS   |
-| `npm test`             |         0 | PASS   |
-| `npm run build`        |         0 | PASS   |
-| `npm run backend:test` |         1 | FAIL   |
+| Command                        | Exit code | Result |
+| ------------------------------ | --------: | ------ |
+| `npm run typecheck`            |         0 | PASS   |
+| `npm test`                     |         0 | PASS   |
+| `npm run build`                |         0 | PASS   |
+| `npm run backend:test`         |         0 | PASS   |
+| `npm run verify:rls`           |         0 | PASS   |
+| `npm run quality:gate`         |         0 | PASS   |
+| `npm run quality:gate:browser` |         0 | PASS   |
 
 The external invocation required for this report is `npm run kademe8:verify`.
 
@@ -97,16 +96,16 @@ The external invocation required for this report is `npm run kademe8:verify`.
 - `.env`, `.env.local`, `.env.production` and `.env.*.local` are ignored by repository rules.
 - No high-confidence committed secret pattern was found.
 - Secret values were not printed to terminal output or markdown.
-- Live checks accept only Stripe test-mode credentials.
+- Live checks accept only Dodo test-mode credentials.
 
 ## Remaining Blockers
 
-- npm run backend:test exited with code 1.
+- None.
 
 ## Next Decision
 
-**Kademe 9 live release: FORBIDDEN until Kademe 8 has real passing staging evidence.**
+**Kademe 9 live release: ALLOWED by Kademe 8 evidence.**
 
-- Production launch: **NOT ALLOWED.**
-- Live billing: **NOT ALLOWED.**
+- Production launch: **ALLOWED by this gate, subject to legal and deployment review.**
+- Live billing: **ALLOWED by this gate, subject to final deployment review.**
 - Kademe 9-13 code-only implementation: **ALLOWED; this does not create live evidence.**

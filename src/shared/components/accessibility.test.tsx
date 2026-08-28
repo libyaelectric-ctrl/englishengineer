@@ -17,8 +17,6 @@ describe('Component Accessibility', () => {
       const { container } = render(<SkeletonCard />);
       expect(container.firstChild).toBeTruthy();
     });
-
-
   });
 
   describe('Button', () => {

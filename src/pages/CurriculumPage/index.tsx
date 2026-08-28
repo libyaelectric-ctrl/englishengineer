@@ -8,7 +8,6 @@
  * 4. Memory & Review Queue
  * 5. Full Curriculum & Recommendations
  */
-
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { PageContainer } from '@/shared/components/PageContainer';
@@ -130,16 +129,28 @@ const CurriculumPage = () => {
 
       {/* ─── Quick Nav Anchors ──────────────────────────── */}
       <div className="flex flex-wrap gap-2">
-        <a href="#actions" className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all">
+        <a
+          href="#actions"
+          className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all"
+        >
           Actions
         </a>
-        <a href="#today" className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all">
+        <a
+          href="#today"
+          className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all"
+        >
           Today
         </a>
-        <a href="#memory" className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all">
+        <a
+          href="#memory"
+          className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all"
+        >
           Memory
         </a>
-        <a href="#full" className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all">
+        <a
+          href="#full"
+          className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover transition-all"
+        >
           Full Curriculum
         </a>
       </div>

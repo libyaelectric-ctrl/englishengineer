@@ -1,12 +1,7 @@
-import type {
-  AICoachContext,
-  AIOperation,
-  AIRequest,
-  AIResponse,
-} from '@/shared/types/ai.types';
+import type { AICoachContext, AIOperation, AIRequest, AIResponse } from '@/shared/types/ai.types';
 
-import { AIService } from './ai.service';
 import { AI_BACKEND_PROXY_CONFIG } from './ai.config';
+import { AIService } from './ai.service';
 import { MockExample } from './mock-ai.provider';
 
 export interface PersonalLessonContent {
@@ -70,11 +65,7 @@ export const PersonalAIService = {
     return AI_BACKEND_PROXY_CONFIG.isBackendConfigured;
   },
 
-  async translate(
-    text: string,
-    targetLanguage: string,
-    sourceLanguage = 'en'
-  ): Promise<string> {
+  async translate(text: string, targetLanguage: string, sourceLanguage = 'en'): Promise<string> {
     const prompt = `Translate the following ${sourceLanguage} text into ${targetLanguage}. Preserve technical engineering terms and tone.\n\nTEXT: ${text}\n\nTRANSLATION:`;
     const request: Omit<AIRequest, 'operation'> = {
       modeId: 'translator',
@@ -93,7 +84,9 @@ export const PersonalAIService = {
       `Discipline: ${discipline}`,
       `Target language for translations/explanations: ${targetLanguage}`,
       `CEFR level: ${cefrLevel}`,
-      skill ? `Focus skill: ${skill}` : 'Include all skills (vocabulary, reading, writing, speaking, listening).',
+      skill
+        ? `Focus skill: ${skill}`
+        : 'Include all skills (vocabulary, reading, writing, speaking, listening).',
       'Engineering context: realistic site, project, and office scenarios.',
       'Return ONLY a valid JSON object matching the content structure.',
     ].join('\n');

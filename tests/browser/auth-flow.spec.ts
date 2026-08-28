@@ -24,9 +24,7 @@ test.describe('Login page rendering', () => {
     await expect(identifierInput).toBeVisible({ timeout: 30_000 });
 
     // Continue button should be present
-    await expect(
-      page.getByRole('button', { name: /continue/i })
-    ).toBeVisible();
+    await expect(page.getByRole('button', { name: /continue/i })).toBeVisible();
   });
 
   test('login page has link to signup', async ({ page }) => {
@@ -64,12 +62,8 @@ test.describe('Signup page rendering', () => {
     const identifierInput = page.locator('input[name="identifier"]').first();
 
     // Either firstName or identifier input should be visible (depends on Clerk config)
-    const hasFirstName = await firstNameInput
-      .isVisible({ timeout: 15_000 })
-      .catch(() => false);
-    const hasIdentifier = await identifierInput
-      .isVisible({ timeout: 15_000 })
-      .catch(() => false);
+    const hasFirstName = await firstNameInput.isVisible({ timeout: 15_000 }).catch(() => false);
+    const hasIdentifier = await identifierInput.isVisible({ timeout: 15_000 }).catch(() => false);
 
     expect(hasFirstName || hasIdentifier).toBeTruthy();
     await expect(page).toHaveTitle(/EngVox/i);
@@ -79,7 +73,8 @@ test.describe('Signup page rendering', () => {
     await page.goto('/signup');
 
     // Wait for Clerk to mount
-    await page.locator('input[name="firstName"], input[name="identifier"]')
+    await page
+      .locator('input[name="firstName"], input[name="identifier"]')
       .first()
       .waitFor({ timeout: 30_000 });
 
@@ -98,7 +93,8 @@ test.describe('Login ↔ Signup navigation', () => {
 
     // Navigate to signup via direct URL
     await page.goto('/signup');
-    await page.locator('input[name="firstName"], input[name="identifier"]')
+    await page
+      .locator('input[name="firstName"], input[name="identifier"]')
       .first()
       .waitFor({ timeout: 30_000 });
     await expect(page).toHaveTitle(/EngVox/i);
@@ -122,7 +118,8 @@ test.describe('Login ↔ Signup navigation', () => {
     // Click signup link — should navigate to /signup
     await signupLink.click();
     await page.waitForURL(/\/signup/);
-    await page.locator('input[name="firstName"], input[name="identifier"]')
+    await page
+      .locator('input[name="firstName"], input[name="identifier"]')
       .first()
       .waitFor({ timeout: 30_000 });
   });
@@ -131,9 +128,7 @@ test.describe('Login ↔ Signup navigation', () => {
 // ─── Auth guard redirect ────────────────────────────────────────────────────
 
 test.describe('Auth guard redirects', () => {
-  test('unauthenticated user is redirected to /login from protected route', async ({
-    page,
-  }) => {
+  test('unauthenticated user is redirected to /login from protected route', async ({ page }) => {
     // Clear any existing auth state
     await page.goto('/');
     await page.evaluate(() => localStorage.clear());
@@ -189,10 +184,7 @@ test.describe('Auth guard redirects', () => {
 // ─── Clerk sign-in flow (requires CLERK_SECRET_KEY) ─────────────────────────
 
 test.describe('Clerk sign-in flow', () => {
-  test.skip(
-    !hasClerkSecret(),
-    'CLERK_SECRET_KEY is required for Clerk sign-in E2E tests'
-  );
+  test.skip(!hasClerkSecret(), 'CLERK_SECRET_KEY is required for Clerk sign-in E2E tests');
 
   test('sign in with email and password', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
@@ -263,9 +255,9 @@ test.describe('Auth error handling', () => {
 
     // Clerk should show an error (user not found or similar)
     // The exact message depends on Clerk instance configuration
-    await expect(
-      page.getByText(/not found|invalid|error|incorrect/i)
-    ).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/not found|invalid|error|incorrect/i)).toBeVisible({
+      timeout: 15_000,
+    });
   });
 });
 
@@ -287,7 +279,8 @@ test.describe('Responsive auth pages', () => {
     await page.goto('/signup');
 
     // Wait for Clerk to mount
-    await page.locator('input[name="firstName"], input[name="identifier"]')
+    await page
+      .locator('input[name="firstName"], input[name="identifier"]')
       .first()
       .waitFor({ timeout: 30_000 });
     await expect(page).toHaveTitle(/EngVox/i);

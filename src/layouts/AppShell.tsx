@@ -11,9 +11,13 @@ import { usePageTracking } from '@/shared/hooks/usePageTracking';
 
 import { useMascotEvents } from '@/features/mascot';
 
-const Sidebar = lazy(() => import('./Sidebar').then(m => ({ default: m.Sidebar })));
-const RightSidebar = lazy(() => import('./RightSidebar').then(m => ({ default: m.RightSidebar })));
-const MobileBottomNavigation = lazy(() => import('./MobileBottomNavigation').then(m => ({ default: m.MobileBottomNavigation })));
+const Sidebar = lazy(() => import('./Sidebar').then((m) => ({ default: m.Sidebar })));
+const RightSidebar = lazy(() =>
+  import('./RightSidebar').then((m) => ({ default: m.RightSidebar }))
+);
+const MobileBottomNavigation = lazy(() =>
+  import('./MobileBottomNavigation').then((m) => ({ default: m.MobileBottomNavigation }))
+);
 
 const BetaAnalyticsTracker = lazy(() =>
   import('@/features/beta').then((m) => ({ default: m.BetaAnalyticsTracker }))

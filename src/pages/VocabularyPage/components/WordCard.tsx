@@ -5,6 +5,7 @@ import { FormEvent, useState } from 'react';
 import { playSound } from '@/shared/utils/sound';
 
 import { useLocalizationStore } from '@/features/localization';
+import { useLearningLanguage } from '@/features/profile/use-learning-language';
 import {
   PronunciationService,
   type VocabularyMenuProgress,
@@ -12,7 +13,6 @@ import {
   repairVocabularyText,
 } from '@/features/vocabulary';
 import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
-import { useLearningLanguage } from '@/features/profile/use-learning-language';
 
 import { WordCardDetails } from './WordCardDetails';
 import { WordCardHeader } from './WordCardHeader';

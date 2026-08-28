@@ -6,22 +6,22 @@ This document outlines how API keys and secrets are managed in production, and t
 
 ## Current Secrets
 
-| Secret                      | Service          | Location    |
-| --------------------------- | ---------------- | ----------- |
-| `SUPABASE_URL`              | Supabase         | Railway env |
-| `SUPABASE_ANON_KEY`         | Supabase         | Railway env |
-| `SUPABASE_JWT_SECRET`       | Supabase         | Railway env |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase         | Railway env |
-| `STRIPE_SECRET_KEY`         | Stripe           | Railway env |
-| `STRIPE_WEBHOOK_SECRET`     | Stripe           | Railway env |
-| `STRIPE_PRICE_JUNIOR_MONTHLY`  | Stripe           | Railway env |
-| `OPENAI_API_KEY`            | OpenAI           | Railway env |
-| `ANTHROPIC_API_KEY`         | Anthropic        | Railway env |
-| `GEMINI_API_KEY`            | Google AI        | Railway env |
-| `UPSTASH_URL`               | Upstash Redis    | Railway env |
-| `UPSTASH_TOKEN`             | Upstash Redis    | Railway env |
-| `INTERNAL_API_SECRET`       | Backend internal | Railway env |
-| `VITE_AI_PROXY_URL`         | Backend proxy    | Vercel env  |
+| Secret                        | Service          | Location    |
+| ----------------------------- | ---------------- | ----------- |
+| `SUPABASE_URL`                | Supabase         | Railway env |
+| `SUPABASE_ANON_KEY`           | Supabase         | Railway env |
+| `SUPABASE_JWT_SECRET`         | Supabase         | Railway env |
+| `SUPABASE_SERVICE_ROLE_KEY`   | Supabase         | Railway env |
+| `STRIPE_SECRET_KEY`           | Stripe           | Railway env |
+| `STRIPE_WEBHOOK_SECRET`       | Stripe           | Railway env |
+| `STRIPE_PRICE_JUNIOR_MONTHLY` | Stripe           | Railway env |
+| `OPENAI_API_KEY`              | OpenAI           | Railway env |
+| `ANTHROPIC_API_KEY`           | Anthropic        | Railway env |
+| `GEMINI_API_KEY`              | Google AI        | Railway env |
+| `UPSTASH_URL`                 | Upstash Redis    | Railway env |
+| `UPSTASH_TOKEN`               | Upstash Redis    | Railway env |
+| `INTERNAL_API_SECRET`         | Backend internal | Railway env |
+| `VITE_AI_PROXY_URL`           | Backend proxy    | Vercel env  |
 
 ## Storage Principles
 

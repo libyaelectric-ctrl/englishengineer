@@ -84,9 +84,9 @@ describe('curriculum.service (logic, mocked corpus)', () => {
   it('keeps term order stable for the same build version', async () => {
     const pathA = await buildLearningPath('electrical', { buildVersion: '2026-08-14' });
     const pathB = await buildLearningPath('electrical', { buildVersion: '2026-08-14' });
-    expect(
-      pathA.stages.find((s) => s.cefrLevel === 'A1')!.levels[0].termIds
-    ).toEqual(pathB.stages.find((s) => s.cefrLevel === 'A1')!.levels[0].termIds);
+    expect(pathA.stages.find((s) => s.cefrLevel === 'A1')!.levels[0].termIds).toEqual(
+      pathB.stages.find((s) => s.cefrLevel === 'A1')!.levels[0].termIds
+    );
   });
 
   it('marks levels completed/in-progress/available/locked from the mastered set', async () => {

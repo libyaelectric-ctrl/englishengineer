@@ -4,10 +4,9 @@ import { getPricingCopy } from '@/shared/data/pricing-copy';
 import type { PricingTier } from '@/shared/data/pricing.data';
 import { formatPrice } from '@/shared/data/pricing.data';
 import { type PricingTierId, getPublicPageCopy } from '@/shared/data/public-page-copy';
+import { getLandingTranslations } from '@/shared/i18n/landing-i18n';
 
 import { useLocalizationStore } from '@/features/localization';
-
-import { getLandingTranslations } from '@/shared/i18n/landing-i18n';
 
 interface PricingCardProps {
   tier: PricingTier;

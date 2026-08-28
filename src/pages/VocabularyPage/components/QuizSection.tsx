@@ -6,6 +6,7 @@ import { SectionCard } from '@/shared/components/SectionCard';
 import { logger } from '@/shared/logger';
 
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
+import { useLearningLanguage } from '@/features/profile/use-learning-language';
 import {
   VocabularyMenuService,
   type VocabularyMenuState,
@@ -20,7 +21,6 @@ import {
   selectRandomQuizItems,
 } from '@/features/vocabulary/services/core/learned-quiz';
 import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
-import { useLearningLanguage } from '@/features/profile/use-learning-language';
 
 interface QuizSectionProps {
   menuState: VocabularyMenuState;

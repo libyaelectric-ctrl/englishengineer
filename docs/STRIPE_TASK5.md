@@ -18,14 +18,14 @@ Render Dashboard → servis → **Environment**.
 
 Zorunlu (olmadan billing `configured: false` kalır — `backend/src/config-builders.ts:102`):
 
-| Değişken | Değer |
-|---|---|
-| `STRIPE_SECRET_KEY` | `sk_live_...` (canlı) veya `sk_test_...` (test) |
-| `STRIPE_PRICE_JUNIOR_MONTHLY` | `price_...` — **junior aylık fiyat boşsa Stripe hiç yapılandırılmaz** |
-| `STRIPE_WEBHOOK_SECRET` | `whsec_...` (webhook endpoint'inin signing secret'ı) |
-| `BILLING_REPOSITORY` | `supabase` (üretim önerilir) |
-| `SUPABASE_URL` | `https://<ref>.supabase.co` — **zorunlu**: `BILLING_REPOSITORY=supabase` iken eksikse container deploy aşamasında `nonZeroExit:1` ile çöker (bkz. §5) |
-| `SUPABASE_SERVICE_ROLE_KEY` | `sb_secret_...` (zaten ortamda) |
+| Değişken                      | Değer                                                                                                                                                 |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `STRIPE_SECRET_KEY`           | `sk_live_...` (canlı) veya `sk_test_...` (test)                                                                                                       |
+| `STRIPE_PRICE_JUNIOR_MONTHLY` | `price_...` — **junior aylık fiyat boşsa Stripe hiç yapılandırılmaz**                                                                                 |
+| `STRIPE_WEBHOOK_SECRET`       | `whsec_...` (webhook endpoint'inin signing secret'ı)                                                                                                  |
+| `BILLING_REPOSITORY`          | `supabase` (üretim önerilir)                                                                                                                          |
+| `SUPABASE_URL`                | `https://<ref>.supabase.co` — **zorunlu**: `BILLING_REPOSITORY=supabase` iken eksikse container deploy aşamasında `nonZeroExit:1` ile çöker (bkz. §5) |
+| `SUPABASE_SERVICE_ROLE_KEY`   | `sb_secret_...` (zaten ortamda)                                                                                                                       |
 
 İsteğe bağlı (tanımlanmazsa backend fiyatları **otomatik oluşturur**):
 
@@ -33,6 +33,7 @@ Zorunlu (olmadan billing `configured: false` kalır — `backend/src/config-buil
 `STRIPE_PRICE_MASTER_MONTHLY`, `STRIPE_PRICE_TEAM_MONTHLY` ve aynılarının
 `_ANNUAL` varyantları. Boş bırakılınca `resolveOrProvisionPriceId`
 (`backend/src/billing-service.ts:78`) ürün/fiyatı ilk checkout'ta oluşturur:
+
 - Ürün adları: `EngVox Junior/Senior/Specialist/Master/Team`
 - Fiyatlar: aylık $29/$59/$79/$99/$999; yıllık %20 indirimli
 - Top-up: `AI Coach Top-up 50 Credits` → $5.00 one-time
@@ -59,8 +60,8 @@ Değişkenleri kaydet → **Redeploy**.
 
 Vercel Project → Settings → Environment Variables:
 
-| Değişken | Değer |
-|---|---|
+| Değişken               | Değer                                          |
+| ---------------------- | ---------------------------------------------- |
 | `VITE_BILLING_API_URL` | `https://englishengineer-backend.onrender.com` |
 
 Kaydet → yeniden deploy (`build`'e `import.meta.env` ile gömülür).

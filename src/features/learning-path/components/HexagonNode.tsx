@@ -32,9 +32,7 @@ export const HexagonNode = ({ level, onSelect }: HexagonNodeProps) => {
       {locked ? (
         <Lock className="h-5 w-5 text-white/80" />
       ) : (
-        <span className="text-lg font-extrabold text-white drop-shadow-sm">
-          {level.index + 1}
-        </span>
+        <span className="text-lg font-extrabold text-white drop-shadow-sm">{level.index + 1}</span>
       )}
       {level.masteryRatio > 0 && level.status !== 'completed' && (
         <span className="absolute inset-x-2 top-1 h-0.5 rounded-full bg-white/70" />

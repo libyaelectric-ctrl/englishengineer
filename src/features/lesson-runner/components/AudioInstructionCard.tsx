@@ -1,9 +1,10 @@
-import { useState } from 'react';
-
 import { Radio, Volume2 } from 'lucide-react';
 
-import { useLocalizationStore } from '@/features/localization';
+import { useState } from 'react';
+
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
+
+import { useLocalizationStore } from '@/features/localization';
 
 export interface AudioInstructionCardProps {
   term: VocabularyTerm;

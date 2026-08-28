@@ -62,12 +62,16 @@ describe('Billing Checkout Flow', () => {
 
     // Wait for buttons to appear
     await waitFor(() => {
-      const buttons = screen.getAllByRole('button', { name: /Get Started|Choose Plan|Upgrade|pricing|Junior|Senior/i });
+      const buttons = screen.getAllByRole('button', {
+        name: /Get Started|Choose Plan|Upgrade|pricing|Junior|Senior/i,
+      });
       expect(buttons.length).toBeGreaterThan(0);
     });
 
     // Verify buttons are rendered
-    const allButtons = screen.getAllByRole('button', { name: /Get Started|Choose Plan|Upgrade|pricing|Junior|Senior/i });
+    const allButtons = screen.getAllByRole('button', {
+      name: /Get Started|Choose Plan|Upgrade|pricing|Junior|Senior/i,
+    });
     expect(allButtons.length).toBeGreaterThan(0);
 
     unmount();

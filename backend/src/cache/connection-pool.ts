@@ -52,7 +52,6 @@ const metrics: PoolMetrics = {
 
 export const getPoolMetrics = (): Readonly<PoolMetrics> => ({ ...metrics });
 
-
 export const recordHealthCheck = (success: boolean): void => {
   metrics.totalHealthChecks++;
   metrics.lastHealthCheckAt = new Date().toISOString();

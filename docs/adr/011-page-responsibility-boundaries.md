@@ -12,11 +12,11 @@ Users encountered confusion between Dashboard, Curriculum, and Progress pages be
 
 Each page has a single, non-overlapping responsibility:
 
-| Page | Responsibility | Scope | User question answered |
-|------|---------------|-------|----------------------|
-| **Dashboard** | Today's overview (summary) | Greeting, stats, gamification (Daily Challenge), quick links | "What's my status right now?" |
-| **Curriculum** | Today's detailed plan (actionable) | Personalized missions, learning memory, full roadmap, skill selector | "What should I do today?" |
-| **Progress** | Historical performance (retrospective) | Past scores, trends, badges, long-term analytics | "How far have I come?" |
+| Page           | Responsibility                         | Scope                                                                | User question answered        |
+| -------------- | -------------------------------------- | -------------------------------------------------------------------- | ----------------------------- |
+| **Dashboard**  | Today's overview (summary)             | Greeting, stats, gamification (Daily Challenge), quick links         | "What's my status right now?" |
+| **Curriculum** | Today's detailed plan (actionable)     | Personalized missions, learning memory, full roadmap, skill selector | "What should I do today?"     |
+| **Progress**   | Historical performance (retrospective) | Past scores, trends, badges, long-term analytics                     | "How far have I come?"        |
 
 ### Rules for future features
 

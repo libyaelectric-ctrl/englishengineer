@@ -7,10 +7,10 @@ import { useLearningStore } from '@/core/learning';
 
 import { GrammarProgressService } from '@/features/grammar/grammar.progress';
 import { useGrammarStore } from '@/features/grammar/grammar.store';
+import { SkillEntryBrief } from '@/features/learning-orchestrator';
+import { useLocalizationStore } from '@/features/localization';
 import { interpolate } from '@/features/localization/interpolate';
 import { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
-import { useLocalizationStore } from '@/features/localization';
-import { SkillEntryBrief } from '@/features/learning-orchestrator';
 
 const log = (_page: string, _action: string, _details: string) => {};
 
@@ -26,7 +26,13 @@ export function GrammarSidebar() {
   const selectedRuleIndex = selectedRule ? rules.findIndex((r) => r.id === selectedRule.id) : -1;
 
   const tabLabel = (t: string): string =>
-    t === 'New' ? copy.vocabNew : t === 'Learning' ? copy.learning : t === 'Due' ? copy.due : copy.strong;
+    t === 'New'
+      ? copy.vocabNew
+      : t === 'Learning'
+        ? copy.learning
+        : t === 'Due'
+          ? copy.due
+          : copy.strong;
 
   const config: SidebarConfig = {
     header: <SkillEntryBrief skill="grammar" compact={true} />,

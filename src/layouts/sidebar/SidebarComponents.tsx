@@ -1,8 +1,8 @@
 import type { LucideIcon } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 import React, { useState } from 'react';
 
-import { ChevronDown } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 
 export function Section({

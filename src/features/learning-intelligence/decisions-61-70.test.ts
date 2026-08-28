@@ -1,8 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import {
+  SPEAKING_MISSIONS,
+  SPEAKING_MVP_MODE,
+  SPEAKING_MVP_REQUIRES_MICROPHONE,
+  getSpeakingHistoryDetails,
+  getSpeakingRoleplayCategory,
+} from '@/shared/services/speaking-test-helpers.service';
 import type { SpeakingEvaluationResult } from '@/shared/types/speaking.types';
-
-import { SPEAKING_MISSIONS, SPEAKING_MVP_MODE, SPEAKING_MVP_REQUIRES_MICROPHONE, getSpeakingHistoryDetails, getSpeakingRoleplayCategory } from '@/shared/services/speaking-test-helpers.service';
 
 import {
   CRITICAL_MISTAKE_REPEAT_THRESHOLD,

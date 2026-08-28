@@ -1,11 +1,3 @@
-import type { CefrLevel } from '@/shared/types/domain.types';
-
-// Dynamic import: seed data loaded on-demand, not in initial bundle
-const loadVocabularyByLevel = async (level: CefrLevel) => {
-  const mod = await import('@/data/vocabulary');
-  return mod.loadVocabularyByLevel(level);
-};
-
 import {
   type LearningDataSkill,
   extractCefrFromId,
@@ -13,9 +5,16 @@ import {
   includesNormalized,
 } from '@/core/learning';
 
+import type { CefrLevel } from '@/shared/types/domain.types';
 import { CEFR_LEVELS } from '@/shared/types/domain.types';
 import { assertVocabularyTerms } from '@/shared/types/vocabulary.schema';
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
+
+// Dynamic import: seed data loaded on-demand, not in initial bundle
+const loadVocabularyByLevel = async (level: CefrLevel) => {
+  const mod = await import('@/data/vocabulary');
+  return mod.loadVocabularyByLevel(level);
+};
 
 const levelCache = new Map<CefrLevel, VocabularyTerm[]>();
 const pendingLevelLoads = new Map<CefrLevel, Promise<VocabularyTerm[]>>();

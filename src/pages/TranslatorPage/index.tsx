@@ -17,9 +17,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { PageHeader } from '@/shared/components/PageHeader';
 import { PageMetadata } from '@/shared/components/PageMetadata';
 import { logger } from '@/shared/logger';
+
 import { useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization/localization.types';
-
 import { SupportedLang, TranslationResult, translationService } from '@/features/translation';
 
 export const SUPPORTED_LANGUAGES: Array<{ code: SupportedLang; name: string; flag: string }> = [
@@ -138,7 +138,8 @@ const SourceInputPanel: React.FC<{
   } = props;
   const quickChars = VIRTUAL_CHAR_BARS[sourceLang];
   const isRtl = sourceLang === 'ar';
-  const speakLabel = isPlayingAudio === 'source' ? translate('translator.playing') : translate('translator.audio');
+  const speakLabel =
+    isPlayingAudio === 'source' ? translate('translator.playing') : translate('translator.audio');
   const speakBtnClass =
     isPlayingAudio === 'source'
       ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 animate-pulse'
@@ -187,7 +188,8 @@ const SourceInputPanel: React.FC<{
       disabled={isTranslating || !hasInput}
       className="w-full py-3 rounded-[var(--radius-card)] bg-primary text-primary-foreground text-xs font-extrabold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-2 mt-3"
     >
-      <Zap className="h-4 w-4" /> {isTranslating ? translate('translator.translating') : translate('translator.translateNow')}
+      <Zap className="h-4 w-4" />{' '}
+      {isTranslating ? translate('translator.translating') : translate('translator.translateNow')}
     </button>
   ) : null;
 
@@ -239,7 +241,8 @@ const OutputPanel: React.FC<{
     translate,
   } = props;
   const hasOutput = translatedText.trim().length > 0;
-  const speakLabel = isPlayingAudio === 'target' ? translate('translator.playing') : translate('translator.audio');
+  const speakLabel =
+    isPlayingAudio === 'target' ? translate('translator.playing') : translate('translator.audio');
   const speakBtnClass =
     isPlayingAudio === 'target'
       ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 animate-pulse'
@@ -353,7 +356,9 @@ const WordAnalysisCard: React.FC<{
           </span>
         </div>
         <div>
-          <span className="text-muted-copy font-bold">{translate('translator.primaryMeaning')} </span>
+          <span className="text-muted-copy font-bold">
+            {translate('translator.primaryMeaning')}{' '}
+          </span>
           <span className="font-extrabold text-emerald-600 font-mono">{translatedText}</span>
         </div>
       </div>
@@ -546,7 +551,11 @@ export const TranslatorPage = () => {
 
         {/* Single-Word Analysis Card */}
         {resultData?.wordAnalysis?.isSingleWord && (
-          <WordAnalysisCard resultData={resultData} translatedText={translatedText} translate={translate} />
+          <WordAnalysisCard
+            resultData={resultData}
+            translatedText={translatedText}
+            translate={translate}
+          />
         )}
       </div>
     </main>

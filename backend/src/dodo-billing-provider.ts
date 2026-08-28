@@ -11,8 +11,8 @@ import {
   processNormalizedWebhookEvent,
 } from './billing-provider.js';
 import type { BillingRepository } from './billing-webhook-handlers.js';
-import { logger } from './logger.js';
 import { ApiError } from './errors.js';
+import { logger } from './logger.js';
 
 const WEBHOOK_PATH = '/api/webhooks/dodo';
 

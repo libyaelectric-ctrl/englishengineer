@@ -9,7 +9,11 @@ interface LoadingStateProps {
   variant?: 'default' | 'error';
 }
 
-export const LoadingState: FC<LoadingStateProps> = ({ title, description, variant = 'default' }) => (
+export const LoadingState: FC<LoadingStateProps> = ({
+  title,
+  description,
+  variant = 'default',
+}) => (
   <div
     className="min-h-[60vh] w-full px-4 py-10"
     role="status"
@@ -34,9 +38,7 @@ export const LoadingState: FC<LoadingStateProps> = ({ title, description, varian
               />
             </svg>
           </div>
-          <h2 className="text-lg font-semibold text-foreground">
-            {title ?? 'Connection problem'}
-          </h2>
+          <h2 className="text-lg font-semibold text-foreground">{title ?? 'Connection problem'}</h2>
           <p className="max-w-sm text-sm text-muted-copy">
             {description ??
               'Unable to reach the authentication service. This is usually caused by an ad blocker or privacy extension. Please disable it for this site and reload the page.'}

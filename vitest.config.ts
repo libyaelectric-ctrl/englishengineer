@@ -49,6 +49,8 @@ export default defineConfig({
       'src/pages/WorkToolsPage.test.tsx',
       'src/features/listening/listening.service.test.ts',
       'src/features/writing/writing.evaluator.test.ts',
+      'src/shared/services/vocabulary.engine.test.ts',
+      'src/shared/services/grammar.engine.test.ts',
     ],
     coverage: {
       provider: 'v8',

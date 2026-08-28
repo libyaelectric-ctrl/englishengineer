@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
 import type * as THREE from 'three';
 
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { useLearningStore } from '@/core/learning';
+
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { useAuthStore } from '@/features/auth';
@@ -37,7 +39,7 @@ const LANGUAGES_DATA = INTERFACE_LANGUAGES.filter((l) => l.available).map((l) =>
 function makeTextSprite(
   THREE: typeof import('three'),
   text: string,
-  opts: { fontSize?: number; color?: string; scale?: number } = {},
+  opts: { fontSize?: number; color?: string; scale?: number } = {}
 ) {
   const fontSize = opts.fontSize ?? 48;
   const color = opts.color ?? '#ffffff';
@@ -106,10 +108,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
       return;
     }
     setIsSaving(true);
-    pushConsole(
-      `> EXEC: [${selectedDiscipline}] + [${selectedLanguage}] GRANTED!`,
-      '#22c55e',
-    );
+    pushConsole(`> EXEC: [${selectedDiscipline}] + [${selectedLanguage}] GRANTED!`, '#22c55e');
     try {
       setLanguage(selectedLanguage);
       LearningProfileRepository.updatePreferences(currentUser.id, {
@@ -156,7 +155,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
         }
       }
     },
-    [pushConsole],
+    [pushConsole]
   );
 
   /* ---- menu click ---- */
@@ -165,7 +164,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
       sceneApi.current?.triggerOrbSelection(code, segment);
       handleOrbSelect(code, segment);
     },
-    [handleOrbSelect],
+    [handleOrbSelect]
   );
 
   /* ================================================================ */
@@ -175,12 +174,12 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
     const container = containerRef.current;
     if (!container) return;
 
-  let animId = 0;
-  let destroyed = false;
+    let animId = 0;
+    let destroyed = false;
 
-  import('three').then((THREE) => {
-    if (destroyed || !container) return;
-    const el = container;
+    import('three').then((THREE) => {
+      if (destroyed || !container) return;
+      const el = container;
 
       /* ---- Scene / Camera / Renderer ---- */
       const scene = new THREE.Scene();
@@ -188,7 +187,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
         45,
         container.clientWidth / container.clientHeight,
         0.1,
-        1000,
+        1000
       );
 
       let r: THREE.WebGLRenderer;
@@ -320,8 +319,8 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
         scene.add(
           new THREE.Line(
             new THREE.BufferGeometry().setFromPoints(pts),
-            new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.15 }),
-          ),
+            new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.15 })
+          )
         );
       }
       addRing(ORBIT_R1);
@@ -350,7 +349,11 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
         orb.userData = { code: item.code, full: item.full, segment: 1 };
         pivot.add(orb);
 
-        const label = makeTextSprite(THREE, item.code, { fontSize: 36, color: '#38bdf8', scale: 0.9 });
+        const label = makeTextSprite(THREE, item.code, {
+          fontSize: 36,
+          color: '#38bdf8',
+          scale: 0.9,
+        });
         label.position.z = 0.1;
         pivot.add(label);
 
@@ -369,7 +372,11 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
         orb.userData = { code: item.code, full: item.full, segment: 2 };
         pivot.add(orb);
 
-        const label = makeTextSprite(THREE, item.code, { fontSize: 36, color: '#c084fc', scale: 0.9 });
+        const label = makeTextSprite(THREE, item.code, {
+          fontSize: 36,
+          color: '#c084fc',
+          scale: 0.9,
+        });
         label.position.z = 0.1;
         pivot.add(label);
 
@@ -388,7 +395,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
       const linkGeo = new THREE.BufferGeometry();
       linkGeo.setAttribute(
         'position',
-        new THREE.BufferAttribute(new Float32Array(linkPairs.length * 2 * 3), 3),
+        new THREE.BufferAttribute(new Float32Array(linkPairs.length * 2 * 3), 3)
       );
       const neuralLines = new THREE.LineSegments(
         linkGeo,
@@ -397,7 +404,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
           transparent: true,
           opacity: 0.15,
           blending: THREE.AdditiveBlending,
-        }),
+        })
       );
       scene.add(neuralLines);
 
@@ -429,7 +436,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
             transparent: true,
             opacity: 0.9,
             blending: THREE.AdditiveBlending,
-          }),
+          })
         );
         m.visible = false;
         scene.add(m);
@@ -460,14 +467,20 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
           pts.push(p);
         }
         beam.geometry.dispose();
-        beam.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 24, 0.075, 8, false);
+        beam.geometry = new THREE.TubeGeometry(
+          new THREE.CatmullRomCurve3(pts),
+          24,
+          0.075,
+          8,
+          false
+        );
       }
 
       /* ---- Scene API for React ---- */
       sceneApi.current = {
         triggerOrbSelection(code, segment) {
           const orb = interactiveOrbs.find(
-            (o) => o.userData.code === code && o.userData.segment === segment,
+            (o) => o.userData.code === code && o.userData.segment === segment
           );
           if (!orb) return;
           if (segment === 1) {
@@ -659,7 +672,11 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
         <div className="bottom-section">
           <div id="cipher-console">
             {consoleLines.map((line, i) => (
-              <div key={`${i}-${line}`} className="console-line" style={{ color: i === 1 ? statusColor : undefined }}>
+              <div
+                key={`${i}-${line}`}
+                className="console-line"
+                style={{ color: i === 1 ? statusColor : undefined }}
+              >
                 {line}
               </div>
             ))}

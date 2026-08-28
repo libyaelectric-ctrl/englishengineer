@@ -3,13 +3,13 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { useState } from 'react';
 
+import { useLearningLanguage } from '@/features/profile/use-learning-language';
 import {
   PronunciationService,
   type VocabularyTerm,
   repairVocabularyText,
 } from '@/features/vocabulary';
 import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
-import { useLearningLanguage } from '@/features/profile/use-learning-language';
 
 interface LearnedCardProps {
   term: VocabularyTerm;

@@ -80,7 +80,11 @@ const ROUTE_BY_OPERATION: Record<AIOperation, string> = {
 const resolveProxyEndpoint = (proxyUrl: string, operation: AIOperation): string => {
   const route = ROUTE_BY_OPERATION[operation];
   const withoutTrailingSlash = proxyUrl.replace(/\/$/, '');
-  if (/\/(coach|writing-review|assessment-feedback|roleplay|translate|generate-content)$/.test(withoutTrailingSlash)) {
+  if (
+    /\/(coach|writing-review|assessment-feedback|roleplay|translate|generate-content)$/.test(
+      withoutTrailingSlash
+    )
+  ) {
     return withoutTrailingSlash.replace(
       /\/(coach|writing-review|assessment-feedback|roleplay|translate|generate-content)$/,
       `/${route}`

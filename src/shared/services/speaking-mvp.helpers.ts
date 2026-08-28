@@ -1,4 +1,8 @@
-import type { SpeakingEvaluationResult, SpeakingMission, SpeakingRoleplayCategory } from '@/shared/types/speaking.types';
+import type {
+  SpeakingEvaluationResult,
+  SpeakingMission,
+  SpeakingRoleplayCategory,
+} from '@/shared/types/speaking.types';
 
 export const SPEAKING_MVP_MODE = 'Written Roleplay' as const;
 export const SPEAKING_MVP_REQUIRES_MICROPHONE = false;

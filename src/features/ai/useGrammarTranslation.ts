@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import type { GrammarExample } from '@/features/grammar/grammar.types';
 import { useLocalizationStore } from '@/features/localization';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
-
-import type { GrammarExample } from '@/features/grammar/grammar.types';
 
 export interface GrammarTranslation {
   title: string;
@@ -95,7 +94,8 @@ export const useGrammarTranslation = (
       return;
     }
 
-    const cached = memoryCache.get(buildCacheKey(rule.id, language)) ?? loadPersisted(rule.id, language);
+    const cached =
+      memoryCache.get(buildCacheKey(rule.id, language)) ?? loadPersisted(rule.id, language);
     if (cached) {
       setTranslation(cached);
       return;

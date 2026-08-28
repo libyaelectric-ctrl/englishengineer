@@ -1,8 +1,8 @@
 import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
 
 import type { WorkspaceConfig } from '../types.js';
-import { ApiError } from './errors.js';
 import { normalizePlanId } from './billing-plan-migration.js';
+import { ApiError } from './errors.js';
 import {
   WorkspaceCreateBodySchema,
   WorkspaceDocumentBodySchema,

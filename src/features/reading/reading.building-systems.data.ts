@@ -9,49 +9,157 @@ export const BUILDING_SYSTEMS_READING_MISSIONS: ReadingMission[] = [
     cefrLevel: 'A2',
     difficulty: 'Beginner',
     estimatedMinutes: 6,
-    passageText: 'SITE NOTICE. All mechanical contractors: fire damper inspection for Level 3 starts Monday. Each fire damper must be checked for blade operation and fusible link condition. Open the access panel and move the blade by hand. It must move freely and close fully. Check the fusible link for damage or paint. Replace damaged links immediately. Record results on the inspection form. Forms go to the QA/QC office by Friday. Do not paint over fusible links. Thank you.',
+    passageText:
+      'SITE NOTICE. All mechanical contractors: fire damper inspection for Level 3 starts Monday. Each fire damper must be checked for blade operation and fusible link condition. Open the access panel and move the blade by hand. It must move freely and close fully. Check the fusible link for damage or paint. Replace damaged links immediately. Record results on the inspection form. Forms go to the QA/QC office by Friday. Do not paint over fusible links. Thank you.',
     vocabulary: [
-      { term: 'fire damper', definition: 'A device in ductwork that closes automatically in a fire to stop smoke and flame spread.', context: 'Each fire damper must be checked for blade operation.', turkishTranslation: 'yangın perdesi' },
-      { term: 'access panel', definition: 'A removable cover that allows entry to equipment inside a wall or ceiling.', context: 'Open the access panel and move the blade by hand.', turkishTranslation: 'erişim paneli' },
-      { term: 'fusible link', definition: 'A metal link that melts at a specific temperature to trigger the damper to close.', context: 'Check the fusible link for damage or paint.', turkishTranslation: 'erimeş 연결구' },
-      { term: 'inspection form', definition: 'A document used to record the results of an equipment check.', context: 'Record results on the inspection form.', turkishTranslation: 'denetim formu' },
-      { term: 'blade', definition: 'The moving part of a damper that opens or closes the airflow path.', context: 'It must move freely and close fully.', turkishTranslation: 'kanat / pala' },
+      {
+        term: 'fire damper',
+        definition:
+          'A device in ductwork that closes automatically in a fire to stop smoke and flame spread.',
+        context: 'Each fire damper must be checked for blade operation.',
+        turkishTranslation: 'yangın perdesi',
+      },
+      {
+        term: 'access panel',
+        definition: 'A removable cover that allows entry to equipment inside a wall or ceiling.',
+        context: 'Open the access panel and move the blade by hand.',
+        turkishTranslation: 'erişim paneli',
+      },
+      {
+        term: 'fusible link',
+        definition:
+          'A metal link that melts at a specific temperature to trigger the damper to close.',
+        context: 'Check the fusible link for damage or paint.',
+        turkishTranslation: 'erimeş 연결구',
+      },
+      {
+        term: 'inspection form',
+        definition: 'A document used to record the results of an equipment check.',
+        context: 'Record results on the inspection form.',
+        turkishTranslation: 'denetim formu',
+      },
+      {
+        term: 'blade',
+        definition: 'The moving part of a damper that opens or closes the airflow path.',
+        context: 'It must move freely and close fully.',
+        turkishTranslation: 'kanat / pala',
+      },
     ],
     questions: [
-      { id: 'bs_a2_q1', type: 'multiple_choice', questionText: 'When does the fire damper inspection start?', choices: ['A) Friday', 'B) Monday', 'C) Next week', 'D) Today'], correctAnswer: 'B', explanation: 'The notice states inspection for Level 3 starts Monday.' },
-      { id: 'bs_a2_q2', type: 'true_false', questionText: 'You should paint over fusible links to protect them.', correctAnswer: 'false', explanation: 'The notice says "Do not paint over fusible links."' },
-      { id: 'bs_a2_q3', type: 'keyword_answer', questionText: 'Where must completed inspection forms be sent?', keywords: ['QA/QC office', 'QA/QC'], correctAnswer: 'the QA/QC office', explanation: 'Forms go to the QA/QC office by Friday.' },
+      {
+        id: 'bs_a2_q1',
+        type: 'multiple_choice',
+        questionText: 'When does the fire damper inspection start?',
+        choices: ['A) Friday', 'B) Monday', 'C) Next week', 'D) Today'],
+        correctAnswer: 'B',
+        explanation: 'The notice states inspection for Level 3 starts Monday.',
+      },
+      {
+        id: 'bs_a2_q2',
+        type: 'true_false',
+        questionText: 'You should paint over fusible links to protect them.',
+        correctAnswer: 'false',
+        explanation: 'The notice says "Do not paint over fusible links."',
+      },
+      {
+        id: 'bs_a2_q3',
+        type: 'keyword_answer',
+        questionText: 'Where must completed inspection forms be sent?',
+        keywords: ['QA/QC office', 'QA/QC'],
+        correctAnswer: 'the QA/QC office',
+        explanation: 'Forms go to the QA/QC office by Friday.',
+      },
     ],
     xpReward: 40,
     coinReward: 15,
     eloReward: 12,
-    sourceMetadata: { origin: 'EngVox original', author: 'AI Content Generation', schemaVersion: 1 },
+    sourceMetadata: {
+      origin: 'EngVox original',
+      author: 'AI Content Generation',
+      schemaVersion: 1,
+    },
   },
   {
     id: 'building_systems_b1_bms_sequence',
     title: 'BMS Sequence of Operations — AHU Control',
-    description: 'Read a Building Management System sequence of operations for an Air Handling Unit.',
+    description:
+      'Read a Building Management System sequence of operations for an Air Handling Unit.',
     discipline: 'Building Systems Engineering',
     cefrLevel: 'B1',
     difficulty: 'Intermediate',
     estimatedMinutes: 9,
-    passageText: 'SEQUENCE OF OPERATIONS — AHU-04 (Office Tower, Level 12). The Air Handling Unit shall operate on a time schedule: Monday to Friday, 06:00 to 20:00. Optimum start shall activate the fan 60 minutes before occupancy to achieve space temperature setpoint. Supply fan VFD shall modulate to maintain duct static pressure setpoint of 250 Pa. Cooling coil valve shall modulate to maintain supply air temperature at 13°C. Heating coil valve shall modulate only when supply air temperature drops below 10°C. Free cooling mode shall activate when outside air enthalpy is lower than return air enthalpy. Minimum outside air damper position shall be 20% during occupied mode. Smoke detector in supply duct shall shut down fan and close all dampers on alarm. All alarms and status points shall be mapped to BMS graphics.',
+    passageText:
+      'SEQUENCE OF OPERATIONS — AHU-04 (Office Tower, Level 12). The Air Handling Unit shall operate on a time schedule: Monday to Friday, 06:00 to 20:00. Optimum start shall activate the fan 60 minutes before occupancy to achieve space temperature setpoint. Supply fan VFD shall modulate to maintain duct static pressure setpoint of 250 Pa. Cooling coil valve shall modulate to maintain supply air temperature at 13°C. Heating coil valve shall modulate only when supply air temperature drops below 10°C. Free cooling mode shall activate when outside air enthalpy is lower than return air enthalpy. Minimum outside air damper position shall be 20% during occupied mode. Smoke detector in supply duct shall shut down fan and close all dampers on alarm. All alarms and status points shall be mapped to BMS graphics.',
     vocabulary: [
-      { term: 'sequence of operations', definition: 'A detailed description of how a control system should operate equipment.', context: 'SEQUENCE OF OPERATIONS — AHU-04.', turkishTranslation: 'işletim sırası' },
-      { term: 'optimum start', definition: 'A control strategy that starts equipment early to reach setpoint by occupancy time.', context: 'Optimum start shall activate the fan 60 minutes before occupancy.', turkishTranslation: 'en iyi başlangıç' },
-      { term: 'VFD', definition: 'Variable Frequency Drive; controls motor speed by varying electrical frequency.', context: 'Supply fan VFD shall modulate to maintain duct static pressure.', turkishTranslation: 'frekans dönüştürücü' },
-      { term: 'free cooling', definition: 'Using cool outside air for cooling instead of mechanical refrigeration.', context: 'Free cooling mode shall activate when outside air enthalpy is lower.', turkishTranslation: 'serbest soğutma' },
-      { term: 'enthalpy', definition: 'Total heat content of air, including sensible and latent heat.', context: 'When outside air enthalpy is lower than return air enthalpy.', turkishTranslation: 'entalpi' },
+      {
+        term: 'sequence of operations',
+        definition: 'A detailed description of how a control system should operate equipment.',
+        context: 'SEQUENCE OF OPERATIONS — AHU-04.',
+        turkishTranslation: 'işletim sırası',
+      },
+      {
+        term: 'optimum start',
+        definition:
+          'A control strategy that starts equipment early to reach setpoint by occupancy time.',
+        context: 'Optimum start shall activate the fan 60 minutes before occupancy.',
+        turkishTranslation: 'en iyi başlangıç',
+      },
+      {
+        term: 'VFD',
+        definition:
+          'Variable Frequency Drive; controls motor speed by varying electrical frequency.',
+        context: 'Supply fan VFD shall modulate to maintain duct static pressure.',
+        turkishTranslation: 'frekans dönüştürücü',
+      },
+      {
+        term: 'free cooling',
+        definition: 'Using cool outside air for cooling instead of mechanical refrigeration.',
+        context: 'Free cooling mode shall activate when outside air enthalpy is lower.',
+        turkishTranslation: 'serbest soğutma',
+      },
+      {
+        term: 'enthalpy',
+        definition: 'Total heat content of air, including sensible and latent heat.',
+        context: 'When outside air enthalpy is lower than return air enthalpy.',
+        turkishTranslation: 'entalpi',
+      },
     ],
     questions: [
-      { id: 'bs_b1_q1', type: 'multiple_choice', questionText: 'What is the supply air temperature setpoint for AHU-04?', choices: ['A) 10°C', 'B) 13°C', 'C) 250 Pa', 'D) 20%'], correctAnswer: 'B', explanation: 'The sequence states cooling coil valve shall maintain supply air temperature at 13°C.' },
-      { id: 'bs_b1_q2', type: 'true_false', questionText: 'The heating coil valve operates when supply air temperature is above 10°C.', correctAnswer: 'false', explanation: 'Heating coil valve modulates only when supply air temperature drops below 10°C.' },
-      { id: 'bs_b1_q3', type: 'keyword_answer', questionText: 'What is the minimum outside air damper position during occupied mode?', keywords: ['20%', '20 percent'], correctAnswer: '20%', explanation: 'The sequence specifies minimum outside air damper position shall be 20% during occupied mode.' },
+      {
+        id: 'bs_b1_q1',
+        type: 'multiple_choice',
+        questionText: 'What is the supply air temperature setpoint for AHU-04?',
+        choices: ['A) 10°C', 'B) 13°C', 'C) 250 Pa', 'D) 20%'],
+        correctAnswer: 'B',
+        explanation:
+          'The sequence states cooling coil valve shall maintain supply air temperature at 13°C.',
+      },
+      {
+        id: 'bs_b1_q2',
+        type: 'true_false',
+        questionText: 'The heating coil valve operates when supply air temperature is above 10°C.',
+        correctAnswer: 'false',
+        explanation:
+          'Heating coil valve modulates only when supply air temperature drops below 10°C.',
+      },
+      {
+        id: 'bs_b1_q3',
+        type: 'keyword_answer',
+        questionText: 'What is the minimum outside air damper position during occupied mode?',
+        keywords: ['20%', '20 percent'],
+        correctAnswer: '20%',
+        explanation:
+          'The sequence specifies minimum outside air damper position shall be 20% during occupied mode.',
+      },
     ],
     xpReward: 45,
     coinReward: 18,
     eloReward: 13,
-    sourceMetadata: { origin: 'EngVox original', author: 'AI Content Generation', schemaVersion: 1 },
+    sourceMetadata: {
+      origin: 'EngVox original',
+      author: 'AI Content Generation',
+      schemaVersion: 1,
+    },
   },
   {
     id: 'fire_alarm_comm',

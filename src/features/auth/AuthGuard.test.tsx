@@ -1,8 +1,9 @@
+import * as Sentry from '@sentry/react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import * as Sentry from '@sentry/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { MemoryRouter } from 'react-router-dom';
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 
 // --- mocks -----------------------------------------------------------
 
@@ -51,7 +52,7 @@ function renderGuard() {
       <AuthGuard>
         <div data-testid="child">Protected content</div>
       </AuthGuard>
-    </MemoryRouter>,
+    </MemoryRouter>
   );
 }
 
@@ -88,9 +89,7 @@ describe('AuthGuard – Clerk timeout fallback', () => {
       expect(screen.getByText('Connection problem')).toBeInTheDocument();
     });
 
-    expect(
-      screen.getByText(/ad blocker or privacy extension/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/ad blocker or privacy extension/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /reload page/i })).toBeInTheDocument();
   });
 
@@ -111,7 +110,7 @@ describe('AuthGuard – Clerk timeout fallback', () => {
         <AuthGuard>
           <div data-testid="child">Protected content</div>
         </AuthGuard>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     // Clerk loaded — should show children, not the error
@@ -227,7 +226,7 @@ describe('AuthGuard – Clerk timeout fallback', () => {
 
     expect(Sentry.captureMessage).toHaveBeenCalledTimes(1);
     expect(Sentry.captureMessage).toHaveBeenCalledWith(
-      expect.stringContaining('Clerk failed to load within timeout'),
+      expect.stringContaining('Clerk failed to load within timeout')
     );
     expect(Sentry.withScope).toHaveBeenCalledTimes(1);
   });
@@ -260,7 +259,7 @@ describe('AuthGuard – Clerk timeout fallback', () => {
         <AuthGuard>
           <div data-testid="child">Protected content</div>
         </AuthGuard>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     await waitFor(() => {
@@ -296,7 +295,7 @@ describe('AuthGuard – Clerk timeout fallback', () => {
         <AuthGuard>
           <div data-testid="child">Protected content</div>
         </AuthGuard>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     // Advance past original timeout — timer should be cleaned up
@@ -317,7 +316,7 @@ describe('AuthGuard – Clerk timeout fallback', () => {
         <AuthGuard>
           <div>Protected</div>
         </AuthGuard>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     vi.advanceTimersByTime(8_000);
@@ -356,7 +355,7 @@ describe('AuthGuard – Clerk timeout fallback', () => {
         <AuthGuard>
           <div data-testid="child">Protected content</div>
         </AuthGuard>
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     // Should redirect to /sign-in (Navigate component replaces the view)

@@ -1,11 +1,11 @@
 import { includesNormalized } from '@/core/learning';
 
+import type { GrammarRule } from '@/shared/types/grammar.types';
 import type { ReadingEvaluationResult, ReadingMission } from '@/shared/types/reading.types';
 import type { WritingEvaluationResult, WritingMission } from '@/shared/types/writing.types';
 
 import { GrammarProgressService } from './grammar-progress.service';
 import { GrammarRepository } from './grammar.repository';
-import type { GrammarRule } from '@/shared/types/grammar.types';
 
 const TRANSFER_SCORE_THRESHOLD = 80;
 const MAX_EVIDENCE_RULES_PER_MISSION = 8;

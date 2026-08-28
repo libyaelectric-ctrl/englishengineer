@@ -11,9 +11,6 @@
  * 7. Gamification & Momentum
  * 8. Targeted Skill Modules
  */
-
-import { useMemo, useState } from 'react';
-
 import {
   ArrowRight,
   BookOpen,
@@ -29,6 +26,9 @@ import {
   Trophy,
   Zap,
 } from 'lucide-react';
+
+import { useMemo, useState } from 'react';
+
 import { Link } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
@@ -50,9 +50,9 @@ import {
 import { LearningTaskEngine } from '@/features/learning-orchestrator';
 import { useLearningCockpit } from '@/features/profile';
 
-import { AssessmentProfilePanel } from './AnalyticsPanels';
 import { AnalyticsChartsSection } from './AnalyticsChartsSection';
 import { AnalyticsMetricCards } from './AnalyticsMetricCards';
+import { AssessmentProfilePanel } from './AnalyticsPanels';
 import { HeroBanner } from './HeroBanner';
 import { QuickStats } from './QuickStats';
 import { SkillSidebar } from './SkillSidebar';
@@ -76,7 +76,8 @@ const ProgressPage = () => {
   );
   const difficultyStats = {
     beginner: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'beginner').length,
-    intermediate: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'intermediate').length,
+    intermediate: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'intermediate')
+      .length,
     advanced: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'advanced').length,
     challenge: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'challenge').length,
   };
@@ -112,25 +113,29 @@ const ProgressPage = () => {
       return {
         label: 'Grandmaster',
         icon: getRankIcon('grandmaster'),
-        color: 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/40',
+        color:
+          'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/40',
       };
     if (elo >= RANK_THRESHOLDS.DIAMOND)
       return {
         label: 'Diamond',
         icon: getRankIcon('diamond'),
-        color: 'text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/30 border-sky-200 dark:border-sky-800/40',
+        color:
+          'text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/30 border-sky-200 dark:border-sky-800/40',
       };
     if (elo >= RANK_THRESHOLDS.PLATINUM)
       return {
         label: 'Platinum',
         icon: getRankIcon('platinum'),
-        color: 'text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/30 border-violet-200 dark:border-violet-800/40',
+        color:
+          'text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/30 border-violet-200 dark:border-violet-800/40',
       };
     if (elo >= RANK_THRESHOLDS.GOLD)
       return {
         label: 'Gold',
         icon: getRankIcon('gold'),
-        color: 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200 dark:border-yellow-800/40',
+        color:
+          'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200 dark:border-yellow-800/40',
       };
     return {
       label: 'Silver',
@@ -163,12 +168,54 @@ const ProgressPage = () => {
   const weakestSkill = LearningTaskEngine.getWeakestSkill(profile);
 
   const skillLinks = [
-    { name: 'Vocabulary', icon: BookOpen, href: '/vocabulary', desc: 'Expand terminology for technical specifications', band: profile?.skills?.vocabulary?.cefrBand ?? 'A1', isWeak: weakestSkill === 'vocabulary' },
-    { name: 'Grammar', icon: Languages, href: '/grammar', desc: 'Master technical sentence structures and passive voice', band: profile?.skills?.grammar?.cefrBand ?? 'A1', isWeak: weakestSkill === 'grammar' },
-    { name: 'Reading', icon: BookOpen, href: '/reading', desc: 'Practice technical reports and site blueprints', band: profile?.skills?.reading?.cefrBand ?? 'A1', isWeak: weakestSkill === 'reading' },
-    { name: 'Writing', icon: PenTool, href: '/writing', desc: 'Draft formal engineering emails and RFIs', band: profile?.skills?.writing?.cefrBand ?? 'A1', isWeak: weakestSkill === 'writing' },
-    { name: 'Speaking', icon: Mic2, href: '/speaking', desc: 'AI-assisted technical pronunciation and standups', band: profile?.skills?.speaking?.cefrBand ?? 'A1', isWeak: weakestSkill === 'speaking' },
-    { name: 'Placement Test', icon: Compass, href: '/placement', desc: 'Calibrate your CEFR band with automated assessment', band: 'Benchmark', isWeak: false },
+    {
+      name: 'Vocabulary',
+      icon: BookOpen,
+      href: '/vocabulary',
+      desc: 'Expand terminology for technical specifications',
+      band: profile?.skills?.vocabulary?.cefrBand ?? 'A1',
+      isWeak: weakestSkill === 'vocabulary',
+    },
+    {
+      name: 'Grammar',
+      icon: Languages,
+      href: '/grammar',
+      desc: 'Master technical sentence structures and passive voice',
+      band: profile?.skills?.grammar?.cefrBand ?? 'A1',
+      isWeak: weakestSkill === 'grammar',
+    },
+    {
+      name: 'Reading',
+      icon: BookOpen,
+      href: '/reading',
+      desc: 'Practice technical reports and site blueprints',
+      band: profile?.skills?.reading?.cefrBand ?? 'A1',
+      isWeak: weakestSkill === 'reading',
+    },
+    {
+      name: 'Writing',
+      icon: PenTool,
+      href: '/writing',
+      desc: 'Draft formal engineering emails and RFIs',
+      band: profile?.skills?.writing?.cefrBand ?? 'A1',
+      isWeak: weakestSkill === 'writing',
+    },
+    {
+      name: 'Speaking',
+      icon: Mic2,
+      href: '/speaking',
+      desc: 'AI-assisted technical pronunciation and standups',
+      band: profile?.skills?.speaking?.cefrBand ?? 'A1',
+      isWeak: weakestSkill === 'speaking',
+    },
+    {
+      name: 'Placement Test',
+      icon: Compass,
+      href: '/placement',
+      desc: 'Calibrate your CEFR band with automated assessment',
+      band: 'Benchmark',
+      isWeak: false,
+    },
   ];
 
   return (
@@ -276,28 +323,36 @@ const ProgressPage = () => {
         <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-4">
           <div className="flex items-center gap-2 text-primary">
             <Zap className="h-4 w-4" />
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">Total XP</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+              Total XP
+            </span>
           </div>
           <p className="mt-2 text-2xl font-black text-foreground">{xp} XP</p>
         </div>
         <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-4">
           <div className="flex items-center gap-2 text-amber-500">
             <Flame className="h-4 w-4" />
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">Streak</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+              Streak
+            </span>
           </div>
           <p className="mt-2 text-2xl font-black text-foreground">{streak} Days</p>
         </div>
         <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-4">
           <div className="flex items-center gap-2 text-emerald-500">
             <Target className="h-4 w-4" />
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">Active Missions</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+              Active Missions
+            </span>
           </div>
           <p className="mt-2 text-2xl font-black text-foreground">{missions.length}</p>
         </div>
         <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-4">
           <div className="flex items-center gap-2 text-cyan-500">
             <Cpu className="h-4 w-4" />
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">Reviews Due</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+              Reviews Due
+            </span>
           </div>
           <p className="mt-2 text-2xl font-black text-foreground">
             {typeof memory?.dueToday === 'number' ? memory.dueToday : 0}
@@ -342,7 +397,9 @@ const ProgressPage = () => {
                 </div>
 
                 <div className="mt-4 flex items-center justify-between pt-3 border-t border-border-soft/60">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-primary">Start Exercise</span>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-primary">
+                    Start Exercise
+                  </span>
                   <ArrowRight className="h-3.5 w-3.5 text-muted-copy transition-transform group-hover:translate-x-1 group-hover:text-primary" />
                 </div>
               </Link>

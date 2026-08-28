@@ -1,6 +1,7 @@
-import { Action, Item, Progress, Section, Stat } from './SidebarComponents';
 import { useLocalizationStore } from '@/features/localization';
 import { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
+
+import { Action, Item, Progress, Section, Stat } from './SidebarComponents';
 import type { SidebarConfig } from './sidebar.config';
 
 function renderTabs(title: string, tabs: NonNullable<SidebarConfig['tabs']>) {
@@ -33,7 +34,10 @@ function renderStats(stats: NonNullable<SidebarConfig['stats']>, statsTitle: str
   );
 }
 
-function renderProgressBars(bars: NonNullable<SidebarConfig['progressBars']>, progressTitle: string) {
+function renderProgressBars(
+  bars: NonNullable<SidebarConfig['progressBars']>,
+  progressTitle: string
+) {
   if (bars.length === 0) return null;
   return (
     <Section title={progressTitle}>
@@ -79,8 +83,8 @@ export function SkillSidebar({ config }: { config: SidebarConfig }) {
         <div className="space-y-3">
           <div>
             <p className="text-[10px] font-bold text-primary tracking-wider uppercase mb-1">
-              {config.currentLevel || copy.loading} {copy.pathWord} ·{' '}
-              {config.totalItems ?? 0} {copy.itemsWord}
+              {config.currentLevel || copy.loading} {copy.pathWord} · {config.totalItems ?? 0}{' '}
+              {copy.itemsWord}
             </p>
             <p className="text-xs text-muted-copy leading-5">{config.pathDescription}</p>
           </div>

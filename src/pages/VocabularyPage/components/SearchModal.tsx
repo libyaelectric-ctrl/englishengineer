@@ -3,10 +3,10 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { useEffect, useRef } from 'react';
 
+import { useLearningLanguage } from '@/features/profile/use-learning-language';
 import type { VocabularyTerm } from '@/features/vocabulary';
 import { repairVocabularyText } from '@/features/vocabulary';
 import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
-import { useLearningLanguage } from '@/features/profile/use-learning-language';
 
 interface SearchModalProps {
   isOpen: boolean;

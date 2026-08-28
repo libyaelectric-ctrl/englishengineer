@@ -1,9 +1,11 @@
 import { storage } from '@/shared/storage';
 
+import { getUiTranslations, getUiTranslationsSync, preloadLanguage } from './data';
+import { UI_TRANSLATIONS } from './localization.data';
 import type { SupportedInterfaceLanguage } from './localization.types';
 import { EXTRA_UI_TRANSLATIONS } from './translations';
-import { getUiTranslations, getUiTranslationsSync, preloadLanguage } from './data';
-import { UI_TRANSLATIONS } from './localization.data'; // fallback sync data
+
+// fallback sync data
 
 const STORAGE_KEY = 'EngVox_interface_language';
 
@@ -56,7 +58,8 @@ export const LocalizationService = {
    * After initial language load, this is instant.
    */
   translate(key: string, language: SupportedInterfaceLanguage): string {
-    const ui = getUiTranslationsSync(language) ?? (UI_TRANSLATIONS[language] as Record<string, string>);
+    const ui =
+      getUiTranslationsSync(language) ?? (UI_TRANSLATIONS[language] as Record<string, string>);
     const uiEn = getUiTranslationsSync('en') ?? (UI_TRANSLATIONS.en as Record<string, string>);
     const extra = EXTRA_UI_TRANSLATIONS[language] as Record<string, string>;
     const extraEn = EXTRA_UI_TRANSLATIONS.en as Record<string, string>;

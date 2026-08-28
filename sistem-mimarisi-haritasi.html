@@ -1,320 +1,730 @@
-<!DOCTYPE html><html lang="tr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EngineerOS — Sistem Mimarisi Haritası (güncel)</title>
-<script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
-<script>
-  if(typeof vis==='undefined'){
-    document.addEventListener('DOMContentLoaded',function(){
-      document.body.innerHTML='<div style="padding:40px;text-align:center;color:#e8e9ec;background:#0f1115;font-family:sans-serif;">'+
-        '<h2 style="color:#d9698a;">vis-network yüklenemedi</h2>'+
-        '<p style="color:#9aa0ac;">CDN bağlantısı kurulamadı. İnternet bağlantınızı kontrol edin ve sayfayı yenileyin.</p>'+
-        '<button onclick="location.reload()" style="margin-top:16px;padding:8px 20px;border:1px solid #2b303b;background:#1e222b;color:#e8e9ec;border-radius:6px;cursor:pointer;">Yeniden Dene</button>'+
-        '</div>';
-    });
-  }
-</script>
-<style>
-  :root{
-    --bg:#0f1115; --panel:#171a21; --panel2:#1e222b; --border:#2b303b;
-    --text:#e8e9ec; --muted:#9aa0ac; --accent:#5da9ff;
-  }
-  *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;}
-  header{padding:20px 24px 12px;border-bottom:1px solid var(--border);}
-  h1{font-size:19px;font-weight:600;margin:0 0 4px;}
-  p.sub{color:var(--muted);font-size:13px;margin:0;}
-  .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;background:#2c8e83;color:#0f1115;font-weight:700;margin-left:8px;vertical-align:middle;}
-  .wrap{display:flex;height:calc(100vh - 84px);}
-  #network{flex:1;background:var(--bg);}
-  #side{width:360px;border-left:1px solid var(--border);background:var(--panel);padding:16px;overflow-y:auto;flex-shrink:0;position:relative;}
-  #side h2{font-size:14px;margin:0 0 8px;color:var(--accent);}
-  #side h3{font-size:16px;margin:0 0 6px;}
-  #side .cat{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;margin-bottom:10px;color:#0f1115;font-weight:600;}
-  #side p{font-size:13px;line-height:1.55;color:#d3d5da;margin:0 0 10px;}
-  #side .hint{color:var(--muted);font-size:12px;margin-top:16px;padding-top:12px;border-top:1px solid var(--border);}
-  #side .changed{display:inline-block;font-size:10px;padding:1px 7px;border-radius:8px;background:#7fc55b;color:#0f1115;font-weight:700;margin-bottom:8px;}
-  .legend{padding:12px 24px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:14px;background:var(--panel2);}
-  .legend div{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);}
-  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
-  #search{width:100%;padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--panel2);color:var(--text);font-size:13px;margin-bottom:12px;}
-  #close-detail{display:none;position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--panel2);color:var(--muted);font-size:16px;cursor:pointer;line-height:28px;text-align:center;}
-  #close-detail:hover{color:var(--text);border-color:var(--accent);}
-  @media(max-width:768px){
-    .wrap{flex-direction:column;height:auto;}
-    #network{height:55vh;}
-    #side{width:100%;border-left:none;border-top:1px solid var(--border);max-height:45vh;}
-    header{padding:14px 16px 10px;}
-    h1{font-size:16px;}
-    p.sub{font-size:12px;}
-    .legend{padding:10px 16px;gap:10px;}
-    .legend div{font-size:11px;}
-  }
-</style>
-</head>
-<body>
-<header>
-  <h1>EngineerOS — Kim neyi, ne şekilde öğretiyor? <span class="badge">güncel · refactor sonrası</span></h1>
-  <p class="sub">10 mühendislik dalı × 6 CEFR seviyesi × 15 dilde İngilizce öğreten sistemin güncel kod tabanından çıkarılmış harita. Yeşil kenarlıklı kutular son güncellemede eklenen/değişen kısımlar. Bir kutuya tıklayın.</p>
-</header>
-<div class="wrap">
-  <div id="network"></div>
-  <div id="side">
-    <button id="close-detail" title="Paneli kapat" aria-label="Detay panelini kapat">&times;</button>
-    <input id="search" placeholder="Düğüm ara (ör. vocabulary)…">
-    <div id="detail">
-      <h2>Nasıl kullanılır</h2>
-      <p>Grafikteki her kutu koddaki gerçek bir dosya/servis/sayfaya karşılık gelir. Bir kutuya tıklayınca burada ne işe yaradığı, hangi dosyada olduğu ve son güncellemede ne değiştiği gösterilir.</p>
-      <p class="hint">Renkler: gri = giriş/yönlendirme · mor = kişiselleştirme (dal/dil/seviye) · amber = ham içerik verisi · teal = öğrenme motoru/mantık · pembe = state/store · mavi = kullanıcı sayfaları · yeşil = analitik/geri besleme. Yeşil kenarlık = son refactor'de değişen/eklenen düğüm.</p>
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EngineerOS — Sistem Mimarisi Haritası (güncel)</title>
+    <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+    <script>
+      if (typeof vis === 'undefined') {
+        document.addEventListener('DOMContentLoaded', function () {
+          document.body.innerHTML =
+            '<div style="padding:40px;text-align:center;color:#e8e9ec;background:#0f1115;font-family:sans-serif;">' +
+            '<h2 style="color:#d9698a;">vis-network yüklenemedi</h2>' +
+            '<p style="color:#9aa0ac;">CDN bağlantısı kurulamadı. İnternet bağlantınızı kontrol edin ve sayfayı yenileyin.</p>' +
+            '<button onclick="location.reload()" style="margin-top:16px;padding:8px 20px;border:1px solid #2b303b;background:#1e222b;color:#e8e9ec;border-radius:6px;cursor:pointer;">Yeniden Dene</button>' +
+            '</div>';
+        });
+      }
+    </script>
+    <style>
+      :root {
+        --bg: #0f1115;
+        --panel: #171a21;
+        --panel2: #1e222b;
+        --border: #2b303b;
+        --text: #e8e9ec;
+        --muted: #9aa0ac;
+        --accent: #5da9ff;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+      }
+      header {
+        padding: 20px 24px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      h1 {
+        font-size: 19px;
+        font-weight: 600;
+        margin: 0 0 4px;
+      }
+      p.sub {
+        color: var(--muted);
+        font-size: 13px;
+        margin: 0;
+      }
+      .badge {
+        display: inline-block;
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 10px;
+        background: #2c8e83;
+        color: #0f1115;
+        font-weight: 700;
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+      .wrap {
+        display: flex;
+        height: calc(100vh - 84px);
+      }
+      #network {
+        flex: 1;
+        background: var(--bg);
+      }
+      #side {
+        width: 360px;
+        border-left: 1px solid var(--border);
+        background: var(--panel);
+        padding: 16px;
+        overflow-y: auto;
+        flex-shrink: 0;
+        position: relative;
+      }
+      #side h2 {
+        font-size: 14px;
+        margin: 0 0 8px;
+        color: var(--accent);
+      }
+      #side h3 {
+        font-size: 16px;
+        margin: 0 0 6px;
+      }
+      #side .cat {
+        display: inline-block;
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        color: #0f1115;
+        font-weight: 600;
+      }
+      #side p {
+        font-size: 13px;
+        line-height: 1.55;
+        color: #d3d5da;
+        margin: 0 0 10px;
+      }
+      #side .hint {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+      }
+      #side .changed {
+        display: inline-block;
+        font-size: 10px;
+        padding: 1px 7px;
+        border-radius: 8px;
+        background: #7fc55b;
+        color: #0f1115;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .legend {
+        padding: 12px 24px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        background: var(--panel2);
+      }
+      .legend div {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        display: inline-block;
+      }
+      #search {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--panel2);
+        color: var(--text);
+        font-size: 13px;
+        margin-bottom: 12px;
+      }
+      #close-detail {
+        display: none;
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--panel2);
+        color: var(--muted);
+        font-size: 16px;
+        cursor: pointer;
+        line-height: 28px;
+        text-align: center;
+      }
+      #close-detail:hover {
+        color: var(--text);
+        border-color: var(--accent);
+      }
+      @media (max-width: 768px) {
+        .wrap {
+          flex-direction: column;
+          height: auto;
+        }
+        #network {
+          height: 55vh;
+        }
+        #side {
+          width: 100%;
+          border-left: none;
+          border-top: 1px solid var(--border);
+          max-height: 45vh;
+        }
+        header {
+          padding: 14px 16px 10px;
+        }
+        h1 {
+          font-size: 16px;
+        }
+        p.sub {
+          font-size: 12px;
+        }
+        .legend {
+          padding: 10px 16px;
+          gap: 10px;
+        }
+        .legend div {
+          font-size: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>
+        EngineerOS — Kim neyi, ne şekilde öğretiyor?
+        <span class="badge">güncel · refactor sonrası</span>
+      </h1>
+      <p class="sub">
+        10 mühendislik dalı × 6 CEFR seviyesi × 15 dilde İngilizce öğreten sistemin güncel kod
+        tabanından çıkarılmış harita. Yeşil kenarlıklı kutular son güncellemede eklenen/değişen
+        kısımlar. Bir kutuya tıklayın.
+      </p>
+    </header>
+    <div class="wrap">
+      <div id="network"></div>
+      <div id="side">
+        <button id="close-detail" title="Paneli kapat" aria-label="Detay panelini kapat">
+          &times;
+        </button>
+        <input id="search" placeholder="Düğüm ara (ör. vocabulary)…" />
+        <div id="detail">
+          <h2>Nasıl kullanılır</h2>
+          <p>
+            Grafikteki her kutu koddaki gerçek bir dosya/servis/sayfaya karşılık gelir. Bir kutuya
+            tıklayınca burada ne işe yaradığı, hangi dosyada olduğu ve son güncellemede ne değiştiği
+            gösterilir.
+          </p>
+          <p class="hint">
+            Renkler: gri = giriş/yönlendirme · mor = kişiselleştirme (dal/dil/seviye) · amber = ham
+            içerik verisi · teal = öğrenme motoru/mantık · pembe = state/store · mavi = kullanıcı
+            sayfaları · yeşil = analitik/geri besleme. Yeşil kenarlık = son refactor'de
+            değişen/eklenen düğüm.
+          </p>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-<div class="legend" id="legend"></div>
+    <div class="legend" id="legend"></div>
 
+    <script>
+      if (typeof vis === 'undefined') {
+        throw new Error('vis-network not loaded');
+      }
 
-<script>
-if(typeof vis==='undefined'){throw new Error('vis-network not loaded');}
+      function esc(s) {
+        var d = document.createElement('div');
+        d.appendChild(document.createTextNode(s));
+        return d.innerHTML;
+      }
 
-function esc(s){var d=document.createElement('div');d.appendChild(document.createTextNode(s));return d.innerHTML;}
+      const COLORS = {
+        entry: { bg: '#5f6572', bd: '#454a55', label: 'Giriş / Yönlendirme' },
+        personal: { bg: '#8b7fe8', bd: '#6a5fc4', label: 'Kişiselleştirme' },
+        data: { bg: '#e0a94a', bd: '#b8863a', label: 'İçerik verisi' },
+        engine: { bg: '#3fb6a8', bd: '#2c8e83', label: 'Öğrenme motoru' },
+        store: { bg: '#d9698a', bd: '#b04d6b', label: 'State / Store' },
+        page: { bg: '#5da9ff', bd: '#3d7fd1', label: 'Kullanıcı sayfası' },
+        analytics: { bg: '#7fc55b', bd: '#5c9a3f', label: 'Analitik / Geri besleme' },
+      };
 
-const COLORS = {
-  entry:   {bg:'#5f6572', bd:'#454a55', label:'Giriş / Yönlendirme'},
-  personal:{bg:'#8b7fe8', bd:'#6a5fc4', label:'Kişiselleştirme'},
-  data:    {bg:'#e0a94a', bd:'#b8863a', label:'İçerik verisi'},
-  engine:  {bg:'#3fb6a8', bd:'#2c8e83', label:'Öğrenme motoru'},
-  store:   {bg:'#d9698a', bd:'#b04d6b', label:'State / Store'},
-  page:    {bg:'#5da9ff', bd:'#3d7fd1', label:'Kullanıcı sayfası'},
-  analytics:{bg:'#7fc55b', bd:'#5c9a3f', label:'Analitik / Geri besleme'},
-};
+      const legendEl = document.getElementById('legend');
+      Object.values(COLORS).forEach(function (c) {
+        var d = document.createElement('div');
+        d.innerHTML = '<span class="dot" style="background:' + c.bg + '"></span>' + c.label;
+        legendEl.appendChild(d);
+      });
+      (function () {
+        var d = document.createElement('div');
+        d.innerHTML =
+          '<span class="dot" style="background:#7fc55b;border:2px solid #fff"></span>Son refactor\'de değişti';
+        legendEl.appendChild(d);
+      })();
 
+      var INFO = {
+        landing: {
+          t: 'Landing sayfası',
+          f: 'src/pages/LandingPage',
+          d: 'Herkese açık giriş sayfası. Ürünü tanıtır, "Ücretsiz Başla" ile kullanıcıyı Start akışına yönlendirir.',
+        },
+        start: {
+          t: 'Start sayfası',
+          f: 'src/pages/StartPage',
+          d: 'Kayıt sonrası ilk durak. Buradan 5 adımlı onboarding akışı başlar.',
+        },
+        onboarding: {
+          t: '5 adımlı onboarding',
+          f: 'onboarding flow (router.tsx: OnboardingGate)',
+          d: "Yeni kullanıcıyı mühendislik dalı seçimi, arayüz dili ve placement test'e yönlendiren zorunlu akış.",
+        },
+        discipline: {
+          t: 'Mühendislik dalı seçimi',
+          f: 'shared/constants/engineering-disciplines.ts',
+          d: '10 dal: architecture, chemical, civil, electrical, electronics, hse, industrial, mechanical, mechatronics, software. Seçim onboarding bitince kalıcı olarak kilitlenir (disciplineLockedAt).',
+        },
+        languageUI: {
+          t: 'Arayüz dili (15 dil + RTL)',
+          f: 'features/localization/localization.types.ts',
+          d: "15 dil tip seviyesinde destekleniyor: en, tr, ar, de, es, pt, fr, ru, zh, ja, it, vi, pl, id, nl. Arapça RTL hook'u (useDirection.ts) ile otomatik uygulanıyor.",
+          changed: true,
+        },
+        languageLearn: {
+          t: 'Öğrenme/çeviri dili (15 dil)',
+          f: 'src/data/translations/by-lang/*.json',
+          d: "Kelime anlamlarının hangi ana dile çevrileceği. Her dil ayrı JSON — lazy-load edilir. Eski 55 MB'lık kullanılmayan tekrar dosyası silindi.",
+          changed: true,
+        },
+        placement: {
+          t: 'Placement test',
+          f: 'src/pages/PlacementPage',
+          d: 'Reading/Vocabulary/Grammar üzerinden yerel (offline) A1 giriş seviyesi tespiti.',
+        },
+        profileStore: {
+          t: 'Kullanıcı öğrenme profili',
+          f: 'shared/types/domain.types.ts (UserLearningProfile, DailyMission)',
+          d: 'discipline (kilitli), her beceri için CEFR bandı + ELO puanı. DailyMission personalReason alanı eklendi.',
+          changed: true,
+        },
+        vocabData: {
+          t: 'Kelime veritabanı (a1–c2)',
+          f: 'src/data/vocabulary/by-level/*.seed.ts',
+          d: "Her CEFR seviyesi için ayrı dosya, 10 dal + general/engineering domain'leriyle etiketlenmiş terimler.",
+        },
+        gramData: {
+          t: 'Gramer kural veritabanı',
+          f: 'src/data/grammar/by-level/*.seed.ts',
+          d: 'a1–c2 seviyelerine göre ayrılmış gramer kuralları.',
+        },
+        translationCorpus: {
+          t: "Çeviri corpus'u",
+          f: 'shared/services/vocabulary-translation.service.ts',
+          d: "15 dilin her biri ayrı JSON — dinamik yüklenir, cache'lenir.",
+        },
+        vocabRepo: {
+          t: 'VocabularyRepository',
+          f: 'shared/services/vocabulary.repository.ts',
+          d: 'Ham vocabulary seed verisine erişim katmanı.',
+        },
+        vocabEngine: {
+          t: 'VocabularyEngine',
+          f: 'shared/services/vocabulary.engine.ts',
+          d: 'CEFR + beceri + domain + gramer uyumu filtresinden geçirir. sortContentByPoolRatio ile kelime havuzuna göre zorluk sırasına sokuyor.',
+          changed: true,
+        },
+        gramEngine: {
+          t: 'GrammarEngine',
+          f: 'shared/services/grammar.engine.ts',
+          d: 'Zayıf beceriye ve CEFR seviyesine göre gramer kuralı seçer. selectGrammarForTask sonunda sortContentByPoolRatio çağrılıyor.',
+          changed: true,
+        },
+        contentSelect: {
+          t: 'Personalized Content Service',
+          f: 'core/content-selection/personalized-content.service.ts',
+          d: 'sortContentByPoolRatio generic olarak tüm görev tiplerini kabul ediyor. USE_UNIFIED_DIFFICULTY_SCORING flag ile açılıp kapatılabilir.',
+          changed: true,
+        },
+        profileEngine: {
+          t: 'LearningProfileEngine',
+          f: 'shared/services/profile-engine.service.ts',
+          d: "generateDailyMissions artık son 7 günün mistake log'unu okuyor, en zayıf beceri seçimine ağırlık veriyor ve personalReason üretiyor.",
+          changed: true,
+        },
+        learningStore: {
+          t: 'Core learning store',
+          f: 'core/learning/learning.store.ts',
+          d: 'Zustand store: oturumlar, can/streak, vocabularyPool (VocabularyEngine ve GrammarEngine tarafından da okunuyor).',
+          changed: true,
+        },
+        liStore: {
+          t: 'Learning Intelligence store',
+          f: 'shared/stores/learning-intelligence.store.ts',
+          d: "Kariyer rolü, mistake log, 7 günlük rapor. ProfileEngine'in günlük görev üretimini besliyor.",
+          changed: true,
+        },
+        featureFlags: {
+          t: 'Feature Flags',
+          f: 'shared/feature-flags.ts',
+          d: 'TEAM_BETA (VITE_FEATURE_FLAG_TEAM_BETA) ile Team sayfalarının görünürlüğünü kontrol ediyor; varsayılan kapalı.',
+          changed: true,
+        },
+        router: {
+          t: 'React Router v7',
+          f: 'src/routes/router.tsx',
+          d: "AuthGuard, OnboardingGate, SubscriptionRouteGuard katmanları. team route'ları FEATURE_FLAGS.TEAM_BETA kontrolünden geçiyor.",
+          changed: true,
+        },
+        dashboard: {
+          t: 'Dashboard',
+          f: 'src/pages/DashboardPage',
+          d: 'Genel özet ve DailyChallenge adlı günlük rastgele mini-quiz özelliği. Router tarafından sunulur,其他 motor veya store ile doğrudan bağlantısı yoktur — izoledir.',
+        },
+        curriculum: {
+          t: 'Curriculum / Today Tab',
+          f: 'src/pages/CurriculumPage/CurriculumTodayTab.tsx',
+          d: "generateDailyMissions'ın ürettiği DailyMission[] listesi. personalReason doluysa kişisel gerekçe satırı render ediliyor.",
+          changed: true,
+        },
+        vocabPage: {
+          t: 'Vocabulary sayfası',
+          f: 'src/pages/VocabularyPage',
+          d: "VocabularyEngine'den gelen pool-ratio'ya göre sıralı terimleri gösterir.",
+        },
+        gramPage: {
+          t: 'Grammar sayfası',
+          f: 'src/pages/GrammarPage',
+          d: "GrammarEngine'in seçtiği pool-ratio'ya göre sıralı kuralı alıştırmaya çevirir.",
+        },
+        readPage: {
+          t: 'Reading sayfası',
+          f: 'src/pages/ReadingPage',
+          d: "Content Selection Service'in %75 bilinen-kelime oranına göre sıraladığı okuma görevlerini sunar.",
+        },
+        writePage: {
+          t: 'Writing sayfası',
+          f: 'src/pages/WritingPage',
+          d: "25 mühendislik yazma görevi; hedef kelime/gramer Content Selection + Grammar Engine'den gelir.",
+        },
+        listenPage: {
+          t: 'Listening sayfası',
+          f: 'src/pages/ListeningPage',
+          d: "30 dinleme senaryosu; ses motoru ile transkript vurgulama ve tekrar özellikleri. Kendi motoru yok — doğrudan learningStore'a yazar, ses oynatma features/listening/ içindeki AudioPlayer tarafından yönetilir.",
+        },
+        speakPage: {
+          t: 'Speaking sayfası',
+          f: 'src/pages/SpeakingPage',
+          d: "Konuşma pratiği görevleri. Kendi motoru yok — doğrudan learningStore'a yazar.",
+        },
+        workTools: {
+          t: 'Work Tools sayfası',
+          f: 'src/pages/WorkToolsPage',
+          d: 'Mühendislik iletişim şablonları, e-posta şablonları, cümle kütüphanesi ve PR Review Coach. 5 sekmeli yapıda (templates/emails/phrases/review-coach/field-docs).',
+        },
+        admin: {
+          t: 'Admin Panel',
+          f: 'src/pages/AdminPage',
+          d: 'Yönetim paneli: kullanıcı yönetimi, fatura/Stripe entegrasyonu, sistem logları. Clerk auth ile korunuyor. Router tarafından sunulur,其他 motor ile doğrudan bağlantısı yoktur — izoledir.',
+        },
+        progress: {
+          t: 'Progress / Analytics',
+          f: 'src/pages/ProgressPage',
+          d: "learning.store + learning-intelligence.store'dan beceri matrisini, CEFR/ELO trendini ve hata günlüğünü sunar.",
+        },
+        aiTools: {
+          t: 'AI Copilot',
+          f: 'src/pages/AIPage · features/ai',
+          d: '12 mühendislik moduna göre yapılandırılmış AI çıktısı üretir.',
+        },
+        profilePage: {
+          t: 'Profile sayfası',
+          f: 'src/pages/ProfilePage',
+          d: 'Kullanıcının dal/seviye/rozet bilgisini gösterir.',
+        },
+        billing: {
+          t: 'Billing / Subscription',
+          f: 'src/pages/BillingPage · features/billing',
+          d: 'DodoPayments Checkout + SubscriptionRouteGuard. Kademe 8 canlıya geçiş kapısı BLOCKED.',
+          changed: true,
+        },
+        team: {
+          t: 'Team sayfası',
+          f: 'src/pages/TeamPage',
+          d: "FEATURE_FLAGS.TEAM_BETA flag'i arkasında; flag kapalıyken dashboard'a yönleniyor.",
+          changed: true,
+        },
+        kademe8: {
+          t: 'Kademe 8 Canlı Servis Doğrulama',
+          f: 'scripts/prc-kademe-8-live-verify.mjs',
+          d: 'Supabase/DodoPayments/Upstash/AI için 17 zorunlu ortam değişkenini kontrol ediyor.',
+          changed: true,
+        },
+      };
 
-const legendEl = document.getElementById('legend');
-Object.values(COLORS).forEach(function(c){
-  var d=document.createElement('div');
-  d.innerHTML='<span class="dot" style="background:'+c.bg+'"></span>'+c.label;
-  legendEl.appendChild(d);
-});
-(function(){
-  var d=document.createElement('div');
-  d.innerHTML='<span class="dot" style="background:#7fc55b;border:2px solid #fff"></span>Son refactor\'de değişti';
-  legendEl.appendChild(d);
-})();
+      var nodes = new vis.DataSet([
+        { id: 'landing', label: 'Landing', group: 'entry' },
+        { id: 'start', label: 'Start', group: 'entry' },
+        { id: 'onboarding', label: 'Onboarding\n(5 adım)', group: 'entry' },
+        { id: 'discipline', label: 'Dal seçimi\n(10 mühendislik)', group: 'personal' },
+        { id: 'languageUI', label: 'Arayüz dili\n(15 dil + RTL)', group: 'personal' },
+        { id: 'languageLearn', label: 'Çeviri dili\n(15 dil)', group: 'personal' },
+        { id: 'placement', label: 'Placement\ntest', group: 'personal' },
+        { id: 'profileStore', label: 'Kullanıcı profili\n(dal kilitli+CEFR)', group: 'store' },
 
+        { id: 'vocabData', label: 'Kelime verisi\n(a1–c2)', group: 'data' },
+        { id: 'gramData', label: 'Gramer verisi\n(a1–c2)', group: 'data' },
+        { id: 'translationCorpus', label: 'Çeviri corpus\n(15 dil json)', group: 'data' },
 
-var INFO = {
-  landing:    {t:'Landing sayfası', f:'src/pages/LandingPage', d:'Herkese açık giriş sayfası. Ürünü tanıtır, "Ücretsiz Başla" ile kullanıcıyı Start akışına yönlendirir.'},
-  start:      {t:'Start sayfası', f:'src/pages/StartPage', d:'Kayıt sonrası ilk durak. Buradan 5 adımlı onboarding akışı başlar.'},
-  onboarding: {t:'5 adımlı onboarding', f:'onboarding flow (router.tsx: OnboardingGate)', d:'Yeni kullanıcıyı mühendislik dalı seçimi, arayüz dili ve placement test\'e yönlendiren zorunlu akış.'},
-  discipline: {t:'Mühendislik dalı seçimi', f:'shared/constants/engineering-disciplines.ts', d:'10 dal: architecture, chemical, civil, electrical, electronics, hse, industrial, mechanical, mechatronics, software. Seçim onboarding bitince kalıcı olarak kilitlenir (disciplineLockedAt).'},
-  languageUI: {t:'Arayüz dili (15 dil + RTL)', f:'features/localization/localization.types.ts', d:'15 dil tip seviyesinde destekleniyor: en, tr, ar, de, es, pt, fr, ru, zh, ja, it, vi, pl, id, nl. Arapça RTL hook\'u (useDirection.ts) ile otomatik uygulanıyor.', changed:true},
-  languageLearn:{t:'Öğrenme/çeviri dili (15 dil)', f:'src/data/translations/by-lang/*.json', d:'Kelime anlamlarının hangi ana dile çevrileceği. Her dil ayrı JSON — lazy-load edilir. Eski 55 MB\'lık kullanılmayan tekrar dosyası silindi.', changed:true},
-  placement:  {t:'Placement test', f:'src/pages/PlacementPage', d:'Reading/Vocabulary/Grammar üzerinden yerel (offline) A1 giriş seviyesi tespiti.'},
-  profileStore:{t:'Kullanıcı öğrenme profili', f:'shared/types/domain.types.ts (UserLearningProfile, DailyMission)', d:'discipline (kilitli), her beceri için CEFR bandı + ELO puanı. DailyMission personalReason alanı eklendi.', changed:true},
-  vocabData:  {t:'Kelime veritabanı (a1–c2)', f:'src/data/vocabulary/by-level/*.seed.ts', d:'Her CEFR seviyesi için ayrı dosya, 10 dal + general/engineering domain\'leriyle etiketlenmiş terimler.'},
-  gramData:   {t:'Gramer kural veritabanı', f:'src/data/grammar/by-level/*.seed.ts', d:'a1–c2 seviyelerine göre ayrılmış gramer kuralları.'},
-  translationCorpus:{t:'Çeviri corpus\'u', f:'shared/services/vocabulary-translation.service.ts', d:'15 dilin her biri ayrı JSON — dinamik yüklenir, cache\'lenir.'},
-  vocabRepo:  {t:'VocabularyRepository', f:'shared/services/vocabulary.repository.ts', d:'Ham vocabulary seed verisine erişim katmanı.'},
-  vocabEngine:{t:'VocabularyEngine', f:'shared/services/vocabulary.engine.ts', d:'CEFR + beceri + domain + gramer uyumu filtresinden geçirir. sortContentByPoolRatio ile kelime havuzuna göre zorluk sırasına sokuyor.', changed:true},
-  gramEngine: {t:'GrammarEngine', f:'shared/services/grammar.engine.ts', d:'Zayıf beceriye ve CEFR seviyesine göre gramer kuralı seçer. selectGrammarForTask sonunda sortContentByPoolRatio çağrılıyor.', changed:true},
-  contentSelect:{t:'Personalized Content Service', f:'core/content-selection/personalized-content.service.ts', d:'sortContentByPoolRatio generic olarak tüm görev tiplerini kabul ediyor. USE_UNIFIED_DIFFICULTY_SCORING flag ile açılıp kapatılabilir.', changed:true},
-  profileEngine:{t:'LearningProfileEngine', f:'shared/services/profile-engine.service.ts', d:'generateDailyMissions artık son 7 günün mistake log\'unu okuyor, en zayıf beceri seçimine ağırlık veriyor ve personalReason üretiyor.', changed:true},
-  learningStore:{t:'Core learning store', f:'core/learning/learning.store.ts', d:'Zustand store: oturumlar, can/streak, vocabularyPool (VocabularyEngine ve GrammarEngine tarafından da okunuyor).', changed:true},
-  liStore:    {t:'Learning Intelligence store', f:'shared/stores/learning-intelligence.store.ts', d:'Kariyer rolü, mistake log, 7 günlük rapor. ProfileEngine\'in günlük görev üretimini besliyor.', changed:true},
-  featureFlags:{t:'Feature Flags', f:'shared/feature-flags.ts', d:'TEAM_BETA (VITE_FEATURE_FLAG_TEAM_BETA) ile Team sayfalarının görünürlüğünü kontrol ediyor; varsayılan kapalı.', changed:true},
-  router:     {t:'React Router v7', f:'src/routes/router.tsx', d:'AuthGuard, OnboardingGate, SubscriptionRouteGuard katmanları. team route\'ları FEATURE_FLAGS.TEAM_BETA kontrolünden geçiyor.', changed:true},
-  dashboard:  {t:'Dashboard', f:'src/pages/DashboardPage', d:'Genel özet ve DailyChallenge adlı günlük rastgele mini-quiz özelliği. Router tarafından sunulur,其他 motor veya store ile doğrudan bağlantısı yoktur — izoledir.'},
-  curriculum: {t:'Curriculum / Today Tab', f:'src/pages/CurriculumPage/CurriculumTodayTab.tsx', d:'generateDailyMissions\'ın ürettiği DailyMission[] listesi. personalReason doluysa kişisel gerekçe satırı render ediliyor.', changed:true},
-  vocabPage:  {t:'Vocabulary sayfası', f:'src/pages/VocabularyPage', d:'VocabularyEngine\'den gelen pool-ratio\'ya göre sıralı terimleri gösterir.'},
-  gramPage:   {t:'Grammar sayfası', f:'src/pages/GrammarPage', d:'GrammarEngine\'in seçtiği pool-ratio\'ya göre sıralı kuralı alıştırmaya çevirir.'},
-  readPage:   {t:'Reading sayfası', f:'src/pages/ReadingPage', d:'Content Selection Service\'in %75 bilinen-kelime oranına göre sıraladığı okuma görevlerini sunar.'},
-  writePage:  {t:'Writing sayfası', f:'src/pages/WritingPage', d:'25 mühendislik yazma görevi; hedef kelime/gramer Content Selection + Grammar Engine\'den gelir.'},
-  listenPage: {t:'Listening sayfası', f:'src/pages/ListeningPage', d:'30 dinleme senaryosu; ses motoru ile transkript vurgulama ve tekrar özellikleri. Kendi motoru yok — doğrudan learningStore\'a yazar, ses oynatma features/listening/ içindeki AudioPlayer tarafından yönetilir.'},
-  speakPage:  {t:'Speaking sayfası', f:'src/pages/SpeakingPage', d:'Konuşma pratiği görevleri. Kendi motoru yok — doğrudan learningStore\'a yazar.'},
-  workTools:  {t:'Work Tools sayfası', f:'src/pages/WorkToolsPage', d:'Mühendislik iletişim şablonları, e-posta şablonları, cümle kütüphanesi ve PR Review Coach. 5 sekmeli yapıda (templates/emails/phrases/review-coach/field-docs).'},
-  admin:      {t:'Admin Panel', f:'src/pages/AdminPage', d:'Yönetim paneli: kullanıcı yönetimi, fatura/Stripe entegrasyonu, sistem logları. Clerk auth ile korunuyor. Router tarafından sunulur,其他 motor ile doğrudan bağlantısı yoktur — izoledir.'},
-  progress:   {t:'Progress / Analytics', f:'src/pages/ProgressPage', d:'learning.store + learning-intelligence.store\'dan beceri matrisini, CEFR/ELO trendini ve hata günlüğünü sunar.'},
-  aiTools:    {t:'AI Copilot', f:'src/pages/AIPage · features/ai', d:'12 mühendislik moduna göre yapılandırılmış AI çıktısı üretir.'},
-  profilePage:{t:'Profile sayfası', f:'src/pages/ProfilePage', d:'Kullanıcının dal/seviye/rozet bilgisini gösterir.'},
-  billing:    {t:'Billing / Subscription', f:'src/pages/BillingPage · features/billing', d:'DodoPayments Checkout + SubscriptionRouteGuard. Kademe 8 canlıya geçiş kapısı BLOCKED.', changed:true},
-  team:       {t:'Team sayfası', f:'src/pages/TeamPage', d:'FEATURE_FLAGS.TEAM_BETA flag\'i arkasında; flag kapalıyken dashboard\'a yönleniyor.', changed:true},
-  kademe8:    {t:'Kademe 8 Canlı Servis Doğrulama', f:'scripts/prc-kademe-8-live-verify.mjs', d:'Supabase/DodoPayments/Upstash/AI için 17 zorunlu ortam değişkenini kontrol ediyor.', changed:true},
-};
+        { id: 'vocabRepo', label: 'Vocabulary\nRepository', group: 'engine' },
+        { id: 'vocabEngine', label: 'Vocabulary\nEngine', group: 'engine' },
+        { id: 'gramEngine', label: 'Grammar\nEngine', group: 'engine' },
+        { id: 'contentSelect', label: 'Content Selection\n(pool-ratio)', group: 'engine' },
+        { id: 'profileEngine', label: 'Learning Profile\nEngine', group: 'engine' },
 
+        { id: 'learningStore', label: 'Learning store\n(vocabularyPool)', group: 'store' },
+        { id: 'liStore', label: 'Learning Intel.\nstore (mistakeLog)', group: 'store' },
+        { id: 'featureFlags', label: 'Feature Flags\n(TEAM_BETA)', group: 'store' },
 
-var nodes = new vis.DataSet([
-  {id:'landing', label:'Landing', group:'entry'},
-  {id:'start', label:'Start', group:'entry'},
-  {id:'onboarding', label:'Onboarding\n(5 adım)', group:'entry'},
-  {id:'discipline', label:'Dal seçimi\n(10 mühendislik)', group:'personal'},
-  {id:'languageUI', label:'Arayüz dili\n(15 dil + RTL)', group:'personal'},
-  {id:'languageLearn', label:'Çeviri dili\n(15 dil)', group:'personal'},
-  {id:'placement', label:'Placement\ntest', group:'personal'},
-  {id:'profileStore', label:'Kullanıcı profili\n(dal kilitli+CEFR)', group:'store'},
+        { id: 'router', label: "Router\n(guard'lar)", group: 'entry' },
 
-  {id:'vocabData', label:'Kelime verisi\n(a1–c2)', group:'data'},
-  {id:'gramData', label:'Gramer verisi\n(a1–c2)', group:'data'},
-  {id:'translationCorpus', label:'Çeviri corpus\n(15 dil json)', group:'data'},
+        { id: 'dashboard', label: 'Dashboard', group: 'page' },
+        { id: 'curriculum', label: 'Curriculum\n(Today Tab)', group: 'page' },
+        { id: 'vocabPage', label: 'Vocabulary', group: 'page' },
+        { id: 'gramPage', label: 'Grammar', group: 'page' },
+        { id: 'readPage', label: 'Reading', group: 'page' },
+        { id: 'writePage', label: 'Writing', group: 'page' },
+        { id: 'listenPage', label: 'Listening', group: 'page' },
+        { id: 'speakPage', label: 'Speaking', group: 'page' },
+        { id: 'workTools', label: 'Work Tools', group: 'page' },
+        { id: 'aiTools', label: 'AI Copilot', group: 'page' },
+        { id: 'profilePage', label: 'Profile', group: 'page' },
+        { id: 'billing', label: 'Billing', group: 'page' },
+        { id: 'team', label: 'Team\n(flag korumalı)', group: 'page' },
+        { id: 'admin', label: 'Admin\n(yönetim)', group: 'page' },
 
-  {id:'vocabRepo', label:'Vocabulary\nRepository', group:'engine'},
-  {id:'vocabEngine', label:'Vocabulary\nEngine', group:'engine'},
-  {id:'gramEngine', label:'Grammar\nEngine', group:'engine'},
-  {id:'contentSelect', label:'Content Selection\n(pool-ratio)', group:'engine'},
-  {id:'profileEngine', label:'Learning Profile\nEngine', group:'engine'},
+        { id: 'progress', label: 'Progress /\nAnalytics', group: 'analytics' },
+        { id: 'kademe8', label: 'Kademe-8 canlı\ndoğrulama (BLOCKED)', group: 'analytics' },
+      ]);
 
-  {id:'learningStore', label:'Learning store\n(vocabularyPool)', group:'store'},
-  {id:'liStore', label:'Learning Intel.\nstore (mistakeLog)', group:'store'},
-  {id:'featureFlags', label:'Feature Flags\n(TEAM_BETA)', group:'store'},
+      var edges = new vis.DataSet([
+        { from: 'landing', to: 'start' },
+        { from: 'start', to: 'onboarding' },
+        { from: 'onboarding', to: 'discipline' },
+        { from: 'onboarding', to: 'languageUI' },
+        { from: 'onboarding', to: 'placement' },
+        { from: 'discipline', to: 'profileStore', label: 'kilitlenir' },
+        { from: 'placement', to: 'profileStore', label: 'başlangıç CEFR' },
+        { from: 'languageUI', to: 'languageLearn' },
 
-  {id:'router', label:'Router\n(guard\'lar)', group:'entry'},
+        { from: 'vocabData', to: 'vocabRepo' },
+        { from: 'vocabRepo', to: 'vocabEngine' },
+        { from: 'translationCorpus', to: 'vocabEngine', label: 'anlam çevirisi' },
+        { from: 'gramData', to: 'gramEngine' },
+        { from: 'vocabEngine', to: 'gramEngine', label: 'grammarFits' },
 
-  {id:'dashboard', label:'Dashboard', group:'page'},
-  {id:'curriculum', label:'Curriculum\n(Today Tab)', group:'page'},
-  {id:'vocabPage', label:'Vocabulary', group:'page'},
-  {id:'gramPage', label:'Grammar', group:'page'},
-  {id:'readPage', label:'Reading', group:'page'},
-  {id:'writePage', label:'Writing', group:'page'},
-  {id:'listenPage', label:'Listening', group:'page'},
-  {id:'speakPage', label:'Speaking', group:'page'},
-  {id:'workTools', label:'Work Tools', group:'page'},
-  {id:'aiTools', label:'AI Copilot', group:'page'},
-  {id:'profilePage', label:'Profile', group:'page'},
-  {id:'billing', label:'Billing', group:'page'},
-  {id:'team', label:'Team\n(flag korumalı)', group:'page'},
-  {id:'admin', label:'Admin\n(yönetim)', group:'page'},
+        {
+          from: 'learningStore',
+          to: 'vocabEngine',
+          label: 'vocabularyPool',
+          color: { color: '#7fc55b' },
+        },
+        {
+          from: 'learningStore',
+          to: 'gramEngine',
+          label: 'vocabularyPool',
+          color: { color: '#7fc55b' },
+        },
+        {
+          from: 'contentSelect',
+          to: 'vocabEngine',
+          label: 'sortByPoolRatio + domain uygula',
+          color: { color: '#7fc55b' },
+        },
+        {
+          from: 'contentSelect',
+          to: 'gramEngine',
+          label: 'sortByPoolRatio uygula',
+          color: { color: '#7fc55b' },
+        },
 
-  {id:'progress', label:'Progress /\nAnalytics', group:'analytics'},
-  {id:'kademe8', label:'Kademe-8 canlı\ndoğrulama (BLOCKED)', group:'analytics'},
-]);
+        { from: 'profileStore', to: 'profileEngine' },
+        { from: 'profileEngine', to: 'contentSelect', label: 'dal domain listesi' },
+        {
+          from: 'liStore',
+          to: 'profileEngine',
+          label: 'mistakeLog (7g)',
+          color: { color: '#7fc55b' },
+        },
+        {
+          from: 'profileEngine',
+          to: 'curriculum',
+          label: '3 görev + personalReason',
+          color: { color: '#7fc55b' },
+        },
 
+        { from: 'router', to: 'dashboard' },
+        { from: 'router', to: 'curriculum' },
+        { from: 'router', to: 'vocabPage' },
+        { from: 'router', to: 'gramPage' },
+        { from: 'router', to: 'readPage' },
+        { from: 'router', to: 'writePage' },
+        { from: 'router', to: 'listenPage' },
+        { from: 'router', to: 'speakPage' },
+        { from: 'router', to: 'workTools' },
+        { from: 'router', to: 'aiTools' },
+        { from: 'router', to: 'profilePage' },
+        { from: 'router', to: 'billing' },
+        { from: 'router', to: 'progress' },
+        { from: 'router', to: 'admin' },
+        { from: 'featureFlags', to: 'router', label: 'TEAM_BETA', color: { color: '#7fc55b' } },
+        { from: 'router', to: 'team' },
 
-var edges = new vis.DataSet([
-  {from:'landing', to:'start'},
-  {from:'start', to:'onboarding'},
-  {from:'onboarding', to:'discipline'},
-  {from:'onboarding', to:'languageUI'},
-  {from:'onboarding', to:'placement'},
-  {from:'discipline', to:'profileStore', label:'kilitlenir'},
-  {from:'placement', to:'profileStore', label:'başlangıç CEFR'},
-  {from:'languageUI', to:'languageLearn'},
+        { from: 'vocabEngine', to: 'vocabPage' },
+        { from: 'gramEngine', to: 'gramPage' },
+        { from: 'contentSelect', to: 'readPage' },
+        { from: 'contentSelect', to: 'writePage' },
 
-  {from:'vocabData', to:'vocabRepo'},
-  {from:'vocabRepo', to:'vocabEngine'},
-  {from:'translationCorpus', to:'vocabEngine', label:'anlam çevirisi'},
-  {from:'gramData', to:'gramEngine'},
-  {from:'vocabEngine', to:'gramEngine', label:'grammarFits'},
+        { from: 'vocabPage', to: 'learningStore' },
+        { from: 'gramPage', to: 'learningStore' },
+        { from: 'readPage', to: 'learningStore' },
+        { from: 'writePage', to: 'learningStore' },
+        { from: 'listenPage', to: 'learningStore' },
+        { from: 'speakPage', to: 'learningStore' },
 
-  {from:'learningStore', to:'vocabEngine', label:'vocabularyPool', color:{color:'#7fc55b'}},
-  {from:'learningStore', to:'gramEngine', label:'vocabularyPool', color:{color:'#7fc55b'}},
-  {from:'contentSelect', to:'vocabEngine', label:'sortByPoolRatio + domain uygula', color:{color:'#7fc55b'}},
-  {from:'contentSelect', to:'gramEngine', label:'sortByPoolRatio uygula', color:{color:'#7fc55b'}},
+        {
+          from: 'learningStore',
+          to: 'profileEngine',
+          label: 'ELO/CEFR güncelle',
+          dashes: true,
+          color: { color: '#7fc55b' },
+        },
+        { from: 'learningStore', to: 'progress' },
+        { from: 'liStore', to: 'progress' },
+        {
+          from: 'billing',
+          to: 'kademe8',
+          label: 'canlıya geçiş kapısı',
+          dashes: true,
+          color: { color: '#d9698a' },
+        },
+      ]);
 
-  {from:'profileStore', to:'profileEngine'},
-  {from:'profileEngine', to:'contentSelect', label:'dal domain listesi'},
-  {from:'liStore', to:'profileEngine', label:'mistakeLog (7g)', color:{color:'#7fc55b'}},
-  {from:'profileEngine', to:'curriculum', label:'3 görev + personalReason', color:{color:'#7fc55b'}},
+      nodes.forEach(function (n) {
+        var c = COLORS[n.group];
+        var isChanged = INFO[n.id] && INFO[n.id].changed;
+        nodes.update({
+          id: n.id,
+          color: {
+            background: c.bg,
+            border: isChanged ? '#ffffff' : c.bd,
+            highlight: { background: c.bg, border: '#fff' },
+          },
+          font: { color: '#0f1115', size: 12, multi: false, face: 'inherit' },
+          shape: 'box',
+          margin: 10,
+          borderWidth: isChanged ? 3 : 1.5,
+        });
+      });
+      edges.forEach(function (e) {
+        edges.update({
+          id: e.id,
+          arrows: 'to',
+          color: e.color || { color: '#4a5063' },
+          width: e.dashes ? 1 : 1.3,
+          smooth: { type: 'cubicBezier', roundness: 0.5 },
+          font: { size: 9, color: '#9aa0ac', strokeWidth: 0, align: 'middle' },
+        });
+      });
 
-  {from:'router', to:'dashboard'},
-  {from:'router', to:'curriculum'},
-  {from:'router', to:'vocabPage'},
-  {from:'router', to:'gramPage'},
-  {from:'router', to:'readPage'},
-  {from:'router', to:'writePage'},
-  {from:'router', to:'listenPage'},
-  {from:'router', to:'speakPage'},
-  {from:'router', to:'workTools'},
-  {from:'router', to:'aiTools'},
-  {from:'router', to:'profilePage'},
-  {from:'router', to:'billing'},
-  {from:'router', to:'progress'},
-  {from:'router', to:'admin'},
-  {from:'featureFlags', to:'router', label:'TEAM_BETA', color:{color:'#7fc55b'}},
-  {from:'router', to:'team'},
+      var container = document.getElementById('network');
+      var data = { nodes: nodes, edges: edges };
+      var options = {
+        layout: { improvedLayout: true },
+        physics: {
+          solver: 'forceAtlas2Based',
+          forceAtlas2Based: {
+            gravitationalConstant: -100,
+            springLength: 120,
+            springConstant: 0.06,
+            avoidOverlap: 0.6,
+          },
+          stabilization: { iterations: 150 },
+        },
+        interaction: { hover: true, tooltipDelay: 200 },
+        nodes: { font: { size: 12 }, widthConstraint: { minimum: 100, maximum: 140 } },
+        edges: { font: { size: 9, color: '#9aa0ac', strokeWidth: 0, align: 'middle' } },
+      };
+      var network = new vis.Network(container, data, options);
 
-  {from:'vocabEngine', to:'vocabPage'},
-  {from:'gramEngine', to:'gramPage'},
-  {from:'contentSelect', to:'readPage'},
-  {from:'contentSelect', to:'writePage'},
+      var RESET_HTML = document.getElementById('detail').innerHTML;
 
-  {from:'vocabPage', to:'learningStore'},
-  {from:'gramPage', to:'learningStore'},
-  {from:'readPage', to:'learningStore'},
-  {from:'writePage', to:'learningStore'},
-  {from:'listenPage', to:'learningStore'},
-  {from:'speakPage', to:'learningStore'},
+      function showDetail(id) {
+        var info = INFO[id];
+        if (!info) return;
+        var node = nodes.get(id);
+        var c = COLORS[node.group];
+        document.getElementById('detail').innerHTML =
+          '<span class="cat" style="background:' +
+          esc(c.bg) +
+          '">' +
+          esc(c.label) +
+          '</span>' +
+          (info.changed ? '<span class="changed">SON REFACTOR\'DE DEĞİŞTİ</span><br>' : '') +
+          '<h3>' +
+          esc(info.t) +
+          '</h3>' +
+          '<p style="color:var(--muted);font-family:monospace;font-size:11px;">' +
+          esc(info.f) +
+          '</p>' +
+          '<p>' +
+          esc(info.d) +
+          '</p>';
+        document.getElementById('close-detail').style.display = 'block';
+      }
 
-  {from:'learningStore', to:'profileEngine', label:'ELO/CEFR güncelle', dashes:true, color:{color:'#7fc55b'}},
-  {from:'learningStore', to:'progress'},
-  {from:'liStore', to:'progress'},
-  {from:'billing', to:'kademe8', label:'canlıya geçiş kapısı', dashes:true, color:{color:'#d9698a'}},
-]);
+      document.getElementById('close-detail').addEventListener('click', function () {
+        document.getElementById('detail').innerHTML = RESET_HTML;
+        this.style.display = 'none';
+        network.unselectAll();
+      });
 
+      network.on('click', function (params) {
+        if (params.nodes.length > 0) {
+          showDetail(params.nodes[0]);
+        }
+      });
 
-nodes.forEach(function(n){
-  var c = COLORS[n.group];
-  var isChanged = INFO[n.id] && INFO[n.id].changed;
-  nodes.update({
-    id:n.id,
-    color:{background:c.bg, border: isChanged ? '#ffffff' : c.bd, highlight:{background:c.bg,border:'#fff'}},
-    font:{color:'#0f1115', size:12, multi:false, face:'inherit'},
-    shape:'box', margin:10,
-    borderWidth: isChanged ? 3 : 1.5,
-  });
-});
-edges.forEach(function(e){
-  edges.update({id:e.id, arrows:'to', color: e.color || {color:'#4a5063'}, width: e.dashes?1:1.3, smooth:{type:'cubicBezier', roundness:0.5}, font:{size:9, color:'#9aa0ac', strokeWidth:0, align:'middle'}});
-});
-
-
-var container = document.getElementById('network');
-var data = {nodes: nodes, edges: edges};
-var options = {
-  layout:{ improvedLayout:true },
-  physics:{ solver:'forceAtlas2Based', forceAtlas2Based:{gravitationalConstant:-100, springLength:120, springConstant:0.06, avoidOverlap:0.6}, stabilization:{iterations:150} },
-  interaction:{ hover:true, tooltipDelay:200 },
-  nodes:{ font:{size:12}, widthConstraint:{minimum:100,maximum:140} },
-  edges:{ font:{size:9, color:'#9aa0ac', strokeWidth:0, align:'middle'} },
-};
-var network = new vis.Network(container, data, options);
-
-
-var RESET_HTML = document.getElementById('detail').innerHTML;
-
-function showDetail(id){
-  var info = INFO[id];
-  if(!info) return;
-  var node = nodes.get(id);
-  var c = COLORS[node.group];
-  document.getElementById('detail').innerHTML =
-    '<span class="cat" style="background:'+esc(c.bg)+'">'+esc(c.label)+'</span>'+
-    (info.changed ? '<span class="changed">SON REFACTOR\'DE DEĞİŞTİ</span><br>' : '')+
-    '<h3>'+esc(info.t)+'</h3>'+
-    '<p style="color:var(--muted);font-family:monospace;font-size:11px;">'+esc(info.f)+'</p>'+
-    '<p>'+esc(info.d)+'</p>';
-  document.getElementById('close-detail').style.display='block';
-}
-
-document.getElementById('close-detail').addEventListener('click', function(){
-  document.getElementById('detail').innerHTML = RESET_HTML;
-  this.style.display='none';
-  network.unselectAll();
-});
-
-network.on('click', function(params){
-  if(params.nodes.length>0){
-    showDetail(params.nodes[0]);
-  }
-});
-
-
-document.getElementById('search').addEventListener('input', function(e){
-  var q = e.target.value.trim().toLowerCase();
-  if(!q){ nodes.forEach(function(n){nodes.update({id:n.id, opacity:1});}); return; }
-  nodes.forEach(function(n){
-    var match = n.id.toLowerCase().indexOf(q)!==-1 || n.label.toLowerCase().indexOf(q)!==-1;
-    nodes.update({id:n.id, opacity: match?1:0.15});
-  });
-});
-</script>
-</body>
+      document.getElementById('search').addEventListener('input', function (e) {
+        var q = e.target.value.trim().toLowerCase();
+        if (!q) {
+          nodes.forEach(function (n) {
+            nodes.update({ id: n.id, opacity: 1 });
+          });
+          return;
+        }
+        nodes.forEach(function (n) {
+          var match =
+            n.id.toLowerCase().indexOf(q) !== -1 || n.label.toLowerCase().indexOf(q) !== -1;
+          nodes.update({ id: n.id, opacity: match ? 1 : 0.15 });
+        });
+      });
+    </script>
+  </body>
 </html>

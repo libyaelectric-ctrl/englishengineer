@@ -1,5 +1,6 @@
-import type { SidebarConfig } from './sidebar.config';
 import type { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
+
+import type { SidebarConfig } from './sidebar.config';
 
 type SkillCopy = (typeof SIDEBAR_SKILL_COPY)['en'];
 

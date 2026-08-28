@@ -66,8 +66,8 @@ const PREFIX_ROUTES: [string, React.ComponentType | null][] = [
   ['/curriculum', DashboardSidebar],
   ['/tools', ToolsSidebar],
   ['/profile', ProfileSidebar],
-  ['/admin', null],        // admin manages its own UI
-  ['/progress', null],     // progress has its own layout
+  ['/admin', null], // admin manages its own UI
+  ['/progress', null], // progress has its own layout
 ];
 
 function getContent(path: string): React.ReactNode {

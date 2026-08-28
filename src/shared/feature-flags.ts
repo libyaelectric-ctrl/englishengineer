@@ -12,8 +12,7 @@ export const FEATURE_FLAGS = {
   TEAM_BETA: import.meta.env.VITE_FEATURE_FLAG_TEAM_BETA === 'true',
 
   /** Unified difficulty scoring — sorts content by knowledge pool ratio */
-  UNIFIED_DIFFICULTY_SCORING:
-    import.meta.env.VITE_FEATURE_FLAG_UNIFIED_DIFFICULTY === 'true',
+  UNIFIED_DIFFICULTY_SCORING: import.meta.env.VITE_FEATURE_FLAG_UNIFIED_DIFFICULTY === 'true',
 } as const;
 
 export type FeatureFlag = keyof typeof FEATURE_FLAGS;

@@ -2,7 +2,23 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 const root = process.cwd();
-const EXPECTED_LANGS = ['en', 'tr', 'ar', 'de', 'es', 'pt', 'fr', 'ru', 'zh', 'ja', 'it', 'vi', 'pl', 'id', 'nl'];
+const EXPECTED_LANGS = [
+  'en',
+  'tr',
+  'ar',
+  'de',
+  'es',
+  'pt',
+  'fr',
+  'ru',
+  'zh',
+  'ja',
+  'it',
+  'vi',
+  'pl',
+  'id',
+  'nl',
+];
 
 // ─── 1. Check by-lang JSON files ────────────────────────────────
 const byLangDir = path.join(root, 'src/data/translations/by-lang');
@@ -14,8 +30,8 @@ const extraByLang = byLangLangs.filter((lang) => !EXPECTED_LANGS.includes(lang))
 
 // ─── 2. Check translation .ts files ─────────────────────────────
 const translationsDir = path.join(root, 'src/features/localization/translations');
-const translationFiles = (await fs.readdir(translationsDir)).filter(
-  (f) => f.endsWith('.translations.ts')
+const translationFiles = (await fs.readdir(translationsDir)).filter((f) =>
+  f.endsWith('.translations.ts')
 );
 
 const translationErrors = [];
@@ -66,7 +82,9 @@ if (translationErrors.length > 0) {
     console.log(`   ${file}: missing ${missing.join(', ')}`);
   }
 } else {
-  console.log(`✅ Translation files: ${translationFiles.length} files, all ${EXPECTED_LANGS.length} languages present`);
+  console.log(
+    `✅ Translation files: ${translationFiles.length} files, all ${EXPECTED_LANGS.length} languages present`
+  );
 }
 
 console.log('');

@@ -9,7 +9,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: "8080"
+        value: '8080'
       - key: SPEAKING_AUDIO_BUCKET
         value: speaking-audio
       - key: APP_ORIGIN

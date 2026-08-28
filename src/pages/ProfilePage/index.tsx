@@ -28,7 +28,6 @@ import {
   UserRound,
   Zap,
 } from 'lucide-react';
-import { ThemeToggle } from '@/shared/components/ThemeToggle';
 
 import React from 'react';
 
@@ -37,6 +36,7 @@ import { useLearningStore } from '@/core/learning';
 import { Heatmap } from '@/shared/components/Heatmap';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { SectionCard } from '@/shared/components/SectionCard';
+import { ThemeToggle } from '@/shared/components/ThemeToggle';
 
 import { BILLING_PLANS } from '@/features/billing';
 import type { BillingPlanId } from '@/features/billing';

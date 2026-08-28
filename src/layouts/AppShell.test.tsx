@@ -86,8 +86,6 @@ vi.mock('./MobileBottomNavigation', () => ({
   MobileBottomNavigation: () => <div>Mobile Bottom Nav</div>,
 }));
 
-
-
 vi.mock('@/config/product.config', () => ({
   PRODUCT_VERSION: '1.0.0',
 }));
