@@ -1,3 +1,11 @@
+// Seed files moved to Supabase Storage; the test shim falls back to the
+// Storage origin when the local public/data copy is missing (CI checkouts
+// contain no public/data files).
+const DATA_CDN_BASE = (
+  process.env.VITE_DATA_CDN_URL ??
+  'https://wxabrwzitwsjtpmlvvqe.supabase.co/storage/v1/object/public/app-data'
+).replace(/\/+$/, "");
+
 // Mock global fetch for local JSON seed files in Node/Vitest
 import { afterEach, vi } from 'vitest';
 
@@ -177,17 +185,32 @@ globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise
         json: async () => JSON.parse(content),
         text: async () => content,
       } as unknown as Response;
-    } catch (e) {
-      logger.w('[TEST_SETUP] Mock fetch failed', e);
-      return {
-        ok: false,
-        status: 404,
-        statusText: 'Not Found',
-        json: async () => {
-          throw new Error('Not Found');
-        },
-        text: async () => 'Not Found',
-      } as unknown as Response;
+    } catch (fsError) {
+      // The seed files may be absent from a CI checkout (they moved to
+      // Supabase Storage) - fall back to the Storage CDN origin.
+      try {
+        const cdnResponse = await originalFetch(`${DATA_CDN_BASE}${urlStr}`);
+        if (!cdnResponse.ok) throw new Error(`CDN ${cdnResponse.status}`);
+        const content = await cdnResponse.text();
+        return {
+          ok: true,
+          status: 200,
+          statusText: 'OK',
+          json: async () => JSON.parse(content),
+          text: async () => content,
+        } as unknown as Response;
+      } catch (cdnError) {
+        logger.w('[TEST_SETUP] Mock fetch failed (fs + CDN)', cdnError);
+        return {
+          ok: false,
+          status: 404,
+          statusText: 'Not Found',
+          json: async () => {
+            throw new Error('Not Found');
+          },
+          text: async () => 'Not Found',
+        } as unknown as Response;
+      }
     }
   }
   if (originalFetch) {
