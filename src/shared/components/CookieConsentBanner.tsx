@@ -54,7 +54,7 @@ const CookieConsentBanner = () => {
         <p className="text-xs sm:text-sm text-muted-copy leading-relaxed">
           Bu site deneyimi iyileştirmek için çerez kullanır. Analitik çerezler yalnızca onayınızla
           etkinleştirilir.{' '}
-          <a href="/privacy" className="underline text-primary hover:text-primary/80">
+          <a href="/legal/privacy" className="underline text-primary hover:text-primary/80">
             Detaylı bilgi
           </a>
         </p>

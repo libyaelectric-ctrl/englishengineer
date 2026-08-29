@@ -11,6 +11,8 @@ import { BookOpen, Brain, Headphones, PenTool, Sparkles, Target, Trophy, Zap } f
 
 import { memo, useMemo } from 'react';
 
+import { Link } from 'react-router-dom';
+
 import { useLearningStore } from '@/core/learning';
 
 interface DigestItem {
@@ -228,34 +230,34 @@ export const DailyDigest = memo(() => {
 
       {/* Quick Actions */}
       <div className="flex flex-wrap gap-2">
-        <a
-          href="/vocabulary"
+        <Link
+          to="/vocabulary"
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--radius-card)] border border-border-soft bg-surface text-xs font-bold text-foreground hover:bg-surface-hover transition-colors"
         >
           <BookOpen className="h-3 w-3" />
           Vocabulary
-        </a>
-        <a
-          href="/grammar"
+        </Link>
+        <Link
+          to="/grammar"
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--radius-card)] border border-border-soft bg-surface text-xs font-bold text-foreground hover:bg-surface-hover transition-colors"
         >
           <Target className="h-3 w-3" />
           Grammar
-        </a>
-        <a
-          href="/writing"
+        </Link>
+        <Link
+          to="/writing"
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--radius-card)] border border-border-soft bg-surface text-xs font-bold text-foreground hover:bg-surface-hover transition-colors"
         >
           <PenTool className="h-3 w-3" />
           Writing
-        </a>
-        <a
-          href="/speaking"
+        </Link>
+        <Link
+          to="/speaking"
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--radius-card)] border border-border-soft bg-surface text-xs font-bold text-foreground hover:bg-surface-hover transition-colors"
         >
           <Headphones className="h-3 w-3" />
           Speaking
-        </a>
+        </Link>
       </div>
 
       {/* Module Progress Bars */}
