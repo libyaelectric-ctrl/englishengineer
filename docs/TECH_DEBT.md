@@ -91,12 +91,18 @@ endpoint. CSP configured with scriptSrc: 'self'.
 
 ## Low Priority
 
-### TD-009: Implement Caching
+### TD-009: Implement Caching ✅
 
 **Issue:** No response caching
 **Impact:** Performance
 **Effort:** 2-3 days
 **Action:** Add Redis caching layer
+
+**Resolution (2026-08-29):** Upstash Redis caching implemented at
+backend/src/cache/redis-cache.service.ts with in-memory fallback.
+getOrSet/invalidateCache/invalidateByPrefix APIs. Used in AI routes
+for response caching (TTL 3600s). Connection pool management at
+connection-pool.ts. Cache stats exposed via /api/v1/admin/cache-stats.
 
 ### TD-010: Add Monitoring ✅
 
@@ -281,7 +287,7 @@ then tail the log. Implemented on 2026-08-29.
 | TD-006 | Medium   | 🟡 Partial  | TBD      | TBD        |
 | TD-007 | Medium   | ✅ Resolved | TBD      | TBD        |
 | TD-008 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
-| TD-009 | Low      | 🟡 Open     | TBD      | TBD        |
+| TD-009 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-010 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-011 | Low      | ✅ Resolved | TBD      | TBD        |
 | TD-012 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
@@ -297,9 +303,9 @@ then tail the log. Implemented on 2026-08-29.
 ## Stats
 
 - **Total Items:** 20
-- **Resolved:** 18 (90%)
+- **Resolved:** 19 (95%)
 - **Partially Resolved:** 1 (5%)
-- **Open:** 1 (5%)
+- **Open:** 0 (0%)
 
 ## Last Updated
 
