@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, waitFor } from '@testing-library/react';
+import { configure, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -32,6 +32,11 @@ const renderWithRouter = (component: React.ReactElement, initialEntries = ['/'])
       <MemoryRouter initialEntries={initialEntries}>{component}</MemoryRouter>
     </QueryClientProvider>
   );
+
+// Lazy/Suspense-loaded components resolve slowly under a full multi-file
+// CI run; give async utility assertions more headroom (see the matching
+// configure() call in new-features.e2e.test.tsx).
+configure({ asyncUtilTimeout: 10000 });
 
 describe('Navigation E2E: Main routes render without errors', () => {
   it('/dashboard renders', async () => {
