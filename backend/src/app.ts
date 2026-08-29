@@ -628,30 +628,6 @@ const registerRoutes = (
     }
   );
 
-  // Redirect middleware for legacy /api routes to /api/v1 routes
-  app.use((req: Request, res: Response, next: NextFunction): void => {
-    if (
-      process.env.NODE_ENV !== 'test' &&
-      req.path.startsWith('/api/') &&
-      !req.path.startsWith('/api/v1/') &&
-      req.path !== '/api/health' &&
-      req.path !== '/api/metrics' &&
-      req.path !== '/api/csp-report' &&
-      req.path !== '/api/webhooks/stripe' &&
-      req.path !== '/api/webhooks/dodo'
-    ) {
-      res.setHeader('Deprecation', 'true');
-      res.setHeader('Sunset', '2026-12-31');
-      res.setHeader(
-        'Link',
-        `<${req.protocol}://${req.get('host')}/api/v1${req.url.slice(4)}>; rel="successor-version"`
-      );
-      res.redirect(307, `/api/v1${req.url.slice(4)}`);
-      return;
-    }
-    next();
-  });
-
   const backendAuth = createBackendAuth(
     { ...config.auth, environment: config.environment } as BackendAuthConfig,
     fetchImpl

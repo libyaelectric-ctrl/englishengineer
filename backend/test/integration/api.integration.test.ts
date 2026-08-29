@@ -48,7 +48,8 @@ describe('Health endpoints', () => {
 describe('AI endpoints', () => {
   it('POST /api/ai/writing-review with dev bypass returns 200', async () => {
     const res = await request(baseUrl)
-      .post('/api/ai/writing-review')
+      .post('/api/v1/ai/writing-review')
+      .set('Authorization', 'Bearer test-token')
       .set('X-EngineerOS-User-Id', 'engineeros-dev-user')
       .send({ prompt: 'Test', text: 'Hello world' });
     assert.equal(res.status, 200);
@@ -56,7 +57,8 @@ describe('AI endpoints', () => {
 
   it('POST /api/ai/coach with dev bypass returns 200', async () => {
     const res = await request(baseUrl)
-      .post('/api/ai/coach')
+      .post('/api/v1/ai/coach')
+      .set('Authorization', 'Bearer test-token')
       .set('X-EngineerOS-User-Id', 'engineeros-dev-user')
       .send({ prompt: 'Test' });
     assert.equal(res.status, 200);
