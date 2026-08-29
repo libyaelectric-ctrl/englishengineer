@@ -8,7 +8,7 @@ on:
       target_url:
         description: 'Target URL for load test'
         required: false
-        default: 'https://eng-vox.vercel.app'
+        default: 'https://englishengineer-backend.onrender.com'
 
 jobs:
   load-test:
@@ -24,7 +24,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install k6
 
-      - name: Run load test
-        run: k6 run scripts/performance/load-test.k6.js
+      - name: Run load test (benchmark thresholds)
+        run: k6 run tests/load/normal-load.js
         env:
-          API_BASE_URL: ${{ github.event.inputs.target_url || 'https://eng-vox.vercel.app' }}
+          BASE_URL: ${{ github.event.inputs.target_url || 'https://englishengineer-backend.onrender.com' }}
