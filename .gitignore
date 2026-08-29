@@ -10,8 +10,9 @@ htmlcov/
 target/
 storybook-static
 
-# ── Data (root-level only; src/data/ and public/data/ are tracked) ──
+# ── Data (moved to Supabase Storage CDN) ──
 /data/
+public/data/
 
 # ── Environment & secrets ──
 .env
