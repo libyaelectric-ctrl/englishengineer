@@ -64,12 +64,17 @@ This document tracks known technical debt items that should be addressed in futu
 
 ## Medium Priority
 
-### TD-008: Add API Documentation
+### TD-008: Add API Documentation ✅
 
 **Issue:** Missing OpenAPI/Swagger docs
 **Impact:** Developer experience
 **Effort:** 2-3 days
 **Action:** Generate from code
+
+**Resolution (2026-08-29):** OpenAPI spec generated from code at
+backend/src/swagger.ts. Swagger UI self-hosted via swagger-ui-dist
+(no CDN dependency). Served at /api-docs with /api-docs.json spec
+endpoint. CSP configured with scriptSrc: 'self'.
 
 ### TD-016: CEFR Type Unification (Not Needed)
 
@@ -265,7 +270,7 @@ then tail the log. Implemented on 2026-08-29.
 | TD-005 | Medium   | 🟡 Open     | TBD      | TBD        |
 | TD-006 | Medium   | 🟡 Partial  | TBD      | TBD        |
 | TD-007 | Medium   | ✅ Resolved | TBD      | TBD        |
-| TD-008 | Medium   | 🟡 Open     | TBD      | TBD        |
+| TD-008 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-009 | Low      | 🟡 Open     | TBD      | TBD        |
 | TD-010 | Low      | 🟡 Open     | TBD      | TBD        |
 | TD-011 | Low      | ✅ Resolved | TBD      | TBD        |
@@ -282,9 +287,9 @@ then tail the log. Implemented on 2026-08-29.
 ## Stats
 
 - **Total Items:** 20
-- **Resolved:** 15 (75%)
+- **Resolved:** 16 (80%)
 - **Partially Resolved:** 1 (5%)
-- **Open:** 4 (20%)
+- **Open:** 3 (15%)
 
 ## Last Updated
 
