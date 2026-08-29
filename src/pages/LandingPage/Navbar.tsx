@@ -15,11 +15,7 @@ import { useBillingStore } from '@/features/billing';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import { useTheme } from '@/features/theme/ThemeProvider';
 
-interface NavbarProps {
-  onOpenProofreader?: () => void;
-}
-
-export function Navbar({ onOpenProofreader: _ }: NavbarProps) {
+export function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();

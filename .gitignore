@@ -1,50 +1,57 @@
-```
-# Dependencies
+# ── Dependencies ──
 node_modules/
 **/node_modules/
-build/
+backend/node_modules_off/
+
+# ── Build outputs ──
 dist/
-.next/
-.npm-cache/
-.vite/
-.git/
-coverage/
-.DS_Store
+build/
+htmlcov/
+target/
+storybook-static
+
+# ── Data (root-level only; src/data/ and public/data/ are tracked) ──
+/data/
+
+# ── Environment & secrets ──
+.env
+.env.*
+!.env.example
+!.env.staging
+**/.env
+**/.env.*
+**/dodo-products-test.env
+
+# ── Logs ──
 *.log
+logs/
+
+# ── Testing ──
 test-results/
 playwright-report/
 .playwright-cli/
 playwright/.auth/
 tests/e2e/.debug-signin.mjs
-.vercel-tmp/
-.freebuff/
-__pycache__/
-data/translations/results/
-/data/
-!src/data/
-!src/data/**
-!public/data/
-tasrim/
-patches/
-.changeset/
-test-results/
+tests/browser/visual-regression.spec.ts-snapshots/
+.mypy_cache/
+.pytest_cache/
 coverage/
-bundle-report.html
-opencode.json
-railway.toml
-stryker.config.mjs
-pipeline.md
-vite.config.ts.bak
-*.zip
+coverage.xml
+*.coverage
+stryker-results/
 
-# Build outputs
-dist/
-build/
-coverage/
-htmlcov/
-target/
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
 
-# Python specific
+# ── OS ──
+.DS_Store
+Thumbs.db
+
+# ── Python ──
 __pycache__/
 *.pyc
 *.pyo
@@ -54,85 +61,70 @@ __pycache__/
 env/
 venv/
 .venv/
-.ENV
-.env
-.env.local
-.env.*
-**/.env
-**/.env.*
-**/dodo-products-test.env
 
-# Logs
-*.log
+# ── Compressed files ──
+*.zip
+*.gz
+*.tar
+*.tgz
+*.xz
+*.7z
+*.rar
+*.zst
+*.tar.gz
+*.tar.bz2
+*.tar.xz
 
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-*.tmp
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Testing
-.mypy_cache/
-.pytest_cache/
-coverage.xml
-*.coverage
-
-# Backup files
+# ── Backup & temp files ──
 *.bak
+~$*
+*.docx
+*.xlsx
 
-# Other
-.aider*
-stryker-results/
-FULL_CODEBASE.txt
-mimogorev.md
-mimola.md
-mimoyenibu.md
-MimoCan.md
-MimoCep.md
-storybook-static
-
-# ESLint output files
+# ── ESLint output ──
 eslint_output.json
 eslint-out.json
 eslint-output.json
 eslint_complexity.json
-lint-output.txt
-
-# Local debug / recording scripts (accidentally committed once, broke CI lint)
-.record.cjs
-*.debug.cjs
-/video/
-
-# Hook scratch output
-.vitest-commit.log
-
-# Temporary notes
-Usta-Faz2.txt
-
 eslint_output_max1.json
 eslint_output_src.json
-tests/browser/visual-regression.spec.ts-snapshots/
+lint-output.txt
 
-# Madde 3 - specific files that should not be committed
-*.docx
-*.xlsx
-~$*
-gece.png
-.gunduz.png
-.gnndz.txt
-bundle-report.html
-.env.staging
-
-# One-time analysis outputs
+# ── Analysis outputs ──
 analysis_output/
 depcruise-output.txt
 test-output.txt
 test-vocab.txt
+qa-report/
+bundle-report.html
+
+# ── Local tool config ──
+opencode.json
+.aider*
+.clerk/
+
+# ── Debug / recording ──
+.record.cjs
+*.debug.cjs
+/video/
+
+# ── Hook scratch ──
+.vitest-commit.log
+
+# ── Project-specific ──
+.vercel-tmp/
+.freebuff/
+tasrim/
+patches/
+.changeset/
+railway.toml
+stryker.config.mjs
+pipeline.md
+vite.config.ts.bak
+Usta-Faz2.txt
+gece.png
+.gunduz.png
+.gnndz.txt
 *.py
 !.env.example
 !scripts/.env.example
@@ -140,48 +132,16 @@ test-vocab.txt
 !scripts/translate-grammar-deepl.py
 !scripts/translate-vocabulary-chunks.py
 !scripts/requirements-translations.txt
-.env*
-!scripts/.env.example
 
-public/data/*.json
-qa-report/
+# ── Runtime dirs ──
+test/
+uploads/
+!backend/test/
+!backend/test/** 
 
-# Local opencode tool config (machine-specific)
-opencode.json
-
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
-```
+# ── Monitoring data ──
 monitoring/grafana_data/
 monitoring/prometheus_data/
 
-# Runtime dirs (must not be committed)
-logs/
-test/
-!backend/test/
-!backend/test/**
-uploads/
-
-# Auto-generated reports
+# ── Auto-generated reports ──
 PRC_Kademe_8_Live_Service_Evidence_Report.md
