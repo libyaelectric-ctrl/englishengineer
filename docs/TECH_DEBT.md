@@ -273,7 +273,7 @@ then tail the log. Implemented on 2026-08-29.
 | TD-013 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-014 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-015 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
-| TD-016 | Medium   | 🟡 Open     | TBD      | TBD        |
+| TD-016 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-017 | Low      | ✅ Resolved | TBD      | TBD        |
 | TD-018 | Medium   | Resolved    | TBD      | TBD        |
 | TD-019 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
@@ -282,9 +282,9 @@ then tail the log. Implemented on 2026-08-29.
 ## Stats
 
 - **Total Items:** 20
-- **Resolved:** 14 (70%)
+- **Resolved:** 15 (75%)
 - **Partially Resolved:** 1 (5%)
-- **Open:** 5 (25%)
+- **Open:** 4 (20%)
 
 ## Last Updated
 
