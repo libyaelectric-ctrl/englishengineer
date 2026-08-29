@@ -55,12 +55,17 @@ This document tracks known technical debt items that should be addressed in futu
 
 ## High Priority
 
-### TD-005: Add Integration Tests
+### TD-005: Add Integration Tests ✅
 
 **Issue:** Limited integration test coverage
 **Impact:** Regression risk
 **Effort:** 3-4 days
 **Action:** Add API integration tests
+
+**Resolution (2026-08-29):** api.integration.test.ts (6 tests: health,
+AI, CSRF, 404 handling, API docs) + api.extended.integration.test.ts
+(31 tests: vocabulary, reading, writing, listening, speaking, grammar,
+billing, progress, webhooks). 83/83 backend tests pass.
 
 ## Medium Priority
 
@@ -267,7 +272,7 @@ then tail the log. Implemented on 2026-08-29.
 | TD-002 | High     | ✅ Resolved | TBD      | TBD        |
 | TD-003 | High     | ✅ Resolved | TBD      | TBD        |
 | TD-004 | Medium   | ✅ Resolved | TBD      | TBD        |
-| TD-005 | Medium   | 🟡 Open     | TBD      | TBD        |
+| TD-005 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-006 | Medium   | 🟡 Partial  | TBD      | TBD        |
 | TD-007 | Medium   | ✅ Resolved | TBD      | TBD        |
 | TD-008 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
@@ -287,9 +292,9 @@ then tail the log. Implemented on 2026-08-29.
 ## Stats
 
 - **Total Items:** 20
-- **Resolved:** 16 (80%)
+- **Resolved:** 17 (85%)
 - **Partially Resolved:** 1 (5%)
-- **Open:** 3 (15%)
+- **Open:** 2 (10%)
 
 ## Last Updated
 
