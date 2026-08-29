@@ -59,7 +59,11 @@ export const AuthGuard = ({ children }: AuthGuardProps) => {
   // /login sees the signed-in session and bounces back to /dashboard, which
   // bounces to /login again — an infinite reload loop. Wait for Clerk before
   // ever deciding the user is signed out.
-  if (!clerkLoaded) {
+  //
+  // However, if the app's own auth store already has a session (demo/local
+  // users seeded by enterDemo()), skip the Clerk wait entirely — demo users
+  // have no Clerk session so waiting would just hit the timeout.
+  if (!clerkLoaded && !hasSession) {
     if (clerkTimedOut) {
       return (
         <LoadingState
