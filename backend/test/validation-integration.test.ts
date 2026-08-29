@@ -189,7 +189,7 @@ describe('Workspace endpoint validation integration', () => {
   });
 
   it('rejects POST /api/workspaces with invalid name type', async () => {
-    const res = await fetch(`${baseUrl}/api/workspaces`, {
+    const res = await fetch(`${baseUrl}/api/v1/workspaces`, {
       method: 'POST',
       headers: authHeaders,
       body: JSON.stringify({ name: 123 }),
@@ -200,7 +200,7 @@ describe('Workspace endpoint validation integration', () => {
   });
 
   it('accepts POST /api/workspaces with valid body', async () => {
-    const res = await fetch(`${baseUrl}/api/workspaces`, {
+    const res = await fetch(`${baseUrl}/api/v1/workspaces`, {
       method: 'POST',
       headers: authHeaders,
       body: JSON.stringify({ name: 'Test Workspace' }),

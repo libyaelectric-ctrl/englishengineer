@@ -46,7 +46,7 @@ describe('Health endpoints', () => {
 });
 
 describe('AI endpoints', () => {
-  it('POST /api/ai/writing-review with dev bypass returns 200', async () => {
+  it('POST /api/v1/ai/writing-review with dev bypass returns 200', async () => {
     const res = await request(baseUrl)
       .post('/api/v1/ai/writing-review')
       .set('Authorization', 'Bearer test-token')
@@ -55,7 +55,7 @@ describe('AI endpoints', () => {
     assert.equal(res.status, 200);
   });
 
-  it('POST /api/ai/coach with dev bypass returns 200', async () => {
+  it('POST /api/v1/ai/coach with dev bypass returns 200', async () => {
     const res = await request(baseUrl)
       .post('/api/v1/ai/coach')
       .set('Authorization', 'Bearer test-token')
