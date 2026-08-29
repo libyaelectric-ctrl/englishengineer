@@ -60,11 +60,16 @@ vi.mock('@/features/learning-intelligence', () => ({
 
 vi.mock('@/features/localization', () => ({
   useLocalizationStore: vi.fn(() => ({ language: 'en' })),
+  LocalizationService: { translate: (key: string) => key, getLanguage: () => 'en' },
   NAVIGATION_TRANSLATIONS: { en: {} },
   INTERFACE_LANGUAGES: [
     { id: 'en', label: 'English', nativeLabel: 'English', available: true, flag: '🇬🇧' },
     { id: 'tr', label: 'Turkish', nativeLabel: 'Türkçe', available: true, flag: '🇹🇷' },
   ],
+}));
+
+vi.mock('@/features/beta/BetaFeedbackWidget', () => ({
+  BetaFeedbackWidget: () => null,
 }));
 
 vi.mock('./Sidebar', () => ({

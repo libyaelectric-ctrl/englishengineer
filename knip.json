@@ -3,12 +3,13 @@
   "workspaces": {
     ".": {
       "entry": ["api/translate.js"],
-      "ignoreDependencies": ["lint-staged"]
+      "ignoreDependencies": ["@testing-library/jest-dom", "lint-staged"]
     },
     "backend": {
       "entry": ["src/app.ts"]
     }
   },
+  "ignore": ["src/core/index.ts"],
   "include": ["files", "dependencies"],
   "ignoreFiles": [
     "scripts/**",
