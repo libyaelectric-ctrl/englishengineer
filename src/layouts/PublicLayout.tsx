@@ -46,8 +46,7 @@ export const PublicLayout = () => {
   const location = useLocation();
   const isLanding = location.pathname === '/';
   const isPricing = location.pathname === '/pricing';
-  const isOnboard = location.pathname === '/onboard';
-  const hideNav = isLanding || isPricing || isOnboard;
+  const hideNav = isLanding || isPricing;
   const { theme, toggleTheme } = useTheme();
 
   return (

@@ -11,7 +11,7 @@ import { INTERFACE_LANGUAGES } from '@/features/localization';
 import { NeuralOrbPanel } from './NeuralOrbPanel';
 import { LearningProfileRepository } from './profile.repository';
 
-const BYPASS_PATHS = ['/billing', '/profile', '/onboard', CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL];
+const BYPASS_PATHS = ['/billing', '/profile', CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL];
 
 /**
  * Gates the entire authenticated app: users who have not selected both a

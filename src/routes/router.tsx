@@ -45,7 +45,6 @@ const Legal = lazy(() => import('@/pages/LegalPage'));
 const Team = lazy(() => import('@/pages/TeamPage'));
 const TeamMember = lazy(() => import('@/pages/TeamMemberPage'));
 const Start = lazy(() => import('@/pages/StartPage'));
-const Onboard = lazy(() => import('@/pages/OnboardPage'));
 const Placement = lazy(() => import('@/pages/PlacementPage'));
 const Translator = lazy(() => import('@/pages/TranslatorPage'));
 const LearningPath = lazy(() => import('@/pages/LearningPathPage'));
@@ -72,10 +71,6 @@ export const router = createBrowserRouter([
       {
         path: '/start',
         element: withSuspense(Start),
-      },
-      {
-        path: '/onboard',
-        element: withSuspense(Onboard),
       },
       {
         path: '/demo',

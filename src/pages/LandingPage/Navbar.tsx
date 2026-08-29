@@ -64,7 +64,7 @@ export function Navbar() {
       stripeSubscriptionId: null,
       updatedAt: new Date().toISOString(),
     });
-    navigate('/onboard');
+    navigate('/dashboard');
   };
 
   useEffect(() => {
