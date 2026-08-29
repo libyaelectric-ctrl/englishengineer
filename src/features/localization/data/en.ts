@@ -863,5 +863,18 @@ export const data: Record<string, string> = {
     'vocabulary.goal': 'Goal',
     // Progress page
     'progress.todaysTarget': "Today's Target",
+    // Orbit selection panel (discipline + language picker)
+    'orbit.tagline': 'Pick your profession, then your interface language',
+    'orbit.disciplines': 'Disciplines',
+    'orbit.languages': 'Languages',
+    'orbit.selectPrompt': 'Select 1 profession + 1 language',
+    'orbit.systemReady': 'System ready...',
+    'orbit.disciplineTag': 'DISCIPLINE',
+    'orbit.languageTag': 'LANGUAGE',
+    'orbit.granted': 'Access granted — entering EngVox...',
+    'orbit.errorDiscipline': 'Please select a profession first',
+    'orbit.errorLanguage': 'Please select an interface language',
+    'orbit.back': 'BACK',
+    'orbit.enter': 'ENTER',
   
 };

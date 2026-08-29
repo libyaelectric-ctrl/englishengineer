@@ -838,5 +838,18 @@ export const data: Record<string, string> = {
     'vocabulary.goal': 'Hedef',
     // Progress page
     'progress.todaysTarget': 'Bugünün Hedefi',
+    // Orbit seçim paneli (meslek + dil seçimi)
+    'orbit.tagline': 'Önce mesleğini, sonra arayüz dilini seç',
+    'orbit.disciplines': 'Meslekler',
+    'orbit.languages': 'Diller',
+    'orbit.selectPrompt': '1 meslek + 1 dil seçin',
+    'orbit.systemReady': 'Sistem hazır...',
+    'orbit.disciplineTag': 'MESLEK',
+    'orbit.languageTag': 'DİL',
+    'orbit.granted': 'Erişim onaylandı — EngVox’a giriliyor...',
+    'orbit.errorDiscipline': 'Lütfen önce bir meslek seçin',
+    'orbit.errorLanguage': 'Lütfen bir arayüz dili seçin',
+    'orbit.back': 'GERİ',
+    'orbit.enter': 'GİRİŞ',
   
 };

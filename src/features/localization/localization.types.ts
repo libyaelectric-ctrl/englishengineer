@@ -1075,4 +1075,17 @@ export type TranslationKey =
   | 'vocabulary.more'
   | 'vocabulary.goal'
   // Progress
-  | 'progress.todaysTarget';
+  | 'progress.todaysTarget'
+  // Orbit selection panel (discipline + language picker)
+  | 'orbit.tagline'
+  | 'orbit.disciplines'
+  | 'orbit.languages'
+  | 'orbit.selectPrompt'
+  | 'orbit.systemReady'
+  | 'orbit.disciplineTag'
+  | 'orbit.languageTag'
+  | 'orbit.granted'
+  | 'orbit.errorDiscipline'
+  | 'orbit.errorLanguage'
+  | 'orbit.back'
+  | 'orbit.enter';

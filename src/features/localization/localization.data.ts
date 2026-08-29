@@ -411,7 +411,8 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.band.c1': 'C1 · Proficient',
     'learningpath.band.c2': 'C2 · Expert',
     'learningpath.apexTerminal': 'C2 Chief Engineer Grand Terminal',
-    'learningpath.apexDescription': 'All engineering disciplines mastered · International fluency achieved',
+    'learningpath.apexDescription':
+      'All engineering disciplines mastered · International fluency achieved',
     'learningpath.viewMode': 'View mode',
     'landing.workflowStep1Desc':
       'Establish your exact engineering discipline, site role, and project target to auto-generate personalized technical drills.',
@@ -908,6 +909,19 @@ export const UI_TRANSLATIONS: Record<
     'vocabulary.goal': 'Goal',
     // Progress page
     'progress.todaysTarget': "Today's Target",
+    // Orbit selection panel (discipline + language picker)
+    'orbit.tagline': 'Pick your profession, then your interface language',
+    'orbit.disciplines': 'Disciplines',
+    'orbit.languages': 'Languages',
+    'orbit.selectPrompt': 'Select 1 profession + 1 language',
+    'orbit.systemReady': 'System ready...',
+    'orbit.disciplineTag': 'DISCIPLINE',
+    'orbit.languageTag': 'LANGUAGE',
+    'orbit.granted': 'Access granted — entering EngVox...',
+    'orbit.errorDiscipline': 'Please select a profession first',
+    'orbit.errorLanguage': 'Please select an interface language',
+    'orbit.back': 'BACK',
+    'orbit.enter': 'ENTER',
   },
   tr: {
     'onboarding.freeDesc': 'Temel öğrenimle yerel olarak başlayın.',
@@ -1286,7 +1300,8 @@ export const UI_TRANSLATIONS: Record<
     'learningpath.band.c1': 'C1 · Uzman',
     'learningpath.band.c2': 'C2 · Uzman',
     'learningpath.apexTerminal': 'C2 Baş Mühendislik Terminali',
-    'learningpath.apexDescription': 'Tüm mühendislik disiplinlerinde ustalık · Uluslararası dil yeterliliği',
+    'learningpath.apexDescription':
+      'Tüm mühendislik disiplinlerinde ustalık · Uluslararası dil yeterliliği',
     'learningpath.viewMode': 'Görünüm modu',
     'landing.workflowStep1Desc':
       'Kişiselleştirilmiş teknik alıştırmaları otomatik oluşturmak için tam mühendislik disiplininizi, saha rolünüzü ve proje hedefinizi belirleyin.',
@@ -1752,6 +1767,19 @@ export const UI_TRANSLATIONS: Record<
     'vocabulary.goal': 'Hedef',
     // Progress page
     'progress.todaysTarget': 'Bugünün Hedefi',
+    // Orbit seçim paneli (meslek + dil seçimi)
+    'orbit.tagline': 'Önce mesleğini, sonra arayüz dilini seç',
+    'orbit.disciplines': 'Meslekler',
+    'orbit.languages': 'Diller',
+    'orbit.selectPrompt': '1 meslek + 1 dil seçin',
+    'orbit.systemReady': 'Sistem hazır...',
+    'orbit.disciplineTag': 'MESLEK',
+    'orbit.languageTag': 'DİL',
+    'orbit.granted': 'Erişim onaylandı — EngVox’a giriliyor...',
+    'orbit.errorDiscipline': 'Lütfen önce bir meslek seçin',
+    'orbit.errorLanguage': 'Lütfen bir arayüz dili seçin',
+    'orbit.back': 'GERİ',
+    'orbit.enter': 'GİRİŞ',
   },
   ar: {
     'onboarding.freeDesc': 'ابدأ محليًّا بالتعلم الأساسي.',
