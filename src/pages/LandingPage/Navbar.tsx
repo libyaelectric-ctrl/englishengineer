@@ -68,7 +68,7 @@ export function Navbar({ onOpenProofreader: _ }: NavbarProps) {
       stripeSubscriptionId: null,
       updatedAt: new Date().toISOString(),
     });
-    navigate('/dashboard');
+    navigate('/onboard');
   };
 
   useEffect(() => {

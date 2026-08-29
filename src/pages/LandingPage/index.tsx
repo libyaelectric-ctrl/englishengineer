@@ -232,7 +232,7 @@ export const LandingPage = () => {
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                   <Link
                     data-hero="cta"
-                    to="/dashboard"
+                    to="/onboard"
                     className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-primary to-blue-600 text-white font-bold text-lg overflow-hidden transition-all hover:shadow-2xl hover:shadow-primary/50"
                   >
                     <span className="relative z-10 flex items-center gap-3">
@@ -243,7 +243,7 @@ export const LandingPage = () => {
                   </Link>
                   <Link
                     data-hero="cta-demo"
-                    to="/vocabulary"
+                    to="/onboard"
                     className="group px-8 py-4 rounded-full border-2 border-dashed border-primary/40 text-primary font-bold text-lg backdrop-blur-md hover:bg-primary/10 hover:border-primary/60 transition-all"
                   >
                     <span className="flex items-center gap-3">
