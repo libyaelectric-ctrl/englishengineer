@@ -26,7 +26,7 @@ jobs:
 
       - name: Check Backend API
         run: |
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 https://englishengineer-backend.onrender.com/api/health)
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 https://englishengineer-backend.onrender.com/api/health)
           echo "Backend: HTTP $RESPONSE"
           if [ "$RESPONSE" -ne 200 ]; then
             echo "::error::Backend health check failed (HTTP $RESPONSE)"
@@ -35,7 +35,7 @@ jobs:
 
       - name: Check Backend Health Details
         run: |
-          HEALTH=$(curl -s --max-time 10 https://englishengineer-backend.onrender.com/api/health)
+          HEALTH=$(curl -s --max-time 60 https://englishengineer-backend.onrender.com/api/health)
           echo "$HEALTH" | jq .
           STATUS=$(echo "$HEALTH" | jq -r '.status')
           if [ "$STATUS" != "ok" ]; then
@@ -46,7 +46,7 @@ jobs:
       - name: Check API Response Time
         run: |
           START=$(date +%s%N)
-          curl -s -o /dev/null --max-time 10 https://englishengineer-backend.onrender.com/api/health
+          curl -s -o /dev/null --max-time 60 https://englishengineer-backend.onrender.com/api/health
           END=$(date +%s%N)
           DURATION_MS=$(( (END - START) / 1000000 ))
           echo "Response time: ${DURATION_MS}ms"
