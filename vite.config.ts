@@ -63,7 +63,6 @@ export default defineConfig(() => {
             // "Cannot set properties of undefined (setting 'Activity')" and
             // renders a white screen. Keep them together in 'vendor-react'.
             if (id.includes('@clerk')) return 'vendor-clerk';
-            if (id.includes('three')) return 'vendor-three';
             if (
               id.includes('react-router') ||
               id.includes('react-router-dom') ||
