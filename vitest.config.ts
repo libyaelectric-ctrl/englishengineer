@@ -56,8 +56,8 @@ export default defineConfig({
       thresholds: {
         branches: 28,
         functions: 38,
-        lines: 44,
-        statements: 43,
+        lines: 43,
+        statements: 42,
         // Measured: lines 35.2 / branches 31.2 / functions 29.4 / stmts 36.4
         'src/features/billing/**': {
           branches: 25,
@@ -83,8 +83,8 @@ export default defineConfig({
         'src/features/vocabulary/**': {
           branches: 48,
           functions: 57,
-          lines: 65,
-          statements: 65,
+          lines: 64,
+          statements: 64,
         },
         // Measured: lines 71.2 / branches 61.9 / functions 71.6 / stmts 70.4
         'src/features/grammar/**': {

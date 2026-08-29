@@ -6,7 +6,8 @@
       "ignoreDependencies": ["@testing-library/jest-dom", "lint-staged"]
     },
     "backend": {
-      "entry": ["src/app.ts"]
+      "entry": ["src/app.ts"],
+      "ignoreDependencies": ["tsx"]
     }
   },
   "ignore": ["src/core/index.ts"],
