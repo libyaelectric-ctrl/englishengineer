@@ -19,7 +19,6 @@
     "@types/compression": "^1.8.1",
     "compression": "^1.8.1",
     "cors": "^2.8.5",
-    "engvox-frontend": "file:..",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
     "stripe": "^22.5.0",
