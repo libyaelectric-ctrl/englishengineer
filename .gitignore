@@ -20,7 +20,7 @@ tests/e2e/.debug-signin.mjs
 .freebuff/
 __pycache__/
 data/translations/results/
-data/
+/data/
 !src/data/
 !src/data/**
 !public/data/

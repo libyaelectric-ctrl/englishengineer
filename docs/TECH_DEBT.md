@@ -173,7 +173,7 @@ src/shared/experiments/abTesting (hash bucketing shared with the flag system,
 control/treatment variants, rollout percentage). Exposure analytics can hook
 into the existing event bus when needed.
 
-### TD-016: Slow test — `profile.engine.test.ts` 🟡
+### TD-021: Slow test — `profile.engine.test.ts` 🟡
 
 **File:** `src/features/profile/profile.engine.test.ts`
 **Issue:** The `generates skill-specific daily missions` test takes ~13-15s to run
@@ -268,6 +268,10 @@ so tests can call `/api/...` directly.
 migrated all route source files and test callers to `/api/v1/*`.
 **Resolved:** 2026-08-29.
 
+**Verified (2026-08-29 21:41):** CI success on the deduplicated tree; the
+frontend was confirmed to call /api/v1/* exclusively (zero non-v1 API
+calls in src/), so dropping the redirect middleware is safe.
+
 ### TD-020: Pre-commit hook swallows vitest exit code (pipe to tail)
 
 **File:** `.husky/pre-commit`
@@ -304,16 +308,17 @@ then tail the log. Implemented on 2026-08-29.
 | TD-015 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-016 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-017 | Low      | ✅ Resolved | TBD      | TBD        |
+| TD-021 | Low      | Open | TBD      | TBD      |
 | TD-018 | Medium   | Resolved    | TBD      | TBD        |
 | TD-019 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-020 | Medium   | Resolved    | TBD      | TBD        |
 
 ## Stats
 
-- **Total Items:** 20
+- **Total Items:** 21
 - **Resolved:** 19 (95%)
 - **Partially Resolved:** 1 (5%)
-- **Open:** 0 (0%)
+- **Open:** 2 (10%)
 
 ## Last Updated
 
