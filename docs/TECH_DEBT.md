@@ -98,12 +98,17 @@ endpoint. CSP configured with scriptSrc: 'self'.
 **Effort:** 2-3 days
 **Action:** Add Redis caching layer
 
-### TD-010: Add Monitoring
+### TD-010: Add Monitoring ✅
 
 **Issue:** Limited observability
 **Impact:** Debugging, performance
 **Effort:** 1-2 days
 **Action:** Add structured logging
+
+**Resolution (2026-08-29):** structured logging already implemented via
+winston at backend/src/logger.ts (JSON format, file transports for
+error.log + combined.log, configurable LOG_LEVEL). Zero console.*
+calls in backend source — all routes use the structured logger.
 
 ### TD-012: Standardize Error Messages
 
@@ -277,7 +282,7 @@ then tail the log. Implemented on 2026-08-29.
 | TD-007 | Medium   | ✅ Resolved | TBD      | TBD        |
 | TD-008 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-009 | Low      | 🟡 Open     | TBD      | TBD        |
-| TD-010 | Low      | 🟡 Open     | TBD      | TBD        |
+| TD-010 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-011 | Low      | ✅ Resolved | TBD      | TBD        |
 | TD-012 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-013 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
@@ -292,9 +297,9 @@ then tail the log. Implemented on 2026-08-29.
 ## Stats
 
 - **Total Items:** 20
-- **Resolved:** 17 (85%)
+- **Resolved:** 18 (90%)
 - **Partially Resolved:** 1 (5%)
-- **Open:** 2 (10%)
+- **Open:** 1 (5%)
 
 ## Last Updated
 
