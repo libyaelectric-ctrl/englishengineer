@@ -44,8 +44,9 @@ export const loadLanguageCorpus = (language: string): Promise<LanguageMap> => {
         return cached;
       }
 
-      // Fetch from static assets
-      const res = await fetch(`/data/translations/${language}.json`);
+      // Fetch from static assets (or the configured data CDN)
+      const dataBase = (import.meta.env.VITE_DATA_CDN_URL ?? '').replace(/\/+$/, '');
+      const res = await fetch(`${dataBase}/data/translations/${language}.json`);
       if (!res.ok) {
         langCache.set(language, emptyMap);
         return emptyMap;

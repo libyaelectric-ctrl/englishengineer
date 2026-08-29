@@ -19,12 +19,13 @@ export const loadVocabularyByLevel = async (level: CefrLevel): Promise<Vocabular
   }
 
   try {
+    const dataBase = (import.meta.env.VITE_DATA_CDN_URL ?? '').replace(/\/+$/, '');
     const slug = level.toLowerCase();
     const shardCount = LEVEL_SHARDS[level] ?? 1;
     const shardUrls = Array.from({ length: shardCount }, (_, shard) =>
       shard === 0
-        ? `/data/vocabulary/${slug}.seed.json`
-        : `/data/vocabulary/${slug}.seed-${shard}.json`
+        ? `${dataBase}/data/vocabulary/${slug}.seed.json`
+        : `${dataBase}/data/vocabulary/${slug}.seed-${shard}.json`
     );
 
     const parts = await Promise.all(
