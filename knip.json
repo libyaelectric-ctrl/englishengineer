@@ -7,7 +7,7 @@
     },
     "backend": {
       "entry": ["src/app.ts"],
-      "ignoreDependencies": ["tsx"]
+      "ignoreDependencies": ["tsx", "swagger-ui-dist"]
     }
   },
   "ignore": ["src/core/index.ts"],
