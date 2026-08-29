@@ -202,6 +202,10 @@ audit touched (pinned `useBillingStore`/`useAuthStore` state explicitly
 where needed) but the systemic gap remains.
 **Found during:** 2026-08-10 repo audit (see `DENETIM_RAPORU.md`).
 
+**Resolution (2026-08-29):** shared reset helper added at
+`src/e2e/test-utils/resetStores.ts` and wired into the navigation and
+new-features vitest E2E suites via a top-level `afterEach` call.
+
 ### TD-019: Deduplicate /api + /api/v1 route registration
 
 **File:** `backend/src/app.ts`
@@ -253,15 +257,16 @@ then tail the log. Implemented on 2026-08-29.
 | TD-015 | Low      | 🟡 Open     | TBD      | TBD      |
 | TD-016 | Medium   | 🟡 Open     | TBD      | TBD      |
 | TD-017 | Low      | ✅ Resolved | TBD      | TBD      |
+| TD-018 | Medium   | Resolved    | TBD      | TBD      |
 | TD-019 | Medium   | Open        | TBD      | TBD      |
-| TD-020 | Medium   | Open        | TBD      | TBD      |
+| TD-020 | Medium   | Resolved    | TBD      | TBD      |
 
 ## Stats
 
 - **Total Items:** 17
-- **Resolved:** 7 (41%)
+- **Resolved:** 9 (53%)
 - **Partially Resolved:** 1 (6%)
-- **Open:** 9 (53%)
+- **Open:** 7 (41%)
 
 ## Last Updated
 

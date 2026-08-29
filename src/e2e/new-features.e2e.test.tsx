@@ -1,5 +1,5 @@
 import { configure, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
 
@@ -11,6 +11,8 @@ import SpeakingPage from '@/pages/SpeakingPage';
 import TeamPage from '@/pages/TeamPage';
 import WorkToolsPage from '@/pages/WorkToolsPage';
 
+import { resetStores } from './test-utils/resetStores';
+
 // Several assertions here wait on lazy()/Suspense-loaded components
 // (InterviewSimulator, TeamDashboard). Under a full multi-file test run
 // module transform can take much longer than the default 1s async-util
@@ -18,6 +20,10 @@ import WorkToolsPage from '@/pages/WorkToolsPage';
 // assertions more headroom.
 configure({ asyncUtilTimeout: 10000 });
 vi.setConfig({ testTimeout: 15000 });
+
+afterEach(() => {
+  resetStores();
+});
 
 const renderWithRouter = (component: React.ReactElement, initialEntries = ['/']) =>
   render(<MemoryRouter initialEntries={initialEntries}>{component}</MemoryRouter>);

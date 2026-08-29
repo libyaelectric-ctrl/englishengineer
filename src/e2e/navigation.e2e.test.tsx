@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
@@ -16,6 +16,12 @@ import SpeakingPage from '@/pages/SpeakingPage';
 import ToolsPage from '@/pages/ToolsPage';
 import VocabularyPage from '@/pages/VocabularyPage';
 import WritingPage from '@/pages/WritingPage';
+
+import { resetStores } from './test-utils/resetStores';
+
+afterEach(() => {
+  resetStores();
+});
 
 const createTestQueryClient = () =>
   new QueryClient({ defaultOptions: { queries: { retry: false } } });
