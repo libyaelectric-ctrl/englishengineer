@@ -1,12 +1,13 @@
 /**
  * Lazy-loaded vocabulary translation layer.
  *
- * Each supported language is code-split into its own JSON chunk under
- * src/data/translations/by-lang/. The app only fetches the corpus for the
- * user's selected learning language. `loadVocabularyTranslations()` remains
- * exported as a backward-compatible full-corpus loader (mainly used by tests
- * and debugging tools) and is not part of the runtime hot path.
+ * Each supported language is served as a static JSON file from
+ * public/data/translations/. The app fetches the corpus for the user's
+ * selected learning language at runtime and caches it in IndexedDB for
+ * offline access.
  */
+import { getCachedSeed, setCachedSeed } from '@/shared/utils/indexed-db';
+
 export interface TermTranslation {
   meaning?: string;
   definition?: string;
@@ -26,10 +27,6 @@ export type TranslationMap = Record<string, LanguageMap>;
 const langCache = new Map<string, LanguageMap>();
 const pendingLoads = new Map<string, Promise<LanguageMap>>();
 
-const corpusModules = import.meta.glob<{
-  default: LanguageMap;
-}>('../../data/translations/by-lang/*.json');
-
 const emptyMap: LanguageMap = {};
 
 /** Loads (and caches) the translation corpus for a single language. */
@@ -37,23 +34,40 @@ export const loadLanguageCorpus = (language: string): Promise<LanguageMap> => {
   if (langCache.has(language)) return Promise.resolve(langCache.get(language)!);
   if (pendingLoads.has(language)) return pendingLoads.get(language)!;
 
-  const loader = corpusModules[`../../data/translations/by-lang/${language}.json`];
-  const load = (
-    loader
-      ? loader().then((mod) => {
-          const map = mod.default ?? emptyMap;
-          langCache.set(language, map);
-          pendingLoads.delete(language);
-          return map;
-        })
-      : Promise.resolve<LanguageMap>(emptyMap)
-  ).catch(() => {
-    langCache.set(language, emptyMap);
-    pendingLoads.delete(language);
-    return emptyMap;
-  });
+  const load = (async () => {
+    try {
+      // Check IndexedDB cache first
+      const cacheKey = `translation_corpus_${language}`;
+      const cached = await getCachedSeed<LanguageMap>(cacheKey);
+      if (cached && Object.keys(cached).length > 0) {
+        langCache.set(language, cached);
+        return cached;
+      }
+
+      // Fetch from static assets
+      const res = await fetch(`/data/translations/${language}.json`);
+      if (!res.ok) {
+        langCache.set(language, emptyMap);
+        return emptyMap;
+      }
+
+      const map: LanguageMap = await res.json();
+      langCache.set(language, map);
+
+      // Cache in IndexedDB for offline access
+      if (Object.keys(map).length > 0) {
+        void setCachedSeed(cacheKey, map);
+      }
+
+      return map;
+    } catch {
+      langCache.set(language, emptyMap);
+      return emptyMap;
+    }
+  })();
 
   pendingLoads.set(language, load);
+  load.finally(() => pendingLoads.delete(language));
   return load;
 };
 

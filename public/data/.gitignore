@@ -1,3 +1,7 @@
 ﻿.gitignore
 *.json
 !/.gitignore
+!vocabulary/
+!vocabulary/**
+!translations/
+!translations/**
