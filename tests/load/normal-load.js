@@ -16,9 +16,9 @@ export const options = {
 const BASE_URL = __ENV.BASE_URL || 'http://127.0.0.1:8787';
 
 export default function () {
-  // Login Endpoint Check (Simulated)
-  const loginRes = http.post(`${BASE_URL}/api/health`); // Using health as a proxy since real login needs auth payload
-  check(loginRes, { 'status is 200': (r) => r.status === 200 });
+  // Health endpoint benchmark (GET-only endpoint - a POST here would 404)
+  const healthRes = http.get(`${BASE_URL}/api/health`);
+  check(healthRes, { 'status is 200': (r) => r.status === 200 });
   sleep(1);
 
   // Vocabulary Fetch (Simulated)
