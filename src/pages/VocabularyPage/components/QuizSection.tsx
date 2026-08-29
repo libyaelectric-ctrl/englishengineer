@@ -1,3 +1,4 @@
+import { AppError, ErrorCode } from '@/core/errors';
 import { Award, CheckCircle2, LoaderCircle } from 'lucide-react';
 
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
@@ -70,7 +71,10 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
       const words = selectedTerms.filter((term): term is VocabularyTerm => Boolean(term));
 
       if (words.length !== LEARNED_QUIZ_SIZE) {
-        throw new Error('Quiz words could not be loaded.');
+        throw new AppError({
+          code: ErrorCode.VALIDATION,
+          message: 'Quiz words could not be loaded.',
+        });
       }
 
       setQuizWords(words);
