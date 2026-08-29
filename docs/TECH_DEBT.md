@@ -129,6 +129,11 @@ throws (grammar seed loaders, schema validation, pronunciation capability
 check) were converted to AppError with proper codes. 14 -> 0 raw throws in
 non-test source.
 
+**Follow-up (2026-08-29):** the duplicate feature-level schema twins
+(src/features/grammar/grammar.schema.ts and
+src/features/vocabulary/types/vocabulary.schema.ts) were deleted; the shared
+twins now carry the AppError validation throws.
+
 ### TD-013: Add Performance Tests
 
 **Issue:** No performance benchmarks
@@ -152,6 +157,9 @@ Fixed: the workflow now runs tests/load/normal-load.js against the backend API
 **Resolution (2026-08-29):** implemented exactly as ADR-006 prescribed:
 config-based flags at src/shared/feature-flags (env override
 VITE_FLAG_<KEY>, deterministic rollout bucketing), no external vendor.
+The legacy src/shared/feature-flags.ts module was removed in the same pass;
+its two flags (teamBeta, unifiedDifficultyScoring) were migrated into the
+registry with legacy VITE_FEATURE_FLAG_* env aliases.
 
 ### TD-015: Add A/B Testing
 

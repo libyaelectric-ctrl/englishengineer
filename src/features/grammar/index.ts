@@ -5,8 +5,6 @@ export {
   type GrammarUserSkillProfile,
 } from './grammar.types';
 
-export { isGrammarRule, assertGrammarRules } from './grammar.schema';
-
 export { GrammarRepository } from './grammar.repository';
 
 export { type GrammarTaskMix, sortByCurriculumOrder, GrammarEngine } from './grammar.engine';

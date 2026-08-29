@@ -1,3 +1,5 @@
+import { AppError, ErrorCode } from '@/core/errors';
+
 import { CEFR_LEVELS } from '@/shared/types/domain.types';
 
 import type { VocabularyTerm } from './vocabulary.types';
@@ -29,7 +31,10 @@ export const isVocabularyTerm = (value: unknown): value is VocabularyTerm => {
 export const assertVocabularyTerms = (values: unknown[]): VocabularyTerm[] => {
   const invalidIndex = values.findIndex((value) => !isVocabularyTerm(value));
   if (invalidIndex >= 0) {
-    throw new Error(`Invalid vocabulary term at index ${invalidIndex}.`);
+    throw new AppError({
+      code: ErrorCode.VALIDATION,
+      message: `Invalid vocabulary term at index ${invalidIndex}.`,
+    });
   }
   return values as VocabularyTerm[];
 };

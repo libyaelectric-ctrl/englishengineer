@@ -8,7 +8,7 @@ import { Navigate, createBrowserRouter } from 'react-router-dom';
 
 import { LoadingState } from '@/shared/components/LoadingState';
 import { PageErrorBoundary } from '@/shared/components/PageErrorBoundary';
-import { FEATURE_FLAGS } from '@/shared/feature-flags';
+import { isFeatureEnabled } from '@/shared/feature-flags/featureFlags';
 
 import { AuthGuard } from '@/features/auth/AuthGuard';
 import { RequireAdminRole } from '@/features/auth/RequireAdminRole';
@@ -248,7 +248,7 @@ export const router = createBrowserRouter([
 
       {
         path: 'team',
-        element: FEATURE_FLAGS.TEAM_BETA ? (
+        element: isFeatureEnabled('teamBeta') ? (
           <ErrorBoundary
             fallback={
               <div className="flex min-h-screen items-center justify-center bg-surface text-foreground">
@@ -272,7 +272,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'team/members/:memberId',
-        element: FEATURE_FLAGS.TEAM_BETA ? (
+        element: isFeatureEnabled('teamBeta') ? (
           withSuspense(TeamMember)
         ) : (
           <Navigate to="/dashboard" replace />

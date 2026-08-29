@@ -18,8 +18,6 @@ export {
   type VocabularySummary,
 } from './types/vocabulary.types';
 
-export { isVocabularyTerm, assertVocabularyTerms } from './types/vocabulary.schema';
-
 export { VocabularyRepository } from './services/core/vocabulary.repository';
 
 export { VocabularyEngine } from './engine/vocabulary.engine';

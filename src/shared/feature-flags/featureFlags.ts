@@ -11,6 +11,8 @@ export interface FeatureFlagDefinition {
   description: string;
   enabledByDefault: boolean;
   rolloutPercentage: number;
+  /** Eski env var adlari (VITE_FEATURE_FLAG_*) - geriye donuk uyumluluk. */
+  legacyEnvKeys?: string[];
 }
 
 export const FEATURE_FLAGS = {
@@ -32,6 +34,20 @@ export const FEATURE_FLAGS = {
     enabledByDefault: true,
     rolloutPercentage: 100,
   },
+  teamBeta: {
+    key: 'teamBeta',
+    description: 'Team pages in the router (legacy VITE_FEATURE_FLAG_TEAM_BETA)',
+    enabledByDefault: false,
+    rolloutPercentage: 100,
+    legacyEnvKeys: ['VITE_FEATURE_FLAG_TEAM_BETA'],
+  },
+  unifiedDifficultyScoring: {
+    key: 'unifiedDifficultyScoring',
+    description: 'Unified difficulty scoring in content selection',
+    enabledByDefault: false,
+    rolloutPercentage: 100,
+    legacyEnvKeys: ['VITE_FEATURE_FLAG_UNIFIED_DIFFICULTY'],
+  },
 } as const satisfies Record<string, FeatureFlagDefinition>;
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
@@ -52,9 +68,14 @@ function toEnvKey(flag: FeatureFlagKey): string {
 }
 
 function readEnvOverride(flag: FeatureFlagKey): boolean | undefined {
-  const raw = (import.meta.env as Record<string, string | undefined>)[toEnvKey(flag)];
-  if (raw === 'true') return true;
-  if (raw === 'false') return false;
+  const definition = FEATURE_FLAGS[flag];
+  const legacyKeys = 'legacyEnvKeys' in definition ? definition.legacyEnvKeys : undefined;
+  const names = [toEnvKey(flag), ...(legacyKeys ?? [])];
+  for (const name of names) {
+    const raw = (import.meta.env as Record<string, string | undefined>)[name];
+    if (raw === 'true') return true;
+    if (raw === 'false') return false;
+  }
   return undefined;
 }
 

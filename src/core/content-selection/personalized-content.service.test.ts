@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { FEATURE_FLAGS } from '@/shared/feature-flags';
+import { FEATURE_FLAGS, isFeatureEnabled } from '@/shared/feature-flags/featureFlags';
 import type { GrammarRule } from '@/shared/types/grammar.types';
 import type { ReadingMission } from '@/shared/types/reading.types';
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
@@ -319,10 +319,10 @@ describe('sortContentByPoolRatio', () => {
 
 describe('FEATURE_FLAGS', () => {
   it('has UNIFIED_DIFFICULTY_SCORING flag', () => {
-    expect('UNIFIED_DIFFICULTY_SCORING' in FEATURE_FLAGS).toBe(true);
+    expect('unifiedDifficultyScoring' in FEATURE_FLAGS).toBe(true);
   });
 
   it('reads from VITE_FEATURE_FLAG_UNIFIED_DIFFICULTY env var', () => {
-    expect(typeof FEATURE_FLAGS.UNIFIED_DIFFICULTY_SCORING).toBe('boolean');
+    expect(typeof isFeatureEnabled('unifiedDifficultyScoring')).toBe('boolean');
   });
 });

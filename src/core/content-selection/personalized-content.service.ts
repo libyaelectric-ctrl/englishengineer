@@ -1,4 +1,4 @@
-import { FEATURE_FLAGS } from '@/shared/feature-flags';
+import { isFeatureEnabled } from '@/shared/feature-flags/featureFlags';
 import type { GrammarRule } from '@/shared/types/grammar.types';
 import type { ReadingMission } from '@/shared/types/reading.types';
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
@@ -47,7 +47,7 @@ function scoreContentByPoolRatio(
 export function sortContentByPoolRatio<
   T extends ReadingMission | WritingMission | VocabularyTerm | GrammarRule,
 >(content: T[], pool: KnowledgePoolEntry[], targetRatio = 0.75): T[] {
-  if (pool.length === 0 || !FEATURE_FLAGS.UNIFIED_DIFFICULTY_SCORING) return content;
+  if (pool.length === 0 || !isFeatureEnabled('unifiedDifficultyScoring')) return content;
   return [...content].sort((a, b) => {
     const scoreA = scoreContentByPoolRatio(a, pool, targetRatio).score;
     const scoreB = scoreContentByPoolRatio(b, pool, targetRatio).score;
