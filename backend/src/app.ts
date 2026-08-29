@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/node';
+﻿import * as Sentry from '@sentry/node';
 import compression from 'compression';
 import cors from 'cors';
 import express, {
@@ -473,22 +473,24 @@ const registerRoutes = (
   const v1RouterAdapter = {
     get: (path: string, ...handlers: RequestHandler[]) => {
       v1Router.get(adaptPath(path), ...handlers);
-      app.get(path, ...handlers);
       return v1RouterAdapter;
     },
     post: (path: string, ...handlers: RequestHandler[]) => {
+      if (path.startsWith('/api/webhooks/')) {
+        // Webhooks intentionally live at /api/webhooks (raw-body parsing and
+        // signature verification are wired there); never under /api/v1.
+        app.post(path, ...handlers);
+        return v1RouterAdapter;
+      }
       v1Router.post(adaptPath(path), ...handlers);
-      app.post(path, ...handlers);
       return v1RouterAdapter;
     },
     put: (path: string, ...handlers: RequestHandler[]) => {
       v1Router.put(adaptPath(path), ...handlers);
-      app.put(path, ...handlers);
       return v1RouterAdapter;
     },
     delete: (path: string, ...handlers: RequestHandler[]) => {
       v1Router.delete(adaptPath(path), ...handlers);
-      app.delete(path, ...handlers);
       return v1RouterAdapter;
     },
     use: (...args: (string | RequestHandler)[]) => {
@@ -496,11 +498,8 @@ const registerRoutes = (
         const path = args[0];
         const handlers = args.slice(1) as RequestHandler[];
         v1Router.use(adaptPath(path), ...handlers);
-        app.use(path, ...handlers);
       } else {
-        const handlers = args as unknown as RequestHandler[];
-        v1Router.use(...handlers);
-        app.use(...handlers);
+        v1Router.use(...(args as unknown as RequestHandler[]));
       }
       return v1RouterAdapter;
     },
@@ -746,13 +745,13 @@ const registerRoutes = (
     limiters.grammar
   ); // GDPR data export routes
   registerExportRoutes(
-    app,
+    v1RouterAdapter as unknown as Express,
     requireBackendAuth,
     config as unknown as { workspace?: Record<string, unknown> }
   );
 
   // Team analytics routes
-  registerTeamAnalyticsRoutes(app, requireBackendAuth, limiters.global);
+  registerTeamAnalyticsRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, limiters.global);
 };
 
 const initConnectionPool = (config: BackendConfig) => {
@@ -835,3 +834,4 @@ export const createApp = ({
 
   return app;
 };
+

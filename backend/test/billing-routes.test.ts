@@ -14,11 +14,17 @@ interface RegisteredRoute {
 const createMockApp = () => {
   const registered: RegisteredRoute[] = [];
   return {
+    // Mimics the real v1RouterAdapter mapping: /api/x -> /api/v1/x, while
+    // webhooks stay at /api/webhooks.
     post: (path: string, ...handlers: unknown[]) => {
-      registered.push({ method: 'POST', path, handlerCount: handlers.length });
+      const finalPath = path.startsWith('/api/webhooks/')
+        ? path
+        : `/api/v1${path.startsWith('/api/') ? path.slice(4) : path}`;
+      registered.push({ method: 'POST', path: finalPath, handlerCount: handlers.length });
     },
     get: (path: string, ...handlers: unknown[]) => {
-      registered.push({ method: 'GET', path, handlerCount: handlers.length });
+      const finalPath = `/api/v1${path.startsWith('/api/') ? path.slice(4) : path}`;
+      registered.push({ method: 'GET', path: finalPath, handlerCount: handlers.length });
     },
     registered,
   };
@@ -52,11 +58,11 @@ describe('Billing Routes', () => {
     );
 
     const paths = app.registered.map((r) => `${r.method} ${r.path}`);
-    assert.ok(paths.includes('POST /api/billing/create-checkout-session'));
-    assert.ok(paths.includes('POST /api/billing/create-topup-session'));
-    assert.ok(paths.includes('POST /api/billing/create-customer-portal-session'));
-    assert.ok(paths.includes('GET /api/billing/subscription-status'));
-    assert.ok(paths.includes('GET /subscription-status'));
+    assert.ok(paths.includes('POST /api/v1/billing/create-checkout-session'));
+    assert.ok(paths.includes('POST /api/v1/billing/create-topup-session'));
+    assert.ok(paths.includes('POST /api/v1/billing/create-customer-portal-session'));
+    assert.ok(paths.includes('GET /api/v1/billing/subscription-status'));
+    assert.ok(paths.includes('GET /api/v1/subscription-status'));
     assert.ok(paths.includes('POST /api/webhooks/stripe'));
   });
 
@@ -70,7 +76,7 @@ describe('Billing Routes', () => {
     );
 
     const checkout = app.registered.find(
-      (r) => r.method === 'POST' && r.path === '/api/billing/create-checkout-session'
+      (r) => r.method === 'POST' && r.path === '/api/v1/billing/create-checkout-session'
     );
     assert.ok(checkout);
     assert.equal(checkout.handlerCount, 5, 'checkout should have 5 middlewares/handlers');
@@ -86,13 +92,13 @@ describe('Billing Routes', () => {
     );
 
     const portal = app.registered.find(
-      (r) => r.method === 'POST' && r.path === '/api/billing/create-customer-portal-session'
+      (r) => r.method === 'POST' && r.path === '/api/v1/billing/create-customer-portal-session'
     );
     assert.ok(portal);
     assert.equal(portal.handlerCount, 4, 'portal should have 4 middlewares/handlers');
   });
 
-  it('subscription status is registered on both api and legacy paths', () => {
+  it('subscription status is registered on the canonical v1 path', () => {
     const app = createMockApp();
     registerBillingRoutes(
       app as unknown as Express,
@@ -102,13 +108,9 @@ describe('Billing Routes', () => {
     );
 
     const apiPath = app.registered.find(
-      (r) => r.method === 'GET' && r.path === '/api/billing/subscription-status'
-    );
-    const legacyPath = app.registered.find(
-      (r) => r.method === 'GET' && r.path === '/subscription-status'
+      (r) => r.method === 'GET' && r.path === '/api/v1/billing/subscription-status'
     );
     assert.ok(apiPath, 'API subscription status route should exist');
-    assert.ok(legacyPath, 'Legacy subscription status route should exist');
   });
 
   it('webhook route does not require auth middleware', () => {

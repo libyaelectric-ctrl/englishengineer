@@ -873,7 +873,7 @@ describe('End-to-End App Wiring', () => {
       assert.equal(subRes.status, 200);
 
       // Step 3: Verify subscription status endpoint
-      const statusRes = await fetch(`${url}/api/billing/subscription-status`);
+      const statusRes = await fetch(`${url}/api/v1/billing/subscription-status`);
       assert.equal(statusRes.status, 200);
       const statusBody = (await statusRes.json()) as { planId: string; status: string };
       // Without auth, returns default free plan
@@ -947,7 +947,7 @@ describe('End-to-End App Wiring', () => {
       const port = typeof address === 'object' && address ? address.port : 0;
       const url = `http://127.0.0.1:${port}`;
 
-      const res = await fetch(`${url}/api/billing/create-checkout-session`, {
+      const res = await fetch(`${url}/api/v1/billing/create-checkout-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ planId: 'junior', billingInterval: 'month' }),

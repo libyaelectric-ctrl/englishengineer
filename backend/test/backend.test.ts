@@ -83,7 +83,7 @@ test('health never exposes secret values', async () => {
 
 test('AI route rejects an empty prompt', async () => {
   const url = await start();
-  const response = await fetch(`${url}/api/ai/coach`, {
+  const response = await fetch(`${url}/api/v1/ai/coach`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt: '   ' }),
@@ -95,7 +95,7 @@ test('AI route rejects an empty prompt', async () => {
 
 test('AI route explicitly labels safe mock mode', async () => {
   const url = await start({ AI_PROVIDER: 'mock' });
-  const response = await fetch(`${url}/api/ai/writing-review`, {
+  const response = await fetch(`${url}/api/v1/ai/writing-review`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt: 'Review this commissioning update.' }),
@@ -124,7 +124,7 @@ test('configured AI provider returns a real-mode contract', async () => {
     );
   };
   const url = await start({ AI_PROVIDER: 'openai', OPENAI_API_KEY: 'test-key' }, { fetchImpl });
-  const response = await fetch(`${url}/api/ai/coach`, {
+  const response = await fetch(`${url}/api/v1/ai/coach`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt: 'Prepare a site coordination response.' }),
@@ -146,7 +146,7 @@ test('configured AI provider returns a real-mode contract', async () => {
 test('configured provider failure returns a safe unavailable error', async () => {
   const fetchImpl = async () => new Response('provider secret detail', { status: 500 });
   const url = await start({ AI_PROVIDER: 'openai', OPENAI_API_KEY: 'test-key' }, { fetchImpl });
-  const response = await fetch(`${url}/api/ai/coach`, {
+  const response = await fetch(`${url}/api/v1/ai/coach`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt: 'Test provider failure.' }),
@@ -159,7 +159,7 @@ test('configured provider failure returns a safe unavailable error', async () =>
 
 test('billing routes return a free fallback when Stripe is not configured', async () => {
   const url = await start();
-  const response = await fetch(`${url}/api/billing/subscription-status?userId=user-1`);
+  const response = await fetch(`${url}/api/v1/billing/subscription-status?userId=user-1`);
   const body = await response.json();
   assert.equal(response.status, 200);
   assert.equal(body.planId, 'free');
@@ -169,7 +169,7 @@ test('billing routes return a free fallback when Stripe is not configured', asyn
 
 test('production billing status falls back safely without backend auth headers', async () => {
   const url = await start(productionAuthEnvironment);
-  const response = await fetch(`${url}/api/billing/subscription-status`);
+  const response = await fetch(`${url}/api/v1/billing/subscription-status`);
   const body = await response.json();
   assert.equal(response.status, 200);
   assert.equal(body.planId, 'free');
@@ -177,9 +177,9 @@ test('production billing status falls back safely without backend auth headers',
   assert.equal(body.source, 'backend');
 });
 
-test('legacy subscription status route returns a free fallback when Stripe is not configured', async () => {
+test('subscription status route returns a free fallback when Stripe is not configured', async () => {
   const url = await start(productionAuthEnvironment);
-  const response = await fetch(`${url}/subscription-status?userId=user-1`);
+  const response = await fetch(`${url}/api/v1/subscription-status?userId=user-1`);
   const body = await response.json();
   assert.equal(response.status, 200);
   assert.equal(body.planId, 'free');
@@ -270,16 +270,16 @@ test('subscription status can report active and payment-failed backend states', 
     },
     { stripeClient, billingRepository: repository }
   );
-  const active = await (await fetch(`${url}/api/billing/subscription-status?userId=user-1`)).json();
+  const active = await (await fetch(`${url}/api/v1/billing/subscription-status?userId=user-1`)).json();
   assert.equal(active.status, 'active');
   snapshot = { ...snapshot, status: 'past_due' };
-  const failed = await (await fetch(`${url}/api/billing/subscription-status?userId=user-1`)).json();
+  const failed = await (await fetch(`${url}/api/v1/billing/subscription-status?userId=user-1`)).json();
   assert.equal(failed.status, 'past_due');
 });
 
 test('vocabulary lookup rejects a missing word', async () => {
   const url = await start();
-  const response = await fetch(`${url}/api/vocabulary/lookup?targetLang=tr`);
+  const response = await fetch(`${url}/api/v1/vocabulary/lookup?targetLang=tr`);
   const body = await response.json();
   assert.equal(response.status, 400);
   assert.equal(body.error.code, 'validation_error');
@@ -288,7 +288,7 @@ test('vocabulary lookup rejects a missing word', async () => {
 test('vocabulary lookup handles provider failure safely', async () => {
   const fetchImpl = async () => ({ ok: false, status: 503 });
   const url = await start({}, { fetchImpl });
-  const response = await fetch(`${url}/api/vocabulary/lookup?word=panel&targetLang=tr`);
+  const response = await fetch(`${url}/api/v1/vocabulary/lookup?word=panel&targetLang=tr`);
   const body = await response.json();
   assert.equal(response.status, 502);
   assert.equal(body.error.code, 'vocabulary_provider_unavailable');
@@ -315,7 +315,7 @@ test('vocabulary lookup reuses a successful cached result', async () => {
     };
   };
   const url = await start({}, { fetchImpl });
-  const endpoint = `${url}/api/vocabulary/lookup?word=panel&targetLang=tr`;
+  const endpoint = `${url}/api/v1/vocabulary/lookup?word=panel&targetLang=tr`;
   const first = await (await fetch(endpoint)).json();
   const second = await (await fetch(endpoint)).json();
   assert.equal(first.cached, false);
@@ -342,7 +342,7 @@ const internalHeaders = (userId = 'user-authenticated') => ({
 
 test('production AI routes reject missing authentication while billing status falls back safely', async () => {
   const url = await start(productionAuthEnvironment);
-  const aiResponse = await fetch(`${url}/api/ai/coach`, {
+  const aiResponse = await fetch(`${url}/api/v1/ai/coach`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -350,7 +350,7 @@ test('production AI routes reject missing authentication while billing status fa
     },
     body: JSON.stringify({ prompt: 'Prepare an update.' }),
   });
-  const billingResponse = await fetch(`${url}/api/billing/subscription-status`);
+  const billingResponse = await fetch(`${url}/api/v1/billing/subscription-status`);
   const billingBody = await billingResponse.json();
   assert.equal(aiResponse.status, 401);
   assert.equal(billingResponse.status, 200);
@@ -360,7 +360,7 @@ test('production AI routes reject missing authentication while billing status fa
 
 test('valid internal authentication protects identity and leaves health public', async () => {
   const url = await start(productionAuthEnvironment);
-  const response = await fetch(`${url}/api/ai/coach`, {
+  const response = await fetch(`${url}/api/v1/ai/coach`, {
     method: 'POST',
     headers: internalHeaders(),
     body: JSON.stringify({ prompt: 'Prepare an update.' }),
@@ -372,7 +372,7 @@ test('valid internal authentication protects identity and leaves health public',
 
 test('AI operation is controlled by the route', async () => {
   const url = await start();
-  const response = await fetch(`${url}/api/ai/coach`, {
+  const response = await fetch(`${url}/api/v1/ai/coach`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -386,7 +386,7 @@ test('AI operation is controlled by the route', async () => {
 
 test('AI prompt size and rate limit are enforced', async () => {
   const url = await start({ AI_RATE_LIMIT_MAX: '1' });
-  const oversized = await fetch(`${url}/api/ai/coach`, {
+  const oversized = await fetch(`${url}/api/v1/ai/coach`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt: 'x'.repeat(20_001) }),
@@ -396,7 +396,7 @@ test('AI prompt size and rate limit are enforced', async () => {
 
   const limitedUrl = await start({ AI_RATE_LIMIT_MAX: '1' });
   const request = () =>
-    fetch(`${limitedUrl}/api/ai/coach`, {
+    fetch(`${limitedUrl}/api/v1/ai/coach`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: 'Valid prompt.' }),
@@ -426,13 +426,13 @@ test('billing derives ownership from authenticated identity', async () => {
     },
     { stripeClient: {}, billingRepository: repository }
   );
-  const response = await fetch(`${url}/api/billing/subscription-status?userId=another-user`, {
+  const response = await fetch(`${url}/api/v1/billing/subscription-status?userId=another-user`, {
     headers: internalHeaders('owner-user'),
   });
   assert.equal(response.status, 403);
   assert.equal(requestedUserId, null);
 
-  const owned = await fetch(`${url}/api/billing/subscription-status`, {
+  const owned = await fetch(`${url}/api/v1/billing/subscription-status`, {
     headers: internalHeaders('owner-user'),
   });
   assert.equal(owned.status, 200);
@@ -466,14 +466,14 @@ test('checkout rejects a mismatched body user and accepts the authenticated user
     cancelUrl: 'https://app.example/cancel',
     planId: 'junior',
   };
-  const rejected = await fetch(`${url}/api/billing/create-checkout-session`, {
+  const rejected = await fetch(`${url}/api/v1/billing/create-checkout-session`, {
     method: 'POST',
     headers: internalHeaders('owner-user'),
     body: JSON.stringify(payload),
   });
   assert.equal(rejected.status, 403);
 
-  const accepted = await fetch(`${url}/api/billing/create-checkout-session`, {
+  const accepted = await fetch(`${url}/api/v1/billing/create-checkout-session`, {
     method: 'POST',
     headers: internalHeaders('owner-user'),
     body: JSON.stringify({ ...payload, userId: 'owner-user' }),
@@ -568,7 +568,7 @@ test('Anthropic request and response contracts are parsed consistently', async (
     },
     { fetchImpl }
   );
-  const response = await fetch(`${url}/api/ai/coach`, {
+  const response = await fetch(`${url}/api/v1/ai/coach`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt: 'Prepare a commissioning update.' }),
@@ -687,7 +687,7 @@ test('billing status returns 200 Free/Lite when no subscription record exists', 
     },
     { stripeClient: {}, billingRepository: repository }
   );
-  const response = await fetch(`${url}/api/billing/subscription-status`, {
+  const response = await fetch(`${url}/api/v1/billing/subscription-status`, {
     headers: internalHeaders('owner-user'),
   });
   assert.equal(response.status, 200);
@@ -718,7 +718,7 @@ test('billing status returns 200 Pro when active Pro subscription exists in repo
     },
     { stripeClient: {}, billingRepository: repository }
   );
-  const response = await fetch(`${url}/api/billing/subscription-status`, {
+  const response = await fetch(`${url}/api/v1/billing/subscription-status`, {
     headers: internalHeaders('owner-user'),
   });
   assert.equal(response.status, 200);
@@ -741,7 +741,7 @@ test('billing status returns 503 BILLING_STATUS_UNAVAILABLE on repository infras
     },
     { stripeClient: {}, billingRepository: repository }
   );
-  const response = await fetch(`${url}/api/billing/subscription-status`, {
+  const response = await fetch(`${url}/api/v1/billing/subscription-status`, {
     headers: internalHeaders('owner-user'),
   });
   assert.equal(response.status, 503);
@@ -755,7 +755,7 @@ test('checkout returns 503 STRIPE_NOT_CONFIGURED when Stripe is not configured',
     STRIPE_SECRET_KEY: '',
     STRIPE_PRICE_JUNIOR_MONTHLY: '',
   });
-  const response = await fetch(`${url}/api/billing/create-checkout-session`, {
+  const response = await fetch(`${url}/api/v1/billing/create-checkout-session`, {
     method: 'POST',
     headers: {
       ...internalHeaders('owner-user'),
@@ -811,7 +811,7 @@ test('checkout route permits request with valid Supabase token', async () => {
     { fetchImpl, stripeClient }
   );
 
-  const response = await fetch(`${url}/api/billing/create-checkout-session`, {
+  const response = await fetch(`${url}/api/v1/billing/create-checkout-session`, {
     method: 'POST',
     headers: {
       Authorization: 'Bearer valid-supabase-token',
@@ -843,7 +843,7 @@ test('checkout route rejects request with missing authorization header', async (
     { fetchImpl }
   );
 
-  const response = await fetch(`${url}/api/billing/create-checkout-session`, {
+  const response = await fetch(`${url}/api/v1/billing/create-checkout-session`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -874,7 +874,7 @@ test('checkout route rejects request with invalid Supabase token', async () => {
     { fetchImpl }
   );
 
-  const response = await fetch(`${url}/api/billing/create-checkout-session`, {
+  const response = await fetch(`${url}/api/v1/billing/create-checkout-session`, {
     method: 'POST',
     headers: {
       Authorization: 'Bearer invalid-token',
@@ -1046,7 +1046,7 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
   assert.equal(body.duplicate, false);
   assert.equal(body.eventId, 'evt_1Tooe1LYQum3RaPO1NTqL56V');
 
-  const statusResponse = await fetch(`${url}/api/billing/subscription-status?userId=owner-user`, {
+  const statusResponse = await fetch(`${url}/api/v1/billing/subscription-status?userId=owner-user`, {
     headers: internalHeaders('owner-user'),
   });
   assert.equal(statusResponse.status, 200);

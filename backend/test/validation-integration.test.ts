@@ -41,7 +41,7 @@ describe('AI endpoint validation integration', () => {
   });
 
   it('rejects POST with missing prompt', async () => {
-    const res = await fetch(`${baseUrl}/api/ai/coach`, {
+    const res = await fetch(`${baseUrl}/api/v1/ai/coach`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({}),
@@ -53,7 +53,7 @@ describe('AI endpoint validation integration', () => {
   });
 
   it('rejects POST with empty prompt', async () => {
-    const res = await fetch(`${baseUrl}/api/ai/coach`, {
+    const res = await fetch(`${baseUrl}/api/v1/ai/coach`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: '' }),
@@ -64,7 +64,7 @@ describe('AI endpoint validation integration', () => {
   });
 
   it('rejects POST with whitespace-only prompt', async () => {
-    const res = await fetch(`${baseUrl}/api/ai/coach`, {
+    const res = await fetch(`${baseUrl}/api/v1/ai/coach`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: '   ' }),
@@ -73,7 +73,7 @@ describe('AI endpoint validation integration', () => {
   });
 
   it('rejects POST with oversized prompt', async () => {
-    const res = await fetch(`${baseUrl}/api/ai/coach`, {
+    const res = await fetch(`${baseUrl}/api/v1/ai/coach`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: 'x'.repeat(20_001) }),
@@ -84,7 +84,7 @@ describe('AI endpoint validation integration', () => {
   });
 
   it('rejects POST with invalid operation', async () => {
-    const res = await fetch(`${baseUrl}/api/ai/coach`, {
+    const res = await fetch(`${baseUrl}/api/v1/ai/coach`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: 'Test', operation: 'badOp' }),
@@ -95,7 +95,7 @@ describe('AI endpoint validation integration', () => {
   });
 
   it('accepts valid request', async () => {
-    const res = await fetch(`${baseUrl}/api/ai/coach`, {
+    const res = await fetch(`${baseUrl}/api/v1/ai/coach`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: 'Hello AI' }),
@@ -116,19 +116,19 @@ describe('Vocabulary endpoint validation integration', () => {
   });
 
   it('rejects GET with missing word', async () => {
-    const res = await fetch(`${baseUrl}/api/vocabulary/lookup?targetLang=tr`);
+    const res = await fetch(`${baseUrl}/api/v1/vocabulary/lookup?targetLang=tr`);
     assert.equal(res.status, 400);
     const body = await res.json();
     assert.equal(body.error.code, 'validation_error');
   });
 
   it('rejects GET with empty word', async () => {
-    const res = await fetch(`${baseUrl}/api/vocabulary/lookup?word=&targetLang=tr`);
+    const res = await fetch(`${baseUrl}/api/v1/vocabulary/lookup?word=&targetLang=tr`);
     assert.equal(res.status, 400);
   });
 
   it('rejects GET with invalid targetLang', async () => {
-    const res = await fetch(`${baseUrl}/api/vocabulary/lookup?word=hello&targetLang=toolong`);
+    const res = await fetch(`${baseUrl}/api/v1/vocabulary/lookup?word=hello&targetLang=toolong`);
     assert.equal(res.status, 400);
     const body = await res.json();
     assert.equal(body.error.code, 'validation_error');
@@ -154,7 +154,7 @@ describe('Vocabulary endpoint validation integration', () => {
     const customServer = app.listen(0);
     const customAddress = customServer.address();
     const port = typeof customAddress === 'object' && customAddress ? customAddress.port : 0;
-    const res = await fetch(`http://localhost:${port}/api/vocabulary/lookup?word=hello`);
+    const res = await fetch(`http://localhost:${port}/api/v1/vocabulary/lookup?word=hello`);
     assert.equal(res.status, 200);
     customServer.close();
   });
@@ -209,7 +209,7 @@ describe('Workspace endpoint validation integration', () => {
   });
 
   it('rejects PUT memory with missing key', async () => {
-    const res = await fetch(`${baseUrl}/api/workspaces/fake-id/memory`, {
+    const res = await fetch(`${baseUrl}/api/v1/workspaces/fake-id/memory`, {
       method: 'PUT',
       headers: authHeaders,
       body: JSON.stringify({ value: 'test' }),
@@ -220,7 +220,7 @@ describe('Workspace endpoint validation integration', () => {
   });
 
   it('rejects POST documents with missing docName', async () => {
-    const res = await fetch(`${baseUrl}/api/workspaces/fake-id/documents`, {
+    const res = await fetch(`${baseUrl}/api/v1/workspaces/fake-id/documents`, {
       method: 'POST',
       headers: authHeaders,
       body: JSON.stringify({ docContent: 'content' }),

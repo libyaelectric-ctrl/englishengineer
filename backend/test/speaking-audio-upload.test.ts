@@ -48,7 +48,7 @@ const internalHeaders = (userId = 'speaking-test-user', contentType?: string) =>
 
 test('audio-upload rejects unauthenticated requests', async () => {
   const url = await start(productionAuthEnvironment);
-  const response = await fetch(`${url}/api/speaking/audio-upload`, {
+  const response = await fetch(`${url}/api/v1/speaking/audio-upload`, {
     method: 'POST',
     // X-Forwarded-Proto is required here purely to avoid the app's
     // production HTTPS-redirect middleware (which runs before auth and
@@ -62,7 +62,7 @@ test('audio-upload rejects unauthenticated requests', async () => {
 
 test('audio-upload rejects unsupported content-type', async () => {
   const url = await start(productionAuthEnvironment);
-  const response = await fetch(`${url}/api/speaking/audio-upload`, {
+  const response = await fetch(`${url}/api/v1/speaking/audio-upload`, {
     method: 'POST',
     headers: internalHeaders('user-1', 'application/octet-stream'),
     body: Buffer.from([1, 2, 3, 4]),
@@ -74,7 +74,7 @@ test('audio-upload rejects unsupported content-type', async () => {
 
 test('audio-upload rejects empty audio body', async () => {
   const url = await start(productionAuthEnvironment);
-  const response = await fetch(`${url}/api/speaking/audio-upload`, {
+  const response = await fetch(`${url}/api/v1/speaking/audio-upload`, {
     method: 'POST',
     headers: internalHeaders('user-1', 'audio/webm'),
     body: Buffer.alloc(0),
@@ -88,7 +88,7 @@ test('audio-upload accepts a valid audio buffer and returns a playable URL', asy
   const url = await start(productionAuthEnvironment);
   const fakeAudioBytes = Buffer.from('fake-webm-audio-bytes-for-test');
 
-  const response = await fetch(`${url}/api/speaking/audio-upload`, {
+  const response = await fetch(`${url}/api/v1/speaking/audio-upload`, {
     method: 'POST',
     headers: internalHeaders('user-1', 'audio/webm'),
     body: fakeAudioBytes,
@@ -110,7 +110,7 @@ test('audio-upload rejects a body larger than the size limit', async () => {
   const url = await start(productionAuthEnvironment);
   const oversized = Buffer.alloc(16 * 1024 * 1024, 1); // 16MB > 15MB limit
 
-  const response = await fetch(`${url}/api/speaking/audio-upload`, {
+  const response = await fetch(`${url}/api/v1/speaking/audio-upload`, {
     method: 'POST',
     headers: internalHeaders('user-1', 'audio/webm'),
     body: oversized,

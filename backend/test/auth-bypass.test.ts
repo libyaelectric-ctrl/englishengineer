@@ -56,7 +56,7 @@ test('insecure dev auth is blocked in production by default', async () => {
 
   // Try to access an authenticated endpoint (e.g., AI Writing Review) using headers bypass
   const { cookie, token } = await fetchCsrfToken(url);
-  const response = await fetch(`${url}/api/ai/writing-review`, {
+  const response = await fetch(`${url}/api/v1/ai/writing-review`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ test('demo engineer profiles are blocked from creating checkout sessions in the 
   });
 
   const { cookie, token } = await fetchCsrfToken(url);
-  const response = await fetch(`${url}/api/billing/create-checkout-session`, {
+  const response = await fetch(`${url}/api/v1/billing/create-checkout-session`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ test('demo engineer profiles are blocked from creating billing portal sessions i
   });
 
   const { cookie, token } = await fetchCsrfToken(url);
-  const response = await fetch(`${url}/api/billing/create-customer-portal-session`, {
+  const response = await fetch(`${url}/api/v1/billing/create-customer-portal-session`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
