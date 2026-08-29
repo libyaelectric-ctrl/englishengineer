@@ -102,12 +102,24 @@ This document tracks known technical debt items that should be addressed in futu
 **Effort:** 1 day
 **Action:** Standardize error responses
 
+**Resolution (2026-08-29):** the backend was already standardized (ApiError +
+toErrorResponse + i18n error-code translation). The remaining frontend raw
+throws (grammar seed loaders, schema validation, pronunciation capability
+check) were converted to AppError with proper codes. 14 -> 0 raw throws in
+non-test source.
+
 ### TD-013: Add Performance Tests
 
 **Issue:** No performance benchmarks
 **Impact:** Performance regression
 **Effort:** 2-3 days
 **Action:** Add k6 performance tests
+
+**Resolution (2026-08-29):** k6 scripts with thresholds already existed under
+tests/load (normal p95<500, soak p95<400, spike p95<1000) but the Load Test
+workflow pointed at a non-existent script path and targeted the frontend host.
+Fixed: the workflow now runs tests/load/normal-load.js against the backend API
+(BASE_URL env, default: the Render backend).
 
 ### TD-014: Implement Feature Flags
 
@@ -116,12 +128,21 @@ This document tracks known technical debt items that should be addressed in futu
 **Effort:** 2-3 days
 **Action:** Add LaunchDarkly or similar
 
+**Resolution (2026-08-29):** implemented exactly as ADR-006 prescribed:
+config-based flags at src/shared/feature-flags (env override
+VITE_FLAG_<KEY>, deterministic rollout bucketing), no external vendor.
+
 ### TD-015: Add A/B Testing
 
 **Issue:** No A/B testing capability
 **Impact:** Product optimization
 **Effort:** 3-4 days
 **Action:** Implement A/B testing framework
+
+**Resolution (2026-08-29):** lightweight deterministic A/B assignments at
+src/shared/experiments/abTesting (hash bucketing shared with the flag system,
+control/treatment variants, rollout percentage). Exposure analytics can hook
+into the existing event bus when needed.
 
 ### TD-016: Slow test — `profile.engine.test.ts` 🟡
 
@@ -170,7 +191,7 @@ runtime (same pattern as `public/data/grammar/*.json`) closes this item for good
    "cockpit" UI is still wanted somewhere, or delete them.
    **Found during / resolved during:** 2026-08-10 repo audit (see `DENETIM_RAPORU.md`).
 
-### TD-018: No shared store-reset helper between E2E test files 🟡
+### TD-018: No shared store-reset helper between E2E test files ✅
 
 **Files:** `src/e2e/*.e2e.test.tsx`
 **Issue:** Zustand stores (`useAuthStore`, `useBillingStore`, and likely
@@ -196,17 +217,14 @@ that resets every Zustand store to its initial state, call it in a global
 `afterEach` (e.g. via `vitest.setup.ts` if one exists, or per-file). This
 removes an entire class of order-dependent flakiness at once, rather than
 patching one interaction at a time.
-**Found during:** 2026-08-10 repo audit (see `DENETIM_RAPORU.md`). Not fixed
-in this pass — the specific interaction was mitigated for the tests this
-audit touched (pinned `useBillingStore`/`useAuthStore` state explicitly
-where needed) but the systemic gap remains.
 **Found during:** 2026-08-10 repo audit (see `DENETIM_RAPORU.md`).
 
 **Resolution (2026-08-29):** shared reset helper added at
-`src/e2e/test-utils/resetStores.ts` and wired into the navigation and
-new-features vitest E2E suites via a top-level `afterEach` call.
+`src/e2e/test-utils/resetStores.ts` and wired into all 6 E2E suites
+(command-palette, critical-flows, landing-page, navigation, new-features,
+release-candidate) via top-level `afterEach` calls.
 
-### TD-019: Deduplicate /api + /api/v1 route registration
+### TD-019: Deduplicate /api + /api/v1 route registration ✅
 
 **File:** `backend/src/app.ts`
 **Issue:** `v1RouterAdapter` registers every route on both `/api/*` and
@@ -217,9 +235,9 @@ unreachable because the redirect middleware fires first, and they mainly exist
 so tests can call `/api/...` directly.
 **Impact:** Maintenance risk, confusing route table.
 **Effort:** 1-2 days (test callers must move to `/api/v1/*`).
-**Action:** Remove the dual registration, keep the redirect, migrate test
-callers to `/api/v1/*`.
-**Found during:** 2026-08-29 code review.
+**Action:** Removed the dual registration, removed the redirect middleware,
+migrated all route source files and test callers to `/api/v1/*`.
+**Resolved:** 2026-08-29.
 
 ### TD-020: Pre-commit hook swallows vitest exit code (pipe to tail)
 
@@ -238,36 +256,36 @@ then tail the log. Implemented on 2026-08-29.
 
 ## Tracking
 
-| ID     | Priority | Status      | Assigned | Due Date |
-| ------ | -------- | ----------- | -------- | -------- |
-| TD-001 | High     | ✅ Resolved | TBD      | TBD      |
-| TD-002 | High     | ✅ Resolved | TBD      | TBD      |
-| TD-003 | High     | ✅ Resolved | TBD      | TBD      |
-| TD-004 | Medium   | ✅ Resolved | TBD      | TBD      |
-| TD-005 | Medium   | 🟡 Open     | TBD      | TBD      |
-| TD-006 | Medium   | 🟡 Partial  | TBD      | TBD      |
-| TD-007 | Medium   | ✅ Resolved | TBD      | TBD      |
-| TD-008 | Medium   | 🟡 Open     | TBD      | TBD      |
-| TD-009 | Low      | 🟡 Open     | TBD      | TBD      |
-| TD-010 | Low      | 🟡 Open     | TBD      | TBD      |
-| TD-011 | Low      | ✅ Resolved | TBD      | TBD      |
-| TD-012 | Low      | 🟡 Open     | TBD      | TBD      |
-| TD-013 | Low      | 🟡 Open     | TBD      | TBD      |
-| TD-014 | Low      | 🟡 Open     | TBD      | TBD      |
-| TD-015 | Low      | 🟡 Open     | TBD      | TBD      |
-| TD-016 | Medium   | 🟡 Open     | TBD      | TBD      |
-| TD-017 | Low      | ✅ Resolved | TBD      | TBD      |
-| TD-018 | Medium   | Resolved    | TBD      | TBD      |
-| TD-019 | Medium   | Open        | TBD      | TBD      |
-| TD-020 | Medium   | Resolved    | TBD      | TBD      |
+| ID     | Priority | Status      | Assigned | Due Date   |
+| ------ | -------- | ----------- | -------- | ---------- |
+| TD-001 | High     | ✅ Resolved | TBD      | TBD        |
+| TD-002 | High     | ✅ Resolved | TBD      | TBD        |
+| TD-003 | High     | ✅ Resolved | TBD      | TBD        |
+| TD-004 | Medium   | ✅ Resolved | TBD      | TBD        |
+| TD-005 | Medium   | 🟡 Open     | TBD      | TBD        |
+| TD-006 | Medium   | 🟡 Partial  | TBD      | TBD        |
+| TD-007 | Medium   | ✅ Resolved | TBD      | TBD        |
+| TD-008 | Medium   | 🟡 Open     | TBD      | TBD        |
+| TD-009 | Low      | 🟡 Open     | TBD      | TBD        |
+| TD-010 | Low      | 🟡 Open     | TBD      | TBD        |
+| TD-011 | Low      | ✅ Resolved | TBD      | TBD        |
+| TD-012 | Low      | 🟡 Open     | TBD      | TBD        |
+| TD-013 | Low      | 🟡 Open     | TBD      | TBD        |
+| TD-014 | Low      | 🟡 Open     | TBD      | TBD        |
+| TD-015 | Low      | 🟡 Open     | TBD      | TBD        |
+| TD-016 | Medium   | 🟡 Open     | TBD      | TBD        |
+| TD-017 | Low      | ✅ Resolved | TBD      | TBD        |
+| TD-018 | Medium   | Resolved    | TBD      | TBD        |
+| TD-019 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-020 | Medium   | Resolved    | TBD      | TBD        |
 
 ## Stats
 
 - **Total Items:** 17
-- **Resolved:** 9 (53%)
+- **Resolved:** 10 (59%)
 - **Partially Resolved:** 1 (6%)
-- **Open:** 7 (41%)
+- **Open:** 6 (35%)
 
 ## Last Updated
 
-- **Date:** 2026-07-27
+- **Date:** 2026-08-29

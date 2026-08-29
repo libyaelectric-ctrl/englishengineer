@@ -1,3 +1,5 @@
+import { AppError, ErrorCode } from '@/core/errors';
+
 import { CEFR_LEVELS } from '@/shared/types/domain.types';
 
 import type { GrammarRule } from './grammar.types';
@@ -29,7 +31,10 @@ export const isGrammarRule = (value: unknown): value is GrammarRule => {
 export const assertGrammarRules = (values: unknown[]): GrammarRule[] => {
   const invalidIndex = values.findIndex((value) => !isGrammarRule(value));
   if (invalidIndex >= 0) {
-    throw new Error(`Invalid grammar rule at index ${invalidIndex}.`);
+    throw new AppError({
+      code: ErrorCode.VALIDATION,
+      message: `Invalid grammar rule at index ${invalidIndex}.`,
+    });
   }
   return values as GrammarRule[];
 };

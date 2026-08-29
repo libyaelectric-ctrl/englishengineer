@@ -1,3 +1,5 @@
+import { AppError, ErrorCode } from '@/core/errors';
+
 import { logger } from '@/shared/logger';
 
 export interface PronunciationResult {
@@ -37,7 +39,7 @@ export const PronunciationService = {
 
   async speak(word: string, rate = 0.9): Promise<void> {
     if (!('speechSynthesis' in window)) {
-      throw new Error('Speech synthesis not supported');
+      throw new AppError({ code: ErrorCode.UNKNOWN, message: 'Speech synthesis not supported' });
     }
 
     // Detect language: Turkish characters or Turkish-specific words
