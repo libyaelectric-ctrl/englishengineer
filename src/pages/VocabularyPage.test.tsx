@@ -122,12 +122,16 @@ describe('VocabularyPage menu', () => {
       // The quiz-complete UI can render a beat before the store flushes the
       // batched progress writes; retry the state assertions instead of
       // reading the store synchronously (order-dependent flake, see TD-018).
-      await waitFor(() => {
+      await waitFor(
+      () => {
         const statuses = Object.values(VocabularyMenuService.getState().progress);
         expect(statuses.filter((word) => word.status === 'Mastered')).toHaveLength(1);
         expect(statuses.filter((word) => word.status === 'Struggling')).toHaveLength(0);
         expect(statuses.filter((word) => word.status === 'Learned')).toHaveLength(99);
-      });
+      },
+      // CI runner'larinda store flush'i 1s varsayilani asabiliyor (TD-018)
+      { timeout: 10000 }
+      );
     } finally {
       randomSpy.mockRestore();
     }
