@@ -9,6 +9,7 @@ import express, {
   type Response,
 } from 'express';
 import helmet from 'helmet';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import type Stripe from 'stripe';
 
@@ -562,26 +563,60 @@ const registerRoutes = (
   });
 
   app.get('/api-docs.json', (_req: Request, res: Response) => res.json(swaggerSpec));
+  // Self-hosted Swagger UI: assets are served same-origin from
+  // /api-docs-assets (no CDN), and the initializer is an external script, so
+  // the page works under the global script-src 'self' CSP.
+  const nodeRequire = createRequire(import.meta.url);
+  const swaggerUiDistPath = path.dirname(nodeRequire.resolve('swagger-ui-dist/package.json'));
+
+  app.get('/api-docs-assets/swagger-initializer.js', (_req: Request, res: Response) => {
+    res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+    res.send(
+      [
+        'window.onload = function () {',
+        '  window.ui = SwaggerUIBundle({',
+        "    url: '/api-docs.json',",
+        "    dom_id: '#swagger-ui',",
+        '    presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],',
+        "    layout: 'StandaloneLayout',",
+        '  });',
+        '};',
+      ].join('\n')
+    );
+  });
+  app.use('/api-docs-assets', express.static(swaggerUiDistPath));
+
   app.get('/api-docs', (_req: Request, res: Response) => {
-    // /api-docs loads Swagger UI from unpkg with an inline bootstrap script; the
-    // global CSP (script-src 'self') would break it. Relax the policy for this
-    // docs page only.
     res.setHeader(
       'Content-Security-Policy',
       [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' https://unpkg.com",
-        "style-src 'self' 'unsafe-inline' https://unpkg.com",
-        "img-src 'self' data: https:",
+        "script-src 'self'",
+        "style-src 'self'",
+        "img-src 'self' data:",
         "connect-src 'self'",
-        "font-src 'self' https://fonts.gstatic.com",
         "object-src 'none'",
         "frame-ancestors 'none'",
         "base-uri 'self'",
       ].join('; ')
     );
     res.send(
-      `<!DOCTYPE html><html><head><title>EngineerOS API Docs</title><link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"></head><body><div id="swagger-ui"></div><script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script><script>SwaggerUIBundle({url:'/api-docs.json',dom_id:'#swagger-ui'})</script></body></html>`
+      [
+        '<!DOCTYPE html>',
+        '<html lang="en">',
+        '<head>',
+        '<meta charset="utf-8" />',
+        '<title>EngineerOS API Docs</title>',
+        '<link rel="stylesheet" href="/api-docs-assets/swagger-ui.css" />',
+        '</head>',
+        '<body>',
+        '<div id="swagger-ui"></div>',
+        '<script src="/api-docs-assets/swagger-ui-bundle.js"></script>',
+        '<script src="/api-docs-assets/swagger-ui-standalone-preset.js"></script>',
+        '<script src="/api-docs-assets/swagger-initializer.js"></script>',
+        '</body>',
+        '</html>',
+      ].join('')
     );
   });
   app.post(
