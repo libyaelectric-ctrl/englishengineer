@@ -65,7 +65,7 @@ This document tracks known technical debt items that should be addressed in futu
 **Resolution (2026-08-29):** api.integration.test.ts (6 tests: health,
 AI, CSRF, 404 handling, API docs) + api.extended.integration.test.ts
 (31 tests: vocabulary, reading, writing, listening, speaking, grammar,
-billing, progress, webhooks). 83/83 backend tests pass.
+billing, progress, webhooks). Backend suite: 414/414 pass (also verified: vocabulary + translation seed files served correctly in production with ETag revalidation + edge cache).
 
 ## Medium Priority
 
