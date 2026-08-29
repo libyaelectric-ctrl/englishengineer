@@ -38,7 +38,7 @@ This document tracks known technical debt items that should be addressed in futu
 
 **Issue:** Some dependencies outdated
 **Impact:** Security, features
-**Status:** Partially Resolved — 7 patch/minor updates merged. Major versions (eslint 10, vite 8, typescript 7, stripe 22) require dedicated upgrade sprint.
+**Status:** Partially Resolved — 13 Dependabot PRs merged including stripe 18→22 and storybook 8→10. Remaining major versions (eslint 10, vite 8, typescript 7) require dedicated upgrade sprint.
 
 ### TD-007: Improve Type Safety ✅
 
