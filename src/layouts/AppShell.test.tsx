@@ -112,9 +112,15 @@ describe('AppShell', () => {
   it('renders sidebar, main content outlet, and bottom navigation', async () => {
     renderShell();
 
-    await waitFor(() => {
-      expect(screen.getByTestId('app-sidebar')).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByTestId('app-sidebar')).toBeInTheDocument();
+      },
+      // Lazy chunks resolve slowly under coverage instrumentation and on busy
+      // CI runners; the 1s default made this test intermittently see an empty
+      // shell (empty body, no app-sidebar).
+      { timeout: 5000 }
+    );
     expect(screen.getByText('Main Content')).toBeInTheDocument();
     expect(screen.getByText('Mobile Bottom Nav')).toBeInTheDocument();
     expect(screen.getByText('Right Sidebar')).toBeInTheDocument();
@@ -123,9 +129,12 @@ describe('AppShell', () => {
   it('renders EngVox branding in sidebar', async () => {
     renderShell();
 
-    await waitFor(() => {
-      expect(screen.getByText('EngVox')).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByText('EngVox')).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
   });
 
   it('renders skip to content link', () => {

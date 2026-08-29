@@ -37,7 +37,19 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html', 'json-summary'],
       include: ['src/**/*.ts', 'src/**/*.tsx'],
-      exclude: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'src/test/**'],
+      exclude: [
+        'src/**/*.test.ts',
+        'src/**/*.test.tsx',
+        'src/test/**',
+        // Bulk machine-generated content data: instrumenting the ~22 MB
+        // vocabulary seed files and the 785 KB static translation fallback
+        // made coverage runs impractically slow (and blew through CI job
+        // timeouts). Well-tested small data modules stay instrumented.
+        'src/data/**',
+        'src/**/by-level/**',
+        'src/features/localization/data/**',
+        'src/features/localization/localization.data.ts',
+      ],
       // Thresholds aligned to actual measured coverage (2026-08-18 run).
       // Each feature-area threshold is set ~5 pp below its measured minimum
       // to catch regressions while letting the suite pass.

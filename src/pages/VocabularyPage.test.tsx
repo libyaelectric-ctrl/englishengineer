@@ -119,10 +119,15 @@ describe('VocabularyPage menu', () => {
       fireEvent.click(screen.getByRole('button', { name: 'vocabulary.finishQuiz' }));
 
       await screen.findByText('vocabulary.quizComplete');
-      const statuses = Object.values(VocabularyMenuService.getState().progress);
-      expect(statuses.filter((word) => word.status === 'Mastered')).toHaveLength(1);
-      expect(statuses.filter((word) => word.status === 'Struggling')).toHaveLength(0);
-      expect(statuses.filter((word) => word.status === 'Learned')).toHaveLength(99);
+      // The quiz-complete UI can render a beat before the store flushes the
+      // batched progress writes; retry the state assertions instead of
+      // reading the store synchronously (order-dependent flake, see TD-018).
+      await waitFor(() => {
+        const statuses = Object.values(VocabularyMenuService.getState().progress);
+        expect(statuses.filter((word) => word.status === 'Mastered')).toHaveLength(1);
+        expect(statuses.filter((word) => word.status === 'Struggling')).toHaveLength(0);
+        expect(statuses.filter((word) => word.status === 'Learned')).toHaveLength(99);
+      });
     } finally {
       randomSpy.mockRestore();
     }
