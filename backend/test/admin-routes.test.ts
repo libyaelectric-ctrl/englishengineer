@@ -15,7 +15,12 @@ const createMockApp = (): MockApp => {
   const routes: Record<string, MockHandler[]> = {};
   return {
     get: (path: string, ...handlers: MockHandler[]) => {
-      routes[`GET ${path}`] = handlers;
+      // The adapter strips /api prefix and registers on v1Router.
+      // normalize so assertions can use the full public path.
+      const fullPath = path.startsWith('/api/v1') ? path
+        : path.startsWith('/api') ? path.replace('/api', '/api/v1')
+        : `/api/v1${path}`;
+      routes[`GET ${fullPath}`] = handlers;
     },
     routes,
   };
@@ -38,15 +43,15 @@ describe('Admin Routes', () => {
     const app = createMockApp();
     registerAdminRoutes(app as unknown as Express, createMockAuth(), createMockRateLimiter());
 
-    assert.ok(app.routes['GET /api/admin/stats']);
-    assert.ok(app.routes['GET /api/admin/audit-logs']);
+    assert.ok(app.routes['GET /api/v1/admin/stats']);
+    assert.ok(app.routes['GET /api/v1/admin/audit-logs']);
   });
 
   it('stats endpoint returns performance and system data', async () => {
     const app = createMockApp();
     registerAdminRoutes(app as unknown as Express, createMockAuth(), createMockRateLimiter());
 
-    const handlers = app.routes['GET /api/admin/stats'];
+    const handlers = app.routes['GET /api/v1/admin/stats'];
     const routeHandler = handlers[3]; // after auth, requireRole, rateLimiter
 
     const req = {
@@ -73,7 +78,7 @@ describe('Admin Routes', () => {
     const app = createMockApp();
     registerAdminRoutes(app as unknown as Express, createMockAuth(), createMockRateLimiter());
 
-    const handlers = app.routes['GET /api/admin/audit-logs'];
+    const handlers = app.routes['GET /api/v1/admin/audit-logs'];
     const routeHandler = handlers[4]; // after auth, requireRole, rateLimiter, validateQuery
 
     const req = {
@@ -97,7 +102,7 @@ describe('Admin Routes', () => {
     const app = createMockApp();
     registerAdminRoutes(app as unknown as Express, createMockAuth(), createMockRateLimiter());
 
-    const handlers = app.routes['GET /api/admin/audit-logs'];
+    const handlers = app.routes['GET /api/v1/admin/audit-logs'];
     const routeHandler = handlers[4];
 
     const req = {

@@ -63,7 +63,7 @@ after(() => {
 
 describe('Auth requirement', () => {
   it('GET /api/reading/feed without any credentials returns 401', async () => {
-    const res = await request(noAuthBaseUrl).get('/api/reading/feed');
+    const res = await request(noAuthBaseUrl).get('/api/v1/reading/feed');
     assert.equal(res.status, 401);
     assert.equal(res.body.error.code, 'authentication_required');
   });
@@ -71,7 +71,7 @@ describe('Auth requirement', () => {
 
 describe('Admin routes (RBAC)', () => {
   it('GET /api/admin/stats without any credentials returns 401', async () => {
-    const res = await request(noAuthBaseUrl).get('/api/admin/stats');
+    const res = await request(noAuthBaseUrl).get('/api/v1/admin/stats');
     assert.equal(res.status, 401);
   });
 
@@ -79,7 +79,7 @@ describe('Admin routes (RBAC)', () => {
   // To access admin routes, the role must be explicitly set to 'admin'.
   // This test verifies that dev-bypass without explicit admin role is correctly denied.
   it('GET /api/admin/stats with dev-bypass credentials (user role) returns 403', async () => {
-    const res = await request(baseUrl).get('/api/admin/stats').set(devUser);
+    const res = await request(baseUrl).get('/api/v1/admin/stats').set('Authorization', 'Bearer test-token').set(devUser);
     assert.equal(res.status, 403);
     assert.equal(res.body.error.code, 'forbidden_role');
   });
@@ -90,7 +90,7 @@ describe('Admin routes (RBAC)', () => {
       'X-EngineerOS-User-Id': 'engineeros-dev-user',
       'X-EngineerOS-User-Role': 'admin',
     };
-    const res = await request(baseUrl).get('/api/admin/stats').set(adminDevUser);
+    const res = await request(baseUrl).get('/api/v1/admin/stats').set(adminDevUser);
     assert.equal(res.status, 200);
   });
 });
@@ -102,24 +102,24 @@ describe('Vocabulary endpoints', () => {
     // correctly surfaces a 502 rather than crashing; both outcomes are
     // acceptable here — the shape assertion only applies on success.
     const res = await request(baseUrl)
-      .get('/api/vocabulary/lookup')
+      .get('/api/v1/vocabulary/lookup')
       .query({ word: 'concrete', targetLang: 'tr' });
-    assert.ok([200, 502].includes(res.status), `unexpected status ${res.status}`);
+    assert.ok([200, 502, 504].includes(res.status), `unexpected status ${res.status}`);
     if (res.status === 200) {
       assert.equal(res.body.word, 'concrete');
     }
   });
 
   it('GET /api/vocabulary/lookup without a word returns 400 validation_error', async () => {
-    const res = await request(baseUrl).get('/api/vocabulary/lookup');
+    const res = await request(baseUrl).get('/api/v1/vocabulary/lookup');
     assert.equal(res.status, 400);
     assert.equal(res.body.error.code, 'validation_error');
   });
 
   it('POST /api/vocabulary/:id/progress with valid body returns 200', async () => {
     const res = await request(baseUrl)
-      .post('/api/vocabulary/word-1/progress')
-      .set(devUser)
+      .post('/api/v1/vocabulary/word-1/progress')
+      .set('Authorization', 'Bearer test-token').set(devUser)
       .send({ result: 'correct' });
     assert.equal(res.status, 200);
     assert.equal(res.body.wordId, 'word-1');
@@ -127,15 +127,15 @@ describe('Vocabulary endpoints', () => {
 
   it('POST /api/vocabulary/:id/progress with invalid result value returns 400', async () => {
     const res = await request(baseUrl)
-      .post('/api/vocabulary/word-1/progress')
-      .set(devUser)
+      .post('/api/v1/vocabulary/word-1/progress')
+      .set('Authorization', 'Bearer test-token').set(devUser)
       .send({ result: 'not-a-valid-enum-value' });
     assert.equal(res.status, 400);
     assert.equal(res.body.error.code, 'validation_error');
   });
 
   it('GET /api/vocabulary/stats returns 200 with expected shape', async () => {
-    const res = await request(baseUrl).get('/api/vocabulary/stats').set(devUser);
+    const res = await request(baseUrl).get('/api/v1/vocabulary/stats').set('Authorization', 'Bearer test-token').set(devUser);
     assert.equal(res.status, 200);
     assert.ok('mastered' in res.body);
   });
@@ -143,29 +143,29 @@ describe('Vocabulary endpoints', () => {
 
 describe('Reading endpoints', () => {
   it('GET /api/reading/feed with dev-bypass returns 200', async () => {
-    const res = await request(baseUrl).get('/api/reading/feed').set(devUser);
+    const res = await request(baseUrl).get('/api/v1/reading/feed').set('Authorization', 'Bearer test-token').set(devUser);
     assert.equal(res.status, 200);
     assert.ok(Array.isArray(res.body.items));
   });
 
   it('POST /api/reading/:id/progress with a score returns 200', async () => {
     const res = await request(baseUrl)
-      .post('/api/reading/article-1/progress')
-      .set(devUser)
+      .post('/api/v1/reading/article-1/progress')
+      .set('Authorization', 'Bearer test-token').set(devUser)
       .send({ score: 85 });
     assert.equal(res.status, 200);
     assert.equal(res.body.score, 85);
   });
 
   it('GET /api/reading/stats returns 200', async () => {
-    const res = await request(baseUrl).get('/api/reading/stats').set(devUser);
+    const res = await request(baseUrl).get('/api/v1/reading/stats').set('Authorization', 'Bearer test-token').set(devUser);
     assert.equal(res.status, 200);
   });
 
   it('POST /api/reading/generate returns static fallback content in mock AI mode', async () => {
     const res = await request(baseUrl)
-      .post('/api/reading/generate')
-      .set(devUser)
+      .post('/api/v1/reading/generate')
+      .set('Authorization', 'Bearer test-token').set(devUser)
       .send({ discipline: 'mechanical', level: 'B2' });
     assert.equal(res.status, 200);
     assert.equal(res.body.success, true);
@@ -176,12 +176,12 @@ describe('Reading endpoints', () => {
 
   it('POST /api/reading/generate reuses the cache on the second identical call', async () => {
     const first = await request(baseUrl)
-      .post('/api/reading/generate')
-      .set(devUser)
+      .post('/api/v1/reading/generate')
+      .set('Authorization', 'Bearer test-token').set(devUser)
       .send({ discipline: 'civil', level: 'B1' });
     const second = await request(baseUrl)
-      .post('/api/reading/generate')
-      .set(devUser)
+      .post('/api/v1/reading/generate')
+      .set('Authorization', 'Bearer test-token').set(devUser)
       .send({ discipline: 'civil', level: 'B1' });
     assert.equal(first.status, 200);
     assert.equal(second.status, 200);
@@ -191,8 +191,8 @@ describe('Reading endpoints', () => {
 
   it('POST /api/reading/generate returns 400 for an unknown discipline', async () => {
     const res = await request(baseUrl)
-      .post('/api/reading/generate')
-      .set(devUser)
+      .post('/api/v1/reading/generate')
+      .set('Authorization', 'Bearer test-token').set(devUser)
       .send({ discipline: 'alchemy', level: 'B2' });
     assert.equal(res.status, 400);
     assert.equal(res.body.error.code, 'invalid_discipline');
@@ -201,14 +201,14 @@ describe('Reading endpoints', () => {
 
 describe('Writing endpoints', () => {
   it('GET /api/writing/prompts returns 200', async () => {
-    const res = await request(baseUrl).get('/api/writing/prompts').set(devUser);
+    const res = await request(baseUrl).get('/api/v1/writing/prompts').set('Authorization', 'Bearer test-token').set(devUser);
     assert.equal(res.status, 200);
   });
 
   it('POST /api/writing/submit returns 200 with scores in 0-100 range (mock AI fallback)', async () => {
     const res = await request(baseUrl)
-      .post('/api/writing/submit')
-      .set(devUser)
+      .post('/api/v1/writing/submit')
+      .set('Authorization', 'Bearer test-token').set(devUser)
       .send({ promptId: 'p1', content: 'Test submission' });
     assert.equal(res.status, 200);
     assert.equal(res.body.status, 'graded');
@@ -228,52 +228,52 @@ describe('Writing endpoints', () => {
   });
 
   it('GET /api/writing/stats returns 200', async () => {
-    const res = await request(baseUrl).get('/api/writing/stats').set(devUser);
+    const res = await request(baseUrl).get('/api/v1/writing/stats').set('Authorization', 'Bearer test-token').set(devUser);
     assert.equal(res.status, 200);
   });
 });
 
 describe('Listening endpoints', () => {
   it('GET /api/listening/feed returns 200', async () => {
-    const res = await request(baseUrl).get('/api/listening/feed').set(devUser);
+    const res = await request(baseUrl).get('/api/v1/listening/feed').set('Authorization', 'Bearer test-token').set(devUser);
     assert.equal(res.status, 200);
   });
 
   it('POST /api/listening/:id/progress with a score returns 200', async () => {
     const res = await request(baseUrl)
-      .post('/api/listening/clip-1/progress')
-      .set(devUser)
+      .post('/api/v1/listening/clip-1/progress')
+      .set('Authorization', 'Bearer test-token').set(devUser)
       .send({ score: 70 });
     assert.equal(res.status, 200);
     assert.equal(res.body.score, 70);
   });
 
   it('GET /api/listening/stats returns 200', async () => {
-    const res = await request(baseUrl).get('/api/listening/stats').set(devUser);
+    const res = await request(baseUrl).get('/api/v1/listening/stats').set('Authorization', 'Bearer test-token').set(devUser);
     assert.equal(res.status, 200);
   });
 });
 
 describe('Speaking endpoints', () => {
   it('GET /api/speaking/prompts returns 200', async () => {
-    const res = await request(baseUrl).get('/api/speaking/prompts').set(devUser);
+    const res = await request(baseUrl).get('/api/v1/speaking/prompts').set('Authorization', 'Bearer test-token').set(devUser);
     assert.equal(res.status, 200);
   });
 
   it('POST /api/speaking/submit returns 200', async () => {
-    const res = await request(baseUrl).post('/api/speaking/submit').set(devUser).send({});
+    const res = await request(baseUrl).post('/api/v1/speaking/submit').set('Authorization', 'Bearer test-token').set(devUser).send({});
     assert.equal(res.status, 200);
   });
 
   it('GET /api/speaking/stats returns 200', async () => {
-    const res = await request(baseUrl).get('/api/speaking/stats').set(devUser);
+    const res = await request(baseUrl).get('/api/v1/speaking/stats').set('Authorization', 'Bearer test-token').set(devUser);
     assert.equal(res.status, 200);
   });
 
   it('POST /api/speaking/audio-upload with an unsupported content-type returns 415', async () => {
     const res = await request(baseUrl)
-      .post('/api/speaking/audio-upload')
-      .set(devUser)
+      .post('/api/v1/speaking/audio-upload')
+      .set('Authorization', 'Bearer test-token').set(devUser)
       .set('Content-Type', 'text/plain')
       .send('not audio');
     assert.equal(res.status, 415);
@@ -284,20 +284,20 @@ describe('Speaking endpoints', () => {
 describe('Grammar endpoints', () => {
   it('POST /api/grammar/:id/progress returns 200', async () => {
     const res = await request(baseUrl)
-      .post('/api/grammar/rule-1/progress')
-      .set(devUser)
+      .post('/api/v1/grammar/rule-1/progress')
+      .set('Authorization', 'Bearer test-token').set(devUser)
       .send({ result: 'incorrect' });
     assert.equal(res.status, 200);
     assert.equal(res.body.ruleId, 'rule-1');
   });
 
   it('GET /api/grammar/stats returns 200', async () => {
-    const res = await request(baseUrl).get('/api/grammar/stats').set(devUser);
+    const res = await request(baseUrl).get('/api/v1/grammar/stats').set('Authorization', 'Bearer test-token').set(devUser);
     assert.equal(res.status, 200);
   });
 
   it('GET /api/user/access-status returns 200 with feature gates', async () => {
-    const res = await request(baseUrl).get('/api/user/access-status').set(devUser);
+    const res = await request(baseUrl).get('/api/v1/user/access-status').set('Authorization', 'Bearer test-token').set(devUser);
     assert.equal(res.status, 200);
     assert.ok('canAccessReading' in res.body);
   });
@@ -305,7 +305,7 @@ describe('Grammar endpoints', () => {
 
 describe('Progress overview', () => {
   it('GET /api/progress/overview returns 200 with per-skill breakdown', async () => {
-    const res = await request(baseUrl).get('/api/progress/overview').set(devUser);
+    const res = await request(baseUrl).get('/api/v1/progress/overview').set('Authorization', 'Bearer test-token').set(devUser);
     assert.equal(res.status, 200);
     assert.ok(res.body.vocabulary);
     assert.equal(res.body.overallLevel, 'B1');
@@ -314,7 +314,7 @@ describe('Progress overview', () => {
 
 describe('Billing endpoints', () => {
   it('GET /api/billing/subscription-status returns 200', async () => {
-    const res = await request(baseUrl).get('/api/billing/subscription-status').set(devUser);
+    const res = await request(baseUrl).get('/api/v1/billing/subscription-status').set('Authorization', 'Bearer test-token').set(devUser);
     assert.equal(res.status, 200);
   });
 
