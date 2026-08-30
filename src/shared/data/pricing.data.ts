@@ -9,6 +9,8 @@ export interface PricingTier {
   name: string;
   monthlyPrice: number;
   annualPrice: number;
+  originalMonthlyPrice?: number;
+  originalAnnualPrice?: number;
   description: string;
   audience: string;
   bestFor: string;
@@ -23,8 +25,10 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'junior',
     name: 'Junior',
-    monthlyPrice: 29,
-    annualPrice: 23,
+    monthlyPrice: 19,
+    annualPrice: 15,
+    originalMonthlyPrice: 29,
+    originalAnnualPrice: 23,
     description: 'Essential learning core for daily engineering English practice.',
     audience: 'Getting started with discipline-specific vocabulary',
     bestFor: 'Individual engineers starting their journey',
@@ -50,8 +54,10 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'senior',
     name: 'Senior',
-    monthlyPrice: 59,
-    annualPrice: 47,
+    monthlyPrice: 39,
+    annualPrice: 31,
+    originalMonthlyPrice: 59,
+    originalAnnualPrice: 47,
     description: 'Expand your skills with reading, writing, and translation.',
     audience: 'Engineers who read and write technical documents',
     bestFor: 'Professional engineers improving documentation skills',
@@ -77,8 +83,10 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'specialist',
     name: 'Specialist',
-    monthlyPrice: 79,
-    annualPrice: 63,
+    monthlyPrice: 49,
+    annualPrice: 39,
+    originalMonthlyPrice: 79,
+    originalAnnualPrice: 63,
     description: 'Add speaking and listening to complete your communication skills.',
     audience: 'Engineers in international project meetings',
     bestFor: 'Engineers in global team environments',
@@ -104,8 +112,10 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'master',
     name: 'Master',
-    monthlyPrice: 99,
-    annualPrice: 79,
+    monthlyPrice: 59,
+    annualPrice: 47,
+    originalMonthlyPrice: 99,
+    originalAnnualPrice: 79,
     description: 'Full access: all modules including AI Copilot and tools.',
     audience: 'Engineers seeking complete professional mastery',
     bestFor: 'Senior engineers and technical leads',

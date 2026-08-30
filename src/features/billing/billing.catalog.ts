@@ -4,6 +4,7 @@ export interface CommercialPlanPreview {
   id: CommercialPlanId;
   name: string;
   price: string;
+  originalPrice?: string;
   cadence: string;
   audience: string;
   bestFor: string;
@@ -27,7 +28,8 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
   {
     id: 'junior',
     name: 'Junior',
-    price: '$29',
+    price: '$19',
+    originalPrice: '$29',
     cadence: 'per month',
     audience: 'Essential learning core for daily engineering English practice.',
     bestFor: 'Getting started with discipline-specific vocabulary',
@@ -54,7 +56,8 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
   {
     id: 'senior',
     name: 'Senior',
-    price: '$59',
+    price: '$39',
+    originalPrice: '$59',
     cadence: 'per month',
     audience: 'Expand your skills with reading, writing, and translation.',
     bestFor: 'Engineers who read and write technical documents',
@@ -82,7 +85,8 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
   {
     id: 'specialist',
     name: 'Specialist',
-    price: '$79',
+    price: '$49',
+    originalPrice: '$79',
     cadence: 'per month',
     audience: 'Add speaking and listening to complete your communication skills.',
     bestFor: 'Engineers in international project meetings',
@@ -110,7 +114,8 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
   {
     id: 'master',
     name: 'Master',
-    price: '$99',
+    price: '$59',
+    originalPrice: '$99',
     cadence: 'per month',
     audience: 'Full access to all modules including AI Copilot and tools.',
     bestFor: 'Engineers who want complete professional mastery',

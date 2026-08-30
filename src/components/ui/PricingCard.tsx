@@ -198,12 +198,27 @@ export const PricingCard = ({
           </div>
 
           <div className="flex items-baseline gap-1.5 mb-2">
+            {tier.originalMonthlyPrice || tier.originalAnnualPrice ? (
+              <span className="text-sm line-through text-muted-copy/60 font-mono">
+                {isTeam
+                  ? '$$$$'
+                  : formatPrice(
+                      isAnnual ? (tier.originalAnnualPrice ?? price) : (tier.originalMonthlyPrice ?? price),
+                      currency
+                    )}
+              </span>
+            ) : null}
             <span className="text-3xl font-extrabold tracking-tight text-foreground font-mono">
               {isTeam ? '$$$$' : formatPrice(price, currency)}
             </span>
             <span className="text-xs text-muted-copy">
               {isAnnual ? copy.perMonthAnnual : copy.perMonth}
             </span>
+            {tier.originalMonthlyPrice || tier.originalAnnualPrice ? (
+              <span className="ml-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                SAVE {Math.round(((isAnnual ? (tier.originalAnnualPrice ?? price) : (tier.originalMonthlyPrice ?? price)) - price) / (isAnnual ? (tier.originalAnnualPrice ?? price) : (tier.originalMonthlyPrice ?? price)) * 100)}%
+              </span>
+            ) : null}
           </div>
 
           <p className="text-xs text-muted-copy leading-relaxed min-h-[48px]">
