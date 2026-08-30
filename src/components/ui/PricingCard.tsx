@@ -197,27 +197,34 @@ export const PricingCard = ({
             </div>
           </div>
 
-          <div className="flex items-baseline gap-1.5 mb-2">
-            {tier.originalMonthlyPrice || tier.originalAnnualPrice ? (
-              <span className="text-sm line-through text-muted-copy/60 font-mono">
-                {isTeam
-                  ? '$$$$'
-                  : formatPrice(
-                      isAnnual ? (tier.originalAnnualPrice ?? price) : (tier.originalMonthlyPrice ?? price),
-                      currency
-                    )}
+          <div className="mb-2">
+            <div className="flex items-baseline gap-1.5">
+              {tier.originalMonthlyPrice || tier.originalAnnualPrice ? (
+                <span className="text-sm line-through text-muted-copy/60 font-mono">
+                  {isTeam
+                    ? '$$$$'
+                    : formatPrice(
+                        isAnnual ? (tier.originalMonthlyPrice ?? price) : (tier.originalMonthlyPrice ?? price),
+                        currency
+                      )}
+                </span>
+              ) : null}
+              <span className="text-3xl font-extrabold tracking-tight text-foreground font-mono">
+                {isTeam ? '$$$$' : formatPrice(price, currency)}
               </span>
-            ) : null}
-            <span className="text-3xl font-extrabold tracking-tight text-foreground font-mono">
-              {isTeam ? '$$$$' : formatPrice(price, currency)}
-            </span>
-            <span className="text-xs text-muted-copy">
-              {isAnnual ? copy.perMonthAnnual : copy.perMonth}
-            </span>
-            {tier.originalMonthlyPrice || tier.originalAnnualPrice ? (
-              <span className="ml-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                SAVE {Math.round(((isAnnual ? (tier.originalAnnualPrice ?? price) : (tier.originalMonthlyPrice ?? price)) - price) / (isAnnual ? (tier.originalAnnualPrice ?? price) : (tier.originalMonthlyPrice ?? price)) * 100)}%
+              <span className="text-xs text-muted-copy">
+                {copy.perMonth}
               </span>
+              {tier.originalMonthlyPrice || tier.originalAnnualPrice ? (
+                <span className="ml-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                  SAVE {Math.round(((tier.originalMonthlyPrice ?? price) - price) / (tier.originalMonthlyPrice ?? price) * 100)}%
+                </span>
+              ) : null}
+            </div>
+            {isAnnual && !isTeam ? (
+              <p className="mt-1 text-[11px] text-muted-copy">
+                {formatPrice(price * 12, currency)} billed annually
+              </p>
             ) : null}
           </div>
 
