@@ -62,7 +62,9 @@ const initSentry = () => {
     tracesSampleRate: 0.1,
     replaysSessionSampleRate: 0,
     replaysOnErrorSampleRate: 1.0,
-    integrations: [Sentry.browserTracingIntegration()],
+    // browserTracingIntegration removed — it calls useLocation() outside
+    // RouterProvider context in @sentry/react@10 + react-router-dom@7,
+    // crashing the dashboard with 'Cannot destructure property basename'.
     beforeSend(event) {
       if (event.exception?.values?.[0]?.type === 'ChunkLoadError') {
         return null;
