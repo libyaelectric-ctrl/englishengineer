@@ -27,7 +27,6 @@ export const BillingPage = () => {
     isLoading: isBillingLoading,
     error: billingError,
     refreshBilling,
-    startCheckout,
     openCustomerPortal,
     invoices,
     isLoadingInvoices,
@@ -48,16 +47,8 @@ export const BillingPage = () => {
     }
   }, [currentUser?.id, refreshBilling, fetchInvoices]);
 
-  const handleUpgrade = async () => {
-    if (!currentUser?.id || !currentUser?.email) {
-      navigate('/pricing');
-      return;
-    }
-    try {
-      await startCheckout(currentUser.id, currentUser.email, 'junior');
-    } catch {
-      navigate('/pricing');
-    }
+  const handleUpgrade = () => {
+    navigate('/pricing');
   };
 
   const handleManageSubscription = () => {
