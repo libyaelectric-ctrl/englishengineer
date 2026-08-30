@@ -27,11 +27,13 @@ export function Navbar() {
   const langRef = useRef<HTMLDivElement>(null);
   const langBtnRef = useRef<HTMLButtonElement>(null);
 
+  // Redirect signed-in users away from landing page, but NOT from /pricing
+  // — authenticated users need /pricing to upgrade their plan.
   useEffect(() => {
-    if (isSignedIn) {
+    if (isSignedIn && location.pathname !== '/pricing') {
       navigate('/dashboard', { replace: true });
     }
-  }, [isSignedIn, navigate]);
+  }, [isSignedIn, navigate, location.pathname]);
 
   const currentLang = INTERFACE_LANGUAGES.find((l) => l.id === language) || INTERFACE_LANGUAGES[0];
 
