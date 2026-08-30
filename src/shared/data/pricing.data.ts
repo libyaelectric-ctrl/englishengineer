@@ -138,33 +138,6 @@ export const PRICING_TIERS: PricingTier[] = [
     ],
     notIncluded: 'Nothing — full access',
   },
-  {
-    id: 'team',
-    name: 'Team',
-    monthlyPrice: 999,
-    annualPrice: 799,
-    description: 'Enterprise solution for engineering organizations.',
-    audience: 'Companies and teams with 10+ engineers',
-    bestFor: 'Enterprise teams and organizations',
-    accessBadge: 'ENTERPRISE',
-    popular: false,
-    comingSoon: true,
-    features: [
-      { name: 'Placement Test', included: true },
-      { name: 'Learning Hub', included: true },
-      { name: 'Progress Tracking', included: true },
-      { name: 'Vocabulary', included: true },
-      { name: 'Grammar', included: true },
-      { name: 'Translator', included: true },
-      { name: 'Reading', included: true },
-      { name: 'Writing', included: true },
-      { name: 'Speaking', included: true },
-      { name: 'Listening', included: true },
-      { name: 'Tool', included: true },
-      { name: 'AI Copilot', included: true },
-    ],
-    notIncluded: 'None — enterprise ready',
-  },
 ];
 
 export const PRICING_FEATURE_ORDER = [

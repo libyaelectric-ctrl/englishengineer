@@ -148,7 +148,7 @@ export const BillingPlanCards = ({
   const aiMax = limits.dailyAICoachRequests === 'unlimited' ? 999 : limits.dailyAICoachRequests;
   const attemptsMax = limits.moduleAttemptsPerDay === 'unlimited' ? 999 : limits.moduleAttemptsPerDay;
   const reviewsMax = limits.vocabularyReviewsPerDay === 'unlimited' ? 999 : limits.vocabularyReviewsPerDay;
-  const isMaxTier = subscription.planId === 'master' || subscription.planId === 'team';
+  const isMaxTier = subscription.planId === 'master';
 
   return (
     <div className="grid gap-5 sm:grid-cols-2">

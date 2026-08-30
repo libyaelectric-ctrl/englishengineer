@@ -1,4 +1,4 @@
-export type BillingPlanId = 'free' | 'junior' | 'senior' | 'specialist' | 'master' | 'team';
+export type BillingPlanId = 'free' | 'junior' | 'senior' | 'specialist' | 'master';
 
 export type SubscriptionStatus =
   | 'none'

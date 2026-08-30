@@ -63,11 +63,6 @@ export const MASTER_FEATURES: BillingFeature[] = [
   'aiCreditAddon',
 ];
 
-// Team is Master + enterprise features. Not purchasable yet ("coming soon"
-// per sonhal.md) but pre-wired so the entitlement system is ready once
-// Team checkout ships.
-export const TEAM_FEATURES: BillingFeature[] = [...MASTER_FEATURES];
-
 export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
   free: {
     id: 'free',
@@ -128,19 +123,6 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
     description: 'Full access: all modules including tools, AI copilot, and LinkedIn optimization.',
     isFutureReady: true,
     features: MASTER_FEATURES,
-    limits: {
-      dailyAICoachRequests: 'unlimited',
-      moduleAttemptsPerDay: 'unlimited',
-      vocabularyReviewsPerDay: 'unlimited',
-      documentUploadsPerMonth: 'unlimited',
-    },
-  },
-  team: {
-    id: 'team',
-    name: 'Team',
-    description: 'Enterprise solution for engineering teams. Coming soon.',
-    isFutureReady: true,
-    features: TEAM_FEATURES,
     limits: {
       dailyAICoachRequests: 'unlimited',
       moduleAttemptsPerDay: 'unlimited',

@@ -1,4 +1,4 @@
-export type CommercialPlanId = 'junior' | 'senior' | 'specialist' | 'master' | 'team';
+export type CommercialPlanId = 'junior' | 'senior' | 'specialist' | 'master';
 
 export interface CommercialPlanPreview {
   id: CommercialPlanId;
@@ -140,34 +140,6 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
     status: 'available-local',
     actionLabel: 'Upgrade to Master',
     actionHref: '/checkout?plan=master',
-  },
-  {
-    id: 'team',
-    name: 'Team',
-    price: '$999',
-    cadence: 'per month',
-    audience: 'Enterprise solution for engineering organizations.',
-    bestFor: 'Companies and teams with 10+ engineers',
-    priceReason: 'Team management, admin controls, and dedicated support.',
-    benefits: [
-      'Everything in Master',
-      'Team management dashboard',
-      'Admin controls & analytics',
-      'Dedicated support',
-      'Coming soon',
-    ],
-    notIncluded: 'None — enterprise ready',
-    comparison: {
-      learning: 'Ultimate team workspace',
-      ai: 'Unlimited + team pool',
-      analytics: 'Team compliance reporting',
-      team: 'Unlimited workspaces',
-      limits: 'Infinite capacity',
-    },
-    ads: 'none',
-    status: 'preview',
-    actionLabel: 'Coming Soon',
-    actionHref: '#',
   },
 ];
 

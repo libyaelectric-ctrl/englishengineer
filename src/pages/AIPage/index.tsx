@@ -37,8 +37,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
       {!embedded && <PageHeader title="AI Copilot Studio" />}
 
       {(subscription.planId === 'specialist' ||
-        subscription.planId === 'master' ||
-        subscription.planId === 'team') && (
+        subscription.planId === 'master') && (
         <WorkspacePanel
           planId={subscription.planId}
           activeWorkspaceId={h.activeWorkspaceId}

@@ -17,7 +17,6 @@ const PLAN_HIERARCHY: BillingPlanId[] = [
   'senior',
   'specialist',
   'master',
-  'team',
 ];
 
 const findMinimumPlanForFeature = (feature: BillingFeature): BillingPlanId | null => {
