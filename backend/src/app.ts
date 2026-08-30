@@ -200,9 +200,15 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
   ];
   app.use(helmet(SECURITY_HEADERS as Parameters<typeof helmet>[0]));
 
-  const configuredOrigins = [config.appOrigin, ...(config.corsAllowedOrigins || [])].filter(
-    Boolean
-  ) as string[];
+  // In production, always allow engvox.com even if APP_ORIGIN is misconfigured.
+  const hardcodedProductionOrigins = config.environment === 'production'
+    ? ['https://engvox.com', 'https://www.engvox.com']
+    : [];
+  const configuredOrigins = [
+    config.appOrigin,
+    ...(config.corsAllowedOrigins || []),
+    ...hardcodedProductionOrigins,
+  ].filter(Boolean) as string[];
 
   // Automatically allow the www./non-www. counterpart of every configured
   // origin, so a domain migration only requires updating APP_ORIGIN (and/or

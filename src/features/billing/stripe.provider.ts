@@ -17,11 +17,11 @@ interface BillingBackendErrorResponse {
   message?: string;
 }
 
-const BILLING_TIMEOUT_MS = 15_000;
+const BILLING_TIMEOUT_MS = 30_000;
 
 const mapRequestError = (error: unknown): Error => {
   if (error instanceof DOMException && error.name === 'AbortError') {
-    return new Error('Billing backend timed out after 15 seconds.');
+    return new Error('Billing backend timed out after 30 seconds. The server may be waking up — please try again.');
   }
 
   if (error instanceof TypeError) {
