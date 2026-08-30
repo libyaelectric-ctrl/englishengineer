@@ -16,12 +16,10 @@ export {
   type InvoiceRecord,
 } from './billing.types';
 
-export {
-  type CommercialPlanId,
-  type CommercialPlanPreview,
-  COMMERCIAL_PLAN_CATALOG,
-  SPONSOR_PLACEMENT_POLICY,
-} from './billing.catalog';
+// billing.catalog.ts is pre-wired for future commercial plan rendering.
+// Currently unused — re-enable when the pricing UI consumes these values.
+// export { type CommercialPlanId, type CommercialPlanPreview,
+//   COMMERCIAL_PLAN_CATALOG, SPONSOR_PLACEMENT_POLICY } from './billing.catalog';
 
 export {
   BILLING_PLANS,

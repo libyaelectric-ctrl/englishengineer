@@ -76,7 +76,7 @@ const AIEntitlementWarning = ({
       onClick={() => onNavigate('/profile')}
       className="mt-3 h-9 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer inline-flex items-center justify-center px-4"
     >
-      Upgrade to Pro
+      Upgrade Plan
     </Button>
   </div>
 );
