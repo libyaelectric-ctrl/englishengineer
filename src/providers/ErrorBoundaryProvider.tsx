@@ -43,6 +43,15 @@ const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3 pt-2">
+          {/* Plain <a>, not react-router's <Link>: this ErrorBoundary sits ABOVE
+              RouterProvider in the tree (see AppProvider/App.tsx), so when its
+              fallback renders there is no router context available. <Link> reads
+              that context internally and throws ("Cannot destructure property
+              'basename' of useContext(...) as it is null"), which previously
+              turned every caught error into a full white-screen crash instead of
+              this recovery screen. A full page navigation via <a> works
+              regardless of router state, which is exactly what a top-level
+              error boundary needs. */}
           <a
             href="/"
             className="flex items-center gap-2 rounded-[12px] border border-border-soft bg-surface px-5 py-2.5 text-sm font-bold text-foreground transition-colors hover:bg-surface-hover"

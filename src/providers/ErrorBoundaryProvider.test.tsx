@@ -1,8 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { BrowserRouter } from 'react-router-dom';
-
 import { ErrorBoundaryProvider } from './ErrorBoundaryProvider';
 
 const BrokenView = () => {
@@ -14,12 +12,16 @@ describe('ErrorBoundaryProvider', () => {
 
   it('shows a friendly fallback, diagnostic and safe Home link', () => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    // Deliberately NOT wrapped in <BrowserRouter>: in production (see
+    // App.tsx/AppProvider.tsx) ErrorBoundaryProvider sits ABOVE RouterProvider,
+    // so its fallback renders with no router context available. Wrapping this
+    // test in a router previously masked a real production bug where the
+    // fallback used react-router's <Link>, which crashes outside router
+    // context and turned every caught error into a full white-screen crash.
     render(
-      <BrowserRouter>
-        <ErrorBoundaryProvider>
-          <BrokenView />
-        </ErrorBoundaryProvider>
-      </BrowserRouter>
+      <ErrorBoundaryProvider>
+        <BrokenView />
+      </ErrorBoundaryProvider>
     );
 
     expect(screen.getByText('Application Error')).toBeInTheDocument();
