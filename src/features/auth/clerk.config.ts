@@ -6,7 +6,7 @@
 
 export const CLERK_PUBLISHABLE_KEY =
   (import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined) ||
-  'pk_live_Y2xlcmsuZW5ndm94LmNvbSQ';
+  (import.meta.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as string | undefined);
 
 export const CLERK_SIGN_IN_URL = import.meta.env.VITE_CLERK_SIGN_IN_URL || '/sign-in';
 
