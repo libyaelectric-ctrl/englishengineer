@@ -1,5 +1,12 @@
 import { type EngVoxEnv, validateEnvironment } from '@/config/environment.config';
 import * as Sentry from '@sentry/react';
+import * as React from 'react';
+import {
+  createRoutesFromChildren,
+  matchRoutes,
+  useLocation,
+  useNavigationType,
+} from 'react-router-dom';
 
 import { logger } from '@/shared/logger';
 
@@ -62,9 +69,15 @@ const initSentry = () => {
     tracesSampleRate: 0.1,
     replaysSessionSampleRate: 0,
     replaysOnErrorSampleRate: 1.0,
-    // browserTracingIntegration removed — it calls useLocation() outside
-    // RouterProvider context in @sentry/react@10 + react-router-dom@7,
-    // crashing the dashboard with 'Cannot destructure property basename'.
+    integrations: [
+      Sentry.reactRouterV7BrowserTracingIntegration({
+        useEffect: React.useEffect,
+        useLocation,
+        useNavigationType,
+        createRoutesFromChildren,
+        matchRoutes,
+      }),
+    ],
     beforeSend(event) {
       if (event.exception?.values?.[0]?.type === 'ChunkLoadError') {
         return null;

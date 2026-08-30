@@ -5,6 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { type ComponentType, Suspense, lazy } from 'react';
 
 import { Navigate, createBrowserRouter } from 'react-router-dom';
+import * as Sentry from '@sentry/react';
 
 import { LoadingState } from '@/shared/components/LoadingState';
 import { PageErrorBoundary } from '@/shared/components/PageErrorBoundary';
@@ -51,7 +52,9 @@ const LearningPath = lazy(() => import('@/pages/LearningPathPage'));
 const LessonRunner = lazy(() => import('@/pages/LessonRunnerPage'));
 const ClerkAuthPage = lazy(() => import('@/pages/ClerkAuthPage'));
 
-export const router = createBrowserRouter([
+const sentryCreateBrowserRouter = Sentry.wrapCreateBrowserRouterV7(createBrowserRouter);
+
+export const router = sentryCreateBrowserRouter([
   {
     element: <PublicLayout />,
     errorElement: <RouteErrorPage />,

@@ -45,9 +45,6 @@ if (typeof window !== 'undefined') {
   });
 }
 
-// Defer Sentry init to after first paint for faster initial load
-requestIdleCallback(() => ObservabilityService.init());
-
 // Theme is handled by ThemeProvider — no manual DOM manipulation here
 
 logger.i('EngVox Kernel Booting...');
@@ -106,6 +103,10 @@ try {
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
+
+// Defer Sentry init to after React mount so router hooks are available
+// for reactRouterV7BrowserTracingIntegration (useLocation, etc.).
+requestIdleCallback(() => ObservabilityService.init());
 
 // Preload vocabulary data in background (non-blocking, lazy loaded)
 requestIdleCallback(async () => {
