@@ -3,7 +3,7 @@ import { router } from '@/routes/router';
 import { ClerkProvider } from '@clerk/clerk-react';
 import * as Sentry from '@sentry/react';
 
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, Component, type ErrorInfo, type ReactNode } from 'react';
 
 import { RouterProvider } from 'react-router-dom';
 
@@ -43,11 +43,42 @@ const ThemedClerkProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+class SimpleErrorBoundary extends Component<
+  { children: ReactNode; fallback?: ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  state = { hasError: false, error: null as Error | null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error('[ErrorBoundary]', error, info.componentStack);
+    Sentry.captureException(error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        this.props.fallback ?? (
+          <div style={{ padding: 24, fontFamily: 'sans-serif' }}>
+            <h2>Something went wrong.</h2>
+            <p>{this.state.error?.message}</p>
+            <button onClick={() => window.location.reload()}>Refresh</button>
+          </div>
+        )
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const AppContent = () => {
   useDirection();
 
   return (
-    <Sentry.ErrorBoundary fallback={<div>An error occurred. Please refresh the page.</div>}>
+    <SimpleErrorBoundary fallback={<div>An error occurred. Please refresh the page.</div>}>
       <ThemeProvider>
         <AppProvider>
           <ThemedClerkProvider>
@@ -61,7 +92,7 @@ const AppContent = () => {
           <ToastContainer />
         </AppProvider>
       </ThemeProvider>
-    </Sentry.ErrorBoundary>
+    </SimpleErrorBoundary>
   );
 };
 
