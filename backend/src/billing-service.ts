@@ -201,9 +201,12 @@ export const createBillingService = ({
       assertBillingUser(userId);
       const sub = await repository.getSubscriptionStatus(userId);
       if (!sub?.stripeCustomerId) return [];
+      // Dodo Payments does not expose a Stripe-style invoice API; return
+      // an empty list when the active provider is not Stripe.
+      if (!stripeClient) return [];
       ensureConfigured();
       try {
-        const invoices = await stripeClient!.invoices.list({
+        const invoices = await stripeClient.invoices.list({
           customer: sub.stripeCustomerId,
           limit: 20,
         });

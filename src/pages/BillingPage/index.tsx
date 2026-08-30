@@ -5,6 +5,8 @@ import { useEffect } from 'react';
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
 import { SectionCard } from '@/shared/components/SectionCard';
+import { useNavigate } from 'react-router-dom';
+
 import { logger } from '@/shared/logger';
 
 import { useAIStore } from '@/features/ai';
@@ -17,6 +19,7 @@ import { BillingUpgradeCTA } from '@/features/billing/components/BillingUpgradeC
 import { useLearningCockpit } from '@/features/profile';
 
 export const BillingPage = () => {
+  const navigate = useNavigate();
   const { currentUser } = useAuthStore();
   const {
     subscription,
@@ -24,7 +27,6 @@ export const BillingPage = () => {
     isLoading: isBillingLoading,
     error: billingError,
     refreshBilling,
-    startCheckout,
     openCustomerPortal,
     invoices,
     isLoadingInvoices,
@@ -46,10 +48,7 @@ export const BillingPage = () => {
   }, [currentUser?.id, refreshBilling, fetchInvoices]);
 
   const handleUpgrade = () => {
-    if (!currentUser?.id || !currentUser?.email) return;
-    startCheckout(currentUser.id, currentUser.email, 'senior').catch((err) =>
-      logger.e('Checkout failed:', err)
-    );
+    navigate('/pricing');
   };
 
   const handleManageSubscription = () => {

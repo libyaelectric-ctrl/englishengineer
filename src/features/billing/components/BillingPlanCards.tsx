@@ -2,6 +2,7 @@ import { Mic } from 'lucide-react';
 
 import { ProgressBar } from '@/shared/components/ProgressBar';
 
+import { BILLING_PLANS } from '@/features/billing';
 import type { SubscriptionSnapshot } from '@/features/billing';
 
 interface BillingPlanCardsProps {
@@ -54,37 +55,41 @@ const UnlimitedCard = ({
 
 const DocumentUploadCard = ({
   isFree,
-  isPro,
   uploadedDocsCount,
+  maxDocs,
 }: {
   isFree: boolean;
-  isPro: boolean;
   uploadedDocsCount: number;
-}) => (
-  <div className="space-y-1.5">
-    <div className="flex justify-between text-xs">
-      <span className="font-bold text-foreground">Monthly Document Uploads</span>
-      <span className="font-bold text-foreground">
+  maxDocs: number;
+}) => {
+  const isUnlimited = maxDocs >= 999;
+  const numericMax = isUnlimited ? 0 : maxDocs;
+  return (
+    <div className="space-y-1.5">
+      <div className="flex justify-between text-xs">
+        <span className="font-bold text-foreground">Monthly Document Uploads</span>
+        <span className="font-bold text-foreground">
+          {isFree
+            ? 'Blocked'
+            : isUnlimited
+              ? `${uploadedDocsCount} / Unlimited`
+              : `${uploadedDocsCount} / ${numericMax} uploads`}
+        </span>
+      </div>
+      <ProgressBar
+        value={isFree ? 0 : isUnlimited ? Math.min(100, (uploadedDocsCount / 10) * 100) : Math.min(100, (uploadedDocsCount / numericMax) * 100)}
+        color={isFree ? 'rose' : !isUnlimited && uploadedDocsCount >= numericMax ? 'amber' : 'primary'}
+      />
+      <p className="text-[10px] text-muted-copy">
         {isFree
-          ? 'Blocked'
-          : isPro
-            ? `${uploadedDocsCount} / 2 uploads`
-            : `${uploadedDocsCount} / Unlimited`}
-      </span>
+          ? 'Upgrade your plan to upload technical documents.'
+          : isUnlimited
+            ? '✓ Unlimited document uploads enabled.'
+            : `✓ Upload documents inside the AI Copilot tab.`}
+      </p>
     </div>
-    <ProgressBar
-      value={isFree ? 0 : isPro ? Math.min(100, (uploadedDocsCount / 2) * 100) : 100}
-      color={isFree ? 'rose' : uploadedDocsCount >= 2 ? 'amber' : 'primary'}
-    />
-    <p className="text-[10px] text-muted-copy">
-      {isFree
-        ? 'Upgrade to Pro to upload up to 2 technical documents/month.'
-        : isPro
-          ? '✓ Upload documents inside the AI Copilot tab.'
-          : '✓ Unlimited document uploads enabled.'}
-    </p>
-  </div>
-);
+  );
+};
 
 const VoiceMinutesCard = ({
   planId,
@@ -124,6 +129,9 @@ const VoiceMinutesCard = ({
   </div>
 );
 
+const formatLimit = (value: number | 'unlimited'): string =>
+  value === 'unlimited' ? 'Unlimited' : String(value);
+
 export const BillingPlanCards = ({
   subscription,
   todaysCoachSessions,
@@ -132,13 +140,19 @@ export const BillingPlanCards = ({
   uploadedDocsCount,
   voiceMinutesUsed,
 }: BillingPlanCardsProps) => {
-  const isPro = subscription.planId === 'senior';
-  const isFree = subscription.planId === 'free' || subscription.planId === 'junior';
+  const plan = BILLING_PLANS[subscription.planId];
+  const { limits } = plan;
+  const isUnlimitedAI = limits.dailyAICoachRequests === 'unlimited';
+  const isUnlimitedAttempts = limits.moduleAttemptsPerDay === 'unlimited';
+  const isUnlimitedReviews = limits.vocabularyReviewsPerDay === 'unlimited';
+  const aiMax = limits.dailyAICoachRequests === 'unlimited' ? 999 : limits.dailyAICoachRequests;
+  const attemptsMax = limits.moduleAttemptsPerDay === 'unlimited' ? 999 : limits.moduleAttemptsPerDay;
+  const reviewsMax = limits.vocabularyReviewsPerDay === 'unlimited' ? 999 : limits.vocabularyReviewsPerDay;
   const isMaxTier = subscription.planId === 'master' || subscription.planId === 'team';
 
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      {isPro ? (
+      {isUnlimitedAI ? (
         <UnlimitedCard
           label="Daily AI Coach Requests"
           color="cyan"
@@ -147,15 +161,15 @@ export const BillingPlanCards = ({
       ) : (
         <UsageCard
           label="Daily AI Coach Requests"
-          display={`${todaysCoachSessions} / 3 daily requests`}
+          display={`${todaysCoachSessions} / ${formatLimit(limits.dailyAICoachRequests)} daily requests`}
           value={todaysCoachSessions}
-          max={3}
-          color={todaysCoachSessions >= 3 ? 'rose' : 'cyan'}
-          helpText="Upgrade to Pro to unlock unlimited daily AI coaching feedback."
+          max={aiMax}
+          color={todaysCoachSessions >= aiMax ? 'rose' : 'cyan'}
+          helpText="Upgrade your plan to unlock more daily AI coaching feedback."
         />
       )}
 
-      {isPro ? (
+      {isUnlimitedAttempts ? (
         <UnlimitedCard
           label="Daily Module Attempts"
           color="emerald"
@@ -164,15 +178,15 @@ export const BillingPlanCards = ({
       ) : (
         <UsageCard
           label="Daily Module Attempts"
-          display={`${todaysAttempts} / 5 daily attempts`}
+          display={`${todaysAttempts} / ${formatLimit(limits.moduleAttemptsPerDay)} daily attempts`}
           value={todaysAttempts}
-          max={5}
-          color={todaysAttempts >= 5 ? 'rose' : 'emerald'}
-          helpText="Upgrade to Pro to unlock unlimited daily technical attempts."
+          max={attemptsMax}
+          color={todaysAttempts >= attemptsMax ? 'rose' : 'emerald'}
+          helpText="Upgrade your plan to unlock more daily technical attempts."
         />
       )}
 
-      {isPro ? (
+      {isUnlimitedReviews ? (
         <UnlimitedCard
           label="Daily Vocabulary Reviews"
           color="cyan"
@@ -181,15 +195,15 @@ export const BillingPlanCards = ({
       ) : (
         <UsageCard
           label="Daily Vocabulary Reviews"
-          display={`${todaysReviews} / 25 reviews`}
+          display={`${todaysReviews} / ${formatLimit(limits.vocabularyReviewsPerDay)} reviews`}
           value={todaysReviews}
-          max={25}
-          color={todaysReviews >= 25 ? 'rose' : 'cyan'}
-          helpText="Upgrade to Pro to review more than 25 terms per day."
+          max={reviewsMax}
+          color={todaysReviews >= reviewsMax ? 'rose' : 'cyan'}
+          helpText="Upgrade your plan to review more terms per day."
         />
       )}
 
-      <DocumentUploadCard isFree={isFree} isPro={isPro} uploadedDocsCount={uploadedDocsCount} />
+      <DocumentUploadCard isFree={limits.documentUploadsPerMonth === 0} uploadedDocsCount={uploadedDocsCount} maxDocs={typeof limits.documentUploadsPerMonth === 'number' ? limits.documentUploadsPerMonth : 999} />
 
       {isMaxTier && (
         <VoiceMinutesCard planId={subscription.planId} voiceMinutesUsed={voiceMinutesUsed} />

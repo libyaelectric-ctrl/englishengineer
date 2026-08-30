@@ -12,7 +12,7 @@ const PRO_BENEFITS = [
   'Advanced Mistake Log analytics',
   'Client / consultant roleplay scenarios',
   '12-month progress history storage',
-  'Direct Stripe billing portal access',
+  'Secure billing portal access',
 ];
 
 export const BillingUpgradeCTA = ({ planId }: BillingUpgradeCTAProps) => (
