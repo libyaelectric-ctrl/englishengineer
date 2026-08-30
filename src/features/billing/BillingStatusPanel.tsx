@@ -1,7 +1,5 @@
 import { Crown, ExternalLink } from 'lucide-react';
 
-import { useNavigate } from 'react-router-dom';
-
 import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 
@@ -38,7 +36,6 @@ export const BillingStatusPanel = ({
   onOpenPortal,
   error,
 }: BillingStatusPanelProps) => {
-  const navigate = useNavigate();
   const presentation = getBillingStatusPresentation(subscription, providerStatus);
   // The paid 'junior' plan (status active/trialing) is paid access; only the
   // free tier should trigger the "Upgrade Plan" CTA.
@@ -121,10 +118,7 @@ export const BillingStatusPanel = ({
         {!paidAccessIsActive ? (
           <Button
             type="button"
-            onClick={() => {
-              onUpgrade();
-              navigate('/pricing');
-            }}
+            onClick={onUpgrade}
             disabled={isLoading}
             className="text-xs bg-primary hover:bg-primary/90 border border-primary text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5 min-h-9 px-4"
           >
