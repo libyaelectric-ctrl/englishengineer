@@ -21,7 +21,7 @@ export const updateSm2ReviewState = (
   );
 
   const repetitions = boundedQuality < 3 ? 0 : previous.repetitions + 1;
-  let interval = 1;
+  let interval: number;
 
   if (boundedQuality < 3) {
     interval = 1;

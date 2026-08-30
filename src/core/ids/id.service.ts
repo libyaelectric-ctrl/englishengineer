@@ -26,7 +26,7 @@ const secureRandomHex = (length: number): string => {
 
 export const IdService = {
   createId(prefix?: IdPrefix | string): string {
-    let uuid = '';
+    let uuid: string;
 
     if (typeof globalThis.crypto?.randomUUID === 'function') {
       uuid = globalThis.crypto.randomUUID();

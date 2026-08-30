@@ -113,6 +113,7 @@ opencode.json
 .vitest-commit.log
 
 # ── Project-specific ──
+.vercel/
 .vercel-tmp/
 .freebuff/
 tasrim/

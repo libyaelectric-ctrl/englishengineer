@@ -84,7 +84,7 @@ const scoreVocabulary = (
 };
 
 const scoreSummary = (wordCount: number, matchedKeywordsCount: number): number => {
-  let summaryScore = 0;
+  let summaryScore: number;
   if (wordCount === 0) {
     summaryScore = 0;
   } else if (wordCount < 15) {
@@ -107,8 +107,8 @@ const buildFeedback = (
   strengths: string[],
   weaknesses: string[]
 ): { summaryFeedback: string; keywordFeedback: string } => {
-  let summaryFeedback = '';
-  let keywordFeedback = '';
+  let summaryFeedback: string;
+  let keywordFeedback: string;
 
   if (comprehensionScore >= 100) {
     strengths.push('Flawless retention of quantitative speech figures');

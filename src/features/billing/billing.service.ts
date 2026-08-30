@@ -43,13 +43,19 @@ const ALLOWED_REDIRECT_HOSTS = [
   'test.customer.dodopayments.com',
 ];
 
+const isAllowedHost = (hostname: string): boolean => {
+  if (ALLOWED_REDIRECT_HOSTS.includes(hostname)) return true;
+  if (hostname.endsWith('.dodopayments.com')) return true;
+  return false;
+};
+
 const safeRedirect = (url: string): void => {
   try {
     const parsed = new URL(url);
-    if (ALLOWED_REDIRECT_HOSTS.some((host) => parsed.hostname === host)) {
+    if (isAllowedHost(parsed.hostname)) {
       window.location.assign(url);
     } else {
-      logger.w('[BILLING] Blocked redirect to untrusted host:', parsed.hostname);
+      logger.w('[BILLING] Blocked redirect to untrusted host:', parsed.hostname, url);
     }
   } catch {
     logger.w('[BILLING] Invalid redirect URL:', url);

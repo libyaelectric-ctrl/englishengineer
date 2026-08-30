@@ -190,7 +190,7 @@ globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise
       // Supabase Storage) - fall back to the Storage CDN origin.
       try {
         const cdnResponse = await originalFetch(`${DATA_CDN_BASE}${urlStr}`);
-        if (!cdnResponse.ok) throw new Error(`CDN ${cdnResponse.status}`);
+        if (!cdnResponse.ok) throw new Error(`CDN ${cdnResponse.status}`, { cause: fsError });
         const content = await cdnResponse.text();
         return {
           ok: true,

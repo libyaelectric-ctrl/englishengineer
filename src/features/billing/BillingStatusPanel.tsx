@@ -54,8 +54,7 @@ export const BillingStatusPanel = ({
           className="rounded-[4px] border border-warning/20 bg-warning/5 p-4 text-xs leading-5 text-warning shadow-sm font-bold uppercase tracking-wider"
           role="alert"
         >
-          Billing status is temporarily unavailable. Access entitlements are based on the last known
-          verified state.
+          {error}
         </div>
       )}
       <div className="flex flex-col gap-3 rounded-[4px] border border-border-soft bg-surface p-4 sm:flex-row sm:items-start sm:justify-between shadow-sm">

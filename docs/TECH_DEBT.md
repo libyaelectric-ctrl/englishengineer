@@ -34,11 +34,11 @@ This document tracks known technical debt items that should be addressed in futu
 **Status:** Resolved — React.lazy() code splitting + manual chunks configured.
 **Note:** Bundle size budget tightened to 1MB JS / 200KB CSS in CI.
 
-### TD-006: Update Dependencies ✅ (Partial)
+### TD-006: Update Dependencies ✅
 
 **Issue:** Some dependencies outdated
 **Impact:** Security, features
-**Status:** Partially Resolved — 13 Dependabot PRs merged including stripe 18→22 and storybook 8→10. Remaining major versions (eslint 10, vite 8, typescript 7) require dedicated upgrade sprint.
+**Status:** Resolved — All Dependabot PRs merged (15 total including stripe 18→22, storybook 8→10). Major upgrades completed: vite 6→8, @vitejs/plugin-react 5→6, eslint 9→10, typescript 5→6, lucide-react, concurrently, jsdom, @testing-library/jest-dom/dom. All ESLint 10 `no-useless-assignment` errors fixed. 77/77 tests pass.
 
 ### TD-007: Improve Type Safety ✅
 

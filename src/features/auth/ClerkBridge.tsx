@@ -82,19 +82,12 @@ export const ClerkBridge = () => {
         storage.setUserId(user.id);
 
         const profile = buildProfile(user);
-        // Hydrate the discipline the user picked during onboarding so pages
-        // like the dashboard that read it off the store user render correctly
-        // on every visit, not just the first.
-        let learningProfile = LearningProfileRepository.getProfile(user.id);
-        if (learningProfile.discipline) {
-          profile.engineeringDiscipline = learningProfile.discipline;
-        }
 
         // Apply pending onboard selections (saved before sign-in from /onboard)
         const pending = consumePendingOnboard();
         if (pending) {
           useLocalizationStore.getState().setLanguage(pending.language);
-          learningProfile = LearningProfileRepository.updatePreferences(user.id, {
+          LearningProfileRepository.updatePreferences(user.id, {
             discipline: pending.discipline,
             professionalTrack: pending.discipline as never,
             interfaceLanguage: pending.language,
@@ -102,6 +95,13 @@ export const ClerkBridge = () => {
           });
           profile.engineeringDiscipline = pending.discipline;
           useLearningStore.getState().resetAll();
+        } else {
+          // Hydrate the discipline the user picked during onboarding so pages
+          // like the dashboard read it off the store correctly on every visit.
+          const existing = LearningProfileRepository.getProfile(user.id);
+          if (existing.discipline) {
+            profile.engineeringDiscipline = existing.discipline;
+          }
         }
 
         useAuthStore.setState({

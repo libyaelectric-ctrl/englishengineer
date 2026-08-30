@@ -84,7 +84,7 @@ export const FieldDocAssistant = () => {
 
       if (genTimerRef.current) clearTimeout(genTimerRef.current);
       genTimerRef.current = setTimeout(() => {
-        let draftText = '';
+        let draftText: string;
         const proj = projectName.trim() || 'PROJECT-ALPHAVOX-2026';
         const ref = clauseRef.trim() || 'Specification Section 15400 / FIDIC 20.1';
 
