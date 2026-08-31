@@ -204,7 +204,7 @@ export const PricingCard = ({
                   {isTeam
                     ? '$$$$'
                     : formatPrice(
-                        isAnnual ? (tier.originalMonthlyPrice ?? price) : (tier.originalMonthlyPrice ?? price),
+                        isAnnual ? (tier.originalAnnualPrice ?? tier.originalMonthlyPrice ?? price) : (tier.originalMonthlyPrice ?? price),
                         currency
                       )}
                 </span>
@@ -216,14 +216,17 @@ export const PricingCard = ({
                 {copy.perMonth}
               </span>
               {tier.originalMonthlyPrice || tier.originalAnnualPrice ? (
-                <span className="ml-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                  SAVE {Math.round(((tier.originalMonthlyPrice ?? price) - price) / (tier.originalMonthlyPrice ?? price) * 100)}%
+                <span className="ml-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded whitespace-nowrap">
+                  SAVE {(() => {
+                    const orig = isAnnual ? (tier.originalAnnualPrice ?? tier.originalMonthlyPrice ?? price) : (tier.originalMonthlyPrice ?? price);
+                    return Math.round(((orig - price) / orig) * 100);
+                  })()}%
                 </span>
               ) : null}
             </div>
             {isAnnual && !isTeam ? (
               <p className="mt-1 text-[11px] text-muted-copy">
-                {formatPrice(price * 12, currency)} billed annually
+                {formatPrice(tier.annualTotal ?? Math.round(price * 12 * 100) / 100, currency)} billed annually
               </p>
             ) : null}
           </div>

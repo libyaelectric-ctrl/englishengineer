@@ -11,6 +11,7 @@ export interface PricingTier {
   name: string;
   monthlyPrice: number;
   annualPrice: number;
+  annualTotal?: number;
   originalMonthlyPrice?: number;
   originalAnnualPrice?: number;
   description: string;
@@ -55,9 +56,10 @@ export const PRICING_TIERS: PricingTier[] = [
     id: 'junior',
     name: 'Junior',
     monthlyPrice: 19.99,
-    annualPrice: 16.66,
+    annualPrice: 16.67,
+    annualTotal: 199.99,
     originalMonthlyPrice: 29.99,
-    originalAnnualPrice: 24.99,
+    originalAnnualPrice: 25.00,
     description: 'Essential learning core for daily engineering English practice.',
     audience: 'Getting started with discipline-specific vocabulary',
     bestFor: 'Individual engineers starting their journey',
@@ -89,8 +91,9 @@ export const PRICING_TIERS: PricingTier[] = [
     name: 'Senior',
     monthlyPrice: 39.99,
     annualPrice: 33.33,
+    annualTotal: 399.99,
     originalMonthlyPrice: 59.99,
-    originalAnnualPrice: 49.99,
+    originalAnnualPrice: 50.00,
     description: 'Expand your skills with reading, writing, and translation.',
     audience: 'Engineers who read and write technical documents',
     bestFor: 'Professional engineers improving documentation skills',
@@ -117,9 +120,10 @@ export const PRICING_TIERS: PricingTier[] = [
     id: 'specialist',
     name: 'Specialist',
     monthlyPrice: 49.99,
-    annualPrice: 41.66,
+    annualPrice: 41.67,
+    annualTotal: 499.99,
     originalMonthlyPrice: 79.99,
-    originalAnnualPrice: 66.66,
+    originalAnnualPrice: 66.67,
     description: 'Add speaking and listening to complete your communication skills.',
     audience: 'Engineers in international project meetings',
     bestFor: 'Engineers in global team environments',
@@ -146,7 +150,8 @@ export const PRICING_TIERS: PricingTier[] = [
     id: 'master',
     name: 'Master',
     monthlyPrice: 59.99,
-    annualPrice: 49.99,
+    annualPrice: 50.00,
+    annualTotal: 599.99,
     originalMonthlyPrice: 99.99,
     originalAnnualPrice: 83.33,
     description: 'Full access: all modules including AI Copilot and tools.',
