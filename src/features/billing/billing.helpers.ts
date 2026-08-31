@@ -142,10 +142,14 @@ export const createFreeSubscription = (): SubscriptionSnapshot => ({
   updatedAt: new Date().toISOString(),
 });
 
+const BILLING_API_URL_FALLBACK = 'https://englishengineer-backend.onrender.com';
+
 export const getBillingApiUrl = (): string | null => {
   const env: BillingEnv | undefined = import.meta.env;
   const value = env?.VITE_BILLING_API_URL?.trim();
-  return isConfiguredPublicUrl(value) ? value?.replace(/\/$/, '') || null : null;
+  if (isConfiguredPublicUrl(value)) return value?.replace(/\/$/, '') || null;
+  // Fallback: use the production backend URL when env var is missing
+  return BILLING_API_URL_FALLBACK;
 };
 
 export const getBillingProviderStatus = (): BillingProviderStatus => {
