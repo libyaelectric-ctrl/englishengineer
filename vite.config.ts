@@ -35,6 +35,7 @@ export default defineConfig(() => {
     },
     build: {
       outDir: 'dist',
+      cache: false,
       sourcemap: 'hidden',
       chunkSizeWarningLimit: 300,
       target: 'es2022',
