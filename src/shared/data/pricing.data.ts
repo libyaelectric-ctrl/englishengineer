@@ -25,6 +25,33 @@ export interface PricingTier {
 
 export const PRICING_TIERS: PricingTier[] = [
   {
+    id: 'free',
+    name: 'Free',
+    monthlyPrice: 0,
+    annualPrice: 0,
+    description: 'Start learning with core modules at no cost.',
+    audience: 'Exploring engineering English',
+    bestFor: 'Trying out the platform',
+    accessBadge: 'ACCESS-LVL-FREE',
+    popular: false,
+    comingSoon: false,
+    features: [
+      { name: 'Placement Test', included: true },
+      { name: 'Learning Hub', included: true },
+      { name: 'Progress Tracking', included: true },
+      { name: 'Vocabulary', included: true },
+      { name: 'Grammar', included: true },
+      { name: 'Translator', included: false },
+      { name: 'Reading', included: false },
+      { name: 'Writing', included: false },
+      { name: 'Speaking', included: false },
+      { name: 'Listening', included: false },
+      { name: 'Tool', included: false },
+      { name: 'AI Copilot', included: false },
+    ],
+    notIncluded: 'Translator, Reading, Writing, Speaking, Listening, Tool, AI Copilot',
+  },
+  {
     id: 'junior',
     name: 'Junior',
     monthlyPrice: 19.99,

@@ -1,6 +1,6 @@
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 
-export type PricingTierId = 'junior' | 'senior' | 'specialist' | 'master' | 'team';
+export type PricingTierId = 'free' | 'junior' | 'senior' | 'specialist' | 'master' | 'team';
 
 interface PublicPageCopy {
   activeEngineers: string;
@@ -18,6 +18,7 @@ const ENGLISH_COPY: PublicPageCopy = {
   technicalTerms: 'Technical Terms',
   freeDescription: 'Core vocabulary and grammar practice to start your engineering English path.',
   tierDescriptions: {
+    free: 'Start learning with core modules at no cost.',
     junior: 'Essential learning core for daily engineering English practice.',
     senior: 'Expand your skills with reading, writing, and translation.',
     specialist: 'Add speaking and listening to complete your communication skills.',
@@ -34,6 +35,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     technicalTerms: 'Teknik terimler',
     freeDescription: 'Mühendislik İngilizcesine başlamak için temel kelime ve dil bilgisi pratiği.',
     tierDescriptions: {
+      free: 'Mühendislik İngilizcesine başlamak için temel paket.',
       junior: 'Günlük mühendislik İngilizcesi pratiği için temel öğrenme paketi.',
       senior: 'Okuma, yazma ve çeviri ile becerilerinizi geliştirin.',
       specialist: 'İletişim becerilerinizi tamamlamak için konuşma ve dinlemeyi ekleyin.',
@@ -48,6 +50,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     technicalTerms: 'المصطلحات الفنية',
     freeDescription: 'تدريب أساسي على المفردات والقواعد لبدء الإنجليزية الهندسية.',
     tierDescriptions: {
+      free: 'ابدأ التعلم بالوحدات الأساسية.',
       junior: 'أساسيات التعلم للممارسة اليومية للإنجليزية الهندسية.',
       senior: 'طوّر مهاراتك بالقراءة والكتابة والترجمة.',
       specialist: 'أضف التحدث والاستماع لإكمال مهارات التواصل.',
@@ -62,6 +65,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     technicalTerms: 'Technische Begriffe',
     freeDescription: 'Grundlegendes Vokabel- und Grammatiktraining für den Einstieg.',
     tierDescriptions: {
+      free: 'Kostenlos mit den Kernmodulen beginnen.',
       junior: 'Die Lernbasis für tägliches technisches Englisch.',
       senior: 'Erweitern Sie Ihre Fähigkeiten mit Lesen, Schreiben und Übersetzen.',
       specialist: 'Ergänzen Sie Sprechen und Hören für vollständige Kommunikation.',
@@ -76,6 +80,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     technicalTerms: 'Términos técnicos',
     freeDescription: 'Práctica básica de vocabulario y gramática para comenzar.',
     tierDescriptions: {
+      free: 'Empieza con los módulos básicos sin costo.',
       junior: 'Base esencial para practicar inglés técnico a diario.',
       senior: 'Amplía tus habilidades con lectura, escritura y traducción.',
       specialist: 'Añade expresión oral y comprensión auditiva.',
@@ -90,6 +95,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     technicalTerms: 'Termos técnicos',
     freeDescription: 'Prática essencial de vocabulário e gramática para começar.',
     tierDescriptions: {
+      free: 'Comece com os módulos principais sem custo.',
       junior: 'Base essencial para a prática diária de inglês de engenharia.',
       senior: 'Amplie suas habilidades com leitura, escrita e tradução.',
       specialist: 'Adicione fala e escuta para completar sua comunicação.',
@@ -104,6 +110,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     technicalTerms: 'Termes techniques',
     freeDescription: "Pratique essentielle du vocabulaire et de la grammaire pour commencer.",
     tierDescriptions: {
+      free: 'Commencez avec les modules de base gratuitement.',
       junior: "Base essentielle pour pratiquer l'anglais technique au quotidien.",
       senior: 'Développez vos compétences en lecture, écriture et traduction.',
       specialist: "Ajoutez l'expression orale et l'écoute.",
@@ -118,6 +125,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     technicalTerms: 'Технические термины',
     freeDescription: 'Базовая практика словарного запаса и грамматики для начала.',
     tierDescriptions: {
+      free: 'Начните с основных модулей бесплатно.',
       junior: 'Основа для ежедневной практики инженерного английского.',
       senior: 'Развивайте навыки чтения, письма и перевода.',
       specialist: 'Добавьте разговорную речь и аудирование.',
@@ -132,6 +140,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     technicalTerms: '技术术语',
     freeDescription: '通过核心词汇和语法练习开始工程英语学习。',
     tierDescriptions: {
+      free: '免费开始核心模块学习。',
       junior: '用于日常工程英语练习的基础学习核心。',
       senior: '通过阅读、写作和翻译扩展技能。',
       specialist: '加入口语和听力，完善沟通能力。',
@@ -146,6 +155,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     technicalTerms: '技術用語',
     freeDescription: '基本語彙と文法練習でエンジニアリング英語を始めます。',
     tierDescriptions: {
+      free: 'コアモジュールで無料で始めましょう。',
       junior: '毎日のエンジニアリング英語練習に必要な基本コース。',
       senior: '読解、作文、翻訳でスキルを広げます。',
       specialist: 'スピーキングとリスニングを加えて完成させます。',
@@ -160,6 +170,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     technicalTerms: 'Termini tecnici',
     freeDescription: 'Pratica di vocabolario e grammatica per iniziare.',
     tierDescriptions: {
+      free: 'Inizia con i moduli principali senza costo.',
       junior: "Base essenziale per la pratica quotidiana dell'inglese tecnico.",
       senior: 'Amplia le competenze con lettura, scrittura e traduzione.',
       specialist: 'Aggiungi parlato e ascolto per completare la comunicazione.',
@@ -174,6 +185,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     technicalTerms: 'Thuật ngữ kỹ thuật',
     freeDescription: 'Luyện từ vựng và ngữ pháp cốt lõi để bắt đầu.',
     tierDescriptions: {
+      free: 'Bắt đầu với các module cốt lõi miễn phí.',
       junior: 'Nền tảng thiết yếu cho tiếng Anh kỹ thuật hằng ngày.',
       senior: 'Mở rộng kỹ năng đọc, viết và dịch thuật.',
       specialist: 'Thêm nói và nghe để hoàn thiện giao tiếp.',
@@ -188,6 +200,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     technicalTerms: 'Terminy techniczne',
     freeDescription: 'Podstawowa praktyka słownictwa i gramatyki na start.',
     tierDescriptions: {
+      free: 'Zacznij od podstawowych modułów za darmo.',
       junior: 'Podstawa codziennej praktyki angielskiego technicznego.',
       senior: 'Rozwijaj czytanie, pisanie i tłumaczenie.',
       specialist: 'Dodaj mówienie i słuchanie dla pełnej komunikacji.',
@@ -202,6 +215,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     technicalTerms: 'Istilah teknis',
     freeDescription: 'Latihan kosakata dan tata bahasa inti untuk memulai.',
     tierDescriptions: {
+      free: 'Mulai dengan modul inti secara gratis.',
       junior: 'Dasar penting untuk latihan bahasa Inggris teknik harian.',
       senior: 'Kembangkan keterampilan membaca, menulis, dan menerjemahkan.',
       specialist: 'Tambahkan berbicara dan menyimak untuk komunikasi lengkap.',
@@ -216,6 +230,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     technicalTerms: 'Technische termen',
     freeDescription: 'Oefen basiswoordenschat en grammatica om te beginnen.',
     tierDescriptions: {
+      free: 'Begin gratis met de kernmodules.',
       junior: 'Essentiële basis voor dagelijkse technische Engelse oefening.',
       senior: 'Breid vaardigheden uit met lezen, schrijven en vertalen.',
       specialist: 'Voeg spreken en luisteren toe voor complete communicatie.',
