@@ -6,10 +6,16 @@
 
 import { CLERK_LIVE_PUBLISHABLE_KEY } from './clerk.key';
 
-export const CLERK_PUBLISHABLE_KEY =
+/** Check if a string looks like a valid Clerk publishable key. */
+const isValidClerkKey = (key: string | undefined): key is string =>
+  !!key && (key.startsWith('pk_test_') || key.startsWith('pk_live_'));
+
+const envKey =
   (import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined) ||
-  (import.meta.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as string | undefined) ||
-  CLERK_LIVE_PUBLISHABLE_KEY;
+  (import.meta.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as string | undefined);
+
+export const CLERK_PUBLISHABLE_KEY =
+  isValidClerkKey(envKey) ? envKey : CLERK_LIVE_PUBLISHABLE_KEY;
 
 export const CLERK_SIGN_IN_URL = import.meta.env.VITE_CLERK_SIGN_IN_URL || '/sign-in';
 
