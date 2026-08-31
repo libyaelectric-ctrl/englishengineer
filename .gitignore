@@ -147,3 +147,6 @@ monitoring/prometheus_data/
 
 # ── Auto-generated reports ──
 PRC_Kademe_8_Live_Service_Evidence_Report.md
+.vercel
+.env*
+!.env.production
