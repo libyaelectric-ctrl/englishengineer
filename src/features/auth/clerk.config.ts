@@ -4,10 +4,12 @@
 // only the publishable key (VITE_CLERK_PUBLISHABLE_KEY) is safe to expose.
 // These values are injected at build time by Vite from .env.local.
 
+import { CLERK_LIVE_PUBLISHABLE_KEY } from './clerk.key';
+
 export const CLERK_PUBLISHABLE_KEY =
   (import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined) ||
   (import.meta.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY as string | undefined) ||
-  'pk_live_Y2xlcmsuZW5ndm94LmNvbSQ'; // production fallback (publishable keys are public by design)
+  CLERK_LIVE_PUBLISHABLE_KEY;
 
 export const CLERK_SIGN_IN_URL = import.meta.env.VITE_CLERK_SIGN_IN_URL || '/sign-in';
 
