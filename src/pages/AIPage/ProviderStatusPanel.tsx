@@ -88,7 +88,7 @@ export const ProviderStatusPanel = ({
           disabled={isBuyingCredits}
           className="h-7 rounded-[4px] border border-emerald-500/25 bg-emerald-500/5 hover:bg-emerald-500/10 text-[10px] font-bold uppercase tracking-wider text-emerald-600 cursor-pointer shadow-sm gap-1 transition-all px-3 inline-flex items-center justify-center"
         >
-          {isBuyingCredits ? 'Processing...' : '+ Buy 50 AI Credits ($5)'}
+          {isBuyingCredits ? 'Processing...' : '+ Buy 50 AI Credits ($4.99)'}
         </Button>
       </div>
     </div>

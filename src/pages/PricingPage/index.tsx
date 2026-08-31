@@ -1,5 +1,5 @@
 import { PricingCard } from '@/components/ui/PricingCard';
-import { Check, Globe, X } from 'lucide-react';
+import { Globe } from 'lucide-react';
 import { motion } from 'motion/react';
 
 import { useEffect, useState } from 'react';
@@ -10,7 +10,7 @@ import { ExitIntentModal } from '@/shared/components/ExitIntentModal';
 import { GlowingOrb } from '@/shared/components/GlowingOrb';
 import { PageMetadata } from '@/shared/components/PageMetadata';
 import { getPricingCopy } from '@/shared/data/pricing-copy';
-import { PRICING_FEATURE_ORDER, PRICING_TIERS } from '@/shared/data/pricing.data';
+import { PRICING_TIERS } from '@/shared/data/pricing.data';
 import { getPublicPageCopy } from '@/shared/data/public-page-copy';
 
 import { ProductAnalyticsService } from '@/features/analytics';
@@ -176,46 +176,6 @@ const PricingPage = () => {
               />
             </motion.div>
           ))}
-        </div>
-
-        {/* Feature Comparison Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm" role="table" aria-label="Feature comparison by plan">
-            <thead>
-              <tr className="border-b border-border-soft">
-                <th className="text-left py-3 pr-4 font-semibold text-muted-copy w-1/3">Feature</th>
-                {PRICING_TIERS.map((tier) => (
-                  <th
-                    key={tier.id}
-                    className="py-3 px-2 text-center font-bold text-foreground text-xs"
-                  >
-                    {tier.name}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {PRICING_FEATURE_ORDER.map((featureName) => (
-                <tr key={featureName} className="border-b border-border-soft/50">
-                  <td className="py-3 pr-4 text-foreground/80">{featureName}</td>
-                  {PRICING_TIERS.map((tier) => {
-                    const tierConfig = PRICING_TIERS.find((t) => t.id === tier.id);
-                    const feature = tierConfig?.features.find((f) => f.name === featureName);
-                    const value = feature?.included ?? false;
-                    return (
-                      <td key={tier.id} className="py-3 px-2 text-center">
-                        {value === true ? (
-                          <Check className="w-4 h-4 text-emerald-500 mx-auto" />
-                        ) : (
-                          <X className="w-4 h-4 text-muted-copy/50 mx-auto" />
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
       </section>
 

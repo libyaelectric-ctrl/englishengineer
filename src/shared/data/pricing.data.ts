@@ -1,3 +1,5 @@
+import { CurrencyConfig } from '@/features/billing/currency.config';
+
 export interface PricingTierFeature {
   name: string;
   included: boolean;
@@ -25,10 +27,10 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'junior',
     name: 'Junior',
-    monthlyPrice: 19,
-    annualPrice: 15,
-    originalMonthlyPrice: 29,
-    originalAnnualPrice: 23,
+    monthlyPrice: 19.99,
+    annualPrice: 15.99,
+    originalMonthlyPrice: 29.99,
+    originalAnnualPrice: 23.99,
     description: 'Essential learning core for daily engineering English practice.',
     audience: 'Getting started with discipline-specific vocabulary',
     bestFor: 'Individual engineers starting their journey',
@@ -36,7 +38,11 @@ export const PRICING_TIERS: PricingTier[] = [
     popular: false,
     comingSoon: false,
     features: [
-      { name: 'Placement Test', included: true, tooltip: 'CEFR assessment to determine your level' },
+      {
+        name: 'Placement Test',
+        included: true,
+        tooltip: 'CEFR assessment to determine your level',
+      },
       { name: 'Learning Hub', included: true, tooltip: 'Core learning modules access' },
       { name: 'Progress Tracking', included: true, tooltip: 'Daily and weekly progress metrics' },
       { name: 'Vocabulary', included: true, tooltip: 'General + Engineering word pool' },
@@ -54,10 +60,10 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'senior',
     name: 'Senior',
-    monthlyPrice: 39,
-    annualPrice: 31,
-    originalMonthlyPrice: 59,
-    originalAnnualPrice: 47,
+    monthlyPrice: 39.99,
+    annualPrice: 31.99,
+    originalMonthlyPrice: 59.99,
+    originalAnnualPrice: 47.99,
     description: 'Expand your skills with reading, writing, and translation.',
     audience: 'Engineers who read and write technical documents',
     bestFor: 'Professional engineers improving documentation skills',
@@ -83,10 +89,10 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'specialist',
     name: 'Specialist',
-    monthlyPrice: 49,
-    annualPrice: 39,
-    originalMonthlyPrice: 79,
-    originalAnnualPrice: 63,
+    monthlyPrice: 49.99,
+    annualPrice: 39.99,
+    originalMonthlyPrice: 79.99,
+    originalAnnualPrice: 63.99,
     description: 'Add speaking and listening to complete your communication skills.',
     audience: 'Engineers in international project meetings',
     bestFor: 'Engineers in global team environments',
@@ -112,10 +118,10 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'master',
     name: 'Master',
-    monthlyPrice: 59,
-    annualPrice: 47,
-    originalMonthlyPrice: 99,
-    originalAnnualPrice: 79,
+    monthlyPrice: 59.99,
+    annualPrice: 47.99,
+    originalMonthlyPrice: 99.99,
+    originalAnnualPrice: 79.99,
     description: 'Full access: all modules including AI Copilot and tools.',
     audience: 'Engineers seeking complete professional mastery',
     bestFor: 'Senior engineers and technical leads',
@@ -189,7 +195,10 @@ export const getRecommendedPlan = (totalItemCount: number): string => {
   return 'junior';
 };
 
-export const getDynamicPricingMessage = (tier: PricingTier, totalItemCount: number): string | null => {
+export const getDynamicPricingMessage = (
+  tier: PricingTier,
+  totalItemCount: number
+): string | null => {
   if (totalItemCount >= 4500 && tier.id === 'master') {
     return 'Best value for your extensive content library';
   }
@@ -198,5 +207,3 @@ export const getDynamicPricingMessage = (tier: PricingTier, totalItemCount: numb
   }
   return null;
 };
-
-import { CurrencyConfig } from '@/features/billing/currency.config';
