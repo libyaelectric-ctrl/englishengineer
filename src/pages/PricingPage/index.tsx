@@ -166,6 +166,10 @@ const PricingPage = () => {
             </motion.div>
           ))}
         </div>
+
+        <p className="text-center text-xs text-muted-copy/60 mt-2 max-w-lg mx-auto">
+          Prices shown may vary slightly at checkout due to billing provider rounding. Please verify the final amount on the payment page before completing your purchase.
+        </p>
       </section>
 
       <ExitIntentModal />
