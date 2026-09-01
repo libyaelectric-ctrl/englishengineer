@@ -121,17 +121,29 @@ const PricingCta = ({
     <div className="space-y-2">
       {tier.originalMonthlyPrice || tier.originalAnnualPrice ? (
         <div className={`rounded-[var(--radius-card)] border px-3 py-1.5 text-center ${isAnnual ? 'border-blue-300 bg-blue-50' : 'border-emerald-300 bg-emerald-50'}`}>
-          <span className={`text-xs font-bold ${isAnnual ? 'text-blue-700' : 'text-emerald-700'}`}>
-            SAVE {(() => {
-              const orig = isAnnual ? (tier.originalAnnualPrice ?? tier.originalMonthlyPrice ?? price) : (tier.originalMonthlyPrice ?? price);
-              return Math.round(((orig - price) / orig) * 100);
-            })()}%
-          </span>
-        </div>
-      ) : null}
-      {isAnnual && tier.monthlyPrice > 0 ? (
-        <div className="rounded-[var(--radius-card)] border border-amber-300 bg-amber-50 px-3 py-1.5 text-center">
-          <span className="text-xs font-bold text-amber-700">SAVE 20% — Annual billing</span>
+          {isAnnual ? (
+            <>
+              <span className="text-[10px] font-bold text-blue-600">
+                SAVE {(() => {
+                  const origM = tier.originalMonthlyPrice ?? price;
+                  return Math.round(((origM - tier.monthlyPrice) / origM) * 100);
+                })()}% + SAVE 20%
+              </span>
+              <div className="text-[11px] font-extrabold text-blue-800 mt-0.5">
+                SAVE {(() => {
+                  const origM = tier.originalMonthlyPrice ?? price;
+                  return Math.round(((origM - price) / origM) * 100);
+                })()}% Total Savings
+              </div>
+            </>
+          ) : (
+            <span className="text-xs font-bold text-emerald-700">
+              SAVE {(() => {
+                const orig = tier.originalMonthlyPrice ?? price;
+                return Math.round(((orig - price) / orig) * 100);
+              })()}%
+            </span>
+          )}
         </div>
       ) : null}
       <button
