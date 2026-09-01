@@ -7,7 +7,7 @@ import { useLocalizationStore } from '@/features/localization';
 export function Footer({ className = '' }: { className?: string }) {
   const { translate } = useLocalizationStore();
   return (
-    <footer className={`border-t border-border-soft bg-background px-6 py-2 md:px-12 ${className}`}>
+    <footer className={`border-t border-border-soft bg-background px-6 py-2 md:px-12 pb-[max(0.5rem,env(safe-area-inset-bottom,0px))] ${className}`}>
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-3">

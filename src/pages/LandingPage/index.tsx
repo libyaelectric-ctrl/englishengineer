@@ -373,11 +373,11 @@ export const LandingPage = () => {
         </AnimatePresence>
       </div>
 
-      {/* Navigation arrows */}
+      {/* Navigation arrows - hidden on mobile to prevent overlap */}
       <button
         type="button"
         onClick={prev}
-        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 flex h-12 w-12 items-center justify-center rounded-full border border-border-soft bg-surface/60 backdrop-blur-md text-muted-copy hover:text-foreground hover:bg-surface-hover transition-all"
+        className="hidden md:flex absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 items-center h-12 w-12 justify-center rounded-full border border-border-soft bg-surface/60 backdrop-blur-md text-muted-copy hover:text-foreground hover:bg-surface-hover transition-all"
         aria-label="Previous slide"
       >
         <ArrowLeft className="h-5 w-5" />
@@ -385,14 +385,14 @@ export const LandingPage = () => {
       <button
         type="button"
         onClick={next}
-        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 flex h-12 w-12 items-center justify-center rounded-full border border-border-soft bg-surface/60 backdrop-blur-md text-muted-copy hover:text-foreground hover:bg-surface-hover transition-all"
+        className="hidden md:flex absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 items-center h-12 w-12 justify-center rounded-full border border-border-soft bg-surface/60 backdrop-blur-md text-muted-copy hover:text-foreground hover:bg-surface-hover transition-all"
         aria-label="Next slide"
       >
         <ArrowRight className="h-5 w-5" />
       </button>
 
       {/* Slide indicators */}
-      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+      <div className="absolute bottom-24 md:bottom-20 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
         {slideLabels.map((label, i) => (
           <button
             key={label}
@@ -407,7 +407,7 @@ export const LandingPage = () => {
       </div>
 
       {/* Watermark */}
-      <div className="fixed bottom-3 right-4 z-50 flex items-center gap-1.5 pointer-events-none select-none opacity-30 hover:opacity-60 transition-opacity duration-500">
+      <div className="fixed bottom-16 md:bottom-3 right-4 z-50 flex items-center gap-1.5 pointer-events-none select-none opacity-30 hover:opacity-60 transition-opacity duration-500">
         <img src="/brand/logo.svg" alt="" className="h-4 w-4" width="16" height="16" />
         <span className="text-[10px] font-bold text-foreground tracking-wide">EngVox</span>
         <span className="text-[9px] font-mono font-bold text-primary">v{PRODUCT_VERSION}</span>

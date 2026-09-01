@@ -37,7 +37,7 @@ export const ClerkAuthControls = () => {
     <>
       <Link
         to={CLERK_SIGN_IN_URL}
-        className="hidden sm:inline-flex items-center rounded border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-semibold text-foreground hover:bg-surface-hover hover:border-primary/40 transition-colors ml-1"
+        className="inline-flex items-center rounded border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-semibold text-foreground hover:bg-surface-hover hover:border-primary/40 transition-colors ml-1"
       >
         {translate('common.login') || 'Log in'}
       </Link>
