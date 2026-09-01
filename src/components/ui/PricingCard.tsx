@@ -53,6 +53,7 @@ const FeatureList = ({ tier, isVariantLanding, featureLabels }: FeatureListProps
 interface PricingCtaProps {
   tier: PricingTier;
   isTeam: boolean;
+  isAnnual: boolean;
   isCurrentPlan: boolean;
   isLoading: boolean;
   onSelect?: (tierId: string) => void;
@@ -64,6 +65,7 @@ interface PricingCtaProps {
 const PricingCta = ({
   tier,
   isTeam,
+  isAnnual,
   isCurrentPlan,
   isLoading,
   onSelect,
@@ -116,17 +118,29 @@ const PricingCta = ({
     );
   }
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      className={`w-full rounded-[var(--radius-card)] px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition-all shadow-sm ${
-        tier.popular
-          ? 'bg-primary text-white hover:bg-primary/95'
-          : 'bg-surface text-foreground border border-border-soft hover:bg-surface-hover'
-      }`}
-    >
-      {onSelect ? `${copy.getStarted} - ${formatPrice(price, currency)}` : copy.choosePlan}
-    </button>
+    <div className="space-y-2">
+      {tier.originalMonthlyPrice || tier.originalAnnualPrice ? (
+        <div className="rounded-[var(--radius-card)] border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-center">
+          <span className="text-xs font-bold text-emerald-700">
+            SAVE {(() => {
+              const orig = isAnnual ? (tier.originalAnnualPrice ?? tier.originalMonthlyPrice ?? price) : (tier.originalMonthlyPrice ?? price);
+              return Math.round(((orig - price) / orig) * 100);
+            })()}%
+          </span>
+        </div>
+      ) : null}
+      <button
+        type="button"
+        onClick={handleClick}
+        className={`w-full rounded-[var(--radius-card)] px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition-all shadow-sm ${
+          tier.popular
+            ? 'bg-primary text-white hover:bg-primary/95'
+            : 'bg-surface text-foreground border border-border-soft hover:bg-surface-hover'
+        }`}
+      >
+        {onSelect ? `${copy.getStarted} - ${formatPrice(price, currency)}` : copy.choosePlan}
+      </button>
+    </div>
   );
 };
 
@@ -215,14 +229,6 @@ export const PricingCard = ({
               <span className="text-xs text-muted-copy">
                 {copy.perMonth}
               </span>
-              {tier.originalMonthlyPrice || tier.originalAnnualPrice ? (
-                <span className="ml-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded whitespace-nowrap">
-                  SAVE {(() => {
-                    const orig = isAnnual ? (tier.originalAnnualPrice ?? tier.originalMonthlyPrice ?? price) : (tier.originalMonthlyPrice ?? price);
-                    return Math.round(((orig - price) / orig) * 100);
-                  })()}%
-                </span>
-              ) : null}
             </div>
             {isAnnual && !isTeam ? (
               <p className="mt-1 text-[11px] text-muted-copy">
@@ -246,6 +252,7 @@ export const PricingCard = ({
           <PricingCta
             tier={tier}
             isTeam={isTeam}
+            isAnnual={isAnnual}
             isCurrentPlan={isCurrentPlan}
             isLoading={isLoading}
             onSelect={onSelect}
