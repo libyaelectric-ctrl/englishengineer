@@ -92,7 +92,7 @@ export const AppShell: FC = () => {
         <main
           id="main-content"
           ref={mainRef}
-          className="custom-scrollbar flex-1 overflow-y-auto overflow-x-hidden overscroll-none px-4 pb-8 pt-4 sm:px-6 lg:px-8 max-w-full"
+          className="custom-scrollbar flex-1 overflow-y-auto overflow-x-hidden overscroll-none px-4 pb-20 pt-4 sm:px-6 lg:px-8 lg:pb-8 max-w-full"
           style={{ touchAction: 'pan-y' }}
         >
           <div className="mx-auto w-full max-w-6xl">

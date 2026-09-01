@@ -90,7 +90,7 @@ export function Navbar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex items-center gap-3 py-2 h-11">
           {/* ── Left: Logo ── */}
-          <Link to="/" className="flex items-center gap-2 group cursor-pointer shrink-0">
+          <Link to="/" className="flex items-center gap-1.5 sm:gap-2 group cursor-pointer shrink-0">
             <div className="flex h-7 w-7 items-center justify-center rounded overflow-hidden transition-transform duration-200 group-hover:scale-105">
               <img
                 src="/brand/logo.svg"
@@ -100,10 +100,10 @@ export function Navbar() {
                 height="48"
               />
             </div>
-            <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">
+            <span className="hidden sm:inline text-sm font-bold text-foreground group-hover:text-primary transition-colors">
               EngVox
             </span>
-            <span className="rounded bg-soft px-1.5 py-px text-[9px] font-bold uppercase tracking-wider text-primary font-mono border border-border-soft flex items-center gap-1">
+            <span className="hidden sm:inline rounded bg-soft px-1.5 py-px text-[9px] font-bold uppercase tracking-wider text-primary font-mono border border-border-soft items-center gap-1">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
@@ -172,7 +172,7 @@ export function Navbar() {
             <button
               type="button"
               onClick={enterDemo}
-              className="inline-flex items-center rounded border border-primary/40 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors cursor-pointer"
+              className="inline-flex items-center rounded border border-primary/40 bg-primary/10 px-2 py-1 text-[10px] sm:text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors cursor-pointer"
             >
               {translate('landing.tryDemo')}
             </button>

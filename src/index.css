@@ -437,3 +437,89 @@ button:hover ~ .yibo-hide-ctrl,
     background: rgba(10, 10, 26, 0.85);
   }
 }
+
+/* ── Mobile Global Reset ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  html {
+    font-size: 15px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    overflow-x: hidden;
+  }
+
+  /* Safe area for notched devices */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .safe-area-inset {
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+      env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  }
+
+  /* Touch-friendly targets — navigation links, primary buttons, form controls */
+  nav a,
+  nav button,
+  .MobileBottomNavigation a,
+  button[type='submit'],
+  input[type='submit'],
+  [role='navigation'] a,
+  [role='navigation'] button {
+    min-height: 44px;
+  }
+
+  /* Prevent horizontal overflow globally */
+  img,
+  video,
+  svg,
+  canvas {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Scrollable areas with momentum */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hide scrollbar on mobile for cleaner look */
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  /* Larger checkboxes / toggles on mobile */
+  input[type='checkbox'],
+  input[type='radio'] {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Tables scroll horizontally on mobile */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Compact badges and small inline elements stay as-is */
+  .text-[9px],
+  .text-[10px],
+  .text-[11px] {
+    line-height: 1.4;
+  }
+
+  /* Bottom navigation safe area padding */
+  .pb-mobile-nav {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+  }
+}

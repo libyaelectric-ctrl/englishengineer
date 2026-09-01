@@ -162,7 +162,7 @@ export const LandingPage = () => {
 
   return (
     <div
-      className="h-dvh w-screen bg-background text-foreground overflow-hidden overscroll-none relative select-none"
+      className="h-dvh w-full max-w-full bg-background text-foreground overflow-hidden overscroll-none relative select-none"
       translate="no"
     >
       <Navbar />

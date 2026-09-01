@@ -3,7 +3,7 @@ import { router } from '@/routes/router';
 import { ClerkProvider } from '@clerk/clerk-react';
 import * as Sentry from '@sentry/react';
 
-import { Suspense, lazy, Component, type ErrorInfo, type ReactNode } from 'react';
+import { Component, type ErrorInfo, type ReactNode, Suspense, lazy } from 'react';
 
 import { RouterProvider } from 'react-router-dom';
 
@@ -37,6 +37,11 @@ const ThemedClerkProvider = ({ children }: { children: React.ReactNode }) => {
       signUpUrl={CLERK_SIGN_UP_URL ?? '/sign-up'}
       signInFallbackRedirectUrl={CLERK_SIGN_IN_FALLBACK_REDIRECT_URL ?? '/dashboard'}
       signUpFallbackRedirectUrl={CLERK_SIGN_UP_FALLBACK_REDIRECT_URL ?? '/dashboard'}
+      allowedRedirectOrigins={[
+        'http://localhost',
+        'capacitor://localhost',
+        'https://eng-vox.vercel.app',
+      ]}
     >
       {children}
     </ClerkProvider>

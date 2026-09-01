@@ -1,5 +1,12 @@
 {
   "appId": "com.engvox.app",
   "appName": "EngVox",
-  "webDir": "dist"
+  "webDir": "dist",
+  "server": {
+    "url": "https://eng-vox.vercel.app",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true
+  }
 }
