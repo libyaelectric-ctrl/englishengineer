@@ -3,7 +3,6 @@
   "appName": "EngVox",
   "webDir": "dist",
   "server": {
-    "url": "https://eng-vox.vercel.app",
     "cleartext": true
   },
   "android": {

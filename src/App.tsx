@@ -84,8 +84,8 @@ const AppContent = () => {
 
   return (
     <SimpleErrorBoundary fallback={<div>An error occurred. Please refresh the page.</div>}>
-      <ThemeProvider>
-        <AppProvider>
+      <AppProvider>
+        <ThemeProvider>
           <ThemedClerkProvider>
             <ClerkBridge />
             <Suspense fallback={null}>
@@ -95,8 +95,8 @@ const AppContent = () => {
             <CookieConsentBanner />
           </ThemedClerkProvider>
           <ToastContainer />
-        </AppProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </AppProvider>
     </SimpleErrorBoundary>
   );
 };
