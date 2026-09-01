@@ -1,11 +1,11 @@
 import { AppShell } from '@/layouts/AppShell';
 import { PublicLayout } from '@/layouts/PublicLayout';
+import * as Sentry from '@sentry/react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { type ComponentType, Suspense, lazy } from 'react';
 
 import { Navigate, createBrowserRouter } from 'react-router-dom';
-import * as Sentry from '@sentry/react';
 
 import { LoadingState } from '@/shared/components/LoadingState';
 import { PageErrorBoundary } from '@/shared/components/PageErrorBoundary';
@@ -127,7 +127,11 @@ export const router = sentryCreateBrowserRouter([
 
       {
         path: 'learning-path',
-        element: withSuspense(LearningPath),
+        element: (
+          <SubscriptionRouteGuard feature="learningPath">
+            {withSuspense(LearningPath)}
+          </SubscriptionRouteGuard>
+        ),
       },
       {
         path: 'lesson-runner/:levelId?',

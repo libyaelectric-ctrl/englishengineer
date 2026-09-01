@@ -40,7 +40,8 @@ export type BillingFeature =
   | 'pronunciationAnalysis'
   | 'voiceMeetingSimulator'
   | 'voiceMinuteWallet'
-  | 'aiCreditAddon';
+  | 'aiCreditAddon'
+  | 'learningPath';
 
 export interface BillingLimits {
   dailyAICoachRequests: number | 'unlimited';

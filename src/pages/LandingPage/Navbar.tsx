@@ -58,8 +58,8 @@ export function Navbar() {
       isLoading: false,
     });
     useBillingStore.getState().setSubscription({
-      planId: 'master',
-      status: 'active',
+      planId: 'free',
+      status: 'none',
       currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       cancelAtPeriodEnd: false,
       stripeCustomerId: null,

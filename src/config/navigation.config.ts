@@ -37,7 +37,7 @@ export const SKILL_NAV_ITEMS = [
 
 // Merged: Learning Path + Curriculum + Placement → single "Learning" group
 const LEARNING_NAV_ITEMS = [
-  { label: 'Learning Path', href: '/learning-path', icon: Trophy },
+  { label: 'Learning Path', href: '/learning-path', icon: Trophy, feature: 'learningPath' },
   { label: 'Curriculum', href: '/curriculum', icon: Calendar },
   { label: 'Placement Test', href: '/placement', icon: Compass, feature: 'placementTest' },
 ] as const;

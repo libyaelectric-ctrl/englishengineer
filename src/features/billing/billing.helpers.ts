@@ -25,7 +25,12 @@ export const FREE_FEATURES: BillingFeature[] = [
   'gamification',
 ];
 
-export const JUNIOR_FEATURES: BillingFeature[] = [...FREE_FEATURES, 'placementTest', 'learningHub'];
+export const JUNIOR_FEATURES: BillingFeature[] = [
+  ...FREE_FEATURES,
+  'placementTest',
+  'learningHub',
+  'learningPath',
+];
 
 export const SENIOR_FEATURES: BillingFeature[] = [
   ...JUNIOR_FEATURES,
