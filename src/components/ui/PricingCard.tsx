@@ -80,12 +80,16 @@ const PricingCta = ({
 
   if (isTeam) {
     return (
-      <a
-        href="mailto:sales@engvox.io?subject=EngineerOS%20Team%20plan"
-        className="block w-full rounded-[var(--radius-card)] border border-border-soft bg-surface px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-foreground transition-colors hover:bg-surface-hover"
+      <button
+        type="button"
+        onClick={async () => {
+          const { openMailto } = await import('@/shared/utils/capacitor');
+          await openMailto('sales@engvox.io', 'EngineerOS Team plan', '');
+        }}
+        className="block w-full rounded-[var(--radius-card)] border border-border-soft bg-surface px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-foreground transition-colors hover:bg-surface-hover cursor-pointer"
       >
         {copy.contactSales}
-      </a>
+      </button>
     );
   }
   if (tier.comingSoon) {

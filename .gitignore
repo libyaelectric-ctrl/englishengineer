@@ -6,6 +6,9 @@ backend/node_modules_off/
 # ── Embedded repo (old Ionic project) ──
 eng-vox/
 
+# ── Stale backups ──
+yap/
+
 # ── Build outputs ──
 dist/
 build/

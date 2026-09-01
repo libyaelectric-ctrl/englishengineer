@@ -50,7 +50,8 @@ const PRReviewCoachDemo = ({
 
   const handleCopy = async () => {
     if (!result?.polishedText) return;
-    await navigator.clipboard.writeText(result.polishedText);
+    const { copyToClipboard } = await import('@/shared/utils/capacitor');
+    await copyToClipboard(result.polishedText);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1400);
   };

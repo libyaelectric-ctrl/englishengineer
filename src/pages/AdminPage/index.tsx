@@ -85,7 +85,7 @@ export const AdminPage = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => window.location.assign('/dashboard')}
+                onClick={async () => { const { navigateTo } = await import('@/shared/utils/capacitor'); navigateTo('/dashboard'); }}
                 className="text-xs"
               >
                 ← Dashboard

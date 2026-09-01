@@ -135,12 +135,16 @@ const BusinessPage = () => {
               >
                 Explore Team Workspace <ArrowRight className="h-4 w-4" />
               </Link>
-              <a
-                href="mailto:sales@engvox.com?subject=EngVox%20Enterprise%20Inquiry"
-                className="inline-flex items-center gap-2 rounded-[var(--radius-card)] bg-surface border border-border-soft px-5 py-2.5 text-xs font-bold text-foreground hover:bg-surface-hover transition-colors"
+              <button
+                type="button"
+                onClick={async () => {
+                  const { openMailto } = await import('@/shared/utils/capacitor');
+                  await openMailto('sales@engvox.com', 'EngVox Enterprise Inquiry', '');
+                }}
+                className="inline-flex items-center gap-2 rounded-[var(--radius-card)] bg-surface border border-border-soft px-5 py-2.5 text-xs font-bold text-foreground hover:bg-surface-hover transition-colors cursor-pointer"
               >
                 <Mail className="h-4 w-4 text-primary" /> Contact Enterprise Sales
-              </a>
+              </button>
             </div>
 
             <div className="pt-3 flex flex-wrap items-center gap-4 text-xs font-medium text-muted-copy">
