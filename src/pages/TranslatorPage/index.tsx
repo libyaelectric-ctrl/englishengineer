@@ -446,10 +446,11 @@ export const TranslatorPage = () => {
     }
   };
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     if (!translatedText) return;
     try {
-      navigator.clipboard.writeText(translatedText);
+      const { copyToClipboard } = await import('@/shared/utils/capacitor');
+      await copyToClipboard(translatedText);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (e) {

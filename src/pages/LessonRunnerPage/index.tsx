@@ -205,7 +205,10 @@ const LessonRunnerPage = () => {
         <p>{translate('learningpath.error')}</p>
         <button
           type="button"
-          onClick={() => window.location.reload()}
+          onClick={async () => {
+            const { reloadApp } = await import('@/shared/utils/capacitor');
+            await reloadApp();
+          }}
           className="flex items-center gap-2 rounded-xl border border-[var(--color-border-soft)] bg-[var(--surface)] px-5 py-2.5 text-xs font-bold text-[var(--foreground)] shadow hover:bg-[var(--surface-hover)]"
         >
           <RotateCcw className="h-4 w-4" /> {translate('lesson.backToRoadmap')}
@@ -388,12 +391,16 @@ const LessonRunnerPage = () => {
                 <p
                   className={`text-sm font-black uppercase tracking-wider ${isCorrect ? 'text-emerald-300' : 'text-rose-300'}`}
                 >
-                  {isCorrect ? translate('lesson.correctSubmission') : translate('lesson.incorrectSubmission')}
+                  {isCorrect
+                    ? translate('lesson.correctSubmission')
+                    : translate('lesson.incorrectSubmission')}
                 </p>
                 {!isCorrect && (
                   <p className="mt-1 text-xs text-[var(--color-muted-copy)]">
                     {translate('lesson.correctAnswer')}:{' '}
-                    <strong className="text-[var(--foreground)] font-bold">{currentQ.correctAnswer}</strong>
+                    <strong className="text-[var(--foreground)] font-bold">
+                      {currentQ.correctAnswer}
+                    </strong>
                   </p>
                 )}
                 {currentQ.term.definition && (

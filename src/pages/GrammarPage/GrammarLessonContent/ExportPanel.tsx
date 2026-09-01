@@ -4,7 +4,7 @@ const escapeHtml = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 export const ExportPanel = ({ selectedRule }: { selectedRule: Rule }) => {
-  const exportAnki = () => {
+  const exportAnki = async () => {
     const header = 'Front,Back,Tags\n';
     const lines = selectedRule.examples.map((ex) => {
       const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;
@@ -15,16 +15,15 @@ export const ExportPanel = ({ selectedRule }: { selectedRule: Rule }) => {
         `"${selectedRule.badExampleEnglish.replace(/"/g, '""')}","${(selectedRule.badExampleTurkishExplanation || selectedRule.commonMistakes).replace(/"/g, '""')}",grammar ${selectedRule.cefrLevel} mistakes`
       );
     }
-    const blob = new Blob([header + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `grammar-${selectedRule.id}-anki.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+    const { downloadFile } = await import('@/shared/utils/capacitor');
+    await downloadFile(
+      header + lines.join('\n'),
+      `grammar-${selectedRule.id}-anki.csv`,
+      'text/csv'
+    );
   };
 
-  const exportPDF = () => {
+  const exportPDF = async () => {
     const h = escapeHtml;
     const html = `
       <!DOCTYPE html><html lang="en"><head>
@@ -57,14 +56,10 @@ export const ExportPanel = ({ selectedRule }: { selectedRule: Rule }) => {
           : ''
       }
       </body></html>`;
+    const { openExternalUrl } = await import('@/shared/utils/capacitor');
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
-    const win = window.open(url, '_blank', 'noopener,noreferrer');
-    if (win) {
-      win.addEventListener('load', () => {
-        win.print();
-      });
-    }
+    await openExternalUrl(url);
   };
 
   return (

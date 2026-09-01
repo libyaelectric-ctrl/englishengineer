@@ -207,23 +207,21 @@ export function useAIPage() {
   const handleCopyResult = async () => {
     if (!lastResult) return;
     try {
-      await navigator.clipboard.writeText(formatCoachResult(lastResult));
+      const { copyToClipboard } = await import('@/shared/utils/capacitor');
+      await copyToClipboard(formatCoachResult(lastResult));
     } catch (e) {
       logger.w('[Clipboard] Failed to copy', e);
     }
   };
 
-  const handleExportResult = () => {
+  const handleExportResult = async () => {
     if (!lastResult) return;
-    const blob = new Blob([formatCoachResult(lastResult)], {
-      type: 'text/plain;charset=utf-8',
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `EngVox-ai-copilot-${new Date().toISOString().slice(0, 10)}.txt`;
-    link.click();
-    URL.revokeObjectURL(url);
+    const { downloadFile } = await import('@/shared/utils/capacitor');
+    await downloadFile(
+      formatCoachResult(lastResult),
+      `EngVox-ai-copilot-${new Date().toISOString().slice(0, 10)}.txt`,
+      'text/plain'
+    );
   };
 
   return {

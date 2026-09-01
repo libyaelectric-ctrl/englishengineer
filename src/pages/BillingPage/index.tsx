@@ -206,15 +206,18 @@ export const BillingPage = () => {
                         </td>
                         <td className="px-4 py-3 text-right">
                           {inv.invoicePdf ? (
-                            <a
-                              href={inv.invoicePdf}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                const { openExternalUrl } =
+                                  await import('@/shared/utils/capacitor');
+                                await openExternalUrl(inv.invoicePdf!);
+                              }}
                               className="inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:border-primary hover:text-primary transition-all cursor-pointer shadow-sm"
                               aria-label="Download receipt"
                             >
                               <Download className="h-4 w-4" />
-                            </a>
+                            </button>
                           ) : (
                             <button
                               type="button"

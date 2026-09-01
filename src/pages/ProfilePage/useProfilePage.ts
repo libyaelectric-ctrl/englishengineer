@@ -139,7 +139,7 @@ export const useProfilePage = () => {
     }
   };
 
-  const exportLocalData = () => {
+  const exportLocalData = async () => {
     const payload = {
       product: 'EngVox',
       version: PRODUCT_VERSION,
@@ -147,15 +147,12 @@ export const useProfilePage = () => {
       scope: 'Local EngVox data stored on this device',
       data: storage.exportAll(),
     };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], {
-      type: 'application/json',
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `EngVox-local-data-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    const { downloadFile } = await import('@/shared/utils/capacitor');
+    await downloadFile(
+      JSON.stringify(payload, null, 2),
+      `EngVox-local-data-${new Date().toISOString().slice(0, 10)}.json`,
+      'application/json'
+    );
     setMessage('Local EngVox data export created.');
     setError(null);
   };

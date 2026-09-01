@@ -3,6 +3,7 @@ import { ErrorCode } from '@/core/errors/error-codes';
 
 import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
+import { isNativePlatform } from '@/shared/utils/capacitor';
 
 import {
   createFreeSubscription,
@@ -49,13 +50,21 @@ const isAllowedHost = (hostname: string): boolean => {
   return false;
 };
 
-const safeRedirect = (url: string): void => {
+const safeRedirect = async (url: string): Promise<void> => {
   try {
     const parsed = new URL(url);
-    if (isAllowedHost(parsed.hostname)) {
-      window.location.assign(url);
-    } else {
+    if (!isAllowedHost(parsed.hostname)) {
       logger.w('[BILLING] Blocked redirect to untrusted host:', parsed.hostname, url);
+      return;
+    }
+
+    if (isNativePlatform()) {
+      // On Android/iOS, open checkout in the system browser so Clerk/Dodo
+      // auth flows work correctly outside the WebView sandbox.
+      const { openExternalUrl } = await import('@/shared/utils/capacitor');
+      await openExternalUrl(url);
+    } else {
+      window.location.assign(url);
     }
   } catch {
     logger.w('[BILLING] Invalid redirect URL:', url);
@@ -124,7 +133,7 @@ export const BillingService = {
         billingInterval,
       });
 
-      safeRedirect(response.url);
+      await safeRedirect(response.url);
     } catch (error: unknown) {
       if (error instanceof Error) throw error;
       throw new AppError({
@@ -150,7 +159,7 @@ export const BillingService = {
         returnUrl: getReturnUrl('/billing'),
       });
 
-      safeRedirect(response.url);
+      await safeRedirect(response.url);
     } catch (error: unknown) {
       if (error instanceof Error) throw error;
       throw new AppError({
@@ -178,7 +187,7 @@ export const BillingService = {
         cancelUrl: getReturnUrl('/billing?topup=cancelled'),
       });
 
-      safeRedirect(response.url);
+      await safeRedirect(response.url);
     } catch (error: unknown) {
       if (error instanceof Error) throw error;
       throw new AppError({

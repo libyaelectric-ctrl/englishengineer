@@ -15,12 +15,11 @@ const isDevelopment = import.meta.env.DEV === true;
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   const errorDetails = error instanceof Error ? error.message : String(error);
 
-  const handleReport = () => {
-    const subject = encodeURIComponent('EngVox Error Report');
-    const body = encodeURIComponent(
-      `Error: ${errorDetails}\nURL: ${window.location.href}\nTime: ${new Date().toISOString()}`
-    );
-    window.open(`mailto:support@engvox.com?subject=${subject}&body=${body}`);
+  const handleReport = async () => {
+    const subject = 'EngVox Error Report';
+    const body = `Error: ${errorDetails}\nURL: ${window.location.href}\nTime: ${new Date().toISOString()}`;
+    const { openMailto } = await import('@/shared/utils/capacitor');
+    await openMailto('support@engvox.com', subject, body);
   };
 
   return (
@@ -80,8 +79,9 @@ const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
 };
 
 export const ErrorBoundaryProvider = ({ children }: ErrorBoundaryProviderProps) => {
-  const handleReset = useCallback(() => {
-    window.location.reload();
+  const handleReset = useCallback(async () => {
+    const { reloadApp } = await import('@/shared/utils/capacitor');
+    await reloadApp();
   }, []);
 
   const handleError = useCallback((error: unknown) => {

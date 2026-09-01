@@ -41,7 +41,10 @@ export const RouteErrorPage = () => {
         logger.w('[RouteError] Failed to write reload count to sessionStorage', e);
       }
       const delay = Math.min(1000 * 2 ** reloadCountRef.current, 8000);
-      const timer = setTimeout(() => window.location.reload(), delay);
+      const timer = setTimeout(async () => {
+        const { reloadApp } = await import('@/shared/utils/capacitor');
+        await reloadApp();
+      }, delay);
       return () => clearTimeout(timer);
     }
     try {

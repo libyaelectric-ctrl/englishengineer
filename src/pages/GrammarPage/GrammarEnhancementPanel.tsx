@@ -104,14 +104,13 @@ const writeJson = <T,>(key: string, value: T): void => {
   }
 };
 
-const downloadText = (filename: string, content: string, type = 'text/plain'): void => {
-  const blob = new Blob([content], { type });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement('a');
-  anchor.href = url;
-  anchor.download = filename;
-  anchor.click();
-  URL.revokeObjectURL(url);
+const downloadText = async (
+  filename: string,
+  content: string,
+  type = 'text/plain'
+): Promise<void> => {
+  const { downloadFile } = await import('@/shared/utils/capacitor');
+  await downloadFile(content, filename, type);
 };
 
 const buildCsv = (rules: GrammarRule[]): string => {
@@ -261,16 +260,16 @@ export const GrammarEnhancementPanel = ({
     window.speechSynthesis.speak(utterance);
   };
 
-  const exportQueue = () => {
+  const exportQueue = async () => {
     const selected = rules.filter((rule) => customQueue.includes(rule.id));
-    downloadText(
+    await downloadText(
       'grammar-custom-queue.csv',
       buildCsv(selected.length ? selected : [selectedRule]),
       'text/csv'
     );
   };
 
-  const exportPocketGuide = () => {
+  const exportPocketGuide = async () => {
     const guide = rules
       .slice(0, 60)
       .map(
@@ -278,7 +277,7 @@ export const GrammarEnhancementPanel = ({
           `${rule.cefrLevel} | ${rule.ruleTitle || rule.title}\n${rule.structure}\n${rule.correctedExampleEnglish}`
       )
       .join('\n\n');
-    downloadText('grammar-pocket-guide.txt', guide);
+    await downloadText('grammar-pocket-guide.txt', guide);
   };
 
   const queueOfflineSync = async () => {

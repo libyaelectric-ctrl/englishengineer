@@ -329,7 +329,7 @@ export function useVocabularyPage() {
     });
   }, [menuState, selectSet, dueTerms]);
 
-  const exportCSV = () => {
+  const exportCSV = async () => {
     const header = 'term,turkishMeaning,cefrLevel,domain,status\n';
     const rows = wordSet
       .map((term) => {
@@ -345,13 +345,12 @@ export function useVocabularyPage() {
         ].join(',');
       })
       .join('\n');
-    const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = `vocabulary-${activeTab.toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`;
-    anchor.click();
-    URL.revokeObjectURL(url);
+    const { downloadFile } = await import('@/shared/utils/capacitor');
+    await downloadFile(
+      header + rows,
+      `vocabulary-${activeTab.toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`,
+      'text/csv'
+    );
   };
 
   const navigate = useNavigate();

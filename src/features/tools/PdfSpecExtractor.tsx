@@ -71,12 +71,13 @@ export const PdfSpecExtractor = () => {
     }, 1200);
   }, []);
 
-  const handleCopyFlashcards = useCallback(() => {
+  const handleCopyFlashcards = useCallback(async () => {
     const text = extractedTerms
       .map((t) => `\u2022 ${t.word} (${t.category}): ${t.definition} [Ref: ${t.specClause}]`)
       .join('\n\n');
     try {
-      navigator.clipboard.writeText(text);
+      const { copyToClipboard } = await import('@/shared/utils/capacitor');
+      await copyToClipboard(text);
       setCopied(true);
     } catch (e) {
       logger.w('[Clipboard] Failed to copy', e);

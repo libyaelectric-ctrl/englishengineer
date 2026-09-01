@@ -108,7 +108,8 @@ export const FieldDocAssistant = () => {
   const handleCopy = useCallback(async () => {
     if (!generatedLetter) return;
     try {
-      await navigator.clipboard.writeText(generatedLetter);
+      const { copyToClipboard } = await import('@/shared/utils/capacitor');
+      await copyToClipboard(generatedLetter);
       setCopied(true);
       if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
       copyTimerRef.current = setTimeout(() => setCopied(false), 2000);

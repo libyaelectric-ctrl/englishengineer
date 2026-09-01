@@ -34,11 +34,11 @@ const CookieConsentBanner = () => {
     }
   }, []);
 
-  const handleAccept = () => {
+  const handleAccept = async () => {
     setCookieConsent('accepted');
     setVisible(false);
-    // Reload to trigger Sentry/analytics init
-    window.location.reload();
+    const { reloadApp } = await import('@/shared/utils/capacitor');
+    await reloadApp();
   };
 
   const handleReject = () => {

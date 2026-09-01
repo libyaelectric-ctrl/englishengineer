@@ -27,15 +27,14 @@ export const VocabularyCsvService = {
     return [header, ...rows].join('\n');
   },
 
-  downloadCsv(words: CsvWord[], filename?: string): void {
+  async downloadCsv(words: CsvWord[], filename?: string): Promise<void> {
     const csv = this.exportToCsv(words);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = filename ?? `vocabulary-export-${new Date().toISOString().slice(0, 10)}.csv`;
-    anchor.click();
-    URL.revokeObjectURL(url);
+    const { downloadFile } = await import('@/shared/utils/capacitor');
+    await downloadFile(
+      csv,
+      filename ?? `vocabulary-export-${new Date().toISOString().slice(0, 10)}.csv`,
+      'text/csv'
+    );
   },
 
   parseCsv(csvContent: string): CsvWord[] {

@@ -44,7 +44,8 @@ export const PRReviewCoach = () => {
   const handleCopy = useCallback(async () => {
     if (!result?.polishedText) return;
     try {
-      await navigator.clipboard.writeText(result.polishedText);
+      const { copyToClipboard } = await import('@/shared/utils/capacitor');
+      await copyToClipboard(result.polishedText);
       setCopied(true);
       if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
       copyTimerRef.current = setTimeout(() => setCopied(false), 1400);

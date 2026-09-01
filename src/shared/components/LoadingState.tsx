@@ -44,7 +44,10 @@ export const LoadingState: FC<LoadingStateProps> = ({
               'Unable to reach the authentication service. This is usually caused by an ad blocker or privacy extension. Please disable it for this site and reload the page.'}
           </p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={async () => {
+              const { reloadApp } = await import('@/shared/utils/capacitor');
+              await reloadApp();
+            }}
             className="mt-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Reload Page

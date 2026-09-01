@@ -30,10 +30,9 @@ export const WorkToolsService = {
   },
 
   async copy(text: string): Promise<boolean> {
-    if (!navigator.clipboard) return false;
     try {
-      await navigator.clipboard.writeText(text);
-      return true;
+      const { copyToClipboard } = await import('@/shared/utils/capacitor');
+      return await copyToClipboard(text);
     } catch (e) {
       logger.w('[Clipboard] Failed to copy', e);
       return false;

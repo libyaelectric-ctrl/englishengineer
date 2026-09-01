@@ -257,7 +257,10 @@ export const router = sentryCreateBrowserRouter([
                 <div className="text-center space-y-4">
                   <p className="text-lg font-bold">Team sayfası yüklenemedi.</p>
                   <button
-                    onClick={() => window.location.reload()}
+                    onClick={async () => {
+                      const { reloadApp } = await import('@/shared/utils/capacitor');
+                      await reloadApp();
+                    }}
                     className="rounded-[12px] border border-border-soft bg-surface px-5 py-2.5 text-sm font-bold transition-colors hover:bg-surface-hover"
                   >
                     Yeniden Dene

@@ -153,3 +153,10 @@ PRC_Kademe_8_Live_Service_Evidence_Report.md
 .vercel
 .env*
 !.env.production
+
+# Capacitor
+android/
+ios/
+.capacitor/
+android/app/build/
+android/.gradle/

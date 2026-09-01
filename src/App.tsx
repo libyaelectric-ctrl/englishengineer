@@ -39,8 +39,10 @@ const ThemedClerkProvider = ({ children }: { children: React.ReactNode }) => {
       signUpFallbackRedirectUrl={CLERK_SIGN_UP_FALLBACK_REDIRECT_URL ?? '/dashboard'}
       allowedRedirectOrigins={[
         'http://localhost',
+        'https://localhost',
         'capacitor://localhost',
         'https://eng-vox.vercel.app',
+        'https://engvox.com',
       ]}
     >
       {children}
@@ -70,7 +72,9 @@ class SimpleErrorBoundary extends Component<
           <div style={{ padding: 24, fontFamily: 'sans-serif' }}>
             <h2>Something went wrong.</h2>
             <p>{this.state.error?.message}</p>
-            <button onClick={() => window.location.reload()}>Refresh</button>
+            <button onClick={() => import('@/shared/utils/capacitor').then((m) => m.reloadApp())}>
+              Refresh
+            </button>
           </div>
         )
       );
@@ -84,8 +88,8 @@ const AppContent = () => {
 
   return (
     <SimpleErrorBoundary fallback={<div>An error occurred. Please refresh the page.</div>}>
-      <AppProvider>
-        <ThemeProvider>
+      <ThemeProvider>
+        <AppProvider>
           <ThemedClerkProvider>
             <ClerkBridge />
             <Suspense fallback={null}>
@@ -95,8 +99,8 @@ const AppContent = () => {
             <CookieConsentBanner />
           </ThemedClerkProvider>
           <ToastContainer />
-        </ThemeProvider>
-      </AppProvider>
+        </AppProvider>
+      </ThemeProvider>
     </SimpleErrorBoundary>
   );
 };

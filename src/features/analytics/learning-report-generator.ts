@@ -191,23 +191,17 @@ export const LearningReportGenerator = {
     return generateHTML(data);
   },
 
-  openInNewWindow(data: ReportData): void {
+  async openInNewWindow(data: ReportData): Promise<void> {
     const html = generateHTML(data);
+    const { openExternalUrl } = await import('@/shared/utils/capacitor');
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
-    window.open(url, '_blank', 'noopener,noreferrer');
+    await openExternalUrl(url);
   },
 
-  downloadAsHTML(data: ReportData, filename = 'learning-report.html'): void {
+  async downloadAsHTML(data: ReportData, filename = 'learning-report.html'): Promise<void> {
     const html = generateHTML(data);
-    const blob = new Blob([html], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const { downloadFile } = await import('@/shared/utils/capacitor');
+    await downloadFile(html, filename, 'text/html');
   },
 };
