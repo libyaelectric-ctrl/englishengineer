@@ -37,13 +37,13 @@ export const ClerkAuthControls = () => {
     <>
       <Link
         to={CLERK_SIGN_IN_URL}
-        className="inline-flex items-center rounded border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-semibold text-foreground hover:bg-surface-hover hover:border-primary/40 transition-colors ml-1"
+        className="inline-flex items-center rounded border border-border-soft bg-surface px-3 py-1.5 sm:px-2.5 sm:py-1 text-xs sm:text-[11px] font-semibold text-foreground hover:bg-surface-hover hover:border-primary/40 transition-colors ml-1"
       >
         {translate('common.login') || 'Log in'}
       </Link>
       <Link
         to={CLERK_SIGN_UP_URL}
-        className="inline-flex items-center gap-1 rounded bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground shadow-sm hover:bg-primary-hover transition-colors ml-0.5"
+        className="inline-flex items-center gap-1 rounded bg-primary px-3 py-1.5 sm:px-2.5 sm:py-1 text-xs sm:text-[11px] font-semibold text-primary-foreground shadow-sm hover:bg-primary-hover transition-colors ml-0.5"
       >
         {translate('landing.startFree')}
         <ArrowRight className="h-3 w-3" />

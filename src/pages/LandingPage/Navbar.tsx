@@ -118,13 +118,13 @@ export function Navbar() {
               ref={langBtnRef}
               type="button"
               onClick={() => setLangOpen(!langOpen)}
-              className="flex items-center gap-1 rounded-[var(--radius-card)] border border-border-soft bg-surface px-2 py-1 text-sm transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 rounded-[var(--radius-card)] border border-border-soft bg-surface px-2.5 py-1.5 sm:px-2 sm:py-1 text-sm transition-colors cursor-pointer"
               aria-haspopup="listbox"
               aria-expanded={langOpen}
               aria-label="Select language"
             >
               <Globe className="h-4 w-4 text-muted-copy" />
-              <span className="text-sm">{currentLang?.flag || '🌐'}</span>
+              <span className="text-base sm:text-sm">{currentLang?.flag || '🌐'}</span>
               <span className="hidden sm:inline text-sm font-medium">
                 {currentLang?.id ? currentLang.id.toUpperCase() : 'EN'}
               </span>
@@ -167,12 +167,12 @@ export function Navbar() {
           <div className="flex-1" />
 
           {/* Right: Nav Links + Theme + Auth */}
-          <div className="flex items-center gap-1.5 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Try Demo Button */}
             <button
               type="button"
               onClick={enterDemo}
-              className="inline-flex items-center rounded border border-primary/40 bg-primary/10 px-2 py-1 text-[10px] sm:text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors cursor-pointer"
+              className="inline-flex items-center rounded border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-xs sm:text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors cursor-pointer"
             >
               {translate('landing.tryDemo')}
             </button>
@@ -180,7 +180,7 @@ export function Navbar() {
             {/* Theme Toggle - shows both states with active highlighted */}
             <button
               onClick={toggleTheme}
-              className="inline-flex items-center gap-1 h-7 px-1.5 rounded-[var(--radius-card)] border border-border-soft bg-background text-muted-copy hover:text-foreground transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1 h-8 sm:h-7 px-2 sm:px-1.5 rounded-[var(--radius-card)] border border-border-soft bg-background text-muted-copy hover:text-foreground transition-colors cursor-pointer"
               aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               <span

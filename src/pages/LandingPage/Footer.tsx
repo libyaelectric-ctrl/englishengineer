@@ -7,9 +7,9 @@ import { useLocalizationStore } from '@/features/localization';
 export function Footer({ className = '' }: { className?: string }) {
   const { translate } = useLocalizationStore();
   return (
-    <footer className={`border-t border-border-soft bg-background px-6 py-2 md:px-12 pb-[max(0.5rem,env(safe-area-inset-bottom,0px))] ${className}`}>
+    <footer className={`border-t border-border-soft bg-background px-4 sm:px-6 py-3 md:px-12 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] ${className}`}>
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-col sm:flex-row flex-wrap items-center justify-between gap-3 sm:gap-2">
           <div className="flex items-center gap-3">
             <div className="relative flex h-8 w-8 items-center justify-center rounded shadow-sm overflow-hidden">
               <img
@@ -27,7 +27,7 @@ export function Footer({ className = '' }: { className?: string }) {
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-6 text-xs font-medium text-foreground/80">
+          <div className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm font-medium text-foreground/80">
             <Link to="/pricing" className="hover:text-primary transition-colors">
               {translate('landing.navPricing')}
             </Link>
@@ -41,7 +41,7 @@ export function Footer({ className = '' }: { className?: string }) {
               {translate('common.contact')}
             </Link>
           </div>
-          <p className="text-xs text-muted-copy font-medium">
+          <p className="text-xs sm:text-sm text-muted-copy font-medium">
             © {new Date().getFullYear()} EngVox. {translate('common.allRightsReserved')}
           </p>
         </div>
