@@ -3,6 +3,9 @@ node_modules/
 **/node_modules/
 backend/node_modules_off/
 
+# ── Embedded repo (old Ionic project) ──
+eng-vox/
+
 # ── Build outputs ──
 dist/
 build/

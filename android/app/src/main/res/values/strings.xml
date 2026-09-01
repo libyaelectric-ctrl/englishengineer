@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">EngVox</string>
+    <string name="title_activity_main">EngVox</string>
+    <string name="package_name">com.engvox.app</string>
+    <string name="custom_url_scheme">com.engvox.app</string>
+</resources>

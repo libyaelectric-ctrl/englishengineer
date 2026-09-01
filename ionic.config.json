@@ -1,0 +1,8 @@
+{
+  "name": "EngVox",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite",
+  "id": "399f91f2"
+}
