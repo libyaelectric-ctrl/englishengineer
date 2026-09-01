@@ -1,12 +1,12 @@
 import { Download, RefreshCw, ShieldCheck, Wallet } from 'lucide-react';
 
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
+import { useNavigate } from 'react-router-dom';
 
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
 import { SectionCard } from '@/shared/components/SectionCard';
-import { useNavigate } from 'react-router-dom';
-
 import { logger } from '@/shared/logger';
 
 import { useAIStore } from '@/features/ai';
@@ -51,6 +51,17 @@ export const BillingPage = () => {
     navigate('/pricing');
   };
 
+  const [syncSlow, setSyncSlow] = useState(false);
+
+  const handleSync = useCallback(() => {
+    if (!currentUser?.id) return;
+    setSyncSlow(false);
+    const timer = setTimeout(() => setSyncSlow(true), 5000);
+    refreshBilling(currentUser.id)
+      .catch((err) => logger.e('Billing refresh failed:', err))
+      .finally(() => clearTimeout(timer));
+  }, [currentUser?.id, refreshBilling]);
+
   const handleManageSubscription = () => {
     if (!currentUser?.id) return;
     openCustomerPortal(currentUser.id).catch((err) => logger.e('Portal failed:', err));
@@ -62,14 +73,21 @@ export const BillingPage = () => {
         title="Billing & Subscriptions"
         description="Verify and adjust your subscription status, manage primary payment card details, and download past invoices."
         actions={
-          <button
-            onClick={() => currentUser?.id && refreshBilling(currentUser.id)}
-            disabled={isBillingLoading}
-            className="self-start sm:self-auto inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-background transition-all cursor-pointer shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <RefreshCw className={`h-3.5 w-3.5 ${isBillingLoading ? 'animate-spin' : ''}`} />
-            Sync Status
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleSync}
+              disabled={isBillingLoading}
+              className="self-start sm:self-auto inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-background transition-all cursor-pointer shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 ${isBillingLoading ? 'animate-spin' : ''}`} />
+              {isBillingLoading ? (syncSlow ? 'Waking up backend…' : 'Syncing…') : 'Sync Status'}
+            </button>
+            {syncSlow && isBillingLoading && (
+              <span className="text-[10px] text-muted-copy italic">
+                Backend may be cold-starting (10-15s)
+              </span>
+            )}
+          </div>
         }
       />
 

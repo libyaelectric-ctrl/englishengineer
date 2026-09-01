@@ -201,9 +201,8 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
   app.use(helmet(SECURITY_HEADERS as Parameters<typeof helmet>[0]));
 
   // In production, always allow engvox.com even if APP_ORIGIN is misconfigured.
-  const hardcodedProductionOrigins = config.environment === 'production'
-    ? ['https://engvox.com', 'https://www.engvox.com']
-    : [];
+  const hardcodedProductionOrigins =
+    config.environment === 'production' ? ['https://engvox.com', 'https://www.engvox.com'] : [];
   const configuredOrigins = [
     config.appOrigin,
     ...(config.corsAllowedOrigins || []),
@@ -757,7 +756,11 @@ const registerRoutes = (
   );
 
   // Team analytics routes
-  registerTeamAnalyticsRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, limiters.global);
+  registerTeamAnalyticsRoutes(
+    v1RouterAdapter as unknown as Express,
+    requireBackendAuth,
+    limiters.global
+  );
 };
 
 const initConnectionPool = (config: BackendConfig) => {
@@ -838,6 +841,33 @@ export const createApp = ({
   );
   registerNotFoundAndErrorHandlers(app, config);
 
+  // ── Keepalive self-ping ────────────────────────────────────────────
+  // Render free tier spins down after ~15 min of inactivity. A periodic
+  // self-ping keeps the service warm so that the first real request
+  // (e.g. Sync Status on the billing page) responds instantly.
+  if (config.environment === 'production') {
+    const KEEPALIVE_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes
+    const selfUrl = process.env.RENDER_EXTERNAL_URL || process.env.APP_URL;
+    if (selfUrl) {
+      const keepAliveTimer = setInterval(async () => {
+        try {
+          const res = await fetch(`${selfUrl}/api/health`);
+          logger.info('[Keepalive] ping', { status: res.status });
+        } catch (err) {
+          logger.warn('[Keepalive] ping failed', {
+            error: err instanceof Error ? err.message : String(err),
+          });
+        }
+      }, KEEPALIVE_INTERVAL_MS);
+      keepAliveTimer.unref(); // don't block process exit
+      logger.info('[Keepalive] self-ping scheduled', {
+        intervalMin: KEEPALIVE_INTERVAL_MS / 60_000,
+        target: selfUrl,
+      });
+    } else {
+      logger.warn('[Keepalive] RENDER_EXTERNAL_URL not set — self-ping disabled');
+    }
+  }
+
   return app;
 };
-
