@@ -1,5 +1,7 @@
 import { AppProvider } from '@/providers';
 import { router } from '@/routes/router';
+import { useCapacitorBackButton } from '@/shared/hooks/useCapacitorBackButton';
+import { usePushNotifications } from '@/shared/hooks/usePushNotifications';
 import { ClerkProvider } from '@clerk/clerk-react';
 import * as Sentry from '@sentry/react';
 
@@ -85,6 +87,8 @@ class SimpleErrorBoundary extends Component<
 
 const AppContent = () => {
   useDirection();
+  useCapacitorBackButton();
+  usePushNotifications();
 
   return (
     <SimpleErrorBoundary fallback={<div>An error occurred. Please refresh the page.</div>}>

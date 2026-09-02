@@ -201,8 +201,11 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
   app.use(helmet(SECURITY_HEADERS as Parameters<typeof helmet>[0]));
 
   // In production, always allow engvox.com even if APP_ORIGIN is misconfigured.
+  // Also allow Capacitor's https://localhost origin for Android/iOS app.
   const hardcodedProductionOrigins =
-    config.environment === 'production' ? ['https://engvox.com', 'https://www.engvox.com'] : [];
+    config.environment === 'production'
+      ? ['https://engvox.com', 'https://www.engvox.com', 'https://localhost']
+      : [];
   const configuredOrigins = [
     config.appOrigin,
     ...(config.corsAllowedOrigins || []),

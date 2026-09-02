@@ -1,3 +1,4 @@
+import { isNativePlatform } from '@/shared/utils/capacitor';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 
 export const startSpeechRecognition = (
@@ -6,6 +7,13 @@ export const startSpeechRecognition = (
   recognitionRef: MutableRefObject<unknown>,
   setIsRecording: (v: boolean) => void
 ) => {
+  // Speech Recognition is not available in Android/iOS WebView
+  if (isNativePlatform()) {
+    console.warn('[SpeechRecognition] Not available in native WebView');
+    setIsRecording(false);
+    return;
+  }
+
   const SpeechRecognitionConstructor = (w.SpeechRecognition ||
     w.webkitSpeechRecognition) as new () => {
     continuous: boolean;
@@ -17,6 +25,13 @@ export const startSpeechRecognition = (
     stop: () => void;
     start: () => void;
   };
+
+  if (!SpeechRecognitionConstructor) {
+    console.warn('[SpeechRecognition] API not supported in this environment');
+    setIsRecording(false);
+    return;
+  }
+
   const recognition = new SpeechRecognitionConstructor();
   recognition.continuous = true;
   recognition.interimResults = true;

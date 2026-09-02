@@ -80,7 +80,7 @@ export function Navbar() {
   }, [langOpen]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border-soft bg-background/95 backdrop-blur-md shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border-soft bg-background/95 backdrop-blur-md shadow-sm" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
       <div className="mx-auto max-w-7xl px-3 sm:px-6">
         {/* Duolingo-style compact bar */}
         <div className="flex items-center gap-2 py-1.5 h-11 sm:h-12">
