@@ -16,10 +16,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="EngVox" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self' https:; script-src 'self' https://*.clerk.accounts.dev https://clerk.engvox.com https://engvox.com https://js.clerk.com https://challenges.cloudflare.com https://*.protect.clerk.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.clerk.accounts.dev https://clerk.engvox.com https://engvox.com; font-src 'self' https://fonts.gstatic.com https://*.clerk.accounts.dev https://clerk.engvox.com https://engvox.com; img-src 'self' data: https: https://img.clerk.com; connect-src 'self' https://englishengineer-backend.onrender.com https://generativelanguage.googleapis.com https://wxabrwzitwsjtpmlvvqe.supabase.co wss://wxabrwzitwsjtpmlvvqe.supabase.co https://*.clerk.accounts.dev https://clerk.engvox.com wss://*.clerk.accounts.dev https://engvox.com wss://engvox.com https://api.clerk.com https://*.protect.clerk.com; frame-src 'self' https://*.clerk.accounts.dev https://clerk.engvox.com https://engvox.com https://challenges.cloudflare.com https://*.protect.clerk.com; object-src 'none'; base-uri 'self'; form-action 'self';"
-    />
+    <!--
+      CSP removed for Capacitor builds — the native shell provides isolation.
+      For web (Vercel/Vercel), a stricter CSP should be applied via HTTP headers
+      on the hosting platform instead of a meta tag, which is fragile across
+      web and native.
+    -->
     <meta
       name="description"
       content="EngVox: engineering English platform for 10 disciplines. Free plan, no credit card. Master vocabulary, AI coaching, and FIDIC contract writing."

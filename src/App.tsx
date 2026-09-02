@@ -42,6 +42,8 @@ const ThemedClerkProvider = ({ children }: { children: React.ReactNode }) => {
         'http://localhost',
         'https://localhost',
         'capacitor://localhost',
+        'capacitor://localhost:8080',
+        'ionic://localhost',
         'https://eng-vox.vercel.app',
         'https://engvox.com',
       ]}

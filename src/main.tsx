@@ -104,8 +104,12 @@ try {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 
-// Service Worker — offline-first caching (registered after React mount)
-if ('serviceWorker' in navigator) {
+// Service Worker — only on web (Capacitor native shell handles its own caching)
+if (
+  typeof window !== 'undefined' &&
+  'serviceWorker' in navigator &&
+  !window.location.protocol.startsWith('capacitor')
+) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register('/sw.js')

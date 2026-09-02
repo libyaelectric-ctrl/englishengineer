@@ -58,6 +58,20 @@ const ClerkAuthPage = ({ mode }: ClerkAuthPageProps) => {
     });
   }, [mode]);
 
+  // On native platform, Clerk auth opens in system browser (useEffect above).
+  // Do NOT render <SignIn>/<SignUp> components in WebView — they try to load
+  // Clerk scripts that fail in Capacitor's WebView, causing a white screen.
+  if (isNativePlatform()) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950">
+        <div className="text-center">
+          <div className="mb-4 h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent mx-auto" />
+          <p className="text-sm text-zinc-400">Opening sign-in in your browser…</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-zinc-950/70 backdrop-blur-md">
       <div className="flex min-h-full flex-col items-center justify-center px-4 py-8">
