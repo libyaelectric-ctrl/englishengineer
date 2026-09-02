@@ -18,7 +18,7 @@ android {
 
     signingConfigs {
         release {
-            // Keystore dosyasý environment variable'dan okunur
+            // Keystore dosyasï¿½ environment variable'dan okunur
             // GitHub Actions'da: ANDROID_KEYSTORE_BASE64 decode edilir
             storeFile file(System.getenv("ANDROID_KEYSTORE_PATH") ?: "release.keystore")
             storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD") ?: ""
@@ -53,7 +53,7 @@ android {
 
 repositories {
     flatDir{
-        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+        dirs 'libs'
     }
 }
 
@@ -68,14 +68,11 @@ dependencies {
     implementation project(':capacitor-browser')
     implementation project(':capacitor-clipboard')
     implementation project(':capacitor-filesystem')
-    implementation project(':capacitor-haptics')
     implementation project(':capacitor-keyboard')
-    implementation project(':capacitor-push-notifications')
     implementation project(':capacitor-status-bar')
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
-    implementation project(':capacitor-cordova-android-plugins')
 }
 
 apply from: 'capacitor.build.gradle'
