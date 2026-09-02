@@ -207,7 +207,7 @@ export const LandingPage = () => {
                   {t.heroBadge}
                 </div>
 
-                <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mt-8 mb-8">
+                <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-8xl font-black leading-[1.05] tracking-tight mt-6 sm:mt-8 mb-6 sm:mb-8">
                   <span data-hero="line" className="block text-foreground">
                     {t.heroTitle1}
                   </span>
@@ -224,12 +224,12 @@ export const LandingPage = () => {
 
                 <p
                   data-hero="subtitle"
-                  className="text-lg md:text-xl text-muted-copy max-w-3xl mx-auto mb-10"
+                  className="text-sm sm:text-base md:text-xl text-muted-copy max-w-3xl mx-auto mb-8 sm:mb-10 px-2"
                 >
                   {t.heroSubtitle}
                 </p>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
                   <Link
                     data-hero="cta"
                     to="/dashboard"
@@ -392,7 +392,7 @@ export const LandingPage = () => {
       </button>
 
       {/* Slide indicators */}
-      <div className="absolute bottom-24 md:bottom-20 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+      <div className="absolute bottom-28 md:bottom-20 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
         {slideLabels.map((label, i) => (
           <button
             key={label}
@@ -407,13 +407,13 @@ export const LandingPage = () => {
       </div>
 
       {/* Watermark */}
-      <div className="fixed bottom-16 md:bottom-3 right-4 z-50 flex items-center gap-1.5 pointer-events-none select-none opacity-30 hover:opacity-60 transition-opacity duration-500">
+      <div className="fixed bottom-20 md:bottom-3 right-3 z-50 flex items-center gap-1 pointer-events-none select-none opacity-25 hover:opacity-50 transition-opacity duration-500">
         <img src="/brand/logo.svg" alt="" className="h-4 w-4" width="16" height="16" />
         <span className="text-[10px] font-bold text-foreground tracking-wide">EngVox</span>
         <span className="text-[9px] font-mono font-bold text-primary">v{PRODUCT_VERSION}</span>
       </div>
 
-      <Footer className="fixed bottom-0 inset-x-0 z-50" />
+      <Footer className="fixed bottom-0 inset-x-0 z-40" />
     </div>
   );
 };
