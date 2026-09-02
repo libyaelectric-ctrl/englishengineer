@@ -4,4 +4,5 @@
     <string name="title_activity_main">EngVox</string>
     <string name="package_name">com.engvox.app</string>
     <string name="custom_url_scheme">com.engvox.app</string>
+    <string name="web_asset_path">app_web/</string>
 </resources>

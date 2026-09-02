@@ -7,6 +7,7 @@ android {
   }
 }
 
+apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
     implementation project(':capacitor-app')
     implementation project(':capacitor-browser')
@@ -14,6 +15,7 @@ dependencies {
     implementation project(':capacitor-filesystem')
     implementation project(':capacitor-keyboard')
     implementation project(':capacitor-status-bar')
+
 }
 
 

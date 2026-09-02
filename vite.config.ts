@@ -37,8 +37,8 @@ export default defineConfig(() => {
       outDir: 'dist',
       cache: false,
       sourcemap: 'hidden',
-      chunkSizeWarningLimit: 300,
-      target: 'es2022',
+      chunkSizeWarningLimit: 100,
+      target: 'es2020',
       minify: 'esbuild' as const,
       cssMinify: 'esbuild' as const,
       rollupOptions: {

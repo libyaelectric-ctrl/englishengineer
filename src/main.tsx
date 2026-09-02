@@ -104,32 +104,20 @@ try {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 
+// Service Worker — offline-first caching (registered after React mount)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((registration) => {
+        logger.i('SW registered:', registration.scope);
+      })
+      .catch((error) => {
+        logger.w('SW registration failed:', error);
+      });
+  });
+}
+
 // Defer Sentry init to after React mount so router hooks are available
 // for reactRouterV7BrowserTracingIntegration (useLocation, etc.).
 requestIdleCallback(() => ObservabilityService.init());
-
-// Preload vocabulary data in background (non-blocking, lazy loaded)
-requestIdleCallback(async () => {
-  try {
-    const { loadVocabularyEntries } = await import('./features/vocabulary/data/vocabulary.data');
-    await loadVocabularyEntries();
-  } catch (err: unknown) {
-    logger.w('[preload] Vocabulary data preload failed:', err);
-  }
-});
-
-// Migrate large data sets from localStorage to IndexedDB (deferred)
-requestIdleCallback(() => {
-  import('@/shared/storage/indexed-db.service').then(({ indexedDBStorage }) =>
-    indexedDBStorage.migrateAll().catch((err: unknown) => {
-      logger.w('[IndexedDB] Migration failed:', err);
-    })
-  );
-});
-
-// Service worker DISABLED — was causing stale-cache SYSTEM FAULT errors.
-// Re-enable only after implementing proper cache-busting (content-hashed filenames
-// are already handled by Vite; SW was redundant and harmful).
-//
-
-void 0;

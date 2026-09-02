@@ -157,9 +157,7 @@ PRC_Kademe_8_Live_Service_Evidence_Report.md
 .env*
 !.env.production
 
-# Capacitor
-android/
-ios/
-.capacitor/
+# Capacitor build artifacts (not the project itself)
 android/app/build/
 android/.gradle/
+android/capacitor-cordova-android-plugins/

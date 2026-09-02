@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">engvox.com</domain>
+        <domain includeSubdomains="true">clerk.engvox.com</domain>
+        <domain includeSubdomains="true">api.clerk.com</domain>
+        <domain includeSubdomains="true">*.clerk.accounts.dev</domain>
+        <domain includeSubdomains="true">*.protect.clerk.com</domain>
+        <domain includeSubdomains="true">checkout.dodopayments.com</domain>
+        <domain includeSubdomains="true">customer.dodopayments.com</domain>
+        <domain includeSubdomains="true">englishengineer-backend.onrender.com</domain>
+        <domain includeSubdomains="true">wxabrwzitwsjtpmlvvqe.supabase.co</domain>
+        <domain includeSubdomains="true">generativelanguage.googleapis.com</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>
