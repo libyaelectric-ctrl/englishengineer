@@ -202,9 +202,16 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
 
   // In production, always allow engvox.com even if APP_ORIGIN is misconfigured.
   // Also allow Capacitor's https://localhost origin for Android/iOS app.
+  // NOTE: Render dashboard'da CORS_ALLOWED_ORIGINS'a da https://localhost ekleyin.
   const hardcodedProductionOrigins =
     config.environment === 'production'
-      ? ['https://engvox.com', 'https://www.engvox.com', 'https://localhost']
+      ? [
+          'https://engvox.com',
+          'https://www.engvox.com',
+          'https://localhost',        // Capacitor Android/iOS
+          'capacitor://localhost',     // Capacitor iOS fallback
+          'http://localhost',          // Local development
+        ]
       : [];
   const configuredOrigins = [
     config.appOrigin,

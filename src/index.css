@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './fonts.css';
 
 :root {
   --background: #faf8ff;
@@ -454,7 +455,7 @@ button:hover ~ .yibo-hide-ctrl,
     overflow-x: hidden;
   }
 
-  /* Safe area for notched devices */
+  /* Safe area for notched devices — uses logical properties for RTL */
   .safe-area-top {
     padding-top: env(safe-area-inset-top, 0px);
   }
@@ -462,8 +463,8 @@ button:hover ~ .yibo-hide-ctrl,
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .safe-area-inset {
-    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
-      env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+    padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px);
+    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
   }
 
   /* Touch-friendly targets — navigation links, primary buttons, form controls */
