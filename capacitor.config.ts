@@ -6,7 +6,6 @@ const config: CapacitorConfig = {
   webDir: 'dist',
   server: {
     androidScheme: 'https',
-    // Allow navigation to external URLs (Dodo checkout, Clerk auth, OAuth providers)
     allowNavigation: [
       // Dodo Payments checkout
       'checkout.dodopayments.com',
@@ -18,29 +17,15 @@ const config: CapacitorConfig = {
       'clerk.engvox.com',
       'api.clerk.com',
       '*.protect.clerk.com',
-      // OAuth providers (Google, Apple)
-      'accounts.google.com',
-      'oauthaccount.googleapis.com',
-      'appleid.apple.com',
       // Sentry error tracking
       '*.sentry.io',
     ],
   },
   android: {
-    // Allow mixed content (HTTP resources in HTTPS WebView)
     allowMixedContent: true,
-    // Capture input for Clerk auth
     captureInput: true,
-    // Build for latest Play Store requirements
-    buildOptions: {
-      keystorePath: undefined,
-      keystoreAlias: undefined,
-    },
   },
   plugins: {
-    PushNotifications: {
-      presentationOptions: ['badge', 'sound', 'alert'],
-    },
     StatusBar: {
       style: 'DARK',
       backgroundColor: '#0f0f23',
