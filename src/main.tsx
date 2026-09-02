@@ -104,11 +104,11 @@ try {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 
-// Service Worker — only on web (Capacitor native shell handles its own caching)
+// Service Worker — only on web PWA (Capacitor native shell handles caching)
 if (
   typeof window !== 'undefined' &&
   'serviceWorker' in navigator &&
-  !window.location.protocol.startsWith('capacitor')
+  !(window as any).Capacitor
 ) {
   window.addEventListener('load', () => {
     navigator.serviceWorker

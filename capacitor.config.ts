@@ -22,7 +22,6 @@ const config: CapacitorConfig = {
     ],
   },
   android: {
-    allowMixedContent: true,
     captureInput: true,
   },
   plugins: {
