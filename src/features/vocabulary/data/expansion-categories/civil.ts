@@ -1,4 +1,4 @@
-import { ExpansionCategory } from '../vocabulary.expansion-categories';
+import type { ExpansionCategory } from './types';
 
 export const civilCategories: ExpansionCategory[] = [
   {

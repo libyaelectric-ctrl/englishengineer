@@ -25,7 +25,8 @@ import {
   ReviewReasonBanner,
 } from './WordCardReview';
 
-export type VocabularySetMode = 'Quiz' | 'Review' | 'View';
+export type { VocabularySetMode } from './word-card.types';
+import type { VocabularySetMode } from './word-card.types';
 
 const normalizeAnswer = (value: string, locale?: string): string =>
   repairVocabularyText(value)

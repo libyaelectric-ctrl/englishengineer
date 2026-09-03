@@ -1,4 +1,5 @@
-import { ExpansionCategory } from '../vocabulary.expansion-categories';
+import type { ExpansionCategory } from './types';
+
 import { civilCategories } from './civil';
 import { electricalCategories } from './electrical';
 import { hseCategories } from './hse';
@@ -21,3 +22,5 @@ export { civilCategories } from './civil';
 export { hseCategories } from './hse';
 export { projectManagementCategories } from './project-management';
 export { specializedCategories } from './specialized';
+
+export type { ExpansionCategory } from './types';

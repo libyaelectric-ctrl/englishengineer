@@ -1,4 +1,4 @@
-import type { MeetingPhrase, SiteDictionaryTerm } from './quick-tools.data';
+import type { MeetingPhrase, SiteDictionaryTerm } from './quick-tools.types';
 
 const MEETING_TOPICS = [
   [

@@ -1,16 +1,6 @@
-import { MissionDifficulty } from '@/core/learning';
+// Re-export the barrel and type from their canonical locations.
+// The ExpansionCategory type lives in expansion-categories/types.ts to avoid
+// a circular dependency between this barrel and the individual category files.
 
-import type { VocabularyDomain } from '@/shared/constants/engineering-disciplines';
-
-import { VocabularyEntry } from '../types/vocabulary.types';
-
-export type ExpansionCategory = {
-  discipline: VocabularyDomain;
-  CEFR: VocabularyEntry['CEFR'];
-  difficulty: MissionDifficulty;
-  tags: string[];
-  context: string;
-  terms: string[];
-};
-
+export type { ExpansionCategory } from './expansion-categories/types';
 export { expansionCategories } from './expansion-categories/index';

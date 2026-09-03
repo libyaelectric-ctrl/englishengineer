@@ -11,7 +11,7 @@ import {
   getVocabularyReviewReason,
 } from '@/features/vocabulary';
 
-import type { VocabularySetMode } from './WordCard';
+import type { VocabularySetMode } from './word-card.types';
 
 interface LearningReviewProps {
   term: VocabularyTerm;

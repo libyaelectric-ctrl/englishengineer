@@ -1,37 +1,7 @@
 import { EXPANDED_MEETING_PHRASES, EXPANDED_SITE_DICTIONARY } from './quick-tools.expanded.data';
 
-export interface MeetingPhrase {
-  id: string;
-  category: string;
-  phrase: string;
-  turkishMeaning: string;
-  whenToUse: string;
-  example: string;
-  tone: string;
-  tags: string[];
-}
-
-export interface SiteDictionaryTerm {
-  id: string;
-  term: string;
-  turkishMeaning: string;
-  technicalExplanation: string;
-  siteExample: string;
-  commonWrongUsage: string;
-  relatedTerms: string[];
-  category: string;
-  tags: string[];
-}
-
-export interface QuickAIAction {
-  id: string;
-  label: string;
-  instruction: string;
-  systemInstruction: string;
-  expectedOutputStyle: string;
-  exampleInput: string;
-  exampleOutput: string;
-}
+export type { MeetingPhrase, SiteDictionaryTerm, QuickAIAction } from './quick-tools.types';
+import type { MeetingPhrase, SiteDictionaryTerm, QuickAIAction } from './quick-tools.types';
 
 type BaseMeetingPhrase = Omit<MeetingPhrase, 'tone' | 'tags'>;
 type BaseSiteDictionaryTerm = Omit<SiteDictionaryTerm, 'tags'>;
