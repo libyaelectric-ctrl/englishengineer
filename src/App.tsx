@@ -1,6 +1,7 @@
 import { AppProvider } from '@/providers';
 import { router } from '@/routes/router';
 import { useCapacitorBackButton } from '@/shared/hooks/useCapacitorBackButton';
+import { Analytics } from '@vercel/analytics/react';
 import { ClerkProvider } from '@clerk/clerk-react';
 import * as Sentry from '@sentry/react';
 
@@ -103,6 +104,7 @@ const AppContent = () => {
             <CookieConsentBanner />
           </ThemedClerkProvider>
           <ToastContainer />
+          <Analytics />
         </AppProvider>
       </ThemeProvider>
     </SimpleErrorBoundary>
