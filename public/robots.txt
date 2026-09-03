@@ -40,4 +40,4 @@ Disallow: /onboarding$
 Disallow: /curriculum$
 
 # Sitemap
-Sitemap: https://eng-vox.vercel.app/sitemap.xml
+Sitemap: https://engvox.com/sitemap.xml
