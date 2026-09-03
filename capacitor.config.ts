@@ -24,7 +24,13 @@ const config: CapacitorConfig = {
   android: {
     captureInput: true,
   },
-  plugins: {},
+  plugins: {
+    StatusBar: {
+      style: 'DARK',
+      backgroundColor: '#0f0f23',
+      overlaysWebView: false,
+    },
+  },
 };
 
 export default config;

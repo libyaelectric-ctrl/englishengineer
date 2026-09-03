@@ -524,3 +524,20 @@ button:hover ~ .yibo-hide-ctrl,
     padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
   }
 }
+
+/* Keyboard handling — prevent layout shift when virtual keyboard opens on Android */
+@media (max-width: 768px) {
+  /* When keyboard is open, ensure forms are scrollable and inputs stay visible */
+  input:focus, textarea:focus, select:focus {
+    /* Prevent zoom on iOS (font-size >= 16px) */
+    font-size: max(16px, 1em);
+  }
+  
+  /* Fixed elements should not overlap keyboard */
+  .fixed-bottom-on-keyboard {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
