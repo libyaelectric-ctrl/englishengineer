@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import type { GrammarExample } from '@/features/grammar/grammar.types';
+import type { GrammarExample } from '@/shared/types/grammar.types';
+
 import { useLocalizationStore } from '@/features/localization';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 

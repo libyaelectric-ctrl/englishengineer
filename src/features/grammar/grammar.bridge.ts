@@ -1,8 +1,7 @@
 import { addToVocabularyPool } from '@/core/learning/learning.pool';
 
 import { logger } from '@/shared/logger';
-
-import type { GrammarRule } from './grammar.types';
+import type { GrammarRule } from '@/shared/types/grammar.types';
 
 export interface BridgeResult {
   ruleId: string;

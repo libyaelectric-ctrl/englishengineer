@@ -7,7 +7,7 @@ export {
   type AssessmentProfile,
   type AssessmentSourceScore,
   type AssessmentWrappedScore,
-} from './assessment.types';
+} from '@/shared/types/assessment.types';
 
 export {
   ASSESSMENT_DIMENSIONS,

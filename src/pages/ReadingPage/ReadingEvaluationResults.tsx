@@ -15,8 +15,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/shared/components/Button';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { SectionCard } from '@/shared/components/SectionCard';
-
-import type { ReadingEvaluationResult } from '@/features/reading/reading.types';
+import type { ReadingEvaluationResult } from '@/shared/types/reading.types';
 
 interface ReadingEvaluationResultsProps {
   translate?: (key: string) => string;

@@ -2,7 +2,7 @@ import type {
   ReviewPriorityCandidate,
   ReviewPriorityItem,
   ReviewPrioritySource,
-} from './learning-intelligence.types';
+} from '@/shared/types/learning-intelligence.types';
 
 const SOURCE_WEIGHT: Record<ReviewPrioritySource, number> = {
   'repeated-mistake': 100,

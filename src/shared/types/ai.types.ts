@@ -38,12 +38,6 @@ export interface AIProviderStatus {
   isConnected: boolean;
 }
 
-export interface MistakeLogEntry {
-  originalText: string;
-  correction: string;
-  category: string;
-}
-
 export interface AICoachContext {
   userName: string;
   role: string;

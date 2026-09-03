@@ -1,7 +1,6 @@
 import { AI_BACKEND_PROXY_CONFIG } from '@/shared/services/ai-proxy.config';
 import { createApiClient } from '@/shared/services/apiClient';
-
-import type { ReadingMission, ReadingQuestion, VocabularyItem } from './reading.types';
+import type { ReadingMission, ReadingQuestion, VocabularyItem } from '@/shared/types/reading.types';
 
 interface GeneratedReadingResponse {
   success?: boolean;

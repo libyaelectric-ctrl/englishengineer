@@ -2,18 +2,18 @@ import { LearningState } from '@/core/learning/learning.types';
 
 import { AssessmentProfile } from '@/shared/types/assessment.types';
 import type { CefrLevel } from '@/shared/types/domain.types';
+import {
+  CareerRole,
+  DailyCommunicationTask,
+  MistakeLogEntry,
+  SevenDayProgressReport,
+} from '@/shared/types/learning-intelligence.types';
 
 import {
   BASE_DAILY_TASKS,
   ROLE_PRIORITY,
   ROLE_RECOMMENDATIONS,
 } from './learning-intelligence.data';
-import {
-  CareerRole,
-  DailyCommunicationTask,
-  MistakeLogEntry,
-  SevenDayProgressReport,
-} from './learning-intelligence.types';
 
 export const getTasksForRole = (role: CareerRole): DailyCommunicationTask[] => {
   const priority = ROLE_PRIORITY[role];

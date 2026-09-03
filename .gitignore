@@ -3,12 +3,6 @@ node_modules/
 **/node_modules/
 backend/node_modules_off/
 
-# ── Embedded repo (old Ionic project) ──
-eng-vox/
-
-# ── Stale backups ──
-yap/
-
 # ── Build outputs ──
 dist/
 build/
@@ -133,13 +127,8 @@ Usta-Faz2.txt
 gece.png
 .gunduz.png
 .gnndz.txt
-*.py
 !.env.example
 !scripts/.env.example
-!scripts/translate-vocabulary-nllb.py
-!scripts/translate-grammar-deepl.py
-!scripts/translate-vocabulary-chunks.py
-!scripts/requirements-translations.txt
 
 # ── Runtime dirs ──
 test/

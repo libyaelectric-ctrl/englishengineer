@@ -1,6 +1,6 @@
+import type { GrammarRule } from '@/shared/types/grammar.types';
 import { getCachedSeed, setCachedSeed } from '@/shared/utils/indexed-db';
 
-import type { GrammarRule } from '@/features/grammar/grammar.types';
 import type { CefrLevel } from '@/features/level-system';
 
 export const loadGrammarRulesByLevel = async (level: CefrLevel): Promise<GrammarRule[]> => {

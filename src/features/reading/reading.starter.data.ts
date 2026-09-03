@@ -1,4 +1,4 @@
-import type { ReadingMission } from './reading.types';
+import type { ReadingMission } from '@/shared/types/reading.types';
 
 export const STARTER_READING_MISSIONS: ReadingMission[] = [
   {

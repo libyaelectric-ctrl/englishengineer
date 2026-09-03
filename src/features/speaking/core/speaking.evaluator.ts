@@ -1,6 +1,12 @@
 import { ScoringService } from '@/core/learning/scoring.service';
 
 import {
+  SpeakingEvaluationResult,
+  SpeakingMission,
+  SpeakingSubmission,
+} from '@/shared/types/speaking.types';
+
+import {
   CLARITY_KEYWORD_WEIGHT,
   CLARITY_STRENGTH_THRESHOLD,
   CONFIDENCE_FILLER_PENALTY,
@@ -40,7 +46,6 @@ import {
   keywordMatchRatio,
   normalizeSpeechText,
 } from './speaking.helpers';
-import { SpeakingEvaluationResult, SpeakingMission, SpeakingSubmission } from './speaking.types';
 
 const scoreFromRatio = (ratio: number): number => Math.round(Math.min(1, Math.max(0, ratio)) * 100);
 

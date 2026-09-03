@@ -1,19 +1,20 @@
 import { create } from 'zustand';
 
-import type { CefrLevel } from '@/features/level-system';
-
-import { VocabularyMemoryService } from '../services/core/vocabulary.memory';
 import type {
   ExternalVocabularyResult,
   SavedVocabularyWord,
   VocabularyEntry,
-  VocabularyMemorySummary,
+  VocabularyMemoryStoreSummary,
   VocabularyWordStatus,
-} from '../types/vocabulary.types';
+} from '@/shared/types/vocabulary.types';
+
+import type { CefrLevel } from '@/features/level-system';
+
+import { VocabularyMemoryService } from '../services/core/vocabulary.memory';
 
 interface VocabularyMemoryStore {
   savedWords: SavedVocabularyWord[];
-  summary: VocabularyMemorySummary;
+  summary: VocabularyMemoryStoreSummary;
   refresh: () => void;
   addEntry: (entry: VocabularyEntry) => void;
   addExternal: (result: ExternalVocabularyResult, level: CefrLevel) => void;

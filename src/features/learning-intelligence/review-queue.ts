@@ -7,9 +7,12 @@ import {
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import type { UserLearningProfile } from '@/shared/types/domain.types';
 import { SKILL_NAMES } from '@/shared/types/domain.types';
+import type {
+  ReviewPriorityCandidate,
+  UnifiedReviewItem,
+} from '@/shared/types/learning-intelligence.types';
 
 import { LearningIntelligenceService } from './learning-intelligence.service';
-import type { ReviewPriorityCandidate, UnifiedReviewItem } from './learning-intelligence.types';
 import { buildReviewPriorities } from './review-priority';
 
 interface ReviewMetadata {

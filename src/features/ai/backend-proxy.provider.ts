@@ -1,7 +1,6 @@
 import { IdService } from '@/core/ids/id.service';
 
 import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
-
 import {
   AICoachContext,
   AICoachResult,
@@ -12,7 +11,7 @@ import {
   AIRequest,
   AIRequestMetadata,
   AIResponse,
-} from './ai.types';
+} from '@/shared/types/ai.types';
 
 interface BackendProxyPayload {
   contractVersion: AIContractVersion;

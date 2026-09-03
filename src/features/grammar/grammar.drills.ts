@@ -1,4 +1,4 @@
-import type { GrammarRule } from './grammar.types';
+import type { GrammarRule } from '@/shared/types/grammar.types';
 
 function fisherYatesShuffle<T>(array: T[]): T[] {
   const shuffled = [...array];

@@ -5,7 +5,7 @@ import {
   AssessmentDimensionId,
   AssessmentDimensionScore,
   AssessmentSourceScore,
-} from './assessment.types';
+} from '@/shared/types/assessment.types';
 
 export const ASSESSMENT_DIMENSIONS: AssessmentDimension[] = [
   {

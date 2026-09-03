@@ -4,9 +4,9 @@ import { describe, expect, it } from 'vitest';
 import { LearningState } from '@/core/learning';
 
 import { AssessmentProfile } from '@/shared/types/assessment.types';
+import { MistakeLogEntry } from '@/shared/types/learning-intelligence.types';
 
 import { buildSevenDayReport, getPersonalizedTasks } from './learning-intelligence.helpers';
-import { MistakeLogEntry } from './learning-intelligence.types';
 
 const learning: LearningState = {
   missions: [],

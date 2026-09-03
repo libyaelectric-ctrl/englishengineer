@@ -5,7 +5,7 @@ import {
   WritingEvaluationResult,
   WritingMission,
   WritingSubmission,
-} from './writing.types';
+} from '@/shared/types/writing.types';
 
 function customizeFeedback(
   scoringResult: {

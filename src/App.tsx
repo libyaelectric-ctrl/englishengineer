@@ -1,6 +1,5 @@
 import { AppProvider } from '@/providers';
 import { router } from '@/routes/router';
-import { useCapacitorBackButton } from '@/shared/hooks/useCapacitorBackButton';
 import { ClerkProvider } from '@clerk/clerk-react';
 import * as Sentry from '@sentry/react';
 
@@ -10,7 +9,9 @@ import { RouterProvider } from 'react-router-dom';
 
 import CookieConsentBanner from '@/shared/components/CookieConsentBanner';
 import { ToastContainer } from '@/shared/components/Toast';
+import { useCapacitorBackButton } from '@/shared/hooks/useCapacitorBackButton';
 import { useDirection } from '@/shared/hooks/useDirection';
+import { logger } from '@/shared/logger';
 
 import { ClerkBridge } from '@/features/auth/ClerkBridge';
 import {
@@ -63,7 +64,7 @@ class SimpleErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('[ErrorBoundary]', error, info.componentStack);
+    logger.e('[ErrorBoundary]', error, info.componentStack);
     Sentry.captureException(error);
   }
 

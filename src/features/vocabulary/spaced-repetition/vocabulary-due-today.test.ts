@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { VocabularyReviewState } from '../types/vocabulary.types';
+import type { VocabularyReviewState } from '@/shared/types/vocabulary.types';
+
 import { getDueTodayWords, getReviewStats, getUpcomingReviews } from './vocabulary-due-today';
 
 const makeReview = (overrides: Partial<VocabularyReviewState> = {}): VocabularyReviewState => ({

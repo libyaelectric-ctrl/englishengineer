@@ -25,7 +25,7 @@ export {
   type UnifiedReviewItem,
   type LearningIntelligencePreferences,
   type SevenDayProgressReport,
-} from './learning-intelligence.types';
+} from '@/shared/types/learning-intelligence.types';
 
 export { LearningMemorySummary } from './LearningMemorySummary';
 

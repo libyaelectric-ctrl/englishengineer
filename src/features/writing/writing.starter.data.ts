@@ -1,4 +1,4 @@
-import type { WritingMission } from './writing.types';
+import type { WritingMission } from '@/shared/types/writing.types';
 
 const starterRubric = {
   clarity: 'The message states one clear fact and one clear action.',

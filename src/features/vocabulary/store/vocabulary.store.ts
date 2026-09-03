@@ -1,14 +1,15 @@
 import { create } from 'zustand';
 
-import { VocabularyProgressService, type WordProgress } from '../services/core/vocabulary.progress';
-import { VocabularyService } from '../services/core/vocabulary.service';
 import {
   VocabularyEntry,
   VocabularyEvaluationResult,
   VocabularyHistoryEntry,
   VocabularyState,
   VocabularyTrainingMode,
-} from '../types/vocabulary.types';
+} from '@/shared/types/vocabulary.types';
+
+import { VocabularyProgressService, type WordProgress } from '../services/core/vocabulary.progress';
+import { VocabularyService } from '../services/core/vocabulary.service';
 
 interface VocabularyStats {
   total: number;

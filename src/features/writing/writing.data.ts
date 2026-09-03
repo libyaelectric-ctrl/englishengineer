@@ -1,10 +1,11 @@
+import { WritingMission, WritingSpec } from '@/shared/types/writing.types';
+
 import { WRITING_DESIGN_SPECS } from './writing.design.data';
 import { WRITING_ELECTRICAL_SPECS } from './writing.electrical.data';
 import { WRITING_PROCUREMENT_SAFETY_SPECS } from './writing.procurement-safety.data';
 import { WRITING_QAQC_SPECS } from './writing.qaqc.data';
 import { WRITING_REPORT_SPECS } from './writing.reports.data';
 import { STARTER_WRITING_MISSIONS } from './writing.starter.data';
-import { WritingMission, WritingSpec } from './writing.types';
 
 const rubric = {
   clarity: 'The message explains the issue, status, impact, and required action without ambiguity.',

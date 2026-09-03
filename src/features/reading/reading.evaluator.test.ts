@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { ReadingMission, ReadingSubmission } from '@/shared/types/reading.types';
+
 import { ReadingEvaluator } from './reading.evaluator';
-import { ReadingMission, ReadingSubmission } from './reading.types';
 
 // Mock ScoringService
 vi.mock('@/core/learning/scoring.service', () => ({

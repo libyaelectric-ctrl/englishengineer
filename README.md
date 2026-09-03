@@ -41,7 +41,7 @@ cp .env.example .env.local
 | `SUPABASE_SERVICE_ROLE_KEY`  | ⚠️       | Supabase service role key (optional)                                           |
 | `DODO_PAYMENTS_API_KEY`      | ⚠️       | Dodo Payments API key (test mode)                                              |
 | `DODO_PAYMENTS_WEBHOOK_KEY`  | ⚠️       | Dodo Payments webhook secret                                                   |
-| `METRICS_TOKEN`              | \-       | Optional: bearer token protecting `/api/metrics` (recommended in production)   |
+| `METRICS_TOKEN`              | Optional | Optional: bearer token protecting `/api/metrics` (recommended in production)   |
 
 ### Development
 
@@ -99,7 +99,7 @@ tests/
 
 | Layer          | Technology                                                                |
 | -------------- | ------------------------------------------------------------------------- |
-| **Frontend**   | React 19, TypeScript 5.8, Vite 6, Tailwind CSS 4, Zustand, TanStack Query |
+| **Frontend**   | React 19, TypeScript 6.0, Vite 8, Tailwind CSS 4, Zustand, TanStack Query |
 | **Backend**    | Express 5, TypeScript, Node 22, Winston (logging), Zod (validation)       |
 | **Auth**       | Clerk (JWT + JWKS verification)                                           |
 | **Billing**    | Dodo Payments (checkout + webhooks) / Stripe (legacy)                     |
@@ -134,11 +134,7 @@ vercel --prod
 
 ### Backend (Render)
 
-Auto-deploys on push to `main`. Manual deploy:
-
-```bash
-vercel --prod --yes
-```
+Auto-deploys on push to `main`. For manual trigger, use Render Dashboard or API.
 
 ### Environment Sync
 

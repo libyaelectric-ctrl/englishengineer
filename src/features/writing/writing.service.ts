@@ -11,6 +11,13 @@ import { filterMissionsByDiscipline } from '@/shared/constants/mission-disciplin
 import { GrammarTransferService } from '@/shared/services/grammar-transfer.service';
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { storage } from '@/shared/storage';
+import {
+  WritingEvaluationResult,
+  WritingHistoryEntry,
+  WritingMission,
+  WritingState,
+  WritingSubmission,
+} from '@/shared/types/writing.types';
 import { applyFeedbackToEvaluation } from '@/shared/utils/evaluation-merge';
 
 import { VocabularyService } from '@/features/vocabulary';
@@ -18,13 +25,6 @@ import { VocabularyService } from '@/features/vocabulary';
 import { submitWritingToBackend } from './writing-submit.service';
 import { WRITING_MISSIONS } from './writing.data';
 import { WritingEvaluator } from './writing.evaluator';
-import {
-  WritingEvaluationResult,
-  WritingHistoryEntry,
-  WritingMission,
-  WritingState,
-  WritingSubmission,
-} from './writing.types';
 
 const STORAGE_KEY = 'EngVox_writing_state';
 

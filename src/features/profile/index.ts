@@ -18,12 +18,13 @@ export {
   type MissionDifficulty,
   type SkillProfile,
   type UserLearningProfile,
-  type VocabularyMemorySummary,
   type DailyMission,
   type AdaptivePaceInput,
   type AdaptivePaceDecision,
   type ProfileBadge,
 } from './profile.types';
+
+export { type VocabularyMemorySummary } from '@/shared/types/vocabulary.types';
 
 export {
   MIN_SKILL_ELO,

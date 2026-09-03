@@ -8,7 +8,7 @@ export {
   type ReadingEvaluationResult,
   type ReadingHistoryEntry,
   type ReadingState,
-} from './reading.types';
+} from '@/shared/types/reading.types';
 
 export { READING_MISSIONS } from './reading.data';
 

@@ -1,4 +1,4 @@
-import { VocabularyReviewState } from '../types/vocabulary.types';
+import { VocabularyReviewState } from '@/shared/types/vocabulary.types';
 
 export interface DueTodayItem {
   wordId: string;

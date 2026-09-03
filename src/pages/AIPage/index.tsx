@@ -29,15 +29,14 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
         'error'
       );
     }
-  }, [h.isLimitedResponse]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [h.isLimitedResponse]);
 
   return (
     <div className="space-y-4 animate-in fade-in duration-300 font-sans pt-8 sm:pt-0">
       <ToastContainer />
       {!embedded && <PageHeader title="AI Copilot Studio" />}
 
-      {(subscription.planId === 'specialist' ||
-        subscription.planId === 'master') && (
+      {(subscription.planId === 'specialist' || subscription.planId === 'master') && (
         <WorkspacePanel
           planId={subscription.planId}
           activeWorkspaceId={h.activeWorkspaceId}

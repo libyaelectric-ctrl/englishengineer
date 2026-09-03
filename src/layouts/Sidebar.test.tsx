@@ -74,12 +74,12 @@ describe('Sidebar', () => {
 
   it('renders sign out button', () => {
     renderSidebar();
-    expect(screen.getByText('Sign Out')).toBeInTheDocument();
+    expect(screen.getByText('Log out')).toBeInTheDocument();
   });
 
   it('renders billing & plan button', () => {
     renderSidebar();
-    expect(screen.getByText('Billing & Plan')).toBeInTheDocument();
+    expect(screen.getByText('Billing')).toBeInTheDocument();
   });
 
   it('renders navigation region', () => {

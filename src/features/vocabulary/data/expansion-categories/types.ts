@@ -1,8 +1,7 @@
 import { MissionDifficulty } from '@/core/learning';
 
 import type { VocabularyDomain } from '@/shared/constants/engineering-disciplines';
-
-import { VocabularyEntry } from '../../types/vocabulary.types';
+import { VocabularyEntry } from '@/shared/types/vocabulary.types';
 
 export type ExpansionCategory = {
   discipline: VocabularyDomain;

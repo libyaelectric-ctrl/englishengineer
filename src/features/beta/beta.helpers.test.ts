@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
 
-import type { ProductAnalyticsEventName } from '@/shared/types/product-analytics.types';
+import type { ProductAnalyticsEventName } from '@/shared/services/product-analytics/product-analytics.types';
 
 import { calculateProductAnalyticsSummary } from './beta.helpers';
 import { ProductAnalyticsEvent } from './beta.types';

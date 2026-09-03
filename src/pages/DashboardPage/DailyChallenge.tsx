@@ -186,6 +186,7 @@ const saveChallengeState = (state: ChallengeState): void => {
   }
 };
 
+// eslint-disable-next-line complexity -- large dashboard card with many states
 export const DailyChallenge = memo(() => {
   const streak = useLearningStore((s) => s.streak);
   const translate = useLocalizationStore((s) => s.translate);

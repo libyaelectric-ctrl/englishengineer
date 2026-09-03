@@ -36,6 +36,7 @@ interface LessonQuestion {
 
 const CARD_TYPES: LessonCardType[] = ['mc', 'rfi', 'audio', 'diagram'];
 
+// eslint-disable-next-line complexity -- large lesson-runner render with many card states
 const LessonRunnerPage = () => {
   const { levelId } = useParams<{ levelId: string }>();
   const navigate = useNavigate();

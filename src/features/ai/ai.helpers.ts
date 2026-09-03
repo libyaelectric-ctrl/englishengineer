@@ -2,17 +2,17 @@ import { IdService } from '@/core/ids/id.service';
 import { LearningState } from '@/core/learning/learning.types';
 import { ProgressService } from '@/core/learning/progress.service';
 
-import { UserProfile } from '@/features/auth/auth.types';
-import { VocabularyService } from '@/features/vocabulary';
-
 import {
   AICoachContext,
   AICoachMode,
   AICoachModeId,
   AICoachResult,
   AIPromptTemplate,
-  MistakeLogEntry,
-} from './ai.types';
+} from '@/shared/types/ai.types';
+import { UserProfile } from '@/shared/types/auth.types';
+import type { MistakeLogEntry } from '@/shared/types/learning-intelligence.types';
+
+import { VocabularyService } from '@/features/vocabulary';
 
 export const AI_COACH_MODES: AICoachMode[] = [
   {

@@ -2,7 +2,8 @@ import { Award, BookMarked, ChevronRight, Languages, TriangleAlert } from 'lucid
 
 import { Link } from 'react-router-dom';
 
-import type { ProfileBadge, VocabularyMemorySummary } from '@/shared/types/domain.types';
+import type { ProfileBadge } from '@/shared/types/domain.types';
+import type { VocabularyMemorySummary } from '@/shared/types/vocabulary.types';
 
 import type { GrammarProgressSummary } from '@/features/grammar';
 

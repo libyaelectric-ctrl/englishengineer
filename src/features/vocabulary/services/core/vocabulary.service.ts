@@ -1,6 +1,14 @@
 import { useLearningStore } from '@/core/learning';
 
 import { storage } from '@/shared/storage';
+import {
+  VocabularyAnswer,
+  VocabularyEntry,
+  VocabularyEvaluationResult,
+  VocabularyHistoryEntry,
+  VocabularyState,
+  VocabularySummary,
+} from '@/shared/types/vocabulary.types';
 
 import { getVocabularyEntries } from '../../data/vocabulary.data';
 import { VocabularyEvaluator } from '../../engine/vocabulary.evaluator';
@@ -14,14 +22,6 @@ import {
   createInitialReviewState,
   updateSm2ReviewState,
 } from '../../spaced-repetition/vocabulary.spaced-repetition';
-import {
-  VocabularyAnswer,
-  VocabularyEntry,
-  VocabularyEvaluationResult,
-  VocabularyHistoryEntry,
-  VocabularyState,
-  VocabularySummary,
-} from '../../types/vocabulary.types';
 import { VocabularyMemoryService } from './vocabulary.memory';
 import { VocabularyMenuService } from './vocabulary.menu';
 

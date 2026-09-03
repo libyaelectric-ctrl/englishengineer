@@ -3,7 +3,7 @@ export {
   type GrammarRule,
   type GrammarExplanationLanguage,
   type GrammarUserSkillProfile,
-} from './grammar.types';
+} from '@/shared/types/grammar.types';
 
 export { GrammarRepository } from './grammar.repository';
 

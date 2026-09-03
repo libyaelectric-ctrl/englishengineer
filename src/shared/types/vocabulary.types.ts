@@ -109,6 +109,16 @@ export interface VocabularyMemoryState {
 }
 
 export interface VocabularyMemorySummary {
+  total: number;
+  new: number;
+  learning: number;
+  mastered: number;
+  forgotten: number;
+  dueToday: number;
+  weakWords: number;
+}
+
+export interface VocabularyMemoryStoreSummary {
   savedWords: number;
   dueToday: number;
   weakWords: number;

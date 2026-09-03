@@ -1,4 +1,8 @@
-import { CareerRole, DailyCommunicationTask, MistakeCategory } from './learning-intelligence.types';
+import {
+  CareerRole,
+  DailyCommunicationTask,
+  MistakeCategory,
+} from '@/shared/types/learning-intelligence.types';
 
 export const CAREER_ROLES: CareerRole[] = [
   'Electrical Works Chief',

@@ -2,9 +2,13 @@ import { create } from 'zustand';
 
 import { logger } from '@/shared/logger';
 import { KnowledgeCaptureService } from '@/shared/services/knowledge-capture.service';
+import {
+  WritingEvaluationResult,
+  WritingHistoryEntry,
+  WritingMission,
+} from '@/shared/types/writing.types';
 
 import { WritingService } from './writing.service';
-import { WritingEvaluationResult, WritingHistoryEntry, WritingMission } from './writing.types';
 
 interface WritingStoreState {
   missions: WritingMission[];

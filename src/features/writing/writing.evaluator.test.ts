@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import type { WritingMission, WritingSubmission } from '@/shared/types/writing.types';
+
 import { WritingEvaluator } from './writing.evaluator';
-import type { WritingMission, WritingSubmission } from './writing.types';
 
 // Mock ScoringService
 vi.mock('@/core/learning/scoring.service', () => ({

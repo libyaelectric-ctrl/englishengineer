@@ -1,4 +1,4 @@
-import { VocabularyEntry, VocabularyReviewState } from '../types/vocabulary.types';
+import { VocabularyEntry, VocabularyReviewState } from '@/shared/types/vocabulary.types';
 
 export const normalizeVocabularyText = (value: string): string =>
   value

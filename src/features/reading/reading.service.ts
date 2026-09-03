@@ -10,19 +10,19 @@ import { EngineeringDiscipline } from '@/shared/constants/engineering-discipline
 import { filterMissionsByDiscipline } from '@/shared/constants/mission-discipline-map';
 import { GrammarTransferService } from '@/shared/services/grammar-transfer.service';
 import { storage } from '@/shared/storage';
-
-import { AIService } from '@/features/ai';
-import { VocabularyService } from '@/features/vocabulary';
-
-import { READING_MISSIONS } from './reading.data';
-import { ReadingEvaluator } from './reading.evaluator';
 import {
   ReadingEvaluationResult,
   ReadingHistoryEntry,
   ReadingMission,
   ReadingState,
   ReadingSubmission,
-} from './reading.types';
+} from '@/shared/types/reading.types';
+
+import { AIService } from '@/features/ai';
+import { VocabularyService } from '@/features/vocabulary';
+
+import { READING_MISSIONS } from './reading.data';
+import { ReadingEvaluator } from './reading.evaluator';
 
 const STORAGE_KEY = 'EngVox_reading_state';
 export const READING_CONTENT_SCHEMA_VERSION = 1;

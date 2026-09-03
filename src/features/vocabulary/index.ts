@@ -7,6 +7,7 @@ export {
   type VocabularyTerm,
   type SavedVocabularyWord,
   type VocabularyMemoryState,
+  type VocabularyMemoryStoreSummary,
   type VocabularyMemorySummary,
   type ExternalVocabularyResult,
   type ExternalLookupState,
@@ -16,7 +17,7 @@ export {
   type VocabularyHistoryEntry,
   type VocabularyState,
   type VocabularySummary,
-} from './types/vocabulary.types';
+} from '@/shared/types/vocabulary.types';
 
 export { VocabularyRepository } from './services/core/vocabulary.repository';
 

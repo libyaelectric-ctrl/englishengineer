@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import type { ProductAnalyticsEventName } from '@/shared/types/product-analytics.types';
+import type { ProductAnalyticsEventName } from '@/shared/services/product-analytics/product-analytics.types';
 
 import { BetaService } from './beta.service';
 import { BetaFeedbackEntry, BetaOnboardingProfile, ProductAnalyticsSummary } from './beta.types';

@@ -1,6 +1,6 @@
-import type { MissionDifficulty } from '@/core/learning/learning.types';
+import { MissionDifficulty } from '@/core/learning/learning.types';
 
-import type { CefrLevel } from '@/shared/types/domain.types';
+import { CefrLevel } from '@/shared/types/domain.types';
 
 export type QuestionType = 'multiple_choice' | 'short_answer' | 'keyword_answer' | 'true_false';
 
@@ -8,9 +8,9 @@ export interface ReadingQuestion {
   id: string;
   type: QuestionType;
   questionText: string;
-  choices?: string[];
-  correctAnswer: string;
-  keywords?: string[];
+  choices?: string[]; // relevant for multiple_choice
+  correctAnswer: string; // for multiple_choice ('A', 'B'...), true_false ('true' or 'false'), others are text
+  keywords?: string[]; // for keyword_answer or short_answer similarity check
   explanation: string;
 }
 
@@ -43,6 +43,12 @@ export interface ReadingMission {
   };
 }
 
+export interface ReadingSubmission {
+  missionId: string;
+  answers: Record<string, string>; // questionId -> user input
+  timeSpentMinutes: number;
+}
+
 export interface DetailedAnswerFeedback {
   questionId: string;
   questionText: string;
@@ -65,4 +71,17 @@ export interface ReadingEvaluationResult {
   weaknesses: string[];
   feedback: string;
   detailedAnswers: DetailedAnswerFeedback[];
+}
+
+export interface ReadingHistoryEntry {
+  missionId: string;
+  timestamp: string;
+  score: number;
+  evaluation: ReadingEvaluationResult;
+}
+
+export interface ReadingState {
+  completedMissions: Record<string, number>; // missionId -> best score
+  lastSelectedMissionId: string | null;
+  history: ReadingHistoryEntry[];
 }

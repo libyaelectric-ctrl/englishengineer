@@ -1,8 +1,8 @@
 import { MissionDifficulty } from '@/core/learning';
 
 import type { VocabularyDomain } from '@/shared/constants/engineering-disciplines';
+import { VocabularyEntry } from '@/shared/types/vocabulary.types';
 
-import { VocabularyEntry } from '../types/vocabulary.types';
 import { expansionCategories } from './expansion-categories';
 import { resolveCollocations } from './expansion-data/collocations';
 import { examples, resolveExample } from './expansion-data/examples';

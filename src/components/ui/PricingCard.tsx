@@ -124,28 +124,36 @@ const PricingCta = ({
   return (
     <div className="space-y-2">
       {tier.originalMonthlyPrice || tier.originalAnnualPrice ? (
-        <div className={`rounded-[var(--radius-card)] border px-3 py-1.5 text-center ${isAnnual ? 'border-blue-300 bg-blue-50' : 'border-emerald-300 bg-emerald-50'}`}>
+        <div
+          className={`rounded-[var(--radius-card)] border px-3 py-1.5 text-center ${isAnnual ? 'border-blue-300 bg-blue-50' : 'border-emerald-300 bg-emerald-50'}`}
+        >
           {isAnnual ? (
             <>
               <span className="text-[10px] font-bold text-blue-600">
-                SAVE {(() => {
+                SAVE{' '}
+                {(() => {
                   const origM = tier.originalMonthlyPrice ?? price;
                   return Math.round(((origM - tier.monthlyPrice) / origM) * 100);
-                })()}% + SAVE 20%
+                })()}
+                % + SAVE 20%
               </span>
               <div className="text-[11px] font-extrabold text-blue-800 mt-0.5">
-                SAVE {(() => {
+                SAVE{' '}
+                {(() => {
                   const origM = tier.originalMonthlyPrice ?? price;
                   return Math.round(((origM - price) / origM) * 100);
-                })()}% Total Savings
+                })()}
+                % Total Savings
               </div>
             </>
           ) : (
             <span className="text-xs font-bold text-emerald-700">
-              SAVE {(() => {
+              SAVE{' '}
+              {(() => {
                 const orig = tier.originalMonthlyPrice ?? price;
                 return Math.round(((orig - price) / orig) * 100);
-              })()}%
+              })()}
+              %
             </span>
           )}
         </div>
@@ -173,6 +181,7 @@ export const PricingCard = ({
   isLoading = false,
   variant = 'pricing',
   onSelect,
+  // eslint-disable-next-line complexity -- large card render with price/badge branches
 }: PricingCardProps) => {
   const language = useLocalizationStore((s) => s.language);
   const copy = getPricingCopy(language);
@@ -239,7 +248,9 @@ export const PricingCard = ({
                   {isTeam
                     ? '$$$$'
                     : formatPrice(
-                        isAnnual ? (tier.originalAnnualPrice ?? tier.originalMonthlyPrice ?? price) : (tier.originalMonthlyPrice ?? price),
+                        isAnnual
+                          ? (tier.originalAnnualPrice ?? tier.originalMonthlyPrice ?? price)
+                          : (tier.originalMonthlyPrice ?? price),
                         currency
                       )}
                 </span>
@@ -247,13 +258,12 @@ export const PricingCard = ({
               <span className="text-3xl font-extrabold tracking-tight text-foreground font-mono">
                 {isTeam ? '$$$$' : formatPrice(price, currency)}
               </span>
-              <span className="text-xs text-muted-copy">
-                {copy.perMonth}
-              </span>
+              <span className="text-xs text-muted-copy">{copy.perMonth}</span>
             </div>
             {isAnnual && !isTeam ? (
               <p className="mt-1 text-[11px] text-muted-copy">
-                {formatPrice(tier.annualTotal ?? Math.round(price * 12 * 100) / 100, currency)} billed annually
+                {formatPrice(tier.annualTotal ?? Math.round(price * 12 * 100) / 100, currency)}{' '}
+                billed annually
               </p>
             ) : null}
           </div>

@@ -1,4 +1,4 @@
-import type { LearningDataSkill } from '@/core/learning';
+import type { LearningDataSkill, UserSkillProfile } from '@/core/learning';
 
 import type { CefrLevel } from '@/shared/types/domain.types';
 
@@ -77,12 +77,11 @@ export interface GrammarRuleProgress {
 }
 
 export interface GrammarProgressSummary {
-  totalRules: number;
+  tracked: number;
   newRules: number;
-  learningRules: number;
-  dueRules: number;
-  strongRules: number;
-  masteredRules: number;
-  averageStrength: number;
-  rulesWithEvidence: number;
+  learning: number;
+  due: number;
+  strong: number;
 }
+
+export type GrammarUserSkillProfile = UserSkillProfile;

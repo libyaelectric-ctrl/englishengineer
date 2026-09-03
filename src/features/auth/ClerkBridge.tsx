@@ -2,16 +2,21 @@ import { useAuth, useClerk, useUser } from '@clerk/clerk-react';
 
 import { useEffect, useRef } from 'react';
 
+import { useLearningStore } from '@/core/learning';
+
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 import { setClerkTokenGetter } from '@/shared/services/auth-backend/backend-auth.service';
 import { storage } from '@/shared/storage';
+import type { UserProfile } from '@/shared/types/auth.types';
+import type { CareerTrackId, InterfaceLanguage } from '@/shared/types/domain.types';
 
+import { useLocalizationStore } from '@/features/localization';
+import type { SupportedInterfaceLanguage } from '@/features/localization';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
-import { useLearningStore } from '@/core/learning';
-import { useLocalizationStore } from '@/features/localization';
 import { consumePendingOnboard } from '@/pages/OnboardPage';
+
 import { useAuthStore } from './auth.store';
-import type { UserProfile } from './auth.types';
 
 const toInitials = (name: string, email: string): string => {
   const fromName = name
@@ -86,11 +91,13 @@ export const ClerkBridge = () => {
         // Apply pending onboard selections (saved before sign-in from /onboard)
         const pending = consumePendingOnboard();
         if (pending) {
-          useLocalizationStore.getState().setLanguage(pending.language);
+          useLocalizationStore
+            .getState()
+            .setLanguage(pending.language as SupportedInterfaceLanguage);
           LearningProfileRepository.updatePreferences(user.id, {
-            discipline: pending.discipline,
-            professionalTrack: pending.discipline as never,
-            interfaceLanguage: pending.language,
+            discipline: pending.discipline as EngineeringDiscipline,
+            professionalTrack: pending.discipline as CareerTrackId,
+            interfaceLanguage: pending.language as InterfaceLanguage,
             onboardingCompleted: true,
           });
           profile.engineeringDiscipline = pending.discipline;

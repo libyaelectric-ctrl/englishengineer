@@ -1,4 +1,4 @@
-export { type UserProfile, type AuthState } from './auth.types';
+export { type UserProfile, type AuthState } from '@/shared/types/auth.types';
 
 export { useAuthStore } from './auth.store';
 

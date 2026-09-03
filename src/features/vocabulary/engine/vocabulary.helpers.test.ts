@@ -1,7 +1,8 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
 
-import { VocabularyEntry } from '../types/vocabulary.types';
+import { VocabularyEntry } from '@/shared/types/vocabulary.types';
+
 import { VocabularyEvaluator } from './vocabulary.evaluator';
 import {
   getPreviousDateKey,

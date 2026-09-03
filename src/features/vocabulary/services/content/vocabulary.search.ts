@@ -1,11 +1,10 @@
 import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
-
 import type {
   ExternalLookupState,
   ExternalVocabularyResult,
   VocabularyEntry,
-} from '../../types/vocabulary.types';
+} from '@/shared/types/vocabulary.types';
 
 const CACHE_KEY = 'EngVox_vocabulary_lookup_cache';
 

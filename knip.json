@@ -18,8 +18,9 @@
     ".lighthouserc.cjs",
     "tests/**",
     "backend/scripts/**",
-    "src/shared/types/analytics.types.ts",
     "android/**",
-    "ios/**"
+    "ios/**",
+    "dist/**",
+    ".vite/**"
   ]
 }

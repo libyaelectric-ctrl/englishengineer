@@ -1,3 +1,5 @@
+import { ReadingMission } from '@/shared/types/reading.types';
+
 import { ARCHITECTURE_READING_MISSIONS } from './reading.architecture.data';
 import { BUILDING_SYSTEMS_READING_MISSIONS } from './reading.building-systems.data';
 import { CHEMICAL_READING_MISSIONS } from './reading.chemical.data';
@@ -12,7 +14,6 @@ import { MEP_READING_MISSIONS } from './reading.mep.data';
 import { QAQC_READING_MISSIONS } from './reading.qaqc.data';
 import { SOFTWARE_READING_MISSIONS } from './reading.software.data';
 import { STARTER_READING_MISSIONS } from './reading.starter.data';
-import { ReadingMission } from './reading.types';
 
 const CORE_READING_MISSIONS: ReadingMission[] = [
   ...ELECTRICAL_READING_MISSIONS,

@@ -1,39 +1,23 @@
 import { eventBus } from '@/core/events/event-bus';
 
 import { storage } from '@/shared/storage';
+import type {
+  GrammarProgressSummary,
+  GrammarReviewStatus,
+  GrammarRuleProgress,
+  GrammarSkillEvidence,
+  GrammarTransferSkill,
+} from '@/shared/types/grammar.types';
 
 import { GrammarRepository } from './grammar.repository';
 
-export type GrammarReviewStatus = 'New' | 'Learning' | 'Due' | 'Strong';
-export type GrammarTransferSkill = 'reading' | 'writing';
-
-export interface GrammarSkillEvidence {
-  skill: GrammarTransferSkill;
-  missionId: string;
-  score: number;
-  demonstratedAt: string;
-}
-
-export interface GrammarRuleProgress {
-  ruleId: string;
-  exposures: number;
-  correctUsages: number;
-  incorrectUsages: number;
-  strength: number;
-  reviewStatus: GrammarReviewStatus;
-  lastUsedAt: string | null;
-  nextReviewDate: string | null;
-  skillEvidence: Partial<Record<GrammarTransferSkill, GrammarSkillEvidence>>;
-  isPassed?: boolean;
-}
-
-export interface GrammarProgressSummary {
-  tracked: number;
-  newRules: number;
-  learning: number;
-  due: number;
-  strong: number;
-}
+export type {
+  GrammarProgressSummary,
+  GrammarReviewStatus,
+  GrammarRuleProgress,
+  GrammarSkillEvidence,
+  GrammarTransferSkill,
+};
 
 const getReviewIsDue = (progress: GrammarRuleProgress, now: Date): boolean =>
   progress.reviewStatus === 'Due' ||

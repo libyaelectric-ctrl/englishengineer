@@ -5,7 +5,7 @@ import {
   ReadingEvaluationResult,
   ReadingMission,
   ReadingSubmission,
-} from './reading.types';
+} from '@/shared/types/reading.types';
 
 interface QuestionEvalResult {
   isCorrect: boolean;

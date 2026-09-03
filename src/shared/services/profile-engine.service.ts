@@ -16,8 +16,8 @@ import {
   type SkillName,
   type SkillProfile,
   type UserLearningProfile,
-  type VocabularyMemorySummary,
 } from '@/shared/types/domain.types';
+import type { VocabularyMemorySummary } from '@/shared/types/vocabulary.types';
 import {
   clampSkillElo,
   getCefrBandFromElo,

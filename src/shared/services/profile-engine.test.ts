@@ -6,12 +6,8 @@ import {
   getDisciplineDomains,
 } from '@/shared/services/profile-engine.service';
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
-import type {
-  SkillName,
-  SkillProfile,
-  UserLearningProfile,
-  VocabularyMemorySummary,
-} from '@/shared/types/domain.types';
+import type { SkillName, SkillProfile, UserLearningProfile } from '@/shared/types/domain.types';
+import type { VocabularyMemorySummary } from '@/shared/types/vocabulary.types';
 
 vi.mock('@/shared/services/vocabulary.repository', () => ({
   VocabularyRepository: {

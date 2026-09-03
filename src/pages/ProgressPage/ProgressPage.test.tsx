@@ -11,19 +11,22 @@ vi.mock('@/features/auth', () => ({
   })),
 }));
 
-vi.mock('@/core/learning', () => ({
-  useLearningStore: vi.fn((selector?: (s: any) => any) => {
-    const state = {
-      vocabularyPool: [],
-      grammarPool: [],
-      speakingPool: [],
-      xp: 100,
-      streak: 5,
-      learningState: { studySessions: [] },
-    };
-    return selector ? selector(state) : state;
-  }),
-}));
+vi.mock('@/core/learning', () => {
+  const state = {
+    vocabularyPool: [],
+    grammarPool: [],
+    speakingPool: [],
+    xp: 100,
+    streak: 5,
+    learningState: { studySessions: [] },
+  };
+  return {
+    useLearningStore: Object.assign(
+      vi.fn((selector?: (s: any) => any) => (selector ? selector(state) : state)),
+      { getState: () => state }
+    ),
+  };
+});
 
 vi.mock('@/features/profile', () => ({
   useLearningCockpit: vi.fn(() => ({
@@ -44,24 +47,36 @@ vi.mock('@/features/profile', () => ({
   LearningProfileEngine: { getBadges: vi.fn(() => []) },
 }));
 
-vi.mock('@/features/billing', () => ({
-  useBillingStore: vi.fn(() => ({
-    subscription: { planId: 'starter' },
-  })),
-  canViewAdvancedAnalytics: vi.fn(() => ({ allowed: false })),
-}));
+vi.mock('@/features/billing', () => {
+  const billingState = { subscription: { planId: 'starter' } };
+  return {
+    useBillingStore: Object.assign(
+      vi.fn(() => billingState),
+      { getState: () => billingState }
+    ),
+    canViewAdvancedAnalytics: vi.fn(() => ({ allowed: false })),
+  };
+});
 
-vi.mock('@/features/analytics', () => ({
-  AnalyticsService: {
-    getSummary: vi.fn(() => ({
-      assessmentProfile: { trustLabel: 'Low', hasEnoughData: false },
-    })),
-  },
-  useAnalyticsStore: vi.fn(() => ({
+vi.mock('@/features/analytics', () => {
+  const analyticsState = {
     activeChart: 'overview',
     setActiveChart: vi.fn(),
-  })),
-}));
+  };
+  return {
+    AnalyticsService: {
+      getSummary: vi.fn(() => ({
+        assessmentProfile: { trustLabel: 'Low', hasEnoughData: false },
+      })),
+    },
+    useAnalyticsStore: Object.assign(
+      vi.fn(() => analyticsState),
+      {
+        getState: () => analyticsState,
+      }
+    ),
+  };
+});
 
 vi.mock('@/features/grammar', () => ({
   GrammarProgressService: {

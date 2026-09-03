@@ -1,6 +1,6 @@
-import type { MissionDifficulty } from '@/core/learning/learning.types';
+import { MissionDifficulty } from '@/core/learning/learning.types';
 
-import type { CefrLevel } from '@/shared/types/domain.types';
+import { CefrLevel } from '@/shared/types/domain.types';
 
 export type CorrectionType = 'grammar' | 'style' | 'vocabulary';
 
@@ -48,6 +48,13 @@ export interface WritingMission {
   feedbackHints?: string[];
 }
 
+export interface WritingSubmission {
+  missionId: string;
+  finalDraft: string;
+  timeSpentMinutes: number;
+  autoFixesUsed: number;
+}
+
 export interface DetailedCorrectionFeedback {
   correctionId: string;
   type: CorrectionType;
@@ -72,3 +79,32 @@ export interface WritingEvaluationResult {
   detailedCorrections: DetailedCorrectionFeedback[];
   finalDraft: string;
 }
+
+export interface WritingHistoryEntry {
+  missionId: string;
+  timestamp: string;
+  score: number;
+  evaluation: WritingEvaluationResult;
+}
+
+export interface WritingState {
+  completedMissions: Record<string, number>; // missionId -> best score
+  lastSelectedMissionId: string | null;
+  history: WritingHistoryEntry[];
+}
+
+export type WritingSpec = {
+  id: string;
+  title: string;
+  category: string;
+  discipline: string;
+  cefrLevel: CefrLevel;
+  difficulty: MissionDifficulty;
+  scenario: string;
+  task: string;
+  expectedStructure: string[];
+  targetVocabulary: string[];
+  grammarFocus: string[];
+  strongPhrase: string;
+  weakPhrase: string;
+};

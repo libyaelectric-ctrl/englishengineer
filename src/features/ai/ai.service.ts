@@ -1,7 +1,13 @@
 import { logger } from '@/shared/logger';
+import {
+  AIOperation,
+  AIProvider,
+  AIProviderStatus,
+  AIRequest,
+  AIResponse,
+} from '@/shared/types/ai.types';
 
 import { AI_BACKEND_PROXY_CONFIG } from './ai.config';
-import { AIOperation, AIProvider, AIProviderStatus, AIRequest, AIResponse } from './ai.types';
 import { createBackendProxyProvider } from './backend-proxy.provider';
 import { MockExample, createMockAIProvider } from './mock-ai.provider';
 

@@ -1,4 +1,4 @@
-import { WritingSpec } from './writing.types';
+import { WritingSpec } from '@/shared/types/writing.types';
 
 export const WRITING_DESIGN_SPECS: WritingSpec[] = [
   {

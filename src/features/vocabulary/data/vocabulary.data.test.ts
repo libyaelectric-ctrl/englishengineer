@@ -2,8 +2,8 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { VocabularyDomain } from '@/shared/constants/engineering-disciplines';
+import { VocabularyEntry } from '@/shared/types/vocabulary.types';
 
-import { VocabularyEntry } from '../types/vocabulary.types';
 import { loadVocabularyEntries } from './vocabulary.data';
 
 const requiredDisciplines: VocabularyDomain[] = [

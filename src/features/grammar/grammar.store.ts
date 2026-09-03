@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
-import type { GrammarRule } from './grammar.types';
+import type { GrammarRule } from '@/shared/types/grammar.types';
+
 import { QuizGrammarProgressService, type RuleProgress } from './services/grammar.progress';
 
 export type GrammarTab = 'New' | 'Learning' | 'Due' | 'Strong';

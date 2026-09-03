@@ -3,8 +3,7 @@ import { devtools } from 'zustand/middleware';
 
 import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
-
-import { AuthState, UserProfile } from './auth.types';
+import { AuthState, UserProfile } from '@/shared/types/auth.types';
 
 interface AuthActions {
   logout: () => Promise<void>;

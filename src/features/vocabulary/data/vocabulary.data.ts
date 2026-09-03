@@ -1,4 +1,5 @@
-import { VocabularyEntry } from '../types/vocabulary.types';
+import { VocabularyEntry } from '@/shared/types/vocabulary.types';
+
 import { VocabularyContentRow, buildEntries } from './vocabulary.expansion-helpers';
 
 let _entriesPromise: Promise<VocabularyEntry[]> | null = null;

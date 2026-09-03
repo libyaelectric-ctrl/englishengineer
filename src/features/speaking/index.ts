@@ -6,7 +6,7 @@ export {
   type SpeakingEvaluationResult,
   type SpeakingHistoryEntry,
   type SpeakingState,
-} from './core/speaking.types';
+} from '@/shared/types/speaking.types';
 
 export { SPEAKING_MISSIONS } from './core/speaking.data';
 

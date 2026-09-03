@@ -1,9 +1,9 @@
 import type { LearningDataSkill } from '@/core/learning/spaced-repetition.types';
 
 import type { CefrBand } from '@/shared/types/domain.types';
+import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
 import { getBaseCefrLevel, getNextCefrBand } from '@/shared/utils/profile.utils';
 
-import type { VocabularyTerm } from '../../types/vocabulary.types';
 import {
   type VocabularyMenuState,
   type VocabularyMenuStatus,

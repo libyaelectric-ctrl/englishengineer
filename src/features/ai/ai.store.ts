@@ -8,8 +8,15 @@ import { LearningState } from '@/core/learning/learning.types';
 import { logger } from '@/shared/logger';
 import { eosPersistConfig } from '@/shared/storage/persist-middleware';
 import { useLearningIntelligenceStore } from '@/shared/stores/learning-intelligence.store';
-
-import { UserProfile } from '@/features/auth/auth.types';
+import {
+  AICoachMode,
+  AICoachModeId,
+  AICoachResult,
+  AICoachSession,
+  AIProviderStatus,
+  AISessionLog,
+} from '@/shared/types/ai.types';
+import { UserProfile } from '@/shared/types/auth.types';
 
 import {
   AI_COACH_MODES,
@@ -18,14 +25,6 @@ import {
   getCoachModeById,
 } from './ai.helpers';
 import { AIService } from './ai.service';
-import {
-  AICoachMode,
-  AICoachModeId,
-  AICoachResult,
-  AICoachSession,
-  AIProviderStatus,
-  AISessionLog,
-} from './ai.types';
 
 interface AIStoreState {
   modes: AICoachMode[];

@@ -1,7 +1,8 @@
+import { logger } from '@/shared/logger';
+import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
 import { getCachedSeed, setCachedSeed } from '@/shared/utils/indexed-db';
 
 import type { CefrLevel } from '@/features/level-system';
-import type { VocabularyTerm } from '@/features/vocabulary/types/vocabulary.types';
 
 /**
  * Runtime-fetch vocabulary loader. Each level's seed data is served as
@@ -44,7 +45,7 @@ export const loadVocabularyByLevel = async (level: CefrLevel): Promise<Vocabular
     }
     return terms;
   } catch (e) {
-    console.warn(`Failed to load vocabulary for ${level}:`, e);
+    logger.w(`Failed to load vocabulary for ${level}:`, e);
     return [];
   }
 };

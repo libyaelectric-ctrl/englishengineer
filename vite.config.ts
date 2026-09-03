@@ -41,26 +41,26 @@ export default defineConfig(() => {
       target: 'es2020',
       minify: 'esbuild' as const,
       cssMinify: 'esbuild' as const,
+      modulePreload: {
+        polyfill: true,
+      },
       rollupOptions: {
         output: {
+          // eslint-disable-next-line complexity -- vendor chunk rules per package family
           manualChunks(id) {
             if (!id.includes('node_modules')) {
               if (id.includes('/data/') && id.includes('by-level/'))
                 return getDataChunk(id) ?? 'seed-data';
               if ((id.includes('/data/') || id.includes('seed')) && !id.includes('/localization/'))
                 return 'seed-data';
+              // Lazy load localization data (huge chunk ~775KB)
+              if (id.includes('/features/localization/') && id.includes('/data/'))
+                return 'localization-data';
+              if (id.includes('/features/localization/translations/'))
+                return 'localization-translations';
               return;
             }
-            // Split vendor into smaller chunks.
-            // NOTE: react/react-dom/scheduler, framer-motion, and the catch-all
-            // bucket must NOT be split apart from each other — several of these
-            // packages reference each other's exports at module-init time, and
-            // splitting them into separate chunks produces circular CHUNK
-            // dependencies (Rollup warns: "Circular chunk: vendor-other ->
-            // vendor-react -> vendor-other"). Depending on the resulting load
-            // order in the browser, this crashes with errors like
-            // "Cannot set properties of undefined (setting 'Activity')" and
-            // renders a white screen. Keep them together in 'vendor-react'.
+            // Vendor chunk splitting
             if (id.includes('@clerk')) return 'vendor-clerk';
             if (
               id.includes('react-router') ||
@@ -72,7 +72,35 @@ export default defineConfig(() => {
               return 'vendor-state';
             if (id.includes('@supabase')) return 'vendor-supabase';
             if (id.includes('@opentelemetry') || id.includes('@sentry')) return 'vendor-telemetry';
-            return 'vendor-react';
+            if (id.includes('lucide-react')) return 'vendor-lucide';
+            if (id.includes('motion') || id.includes('framer-motion')) return 'vendor-motion';
+            if (id.includes('three')) return 'vendor-three';
+            if (id.includes('zustand')) return 'vendor-zustand';
+            if (id.includes('@tanstack')) return 'vendor-tanstack';
+            if (id.includes('lucide-react')) return 'vendor-lucide';
+            // Core React ecosystem - keep together to avoid circular deps
+            if (
+              id.includes('react') ||
+              id.includes('scheduler') ||
+              id.includes('use-sync-external-store') ||
+              id.includes('object-assign')
+            )
+              return 'vendor-react-core';
+            return 'vendor-other';
+          },
+          chunkFileNames: 'assets/[name]-[hash].js',
+          entryFileNames: 'assets/[name]-[hash].js',
+          assetFileNames: (assetInfo) => {
+            const name = assetInfo.name ?? 'asset';
+            const info = name.split('.');
+            const ext = info[info.length - 1];
+            if (/\.(png|jpe?g|gif|svg|webp|avif|ico)$/.test(name)) {
+              return `assets/images/[name]-[hash].${ext}`;
+            }
+            if (/\.(woff2?|eot|ttf|otf)$/.test(name)) {
+              return `assets/fonts/[name]-[hash].${ext}`;
+            }
+            return `assets/[name]-[hash].${ext}`;
           },
         },
         onwarn(warning, warn) {

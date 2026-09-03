@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { AIRequest, MockExample } from '../ai.types';
+import type { AIRequest, MockExample } from '@/shared/types/ai.types';
 
 const mockExamples: MockExample[] = [{ input: 'hello', output: 'AI REFINEMENT:\nHello world' }];
 

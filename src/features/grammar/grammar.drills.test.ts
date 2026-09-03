@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import type { GrammarRule } from '@/shared/types/grammar.types';
+
 import { type DrillQuestion, InteractiveDrillService } from './grammar.drills';
-import type { GrammarRule } from './grammar.types';
 
 const makeRule = (overrides: Partial<GrammarRule> = {}): GrammarRule => ({
   id: 'rule-1',

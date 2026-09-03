@@ -98,6 +98,7 @@ const buildTeamAnalytics = (
     date: string;
     durationMinutes?: number;
   }>
+  // eslint-disable-next-line complexity -- dense aggregate data shaping
 ): TeamAnalyticsResponse => {
   const now = new Date();
   const weekAgo = new Date(now.getTime() - 7 * 86_400_000);
@@ -106,6 +107,7 @@ const buildTeamAnalytics = (
   const summaryMap = new Map(summaries.map((s) => [s.memberId, s]));
   const skills = ['vocabulary', 'grammar', 'reading', 'writing', 'speaking', 'listening'];
 
+  // eslint-disable-next-line complexity -- dense per-member data shaping
   const memberAnalytics: TeamMemberAnalytics[] = members.map((m) => {
     const summary = summaryMap.get(m.id);
     const memberSessions = sessions?.filter((s) => s.userId === m.id) ?? [];

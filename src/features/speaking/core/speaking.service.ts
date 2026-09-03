@@ -7,6 +7,13 @@ import { EngineeringDiscipline } from '@/shared/constants/engineering-discipline
 import { filterMissionsByDiscipline } from '@/shared/constants/mission-discipline-map';
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { storage } from '@/shared/storage';
+import {
+  SpeakingEvaluationResult,
+  SpeakingHistoryEntry,
+  SpeakingMission,
+  SpeakingState,
+  SpeakingSubmission,
+} from '@/shared/types/speaking.types';
 import { applyFeedbackToEvaluation } from '@/shared/utils/evaluation-merge';
 
 import { VocabularyService } from '@/features/vocabulary';
@@ -14,13 +21,6 @@ import { VocabularyService } from '@/features/vocabulary';
 import { getSpeakingHistoryDetails } from './speaking-mvp';
 import { SPEAKING_MISSIONS } from './speaking.data';
 import { SpeakingEvaluator } from './speaking.evaluator';
-import {
-  SpeakingEvaluationResult,
-  SpeakingHistoryEntry,
-  SpeakingMission,
-  SpeakingState,
-  SpeakingSubmission,
-} from './speaking.types';
 
 const STORAGE_KEY = 'EngVox_speaking_state';
 

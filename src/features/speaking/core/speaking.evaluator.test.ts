@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import { SpeakingMission, SpeakingSubmission } from '@/shared/types/speaking.types';
+
 import { SpeakingEvaluator } from './speaking.evaluator';
-import { SpeakingMission, SpeakingSubmission } from './speaking.types';
 
 const mockMission: SpeakingMission = {
   id: 'speaking_site_meeting',

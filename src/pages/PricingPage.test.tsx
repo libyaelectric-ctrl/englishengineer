@@ -1,7 +1,9 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
+
+import { PRICING_TIERS, formatPrice } from '@/shared/data/pricing.data';
 
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
@@ -60,7 +62,7 @@ describe('PricingPage', () => {
     } as unknown as ReturnType<typeof useBillingStore>);
   };
 
-  it('renders all 5 pricing tiers', () => {
+  it('renders every tier in the pricing model', () => {
     mockAuth(null);
     mockBilling({ planId: 'junior', status: 'none' });
 
@@ -70,11 +72,12 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getAllByText('Junior').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Senior').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Specialist').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Master').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Team').length).toBeGreaterThan(0);
+    // Data-driven off PRICING_TIERS so this cannot drift again — the previous
+    // version asserted the removed 'Team' tier by name.
+    expect(PRICING_TIERS).toHaveLength(5);
+    for (const tier of PRICING_TIERS) {
+      expect(screen.getByRole('heading', { name: tier.name })).toBeInTheDocument();
+    }
   });
 
   it('shows Most Popular badge on Senior plan', () => {
@@ -91,7 +94,7 @@ describe('PricingPage', () => {
     expect(badges.length).toBeGreaterThan(0);
   });
 
-  it('shows Coming Soon badge on Team plan', () => {
+  it('does not show Coming Soon badges (all tiers are currently available)', () => {
     mockAuth(null);
     mockBilling({ planId: 'junior', status: 'none' });
 
@@ -101,8 +104,8 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    const badges = screen.getAllByText(/Coming Soon|pricing.comingSoon/i);
-    expect(badges.length).toBeGreaterThan(0);
+    expect(PRICING_TIERS.some((tier) => tier.comingSoon)).toBe(false);
+    expect(screen.queryByText(/Coming Soon|pricing.comingSoon/i)).not.toBeInTheDocument();
   });
 
   it('shows current plan indicator for active subscription', () => {
@@ -118,7 +121,7 @@ describe('PricingPage', () => {
     expect(screen.getByText(/Current plan|pricing.currentPlan/i)).toBeInTheDocument();
   });
 
-  it('displays correct prices', () => {
+  it('displays the current monthly price on each paid tier', () => {
     mockAuth(null);
     mockBilling({ planId: 'junior', status: 'none' });
 
@@ -128,8 +131,16 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('$29')).toBeInTheDocument();
-    expect(screen.getByText('$59')).toBeInTheDocument();
-    expect(screen.getByText('$99')).toBeInTheDocument();
+    // Data-driven off PRICING_TIERS so future price changes don't rot the
+    // assertions. Struck-through original prices can equal another tier's
+    // current price (e.g. $59.99), so scope each lookup to its own card.
+    for (const tier of PRICING_TIERS) {
+      if (tier.monthlyPrice === 0) continue; // Free renders as "Free"
+      const card = screen.getByRole('heading', { name: tier.name }).closest('article');
+      expect(card).not.toBeNull();
+      expect(
+        within(card as HTMLElement).getByText(formatPrice(tier.monthlyPrice, 'USD'))
+      ).toBeInTheDocument();
+    }
   });
 });

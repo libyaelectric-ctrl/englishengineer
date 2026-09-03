@@ -9,7 +9,7 @@ export {
   type WritingHistoryEntry,
   type WritingState,
   type WritingSpec,
-} from './writing.types';
+} from '@/shared/types/writing.types';
 
 export { WRITING_MISSIONS } from './writing.data';
 

@@ -1,6 +1,6 @@
 import { AppError, ErrorCode } from '@/core/errors';
 
-import type { GrammarRule } from '@/features/grammar/grammar.types';
+import type { GrammarRule } from '@/shared/types/grammar.types';
 
 export const loadA2GrammarRules = async (): Promise<GrammarRule[]> => {
   const res = await fetch('/data/grammar/a2.seed.json');

@@ -1,5 +1,13 @@
 import { LearningState, MissionModule, ScoreResult } from '@/core/learning/learning.types';
 
+import {
+  AssessmentDimensionScore,
+  AssessmentProfile,
+  AssessmentResult,
+  AssessmentSourceScore,
+  AssessmentWrappedScore,
+} from '@/shared/types/assessment.types';
+
 import { VocabularyService } from '@/features/vocabulary';
 
 import {
@@ -13,13 +21,6 @@ import {
   mapScoreToCefr,
   mapScoreToEngineerElo,
 } from './assessment.helpers';
-import {
-  AssessmentDimensionScore,
-  AssessmentProfile,
-  AssessmentResult,
-  AssessmentSourceScore,
-  AssessmentWrappedScore,
-} from './assessment.types';
 
 const COMMUNICATION_MODULES: MissionModule[] = ['Writing', 'Speaking', 'Listening', 'Reading'];
 

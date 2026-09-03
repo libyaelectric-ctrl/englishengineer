@@ -4,7 +4,8 @@ import {
   VocabularyAnswer,
   VocabularyEvaluationResult,
   VocabularyReviewState,
-} from '../types/vocabulary.types';
+} from '@/shared/types/vocabulary.types';
+
 import {
   FINAL_ACCURACY_WEIGHT,
   FINAL_RETENTION_WEIGHT,

@@ -16,7 +16,6 @@ export {
   type PromotionState,
   type SkillProfile,
   type UserLearningProfile,
-  type VocabularyMemorySummary,
   type MissionType,
   type MissionDifficulty,
   type DailyMission,
@@ -24,3 +23,5 @@ export {
   type AdaptivePaceDecision,
   type ProfileBadge,
 } from '@/shared/types/domain.types';
+
+export { type VocabularyMemorySummary } from '@/shared/types/vocabulary.types';

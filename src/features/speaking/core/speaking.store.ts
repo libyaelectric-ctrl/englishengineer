@@ -2,9 +2,13 @@ import { create } from 'zustand';
 
 import { logger } from '@/shared/logger';
 import { KnowledgeCaptureService } from '@/shared/services/knowledge-capture.service';
+import {
+  SpeakingEvaluationResult,
+  SpeakingHistoryEntry,
+  SpeakingMission,
+} from '@/shared/types/speaking.types';
 
 import { SpeakingService } from './speaking.service';
-import { SpeakingEvaluationResult, SpeakingHistoryEntry, SpeakingMission } from './speaking.types';
 
 interface SpeakingStoreState {
   missions: SpeakingMission[];

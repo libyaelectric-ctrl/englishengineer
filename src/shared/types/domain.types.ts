@@ -168,16 +168,6 @@ export interface UserLearningProfile {
   updatedAt: string;
 }
 
-export interface VocabularyMemorySummary {
-  total: number;
-  new: number;
-  learning: number;
-  mastered: number;
-  forgotten: number;
-  dueToday: number;
-  weakWords: number;
-}
-
 export type MissionType = 'skill-practice' | 'vocabulary-review' | 'grammar-focus';
 export type MissionDifficulty = 'review' | 'current' | 'stretch';
 

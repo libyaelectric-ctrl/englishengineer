@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { VocabularyTerm } from '../../types/vocabulary.types';
+import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
+
 import {
   CANONICAL_VOCABULARY_TOTAL,
   VocabularyMenuService,

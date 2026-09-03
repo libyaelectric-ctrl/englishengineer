@@ -21,7 +21,7 @@
     "test:watch": "vitest --configLoader runner",
     "test:coverage": "vitest run --coverage --configLoader runner --exclude 'src/e2e/**' --exclude 'e2e/**' --exclude '.mimocode/**' --exclude 'tests/**' --exclude 'src/shared/tests/integration/**'",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "depcruise": "depcruise src backend --config .dependency-cruiser.mjs",
     "depcruise:graph": "depcruise src backend --config .dependency-cruiser.mjs --output-type dot | dot -T svg > dependency-graph.svg",
     "e2e": "vitest run src/e2e --configLoader runner",
@@ -33,10 +33,6 @@
     "build-storybook": "storybook build",
     "verify:release": "node scripts/verify-release.mjs",
     "verify:rls": "node scripts/verify-supabase-rls.mjs",
-    "import:grammar": "node scripts/import-grammar-database.mjs",
-    "import:vocabulary": "node scripts/import-vocabulary-database.mjs",
-    "verify:grammar": "node scripts/verify-grammar-database.mjs",
-    "verify:vocabulary": "node scripts/verify-vocabulary-database.mjs",
     "verify:test-exit": "node scripts/run-with-timeout.mjs 90000 run test",
     "verify:build-exit": "node scripts/run-with-timeout.mjs 120000 run build",
     "verify:quality-exit": "node scripts/run-with-timeout.mjs 240000 run quality:gate",
@@ -92,7 +88,10 @@
     "@commitlint/config-conventional": "^21.2.2",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.62.1",
+    "@storybook/addon-a11y": "^10.6.0",
     "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/addon-interactions": "^8.6.14",
+    "@storybook/addon-themes": "^10.6.0",
     "@storybook/react": "^10.6.0",
     "@storybook/react-vite": "^10.6.0",
     "@tailwindcss/vite": "^4.3.3",
@@ -128,11 +127,11 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "eslint --fix",
+      "eslint --fix --max-warnings 0",
       "prettier --write"
     ],
     "*.{js,mjs,cjs}": [
-      "eslint --fix",
+      "eslint --fix --max-warnings 0",
       "prettier --write"
     ],
     "*.{json,md,yml}": [

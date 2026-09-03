@@ -1,17 +1,16 @@
 import { storage } from '@/shared/storage';
-
-import type { CefrLevel } from '@/features/level-system';
-
 import type {
   ExternalVocabularyResult,
   MyVocabularyFilter,
   SavedVocabularyWord,
   VocabularyEntry,
   VocabularyMemoryState,
-  VocabularyMemorySummary,
+  VocabularyMemoryStoreSummary,
   VocabularyWordSource,
   VocabularyWordStatus,
-} from '../../types/vocabulary.types';
+} from '@/shared/types/vocabulary.types';
+
+import type { CefrLevel } from '@/features/level-system';
 
 const STORAGE_KEY = 'EngVox_vocabulary_memory';
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -153,7 +152,7 @@ export const VocabularyMemoryService = {
     return this.getState().savedWords.filter((word) => word.status === 'Weak');
   },
 
-  getSummary(now = new Date()): VocabularyMemorySummary {
+  getSummary(now = new Date()): VocabularyMemoryStoreSummary {
     const words = this.getState().savedWords;
     return {
       savedWords: words.length,

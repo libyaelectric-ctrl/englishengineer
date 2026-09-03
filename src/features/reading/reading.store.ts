@@ -4,9 +4,13 @@ import type { KnowledgePoolEntry } from '@/core/content-selection/personalized-c
 
 import { logger } from '@/shared/logger';
 import { KnowledgeCaptureService } from '@/shared/services/knowledge-capture.service';
+import {
+  ReadingEvaluationResult,
+  ReadingHistoryEntry,
+  ReadingMission,
+} from '@/shared/types/reading.types';
 
 import { ReadingService } from './reading.service';
-import { ReadingEvaluationResult, ReadingHistoryEntry, ReadingMission } from './reading.types';
 
 interface ReadingStoreState {
   missions: ReadingMission[];

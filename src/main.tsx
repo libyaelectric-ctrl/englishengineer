@@ -9,12 +9,16 @@ import './index.css';
 import { logger } from './shared/logger';
 
 // Configure StatusBar for native platforms (overlay:false = WebView below status bar)
-if (typeof window !== 'undefined' && (window as any).Capacitor) {
-  import('@capacitor/status-bar').then(({ StatusBar }) => {
-    StatusBar.setOverlaysWebView({ overlay: false }).catch(() => {});
-    StatusBar.setStyle({ style: 'DARK' as any }).catch(() => {});
-    StatusBar.setBackgroundColor({ color: '#0f0f23' }).catch(() => {});
-  }).catch(() => {});
+const isCapacitor =
+  typeof window !== 'undefined' && Boolean((window as Window & { Capacitor?: unknown }).Capacitor);
+if (isCapacitor) {
+  import('@capacitor/status-bar')
+    .then(({ StatusBar, Style }) => {
+      StatusBar.setOverlaysWebView({ overlay: false }).catch(() => {});
+      StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
+      StatusBar.setBackgroundColor({ color: '#0f0f23' }).catch(() => {});
+    })
+    .catch(() => {});
 }
 
 // Polyfill: Safari < 16 does not support requestIdleCallback
@@ -114,11 +118,7 @@ try {
 ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 
 // Service Worker — only on web PWA (Capacitor native shell handles caching)
-if (
-  typeof window !== 'undefined' &&
-  'serviceWorker' in navigator &&
-  !(window as any).Capacitor
-) {
+if ('serviceWorker' in navigator && !isCapacitor) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register('/sw.js')

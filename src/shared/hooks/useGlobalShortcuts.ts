@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -15,6 +15,16 @@ interface Shortcut {
   action: () => void;
 }
 
+const isShortcutTriggered = (shortcut: Shortcut, event: KeyboardEvent): boolean => {
+  const keyMatch = event.key.toLowerCase() === shortcut.key.toLowerCase();
+  const ctrlMatch = shortcut.ctrl
+    ? event.ctrlKey || event.metaKey
+    : !event.ctrlKey && !event.metaKey;
+  const shiftMatch = shortcut.shift ? event.shiftKey : !event.shiftKey;
+  const altMatch = shortcut.alt ? event.altKey : !event.altKey;
+  return keyMatch && ctrlMatch && shiftMatch && altMatch;
+};
+
 /**
  * Global keyboard shortcuts for the application.
  *
@@ -29,29 +39,32 @@ export function useGlobalShortcuts() {
   const { toggle } = useCommandPalette();
   const { toggle: toggleShortcuts } = useKeyboardShortcutsPanel();
 
-  const shortcuts: Shortcut[] = [
-    // Command Palette
-    { key: 'k', ctrl: true, description: 'Command Palette', action: toggle },
-    { key: 'k', meta: true, description: 'Command Palette', action: toggle },
+  const shortcuts = useMemo<Shortcut[]>(
+    () => [
+      // Command Palette
+      { key: 'k', ctrl: true, description: 'Command Palette', action: toggle },
+      { key: 'k', meta: true, description: 'Command Palette', action: toggle },
 
-    // Shortcuts Panel
-    { key: '/', ctrl: true, description: 'Keyboard Shortcuts', action: toggleShortcuts },
-    { key: '/', meta: true, description: 'Keyboard Shortcuts', action: toggleShortcuts },
+      // Shortcuts Panel
+      { key: '/', ctrl: true, description: 'Keyboard Shortcuts', action: toggleShortcuts },
+      { key: '/', meta: true, description: 'Keyboard Shortcuts', action: toggleShortcuts },
 
-    // Quick navigation (numbers)
-    { key: '1', description: 'Dashboard', action: () => navigate('/dashboard') },
-    { key: '2', description: 'Vocabulary', action: () => navigate('/vocabulary') },
-    { key: '3', description: 'Grammar', action: () => navigate('/grammar') },
-    { key: '4', description: 'Reading', action: () => navigate('/reading') },
-    { key: '5', description: 'Writing', action: () => navigate('/writing') },
-    { key: '6', description: 'Listening', action: () => navigate('/listening') },
-    { key: '7', description: 'Speaking', action: () => navigate('/speaking') },
-    { key: '8', description: 'Learning Path', action: () => navigate('/learning-path') },
-    { key: '9', description: 'Profile', action: () => navigate('/profile') },
+      // Quick navigation (numbers)
+      { key: '1', description: 'Dashboard', action: () => navigate('/dashboard') },
+      { key: '2', description: 'Vocabulary', action: () => navigate('/vocabulary') },
+      { key: '3', description: 'Grammar', action: () => navigate('/grammar') },
+      { key: '4', description: 'Reading', action: () => navigate('/reading') },
+      { key: '5', description: 'Writing', action: () => navigate('/writing') },
+      { key: '6', description: 'Listening', action: () => navigate('/listening') },
+      { key: '7', description: 'Speaking', action: () => navigate('/speaking') },
+      { key: '8', description: 'Learning Path', action: () => navigate('/learning-path') },
+      { key: '9', description: 'Profile', action: () => navigate('/profile') },
 
-    // Escape — close command palette if open
-    { key: 'Escape', description: 'Close', action: () => {} },
-  ];
+      // Escape — close command palette if open
+      { key: 'Escape', description: 'Close', action: () => {} },
+    ],
+    [navigate, toggle, toggleShortcuts]
+  );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -65,20 +78,13 @@ export function useGlobalShortcuts() {
         return;
       }
 
-      for (const shortcut of shortcuts) {
-        const keyMatch = e.key.toLowerCase() === shortcut.key.toLowerCase();
-        const ctrlMatch = shortcut.ctrl ? e.ctrlKey || e.metaKey : !e.ctrlKey && !e.metaKey;
-        const shiftMatch = shortcut.shift ? e.shiftKey : !e.shiftKey;
-        const altMatch = shortcut.alt ? e.altKey : !e.altKey;
-
-        if (keyMatch && ctrlMatch && shiftMatch && altMatch) {
-          e.preventDefault();
-          shortcut.action();
-          return;
-        }
+      const shortcut = shortcuts.find((item) => isShortcutTriggered(item, e));
+      if (shortcut) {
+        e.preventDefault();
+        shortcut.action();
       }
     },
-    [navigate, toggle, toggleShortcuts, shortcuts]
+    [shortcuts]
   );
 
   useEffect(() => {

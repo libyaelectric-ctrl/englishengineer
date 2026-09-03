@@ -24,6 +24,7 @@ import { DailyChallenge } from './DailyChallenge';
 import { DailyDigest } from './DailyDigest';
 import { ProgressNudge } from './ProgressNudge';
 
+// eslint-disable-next-line complexity -- large dashboard layout with many conditional sections
 export const DashboardPage: React.FC = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const translate = useLocalizationStore((state) => state.translate);

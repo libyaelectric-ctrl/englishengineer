@@ -5,7 +5,7 @@ import {
   AIRequest,
   AIResponse,
   MockExample,
-} from './ai.types';
+} from '@/shared/types/ai.types';
 
 export type { MockExample };
 
