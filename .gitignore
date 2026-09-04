@@ -113,7 +113,6 @@ opencode.json
 .vitest-commit.log
 
 # ── Project-specific ──
-.vercel/
 .vercel-tmp/
 .freebuff/
 tasrim/
@@ -127,8 +126,13 @@ Usta-Faz2.txt
 gece.png
 .gunduz.png
 .gnndz.txt
+*.py
 !.env.example
 !scripts/.env.example
+!scripts/translate-vocabulary-nllb.py
+!scripts/translate-grammar-deepl.py
+!scripts/translate-vocabulary-chunks.py
+!scripts/requirements-translations.txt
 
 # ── Runtime dirs ──
 test/
@@ -144,9 +148,3 @@ monitoring/prometheus_data/
 PRC_Kademe_8_Live_Service_Evidence_Report.md
 .vercel
 .env*
-!.env.production
-
-# Capacitor build artifacts (not the project itself)
-android/app/build/
-android/.gradle/
-android/capacitor-cordova-android-plugins/
