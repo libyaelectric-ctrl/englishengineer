@@ -401,7 +401,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
   const showEmpty = hasEmptyResults(tab, counts);
 
   return (
-    <div className="space-y-7 animate-in fade-in duration-300 pt-12 sm:pt-0">
+    <div className="space-y-7 animate-in fade-in duration-300">
       {!embedded && (
         <PageHeader
           title="Work Tools"

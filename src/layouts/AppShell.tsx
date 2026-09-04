@@ -5,6 +5,7 @@ import { type FC, Suspense, lazy, useEffect, useRef } from 'react';
 
 import { Outlet } from 'react-router-dom';
 
+import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { useGlobalShortcuts } from '@/shared/hooks/useGlobalShortcuts';
 import { useKeyboardNavigation } from '@/shared/hooks/useKeyboardNavigation';
 import { usePageTracking } from '@/shared/hooks/usePageTracking';
@@ -82,13 +83,28 @@ export const AppShell: FC = () => {
         <Suspense fallback={null}>
           <BetaAnalyticsTracker />
         </Suspense>
-        <button
-          onClick={toggleSidebar}
-          className="fixed left-2 top-2 z-50 cursor-pointer rounded-[var(--radius-card)] p-2 text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground lg:hidden"
-          aria-label="Toggle navigation sidebar"
+        {/* Mobile top app bar */}
+        <div
+          className="flex h-12 items-center justify-between border-b border-border-soft bg-surface/95 px-3 backdrop-blur-md lg:hidden shrink-0 z-40"
+          style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
         >
-          <Menu className="h-5 w-5" />
-        </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleSidebar}
+              className="flex items-center justify-center h-8 w-8 rounded-lg text-muted-copy hover:bg-surface-hover hover:text-foreground transition-colors cursor-pointer"
+              aria-label="Toggle navigation sidebar"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+            <div className="flex items-center gap-1.5">
+              <img src="/brand/logo.svg" alt="EngVox" className="h-5 w-5" />
+              <span className="text-sm font-bold text-foreground">EngVox</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <ThemeToggle />
+          </div>
+        </div>
         <main
           id="main-content"
           ref={mainRef}

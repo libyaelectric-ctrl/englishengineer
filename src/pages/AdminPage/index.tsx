@@ -69,7 +69,7 @@ export const AdminPage = () => {
   const isRefreshing = isLoadingUsers || isLoadingStats || isLoadingLogs;
 
   return (
-    <PageContainer className="w-full animate-aurora-fade-in space-y-6 pt-12 sm:pt-0">
+    <PageContainer className="w-full animate-aurora-fade-in space-y-6">
       {/* ─── Command Console Header ─────────────────────── */}
       <header className="premium-panel overflow-hidden p-6 sm:p-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
@@ -85,7 +85,10 @@ export const AdminPage = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={async () => { const { navigateTo } = await import('@/shared/utils/capacitor'); navigateTo('/dashboard'); }}
+                onClick={async () => {
+                  const { navigateTo } = await import('@/shared/utils/capacitor');
+                  navigateTo('/dashboard');
+                }}
                 className="text-xs"
               >
                 ← Dashboard

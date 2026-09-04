@@ -278,7 +278,7 @@ const SpeakingPage = () => {
   const userDiscipline = (currentUser?.engineeringDiscipline as EngineeringDiscipline) ?? null;
 
   return (
-    <PageContainer className="pt-12 sm:pt-0 relative z-10 font-sans">
+    <PageContainer className="relative z-10 font-sans">
       <PageHeader
         title="Speaking"
         badgeText={`${MAX_VOICE_MINUTES - voiceMinutesUsedThisMonth}m LEFT`}

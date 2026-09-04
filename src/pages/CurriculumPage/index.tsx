@@ -120,7 +120,7 @@ const CurriculumPage = () => {
   const repeatedMistakes = mistakeLog.filter((item) => (item.repetitionCount ?? 1) >= 3).length;
 
   return (
-    <PageContainer className="w-full space-y-7 pb-8 relative z-10 font-sans pt-12 sm:pt-0">
+    <PageContainer className="w-full space-y-7 pb-8 relative z-10 font-sans">
       {/* ─── Learning Hub Header ────────────────────────── */}
       <PageHeader
         title={translate('learningHub.title')}

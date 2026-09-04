@@ -124,7 +124,7 @@ const ProgressPage = () => {
     },
   ];
   return (
-    <PageContainer className="space-y-6 pt-12 sm:pt-0">
+    <PageContainer className="space-y-6">
       <HeroBanner totalElo={totalElo} totalPercentage={Math.min(100, (totalElo / MAX_ELO) * 100)} />
       <QuickStats
         totalElo={totalElo}

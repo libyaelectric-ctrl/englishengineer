@@ -45,11 +45,11 @@ export const MetricCard = memo<MetricCardProps>(
     };
 
     return (
-      <Card className={cn('group relative overflow-hidden p-5', className)} {...props}>
-        <div className="flex min-w-0 items-start justify-between gap-3">
-          <div className="min-w-0 flex-1 space-y-2">
-            <p className="text-xs text-muted-copy">{label}</p>
-            <h3 className="text-2xl font-bold text-foreground tabular-nums">{value}</h3>
+      <Card className={cn('group relative overflow-hidden p-3.5 sm:p-5', className)} {...props}>
+        <div className="flex min-w-0 items-start justify-between gap-2 sm:gap-3">
+          <div className="min-w-0 flex-1 space-y-1.5 sm:space-y-2">
+            <p className="text-[11px] sm:text-xs text-muted-copy truncate">{label}</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground tabular-nums">{value}</h3>
             {trend && (
               <p className={cn('flex items-center gap-1 text-xs', trendTextColors[trendDirection])}>
                 {trendDirection === 'up' && <ArrowUpRight className="h-3 w-3" />}
