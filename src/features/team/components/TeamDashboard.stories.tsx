@@ -91,7 +91,7 @@ export const MemberRow = ({ member }: { member: (typeof DEMO_MEMBERS)[number] })
 
 const TeamDashboardDemo = ({ showDemoWarning }: { showDemoWarning?: boolean }) => {
   return (
-    <main className="space-y-6 pt-12 sm:pt-0">
+    <main className="space-y-6">
       <header className="flex flex-col gap-4 border-b border-border-soft pb-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="flex flex-wrap items-center gap-2">

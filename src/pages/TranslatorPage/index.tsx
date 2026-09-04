@@ -70,14 +70,14 @@ const LanguageBar: React.FC<{
   handleSwapLanguages: () => void;
   translate: (key: TranslationKey) => string;
 }> = ({ sourceLang, setSourceLang, targetLang, setTargetLang, handleSwapLanguages, translate }) => (
-  <div className="flex flex-wrap items-center justify-between gap-3 bg-background p-3 rounded-[var(--radius-card)] border border-border-soft text-xs">
-    <div className="flex items-center gap-2">
+  <div className="flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 bg-background p-2.5 sm:p-3 rounded-[var(--radius-card)] border border-border-soft text-xs">
+    <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
       <Globe2 className="h-4 w-4 text-primary shrink-0" />
-      <span className="font-bold text-muted-copy">{translate('translator.fromLabel')}</span>
+      <span className="font-bold text-muted-copy hidden min-[360px]:inline">{translate('translator.fromLabel')}</span>
       <select
         value={sourceLang}
         onChange={(e) => setSourceLang(e.target.value as SupportedLang)}
-        className="rounded-[var(--radius-card)] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer"
+        className="max-w-[125px] min-[400px]:max-w-none rounded-[var(--radius-card)] border border-border-soft bg-surface px-2 sm:px-3 py-1.5 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer truncate"
       >
         <option value="auto">{translate('translator.autoDetect')}</option>
         {SUPPORTED_LANGUAGES.map((lang) => (
@@ -91,18 +91,18 @@ const LanguageBar: React.FC<{
     <button
       type="button"
       onClick={handleSwapLanguages}
-      className="p-2 rounded-[var(--radius-card)] border border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary transition-all cursor-pointer shadow-sm hover:scale-105"
+      className="p-2 rounded-[var(--radius-card)] border border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary transition-all cursor-pointer shadow-sm hover:scale-105 shrink-0"
       title={translate('translator.swapTitle')}
     >
       <ArrowLeftRight className="h-4 w-4" />
     </button>
 
-    <div className="flex items-center gap-2">
-      <span className="font-bold text-muted-copy">{translate('translator.toLabel')}</span>
+    <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+      <span className="font-bold text-muted-copy hidden min-[360px]:inline">{translate('translator.toLabel')}</span>
       <select
         value={targetLang}
         onChange={(e) => setTargetLang(e.target.value as SupportedLang)}
-        className="rounded-[var(--radius-card)] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer"
+        className="max-w-[125px] min-[400px]:max-w-none rounded-[var(--radius-card)] border border-border-soft bg-surface px-2 sm:px-3 py-1.5 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer truncate"
       >
         {SUPPORTED_LANGUAGES.map((lang) => (
           <option key={lang.code} value={lang.code}>
@@ -492,7 +492,7 @@ export const TranslatorPage = () => {
       />
 
       {/* Main Container Card - Full Width 6XL Spacing */}
-      <div className="rounded-[var(--radius-card)] border border-primary/30 bg-surface/95 p-6 md:p-8 shadow-xl space-y-6 relative">
+      <div className="rounded-[var(--radius-card)] border border-primary/30 bg-surface/95 p-4 sm:p-6 md:p-8 shadow-xl space-y-6 relative">
         {/* Attribution Badge & Live Translate Checkbox */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-soft pb-4">
           <div className="flex items-center gap-2 text-xs font-bold text-muted-copy">

@@ -32,7 +32,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
   }, [h.isLimitedResponse]);
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-300 font-sans pt-8 sm:pt-0">
+    <div className="space-y-4 animate-in fade-in duration-300 font-sans">
       <ToastContainer />
       {!embedded && <PageHeader title="AI Copilot Studio" />}
 

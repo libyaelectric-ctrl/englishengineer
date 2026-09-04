@@ -20,7 +20,7 @@ export function PageHeader({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="sticky -top-4 z-30 flex h-14 sm:h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background backdrop-blur-xl mb-6 gap-2 overflow-x-auto">
+    <div className="sticky -top-4 z-30 flex min-h-14 sm:h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-4 sm:mb-6 gap-2">
       <div className="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0">
         {icon && (
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[4px] bg-surface border border-border-soft text-base shadow-sm">
@@ -47,7 +47,7 @@ export function PageHeader({
         )}
       </div>
       {actions && (
-        <div className="shrink-0 flex items-center gap-1.5 sm:gap-2 overflow-x-auto">{actions}</div>
+        <div className="shrink-0 flex items-center gap-1.5 sm:gap-2 overflow-x-auto max-w-[65vw] sm:max-w-none py-1 scrollbar-none">{actions}</div>
       )}
       {children}
     </div>

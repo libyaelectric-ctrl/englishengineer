@@ -325,7 +325,7 @@ const LessonRunnerPage = () => {
       </div>
 
       {/* Simulator Question Container */}
-      <div className="flex w-full flex-col items-center justify-center rounded-2xl border border-[var(--color-border-soft)] bg-[var(--surface)] p-6 sm:p-8 shadow-[0_0_30px_rgba(6,182,212,0.12)] backdrop-blur-xl">
+      <div className="flex w-full flex-col items-center justify-center rounded-2xl border border-[var(--color-border-soft)] bg-[var(--surface)] p-4 sm:p-8 shadow-[0_0_30px_rgba(6,182,212,0.12)] backdrop-blur-xl">
         <div className="w-full flex justify-center">
           {currentQ.type === 'mc' && (
             <MultipleChoiceCard

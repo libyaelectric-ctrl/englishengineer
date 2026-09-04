@@ -1,14 +1,14 @@
-import { BriefcaseBusiness, Home, Map, User } from 'lucide-react';
+import { BookOpen, BriefcaseBusiness, Home, Map, User } from 'lucide-react';
 
 import { NavLink } from 'react-router-dom';
 
-import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { cn } from '@/shared/utils/cn';
 
 import { NAVIGATION_TRANSLATIONS, useLocalizationStore } from '@/features/localization';
 
 const ITEMS = [
   { label: 'Home', href: '/dashboard', icon: Home },
+  { label: 'Learning', href: '/curriculum', icon: BookOpen },
   { label: 'Learning Path', href: '/learning-path', icon: Map },
   { label: 'Tools', href: '/tools', icon: BriefcaseBusiness },
   { label: 'Profile', href: '/profile', icon: User },
@@ -51,9 +51,6 @@ export const MobileBottomNavigation = () => {
             </NavLink>
           );
         })}
-        <div className="flex min-h-11 min-w-0 flex-col items-center justify-center">
-          <ThemeToggle />
-        </div>
       </div>
     </nav>
   );

@@ -121,7 +121,7 @@ const OnboardPage = () => {
           </button>
         </div>
       </header>
-      <main className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-8 p-8 max-w-6xl mx-auto w-full">
+      <main className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 p-4 sm:p-8 max-w-6xl mx-auto w-full">
         <section>
           <h2 className="text-xs font-bold uppercase mb-4 flex items-center gap-2">
             <Wrench size={14} /> Professions
@@ -132,7 +132,7 @@ const OnboardPage = () => {
                 key={d.id}
                 onClick={() => setSelectedDiscipline(d.id)}
                 className={cn(
-                  'p-4 border rounded-xl text-left transition-all',
+                  'p-3.5 sm:p-4 border rounded-xl text-left transition-all',
                   selectedDiscipline === d.id
                     ? 'border-cyan-500 bg-cyan-500/10'
                     : 'border-border-soft hover:bg-surface-hover'
@@ -153,7 +153,7 @@ const OnboardPage = () => {
                 key={l.id}
                 onClick={() => setSelectedLanguage(l.id)}
                 className={cn(
-                  'p-4 border rounded-xl text-left transition-all',
+                  'p-3.5 sm:p-4 border rounded-xl text-left transition-all',
                   selectedLanguage === l.id
                     ? 'border-blue-500 bg-blue-500/10'
                     : 'border-border-soft hover:bg-surface-hover'
@@ -165,12 +165,12 @@ const OnboardPage = () => {
           </div>
         </section>
       </main>
-      <footer className="p-8 border-t flex justify-center">
+      <footer className="sticky bottom-0 bg-background/95 backdrop-blur-md p-4 sm:p-6 border-t flex justify-center z-20">
         <button
           onClick={handleEnter}
           disabled={!selectedDiscipline || !selectedLanguage || saving}
           className={cn(
-            'px-12 py-3 rounded-2xl font-bold flex items-center gap-2 transition-all',
+            'w-full sm:w-auto px-8 sm:px-12 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all',
             selectedDiscipline && selectedLanguage
               ? 'bg-primary text-white shadow-lg'
               : 'bg-gray-200 text-gray-400'

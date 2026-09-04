@@ -56,7 +56,7 @@ export const Sidebar = () => {
       {isSidebarOpen && (
         <button
           type="button"
-          className="fixed inset-0 z-30 bg-foreground/10 backdrop-blur-[1px] lg:hidden border-0 bg-transparent"
+          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden border-0"
           onClick={toggleSidebar}
           aria-label="Close"
         />

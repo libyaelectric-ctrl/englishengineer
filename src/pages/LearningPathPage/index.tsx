@@ -100,34 +100,34 @@ const LearningPathPage = () => {
         <PageHeader title={translate('learningpath.title')} />
 
         {/* View Mode Toggle Button */}
-        <div role="tablist" aria-label={translate('learningpath.viewMode')} className="flex items-center gap-1 rounded-xl border border-border-soft bg-surface p-1 shadow-sm">
+        <div role="tablist" aria-label={translate('learningpath.viewMode')} className="flex items-center gap-1 rounded-xl border border-border-soft bg-surface p-1 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
           <button
             type="button"
             role="tab"
             aria-selected={viewMode === 'railway'}
             onClick={() => setViewMode('railway')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-2 min-h-11 text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 rounded-lg px-2.5 sm:px-3 py-2 min-h-11 text-xs font-bold transition-all cursor-pointer ${
               viewMode === 'railway'
                 ? 'bg-primary text-white shadow-sm'
                 : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
             }`}
           >
-            <Train className="h-4 w-4" />
-            <span>Industrial High-Speed Rail (A1–C2)</span>
+            <Train className="h-4 w-4 shrink-0" />
+            <span><span className="hidden sm:inline">Industrial </span>Rail (A1–C2)</span>
           </button>
           <button
             type="button"
             role="tab"
             aria-selected={viewMode === 'columns'}
             onClick={() => setViewMode('columns')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-2 min-h-11 text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 rounded-lg px-2.5 sm:px-3 py-2 min-h-11 text-xs font-bold transition-all cursor-pointer ${
               viewMode === 'columns'
                 ? 'bg-primary text-white shadow-sm'
                 : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
             }`}
           >
-            <LayoutGrid className="h-4 w-4" />
-            <span>Columns View</span>
+            <LayoutGrid className="h-4 w-4 shrink-0" />
+            <span><span className="hidden sm:inline">Columns </span>Grid</span>
           </button>
         </div>
       </div>
@@ -150,7 +150,7 @@ const LearningPathPage = () => {
               <span className="text-white/80">{disciplineMeta.wordCount} Specialized Terms</span>
             </p>
           </div>
-          <div className="flex items-center gap-5 rounded-2xl bg-black/25 px-5 py-3.5 backdrop-blur-md border border-white/15 shadow-lg">
+          <div className="flex items-center gap-3 sm:gap-5 rounded-2xl bg-black/25 px-3.5 py-2.5 sm:px-5 sm:py-3.5 backdrop-blur-md border border-white/15 shadow-lg">
             <div className="relative flex flex-col items-center">
               {xpGain && (
                 <span
