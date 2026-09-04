@@ -51,7 +51,8 @@ export const BillingStatusPanel = ({
           className="rounded-[4px] border border-warning/20 bg-warning/5 p-4 text-xs leading-5 text-warning shadow-sm font-bold uppercase tracking-wider"
           role="alert"
         >
-          {error}
+          Billing status is temporarily unavailable. Access entitlements are based on the last known
+          verified state.
         </div>
       )}
       <div className="flex flex-col gap-3 rounded-[4px] border border-border-soft bg-surface p-4 sm:flex-row sm:items-start sm:justify-between shadow-sm">
@@ -118,7 +119,9 @@ export const BillingStatusPanel = ({
         {!paidAccessIsActive ? (
           <Button
             type="button"
-            onClick={onUpgrade}
+            onClick={() => {
+              onUpgrade();
+            }}
             disabled={isLoading}
             className="text-xs bg-primary hover:bg-primary/90 border border-primary text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5 min-h-9 px-4"
           >

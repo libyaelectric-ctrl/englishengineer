@@ -1,8 +1,6 @@
 import { Download, RefreshCw, ShieldCheck, Wallet } from 'lucide-react';
 
-import { useCallback, useEffect, useState } from 'react';
-
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
@@ -19,7 +17,6 @@ import { BillingUpgradeCTA } from '@/features/billing/components/BillingUpgradeC
 import { useLearningCockpit } from '@/features/profile';
 
 export const BillingPage = () => {
-  const navigate = useNavigate();
   const { currentUser } = useAuthStore();
   const {
     subscription,
@@ -27,6 +24,7 @@ export const BillingPage = () => {
     isLoading: isBillingLoading,
     error: billingError,
     refreshBilling,
+    startCheckout,
     openCustomerPortal,
     invoices,
     isLoadingInvoices,
@@ -47,20 +45,14 @@ export const BillingPage = () => {
     }
   }, [currentUser?.id, refreshBilling, fetchInvoices]);
 
-  const handleUpgrade = () => {
-    navigate('/pricing');
+  const handleUpgrade = async () => {
+    if (!currentUser?.id || !currentUser?.email) return;
+    try {
+      await startCheckout(currentUser.id, currentUser.email, 'senior');
+    } catch (err) {
+      logger.e('Checkout failed:', err);
+    }
   };
-
-  const [syncSlow, setSyncSlow] = useState(false);
-
-  const handleSync = useCallback(() => {
-    if (!currentUser?.id) return;
-    setSyncSlow(false);
-    const timer = setTimeout(() => setSyncSlow(true), 5000);
-    refreshBilling(currentUser.id)
-      .catch((err) => logger.e('Billing refresh failed:', err))
-      .finally(() => clearTimeout(timer));
-  }, [currentUser?.id, refreshBilling]);
 
   const handleManageSubscription = () => {
     if (!currentUser?.id) return;
@@ -73,21 +65,14 @@ export const BillingPage = () => {
         title="Billing & Subscriptions"
         description="Verify and adjust your subscription status, manage primary payment card details, and download past invoices."
         actions={
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleSync}
-              disabled={isBillingLoading}
-              className="self-start sm:self-auto inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-background transition-all cursor-pointer shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <RefreshCw className={`h-3.5 w-3.5 ${isBillingLoading ? 'animate-spin' : ''}`} />
-              {isBillingLoading ? (syncSlow ? 'Waking up backend…' : 'Syncing…') : 'Sync Status'}
-            </button>
-            {syncSlow && isBillingLoading && (
-              <span className="text-[10px] text-muted-copy italic">
-                Backend may be cold-starting (10-15s)
-              </span>
-            )}
-          </div>
+          <button
+            onClick={() => currentUser?.id && refreshBilling(currentUser.id)}
+            disabled={isBillingLoading}
+            className="self-start sm:self-auto inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-background transition-all cursor-pointer shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 ${isBillingLoading ? 'animate-spin' : ''}`} />
+            Sync Status
+          </button>
         }
       />
 
@@ -206,18 +191,15 @@ export const BillingPage = () => {
                         </td>
                         <td className="px-4 py-3 text-right">
                           {inv.invoicePdf ? (
-                            <button
-                              type="button"
-                              onClick={async () => {
-                                const { openExternalUrl } =
-                                  await import('@/shared/utils/capacitor');
-                                await openExternalUrl(inv.invoicePdf!);
-                              }}
+                            <a
+                              href={inv.invoicePdf}
+                              target="_blank"
+                              rel="noopener noreferrer"
                               className="inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:border-primary hover:text-primary transition-all cursor-pointer shadow-sm"
                               aria-label="Download receipt"
                             >
                               <Download className="h-4 w-4" />
-                            </button>
+                            </a>
                           ) : (
                             <button
                               type="button"
