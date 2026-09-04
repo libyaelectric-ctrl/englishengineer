@@ -34,7 +34,7 @@ jobs:
           java-version: 17
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
 
       - name: Initialize Capacitor
         run: |
@@ -118,7 +118,7 @@ jobs:
           java-version: 17
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
 
       - name: Run deep-link smoke test on emulator
         # IMPORTANT: this action's parseScript splits the script on newlines and
