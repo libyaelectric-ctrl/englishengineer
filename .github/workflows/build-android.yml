@@ -55,17 +55,15 @@ jobs:
 
       - name: Build APK (Release)
         working-directory: android
+        # Requires the keystore secret; without it assembleRelease fails at
+        # validateSigningRelease (release signing is configured unconditionally
+        # in android/app/build.gradle). Skipped until the secret is added.
+        if: ${{ env.KEYSTORE_BASE64 != '' }}
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: |
-          if [ -f "app/release.keystore" ]; then
-            ./gradlew assembleRelease
-          else
-            echo "No keystore found — building unsigned release APK"
-            ./gradlew assembleRelease
-          fi
+        run: ./gradlew assembleRelease
 
       # Build AAB (Android App Bundle) for Play Store
       - name: Build AAB (Release)
@@ -85,9 +83,10 @@ jobs:
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
+        if: ${{ env.KEYSTORE_BASE64 != '' }}
         with:
           name: engvox-release.apk
-          path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+          path: android/app/build/outputs/apk/release/app-release.apk
 
       - name: Upload Release AAB
         uses: actions/upload-artifact@v4
