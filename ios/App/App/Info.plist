@@ -22,6 +22,22 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<!-- com.engvox.app custom scheme: the system browser hands the Google OAuth
+	     completion back to the app via this URL (Clerk redirects to
+	     com.engvox.app://oauth-callback). SceneDelegate forwards openURLContexts
+	     to the Capacitor App plugin, which fires the appUrlOpen event that
+	     useNativeOAuthReturn() listens for. -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.engvox.app.oauth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.engvox.app</string>
+			</array>
+		</dict>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
