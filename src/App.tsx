@@ -111,8 +111,30 @@ const AppContent = () => {
 
 export default function App() {
   if (!CLERK_PUBLISHABLE_KEY) {
-    return <div>EngVox is not configured. Set CLERK_PUBLISHABLE_KEY to continue.</div>;
+    return (
+      <div style={{ padding: 24, fontFamily: 'sans-serif', background: '#0f0f23', color: '#fff', minHeight: '100vh' }}>
+        EngVox is not configured. Set CLERK_PUBLISHABLE_KEY to continue.
+      </div>
+    );
   }
 
-  return <AppContent />;
+  return (
+    <SimpleErrorBoundary
+      fallback={
+        <div style={{ padding: 24, fontFamily: 'sans-serif', background: '#0f0f23', color: '#fff', minHeight: '100vh' }}>
+          <h2>EngVox Startup Notice</h2>
+          <p>An unexpected error occurred while starting the application.</p>
+          <button
+            style={{ padding: '10px 20px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', marginTop: 16 }}
+            onClick={() => import('@/shared/utils/capacitor').then((m) => m.reloadApp())}
+          >
+            Refresh App
+          </button>
+        </div>
+      }
+    >
+      <AppContent />
+    </SimpleErrorBoundary>
+  );
 }
+

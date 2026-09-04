@@ -1,16 +1,13 @@
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { router } from '@/routes/router';
 import { isNativePlatform } from '@/shared/utils/capacitor';
 
 /**
  * Handles the Android hardware back button.
  * - On root paths (/dashboard, /, /pricing), exits the app.
- * - On other paths, navigates back via react-router.
+ * - On other paths, navigates back via router.
  */
 export function useCapacitorBackButton() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
   useEffect(() => {
     if (!isNativePlatform()) return;
 
@@ -18,14 +15,18 @@ export function useCapacitorBackButton() {
 
     import('@capacitor/app').then(({ App }) => {
       App.addListener('backButton', ({ canGoBack }) => {
-        const rootPaths = ['/', '/dashboard', '/pricing', '/onboard'];
+        const currentPath =
+          router?.state?.location?.pathname ||
+          window.location.hash.replace(/^#/, '') ||
+          '/';
+        const rootPaths = ['/', '/dashboard', '/pricing', '/onboard', '/start'];
 
-        if (rootPaths.includes(location.pathname)) {
+        if (rootPaths.includes(currentPath)) {
           App.exitApp();
         } else if (canGoBack) {
-          navigate(-1);
+          router.navigate(-1);
         } else {
-          navigate('/dashboard');
+          router.navigate('/dashboard');
         }
       }).then((handle) => {
         removeListener = handle.remove;
@@ -35,5 +36,6 @@ export function useCapacitorBackButton() {
     return () => {
       removeListener?.();
     };
-  }, [navigate, location.pathname]);
+  }, []);
 }
+

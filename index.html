@@ -16,6 +16,27 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="EngVox" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <script>
+      (function() {
+        function showErr(title, msg) {
+          var el = document.getElementById('engvox-boot-err');
+          if (!el) {
+            el = document.createElement('div');
+            el.id = 'engvox-boot-err';
+            el.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#0f0f23;color:#ff6b6b;padding:20px;z-index:99999999;font-family:monospace;font-size:12px;overflow:auto;box-sizing:border-box;white-space:pre-wrap;line-height:1.4;';
+            (document.body || document.documentElement).appendChild(el);
+          }
+          el.innerText += '\n[' + title + ']\n' + msg + '\n-------------------------\n';
+        }
+        window.addEventListener('error', function(e) {
+          showErr('RUNTIME ERROR', (e.message || e.error) + '\nAt: ' + e.filename + ':' + e.lineno + ':' + e.colno + (e.error && e.error.stack ? '\n' + e.error.stack : ''));
+        });
+        window.addEventListener('unhandledrejection', function(e) {
+          var r = e.reason ? (e.reason.stack || e.reason.message || String(e.reason)) : 'Unknown';
+          showErr('UNHANDLED REJECTION', r);
+        });
+      })();
+    </script>
     <!--
       CSP removed for Capacitor builds — the native shell provides isolation.
       For web (Vercel/Vercel), a stricter CSP should be applied via HTTP headers
