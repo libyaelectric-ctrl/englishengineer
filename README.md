@@ -43,13 +43,9 @@ cp .env.example .env.local
 | `DODO_PAYMENTS_WEBHOOK_KEY`  | ⚠️       | Dodo Payments webhook secret                                                   |
 | `METRICS_TOKEN`              | Optional | Optional: bearer token protecting `/api/metrics` (recommended in production)   |
 
-### Mobile (Android APK) — Google sign-in
+### Mobile (Android APK / iOS)
 
-Google OAuth on the APK opens in the system browser (Google blocks embedded WebViews) and returns through the app's `com.engvox.app://` custom scheme. For it to work:
-
-1. In the **Clerk Dashboard** (instance → Redirect URLs), allow the redirect URL `com.engvox.app://oauth-callback` and make sure the **Google** OAuth provider is enabled.
-2. Rebuild the APK after `npm run build && npx cap sync android` so the manifest intent filter is current.
-3. Email/password and OTP sign-in are unaffected — they run entirely in-app.
+Google OAuth on the native apps opens in the system browser (Google blocks embedded WebViews) and returns through the `com.engvox.app://` custom scheme. The full runbook — the two Clerk Dashboard settings (redirect URL + allowed origins), the `cap sync` workflow, and the adb deep-link test procedure — lives in [MOBILE.md](./MOBILE.md). Email/password and OTP sign-in run entirely in-app and are unaffected.
 
 ### Development
 
