@@ -9,6 +9,7 @@
     "dev": "vite --port=3000 --host=0.0.0.0",
     "dev:all": "concurrently -n \"frontend,backend\" -c \"blue,green\" \"npm run dev\" \"npm --prefix backend run dev\"",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 tsc --noEmit && cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build --configLoader runner",
+    "build:mobile": "cross-env NODE_OPTIONS=--max-old-space-size=4096 tsc --noEmit && cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build --configLoader runner --mode mobile",
     "capacitor:sync": "npx cap sync",
     "capacitor:android:build": "cd android && ./gradlew assembleRelease",
     "capacitor:android:run": "cd android && ./gradlew installDebug",
