@@ -34,8 +34,13 @@ import { useEffect, useRef } from 'react';
 
 import { isNativePlatform } from '@/shared/utils/capacitor';
 
-/** Hash-router route that completes the OAuth flow (see router.tsx). */
-export const OAUTH_CALLBACK_ROUTE = '/oauth-callback';
+import { forwardOAuthReturn } from './native-oauth-forward';
+
+export {
+  OAUTH_CALLBACK_ROUTE,
+  buildOAuthForwardUrl,
+  forwardOAuthReturn,
+} from './native-oauth-forward';
 
 /**
  * The custom URL scheme the Android manifest declares for OAuth returns.
@@ -50,24 +55,6 @@ export const getOAuthDeepLinkUrl = (): string => `${OAUTH_CALLBACK_SCHEME}://oau
 
 /** True when running inside the native Capacitor shell (Android/iOS). */
 export const isNativeOAuthSupported = (): boolean => isNativePlatform();
-
-/**
- * Replays a `com.engvox.app://` return URL into the WebView: the deep link's
- * query params (Clerk handshake/state) are copied onto the current origin and
- * the hash router is pointed at `#/oauth-callback`. The full navigation reloads
- * the app so clerk-js boots with the params visible in `window.location`.
- */
-function forwardOAuthReturn(deepLinkUrl: string): void {
-  try {
-    const incoming = new URL(deepLinkUrl);
-    const target = new URL(window.location.href);
-    target.search = incoming.search;
-    target.hash = `#${OAUTH_CALLBACK_ROUTE}`;
-    window.location.href = target.toString();
-  } catch {
-    window.location.reload();
-  }
-}
 
 /**
  * Listens for the system browser handing the OAuth completion back to the app

@@ -20,6 +20,10 @@ import { CLERK_SIGN_IN_URL } from '@/features/auth/clerk.config';
  * Safe to visit on web too: with no pending OAuth flow the completion is a
  * no-op/error that bounces back to the sign-in screen.
  */
+
+/** How long to wait for handleRedirectCallback before showing the error card. */
+const COMPLETION_TIMEOUT_MS = 20_000;
+
 const OAuthCallbackPage = () => {
   const { isLoaded } = useAuth();
   const clerk = useClerk();
@@ -27,8 +31,32 @@ const OAuthCallbackPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isLoaded) return;
     let cancelled = false;
+    let settled = false;
+
+    const fail = (message: string): void => {
+      settled = true;
+      if (!cancelled) setError(message);
+    };
+
+    // If Clerk never finishes — handleRedirectCallback stalls, or Clerk never
+    // loads at all (Frontend API unreachable, e.g. a missing origin allowlist)
+    // — don't leave the user staring at a spinner forever: surface the error
+    // card so they can back out. Armed on mount, so it covers the not-yet-
+    // loaded case too.
+    const timeout = window.setTimeout(() => {
+      if (settled) return;
+      fail('Sign-in is taking too long. Please try again or use email/password.');
+    }, COMPLETION_TIMEOUT_MS);
+
+    if (!isLoaded) {
+      // Clerk still loading — the completion starts when isLoaded flips; the
+      // timeout above still guards the never-loads case.
+      return () => {
+        cancelled = true;
+        window.clearTimeout(timeout);
+      };
+    }
 
     const complete = async (): Promise<void> => {
       try {
@@ -37,11 +65,11 @@ const OAuthCallbackPage = () => {
             navigateTo(to);
           }
         });
+        settled = true;
         // handleRedirectCallback navigates on success; this is a safety net.
         if (!cancelled) navigate('/dashboard', { replace: true });
       } catch (err) {
-        if (cancelled) return;
-        setError(
+        fail(
           err instanceof Error
             ? err.message
             : 'Could not complete Google sign-in. Please try again or use email/password.'
@@ -53,6 +81,7 @@ const OAuthCallbackPage = () => {
 
     return () => {
       cancelled = true;
+      window.clearTimeout(timeout);
     };
   }, [isLoaded, clerk, navigate]);
 
