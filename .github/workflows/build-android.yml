@@ -133,9 +133,9 @@ jobs:
           script: |
             # 0. Install first — on a fresh emulator the app isn't on the device yet,
             #    so the resolve check below would fail before install (MOBILE.md §2/§3).
-            #    download-artifact@v4 creates a dir named after the artifact, so the
-            #    file is engvox-debug.apk/app-debug.apk, not a bare file.
-            adb install -r "$GITHUB_WORKSPACE/engvox-debug.apk/app-debug.apk" || { echo '❌ APK install failed'; exit 1; }
+            #    Locate the APK via find: download-artifact@v4's extraction layout
+            #    varies, but the smoke job's workspace holds only one .apk.
+            adb install -r "$(find "$GITHUB_WORKSPACE" -name '*.apk' | head -1)" || { echo '❌ APK install failed'; exit 1; }
             # 1. The custom scheme must resolve to the app (MOBILE.md §3).
             adb shell cmd package resolve-activity --brief -a android.intent.action.VIEW -d 'com.engvox.app://oauth-callback?__clerk_handshake=1&__clerk_handshake_nonce=ci-smoke' | grep -q 'com.engvox.app/.MainActivity' || { echo '❌ custom scheme did not resolve to the app'; exit 1; }
             # 2. Fresh logcat, launch, then inject the OAuth return deep link.
