@@ -71,16 +71,17 @@ export async function reloadApp(): Promise<void> {
 }
 
 /**
- * Navigate to a path within the app. On native platforms, the WebView
- * handles internal navigation. In a browser, uses window.location.
+ * Navigate to a route within the app. The app uses a hash router on every
+ * platform (web and Capacitor), so internal navigation must update the
+ * `location.hash` — assigning `window.location.href = '/dashboard'` would
+ * trigger a full document load and, inside the Capacitor WebView, depend on
+ * the local server's index.html fallback instead of letting react-router
+ * handle the route (full reload, landing flash, lost in-memory state).
  */
 export function navigateTo(path: string): void {
-  if (isNativePlatform()) {
-    // Capacitor WebView handles internal navigation via react-router
-    window.location.href = path;
-  } else {
-    window.location.href = path;
-  }
+  const target = path.startsWith('#') ? path : `#${path}`;
+  if (window.location.hash === target) return;
+  window.location.hash = target;
 }
 
 /**

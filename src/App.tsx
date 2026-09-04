@@ -22,6 +22,7 @@ import {
   CLERK_SIGN_UP_URL,
 } from '@/features/auth/clerk.config';
 import { getClerkTheme } from '@/features/auth/clerk.theme';
+import { useNativeOAuthReturn } from '@/features/auth/native-oauth';
 import { ThemeProvider, useTheme } from '@/features/theme/ThemeProvider';
 
 const BillingSync = lazy(() =>
@@ -89,6 +90,7 @@ class SimpleErrorBoundary extends Component<
 const AppContent = () => {
   useDirection();
   useCapacitorBackButton();
+  useNativeOAuthReturn();
 
   return (
     <SimpleErrorBoundary fallback={<div>An error occurred. Please refresh the page.</div>}>
@@ -112,7 +114,15 @@ const AppContent = () => {
 export default function App() {
   if (!CLERK_PUBLISHABLE_KEY) {
     return (
-      <div style={{ padding: 24, fontFamily: 'sans-serif', background: '#0f0f23', color: '#fff', minHeight: '100vh' }}>
+      <div
+        style={{
+          padding: 24,
+          fontFamily: 'sans-serif',
+          background: '#0f0f23',
+          color: '#fff',
+          minHeight: '100vh',
+        }}
+      >
         EngVox is not configured. Set CLERK_PUBLISHABLE_KEY to continue.
       </div>
     );
@@ -121,11 +131,27 @@ export default function App() {
   return (
     <SimpleErrorBoundary
       fallback={
-        <div style={{ padding: 24, fontFamily: 'sans-serif', background: '#0f0f23', color: '#fff', minHeight: '100vh' }}>
+        <div
+          style={{
+            padding: 24,
+            fontFamily: 'sans-serif',
+            background: '#0f0f23',
+            color: '#fff',
+            minHeight: '100vh',
+          }}
+        >
           <h2>EngVox Startup Notice</h2>
           <p>An unexpected error occurred while starting the application.</p>
           <button
-            style={{ padding: '10px 20px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', marginTop: 16 }}
+            style={{
+              padding: '10px 20px',
+              background: '#3b82f6',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 8,
+              cursor: 'pointer',
+              marginTop: 16,
+            }}
             onClick={() => import('@/shared/utils/capacitor').then((m) => m.reloadApp())}
           >
             Refresh App
@@ -137,4 +163,3 @@ export default function App() {
     </SimpleErrorBoundary>
   );
 }
-

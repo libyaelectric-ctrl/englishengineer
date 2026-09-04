@@ -131,7 +131,9 @@ describe('AppShell', () => {
 
     await waitFor(
       () => {
-        expect(screen.getByText('EngVox')).toBeInTheDocument();
+        // The mobile top app bar also shows the EngVox wordmark, so scope the
+        // assertion to the sidebar itself.
+        expect(screen.getByTestId('app-sidebar')).toHaveTextContent('EngVox');
       },
       { timeout: 5000 }
     );

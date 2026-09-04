@@ -51,6 +51,7 @@ const Translator = lazy(() => import('@/pages/TranslatorPage'));
 const LearningPath = lazy(() => import('@/pages/LearningPathPage'));
 const LessonRunner = lazy(() => import('@/pages/LessonRunnerPage'));
 const ClerkAuthPage = lazy(() => import('@/pages/ClerkAuthPage'));
+const OAuthCallbackPage = lazy(() => import('@/pages/OAuthCallbackPage'));
 
 const sentryCreateBrowserRouter = Sentry.wrapCreateBrowserRouterV7(createHashRouter);
 
@@ -284,6 +285,11 @@ export const router = sentryCreateBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: '/oauth-callback',
+    errorElement: <RouteErrorPage />,
+    element: withSuspense(OAuthCallbackPage),
   },
   {
     path: CLERK_SIGN_IN_URL,
