@@ -121,56 +121,30 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Run deep-link smoke test on emulator
+        # IMPORTANT: this action's parseScript splits the script on newlines and
+        # runs EACH LINE as its own `sh -c` — no multi-line commands, no `set -e`
+        # carryover, and no shell variables across lines. Every line below is a
+        # self-contained command with explicit `|| exit 1` where failure matters.
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
           arch: x86_64
           disable-animations: true
           script: |
-            set -e
-            export PATH="$ANDROID_SDK_ROOT/platform-tools:$PATH"
-
             # 1. The custom scheme must resolve to the app (MOBILE.md §3).
-            RESOLVED="$(adb shell cmd package resolve-activity --brief \
-              -a android.intent.action.VIEW \
-              -d 'com.engvox.app://oauth-callback?__clerk_handshake=1&__clerk_handshake_nonce=ci-smoke')"
-            echo "$RESOLVED"
-            echo "$RESOLVED" | grep -q 'com.engvox.app/.MainActivity' \
-              || { echo '❌ custom scheme did not resolve to the app'; exit 1; }
-
-            adb install -r engvox-debug.apk
-
+            adb shell cmd package resolve-activity --brief -a android.intent.action.VIEW -d 'com.engvox.app://oauth-callback?__clerk_handshake=1&__clerk_handshake_nonce=ci-smoke' | grep -q 'com.engvox.app/.MainActivity' || { echo '❌ custom scheme did not resolve to the app'; exit 1; }
+            adb install -r "$GITHUB_WORKSPACE/engvox-debug.apk" || { echo '❌ APK install failed'; exit 1; }
             # 2. Fresh logcat, launch, then inject the OAuth return deep link.
-            adb logcat -c
-            adb shell am force-stop com.engvox.app
-            adb shell am start -W -n com.engvox.app/.MainActivity >/dev/null
-            adb shell am start -W -a android.intent.action.VIEW \
-              -d 'com.engvox.app://oauth-callback?__clerk_handshake=1&__clerk_handshake_nonce=ci-smoke' \
-              com.engvox.app >/dev/null || true
-
-            # 3. appUrlOpen must fire, and the reload after forwarding must show
-            #    a second boot (boot + post-forward reload = 2 occurrences).
-            for i in $(seq 1 20); do
-              adb logcat -d | grep -q 'Notifying listeners for event appUrlOpen' && break
-              sleep 1
-            done
-            adb logcat -d | grep -q 'Notifying listeners for event appUrlOpen' \
-              || { echo '❌ appUrlOpen event not observed'; exit 1; }
-            [ "$(adb logcat -d | grep -c 'EngVox Kernel Booting')" -ge 2 ] \
-              || { echo '❌ app did not reload after forwarding'; exit 1; }
-
-            # 4. Assert the callback URL state via WebView DevTools
-            #    (MainActivity enables setWebContentsDebuggingEnabled).
-            PID="$(adb shell pidof com.engvox.app | tr -d '[:space:]')"
-            adb forward tcp:9222 "localabstract:webview_devtools_remote_$PID" >/dev/null
-            TARGETS=""
-            for i in $(seq 1 20); do
-              TARGETS="$(curl -s http://127.0.0.1:9222/json 2>/dev/null || true)"
-              echo "$TARGETS" | grep -q 'oauth-callback' && break
-              sleep 1
-            done
-            # buildOAuthForwardUrl replays ALL deep-link params, so the nonce
-            # is part of the final URL (verified by native-oauth.test.ts).
-            echo "$TARGETS" | grep -q 'https://localhost/?__clerk_handshake=1&__clerk_handshake_nonce=ci-smoke#/oauth-callback' \
-              || { echo '❌ WebView did not land on the callback URL'; echo "$TARGETS"; exit 1; }
+            adb logcat -c || true
+            adb shell am force-stop com.engvox.app || true
+            adb shell am start -W -n com.engvox.app/.MainActivity >/dev/null || { echo '❌ app launch failed'; exit 1; }
+            adb shell am start -W -a android.intent.action.VIEW -d 'com.engvox.app://oauth-callback?__clerk_handshake=1&__clerk_handshake_nonce=ci-smoke' com.engvox.app >/dev/null || true
+            # 3. appUrlOpen must fire, and the reload after forwarding must show a second boot.
+            for i in $(seq 1 20); do adb logcat -d | grep -q 'Notifying listeners for event appUrlOpen' && break; sleep 1; done
+            adb logcat -d | grep -q 'Notifying listeners for event appUrlOpen' || { echo '❌ appUrlOpen event not observed'; exit 1; }
+            [ "$(adb logcat -d | grep -c 'EngVox Kernel Booting')" -ge 2 ] || { echo '❌ app did not reload after forwarding'; exit 1; }
+            # 4. Assert the callback URL state via WebView DevTools (MainActivity enables setWebContentsDebuggingEnabled). buildOAuthForwardUrl replays ALL deep-link params, so the nonce is part of the final URL.
+            adb forward tcp:9222 "localabstract:webview_devtools_remote_$(adb shell pidof com.engvox.app | tr -d '[:space:]')" || true
+            for i in $(seq 1 20); do curl -s http://127.0.0.1:9222/json 2>/dev/null | grep -q 'oauth-callback' && break; sleep 1; done
+            curl -s http://127.0.0.1:9222/json | grep -q 'https://localhost/?__clerk_handshake=1&__clerk_handshake_nonce=ci-smoke#/oauth-callback' || { echo '❌ WebView did not land on the callback URL'; curl -s http://127.0.0.1:9222/json; exit 1; }
             echo '✅ deep-link smoke test passed'
