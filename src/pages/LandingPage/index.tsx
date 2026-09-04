@@ -196,18 +196,18 @@ export const LandingPage = () => {
               animate="center"
               exit="exit"
               transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-              className="absolute inset-0 flex items-center justify-center text-center px-4"
+              className="absolute inset-0 flex items-center justify-center text-center px-4 overflow-y-auto py-16 sm:py-0"
             >
-              <div className="max-w-6xl mx-auto">
+              <div className="max-w-6xl mx-auto my-auto py-4 sm:py-0">
                 <div
                   data-hero="badge"
-                  className="inline-flex items-center gap-2 rounded-full border border-border-soft bg-surface/60 backdrop-blur-md px-6 py-3 text-sm font-semibold text-foreground/90"
+                  className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-border-soft bg-surface/60 backdrop-blur-md px-3.5 py-1.5 sm:px-6 sm:py-3 text-xs sm:text-sm font-semibold text-foreground/90"
                 >
-                  <Sparkles className="h-5 w-5 text-primary animate-spin-slow" />
+                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary animate-spin-slow" />
                   {t.heroBadge}
                 </div>
 
-                <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-8xl font-black leading-[1.05] tracking-tight mt-6 sm:mt-8 mb-6 sm:mb-8">
+                <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight mt-4 sm:mt-8 mb-4 sm:mb-8">
                   <span data-hero="line" className="block text-foreground">
                     {t.heroTitle1}
                   </span>
@@ -224,49 +224,49 @@ export const LandingPage = () => {
 
                 <p
                   data-hero="subtitle"
-                  className="text-sm sm:text-base md:text-xl text-muted-copy max-w-3xl mx-auto mb-8 sm:mb-10 px-2"
+                  className="text-xs sm:text-base md:text-xl text-muted-copy max-w-3xl mx-auto mb-6 sm:mb-10 px-2 leading-relaxed"
                 >
                   {t.heroSubtitle}
                 </p>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-4 max-w-xs sm:max-w-none mx-auto w-full">
                   <Link
                     data-hero="cta"
                     to="/dashboard"
-                    className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-primary to-blue-600 text-white font-bold text-lg overflow-hidden transition-all hover:shadow-2xl hover:shadow-primary/50"
+                    className="group relative px-6 py-3 sm:px-8 sm:py-4 rounded-full bg-gradient-to-r from-primary to-blue-600 text-white font-bold text-sm sm:text-lg overflow-hidden transition-all hover:shadow-2xl hover:shadow-primary/50 flex items-center justify-center"
                   >
-                    <span className="relative z-10 flex items-center gap-3">
+                    <span className="relative z-10 flex items-center gap-2 sm:gap-3">
                       {t.ctaSelectBranch}
-                      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-1" />
                     </span>
                     <span className="absolute inset-0 bg-gradient-to-r from-blue-600 to-violet-600 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300" />
                   </Link>
                   <Link
                     data-hero="cta-demo"
                     to="/dashboard"
-                    className="group px-8 py-4 rounded-full border-2 border-dashed border-primary/40 text-primary font-bold text-lg backdrop-blur-md hover:bg-primary/10 hover:border-primary/60 transition-all"
+                    className="group px-6 py-3 sm:px-8 sm:py-4 rounded-full border-2 border-dashed border-primary/40 text-primary font-bold text-sm sm:text-lg backdrop-blur-md hover:bg-primary/10 hover:border-primary/60 transition-all flex items-center justify-center"
                   >
-                    <span className="flex items-center gap-3">
-                      <Sparkles className="h-5 w-5" />
+                    <span className="flex items-center gap-2 sm:gap-3">
+                      <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" />
                       {t.ctaTryDemo}
                     </span>
                   </Link>
-                  <a
+                  <Link
                     data-hero="cta"
-                    href="#pricing"
-                    className="px-8 py-4 rounded-full border border-border-soft text-foreground font-bold text-lg backdrop-blur-md hover:bg-surface-hover hover:border-primary/40 transition-all"
+                    to="/pricing"
+                    className="px-6 py-3 sm:px-8 sm:py-4 rounded-full border border-border-soft text-foreground font-bold text-sm sm:text-lg backdrop-blur-md hover:bg-surface-hover hover:border-primary/40 transition-all flex items-center justify-center"
                   >
                     {t.ctaViewPlans}
-                  </a>
+                  </Link>
                 </div>
 
-                <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-muted-copy">
-                  <span data-hero="trust" className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                <div className="mt-6 sm:mt-12 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm text-muted-copy">
+                  <span data-hero="trust" className="flex items-center gap-1.5 sm:gap-2">
+                    <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-400" />
                     {t.badgeNoCard}
                   </span>
-                  <span data-hero="trust" className="flex items-center gap-2">
-                    <Globe className="h-5 w-5 text-blue-400" />
+                  <span data-hero="trust" className="flex items-center gap-1.5 sm:gap-2">
+                    <Globe className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
                     {t.badgeLanguages}
                   </span>
                 </div>

@@ -14,7 +14,7 @@ import { CLERK_PUBLISHABLE_KEY, CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from './c
  * nothing instead of crashing when the provider is not mounted (e.g. in unit
  * tests or when the publishable key is missing at runtime).
  */
-class ClerkBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+class ClerkBoundary extends Component<{ children: ReactNode; fallback?: ReactNode }, { failed: boolean }> {
   state = { failed: false };
 
   static getDerivedStateFromError(): { failed: boolean } {
@@ -26,7 +26,7 @@ class ClerkBoundary extends Component<{ children: ReactNode }, { failed: boolean
   }
 
   render() {
-    return this.state.failed ? null : this.props.children;
+    return this.state.failed ? (this.props.fallback ?? null) : this.props.children;
   }
 }
 
@@ -34,21 +34,21 @@ export const ClerkAuthControls = () => {
   const translate = useLocalizationStore((s) => s.translate);
 
   const appAuthLinks = (
-    <>
+    <div className="flex items-center gap-1.5">
       <Link
         to={CLERK_SIGN_IN_URL}
-        className="inline-flex items-center rounded-lg border border-border-soft bg-surface px-2.5 py-1.5 sm:px-3 sm:py-1.5 text-[11px] sm:text-xs font-semibold text-foreground hover:bg-surface-hover hover:border-primary/40 transition-colors cursor-pointer"
+        className="inline-flex items-center rounded-lg border border-border-soft bg-surface px-2.5 py-1.5 text-xs font-semibold text-foreground hover:bg-surface-hover hover:border-primary/40 transition-colors cursor-pointer whitespace-nowrap"
       >
         {translate('common.login') || 'Log in'}
       </Link>
       <Link
         to={CLERK_SIGN_UP_URL}
-        className="inline-flex items-center gap-1 rounded-lg bg-primary px-2.5 py-1.5 sm:px-3 sm:py-1.5 text-[11px] sm:text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary-hover transition-colors cursor-pointer"
+        className="inline-flex items-center gap-1 rounded-lg bg-primary px-2.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary-hover transition-colors cursor-pointer whitespace-nowrap"
       >
-        {translate('landing.startFree')}
+        {translate('landing.startFree') || 'Sign Up'}
         <ArrowRight className="h-3 w-3" />
       </Link>
-    </>
+    </div>
   );
 
   if (!CLERK_PUBLISHABLE_KEY) {
@@ -56,7 +56,7 @@ export const ClerkAuthControls = () => {
   }
 
   return (
-    <ClerkBoundary>
+    <ClerkBoundary fallback={appAuthLinks}>
       <SignedIn>
         <UserButton afterSignOutUrl="/" />
       </SignedIn>

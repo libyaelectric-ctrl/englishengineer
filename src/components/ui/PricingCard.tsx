@@ -242,7 +242,7 @@ export const PricingCard = ({
           </div>
 
           <div className="mb-2">
-            <div className="flex items-baseline gap-1.5">
+            <div className="flex flex-wrap items-baseline gap-1.5">
               {tier.originalMonthlyPrice || tier.originalAnnualPrice ? (
                 <span className="text-sm line-through text-muted-copy/60 font-mono">
                   {isTeam
@@ -255,7 +255,7 @@ export const PricingCard = ({
                       )}
                 </span>
               ) : null}
-              <span className="text-3xl font-extrabold tracking-tight text-foreground font-mono">
+              <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground font-mono">
                 {isTeam ? '$$$$' : formatPrice(price, currency)}
               </span>
               <span className="text-xs text-muted-copy">{copy.perMonth}</span>

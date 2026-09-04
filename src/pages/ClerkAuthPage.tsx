@@ -1,12 +1,9 @@
 import { SignIn, SignUp } from '@clerk/clerk-react';
 import { ArrowLeft } from 'lucide-react';
 
-import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-import { isNativePlatform } from '@/shared/utils/capacitor';
 import {
-  CLERK_PUBLISHABLE_KEY,
   CLERK_SIGN_IN_FALLBACK_REDIRECT_URL,
   CLERK_SIGN_IN_URL,
   CLERK_SIGN_UP_FALLBACK_REDIRECT_URL,
@@ -38,39 +35,6 @@ const ClerkAuthPage = ({ mode }: ClerkAuthPageProps) => {
 
   const signInAfter = returnTarget ?? CLERK_SIGN_IN_FALLBACK_REDIRECT_URL;
   const signUpAfter = returnTarget ?? CLERK_SIGN_UP_FALLBACK_REDIRECT_URL;
-
-  // On native platform, open Clerk auth in system browser to avoid WebView OAuth issues
-  useEffect(() => {
-    if (!isNativePlatform() || !CLERK_PUBLISHABLE_KEY) return;
-
-    const clerkHost = CLERK_PUBLISHABLE_KEY.replace('pk_live_', '').replace('pk_test_', '').split('$')[0];
-    const authUrl = mode === 'sign-in'
-      ? `https://${clerkHost}/sign-in`
-      : `https://${clerkHost}/sign-up`;
-
-    import('@capacitor/browser').then(({ Browser }) => {
-      Browser.open({
-        url: authUrl,
-        toolbarColor: '#0a0a1a',
-      });
-    }).catch(() => {
-      // Fallback: stay in WebView with Clerk component
-    });
-  }, [mode]);
-
-  // On native platform, Clerk auth opens in system browser (useEffect above).
-  // Do NOT render <SignIn>/<SignUp> components in WebView — they try to load
-  // Clerk scripts that fail in Capacitor's WebView, causing a white screen.
-  if (isNativePlatform()) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950">
-        <div className="text-center">
-          <div className="mb-4 h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent mx-auto" />
-          <p className="text-sm text-zinc-400">Opening sign-in in your browser…</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-zinc-950/70 backdrop-blur-md">
