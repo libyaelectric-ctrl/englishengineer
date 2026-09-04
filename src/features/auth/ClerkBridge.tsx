@@ -111,6 +111,7 @@ export const ClerkBridge = () => {
           }
         }
 
+        storage.globalSet('auth_user', profile);
         useAuthStore.setState({
           currentUser: profile,
           isAuthenticated: true,
@@ -147,6 +148,7 @@ export const ClerkBridge = () => {
       if (current && bridgedUserId.current && current.id === bridgedUserId.current) {
         bridgedUserId.current = null;
         storage.setUserId(null);
+        storage.globalRemove('auth_user');
         useAuthStore.setState({
           currentUser: null,
           isAuthenticated: false,

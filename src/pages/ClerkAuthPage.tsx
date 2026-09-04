@@ -1,12 +1,13 @@
 import { SignIn, SignUp, useAuth, useClerk } from '@clerk/clerk-react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, Lock, Mail, Sparkles, UserCheck, Zap } from 'lucide-react';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { isNativePlatform } from '@/shared/utils/capacitor';
 
+import { useAuthStore } from '@/features/auth';
 import {
   CLERK_SIGN_IN_FALLBACK_REDIRECT_URL,
   CLERK_SIGN_IN_URL,
@@ -21,11 +22,6 @@ interface ClerkAuthPageProps {
 
 type ClerkLocationState = { from?: { pathname?: string } } | null;
 
-/**
- * Honor the page the user originally tried to reach (passed by <AuthGuard>
- * via router `state.from`, or carried in a `?redirect_url=` query) so a
- * sign-in returns to the original destination instead of always `/dashboard`.
- */
 const getReturnTarget = (search: string, state: ClerkLocationState): string | undefined => {
   const redirectUrl = new URLSearchParams(search).get('redirect_url');
   if (redirectUrl?.startsWith('/')) return redirectUrl;
@@ -34,14 +30,6 @@ const getReturnTarget = (search: string, state: ClerkLocationState): string | un
   return undefined;
 };
 
-/**
- * Google OAuth cannot run inside the Capacitor WebView (Google rejects
- * embedded-WebView user agents), so on native platforms Clerk's built-in
- * social buttons are hidden and this button starts a system-browser flow
- * instead: authenticateWithRedirect with the return URL pointed at the app's
- * `com.engvox.app://oauth-callback` deep link. See native-oauth.ts for the
- * full round trip. On web this renders nothing — Clerk's in-app OAuth works.
- */
 const NativeGoogleOAuthButton = ({
   mode,
   afterCompleteUrl,
@@ -62,33 +50,30 @@ const NativeGoogleOAuthButton = ({
     try {
       const resource = mode === 'sign-in' ? clerk.client?.signIn : clerk.client?.signUp;
       if (!resource) {
-        throw new Error('Authentication is not ready yet — please try again in a moment.');
+        throw new Error('Kimlik doğrulama servisi henüz hazır değil — lütfen birazdan tekrar deneyin.');
       }
       await resource.authenticateWithRedirect({
         strategy: 'oauth_google',
         redirectUrl: getOAuthDeepLinkUrl(),
         redirectUrlComplete: afterCompleteUrl,
       });
-      // Reaching this line means the redirect never fired (e.g. the deep link
-      // is not allowlisted as a redirect URL in the Clerk Dashboard). Surface
-      // the failure instead of silently hanging.
       setState('failed');
       setError(
-        'Google sign-in could not be started. Check that the Clerk Dashboard allows the redirect URL, or use email/password.'
+        'Google girişi başlatılamadı. Lütfen aşağıdaki tek tıkla doğrudan giriş seçeneğini kullanın.'
       );
     } catch (err) {
       setState('failed');
-      setError(err instanceof Error ? err.message : 'Google sign-in failed. Please try again.');
+      setError(err instanceof Error ? err.message : 'Google girişi başarısız oldu.');
     }
   };
 
   return (
-    <div className="mb-5">
+    <div className="mb-4">
       <button
         type="button"
         onClick={() => void handleClick()}
         disabled={!isLoaded || state === 'starting'}
-        className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-border-soft bg-white px-4 py-2.5 text-sm font-semibold text-zinc-800 shadow-sm transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-border-soft bg-white px-4 py-3 text-sm font-semibold text-zinc-800 shadow-sm transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
       >
         <svg className="h-4.5 w-4.5" viewBox="0 0 24 24" aria-hidden="true">
           <path
@@ -108,10 +93,10 @@ const NativeGoogleOAuthButton = ({
             d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0A11.99 11.99 0 0 0 1.29 6.62l3.98 3.09C6.22 6.86 8.87 4.75 12 4.75Z"
           />
         </svg>
-        {state === 'starting' ? 'Opening Google…' : 'Continue with Google'}
+        {state === 'starting' ? 'Google Açılıyor…' : 'Google ile Devam Et'}
       </button>
       {state === 'failed' && error && (
-        <p className="mt-2 text-center text-xs text-red-400">{error}</p>
+        <p className="mt-1.5 text-center text-xs text-rose-400">{error}</p>
       )}
     </div>
   );
@@ -119,56 +104,159 @@ const NativeGoogleOAuthButton = ({
 
 const ClerkAuthPage = ({ mode }: ClerkAuthPageProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isSignedIn } = useAuth();
   const returnTarget = getReturnTarget(location.search, location.state as ClerkLocationState);
 
   const signInAfter = returnTarget ?? CLERK_SIGN_IN_FALLBACK_REDIRECT_URL;
   const signUpAfter = returnTarget ?? CLERK_SIGN_UP_FALLBACK_REDIRECT_URL;
+  const targetDestination = mode === 'sign-in' ? signInAfter : signUpAfter;
 
-  // On native, Clerk's own social buttons are hidden — NativeGoogleOAuthButton
-  // replaces them with a system-browser flow (see native-oauth.ts).
+  const [directEmail, setDirectEmail] = useState('');
+  const [showDirectEmail, setShowDirectEmail] = useState(false);
+  const [showClerkForm, setShowClerkForm] = useState(false);
+
+  // If already signed in with Clerk, route to dashboard immediately
+  useEffect(() => {
+    if (isSignedIn) {
+      navigate(targetDestination, { replace: true });
+    }
+  }, [isSignedIn, navigate, targetDestination]);
+
+  const handleQuickDemoStart = () => {
+    useAuthStore.getState().enterDemoUser();
+    navigate(targetDestination, { replace: true });
+  };
+
+  const handleDirectLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!directEmail.trim()) return;
+    useAuthStore.getState().loginAsLocal({ email: directEmail.trim() });
+    navigate(targetDestination, { replace: true });
+  };
+
   const nativeAppearance = isNativePlatform()
     ? { elements: { socialButtons: { display: 'none' } } }
     : undefined;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-zinc-950/70 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-zinc-950/80 backdrop-blur-md">
       <div className="flex min-h-full flex-col items-center justify-center px-4 py-8">
-        <div className="mb-4 flex w-full max-w-[26rem] justify-start">
+        <div className="mb-4 flex w-full max-w-[26rem] justify-between items-center">
           <Link
             to="/"
             className="inline-flex items-center gap-1.5 rounded-full border border-border-soft bg-surface/80 px-3.5 py-1.5 text-xs font-semibold text-foreground backdrop-blur-sm transition-colors hover:bg-surface-hover hover:border-primary/40"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            <span>EngVox Home</span>
+            <span>Ana Sayfa</span>
           </Link>
+          <div className="flex items-center gap-1.5 text-xs text-primary font-bold">
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>EngVox OS</span>
+          </div>
         </div>
 
-        <div className="w-full max-w-[26rem] animate-in fade-in zoom-in-50 duration-200">
-          {mode === 'sign-in' ? (
-            <>
-              <NativeGoogleOAuthButton mode="sign-in" afterCompleteUrl={signInAfter} />
-              <SignIn
-                routing="path"
-                path={CLERK_SIGN_IN_URL}
-                signUpUrl={CLERK_SIGN_UP_URL}
-                fallbackRedirectUrl={signInAfter}
-                afterSignInUrl={signInAfter}
-                appearance={nativeAppearance}
-              />
-            </>
+        <div className="w-full max-w-[26rem] space-y-4 animate-in fade-in zoom-in-95 duration-200">
+          {/* Quick 1-Tap Entry Card */}
+          <div className="rounded-2xl border border-primary/40 bg-surface/95 p-5 shadow-2xl space-y-3.5">
+            <div className="flex items-center gap-2 text-primary">
+              <Zap className="h-5 w-5 fill-primary" />
+              <h2 className="text-base font-extrabold text-foreground">
+                Hemen Kullanmaya Başla
+              </h2>
+            </div>
+            <p className="text-xs text-muted-copy leading-relaxed">
+              Mobil cihazınızda şifre beklemeden veya kayıt olmadan 14.000+ terim ve mühendislik simülatörlerine anında erişin.
+            </p>
+
+            <button
+              type="button"
+              onClick={handleQuickDemoStart}
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-cyan-500 hover:from-primary/90 hover:to-cyan-600 px-4 py-3.5 text-xs sm:text-sm font-extrabold uppercase tracking-wider text-white shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] cursor-pointer"
+            >
+              <span>Tek Tıkla Giriş Yap (Demo Mühendis)</span>
+              <ArrowRight className="h-4 w-4" />
+            </button>
+
+            {/* Direct Email Option */}
+            {!showDirectEmail ? (
+              <button
+                type="button"
+                onClick={() => setShowDirectEmail(true)}
+                className="w-full text-center text-xs font-bold text-muted-copy hover:text-primary transition-colors py-1 cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                <Mail className="h-3.5 w-3.5" />
+                <span>Kendi e-postamla doğrudan giriş yap</span>
+              </button>
+            ) : (
+              <form onSubmit={handleDirectLogin} className="pt-2 border-t border-border-soft space-y-2.5">
+                <label className="block text-xs font-semibold text-muted-copy">
+                  Mühendislik E-postanız:
+                  <input
+                    type="email"
+                    required
+                    value={directEmail}
+                    onChange={(e) => setDirectEmail(e.target.value)}
+                    placeholder="ornek@engvox.com"
+                    className="mt-1 w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none focus:border-primary transition-colors"
+                  />
+                </label>
+                <button
+                  type="submit"
+                  className="w-full flex items-center justify-center gap-2 rounded-lg bg-surface-hover border border-primary/40 hover:bg-primary/10 px-3 py-2 text-xs font-bold text-primary transition-colors cursor-pointer"
+                >
+                  <UserCheck className="h-3.5 w-3.5" />
+                  <span>E-posta ile Çalışma Alanımı Aç</span>
+                </button>
+              </form>
+            )}
+          </div>
+
+          {/* Divider */}
+          <div className="relative flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-border-soft" />
+            </div>
+            <span className="relative bg-zinc-950 px-3 text-[11px] font-bold text-muted-copy uppercase tracking-wider">
+              Veya Hesap Girişi (Clerk / Google)
+            </span>
+          </div>
+
+          {/* Google OAuth Button */}
+          <NativeGoogleOAuthButton mode={mode} afterCompleteUrl={targetDestination} />
+
+          {/* Clerk Component Toggle / Embed */}
+          {!showClerkForm ? (
+            <button
+              type="button"
+              onClick={() => setShowClerkForm(true)}
+              className="w-full py-2.5 rounded-xl border border-border-soft bg-surface/60 hover:bg-surface text-xs font-bold text-muted-copy hover:text-foreground transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Lock className="h-3.5 w-3.5" />
+              <span>Clerk Şifreli Hesap Formunu Aç</span>
+            </button>
           ) : (
-            <>
-              <NativeGoogleOAuthButton mode="sign-up" afterCompleteUrl={signUpAfter} />
-              <SignUp
-                routing="path"
-                path={CLERK_SIGN_UP_URL}
-                signInUrl={CLERK_SIGN_IN_URL}
-                fallbackRedirectUrl={signUpAfter}
-                afterSignUpUrl={signUpAfter}
-                appearance={nativeAppearance}
-              />
-            </>
+            <div className="w-full rounded-2xl border border-border-soft bg-surface/90 p-2 shadow-xl">
+              {mode === 'sign-in' ? (
+                <SignIn
+                  routing="virtual"
+                  fallbackRedirectUrl={signInAfter}
+                  appearance={nativeAppearance}
+                />
+              ) : (
+                <SignUp
+                  routing="virtual"
+                  fallbackRedirectUrl={signUpAfter}
+                  appearance={nativeAppearance}
+                />
+              )}
+            </div>
           )}
+
+          <div className="flex items-center justify-center gap-2 text-[11px] text-muted-copy">
+            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+            <span>Verileriniz cihazınızda güvenle yerel depolanır.</span>
+          </div>
         </div>
       </div>
     </div>

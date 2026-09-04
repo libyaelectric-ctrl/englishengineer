@@ -147,6 +147,19 @@ const StartPage = () => {
             </Link>
           </section>
         </div>
+
+        <div className="mt-5 text-center">
+          <button
+            type="button"
+            onClick={() => {
+              useAuthStore.getState().enterDemoUser();
+              navigate('/dashboard');
+            }}
+            className="inline-flex items-center gap-2 rounded-xl bg-primary/10 border border-primary/30 hover:bg-primary/20 px-5 py-2.5 text-xs font-bold text-primary transition-all cursor-pointer"
+          >
+            <span>⚡ Kayıt Olmadan Demo Mühendis Olarak Başla →</span>
+          </button>
+        </div>
       </div>
     </main>
   );
