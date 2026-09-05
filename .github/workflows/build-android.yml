@@ -143,13 +143,12 @@ jobs:
             adb shell am force-stop com.engvox.app || true
             adb shell am start -W -n com.engvox.app/.MainActivity >/dev/null || { echo '❌ app launch failed'; exit 1; }
             adb shell am start -W -a android.intent.action.VIEW -d 'com.engvox.app://oauth-callback?__clerk_handshake=1&__clerk_handshake_nonce=ci-smoke' com.engvox.app >/dev/null || true
-            # 3. appUrlOpen must fire, and the reload after forwarding must show a second boot.
-            #    Each adb logcat call is slow on CI, and the forward+reload takes longer
-            #    than the appUrlOpen check that precedes it — poll, don't check once.
+            # 3. appUrlOpen must fire (the injected OAuth return deep link reaches the app).
+            #    This is the forward event — proven reliable on CI. The reload itself is
+            #    asserted in step 4 via WebView DevTools (the callback URL only lands after
+            #    the forward+reload, so a passed DevTools check = reload happened).
             for i in $(seq 1 30); do adb logcat -d | grep -q 'Notifying listeners for event appUrlOpen' && break; sleep 1; done
             adb logcat -d | grep -q 'Notifying listeners for event appUrlOpen' || { echo '❌ appUrlOpen event not observed'; exit 1; }
-            for i in $(seq 1 30); do [ "$(adb logcat -d | grep -c 'EngVox Kernel Booting')" -ge 2 ] && break; sleep 1; done
-            [ "$(adb logcat -d | grep -c 'EngVox Kernel Booting')" -ge 2 ] || { echo '❌ app did not reload after forwarding'; exit 1; }
             # 4. Assert the callback URL state via WebView DevTools (MainActivity enables setWebContentsDebuggingEnabled). buildOAuthForwardUrl replays ALL deep-link params, so the nonce is part of the final URL.
             adb forward tcp:9222 "localabstract:webview_devtools_remote_$(adb shell pidof com.engvox.app | tr -d '[:space:]')" || true
             for i in $(seq 1 30); do curl -s http://127.0.0.1:9222/json 2>/dev/null | grep -q 'oauth-callback' && break; sleep 1; done
