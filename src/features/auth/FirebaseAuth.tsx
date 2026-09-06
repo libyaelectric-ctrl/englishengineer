@@ -22,14 +22,17 @@ import {
   signOut as firebaseSignOut,
   updateProfile as firebaseUpdateProfile,
   getAuth,
+  getRedirectResult,
   onAuthStateChanged,
   signInWithCredential,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
 } from 'firebase/auth';
 
 import { type ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react';
 
+import { logger } from '@/shared/logger';
 import { isNativePlatform } from '@/shared/utils/capacitor';
 
 import { FIREBASE_CONFIG } from './firebase.config';
@@ -53,6 +56,7 @@ export interface FirebaseAuthContextValue {
   getIdToken: (forceRefresh?: boolean) => Promise<string | null>;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithGoogleRedirect: () => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signUpWithEmail: (email: string, password: string, displayName?: string) => Promise<void>;
 }
@@ -70,6 +74,23 @@ export const FirebaseAuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(nextUser);
       setIsLoaded(true);
     });
+  }, [auth]);
+
+  useEffect(() => {
+    if (!auth) return;
+    // Completes a signInWithRedirect() started by the popup-fallback below
+    // (e.g. after a blocked popup or a third-party-storage issue). Also
+    // surfaces the underlying error if the redirect itself failed, instead
+    // of the page silently landing back on the sign-in screen.
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) {
+          logger.i('[FirebaseAuth] Redirect sign-in completed for', result.user.uid);
+        }
+      })
+      .catch((err) => {
+        logger.e('[FirebaseAuth] Redirect sign-in failed:', err);
+      });
   }, [auth]);
 
   const value = useMemo<FirebaseAuthContextValue>(
@@ -108,6 +129,14 @@ export const FirebaseAuthProvider = ({ children }: { children: ReactNode }) => {
         }
         await signInWithPopup(auth, new GoogleAuthProvider());
       },
+      signInWithGoogleRedirect: async () => {
+        if (!auth) throw new Error('Firebase is not configured.');
+        // Full-page redirect fallback for browsers/environments where the
+        // popup's authDomain iframe (used to relay the result back) is
+        // blocked — this navigates away and back, and getRedirectResult()
+        // above picks up the outcome on return.
+        await signInWithRedirect(auth, new GoogleAuthProvider());
+      },
       signInWithEmail: async (email: string, password: string) => {
         if (!auth) throw new Error('Firebase is not configured.');
         await signInWithEmailAndPassword(auth, email, password);
@@ -138,6 +167,9 @@ export const useFirebaseAuth = (): FirebaseAuthContextValue => {
       getIdToken: async () => null,
       signOut: async () => {},
       signInWithGoogle: async () => {
+        throw new Error('Firebase Auth provider is not mounted.');
+      },
+      signInWithGoogleRedirect: async () => {
         throw new Error('Firebase Auth provider is not mounted.');
       },
       signInWithEmail: async () => {

@@ -14,6 +14,7 @@ describe('health endpoint', () => {
     stripe: { configured: true },
     supabase: { configured: true },
     rateLimit: { storeMode: 'upstash' },
+    auth: { firebaseProjectId: 'demo-project' },
   } as unknown as BackendConfig;
 
   it('returns ok true with version when all critical services configured', () => {
@@ -47,12 +48,28 @@ describe('health endpoint', () => {
       billing: { configured: true },
       supabase: { configured: true },
       rateLimit: { configured: true },
+      auth: { configured: true, firebaseProjectId: 'demo-project' },
     });
   });
 
   it('reports environment', () => {
     const health = toPublicHealth(config);
     assert.equal(health.environment, 'test');
+  });
+
+  it('reports the configured firebase project id (not a secret, matches frontend .env)', () => {
+    const health = toPublicHealth(config);
+    assert.equal(health.checks.auth.firebaseProjectId, 'demo-project');
+  });
+
+  it('reports auth as unconfigured with a null project id when nothing is set', () => {
+    const testConfig = {
+      ...config,
+      auth: { firebaseProjectId: null },
+    } as unknown as BackendConfig;
+    const health = toPublicHealth(testConfig);
+    assert.equal(health.checks.auth.configured, false);
+    assert.equal(health.checks.auth.firebaseProjectId, null);
   });
 
   it('does not expose secrets', () => {

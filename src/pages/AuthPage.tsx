@@ -38,7 +38,7 @@ const getReturnTarget = (search: string, state: AuthLocationState): string | und
   return undefined;
 };
 
-/** Maps Firebase Auth error codes to user-facing Turkish messages. */
+/** Maps Firebase Auth error codes to user-facing Turkish messages (email/password flow). */
 const describeAuthError = (error: unknown): string => {
   if (error instanceof FirebaseError) {
     switch (error.code) {
@@ -65,6 +65,50 @@ const describeAuthError = (error: unknown): string => {
   return error instanceof Error ? error.message : 'Giriş başarısız oldu.';
 };
 
+/**
+ * Maps Firebase Auth error codes for the GOOGLE sign-in flow specifically.
+ * IMPORTANT: this must never reuse the email/password copy ("E-posta veya
+ * şifre hatalı") — no email or password was ever entered here, so that
+ * message is always wrong and hides the real cause (typically a Firebase
+ * Console / Google Cloud OAuth configuration issue, e.g. the app's domain
+ * missing from Authorized domains). We surface the real code so it can be
+ * diagnosed instead of masking it.
+ */
+const describeGoogleAuthError = (error: unknown): string => {
+  if (error instanceof FirebaseError) {
+    switch (error.code) {
+      case 'auth/popup-closed-by-user':
+      case 'auth/cancelled-popup-request':
+        return 'Google penceresi kapatıldı. Tekrar deneyin.';
+      case 'auth/popup-blocked':
+        return 'Tarayıcı Google penceresini engelledi. Farklı bir yöntemle devam ediliyor…';
+      case 'auth/network-request-failed':
+        return 'Ağ bağlantısı kurulamadı. İnternetinizi kontrol edin.';
+      case 'auth/unauthorized-domain':
+        return 'Bu site Google girişi için yetkilendirilmemiş (yapılandırma hatası). Lütfen destek ile iletişime geçin.';
+      case 'auth/account-exists-with-different-credential':
+        return 'Bu e-posta başka bir giriş yöntemiyle kayıtlı. E-posta/şifre ile giriş yapmayı deneyin.';
+      case 'auth/invalid-credential':
+      case 'auth/internal-error':
+        return `Google girişi tamamlanamadı (yapılandırma hatası: ${error.code}). Lütfen destek ile iletişime geçin.`;
+      default:
+        return `Google girişi başarısız oldu (${error.code}).`;
+    }
+  }
+  return error instanceof Error ? error.message : 'Google girişi başarısız oldu.';
+};
+
+/** Error codes worth retrying once via a full-page redirect instead of a
+ * popup — these are typically caused by the popup's cross-domain relay
+ * (the authDomain iframe) being blocked by third-party storage partitioning
+ * or an ad/tracker blocker, which a redirect flow avoids entirely. */
+const GOOGLE_REDIRECT_FALLBACK_CODES = new Set([
+  'auth/popup-blocked',
+  'auth/invalid-credential',
+  'auth/internal-error',
+  'auth/network-request-failed',
+]);
+
 const GoogleButton = ({
   busy,
   onBusyChange,
@@ -72,7 +116,7 @@ const GoogleButton = ({
   busy: boolean;
   onBusyChange: (b: boolean) => void;
 }) => {
-  const { signInWithGoogle } = useFirebaseAuth();
+  const { signInWithGoogle, signInWithGoogleRedirect } = useFirebaseAuth();
   const [error, setError] = useState<string | null>(null);
 
   const handleClick = async (): Promise<void> => {
@@ -82,7 +126,23 @@ const GoogleButton = ({
       await signInWithGoogle();
       // On success the isSignedIn effect navigates away; stay busy until then.
     } catch (err) {
-      setError(describeAuthError(err));
+      const code = err instanceof FirebaseError ? err.code : null;
+      if (code && GOOGLE_REDIRECT_FALLBACK_CODES.has(code)) {
+        // Popup-based sign-in failed for a reason a full-page redirect can
+        // route around (blocked popup, blocked third-party storage, etc).
+        // signInWithGoogleRedirect navigates away from the page; on return,
+        // FirebaseAuthProvider's getRedirectResult handling completes it.
+        try {
+          setError(describeGoogleAuthError(err));
+          await signInWithGoogleRedirect();
+          return;
+        } catch (redirectErr) {
+          setError(describeGoogleAuthError(redirectErr));
+          onBusyChange(false);
+          return;
+        }
+      }
+      setError(describeGoogleAuthError(err));
       onBusyChange(false);
     }
   };

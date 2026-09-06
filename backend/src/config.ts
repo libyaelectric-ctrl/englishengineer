@@ -51,6 +51,7 @@ interface HealthCheck {
   configured: boolean;
   reachable?: boolean;
   error?: string;
+  firebaseProjectId?: string | null;
 }
 
 interface PublicHealth {
@@ -63,17 +64,33 @@ interface PublicHealth {
     billing: HealthCheck;
     supabase: HealthCheck;
     rateLimit: HealthCheck;
+    auth: HealthCheck;
     [key: string]: HealthCheck;
   };
   mockMode: boolean;
 }
 
 export const toPublicHealth = (config: BackendConfig): PublicHealth => {
+  // firebaseProjectId is not a secret — it's already public in the
+  // frontend's own bundle/.env.production and in every Firebase console
+  // URL — so exposing it here (unlike a real secret) is safe and lets
+  // anyone directly compare "does the live backend's configured project
+  // match the frontend's project" without needing dashboard access to the
+  // hosting provider's environment variables. Secret material (JWT
+  // secrets, service keys) stays booleans only, never here.
+  const firebaseConfigured = Boolean(config.auth?.firebaseProjectId);
+  const supabaseAuthConfigured = Boolean(
+    config.auth?.supabaseJwtSecret || (config.auth?.supabaseUrl && config.auth?.supabaseAnonKey)
+  );
   const checks: PublicHealth['checks'] = {
     ai: { configured: config.ai.configured },
     billing: { configured: config.billing.provider === 'dodo' ? config.dodo.configured : config.stripe.configured },
     supabase: { configured: config.supabase.configured },
     rateLimit: { configured: config.rateLimit.storeMode === 'upstash' },
+    auth: {
+      configured: firebaseConfigured || supabaseAuthConfigured,
+      firebaseProjectId: config.auth?.firebaseProjectId || null,
+    },
   };
 
   const allCriticalConfigured = config.ai.configured && config.supabase.configured;
