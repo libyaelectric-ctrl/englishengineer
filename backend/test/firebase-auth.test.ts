@@ -62,6 +62,19 @@ const signFirebaseJwt = async (
 const createJwksFetch = (keys: JwkWithKid[]): typeof fetch =>
   (async () => ({ ok: true, json: async () => ({ keys }) as JwkSet })) as unknown as typeof fetch;
 
+/** Captures the URL(s) requested through a fetch impl, while still serving
+ * the given keys — for asserting the exact Google endpoint that gets hit. */
+const createJwksFetchSpy = (
+  keys: JwkWithKid[]
+): { fetchImpl: typeof fetch; calls: string[] } => {
+  const calls: string[] = [];
+  const fetchImpl = (async (input: unknown) => {
+    calls.push(String(input));
+    return { ok: true, json: async () => ({ keys }) as JwkSet };
+  }) as unknown as typeof fetch;
+  return { fetchImpl, calls };
+};
+
 const createMockRequest = (headers: Record<string, string> = {}): Request =>
   ({ headers, auth: undefined }) as unknown as Request;
 
@@ -137,6 +150,38 @@ describe('createBackendAuth with Firebase project', () => {
     assert.deepEqual(errors, []);
     assert.equal(req.auth?.userId, 'firebase-uid-admin');
     assert.equal(req.auth?.role, 'Super Administrator');
+  });
+
+  it('fetches keys from the real, documented Google JWKS endpoint', async () => {
+    // Regression test: this URL was previously wrong ("v3/jwks", a path
+    // that does not exist) which silently broke every Firebase sign-in —
+    // JWKS fetch failed, the auth chain fell through, and every real,
+    // valid ID token was rejected with a generic 401. Google's own
+    // OIDC discovery document (https://securetoken.google.com/{project}/
+    // .well-known/openid-configuration) publishes this exact jwks_uri.
+    reset();
+    const keyPair = await createFirebaseKeyPair('firebase-kid-url-check');
+    const token = await signFirebaseJwt(keyPair, baseClaims());
+    const { fetchImpl, calls } = createJwksFetchSpy([
+      { ...keyPair.publicJwk, kid: keyPair.kid, use: 'sig', alg: 'RS256' },
+    ]);
+
+    const { requireBackendAuth } = createBackendAuth(
+      { firebaseProjectId: PROJECT_ID } as unknown as BackendAuthConfig,
+      fetchImpl
+    );
+
+    const { next, errors } = captureNext();
+    await requireBackendAuth(
+      createMockRequest({ authorization: `Bearer ${token}` }),
+      mockResponse,
+      next
+    );
+
+    assert.deepEqual(errors, []);
+    assert.deepEqual(calls, [
+      'https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com',
+    ]);
   });
 
   it('rejects a token signed by a different key (unknown kid)', async () => {

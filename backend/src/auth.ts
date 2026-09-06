@@ -79,9 +79,15 @@ const JWKS_CACHE_TTL_MS = 60 * 60 * 1000;
 /**
  * Google publishes the signing keys for Firebase Auth ID tokens at a fixed,
  * project-independent URL (the issuer only varies per project).
+ *
+ * IMPORTANT: this must be the v1/jwk path. There is no "v3/jwks" endpoint —
+ * that path 404s, which silently broke every Firebase sign-in verification
+ * (the fetch failure is caught in authenticate()'s try/catch and the auth
+ * chain just falls through to a 401, indistinguishable from "bad token"
+ * client-side). See: https://firebase.google.com/docs/auth/admin/verify-id-tokens
  */
 const FIREBASE_JWKS_URL =
-  'https://www.googleapis.com/service_accounts/v3/jwks/securetoken@system.gserviceaccount.com';
+  'https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com';
 
 const firebaseIssuerFor = (projectId: string): string =>
   `https://securetoken.google.com/${projectId}`;
