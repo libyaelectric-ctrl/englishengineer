@@ -22,14 +22,11 @@ export const getBackendAuthHeaders = async (
 ): Promise<Record<string, string>> => {
   const headers: Record<string, string> = {};
 
-  console.log('[backend-auth] getBackendAuthHeaders called, authTokenGetter:', !!authTokenGetter, 'localUserId:', localUserId);
-
   // Firebase Auth is the auth of record while a session is alive: send the
   // Firebase ID token and skip the Supabase session entirely (Firebase users
   // have none).
   if (authTokenGetter) {
     const token = await authTokenGetter();
-    console.log('[backend-auth] token result:', token ? 'OK (len=' + token.length + ')' : 'NULL');
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
@@ -44,11 +41,9 @@ export const getBackendAuthHeaders = async (
       headers['X-EngineerOS-Org-Id'] = cachedOrgId;
       headers['X-Corporation-Id'] = cachedOrgId;
     }
-    console.log('[backend-auth] returning headers:', JSON.stringify({ hasAuth: !!headers['Authorization'], hasUserId: !!headers['X-EngVox-User-Id'] }));
     return headers;
   }
 
-  console.log('[backend-auth] authTokenGetter is NULL — returning no Authorization');
   // No Firebase bridge configured yet: surface the local user id for
   // engineering visibility, but never fall back to a Supabase session.
   if (localUserId) {
