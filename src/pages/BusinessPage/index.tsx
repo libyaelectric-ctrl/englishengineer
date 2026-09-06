@@ -1,4 +1,4 @@
-import {
+﻿import {
   ArrowRight,
   BarChart3,
   CheckCircle2,
@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 
 import { PageMetadata } from '@/shared/components/PageMetadata';
 
-import { CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
+import { AUTH_SIGN_UP_URL } from '@/features/auth/firebase.config';
 import { getTeamOverview, useTeamStore } from '@/features/team';
 
 const BUSINESS_CASES = [
@@ -92,7 +92,7 @@ const BusinessPage = () => {
     { label: 'Active Engineers', value: String(overview.activeLearners) },
     {
       label: 'Overall Readiness',
-      value: overview.averageProgress > 0 ? `${overview.averageProgress}%` : '—',
+      value: overview.averageProgress > 0 ? `${overview.averageProgress}%` : 'â€”',
     },
     { label: 'Risk Flags Pruned', value: String(riskFlagsPruned) },
   ] as const;
@@ -106,7 +106,7 @@ const BusinessPage = () => {
   return (
     <main className="bg-background min-h-screen pt-20 sm:pt-24 pb-16 text-foreground">
       <PageMetadata
-        title="EngVox for Teams & Enterprises — Engineering Communication OS"
+        title="EngVox for Teams & Enterprises â€” Engineering Communication OS"
         description="Role-based technical English training, automated manager readiness analytics, and project workspace isolation across all 10 engineering disciplines."
       />
 
@@ -130,7 +130,7 @@ const BusinessPage = () => {
 
             <div className="pt-2 flex flex-wrap items-center gap-3">
               <Link
-                to={CLERK_SIGN_UP_URL}
+                to={AUTH_SIGN_UP_URL}
                 className="inline-flex items-center gap-2 rounded-[var(--radius-card)] bg-primary px-5 py-2.5 text-xs font-bold text-primary-foreground shadow transition-all hover:bg-primary/95"
               >
                 Explore Team Workspace <ArrowRight className="h-4 w-4" />
@@ -286,7 +286,7 @@ const BusinessPage = () => {
       {/* Footer Link Back to Home */}
       <section className="px-6 md:px-12 pt-8 pb-4 max-w-7xl mx-auto border-t border-border-soft">
         <div className="flex items-center justify-between text-xs text-muted-copy">
-          <span>EngVox Engineering Operating System © 2026</span>
+          <span>EngVox Engineering Operating System Â© 2026</span>
           <Link to="/" className="font-bold text-primary hover:underline flex items-center gap-1">
             <span>Back to Home</span>
             <ArrowRight className="h-3.5 w-3.5" />

@@ -65,7 +65,54 @@ export function ExitIntentModal() {
     };
   }, [handleMouseLeave, handleVisibilityChange]);
 
+  const modalRef = useRef<HTMLDivElement>(null);
+
   const close = () => setIsOpen(false);
+
+  // Focus trap and escape handler
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const modal = modalRef.current;
+    if (modal) {
+      const focusable = modal.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href]:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
+      );
+      if (focusable.length > 0) focusable[0].focus();
+    }
+
+    const handleKeyDown = (e: globalThis.KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        close();
+        return;
+      }
+      if (e.key === 'Tab' && modal) {
+        const focusable = Array.from(
+          modal.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), [href]:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
+          )
+        ).filter((el) => el.offsetParent !== null);
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
 
   return (
     <AnimatePresence>
@@ -80,11 +127,16 @@ export function ExitIntentModal() {
           />
 
           <motion.div
+            ref={modalRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="exit-intent-title"
+            tabIndex={-1}
             initial={prefersReduced ? false : { opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={prefersReduced ? undefined : { opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-md overflow-hidden rounded-[var(--radius-card)] border border-primary/30 bg-surface shadow-2xl"
+            className="relative w-full max-w-md overflow-hidden rounded-[var(--radius-card)] border border-primary/30 bg-surface shadow-2xl outline-none"
           >
             <button
               onClick={close}
@@ -99,7 +151,9 @@ export function ExitIntentModal() {
                 <Sparkles className="h-6 w-6 text-primary" />
               </div>
 
-              <h2 className="text-xl font-bold text-foreground">Wait! Here&apos;s 20% off 🎁</h2>
+              <h2 id="exit-intent-title" className="text-xl font-bold text-foreground">
+                Wait! Here&apos;s 20% off 🎁
+              </h2>
               <p className="mt-2 text-sm text-muted-copy leading-relaxed">
                 Upgrade to any paid plan within the next 24 hours and get{' '}
                 <strong className="text-foreground">20% off your first month</strong>. Use code at

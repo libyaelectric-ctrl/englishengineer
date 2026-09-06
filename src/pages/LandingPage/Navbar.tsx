@@ -1,11 +1,15 @@
-import { useAuth } from '@clerk/clerk-react';
-import { ChevronDown, Globe, Moon, Sun } from 'lucide-react';
+﻿import { ChevronDown, Globe, Moon, Sun } from 'lucide-react';
+
 import { useEffect, useRef, useState } from 'react';
+
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+
 import { storage } from '@/shared/storage';
-import { ClerkAuthControls } from '@/features/auth/ClerkAuthControls';
+
+import { AuthControls } from '@/features/auth/AuthControls';
+import { useFirebaseAuth } from '@/features/auth/FirebaseAuth';
 import { useAuthStore } from '@/features/auth/auth.store';
-import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
+import { AUTH_SIGN_IN_URL, AUTH_SIGN_UP_URL } from '@/features/auth/firebase.config';
 import { useBillingStore } from '@/features/billing';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import { useTheme } from '@/features/theme/ThemeProvider';
@@ -14,9 +18,9 @@ export function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
-  const { isSignedIn } = useAuth();
+  const { isSignedIn } = useFirebaseAuth();
   const isAuthPage =
-    location.pathname === CLERK_SIGN_IN_URL || location.pathname === CLERK_SIGN_UP_URL;
+    location.pathname === AUTH_SIGN_IN_URL || location.pathname === AUTH_SIGN_UP_URL;
   const { language, setLanguage, translate } = useLocalizationStore();
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
@@ -80,11 +84,14 @@ export function Navbar() {
   }, [langOpen]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border-soft bg-background/95 backdrop-blur-md shadow-sm" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+    <header
+      className="fixed top-0 left-0 right-0 z-50 border-b border-border-soft bg-background/95 backdrop-blur-md shadow-sm"
+      style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+    >
       <div className="mx-auto max-w-7xl px-3 sm:px-6">
         {/* Duolingo-style compact bar */}
         <div className="flex items-center gap-2 py-1.5 h-11 sm:h-12">
-          {/* ── Left: Logo + Language ── */}
+          {/* â”€â”€ Left: Logo + Language â”€â”€ */}
           <Link to="/" className="flex items-center gap-1.5 group cursor-pointer shrink-0">
             <div className="flex h-7 w-7 items-center justify-center rounded overflow-hidden transition-transform duration-200 group-hover:scale-105">
               <img
@@ -100,7 +107,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          {/* ── Language Selector (compact) ── */}
+          {/* â”€â”€ Language Selector (compact) â”€â”€ */}
           <div className="relative" ref={langRef}>
             <button
               ref={langBtnRef}
@@ -112,7 +119,9 @@ export function Navbar() {
               aria-label="Select language"
             >
               <Globe className="h-3.5 w-3.5 text-muted-copy" />
-              <span className="text-sm sm:text-base leading-none">{currentLang?.flag || '🌐'}</span>
+              <span className="text-sm sm:text-base leading-none">
+                {currentLang?.flag || 'ğŸŒ'}
+              </span>
               <span className="hidden sm:inline text-xs font-medium text-muted-copy">
                 {currentLang?.id ? currentLang.id.toUpperCase() : 'EN'}
               </span>
@@ -154,7 +163,7 @@ export function Navbar() {
           {/* Spacer */}
           <div className="flex-1" />
 
-          {/* ── Right: Demo + Theme + Auth (compact) ── */}
+          {/* â”€â”€ Right: Demo + Theme + Auth (compact) â”€â”€ */}
           <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
             {/* Try Demo Button */}
             <button
@@ -179,7 +188,7 @@ export function Navbar() {
             </button>
 
             {/* Auth Controls */}
-            {!isAuthPage && <ClerkAuthControls />}
+            {!isAuthPage && <AuthControls />}
           </div>
         </div>
       </div>

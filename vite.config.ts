@@ -2,9 +2,28 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import type { Plugin } from 'vite';
 import { defineConfig } from 'vite';
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
+
+/**
+ * Makes all <link rel="stylesheet"> tags non-render-blocking by converting
+ * them to preload with an onload handler. Prevents CSS from blocking LCP.
+ */
+function deferredCssPlugin(): Plugin {
+  return {
+    name: 'deferred-css',
+    enforce: 'post',
+    transformIndexHtml(html) {
+      return html.replace(
+        /<link\s+rel="stylesheet"[^>]*href="([^"]+)"[^>]*\/?>/g,
+        (_match, href) =>
+          `<link rel="preload" href="${href}" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${href}"></noscript>`
+      );
+    },
+  };
+}
 
 function getDataChunk(id: string): string | undefined {
   const levelMatch = id.match(/by-level\/([a-c][1-2])\.seed/i);
@@ -15,7 +34,7 @@ function getDataChunk(id: string): string | undefined {
 
 export default defineConfig(() => {
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), deferredCssPlugin()],
     resolve: {
       alias: {
         '@': path.resolve(projectRoot, './src'),
@@ -53,40 +72,33 @@ export default defineConfig(() => {
                 return getDataChunk(id) ?? 'seed-data';
               if ((id.includes('/data/') || id.includes('seed')) && !id.includes('/localization/'))
                 return 'seed-data';
-              // Lazy load localization data (huge chunk ~775KB)
               if (id.includes('/features/localization/') && id.includes('/data/'))
                 return 'localization-data';
               if (id.includes('/features/localization/translations/'))
                 return 'localization-translations';
               return;
             }
-            // Vendor chunk splitting
-            if (id.includes('@clerk')) return 'vendor-clerk';
+            // Large vendor chunks - keep separate for caching
+            if (id.includes('firebase') || id.includes('@firebase')) return 'vendor-firebase';
             if (
               id.includes('react-router') ||
               id.includes('react-router-dom') ||
               id.includes('@remix-run')
             )
               return 'vendor-router';
-            if (id.includes('zustand') || id.includes('@tanstack/react-query'))
-              return 'vendor-state';
             if (id.includes('@supabase')) return 'vendor-supabase';
             if (id.includes('@opentelemetry') || id.includes('@sentry')) return 'vendor-telemetry';
-            if (id.includes('lucide-react')) return 'vendor-lucide';
-            if (id.includes('motion') || id.includes('framer-motion')) return 'vendor-motion';
             if (id.includes('three')) return 'vendor-three';
-            if (id.includes('zustand')) return 'vendor-zustand';
-            if (id.includes('@tanstack')) return 'vendor-tanstack';
+            if (id.includes('motion') || id.includes('framer-motion')) return 'vendor-motion';
+            if (id.includes('zustand') || id.includes('@tanstack')) return 'vendor-state';
             if (id.includes('lucide-react')) return 'vendor-lucide';
-            // Core React ecosystem - keep together to avoid circular deps
             if (
               id.includes('react') ||
               id.includes('scheduler') ||
-              id.includes('use-sync-external-store') ||
-              id.includes('object-assign')
+              id.includes('use-sync-external-store')
             )
               return 'vendor-react-core';
-            return 'vendor-other';
+            return 'vendor-misc';
           },
           chunkFileNames: 'assets/[name]-[hash].js',
           entryFileNames: 'assets/[name]-[hash].js',

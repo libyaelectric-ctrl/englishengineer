@@ -35,7 +35,7 @@ const PlacementPage = () => {
 
   if (result) {
     return (
-      <main className="mx-auto max-w-3xl py-4 sm:py-8">
+      <div className="mx-auto max-w-3xl py-4 sm:py-8">
         <section className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-6 sm:p-8">
           <CheckCircle2 className="h-8 w-8 text-success" />
           <p className="mt-5 text-xs font-medium uppercase text-success">Placement complete</p>
@@ -72,12 +72,12 @@ const PlacementPage = () => {
             </Button>
           </div>
         </section>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="mx-auto max-w-3xl py-4 sm:py-8">
+    <div className="mx-auto max-w-3xl py-4 sm:py-8">
       <section className="overflow-hidden rounded-[var(--radius-card)] border border-border-soft bg-surface">
         <header className="border-b border-border-soft bg-surface-hover p-5 sm:p-7">
           <div className="flex items-center gap-3">
@@ -141,7 +141,7 @@ const PlacementPage = () => {
       <p className="mt-4 text-center text-xs leading-5 text-muted-copy">
         This is an internal Engineering Communication estimate, not an official CEFR certificate.
       </p>
-    </main>
+    </div>
   );
 };
 

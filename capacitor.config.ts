@@ -12,11 +12,9 @@ const config: CapacitorConfig = {
       'test.checkout.dodopayments.com',
       'customer.dodopayments.com',
       'test.customer.dodopayments.com',
-      // Clerk authentication
-      '*.clerk.accounts.dev',
-      'clerk.engvox.com',
-      'api.clerk.com',
-      '*.protect.clerk.com',
+      // Firebase authentication
+      '*.firebaseapp.com',
+      '*.googleapis.com',
       // Sentry error tracking
       '*.sentry.io',
     ],
@@ -29,6 +27,9 @@ const config: CapacitorConfig = {
       style: 'DARK',
       backgroundColor: '#0f0f23',
       overlaysWebView: false,
+    },
+    FirebaseAuthentication: {
+      providers: ['google.com'],
     },
   },
 };

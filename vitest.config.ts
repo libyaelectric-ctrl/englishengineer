@@ -27,11 +27,6 @@ export default defineConfig({
       '.mimocode/**',
       'src/shared/tests/integration/**',
       'test/integration/**',
-      // AuthGuard uses dynamic `await import('./AuthGuard')` with Clerk mocks
-      // and vi.useFakeTimers. The dynamic import hangs indefinitely in the
-      // Vitest worker because Clerk's module initialization never resolves
-      // under the mock. Requires Clerk runtime or a different mock strategy.
-      'src/features/auth/AuthGuard.test.tsx',
     ],
     coverage: {
       provider: 'v8',

@@ -164,17 +164,16 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
     );
   }
 
-  if (!config.auth.clerkIssuer) {
+  if (!config.auth.firebaseProjectId) {
     if (config.environment === 'production' && process.env.NODE_ENV !== 'test') {
       throw new Error(
-        'CLERK_ISSUER is required in production. Refusing to start: without it, every ' +
-          'Clerk-authenticated request will silently fail with 401. Set CLERK_ISSUER to the ' +
-          "exact value of your Clerk instance's issuer (e.g. https://clerk.<your-domain>.com), " +
-          'no trailing slash.'
+        'FIREBASE_PROJECT_ID is required in production. Refusing to start: without it, every ' +
+          'Firebase-authenticated request will silently fail with 401. Set FIREBASE_PROJECT_ID ' +
+          'to your Firebase project id (e.g. elemental-outlet-pnn32).'
       );
     }
     logger.warn(
-      'CLERK_ISSUER is not set. Clerk-authenticated requests will fail in this environment.'
+      'FIREBASE_PROJECT_ID is not set. Firebase-authenticated requests will fail in this environment.'
     );
   }
 
@@ -208,9 +207,9 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
       ? [
           'https://engvox.com',
           'https://www.engvox.com',
-          'https://localhost',        // Capacitor Android/iOS
-          'capacitor://localhost',     // Capacitor iOS fallback
-          'http://localhost',          // Local development
+          'https://localhost', // Capacitor Android/iOS
+          'capacitor://localhost', // Capacitor iOS fallback
+          'http://localhost', // Local development
         ]
       : [];
   const configuredOrigins = [

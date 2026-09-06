@@ -1,4 +1,4 @@
-import { useAppStore } from '@/store/app.store';
+﻿import { useAppStore } from '@/store/app.store';
 import { X } from 'lucide-react';
 import { useShallow } from 'zustand/shallow';
 
@@ -10,7 +10,7 @@ import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { cn } from '@/shared/utils/cn';
 
 import { useAuthStore } from '@/features/auth';
-import { CLERK_SIGN_IN_URL } from '@/features/auth/clerk.config';
+import { AUTH_SIGN_IN_URL } from '@/features/auth/firebase.config';
 import { useBillingStore } from '@/features/billing';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 
@@ -48,7 +48,7 @@ export const Sidebar = () => {
   };
   const handleLogout = async () => {
     await logout();
-    startTransition(() => navigate(CLERK_SIGN_IN_URL));
+    startTransition(() => navigate(AUTH_SIGN_IN_URL));
   };
 
   return (
@@ -61,9 +61,10 @@ export const Sidebar = () => {
           aria-label="Close"
         />
       )}
-      <aside
+      <nav
         data-testid="app-sidebar"
-        role="navigation"
+        aria-label="Sidebar navigation"
+        aria-hidden={!isSidebarOpen}
         className={cn(
           'fixed inset-y-0 left-0 z-40 flex flex-col border-r border-border-hover bg-surface transition-all lg:static lg:flex lg:translate-x-0',
           isSidebarCollapsed ? 'w-16' : 'w-64',
@@ -100,6 +101,7 @@ export const Sidebar = () => {
               <ThemeToggle />
               <button
                 onClick={toggleSidebar}
+                aria-label="Close sidebar"
                 className="lg:hidden ml-auto border-0 bg-transparent cursor-pointer"
               >
                 <X size={16} />
@@ -126,7 +128,7 @@ export const Sidebar = () => {
             closeSidebarOnMobile={closeSidebarOnMobile}
           />
         </div>
-      </aside>
+      </nav>
     </>
   );
 };

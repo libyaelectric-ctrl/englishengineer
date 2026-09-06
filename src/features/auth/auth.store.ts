@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
 import { AuthState, UserProfile } from '@/shared/types/auth.types';
@@ -10,10 +11,14 @@ import { LearningProfileRepository } from '@/features/profile/profile.repository
 interface AuthActions {
   logout: () => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
-  loginAsLocal: (userData: { email: string; displayName?: string; discipline?: string }) => UserProfile;
+  loginAsLocal: (userData: {
+    email: string;
+    displayName?: string;
+    discipline?: string;
+  }) => UserProfile;
   enterDemoUser: () => UserProfile;
-  setClerkUserSync: (fn: ((updates: Partial<UserProfile>) => Promise<void>) | null) => void;
-  setClerkSignOut: (fn: (() => Promise<void>) | null) => void;
+  setProviderUserSync: (fn: ((updates: Partial<UserProfile>) => Promise<void>) | null) => void;
+  setProviderSignOut: (fn: (() => Promise<void>) | null) => void;
 }
 
 const getInitialUser = (): UserProfile | null => {
@@ -37,8 +42,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       currentUser: initialUser,
       isAuthenticated: Boolean(initialUser),
       isLoading: !initialUser,
-      clerkUserSync: null,
-      clerkSignOut: null,
+      providerUserSync: null,
+      providerSignOut: null,
 
       loginAsLocal: (userData: { email: string; displayName?: string; discipline?: string }) => {
         const cleanEmail = userData.email.trim().toLowerCase();
@@ -61,7 +66,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         storage.globalSet('auth_user', profile);
         try {
           LearningProfileRepository.updatePreferences(userId, {
-            discipline: (profile.engineeringDiscipline || 'electrical') as any,
+            discipline: (profile.engineeringDiscipline || 'electrical') as EngineeringDiscipline,
             onboardingCompleted: true,
             interfaceLanguage: 'tr',
           });
@@ -105,9 +110,9 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       logout: async () => {
         set({ isLoading: true });
         try {
-          const clerkSignOut = useAuthStore.getState().clerkSignOut;
-          if (clerkSignOut) {
-            await clerkSignOut();
+          const providerSignOut = useAuthStore.getState().providerSignOut;
+          if (providerSignOut) {
+            await providerSignOut();
           }
           set({ currentUser: null, isAuthenticated: false });
           storage.globalRemove('auth_user');
@@ -127,12 +132,12 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           set({ currentUser: updated });
           storage.globalSet('auth_user', updated);
 
-          const sync = useAuthStore.getState().clerkUserSync;
+          const sync = useAuthStore.getState().providerUserSync;
           if (sync && updates.displayName) {
             try {
               await sync(updates);
             } catch (e) {
-              logger.w('Clerk profile sync failed.', e);
+              logger.w('Auth provider profile sync failed.', e);
             }
           }
         } catch (e) {
@@ -141,12 +146,12 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         }
       },
 
-      setClerkUserSync: (fn) => {
-        set({ clerkUserSync: fn });
+      setProviderUserSync: (fn) => {
+        set({ providerUserSync: fn });
       },
 
-      setClerkSignOut: (fn) => {
-        set({ clerkSignOut: fn });
+      setProviderSignOut: (fn) => {
+        set({ providerSignOut: fn });
       },
     }),
     { name: 'AuthStore' }

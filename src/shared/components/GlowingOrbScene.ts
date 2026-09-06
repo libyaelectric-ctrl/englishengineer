@@ -127,18 +127,17 @@ export const mountGlowingOrbScene = (container: HTMLElement): (() => void) | und
   const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(
-    45,
-    container.clientWidth / container.clientHeight,
-    0.1,
-    100
-  );
+
+  // Batch all layout reads before any DOM mutation to avoid forced reflow
+  let width = container.clientWidth || 1;
+  let height = container.clientHeight || 1;
+
+  const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
   camera.position.z = 3.5;
 
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  container.appendChild(renderer.domElement);
+  renderer.setSize(width, height);
 
   const uniforms = { uTime: { value: 0 } };
 
@@ -155,16 +154,22 @@ export const mountGlowingOrbScene = (container: HTMLElement): (() => void) | und
   const orb = new THREE.Mesh(geometry, material);
   scene.add(orb);
 
+  // Defer DOM mutation (appendChild) to avoid read-write-read layout thrash
+  container.appendChild(renderer.domElement);
+
   const clock = new THREE.Clock();
 
   const resize = () => {
-    const width = container.clientWidth || 1;
-    const height = container.clientHeight || 1;
-    renderer!.setSize(width, height);
-    camera.aspect = width / height;
+    // Read layout properties in a single batch (no writes between reads)
+    const w = container.clientWidth || 1;
+    const h = container.clientHeight || 1;
+    if (w === width && h === height) return; // skip no-op resizes
+    width = w;
+    height = h;
+    renderer!.setSize(w, h);
+    camera.aspect = w / h;
     camera.updateProjectionMatrix();
   };
-  resize();
   const observer = new ResizeObserver(resize);
   observer.observe(container);
 

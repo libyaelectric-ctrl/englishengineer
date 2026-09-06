@@ -1,4 +1,4 @@
-import { ArrowRight, Globe, Moon, Sun, Wrench } from 'lucide-react';
+﻿import { ArrowRight, Globe, Moon, Sun, Wrench } from 'lucide-react';
 
 import { useCallback, useState } from 'react';
 
@@ -12,41 +12,41 @@ import type { CareerTrackId, InterfaceLanguage } from '@/shared/types/domain.typ
 import { cn } from '@/shared/utils/cn';
 
 import { useAuthStore } from '@/features/auth';
-import { CLERK_SIGN_IN_URL } from '@/features/auth/clerk.config';
+import { AUTH_SIGN_IN_URL } from '@/features/auth/firebase.config';
 import { useLocalizationStore } from '@/features/localization';
 import type { SupportedInterfaceLanguage } from '@/features/localization';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 import { useTheme } from '@/features/theme/ThemeProvider';
 
 const DISCIPLINES = [
-  { id: 'architecture', full: 'Architecture', icon: '🏛️' },
-  { id: 'chemical', full: 'Chemical Eng.', icon: '⚗️' },
-  { id: 'civil', full: 'Civil Eng.', icon: '🏗️' },
-  { id: 'electrical', full: 'Electrical Eng.', icon: '⚡' },
-  { id: 'electronics', full: 'Electronics Eng.', icon: '🔌' },
-  { id: 'software', full: 'Software Eng.', icon: '💻' },
-  { id: 'mechatronics', full: 'Mechatronics', icon: '🤖' },
-  { id: 'mechanical', full: 'Mechanical Eng.', icon: '⚙️' },
-  { id: 'industrial', full: 'Industrial Eng.', icon: '🏭' },
-  { id: 'hse', full: 'HSE Eng.', icon: '🛡️' },
+  { id: 'architecture', full: 'Architecture', icon: 'ğŸ›ï¸' },
+  { id: 'chemical', full: 'Chemical Eng.', icon: 'âš—ï¸' },
+  { id: 'civil', full: 'Civil Eng.', icon: 'ğŸ—ï¸' },
+  { id: 'electrical', full: 'Electrical Eng.', icon: 'âš¡' },
+  { id: 'electronics', full: 'Electronics Eng.', icon: 'ğŸ”Œ' },
+  { id: 'software', full: 'Software Eng.', icon: 'ğŸ’»' },
+  { id: 'mechatronics', full: 'Mechatronics', icon: 'ğŸ¤–' },
+  { id: 'mechanical', full: 'Mechanical Eng.', icon: 'âš™ï¸' },
+  { id: 'industrial', full: 'Industrial Eng.', icon: 'ğŸ­' },
+  { id: 'hse', full: 'HSE Eng.', icon: 'ğŸ›¡ï¸' },
 ];
 
 const LANGUAGES = [
-  { id: 'en', label: 'English', flag: '🇬🇧' },
-  { id: 'tr', label: 'Türkçe', flag: '🇹🇷' },
-  { id: 'ar', label: 'العربية', flag: '🇸🇦' },
-  { id: 'de', label: 'Deutsch', flag: '🇩🇪' },
-  { id: 'es', label: 'Español', flag: '🇪🇸' },
-  { id: 'fr', label: 'Français', flag: '🇫🇷' },
-  { id: 'pt', label: 'Português', flag: '🇧🇷' },
-  { id: 'ru', label: 'Русский', flag: '🇷🇺' },
-  { id: 'zh', label: '中文', flag: '🇨🇳' },
-  { id: 'ja', label: '日本語', flag: '🇯🇵' },
-  { id: 'it', label: 'Italiano', flag: '🇮🇹' },
-  { id: 'vi', label: 'Tiếng Việt', flag: '🇻🇳' },
-  { id: 'pl', label: 'Polski', flag: '🇵🇱' },
-  { id: 'id', label: 'Bahasa Indonesia', flag: '🇮🇩' },
-  { id: 'nl', label: 'Nederlands', flag: '🇳🇱' },
+  { id: 'en', label: 'English', flag: 'ğŸ‡¬ğŸ‡§' },
+  { id: 'tr', label: 'TÃ¼rkÃ§e', flag: 'ğŸ‡¹ğŸ‡·' },
+  { id: 'ar', label: 'Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©', flag: 'ğŸ‡¸ğŸ‡¦' },
+  { id: 'de', label: 'Deutsch', flag: 'ğŸ‡©ğŸ‡ª' },
+  { id: 'es', label: 'EspaÃ±ol', flag: 'ğŸ‡ªğŸ‡¸' },
+  { id: 'fr', label: 'FranÃ§ais', flag: 'ğŸ‡«ğŸ‡·' },
+  { id: 'pt', label: 'PortuguÃªs', flag: 'ğŸ‡§ğŸ‡·' },
+  { id: 'ru', label: 'Ğ ÑƒÑÑĞºĞ¸Ğ¹', flag: 'ğŸ‡·ğŸ‡º' },
+  { id: 'zh', label: 'ä¸­æ–‡', flag: 'ğŸ‡¨ğŸ‡³' },
+  { id: 'ja', label: 'æ—¥æœ¬èª', flag: 'ğŸ‡¯ğŸ‡µ' },
+  { id: 'it', label: 'Italiano', flag: 'ğŸ‡®ğŸ‡¹' },
+  { id: 'vi', label: 'Tiáº¿ng Viá»‡t', flag: 'ğŸ‡»ğŸ‡³' },
+  { id: 'pl', label: 'Polski', flag: 'ğŸ‡µğŸ‡±' },
+  { id: 'id', label: 'Bahasa Indonesia', flag: 'ğŸ‡®ğŸ‡©' },
+  { id: 'nl', label: 'Nederlands', flag: 'ğŸ‡³ğŸ‡±' },
 ];
 
 export const consumePendingOnboard = () => {
@@ -93,7 +93,7 @@ const OnboardPage = () => {
           discipline: selectedDiscipline,
           language: selectedLanguage,
         });
-        navigate(`${CLERK_SIGN_IN_URL}?redirect=/onboard`, { replace: true });
+        navigate(`${AUTH_SIGN_IN_URL}?redirect=/onboard`, { replace: true });
       }
     } finally {
       setSaving(false);

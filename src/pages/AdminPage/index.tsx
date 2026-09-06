@@ -1,5 +1,5 @@
-/**
- * Admin Page — Modern Single Page Design
+﻿/**
+ * Admin Page â€” Modern Single Page Design
  *
  * All sections scroll vertically:
  * 1. Command Console Header (status, refresh controls)
@@ -18,7 +18,7 @@ import { Button } from '@/shared/components/Button';
 import { PageContainer } from '@/shared/components/PageContainer';
 
 import { useAdminStore } from '@/features/admin';
-import { CLERK_SIGN_IN_URL } from '@/features/auth/clerk.config';
+import { AUTH_SIGN_IN_URL } from '@/features/auth/firebase.config';
 
 import { BillingTab } from './BillingTab';
 import { StatsGrid } from './StatsGrid';
@@ -65,12 +65,12 @@ export const AdminPage = () => {
     return () => clearInterval(id);
   }, [autoRefresh, refreshAll]);
 
-  const handleLogout = () => navigate(CLERK_SIGN_IN_URL);
+  const handleLogout = () => navigate(AUTH_SIGN_IN_URL);
   const isRefreshing = isLoadingUsers || isLoadingStats || isLoadingLogs;
 
   return (
     <PageContainer className="w-full animate-aurora-fade-in space-y-6">
-      {/* ─── Command Console Header ─────────────────────── */}
+      {/* â”€â”€â”€ Command Console Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <header className="premium-panel overflow-hidden p-6 sm:p-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div>
@@ -91,7 +91,7 @@ export const AdminPage = () => {
                 }}
                 className="text-xs"
               >
-                ← Dashboard
+                â† Dashboard
               </Button>
               <Button variant="ghost" size="sm" onClick={handleLogout} className="text-xs">
                 <LogOut className="h-3.5 w-3.5" /> Logout
@@ -155,22 +155,22 @@ export const AdminPage = () => {
         </div>
       </header>
 
-      {/* ─── Stats Grid ─────────────────────────────────── */}
+      {/* â”€â”€â”€ Stats Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div id="stats">
         <StatsGrid stats={stats} isLoading={isLoadingStats} />
       </div>
 
-      {/* ─── Users ──────────────────────────────────────── */}
+      {/* â”€â”€â”€ Users â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div id="users">
         <UsersTab users={users} onPromote={toggleUserPlan} isLoading={isLoadingUsers} />
       </div>
 
-      {/* ─── Billing ────────────────────────────────────── */}
+      {/* â”€â”€â”€ Billing â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div id="billing">
         <BillingTab />
       </div>
 
-      {/* ─── System Logs ────────────────────────────────── */}
+      {/* â”€â”€â”€ System Logs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div id="system">
         <SystemTab systemLogs={systemLogs} isLoading={isLoadingLogs} />
       </div>

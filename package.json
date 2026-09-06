@@ -58,6 +58,7 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
+    "@capacitor-firebase/authentication": "^8.5.1",
     "@capacitor/android": "^8.5.1",
     "@capacitor/app": "^8.1.1",
     "@capacitor/browser": "^8.0.4",
@@ -73,6 +74,7 @@
     "@tanstack/react-query": "^5.102.8",
     "@testing-library/dom": "^10.4.1",
     "clsx": "^2.1.1",
+    "firebase": "^12.18.0",
     "lucide-react": "^1.39.0",
     "motion": "^13.2.0",
     "react": "^19.2.8",

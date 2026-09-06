@@ -42,10 +42,13 @@ export const ReaderView = ({ title, content, onWordClick }: ReaderViewProps) => 
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-bold text-foreground">{title}</h2>
         <div className="flex items-center gap-2">
-          <div className="flex gap-1">
+          <div role="radiogroup" aria-label="Playback speed" className="flex gap-1">
             {TTS_BUTTONS.map((btn) => (
               <button
                 key={btn.rate}
+                role="radio"
+                aria-checked={selectedRate === btn.rate}
+                aria-label={`${btn.label} speed`}
                 onClick={() => setSelectedRate(btn.rate)}
                 className={`rounded-[4px] px-2.5 min-h-9 text-[10px] font-bold transition ${
                   selectedRate === btn.rate

@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+﻿import assert from 'node:assert/strict';
 import { afterEach, test } from 'node:test';
 
 import { createApp } from '../src/app.js';
@@ -190,7 +190,7 @@ test('webhook is not redirected to /api/v1 by legacy redirect middleware in prod
   const url = await start(
     {
       NODE_ENV: 'production',
-      CLERK_ISSUER: 'https://clerk.test.example.com',
+      FIREBASE_PROJECT_ID: 'test-firebase-project',
       BILLING_REPOSITORY: 'memory',
       ALLOW_MEMORY_BILLING_REPOSITORY: 'true',
     },

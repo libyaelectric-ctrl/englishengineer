@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1098513899407",
+    "project_id": "engvox-59b85",
+    "storage_bucket": "engvox-59b85.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098513899407:android:3a7239302723f1bab235fa",
+        "android_client_info": {
+          "package_name": "com.engvox.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXAc7YpHtAfCP41pfH6-KF-ByHorZba4w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

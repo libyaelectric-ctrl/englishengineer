@@ -1,4 +1,4 @@
-import { spawnSync } from 'node:child_process';
+﻿import { spawnSync } from 'node:child_process';
 import { randomBytes, randomUUID } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { basename, extname, resolve } from 'node:path';
@@ -145,7 +145,7 @@ const getEnvironmentRows = (environment) => {
 const validateSafeValues = (environment) => {
   const invalid = [];
   const expected = [
-    ['VITE_AUTH_PROVIDER', 'clerk'],
+    ['VITE_AUTH_PROVIDER', 'firebase'],
     ['VITE_AI_PROVIDER', 'backend'],
     ['BILLING_REPOSITORY', 'supabase'],
     ['BILLING_PROVIDER', 'dodo'],
@@ -373,8 +373,6 @@ const verifySupabase = async (environment, evidence) => {
   }
 };
 
-
-
 const backendRequest = async (url, token, init = {}, statuses = [200]) =>
   jsonRequest(
     url,
@@ -388,8 +386,6 @@ const backendRequest = async (url, token, init = {}, statuses = [200]) =>
     },
     statuses
   );
-
-
 
 const verifyDodo = async (environment, authContext, evidence) => {
   let billingBase = environment.VITE_BILLING_API_URL.replace(/\/$/, '');

@@ -17,15 +17,16 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   /**
-   * Registered by <ClerkBridge> while a Clerk session is active. Called by
-   * updateProfile() so display-field edits (e.g. displayName) are persisted to
-   * the Clerk account, not just the in-memory store.
+   * Registered by <FirebaseBridge> while a Firebase session is active. Called
+   * by updateProfile() so display-field edits (e.g. displayName) are persisted
+   * to the Firebase account, not just the in-memory store.
    */
-  clerkUserSync?: ((updates: Partial<UserProfile>) => Promise<void>) | null;
+  providerUserSync?: ((updates: Partial<UserProfile>) => Promise<void>) | null;
   /**
-   * Registered by <ClerkBridge> while a Clerk session is active. Called by
-   * logout() so the Sign Out action also ends the Clerk session, otherwise the
-   * user is bounced back to a guard that waits on a session that never clears.
+   * Registered by <FirebaseBridge> while a Firebase session is active. Called
+   * by logout() so the Sign Out action also ends the Firebase session,
+   * otherwise the user is bounced back to a guard that waits on a session
+   * that never clears.
    */
-  clerkSignOut?: (() => Promise<void>) | null;
+  providerSignOut?: (() => Promise<void>) | null;
 }

@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Brain, LogIn, Target, UserPlus } from 'lucide-react';
+﻿import { ArrowRight, BookOpen, Brain, LogIn, Target, UserPlus } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 
 import { useEffect, useState } from 'react';
@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuthStore } from '@/features/auth';
-import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
+import { AUTH_SIGN_IN_URL, AUTH_SIGN_UP_URL } from '@/features/auth/firebase.config';
 
 const ONBOARDING_STEPS = [
   {
@@ -14,7 +14,7 @@ const ONBOARDING_STEPS = [
     icon: Target,
     title: 'Pick your discipline',
     description:
-      'Choose from 10+ engineering fields — Civil, Mechanical, Electrical, and more. Your content adapts to your specialty.',
+      'Choose from 10+ engineering fields â€” Civil, Mechanical, Electrical, and more. Your content adapts to your specialty.',
     color: 'from-blue-500 to-cyan-400',
     glow: 'shadow-blue-500/20',
   },
@@ -23,7 +23,7 @@ const ONBOARDING_STEPS = [
     icon: BookOpen,
     title: 'Try a lesson',
     description:
-      'Dive into vocabulary, grammar, reading, or writing — all tailored to real engineering documentation.',
+      'Dive into vocabulary, grammar, reading, or writing â€” all tailored to real engineering documentation.',
     color: 'from-emerald-500 to-teal-400',
     glow: 'shadow-emerald-500/20',
   },
@@ -70,7 +70,7 @@ const StartPage = () => {
               Start EngVox with a secure account.
             </h1>
             <p className="mt-3 text-xs leading-5 text-muted-copy">
-              Sign up with a Clerk-managed account to keep your progress synced and accessible.
+              Sign up with a secure account to keep your progress synced and accessible.
             </p>
           </div>
         </div>
@@ -122,11 +122,11 @@ const StartPage = () => {
             <UserPlus className="h-6 w-6 text-muted-copy" />
             <h2 className="mt-5 text-base font-bold text-foreground">Create account</h2>
             <p className="mt-2 flex-1 text-xs leading-5 text-muted-copy">
-              Email and password account secured with Clerk, with session restore and profile
+              Email and password account secured with Firebase, with session restore and profile
               persistence.
             </p>
             <Link
-              to={CLERK_SIGN_UP_URL}
+              to={AUTH_SIGN_UP_URL}
               className="public-primary-action mt-5 w-full text-center py-2 text-xs min-h-10 flex items-center justify-center gap-2"
             >
               Create account <ArrowRight className="h-4 w-4" />
@@ -140,7 +140,7 @@ const StartPage = () => {
               Continue with an existing verified account.
             </p>
             <Link
-              to={CLERK_SIGN_IN_URL}
+              to={AUTH_SIGN_IN_URL}
               className="public-secondary-action mt-5 w-full text-center py-2 text-xs min-h-10 flex items-center justify-center gap-2"
             >
               Log in <LogIn className="h-4 w-4" />
@@ -157,7 +157,7 @@ const StartPage = () => {
             }}
             className="inline-flex items-center gap-2 rounded-xl bg-primary/10 border border-primary/30 hover:bg-primary/20 px-5 py-2.5 text-xs font-bold text-primary transition-all cursor-pointer"
           >
-            <span>⚡ Kayıt Olmadan Demo Mühendis Olarak Başla →</span>
+            <span>âš¡ KayÄ±t Olmadan Demo MÃ¼hendis Olarak BaÅŸla â†’</span>
           </button>
         </div>
       </div>

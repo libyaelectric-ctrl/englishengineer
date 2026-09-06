@@ -1,4 +1,4 @@
-import { PricingCard } from '@/components/ui/PricingCard';
+﻿import { PricingCard } from '@/components/ui/PricingCard';
 import { Globe } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -14,7 +14,7 @@ import { PRICING_TIERS } from '@/shared/data/pricing.data';
 
 import { ProductAnalyticsService } from '@/features/analytics';
 import { useAuthStore } from '@/features/auth';
-import { CLERK_SIGN_IN_URL } from '@/features/auth/clerk.config';
+import { AUTH_SIGN_IN_URL } from '@/features/auth/firebase.config';
 import { useBillingStore } from '@/features/billing/billing.store';
 import type { BillingPlanId } from '@/features/billing/billing.types';
 import { CurrencyConfig } from '@/features/billing/currency.config';
@@ -49,7 +49,7 @@ const PricingPage = () => {
       return;
     }
     if (!currentUser) {
-      navigate(CLERK_SIGN_IN_URL, { state: { from: location } });
+      navigate(AUTH_SIGN_IN_URL, { state: { from: location } });
       return;
     }
     if (currentUser.id.startsWith('demo_engineer_')) {
@@ -71,7 +71,7 @@ const PricingPage = () => {
   return (
     <main className="bg-background text-foreground min-h-screen relative z-10 pb-16">
       <PageMetadata
-        title="Pricing Plans — EngVox"
+        title="Pricing Plans â€” EngVox"
         description="Choose the plan that fits your engineering communication goals."
       />
 
@@ -168,7 +168,8 @@ const PricingPage = () => {
         </div>
 
         <p className="text-center text-xs text-muted-copy/60 mt-2 max-w-lg mx-auto">
-          Prices shown may vary slightly at checkout due to billing provider rounding. Please verify the final amount on the payment page before completing your purchase.
+          Prices shown may vary slightly at checkout due to billing provider rounding. Please verify
+          the final amount on the payment page before completing your purchase.
         </p>
       </section>
 

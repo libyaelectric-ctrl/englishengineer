@@ -17,7 +17,7 @@ const minimalProductionConfig = {
     supabaseUrl: null,
     supabaseAnonKey: null,
     supabaseJwtSecret: null,
-    clerkIssuer: null, // ← deliberately missing
+    firebaseProjectId: null, // ← deliberately missing
   },
   billing: { configured: false },
   dodo: { configured: false },
@@ -34,11 +34,11 @@ const minimalProductionConfig = {
   },
 } as unknown as BackendConfig;
 
-const productionConfigWithIssuer = {
+const productionConfigWithProject = {
   ...minimalProductionConfig,
   auth: {
     ...minimalProductionConfig.auth,
-    clerkIssuer: 'https://engvox.com',
+    firebaseProjectId: 'test-firebase-project',
   },
 } as unknown as BackendConfig;
 
@@ -47,12 +47,12 @@ const developmentConfig = {
   environment: 'development',
   auth: {
     ...minimalProductionConfig.auth,
-    clerkIssuer: null,
+    firebaseProjectId: null,
   },
 } as unknown as BackendConfig;
 
-describe('CLERK_ISSUER fail-fast', () => {
-  it('throws in production when CLERK_ISSUER is not set', () => {
+describe('FIREBASE_PROJECT_ID fail-fast', () => {
+  it('throws in production when FIREBASE_PROJECT_ID is not set', () => {
     // Temporarily set NODE_ENV to production to trigger the fail-fast check
     const originalNodeEnv = process.env.NODE_ENV;
     process.env.NODE_ENV = 'production';
@@ -61,8 +61,8 @@ describe('CLERK_ISSUER fail-fast', () => {
         () => createApp({ config: minimalProductionConfig }),
         (error: Error) => {
           assert.ok(
-            error.message.includes('CLERK_ISSUER'),
-            `Expected CLERK_ISSUER in error message, got: ${error.message}`
+            error.message.includes('FIREBASE_PROJECT_ID'),
+            `Expected FIREBASE_PROJECT_ID in error message, got: ${error.message}`
           );
           assert.ok(
             error.message.includes('required in production'),
@@ -76,23 +76,23 @@ describe('CLERK_ISSUER fail-fast', () => {
     }
   });
 
-  it('starts normally in production when CLERK_ISSUER is set', () => {
+  it('starts normally in production when FIREBASE_PROJECT_ID is set', () => {
     // Should NOT throw — createApp should succeed
     assert.doesNotThrow(() => {
-      const app = createApp({ config: productionConfigWithIssuer });
+      const app = createApp({ config: productionConfigWithProject });
       assert.ok(app, 'createApp should return an Express app');
     });
   });
 
-  it('starts normally in development when CLERK_ISSUER is not set', () => {
-    // Should NOT throw — CLERK_ISSUER is only required in production
+  it('starts normally in development when FIREBASE_PROJECT_ID is not set', () => {
+    // Should NOT throw — FIREBASE_PROJECT_ID is only required in production
     assert.doesNotThrow(() => {
       const app = createApp({ config: developmentConfig });
       assert.ok(app, 'createApp should return an Express app');
     });
   });
 
-  it('error message explains the consequence of missing CLERK_ISSUER', () => {
+  it('error message explains the consequence of missing FIREBASE_PROJECT_ID', () => {
     const originalNodeEnv = process.env.NODE_ENV;
     process.env.NODE_ENV = 'production';
     try {
@@ -105,8 +105,8 @@ describe('CLERK_ISSUER fail-fast', () => {
         `Error message should mention 401 consequence, got: ${message}`
       );
       assert.ok(
-        message.includes('no trailing slash'),
-        `Error message should mention trailing slash, got: ${message}`
+        message.includes('Firebase project id'),
+        `Error message should mention the Firebase project id, got: ${message}`
       );
     } finally {
       process.env.NODE_ENV = originalNodeEnv;

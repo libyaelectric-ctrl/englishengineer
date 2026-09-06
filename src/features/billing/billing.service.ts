@@ -1,4 +1,4 @@
-import { AppError } from '@/core/errors/app-error';
+﻿import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
 
 import { logger } from '@/shared/logger';
@@ -59,7 +59,7 @@ const safeRedirect = async (url: string): Promise<void> => {
     }
 
     if (isNativePlatform()) {
-      // On Android/iOS, open checkout in the system browser so Clerk/Dodo
+      // On Android/iOS, open checkout in the system browser so Firebase/Dodo
       // auth flows work correctly outside the WebView sandbox.
       const { openExternalUrl } = await import('@/shared/utils/capacitor');
       await openExternalUrl(url);

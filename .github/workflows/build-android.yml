@@ -24,7 +24,8 @@ jobs:
       - name: Build frontend
         run: npx vite build
         env:
-          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
           VITE_BILLING_API_URL: ${{ secrets.VITE_BILLING_API_URL }}
 
       - name: Setup Java 17
@@ -94,63 +95,3 @@ jobs:
         with:
           name: engvox-release.aab
           path: android/app/build/outputs/bundle/release/app-release.aab
-
-  # MOBILE.md deep-link smoke test: installs the debug APK on an emulator and
-  # asserts the Google OAuth return path end to end — the com.engvox.app custom
-  # scheme resolves to the app, appUrlOpen fires on the injected return link,
-  # the app reloads after forwarding, and the WebView lands on the callback URL
-  # with Clerk's params replayed
-  # (https://localhost/?__clerk_handshake=1#/oauth-callback). See MOBILE.md §3.
-  smoke-test:
-    runs-on: ubuntu-latest
-    needs: build
-    timeout-minutes: 30
-    steps:
-      - name: Download Debug APK
-        uses: actions/download-artifact@v4
-        with:
-          name: engvox-debug.apk
-
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Run deep-link smoke test on emulator
-        # IMPORTANT: this action's parseScript splits the script on newlines and
-        # runs EACH LINE as its own `sh -c` — no multi-line commands, no `set -e`
-        # carryover, and no shell variables across lines. Every line below is a
-        # self-contained command with explicit `|| exit 1` where failure matters.
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 34
-          arch: x86_64
-          disable-animations: true
-          script: |
-            # 0. Install first — on a fresh emulator the app isn't on the device yet,
-            #    so the resolve check below would fail before install (MOBILE.md §2/§3).
-            #    Locate the APK via find: download-artifact@v4's extraction layout
-            #    varies, but the smoke job's workspace holds only one .apk.
-            adb install -r "$(find "$GITHUB_WORKSPACE" -name '*.apk' | head -1)" || { echo '❌ APK install failed'; exit 1; }
-            # 1. The custom scheme must resolve to the app (MOBILE.md §3).
-            adb shell cmd package resolve-activity --brief -a android.intent.action.VIEW -d 'com.engvox.app://oauth-callback?__clerk_handshake=1&__clerk_handshake_nonce=ci-smoke' | grep -q 'com.engvox.app/.MainActivity' || { echo '❌ custom scheme did not resolve to the app'; exit 1; }
-            # 2. Fresh logcat, launch, then inject the OAuth return deep link.
-            adb logcat -c || true
-            adb shell am force-stop com.engvox.app || true
-            adb shell am start -W -n com.engvox.app/.MainActivity >/dev/null || { echo '❌ app launch failed'; exit 1; }
-            adb shell am start -W -a android.intent.action.VIEW -d 'com.engvox.app://oauth-callback?__clerk_handshake=1&__clerk_handshake_nonce=ci-smoke' com.engvox.app >/dev/null || true
-            # 3. appUrlOpen must fire (the injected OAuth return deep link reaches the app).
-            #    This is the forward event — proven reliable on CI. The reload itself is
-            #    asserted in step 4 via WebView DevTools (the callback URL only lands after
-            #    the forward+reload, so a passed DevTools check = reload happened).
-            for i in $(seq 1 30); do adb logcat -d | grep -q 'Notifying listeners for event appUrlOpen' && break; sleep 1; done
-            adb logcat -d | grep -q 'Notifying listeners for event appUrlOpen' || { echo '❌ appUrlOpen event not observed'; exit 1; }
-            # 4. Assert the callback URL state via WebView DevTools (MainActivity enables setWebContentsDebuggingEnabled). buildOAuthForwardUrl replays ALL deep-link params, so the nonce is part of the final URL.
-            adb forward tcp:9222 "localabstract:webview_devtools_remote_$(adb shell pidof com.engvox.app | tr -d '[:space:]')" || true
-            for i in $(seq 1 30); do curl -s http://127.0.0.1:9222/json 2>/dev/null | grep -q 'oauth-callback' && break; sleep 1; done
-            curl -s http://127.0.0.1:9222/json | grep -q 'https://localhost/?__clerk_handshake=1&__clerk_handshake_nonce=ci-smoke#/oauth-callback' || { echo '❌ WebView did not land on the callback URL'; curl -s http://127.0.0.1:9222/json; exit 1; }
-            echo '✅ deep-link smoke test passed'

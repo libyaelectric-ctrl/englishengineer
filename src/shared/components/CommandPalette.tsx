@@ -144,6 +144,45 @@ export const CommandPalette = () => {
     return result;
   }, [search, recentItems, frequentItems, grouped]);
 
+  const paletteRef = useRef<HTMLDivElement>(null);
+
+  // Focus trap and escape handler
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: globalThis.KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        close();
+        return;
+      }
+      if (e.key === 'Tab' && paletteRef.current) {
+        const focusable = Array.from(
+          paletteRef.current.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), [href]:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
+          )
+        ).filter((el) => el.offsetParent !== null);
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, close]);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -158,16 +197,22 @@ export const CommandPalette = () => {
           />
 
           <motion.div
+            ref={paletteRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="command-palette-title"
+            tabIndex={-1}
             initial={prefersReduced ? false : { opacity: 0, scale: 0.96, y: -8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={prefersReduced ? undefined : { opacity: 0, scale: 0.96, y: -8 }}
             transition={{ duration: prefersReduced ? 0 : 0.15, ease: 'easeOut' }}
-            className="relative w-full max-w-xl overflow-hidden rounded-[var(--radius-card)] border border-border-soft bg-surface shadow-2xl"
+            className="relative w-full max-w-xl overflow-hidden rounded-[var(--radius-card)] border border-border-soft bg-surface shadow-2xl outline-none"
           >
             <div className="flex items-center border-b border-border-soft px-4">
               <Search className="h-5 w-5 shrink-0 text-muted-copy" />
               <input
                 ref={inputRef}
+                id="command-palette-title"
                 type="text"
                 className="flex-1 bg-transparent px-4 py-4 text-sm font-medium outline-none placeholder:text-muted-copy"
                 placeholder="Search pages, navigate, or run actions..."

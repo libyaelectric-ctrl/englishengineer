@@ -1,17 +1,17 @@
-import { type ReactNode, useCallback, useState } from 'react';
+﻿import { type ReactNode, useCallback, useState } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
 
 import { useAuthStore } from '@/features/auth';
-import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
+import { AUTH_SIGN_IN_URL, AUTH_SIGN_UP_URL } from '@/features/auth/firebase.config';
 import { INTERFACE_LANGUAGES } from '@/features/localization';
 
 import { NeuralOrbPanel } from './NeuralOrbPanel';
 import { LearningProfileRepository } from './profile.repository';
 
-const BYPASS_PATHS = ['/billing', '/profile', CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL];
+const BYPASS_PATHS = ['/billing', '/profile', AUTH_SIGN_IN_URL, AUTH_SIGN_UP_URL];
 
 /**
  * Gates the entire authenticated app: users who have not selected both a
@@ -19,7 +19,7 @@ const BYPASS_PATHS = ['/billing', '/profile', CLERK_SIGN_IN_URL, CLERK_SIGN_UP_U
  * centered selection panel (login-style card) instead of the app content.
  *
  * The profile is read fresh on every render (no memoization) so that completing
- * onboarding unlocks the app immediately — a stale cached profile would keep
+ * onboarding unlocks the app immediately â€” a stale cached profile would keep
  * showing the panel and lock the user out.
  */
 export const OnboardingGate = ({ children }: { children: ReactNode }) => {

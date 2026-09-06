@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/react';
+﻿import * as Sentry from '@sentry/react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -7,14 +7,14 @@ import { MemoryRouter } from 'react-router-dom';
 
 // --- mocks -----------------------------------------------------------
 
-let clerkLoaded = false;
-let clerkSignedIn = false;
+let authLoaded = false;
+let authSignedIn = false;
 let isStoreAuthenticated = false;
 let isStoreLoading = false;
 let storeCurrentUser: unknown = null;
 
-vi.mock('@clerk/clerk-react', () => ({
-  useAuth: () => ({ isLoaded: clerkLoaded, isSignedIn: clerkSignedIn }),
+vi.mock('./FirebaseAuth', () => ({
+  useFirebaseAuth: () => ({ isLoaded: authLoaded, isSignedIn: authSignedIn }),
 }));
 
 vi.mock('./auth.store', () => ({
@@ -25,8 +25,8 @@ vi.mock('./auth.store', () => ({
   }),
 }));
 
-vi.mock('./clerk.config', () => ({
-  CLERK_SIGN_IN_URL: '/sign-in',
+vi.mock('./firebase.config', () => ({
+  AUTH_SIGN_IN_URL: '/sign-in',
 }));
 
 vi.mock('@sentry/react', () => ({
@@ -58,10 +58,10 @@ function renderGuard() {
 
 // --- tests -----------------------------------------------------------
 
-describe('AuthGuard – Clerk timeout fallback', () => {
+describe('AuthGuard â€“ Firebase timeout fallback', () => {
   beforeEach(() => {
-    clerkLoaded = false;
-    clerkSignedIn = false;
+    authLoaded = false;
+    authSignedIn = false;
     isStoreAuthenticated = false;
     isStoreLoading = false;
     storeCurrentUser = null;
@@ -72,14 +72,14 @@ describe('AuthGuard – Clerk timeout fallback', () => {
     vi.useRealTimers();
   });
 
-  it('shows loading state while Clerk is loading', () => {
+  it('shows loading state while Firebase Auth is loading', () => {
     renderGuard();
     expect(screen.getByText('Opening EngVox')).toBeInTheDocument();
     expect(screen.getByText('Restoring your professional learning workspace.')).toBeInTheDocument();
     expect(screen.queryByTestId('child')).not.toBeInTheDocument();
   });
 
-  it('shows error fallback after 8 seconds if Clerk has not loaded', async () => {
+  it('shows error fallback after 8 seconds if Firebase Auth has not loaded', async () => {
     renderGuard();
 
     // Advance past the 8-second timeout
@@ -93,18 +93,18 @@ describe('AuthGuard – Clerk timeout fallback', () => {
     expect(screen.getByRole('button', { name: /reload page/i })).toBeInTheDocument();
   });
 
-  it('does NOT show error if Clerk loads before timeout', async () => {
+  it('does NOT show error if Firebase Auth loads before timeout', async () => {
     const { rerender } = renderGuard();
 
     // Initially shows loading
     expect(screen.getByText('Opening EngVox')).toBeInTheDocument();
 
-    // Clerk loads after 3 seconds — before timeout
+    // Firebase Auth loads after 3 seconds â€” before timeout
     vi.advanceTimersByTime(3_000);
-    clerkLoaded = true;
-    clerkSignedIn = true;
+    authLoaded = true;
+    authSignedIn = true;
 
-    // Re-render to pick up the new clerkLoaded state
+    // Re-render to pick up the new authLoaded state
     rerender(
       <MemoryRouter initialEntries={['/dashboard']}>
         <AuthGuard>
@@ -113,7 +113,7 @@ describe('AuthGuard – Clerk timeout fallback', () => {
       </MemoryRouter>
     );
 
-    // Clerk loaded — should show children, not the error
+    // Firebase Auth loaded â€” should show children, not the error
     await waitFor(() => {
       expect(screen.getByTestId('child')).toBeInTheDocument();
     });
@@ -121,7 +121,7 @@ describe('AuthGuard – Clerk timeout fallback', () => {
     expect(screen.queryByText('Connection problem')).not.toBeInTheDocument();
   });
 
-  it('shows error fallback immediately if Clerk already timed out on re-render', async () => {
+  it('shows error fallback immediately if Firebase Auth already timed out on re-render', async () => {
     renderGuard();
 
     // Simulate the timeout
@@ -138,14 +138,14 @@ describe('AuthGuard – Clerk timeout fallback', () => {
 
   // --- Ad-blocker scenario tests ---
 
-  it('ad-blocker scenario: Clerk never loads, full error UI appears', async () => {
+  it('ad-blocker scenario: Firebase Auth never loads, full error UI appears', async () => {
     renderGuard();
 
     // Verify loading state first
     expect(screen.getByText('Opening EngVox')).toBeInTheDocument();
     expect(screen.queryByText('Connection problem')).not.toBeInTheDocument();
 
-    // Simulate ad-blocker: Clerk never loads
+    // Simulate ad-blocker: Firebase Auth never loads
     vi.advanceTimersByTime(7_999);
     expect(screen.queryByText('Connection problem')).not.toBeInTheDocument();
 
@@ -216,7 +216,7 @@ describe('AuthGuard – Clerk timeout fallback', () => {
 
   // --- Sentry integration tests ---
 
-  it('sends Sentry warning when Clerk timeout fires', async () => {
+  it('sends Sentry warning when Firebase Auth timeout fires', async () => {
     renderGuard();
     vi.advanceTimersByTime(8_000);
 
@@ -226,7 +226,7 @@ describe('AuthGuard – Clerk timeout fallback', () => {
 
     expect(Sentry.captureMessage).toHaveBeenCalledTimes(1);
     expect(Sentry.captureMessage).toHaveBeenCalledWith(
-      expect.stringContaining('Clerk failed to load within timeout')
+      expect.stringContaining('Firebase Auth failed to load within timeout')
     );
     expect(Sentry.withScope).toHaveBeenCalledTimes(1);
   });
@@ -241,18 +241,18 @@ describe('AuthGuard – Clerk timeout fallback', () => {
 
     // Verify scope.setTag was called with expected tags
     const scopeMock = vi.mocked(Sentry.withScope).mock.results[0].value;
-    expect(scopeMock.setTag).toHaveBeenCalledWith('clerk.timeout', true);
-    expect(scopeMock.setTag).toHaveBeenCalledWith('clerk.timeout_ms', 8000);
+    expect(scopeMock.setTag).toHaveBeenCalledWith('auth.timeout', true);
+    expect(scopeMock.setTag).toHaveBeenCalledWith('auth.timeout_ms', 8000);
     expect(scopeMock.setTag).toHaveBeenCalledWith('route', '/dashboard');
     expect(scopeMock.setLevel).toHaveBeenCalledWith('warning');
   });
 
-  it('does NOT send Sentry if Clerk loads before timeout', async () => {
+  it('does NOT send Sentry if Firebase Auth loads before timeout', async () => {
     const { rerender } = renderGuard();
 
     vi.advanceTimersByTime(3_000);
-    clerkLoaded = true;
-    clerkSignedIn = true;
+    authLoaded = true;
+    authSignedIn = true;
 
     rerender(
       <MemoryRouter initialEntries={['/dashboard']}>
@@ -275,20 +275,20 @@ describe('AuthGuard – Clerk timeout fallback', () => {
     const { unmount } = renderGuard();
     unmount();
 
-    // Advance past timeout — should not cause state update on unmounted component
+    // Advance past timeout â€” should not cause state update on unmounted component
     vi.advanceTimersByTime(10_000);
     // No error thrown = cleanup worked
   });
 
-  it('does not show loading after timeout is cleared by Clerk load', async () => {
+  it('does not show loading after timeout is cleared by Firebase Auth load', async () => {
     const { rerender } = renderGuard();
 
     // Advance to just before timeout
     vi.advanceTimersByTime(7_000);
 
-    // Clerk loads
-    clerkLoaded = true;
-    clerkSignedIn = true;
+    // Firebase Auth loads
+    authLoaded = true;
+    authSignedIn = true;
 
     rerender(
       <MemoryRouter initialEntries={['/dashboard']}>
@@ -298,7 +298,7 @@ describe('AuthGuard – Clerk timeout fallback', () => {
       </MemoryRouter>
     );
 
-    // Advance past original timeout — timer should be cleaned up
+    // Advance past original timeout â€” timer should be cleaned up
     vi.advanceTimersByTime(2_000);
 
     await waitFor(() => {
@@ -331,10 +331,10 @@ describe('AuthGuard – Clerk timeout fallback', () => {
 
   // --- !hasSession branch coverage ---
 
-  it('shows loading when clerk loaded but store is still loading (no session yet)', () => {
-    // Clerk loaded, no session, store still loading
-    clerkLoaded = true;
-    clerkSignedIn = false;
+  it('shows loading when Firebase Auth loaded but store is still loading (no session yet)', () => {
+    // Firebase Auth loaded, no session, store still loading
+    authLoaded = true;
+    authSignedIn = false;
     isStoreLoading = true;
 
     renderGuard();
@@ -344,10 +344,10 @@ describe('AuthGuard – Clerk timeout fallback', () => {
     expect(screen.queryByTestId('child')).not.toBeInTheDocument();
   });
 
-  it('redirects to /sign-in when clerk loaded but no session and not loading', async () => {
-    // Clerk loaded, no session, store not loading → should redirect
-    clerkLoaded = true;
-    clerkSignedIn = false;
+  it('redirects to /sign-in when Firebase Auth loaded but no session and not loading', async () => {
+    // Firebase Auth loaded, no session, store not loading â†’ should redirect
+    authLoaded = true;
+    authSignedIn = false;
     isStoreLoading = false;
 
     render(
@@ -365,9 +365,9 @@ describe('AuthGuard – Clerk timeout fallback', () => {
     expect(screen.queryByText('Opening EngVox')).not.toBeInTheDocument();
   });
 
-  it('shows children when clerk loaded and has session via store', () => {
-    clerkLoaded = true;
-    clerkSignedIn = false;
+  it('shows children when Firebase Auth loaded and has session via store', () => {
+    authLoaded = true;
+    authSignedIn = false;
     isStoreAuthenticated = true;
 
     renderGuard();
@@ -376,9 +376,9 @@ describe('AuthGuard – Clerk timeout fallback', () => {
     expect(screen.queryByText('Opening EngVox')).not.toBeInTheDocument();
   });
 
-  it('shows children when clerk loaded and has clerk session', () => {
-    clerkLoaded = true;
-    clerkSignedIn = true;
+  it('shows children when Firebase Auth loaded and has Firebase session', () => {
+    authLoaded = true;
+    authSignedIn = true;
 
     renderGuard();
 
@@ -386,9 +386,9 @@ describe('AuthGuard – Clerk timeout fallback', () => {
     expect(screen.queryByText('Opening EngVox')).not.toBeInTheDocument();
   });
 
-  it('shows children when clerk loaded and has currentUser in store', () => {
-    clerkLoaded = true;
-    clerkSignedIn = false;
+  it('shows children when Firebase Auth loaded and has currentUser in store', () => {
+    authLoaded = true;
+    authSignedIn = false;
     storeCurrentUser = { id: 'user_123' };
 
     renderGuard();

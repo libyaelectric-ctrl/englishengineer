@@ -30,6 +30,7 @@ export function SearchModal({
   onSelectResult,
 }: SearchModalProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
   const resolveMeaning = useTermMeaningResolver(useLearningLanguage());
 
   useEffect(() => {
@@ -37,6 +38,43 @@ export function SearchModal({
     const timer = setTimeout(() => inputRef.current?.focus(), 100);
     return () => clearTimeout(timer);
   }, [isOpen]);
+
+  // Focus trap and escape handler
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: globalThis.KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusable = Array.from(
+          modalRef.current.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), [href]:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
+          )
+        ).filter((el) => el.offsetParent !== null);
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   const handleSearch = (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
@@ -56,14 +94,21 @@ export function SearchModal({
         onClick={onClose}
       >
         <motion.div
+          ref={modalRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="search-modal-title"
+          tabIndex={-1}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="w-full max-w-lg rounded-[var(--radius-card)] border border-border-soft bg-surface p-5 shadow-xl"
+          className="w-full max-w-lg rounded-[var(--radius-card)] border border-border-soft bg-surface p-5 shadow-xl outline-none"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between border-b border-border-soft pb-3">
-            <h3 className="text-sm font-bold text-foreground">Search Vocabulary</h3>
+            <h3 id="search-modal-title" className="text-sm font-bold text-foreground">
+              Search Vocabulary
+            </h3>
             <button
               type="button"
               onClick={onClose}

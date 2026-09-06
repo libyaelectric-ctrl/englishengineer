@@ -1,10 +1,10 @@
-# ──────────────────────────────────────────────────────
-# EngVox — Docker Compose
+﻿# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# EngVox â€” Docker Compose
 # Usage:
 #   Development:  docker compose up
 #   Production:   docker compose -f docker-compose.yml -f docker-compose.prod.yml up
 #   Monitoring:   docker compose -f docker-compose.yml -f monitoring/docker-compose.monitoring.yml up
-# ──────────────────────────────────────────────────────
+# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 services:
   # === Frontend ===
@@ -44,7 +44,7 @@ services:
       - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY:-}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
-      - CLERK_ISSUER=${CLERK_ISSUER:-}
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID:-}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-}
       - UPSTASH_URL=${UPSTASH_URL:-}

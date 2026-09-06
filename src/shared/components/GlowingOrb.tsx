@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface GlowingOrbProps {
   className?: string;
@@ -15,11 +15,40 @@ const SIZE_MAP = {
  * Decorative WebGL orb. The three.js scene lives in GlowingOrbScene and is
  * loaded on demand, so pages using the orb (Landing, Pricing) no longer pull
  * the three.js runtime into their initial chunks.
+ * Uses IntersectionObserver + requestIdleCallback to defer GPU-heavy shader
+ * compilation until the orb is near the viewport and the main thread is idle.
  */
 export const GlowingOrb = ({ className = '', size = 'md' }: GlowingOrbProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          observer.disconnect();
+          // Defer to idle so shader compilation doesn't block LCP/TTBT
+          const w = window as Window & {
+            requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+          };
+          if (typeof w.requestIdleCallback === 'function') {
+            w.requestIdleCallback(() => setShouldLoad(true), { timeout: 3000 });
+          } else {
+            setTimeout(() => setShouldLoad(true), 200);
+          }
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!shouldLoad) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -53,7 +82,7 @@ export const GlowingOrb = ({ className = '', size = 'md' }: GlowingOrbProps) => 
       dispose?.();
       dispose = null;
     };
-  }, []);
+  }, [shouldLoad]);
 
   return (
     <div

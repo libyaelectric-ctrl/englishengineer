@@ -167,10 +167,13 @@ export const PersonalAIPanel = ({
       <div className="space-y-4">
         <AiAnalyticsCard />
 
-        <div className="flex flex-wrap gap-2">
+        <div role="tablist" className="flex flex-wrap gap-2">
           {SKILL_TABS.map(({ id, icon: Icon }) => (
             <button
               key={id}
+              id={`skill-tab-${id}`}
+              role="tab"
+              aria-selected={activeTab === id}
               onClick={() => setActiveTab(id)}
               className={`flex items-center gap-1.5 rounded-[var(--radius-card)] px-3 py-1.5 text-xs font-medium transition-all cursor-pointer ${
                 activeTab === id
@@ -199,7 +202,11 @@ export const PersonalAIPanel = ({
           </div>
         )}
 
-        {lesson && <LessonContent lesson={lesson} activeTab={activeTab} />}
+        {lesson && (
+          <div role="tabpanel" aria-labelledby={`skill-tab-${activeTab}`}>
+            <LessonContent lesson={lesson} activeTab={activeTab} />
+          </div>
+        )}
       </div>
     </SectionCard>
   );

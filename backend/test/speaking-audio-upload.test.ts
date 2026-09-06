@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+﻿import assert from 'node:assert/strict';
 import { rm } from 'node:fs/promises';
 import path from 'node:path';
 import { afterEach, test } from 'node:test';
@@ -32,7 +32,7 @@ const start = async (environment = {}, dependencies = {}) => {
 
 const productionAuthEnvironment = {
   NODE_ENV: 'production',
-  CLERK_ISSUER: 'https://clerk.test.example.com',
+  FIREBASE_PROJECT_ID: 'test-firebase-project',
   ENGINEEROS_INTERNAL_API_SECRET: 'internal-test-secret',
   ALLOW_MEMORY_BILLING_REPOSITORY: 'true',
   RATE_LIMIT_STORE: 'memory',

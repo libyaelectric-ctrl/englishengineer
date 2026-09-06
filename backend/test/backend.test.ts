@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+﻿import assert from 'node:assert/strict';
 import { afterEach, test } from 'node:test';
 
 import { createApp } from '../src/app.js';
@@ -270,10 +270,14 @@ test('subscription status can report active and payment-failed backend states', 
     },
     { stripeClient, billingRepository: repository }
   );
-  const active = await (await fetch(`${url}/api/v1/billing/subscription-status?userId=user-1`)).json();
+  const active = await (
+    await fetch(`${url}/api/v1/billing/subscription-status?userId=user-1`)
+  ).json();
   assert.equal(active.status, 'active');
   snapshot = { ...snapshot, status: 'past_due' };
-  const failed = await (await fetch(`${url}/api/v1/billing/subscription-status?userId=user-1`)).json();
+  const failed = await (
+    await fetch(`${url}/api/v1/billing/subscription-status?userId=user-1`)
+  ).json();
   assert.equal(failed.status, 'past_due');
 });
 
@@ -304,7 +308,7 @@ test('vocabulary lookup reuses a successful cached result', async () => {
       json: async () => [
         {
           word: 'panel',
-          phonetic: '/ˈpæn.əl/',
+          phonetic: '/ËˆpÃ¦n.É™l/',
           meanings: [
             {
               definitions: [{ definition: 'A board that contains electrical controls.' }],
@@ -326,7 +330,7 @@ test('vocabulary lookup reuses a successful cached result', async () => {
 
 const productionAuthEnvironment = {
   NODE_ENV: 'production',
-  CLERK_ISSUER: 'https://clerk.test.example.com',
+  FIREBASE_PROJECT_ID: 'test-firebase-project',
   ENGINEEROS_INTERNAL_API_SECRET: 'internal-test-secret',
   ALLOW_MEMORY_BILLING_REPOSITORY: 'true',
   RATE_LIMIT_STORE: 'memory',
@@ -617,7 +621,7 @@ test('Anthropic requires an explicit model while OpenAI keeps its stable default
 test('production selects Supabase billing persistence when configured', () => {
   const config = createBackendConfig({
     NODE_ENV: 'production',
-    CLERK_ISSUER: 'https://clerk.test.example.com',
+    FIREBASE_PROJECT_ID: 'test-firebase-project',
     SUPABASE_URL: 'https://project.supabase.co',
     SUPABASE_SERVICE_ROLE_KEY: 'service-role-test-key',
     RATE_LIMIT_STORE: 'memory',
@@ -632,7 +636,7 @@ test('production requires an explicitly configured external rate-limit store', (
     () =>
       createBackendConfig({
         NODE_ENV: 'production',
-        CLERK_ISSUER: 'https://clerk.test.example.com',
+        FIREBASE_PROJECT_ID: 'test-firebase-project',
       }),
     /UPSTASH_REDIS_REST_URL/
   );
@@ -645,7 +649,7 @@ test('production requires an explicitly configured external rate-limit store', (
   try {
     createBackendConfig({
       NODE_ENV: 'production',
-      CLERK_ISSUER: 'https://clerk.test.example.com',
+      FIREBASE_PROJECT_ID: 'test-firebase-project',
       RATE_LIMIT_STORE: 'memory',
     });
     assert.ok(
@@ -660,7 +664,7 @@ test('production requires an explicitly configured external rate-limit store', (
 test('production accepts Upstash rate limiting without exposing its token', () => {
   const config = createBackendConfig({
     NODE_ENV: 'production',
-    CLERK_ISSUER: 'https://clerk.test.example.com',
+    FIREBASE_PROJECT_ID: 'test-firebase-project',
     RATE_LIMIT_STORE: 'upstash',
     UPSTASH_REDIS_REST_URL: 'https://rate-limit.example.test/',
     UPSTASH_REDIS_REST_TOKEN: 'server-only-token',
@@ -1046,9 +1050,12 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
   assert.equal(body.duplicate, false);
   assert.equal(body.eventId, 'evt_1Tooe1LYQum3RaPO1NTqL56V');
 
-  const statusResponse = await fetch(`${url}/api/v1/billing/subscription-status?userId=owner-user`, {
-    headers: internalHeaders('owner-user'),
-  });
+  const statusResponse = await fetch(
+    `${url}/api/v1/billing/subscription-status?userId=owner-user`,
+    {
+      headers: internalHeaders('owner-user'),
+    }
+  );
   assert.equal(statusResponse.status, 200);
   const statusBody = await statusResponse.json();
   assert.equal(statusBody.planId, 'junior');

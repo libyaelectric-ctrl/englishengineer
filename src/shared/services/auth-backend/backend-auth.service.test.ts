@@ -1,32 +1,32 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+﻿import { beforeEach, describe, expect, it } from 'vitest';
 
 import {
   getBackendAuthHeaders,
   invalidateOrgCache,
-  setClerkTokenGetter,
+  setAuthTokenGetter,
 } from '@/shared/services/auth-backend/backend-auth.service';
 
-describe('getBackendAuthHeaders (Clerk flow)', () => {
+describe('getBackendAuthHeaders (Firebase flow)', () => {
   beforeEach(() => {
-    setClerkTokenGetter(null);
+    setAuthTokenGetter(null);
     invalidateOrgCache();
   });
 
-  it('sends the Clerk session JWT as a Bearer token when a getter is registered', async () => {
-    setClerkTokenGetter(async () => 'clerk-session-jwt');
+  it('sends the Firebase ID token as a Bearer token when a getter is registered', async () => {
+    setAuthTokenGetter(async () => 'firebase-id-token');
     const headers = await getBackendAuthHeaders('user_123');
-    expect(headers['Authorization']).toBe('Bearer clerk-session-jwt');
+    expect(headers['Authorization']).toBe('Bearer firebase-id-token');
     expect(headers['X-EngVox-User-Id']).toBe('user_123');
   });
 
-  it('returns no Authorization header when the Clerk getter resolves null', async () => {
-    setClerkTokenGetter(async () => null);
+  it('returns no Authorization header when the auth getter resolves null', async () => {
+    setAuthTokenGetter(async () => null);
     const headers = await getBackendAuthHeaders('user_123');
     expect(headers['Authorization']).toBeUndefined();
   });
 
-  it('still surfaces the local user id when no Clerk getter is registered', async () => {
-    setClerkTokenGetter(null);
+  it('still surfaces the local user id when no auth getter is registered', async () => {
+    setAuthTokenGetter(null);
     const headers = await getBackendAuthHeaders('user_123');
     expect(headers['Authorization']).toBeUndefined();
     expect(headers['X-EngVox-User-Id']).toBe('user_123');

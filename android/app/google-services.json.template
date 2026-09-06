@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1058778261006",
+    "project_id": "elemental-outlet-pnn32",
+    "storage_bucket": "elemental-outlet-pnn32.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1058778261006:android:your-android-app-id",
+        "android_client_info": {
+          "package_name": "com.engvox.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "your-oauth-client-id.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5Orw8YkkQuOMoGqz9l1ikpdwwatTPIb0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "your-oauth-client-id.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

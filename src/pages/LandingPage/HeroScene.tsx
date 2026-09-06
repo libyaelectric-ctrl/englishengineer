@@ -130,8 +130,20 @@ function makeBuildings(): BldgDef[] {
 }
 
 /* ── window grid as <pattern> (deterministic) ── */
-function WindowGrid({ seed, cols, rows, cw, ch, theme }: {
-  seed: number; cols: number; rows: number; cw: number; ch: number; theme: Theme;
+function WindowGrid({
+  seed,
+  cols,
+  rows,
+  cw,
+  ch,
+  theme,
+}: {
+  seed: number;
+  cols: number;
+  rows: number;
+  cw: number;
+  ch: number;
+  theme: Theme;
 }) {
   const rects = useMemo(() => {
     const rand = mulberry32(seed);
@@ -396,7 +408,10 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
             {/* Jib (rotates) */}
             <g
               className="hero-crane-jib"
-              style={{ transformOrigin: `${crane.x}px ${groundY - 55}px`, animationDelay: `${ci * 1.5}s` }}
+              style={{
+                transformOrigin: `${crane.x}px ${groundY - 55}px`,
+                animationDelay: `${ci * 1.5}s`,
+              }}
             >
               {/* Jib arm */}
               <line
@@ -457,7 +472,14 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
               rx={2}
             />
             {/* Top/bottom caps */}
-            <ellipse cx={p.x} cy={groundY - p.h + 2} rx={5} ry={1.5} fill={colors.pillar} opacity={0.7} />
+            <ellipse
+              cx={p.x}
+              cy={groundY - p.h + 2}
+              rx={5}
+              ry={1.5}
+              fill={colors.pillar}
+              opacity={0.7}
+            />
             <ellipse cx={p.x} cy={groundY - 2} rx={5} ry={1.5} fill={colors.pillar} opacity={0.7} />
             {/* Moving blob */}
             <rect
@@ -469,7 +491,12 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
               rx={2}
               opacity={0.9}
               className="hero-pillar-blob"
-              style={{ animationDelay: `${p.delay}s`, '--pillar-h': `${p.h - 20}px` } as React.CSSProperties}
+              style={
+                {
+                  animationDelay: `${p.delay}s`,
+                  '--pillar-h': `${p.h - 20}px`,
+                } as React.CSSProperties
+              }
             />
           </g>
         ))}
@@ -488,10 +515,42 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
             strokeWidth={1.2}
             opacity={0.45}
           />
-          <line x1={W / 2 + 100} y1={groundY - 210} x2={W / 2 + 115} y2={groundY - 170} stroke={colors.holo1} strokeWidth={0.6} opacity={0.3} />
-          <line x1={W / 2 + 100} y1={groundY - 210} x2={W / 2 + 85} y2={groundY - 170} stroke={colors.holo1} strokeWidth={0.6} opacity={0.3} />
-          <line x1={W / 2 + 120} y1={groundY - 195} x2={W / 2 + 85} y2={groundY - 170} stroke={colors.holo1} strokeWidth={0.6} opacity={0.3} />
-          <line x1={W / 2 + 80} y1={groundY - 195} x2={W / 2 + 115} y2={groundY - 170} stroke={colors.holo1} strokeWidth={0.6} opacity={0.3} />
+          <line
+            x1={W / 2 + 100}
+            y1={groundY - 210}
+            x2={W / 2 + 115}
+            y2={groundY - 170}
+            stroke={colors.holo1}
+            strokeWidth={0.6}
+            opacity={0.3}
+          />
+          <line
+            x1={W / 2 + 100}
+            y1={groundY - 210}
+            x2={W / 2 + 85}
+            y2={groundY - 170}
+            stroke={colors.holo1}
+            strokeWidth={0.6}
+            opacity={0.3}
+          />
+          <line
+            x1={W / 2 + 120}
+            y1={groundY - 195}
+            x2={W / 2 + 85}
+            y2={groundY - 170}
+            stroke={colors.holo1}
+            strokeWidth={0.6}
+            opacity={0.3}
+          />
+          <line
+            x1={W / 2 + 80}
+            y1={groundY - 195}
+            x2={W / 2 + 115}
+            y2={groundY - 170}
+            stroke={colors.holo1}
+            strokeWidth={0.6}
+            opacity={0.3}
+          />
         </g>
 
         {/* Octahedron */}
@@ -507,8 +566,24 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
             strokeWidth={1.2}
             opacity={0.45}
           />
-          <line x1={W / 2 - 120} y1={groundY - 225} x2={W / 2 - 120} y2={groundY - 175} stroke={colors.holo2} strokeWidth={0.6} opacity={0.3} />
-          <line x1={W / 2 - 100} y1={groundY - 200} x2={W / 2 - 140} y2={groundY - 200} stroke={colors.holo2} strokeWidth={0.6} opacity={0.3} />
+          <line
+            x1={W / 2 - 120}
+            y1={groundY - 225}
+            x2={W / 2 - 120}
+            y2={groundY - 175}
+            stroke={colors.holo2}
+            strokeWidth={0.6}
+            opacity={0.3}
+          />
+          <line
+            x1={W / 2 - 100}
+            y1={groundY - 200}
+            x2={W / 2 - 140}
+            y2={groundY - 200}
+            stroke={colors.holo2}
+            strokeWidth={0.6}
+            opacity={0.3}
+          />
         </g>
 
         {/* Torus knot approximation (small) */}
@@ -567,7 +642,7 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
         <circle
           cx={W / 2}
           cy={groundY - 10}
-          r={30}
+          r={1}
           fill="none"
           stroke={colors.ring1}
           strokeWidth={1.5}
@@ -576,7 +651,7 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
         <circle
           cx={W / 2}
           cy={groundY - 10}
-          r={20}
+          r={1}
           fill="none"
           stroke={colors.ring2}
           strokeWidth={1}
@@ -678,21 +753,23 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
           animation: heroSpark 4s ease-in infinite;
         }
 
-        /* Pulse rings expand */
+        /* Pulse rings expand — uses transform (compositable) instead of r */
         @keyframes heroPulse1 {
-          0% { r: 10; opacity: 0.5; }
-          100% { r: 180; opacity: 0; }
+          0% { transform: scale(1); opacity: 0.5; }
+          100% { transform: scale(180); opacity: 0; }
         }
         @keyframes heroPulse2 {
-          0% { r: 8; opacity: 0.4; }
-          100% { r: 150; opacity: 0; }
+          0% { transform: scale(1); opacity: 0.4; }
+          100% { transform: scale(150); opacity: 0; }
         }
         .hero-pulse-1 {
           animation: heroPulse1 4s ease-out infinite;
+          transform-origin: center;
         }
         .hero-pulse-2 {
           animation: heroPulse2 4s ease-out infinite;
           animation-delay: 1.2s;
+          transform-origin: center;
         }
 
         /* Reduced motion */

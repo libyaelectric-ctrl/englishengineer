@@ -50,6 +50,8 @@ const CookieConsentBanner = () => {
 
   return (
     <div
+      role="region"
+      aria-label="Cookie consent"
       className="fixed bottom-0 left-0 right-0 z-50 border-t border-border-soft bg-surface/95 backdrop-blur-sm shadow-lg lg:bottom-0"
       style={{ bottom: 'max(0px, env(safe-area-inset-bottom, 0px))' }}
     >

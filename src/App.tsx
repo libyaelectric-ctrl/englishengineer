@@ -1,7 +1,5 @@
 import { AppProvider } from '@/providers';
 import { router } from '@/routes/router';
-import { ClerkProvider } from '@clerk/clerk-react';
-import * as Sentry from '@sentry/react';
 
 import { Component, type ErrorInfo, type ReactNode, Suspense, lazy } from 'react';
 
@@ -13,46 +11,13 @@ import { useCapacitorBackButton } from '@/shared/hooks/useCapacitorBackButton';
 import { useDirection } from '@/shared/hooks/useDirection';
 import { logger } from '@/shared/logger';
 
-import { ClerkBridge } from '@/features/auth/ClerkBridge';
-import {
-  CLERK_PUBLISHABLE_KEY,
-  CLERK_SIGN_IN_FALLBACK_REDIRECT_URL,
-  CLERK_SIGN_IN_URL,
-  CLERK_SIGN_UP_FALLBACK_REDIRECT_URL,
-  CLERK_SIGN_UP_URL,
-} from '@/features/auth/clerk.config';
-import { getClerkTheme } from '@/features/auth/clerk.theme';
-import { useNativeOAuthReturn } from '@/features/auth/native-oauth';
-import { ThemeProvider, useTheme } from '@/features/theme/ThemeProvider';
+import { FirebaseAuthProvider } from '@/features/auth/FirebaseAuth';
+import { FirebaseBridge } from '@/features/auth/FirebaseBridge';
+import { ThemeProvider } from '@/features/theme/ThemeProvider';
 
 const BillingSync = lazy(() =>
   import('@/features/billing/BillingSync').then((m) => ({ default: m.BillingSync }))
 );
-
-const ThemedClerkProvider = ({ children }: { children: React.ReactNode }) => {
-  const { theme } = useTheme();
-
-  return (
-    <ClerkProvider
-      publishableKey={CLERK_PUBLISHABLE_KEY!}
-      appearance={getClerkTheme(theme)}
-      signInUrl={CLERK_SIGN_IN_URL ?? '/sign-in'}
-      signUpUrl={CLERK_SIGN_UP_URL ?? '/sign-up'}
-      signInFallbackRedirectUrl={CLERK_SIGN_IN_FALLBACK_REDIRECT_URL ?? '/dashboard'}
-      signUpFallbackRedirectUrl={CLERK_SIGN_UP_FALLBACK_REDIRECT_URL ?? '/dashboard'}
-      allowedRedirectOrigins={[
-        'http://localhost',
-        'https://localhost',
-        'capacitor://localhost',
-        'capacitor://localhost:8080',
-        'ionic://localhost',
-        'https://engvox.com',
-      ]}
-    >
-      {children}
-    </ClerkProvider>
-  );
-};
 
 class SimpleErrorBoundary extends Component<
   { children: ReactNode; fallback?: ReactNode },
@@ -66,7 +31,7 @@ class SimpleErrorBoundary extends Component<
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     logger.e('[ErrorBoundary]', error, info.componentStack);
-    Sentry.captureException(error);
+    import('@sentry/react').then((m) => m.captureException(error)).catch(() => {});
   }
 
   render() {
@@ -90,20 +55,19 @@ class SimpleErrorBoundary extends Component<
 const AppContent = () => {
   useDirection();
   useCapacitorBackButton();
-  useNativeOAuthReturn();
 
   return (
     <SimpleErrorBoundary fallback={<div>An error occurred. Please refresh the page.</div>}>
       <ThemeProvider>
         <AppProvider>
-          <ThemedClerkProvider>
-            <ClerkBridge />
+          <FirebaseAuthProvider>
+            <FirebaseBridge />
             <Suspense fallback={null}>
               <BillingSync />
             </Suspense>
             <RouterProvider router={router} />
             <CookieConsentBanner />
-          </ThemedClerkProvider>
+          </FirebaseAuthProvider>
           <ToastContainer />
         </AppProvider>
       </ThemeProvider>
@@ -112,22 +76,6 @@ const AppContent = () => {
 };
 
 export default function App() {
-  if (!CLERK_PUBLISHABLE_KEY) {
-    return (
-      <div
-        style={{
-          padding: 24,
-          fontFamily: 'sans-serif',
-          background: '#0f0f23',
-          color: '#fff',
-          minHeight: '100vh',
-        }}
-      >
-        EngVox is not configured. Set CLERK_PUBLISHABLE_KEY to continue.
-      </div>
-    );
-  }
-
   return (
     <SimpleErrorBoundary
       fallback={

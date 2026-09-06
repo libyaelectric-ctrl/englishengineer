@@ -1,6 +1,5 @@
-import { AppShell } from '@/layouts/AppShell';
+﻿import { AppShell } from '@/layouts/AppShell';
 import { PublicLayout } from '@/layouts/PublicLayout';
-import * as Sentry from '@sentry/react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { type ComponentType, Suspense, lazy } from 'react';
@@ -13,7 +12,7 @@ import { isFeatureEnabled } from '@/shared/feature-flags/featureFlags';
 
 import { AuthGuard } from '@/features/auth/AuthGuard';
 import { RequireAdminRole } from '@/features/auth/RequireAdminRole';
-import { CLERK_SIGN_IN_URL, CLERK_SIGN_UP_URL } from '@/features/auth/clerk.config';
+import { AUTH_SIGN_IN_URL, AUTH_SIGN_UP_URL } from '@/features/auth/firebase.config';
 import { CurriculumSectionGuard, SubscriptionRouteGuard } from '@/features/billing';
 import { OnboardingGate } from '@/features/profile';
 
@@ -50,12 +49,9 @@ const Placement = lazy(() => import('@/pages/PlacementPage'));
 const Translator = lazy(() => import('@/pages/TranslatorPage'));
 const LearningPath = lazy(() => import('@/pages/LearningPathPage'));
 const LessonRunner = lazy(() => import('@/pages/LessonRunnerPage'));
-const ClerkAuthPage = lazy(() => import('@/pages/ClerkAuthPage'));
-const OAuthCallbackPage = lazy(() => import('@/pages/OAuthCallbackPage'));
+const AuthPage = lazy(() => import('@/pages/AuthPage'));
 
-const sentryCreateBrowserRouter = Sentry.wrapCreateBrowserRouterV7(createHashRouter);
-
-export const router = sentryCreateBrowserRouter([
+export const router = createHashRouter([
   {
     element: <PublicLayout />,
     errorElement: <RouteErrorPage />,
@@ -256,7 +252,7 @@ export const router = sentryCreateBrowserRouter([
             fallback={
               <div className="flex min-h-screen items-center justify-center bg-surface text-foreground">
                 <div className="text-center space-y-4">
-                  <p className="text-lg font-bold">Team sayfası yüklenemedi.</p>
+                  <p className="text-lg font-bold">Team sayfasÄ± yÃ¼klenemedi.</p>
                   <button
                     onClick={async () => {
                       const { reloadApp } = await import('@/shared/utils/capacitor');
@@ -287,25 +283,20 @@ export const router = sentryCreateBrowserRouter([
     ],
   },
   {
-    path: '/oauth-callback',
-    errorElement: <RouteErrorPage />,
-    element: withSuspense(OAuthCallbackPage),
-  },
-  {
-    path: CLERK_SIGN_IN_URL,
+    path: AUTH_SIGN_IN_URL,
     errorElement: <RouteErrorPage />,
     element: (
       <Suspense fallback={<LoadingState />}>
-        <ClerkAuthPage mode="sign-in" />
+        <AuthPage mode="sign-in" />
       </Suspense>
     ),
   },
   {
-    path: `${CLERK_SIGN_IN_URL}/*`,
+    path: `${AUTH_SIGN_IN_URL}/*`,
     errorElement: <RouteErrorPage />,
     element: (
       <Suspense fallback={<LoadingState />}>
-        <ClerkAuthPage mode="sign-in" />
+        <AuthPage mode="sign-in" />
       </Suspense>
     ),
   },
@@ -314,7 +305,7 @@ export const router = sentryCreateBrowserRouter([
     errorElement: <RouteErrorPage />,
     element: (
       <Suspense fallback={<LoadingState />}>
-        <ClerkAuthPage mode="sign-in" />
+        <AuthPage mode="sign-in" />
       </Suspense>
     ),
   },
@@ -323,25 +314,25 @@ export const router = sentryCreateBrowserRouter([
     errorElement: <RouteErrorPage />,
     element: (
       <Suspense fallback={<LoadingState />}>
-        <ClerkAuthPage mode="sign-in" />
+        <AuthPage mode="sign-in" />
       </Suspense>
     ),
   },
   {
-    path: CLERK_SIGN_UP_URL,
+    path: AUTH_SIGN_UP_URL,
     errorElement: <RouteErrorPage />,
     element: (
       <Suspense fallback={<LoadingState />}>
-        <ClerkAuthPage mode="sign-up" />
+        <AuthPage mode="sign-up" />
       </Suspense>
     ),
   },
   {
-    path: `${CLERK_SIGN_UP_URL}/*`,
+    path: `${AUTH_SIGN_UP_URL}/*`,
     errorElement: <RouteErrorPage />,
     element: (
       <Suspense fallback={<LoadingState />}>
-        <ClerkAuthPage mode="sign-up" />
+        <AuthPage mode="sign-up" />
       </Suspense>
     ),
   },
@@ -350,7 +341,7 @@ export const router = sentryCreateBrowserRouter([
     errorElement: <RouteErrorPage />,
     element: (
       <Suspense fallback={<LoadingState />}>
-        <ClerkAuthPage mode="sign-up" />
+        <AuthPage mode="sign-up" />
       </Suspense>
     ),
   },
@@ -359,7 +350,7 @@ export const router = sentryCreateBrowserRouter([
     errorElement: <RouteErrorPage />,
     element: (
       <Suspense fallback={<LoadingState />}>
-        <ClerkAuthPage mode="sign-up" />
+        <AuthPage mode="sign-up" />
       </Suspense>
     ),
   },
@@ -368,7 +359,7 @@ export const router = sentryCreateBrowserRouter([
     errorElement: <RouteErrorPage />,
     element: (
       <Suspense fallback={<LoadingState />}>
-        <ClerkAuthPage mode="sign-up" />
+        <AuthPage mode="sign-up" />
       </Suspense>
     ),
   },
@@ -377,7 +368,7 @@ export const router = sentryCreateBrowserRouter([
     errorElement: <RouteErrorPage />,
     element: (
       <Suspense fallback={<LoadingState />}>
-        <ClerkAuthPage mode="sign-up" />
+        <AuthPage mode="sign-up" />
       </Suspense>
     ),
   },

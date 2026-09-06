@@ -2,14 +2,14 @@ let cachedOrgId: string | null = null;
 let cachedUserId: string | null = null;
 
 /**
- * Resolves the active Clerk session JWT (registered by <ClerkBridge>). Kept
- * separate from the zustand auth store so importing this service never drags
- * the store (and its AuthService reference) into a test's module graph.
+ * Resolves the active Firebase Auth ID token (registered by <FirebaseBridge>).
+ * Kept separate from the zustand auth store so importing this service never
+ * drags the store (and its AuthService reference) into a test's module graph.
  */
-let clerkTokenGetter: (() => Promise<string | null>) | null = null;
+let authTokenGetter: (() => Promise<string | null>) | null = null;
 
-export const setClerkTokenGetter = (fn: (() => Promise<string | null>) | null): void => {
-  clerkTokenGetter = fn;
+export const setAuthTokenGetter = (fn: (() => Promise<string | null>) | null): void => {
+  authTokenGetter = fn;
 };
 
 export const invalidateOrgCache = (): void => {
@@ -22,10 +22,11 @@ export const getBackendAuthHeaders = async (
 ): Promise<Record<string, string>> => {
   const headers: Record<string, string> = {};
 
-  // Clerk is the auth of record while a session is alive: send the Clerk JWT
-  // and skip the Supabase session entirely (Clerk users have none).
-  if (clerkTokenGetter) {
-    const token = await clerkTokenGetter();
+  // Firebase Auth is the auth of record while a session is alive: send the
+  // Firebase ID token and skip the Supabase session entirely (Firebase users
+  // have none).
+  if (authTokenGetter) {
+    const token = await authTokenGetter();
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
@@ -43,8 +44,8 @@ export const getBackendAuthHeaders = async (
     return headers;
   }
 
-  // No Clerk bridge configured yet: surface the local user id for engineering
-  // visibility, but never fall back to a Supabase session.
+  // No Firebase bridge configured yet: surface the local user id for
+  // engineering visibility, but never fall back to a Supabase session.
   if (localUserId) {
     headers['X-EngVox-User-Id'] = localUserId;
   }

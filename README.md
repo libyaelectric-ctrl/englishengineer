@@ -30,22 +30,27 @@ cp .env.example .env.local
 
 ### Environment Variables
 
-| Variable                     | Required | Description                                                                    |
-| ---------------------------- | -------- | ------------------------------------------------------------------------------ |
-| `VITE_CLERK_PUBLISHABLE_KEY` | ✅       | Clerk publishable key (`pk_test_...`)                                          |
-| `CLERK_SECRET_KEY`           | ✅       | Clerk secret key (backend)                                                     |
-| `CLERK_ISSUER`               | ✅       | Clerk issuer URL (e.g., `https://xxx.clerk.accounts.dev`)                      |
-| `VITE_BILLING_API_URL`       | ⚠️       | Backend URL for billing (e.g., `https://englishengineer-backend.onrender.com`) |
-| `ANTHROPIC_API_KEY`          | ⚠️       | For AI coach (optional, mock mode if missing)                                  |
-| `SUPABASE_URL`               | ⚠️       | Supabase project URL (optional, memory fallback)                               |
-| `SUPABASE_SERVICE_ROLE_KEY`  | ⚠️       | Supabase service role key (optional)                                           |
-| `DODO_PAYMENTS_API_KEY`      | ⚠️       | Dodo Payments API key (test mode)                                              |
-| `DODO_PAYMENTS_WEBHOOK_KEY`  | ⚠️       | Dodo Payments webhook secret                                                   |
-| `METRICS_TOKEN`              | Optional | Optional: bearer token protecting `/api/metrics` (recommended in production)   |
+| Variable                    | Required | Description                                                                    |
+| --------------------------- | -------- | ------------------------------------------------------------------------------ |
+| `VITE_AUTH_PROVIDER`        | ✅       | `firebase` (currently only supported provider)                                 |
+| `VITE_FIREBASE_API_KEY`     | ✅       | Firebase web API key (public by design, from Console → Web app)                |
+| `VITE_FIREBASE_PROJECT_ID`  | ✅       | Firebase project ID (e.g., `elemental-outlet-pnn32`)                           |
+| `VITE_FIREBASE_AUTH_DOMAIN` | ✅       | Firebase auth domain (`<projectId>.firebaseapp.com`)                           |
+| `VITE_FIREBASE_APP_ID`      | ⚠️       | Firebase app ID (optional, for Analytics)                                      |
+| `FIREBASE_PROJECT_ID`       | ✅       | Backend: Firebase project ID for ID token verification                         |
+| `VITE_BILLING_API_URL`      | ⚠️       | Backend URL for billing (e.g., `https://englishengineer-backend.onrender.com`) |
+| `ANTHROPIC_API_KEY`         | ⚠️       | For AI coach (optional, mock mode if missing)                                  |
+| `SUPABASE_URL`              | ⚠️       | Supabase project URL (optional, memory fallback)                               |
+| `SUPABASE_SERVICE_ROLE_KEY` | ⚠️       | Supabase service role key (optional)                                           |
+| `DODO_PAYMENTS_API_KEY`     | ⚠️       | Dodo Payments API key (test mode)                                              |
+| `DODO_PAYMENTS_WEBHOOK_KEY` | ⚠️       | Dodo Payments webhook secret                                                   |
+| `METRICS_TOKEN`             | Optional | Optional: bearer token protecting `/api/metrics` (recommended in production)   |
 
 ### Mobile (Android APK / iOS)
 
-Google OAuth on the native apps opens in the system browser (Google blocks embedded WebViews) and returns through the `com.engvox.app://` custom scheme. The full runbook — the two Clerk Dashboard settings (redirect URL + allowed origins), the `cap sync` workflow, and the adb deep-link test procedure — lives in [MOBILE.md](./MOBILE.md). Email/password and OTP sign-in run entirely in-app and are unaffected.
+Google OAuth on the native apps uses **@capacitor-firebase/authentication** — it performs a **native Google Sign-In** via Play Services / Credential Manager (no embedded WebView, no custom scheme deep link). The ID token is handed to the Firebase Web SDK via `signInWithCredential()`. Email/password sign-in runs entirely in-app and is unaffected.
+
+The full runbook — Firebase Console settings (Android app package + SHA-1/256 + `google-services.json`), the `cap sync` workflow, and the emulator test procedure — lives in [MOBILE.md](./MOBILE.md).
 
 ### Development
 

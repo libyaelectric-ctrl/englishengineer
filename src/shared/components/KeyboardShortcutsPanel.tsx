@@ -75,25 +75,43 @@ export const KeyboardShortcutsPanel = () => {
   const panelRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
 
-  // Close on Escape
+  // Close on Escape and focus trap
   useEffect(() => {
     if (!isOpen) return;
+    const panel = panelRef.current;
+    if (panel) panel.focus();
+
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.preventDefault();
         close();
+        return;
+      }
+      if (e.key === 'Tab' && panel) {
+        const focusable = Array.from(
+          panel.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), [href]:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
+          )
+        ).filter((el) => el.offsetParent !== null);
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
       }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, [isOpen, close]);
-
-  // Focus trap
-  useEffect(() => {
-    if (isOpen) {
-      panelRef.current?.focus();
-    }
-  }, [isOpen]);
 
   return (
     <AnimatePresence>
@@ -112,6 +130,9 @@ export const KeyboardShortcutsPanel = () => {
           {/* Panel */}
           <motion.div
             ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="keyboard-shortcuts-title"
             tabIndex={-1}
             initial={prefersReduced ? false : { opacity: 0, scale: 0.96, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -123,7 +144,9 @@ export const KeyboardShortcutsPanel = () => {
             <div className="flex items-center justify-between border-b border-border-soft px-5 py-4">
               <div className="flex items-center gap-2.5">
                 <Keyboard className="h-5 w-5 text-primary" />
-                <h2 className="text-sm font-bold text-foreground">Keyboard Shortcuts</h2>
+                <h2 id="keyboard-shortcuts-title" className="text-sm font-bold text-foreground">
+                  Keyboard Shortcuts
+                </h2>
               </div>
               <button
                 onClick={close}

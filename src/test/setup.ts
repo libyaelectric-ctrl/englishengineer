@@ -41,33 +41,28 @@ globalThis.HTMLCanvasElement = class MockCanvas {
   }
 } as unknown as typeof HTMLCanvasElement;
 
-// Mock Clerk for tests - provides ClerkProvider and components
-vi.mock('@clerk/clerk-react', () => ({
-  ClerkProvider: ({
-    children,
-    publishableKey,
-  }: {
-    children: React.ReactNode;
-    publishableKey?: string;
-  }) =>
-    publishableKey
-      ? React.createElement('div', { 'data-clerk-provider': true }, children)
-      : children,
-  SignedIn: ({ children }: { children: React.ReactNode }) =>
-    React.createElement('div', { 'data-clerk-signed-in': true }, children),
-  SignedOut: ({ children }: { children: React.ReactNode }) =>
-    React.createElement('div', { 'data-clerk-signed-out': true }, children),
-  UserButton: () => React.createElement('button', { 'data-clerk-user-button': true }, 'User'),
-  SignIn: () => React.createElement('div', { 'data-clerk-sign-in': true }, 'Sign In'),
-  SignUp: () => React.createElement('div', { 'data-clerk-sign-up': true }, 'Sign Up'),
-  useAuth: () => ({
+// Mock Firebase Auth for tests - provides the provider and the useFirebaseAuth hook
+vi.mock('@/features/auth/FirebaseAuth', () => ({
+  FirebaseAuthProvider: ({ children }: { children: React.ReactNode }) =>
+    React.createElement('div', { 'data-firebase-auth-provider': true }, children),
+  useFirebaseAuth: () => ({
     isLoaded: true,
     isSignedIn: false,
-    userId: null,
-    getToken: vi.fn().mockResolvedValue(null),
+    user: null,
+    getIdToken: vi.fn().mockResolvedValue(null),
+    signOut: vi.fn().mockResolvedValue(undefined),
+    signInWithGoogle: vi.fn().mockResolvedValue(undefined),
+    signInWithEmail: vi.fn().mockResolvedValue(undefined),
+    signUpWithEmail: vi.fn().mockResolvedValue(undefined),
   }),
-  useUser: () => ({ user: null, isLoaded: true }),
-  useClerk: () => ({ signOut: vi.fn() }),
+}));
+
+// Mock the Capacitor Firebase Authentication plugin (native Google sign-in)
+vi.mock('@capacitor-firebase/authentication', () => ({
+  FirebaseAuthentication: {
+    signInWithGoogle: vi.fn().mockResolvedValue({ credential: { idToken: 'fake-id-token' } }),
+    signOut: vi.fn().mockResolvedValue(undefined),
+  },
 }));
 
 // Mock localization store for tests - provides getState and selector support

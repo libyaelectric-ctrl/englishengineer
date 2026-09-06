@@ -105,10 +105,10 @@ export const LandingPage = () => {
       cancelIdleCallback?: (id: number) => void;
     };
     if (typeof w.requestIdleCallback === 'function') {
-      const id = w.requestIdleCallback(() => setSceneReady(true), { timeout: 2000 });
+      const id = w.requestIdleCallback(() => setSceneReady(true), { timeout: 200 });
       return () => w.cancelIdleCallback?.(id);
     }
-    const t = window.setTimeout(() => setSceneReady(true), 300);
+    const t = window.setTimeout(() => setSceneReady(true), 50);
     return () => window.clearTimeout(t);
   }, []);
 
@@ -184,7 +184,10 @@ export const LandingPage = () => {
       </div>
 
       {/* Slide content */}
-      <div className="relative z-10 h-full w-full flex items-center justify-center">
+      <div
+        id="main-content"
+        className="relative z-10 h-full w-full flex items-center justify-center"
+      >
         <AnimatePresence custom={direction} mode="wait">
           {/* ── SLIDE 0: HERO ── */}
           {slide === 0 && (

@@ -76,7 +76,17 @@ const readBearerToken = (request: Request): string | null => {
 
 const JWKS_CACHE_TTL_MS = 60 * 60 * 1000;
 
-interface ClerkJwk {
+/**
+ * Google publishes the signing keys for Firebase Auth ID tokens at a fixed,
+ * project-independent URL (the issuer only varies per project).
+ */
+const FIREBASE_JWKS_URL =
+  'https://www.googleapis.com/service_accounts/v3/jwks/securetoken@system.gserviceaccount.com';
+
+const firebaseIssuerFor = (projectId: string): string =>
+  `https://securetoken.google.com/${projectId}`;
+
+interface FirebaseJwk {
   kid?: string;
   kty?: string;
   n?: string;
@@ -85,35 +95,41 @@ interface ClerkJwk {
   use?: string;
 }
 
-interface ClerkClaims {
+interface FirebaseClaims {
   sub?: string;
-  sid?: string;
+  aud?: string;
   iss?: string;
   exp?: number;
-  nbf?: number;
   iat?: number;
+  auth_time?: number;
   email?: string;
+  email_verified?: boolean;
   role?: string;
+  isSuperUser?: boolean;
+  firebase?: { sign_in_provider?: string };
 }
 
-let clerkJwksCache: { issuer: string; keys: ClerkJwk[]; fetchedAt: number } | null = null;
+let firebaseJwksCache: { url: string; keys: FirebaseJwk[]; fetchedAt: number } | null = null;
 
-const fetchClerkJwks = async (issuer: string, fetchImpl: typeof fetch): Promise<ClerkJwk[]> => {
-  const normalizedIssuer = normalizeIssuer(issuer);
+const fetchFirebaseJwks = async (fetchImpl: typeof fetch): Promise<FirebaseJwk[]> => {
   if (
-    clerkJwksCache &&
-    clerkJwksCache.issuer === normalizedIssuer &&
-    Date.now() - clerkJwksCache.fetchedAt < JWKS_CACHE_TTL_MS
+    firebaseJwksCache &&
+    firebaseJwksCache.url === FIREBASE_JWKS_URL &&
+    Date.now() - firebaseJwksCache.fetchedAt < JWKS_CACHE_TTL_MS
   ) {
-    return clerkJwksCache.keys;
+    return firebaseJwksCache.keys;
   }
-  const response = await fetchImpl(`${normalizedIssuer}/.well-known/jwks.json`);
+  const response = await fetchImpl(FIREBASE_JWKS_URL);
   if (!response.ok) {
-    throw new ApiError(503, 'auth_provider_unavailable', 'Clerk JWKS could not be fetched.');
+    throw new ApiError(503, 'auth_provider_unavailable', 'Firebase JWKS could not be fetched.');
   }
-  const document = (await response.json()) as { keys?: ClerkJwk[] };
-  clerkJwksCache = { issuer: normalizedIssuer, keys: document.keys ?? [], fetchedAt: Date.now() };
-  return clerkJwksCache.keys;
+  const document = (await response.json()) as { keys?: FirebaseJwk[] };
+  firebaseJwksCache = { url: FIREBASE_JWKS_URL, keys: document.keys ?? [], fetchedAt: Date.now() };
+  return firebaseJwksCache.keys;
+};
+
+export const resetFirebaseJwksCache = (): void => {
+  firebaseJwksCache = null;
 };
 
 const base64UrlBytes = (value: string): Uint8Array => {
@@ -123,68 +139,83 @@ const base64UrlBytes = (value: string): Uint8Array => {
   return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
 };
 
-interface DecodedClerkToken {
-  header: { kid?: string };
-  payload: ClerkClaims;
+interface DecodedFirebaseToken {
+  header: { kid?: string; alg?: string };
+  payload: FirebaseClaims;
   signingInput: string;
   signature: Uint8Array;
 }
 
-const decodeClerkToken = (token: string): DecodedClerkToken | null => {
+const decodeFirebaseToken = (token: string): DecodedFirebaseToken | null => {
   const parts = token.split('.');
   if (parts.length !== 3) return null;
   const [headerB64, payloadB64, signatureB64] = parts;
   try {
     return {
-      header: JSON.parse(Buffer.from(headerB64!, 'base64').toString('utf8')) as { kid?: string },
-      payload: JSON.parse(Buffer.from(payloadB64!, 'base64').toString('utf8')) as ClerkClaims,
+      header: JSON.parse(Buffer.from(headerB64!, 'base64').toString('utf8')) as {
+        kid?: string;
+        alg?: string;
+      },
+      payload: JSON.parse(Buffer.from(payloadB64!, 'base64').toString('utf8')) as FirebaseClaims,
       signingInput: `${headerB64}.${payloadB64}`,
       signature: base64UrlBytes(signatureB64!),
     };
   } catch {
-    logger.warn('Failed to parse Clerk JWT parts');
+    logger.warn('Failed to parse Firebase ID token parts');
     return null;
   }
 };
 
 const normalizeIssuer = (value: string): string => value.replace(/\/+$/, '');
 
-const hasValidClerkClaims = (payload: ClerkClaims, issuer: string, now: number): boolean => {
+const hasValidFirebaseClaims = (
+  payload: FirebaseClaims,
+  projectId: string,
+  now: number
+): boolean => {
   if (typeof payload.sub !== 'string' || !payload.sub) return false;
-  if (typeof payload.iss !== 'string' || normalizeIssuer(payload.iss) !== normalizeIssuer(issuer))
+  if (typeof payload.aud !== 'string' || payload.aud !== projectId) return false;
+  if (
+    typeof payload.iss !== 'string' ||
+    normalizeIssuer(payload.iss) !== firebaseIssuerFor(projectId)
+  ) {
     return false;
+  }
   if (typeof payload.exp === 'number' && payload.exp < now) return false;
-  if (typeof payload.nbf === 'number' && payload.nbf > now) return false;
+  // Firebase ID tokens carry iat (no nbf); the token must not be from the
+  // future (small clock skew tolerated by the caller's token refresh cycle).
+  if (typeof payload.iat === 'number' && payload.iat > now + 60) return false;
   return true;
 };
 
-const toAuthenticatedUser = (payload: ClerkClaims): AuthenticatedUser => ({
+const toAuthenticatedUser = (payload: FirebaseClaims): AuthenticatedUser => ({
   userId: payload.sub as string,
   email: typeof payload.email === 'string' ? payload.email : undefined,
   role: typeof payload.role === 'string' ? payload.role : undefined,
-  source: 'clerk-jwt',
+  source: 'firebase-jwt',
 });
 
 /**
- * Verifies a Clerk session JWT against the instance's JWKS using WebCrypto
- * (RS256). No Clerk SDK is required for verification — the public signing key
- * is published under <issuer>/.well-known/jwks.json. Returns the authenticated
- * user when the token is valid and issued by the configured issuer, otherwise
- * null/throws so callers can fall through to the next auth provider.
+ * Verifies a Firebase Auth ID token against Google's public JWKS using
+ * WebCrypto (RS256). No Firebase Admin SDK is required for verification —
+ * the public signing keys are published at a fixed googleapis.com URL.
+ * Returns the authenticated user when the token is valid, issued for the
+ * configured project, and unexpired; otherwise null so callers can fall
+ * through to the next auth provider.
  */
-const verifyClerkToken = async (
+const verifyFirebaseToken = async (
   token: string,
-  issuer: string | null,
+  projectId: string | null,
   fetchImpl: typeof fetch
 ): Promise<AuthenticatedUser | null> => {
-  if (!issuer) return null;
-  const decoded = decodeClerkToken(token);
+  if (!projectId) return null;
+  const decoded = decodeFirebaseToken(token);
   if (!decoded) return null;
-  if (!hasValidClerkClaims(decoded.payload, issuer, Math.floor(Date.now() / 1000))) {
+  if (!hasValidFirebaseClaims(decoded.payload, projectId, Math.floor(Date.now() / 1000))) {
     return null;
   }
 
-  const keys = await fetchClerkJwks(issuer, fetchImpl);
+  const keys = await fetchFirebaseJwks(fetchImpl);
   const key = keys.find((candidate) => candidate.kid === decoded.header.kid);
   if (!key?.n || !key.e) return null;
 
@@ -205,7 +236,7 @@ const verifyClerkToken = async (
     if (!valid) return null;
     return toAuthenticatedUser(decoded.payload);
   } catch {
-    logger.warn('Clerk JWT verification failed');
+    logger.warn('Firebase ID token verification failed');
     return null;
   }
 };
@@ -214,7 +245,7 @@ const verifyClerkToken = async (
 // identifier characters. This value can end up in filesystem paths (see
 // speaking-routes.ts local-disk upload fallback), so it must never contain
 // path separators, "..", or other characters that could enable path
-// traversal or header/log injection. Covers UUID, Clerk ("user_xxx"), and
+// traversal or header/log injection. Covers UUID, Firebase UID, and
 // Supabase-style identifiers.
 const SAFE_USER_ID_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
 
@@ -346,9 +377,9 @@ export const createBackendAuth = (
       if (localUser) return localUser;
     }
 
-    if (config.clerkIssuer && token) {
-      const clerkUser = await verifyClerkToken(token, config.clerkIssuer, fetchImpl);
-      if (clerkUser) return clerkUser;
+    if (config.firebaseProjectId && token) {
+      const firebaseUser = await verifyFirebaseToken(token, config.firebaseProjectId, fetchImpl);
+      if (firebaseUser) return firebaseUser;
     }
 
     const supabaseUser = await validateSupabaseToken(config, token, fetchImpl);
