@@ -109,8 +109,8 @@ const collectEnvironmentErrors = (
   aiProvider: string,
   hasAiProxyUrl: boolean,
   authProvider: string,
-  hasSupabaseUrl: boolean,
-  hasSupabaseAnonKey: boolean,
+  _hasSupabaseUrl: boolean,
+  _hasSupabaseAnonKey: boolean,
   hasBillingApiUrl: boolean,
   appVersion: string,
   unsafeFrontendKeys: string[]
@@ -123,9 +123,9 @@ const collectEnvironmentErrors = (
   if (aiProvider !== 'backend' || !hasAiProxyUrl) {
     errors.push('Production requires VITE_AI_PROVIDER=backend and VITE_AI_PROXY_URL.');
   }
-  if (authProvider !== 'supabase' || !hasSupabaseUrl || !hasSupabaseAnonKey) {
+  if (authProvider !== 'firebase') {
     errors.push(
-      'Production requires VITE_AUTH_PROVIDER=supabase, VITE_SUPABASE_URL, and VITE_SUPABASE_ANON_KEY.'
+      'Production requires VITE_AUTH_PROVIDER=firebase.'
     );
   }
   if (!hasBillingApiUrl) {

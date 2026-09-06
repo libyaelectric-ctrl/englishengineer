@@ -102,6 +102,12 @@ export const FirebaseBridge = () => {
       const profile = await buildProfile(user);
       if (cancelled) return;
 
+      // Register the token getter EARLY so that BillingSync and other
+      // subscribers can authenticate backend calls before the full profile
+      // hydration completes. Without this, getBackendAuthHeaders() returns
+      // no Authorization header and billing endpoints return 401.
+      setAuthTokenGetter(async () => (await getIdToken()) ?? null);
+
       if (!alreadyMine) {
         // Scope storage to this user BEFORE reading any user-scoped data so
         // the profile repository resolves the same key that onboarding writes
@@ -143,11 +149,6 @@ export const FirebaseBridge = () => {
       // fully signs the user out instead of leaving a live session that
       // bounces the user back into a guard that waits forever.
       useAuthStore.getState().setProviderSignOut(() => signOut());
-
-      // Expose the session token so getBackendAuthHeaders() can authenticate
-      // backend calls with a Firebase ID token (verified against Google's
-      // public JWKS). getIdToken() transparently refreshes expired tokens.
-      setAuthTokenGetter(async () => (await getIdToken()) ?? null);
 
       // Persist display-field edits (displayName) to the Firebase account so
       // profile changes survive a reload/sign-in.
