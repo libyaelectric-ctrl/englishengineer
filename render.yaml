@@ -33,4 +33,4 @@
       - key: CORS_ALLOWED_ORIGINS
         value: https://engvox.com,https://www.engvox.com
       - key: FIREBASE_PROJECT_ID
-        sync: false
+        value: engvox-59b85
