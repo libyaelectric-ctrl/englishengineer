@@ -150,8 +150,7 @@ export const resolveStripe = (env: Env, runtimeEnv: RuntimeEnvironment): StripeC
     supabaseKey !== 'your-supabase-service-role-key';
 
   const requestedBillingRepository = (
-    env.BILLING_REPOSITORY ||
-    (runtimeEnv === 'production' && supabaseConfigured ? 'supabase' : 'memory')
+    env.BILLING_REPOSITORY || (supabaseConfigured ? 'supabase' : 'memory')
   ).toLowerCase();
   if (!['memory', 'supabase'].includes(requestedBillingRepository)) {
     throw new Error('BILLING_REPOSITORY must be memory or supabase.');

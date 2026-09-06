@@ -16,10 +16,13 @@
         value: https://engvox.com
       - key: SUPABASE_URL
         sync: false
+        value: ""
       - key: SUPABASE_ANON_KEY
         sync: false
+        value: ""
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
+        value: ""
       - key: AI_PROVIDER
         sync: false
       - key: AI_MODEL
