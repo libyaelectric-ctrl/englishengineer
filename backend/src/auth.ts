@@ -284,11 +284,9 @@ const validateSupabaseToken = async (
       : null;
   } catch (error) {
     logger.error('validateSupabaseToken failed', {}, error as Error);
-    throw new ApiError(
-      503,
-      'auth_provider_unavailable',
-      'Authentication provider is temporarily unavailable.'
-    );
+    // Network errors (DNS failure, timeout, Supabase project suspended) should
+    // NOT block other auth methods. Return null so the auth chain continues.
+    return null;
   }
 };
 
@@ -378,12 +376,20 @@ export const createBackendAuth = (
     }
 
     if (config.firebaseProjectId && token) {
-      const firebaseUser = await verifyFirebaseToken(token, config.firebaseProjectId, fetchImpl);
-      if (firebaseUser) return firebaseUser;
+      try {
+        const firebaseUser = await verifyFirebaseToken(token, config.firebaseProjectId, fetchImpl);
+        if (firebaseUser) return firebaseUser;
+      } catch (error) {
+        // JWKS fetch failure (network issue, Google API outage) should not
+        // block the entire auth chain — log and fall through.
+        logger.warn('Firebase token verification failed', {}, error as Error);
+      }
+      // A Firebase ID token is never a valid Supabase JWT — skip the
+      // Supabase validation to avoid 503 errors when Supabase is unreachable.
+    } else {
+      const supabaseUser = await validateSupabaseToken(config, token, fetchImpl);
+      if (supabaseUser) return supabaseUser;
     }
-
-    const supabaseUser = await validateSupabaseToken(config, token, fetchImpl);
-    if (supabaseUser) return supabaseUser;
 
     const devUser = authenticateDevBypass(request);
     if (devUser) return devUser;
