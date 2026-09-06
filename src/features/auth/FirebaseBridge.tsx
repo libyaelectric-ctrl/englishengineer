@@ -102,12 +102,6 @@ export const FirebaseBridge = () => {
       const profile = await buildProfile(user);
       if (cancelled) return;
 
-      // Register the token getter EARLY so that BillingSync and other
-      // subscribers can authenticate backend calls before the full profile
-      // hydration completes. Without this, getBackendAuthHeaders() returns
-      // no Authorization header and billing endpoints return 401.
-      setAuthTokenGetter(async () => (await getIdToken()) ?? null);
-
       if (!alreadyMine) {
         // Scope storage to this user BEFORE reading any user-scoped data so
         // the profile repository resolves the same key that onboarding writes
@@ -161,6 +155,10 @@ export const FirebaseBridge = () => {
     };
 
     if (isSignedIn && user) {
+      // Register the token getter SYNCHRONOUSLY before any async seed() work.
+      // This ensures billing API calls always have an Authorization header,
+      // even if seed() hasn't finished profile hydration yet.
+      setAuthTokenGetter(async () => (await getIdToken()) ?? null);
       void seed();
       return () => {
         cancelled = true;
