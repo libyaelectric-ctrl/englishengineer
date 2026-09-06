@@ -382,7 +382,7 @@ export const createBackendAuth = (
       } catch (error) {
         // JWKS fetch failure (network issue, Google API outage) should not
         // block the entire auth chain — log and fall through.
-        logger.warn('Firebase token verification failed', {}, error as Error);
+        logger.warn('Firebase token verification failed', { error: (error as Error).message });
       }
       // A Firebase ID token is never a valid Supabase JWT — skip the
       // Supabase validation to avoid 503 errors when Supabase is unreachable.
