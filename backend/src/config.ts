@@ -63,17 +63,28 @@ interface PublicHealth {
     billing: HealthCheck;
     supabase: HealthCheck;
     rateLimit: HealthCheck;
+    auth: HealthCheck;
     [key: string]: HealthCheck;
   };
   mockMode: boolean;
 }
 
 export const toPublicHealth = (config: BackendConfig): PublicHealth => {
+  // Booleans only — never expose the actual project id / secret values here,
+  // this endpoint is public and unauthenticated. This exists so a broken
+  // "authentication_required" error on the client can be triaged (is the
+  // backend even configured to verify tokens?) without needing dashboard
+  // access to the hosting provider's environment variables.
+  const firebaseConfigured = Boolean(config.auth?.firebaseProjectId);
+  const supabaseAuthConfigured = Boolean(
+    config.auth?.supabaseJwtSecret || (config.auth?.supabaseUrl && config.auth?.supabaseAnonKey)
+  );
   const checks: PublicHealth['checks'] = {
     ai: { configured: config.ai.configured },
     billing: { configured: config.billing.provider === 'dodo' ? config.dodo.configured : config.stripe.configured },
     supabase: { configured: config.supabase.configured },
     rateLimit: { configured: config.rateLimit.storeMode === 'upstash' },
+    auth: { configured: firebaseConfigured || supabaseAuthConfigured },
   };
 
   const allCriticalConfigured = config.ai.configured && config.supabase.configured;

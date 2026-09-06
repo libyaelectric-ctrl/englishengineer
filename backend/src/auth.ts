@@ -394,6 +394,19 @@ export const createBackendAuth = (
     const devUser = authenticateDevBypass(request);
     if (devUser) return devUser;
 
+    // Diagnostic breadcrumb only — never logs the token itself. This turns
+    // "authentication_required" from an opaque dead end (in the client) into
+    // something triageable from the backend logs: was there no token at
+    // all, was Firebase auth not even configured on this deployment, or did
+    // a present token simply fail every configured verification method?
+    logger.warn('Backend auth rejected request', {
+      path: request.path,
+      hadToken: Boolean(token),
+      firebaseConfigured: Boolean(config.firebaseProjectId),
+      supabaseJwtConfigured: Boolean(config.supabaseJwtSecret),
+      supabaseAuthConfigured: Boolean(config.supabaseUrl && config.supabaseAnonKey),
+    });
+
     throw new ApiError(
       401,
       'authentication_required',

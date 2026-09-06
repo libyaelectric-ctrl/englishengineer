@@ -14,6 +14,7 @@ describe('health endpoint', () => {
     stripe: { configured: true },
     supabase: { configured: true },
     rateLimit: { storeMode: 'upstash' },
+    auth: { firebaseProjectId: 'demo-project' },
   } as unknown as BackendConfig;
 
   it('returns ok true with version when all critical services configured', () => {
@@ -47,6 +48,7 @@ describe('health endpoint', () => {
       billing: { configured: true },
       supabase: { configured: true },
       rateLimit: { configured: true },
+      auth: { configured: true },
     });
   });
 
