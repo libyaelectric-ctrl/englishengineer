@@ -51,6 +51,7 @@ interface HealthCheck {
   configured: boolean;
   reachable?: boolean;
   error?: string;
+  firebaseProjectId?: string | null;
 }
 
 interface PublicHealth {
@@ -70,11 +71,13 @@ interface PublicHealth {
 }
 
 export const toPublicHealth = (config: BackendConfig): PublicHealth => {
-  // Booleans only — never expose the actual project id / secret values here,
-  // this endpoint is public and unauthenticated. This exists so a broken
-  // "authentication_required" error on the client can be triaged (is the
-  // backend even configured to verify tokens?) without needing dashboard
-  // access to the hosting provider's environment variables.
+  // firebaseProjectId is not a secret — it's already public in the
+  // frontend's own bundle/.env.production and in every Firebase console
+  // URL — so exposing it here (unlike a real secret) is safe and lets
+  // anyone directly compare "does the live backend's configured project
+  // match the frontend's project" without needing dashboard access to the
+  // hosting provider's environment variables. Secret material (JWT
+  // secrets, service keys) stays booleans only, never here.
   const firebaseConfigured = Boolean(config.auth?.firebaseProjectId);
   const supabaseAuthConfigured = Boolean(
     config.auth?.supabaseJwtSecret || (config.auth?.supabaseUrl && config.auth?.supabaseAnonKey)
@@ -84,7 +87,10 @@ export const toPublicHealth = (config: BackendConfig): PublicHealth => {
     billing: { configured: config.billing.provider === 'dodo' ? config.dodo.configured : config.stripe.configured },
     supabase: { configured: config.supabase.configured },
     rateLimit: { configured: config.rateLimit.storeMode === 'upstash' },
-    auth: { configured: firebaseConfigured || supabaseAuthConfigured },
+    auth: {
+      configured: firebaseConfigured || supabaseAuthConfigured,
+      firebaseProjectId: config.auth?.firebaseProjectId || null,
+    },
   };
 
   const allCriticalConfigured = config.ai.configured && config.supabase.configured;
