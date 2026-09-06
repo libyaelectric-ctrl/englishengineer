@@ -29,9 +29,20 @@ const CookieConsentBanner = () => {
 
   useEffect(() => {
     const consent = getCookieConsent();
-    if (!consent) {
-      setVisible(true);
+    if (consent) return;
+
+    const w = window as Window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+
+    if (typeof w.requestIdleCallback === 'function') {
+      const id = w.requestIdleCallback(() => setVisible(true), { timeout: 2000 });
+      return () => w.cancelIdleCallback?.(id);
     }
+
+    const t = window.setTimeout(() => setVisible(true), 1000);
+    return () => window.clearTimeout(t);
   }, []);
 
   const handleAccept = async () => {

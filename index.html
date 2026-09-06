@@ -153,13 +153,22 @@
   <body class="text-slate-950 antialiased selection:bg-primary/20">
     <style>
       .skip-link {
-        left: -999px;
         position: absolute;
+        top: -100%;
+        left: 0;
+        z-index: 9999;
+        padding: 0.75rem 1.5rem;
+        background: var(--background, #0f0f23);
+        color: var(--foreground, #fff);
+        font-weight: 600;
+        border-radius: 0 0 8px 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        transition: top 0.2s ease;
       }
-      @media (min-width: 640px) {
-        .skip-link {
-          left: auto;
-        }
+      .skip-link:focus {
+        top: 0;
+        outline: 2px solid var(--primary, #8d7bff);
+        outline-offset: 2px;
       }
       a {
         text-decoration: none;
@@ -172,7 +181,7 @@
     </style>
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:p-4 focus:bg-background focus:text-foreground focus:outline-2 focus:outline-primary"
+      class="skip-link"
     >
       Skip to main content
     </a>

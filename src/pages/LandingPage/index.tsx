@@ -394,18 +394,25 @@ export const LandingPage = () => {
         <ArrowRight className="h-5 w-5" />
       </button>
 
-      {/* Slide indicators */}
-      <div className="absolute bottom-28 md:bottom-20 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+      {/* Slide indicators — 48px min touch target, fixed width to prevent CLS */}
+      <div className="absolute bottom-28 md:bottom-20 left-1/2 -translate-x-1/2 z-20 flex items-center">
         {slideLabels.map((label, i) => (
           <button
             key={label}
             type="button"
             onClick={() => goTo(i)}
-            className={`relative h-2.5 rounded-full transition-all duration-300 ${
-              i === slide ? 'w-8 bg-primary' : 'w-2.5 bg-muted-copy/40 hover:bg-muted-copy/60'
-            }`}
+            className="flex items-center justify-center w-12 h-12"
             aria-label={`Go to ${label}`}
-          />
+            aria-current={i === slide ? 'true' : undefined}
+          >
+            <span
+              className={`block rounded-full transition-all duration-300 ${
+                i === slide
+                  ? 'w-8 h-2.5 bg-primary'
+                  : 'w-2.5 h-2.5 bg-muted-copy/40 hover:bg-muted-copy/60'
+              }`}
+            />
+          </button>
         ))}
       </div>
 
