@@ -1,7 +1,6 @@
 import { storage } from '@/shared/storage';
 
 import { getUiTranslations, getUiTranslationsSync, preloadLanguage } from './data';
-import { UI_TRANSLATIONS } from './localization.data';
 import type { SupportedInterfaceLanguage } from './localization.types';
 import { EXTRA_UI_TRANSLATIONS } from './translations';
 
@@ -54,13 +53,20 @@ export const LocalizationService = {
   },
 
   /**
-   * Synchronous translation — uses in-memory cache or static fallback.
-   * After initial language load, this is instant.
+   * Synchronous translation — uses the in-memory cache populated by
+   * `getUiTranslations`/`preloadLanguage`. Before that per-language chunk
+   * has loaded, this falls through to `extra`/the raw key; call
+   * `waitUntilReady` (as the localization store does on boot and on
+   * language change) to know when to re-render with the loaded copy.
+   *
+   * Intentionally does NOT statically import the ~700KB all-languages
+   * `UI_TRANSLATIONS` object as a fallback — that object previously made
+   * every page (including the public landing page) eagerly download and
+   * parse UI copy for all 15 supported languages before first paint.
    */
   translate(key: string, language: SupportedInterfaceLanguage): string {
-    const ui =
-      getUiTranslationsSync(language) ?? (UI_TRANSLATIONS[language] as Record<string, string>);
-    const uiEn = getUiTranslationsSync('en') ?? (UI_TRANSLATIONS.en as Record<string, string>);
+    const ui = getUiTranslationsSync(language) ?? {};
+    const uiEn = getUiTranslationsSync('en') ?? {};
     const extra = EXTRA_UI_TRANSLATIONS[language] as Record<string, string>;
     const extraEn = EXTRA_UI_TRANSLATIONS.en as Record<string, string>;
     return ui[key] ?? extra[key] ?? uiEn[key] ?? extraEn[key] ?? key;
@@ -82,5 +88,17 @@ export const LocalizationService = {
    */
   preloadLanguage(language: SupportedInterfaceLanguage): void {
     preloadLanguage(language);
+  },
+
+  /**
+   * Resolves once `language`'s UI copy (and the English fallback, if
+   * different) has finished loading and is available synchronously via
+   * `getUiTranslationsSync`/`translate`.
+   */
+  async waitUntilReady(language: SupportedInterfaceLanguage): Promise<void> {
+    await getUiTranslations(language);
+    if (language !== 'en') {
+      await getUiTranslations('en');
+    }
   },
 };

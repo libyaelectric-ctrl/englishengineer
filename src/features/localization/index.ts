@@ -10,7 +10,6 @@ export {
 export {
   INTERFACE_LANGUAGES,
   AVAILABLE_INTERFACE_LANGUAGES,
-  UI_TRANSLATIONS,
   NAVIGATION_TRANSLATIONS,
 } from './localization.data';
 
