@@ -158,7 +158,12 @@ export const FirebaseBridge = () => {
       // Register the token getter SYNCHRONOUSLY before any async seed() work.
       // This ensures billing API calls always have an Authorization header,
       // even if seed() hasn't finished profile hydration yet.
-      setAuthTokenGetter(async () => (await getIdToken()) ?? null);
+      setAuthTokenGetter(async () => {
+        const token = await getIdToken();
+        console.log('[FirebaseBridge] getToken result:', token ? 'OK (len=' + token.length + ')' : 'NULL');
+        return token;
+      });
+      console.log('[FirebaseBridge] authTokenGetter set, isSignedIn:', isSignedIn, 'user.uid:', user.uid);
       void seed();
       return () => {
         cancelled = true;
