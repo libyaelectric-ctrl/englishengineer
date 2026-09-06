@@ -1,4 +1,4 @@
-const CACHE_NAME = 'engvox-v1';
+const CACHE_NAME = 'engvox-v2';
 const OFFLINE_URL = '/offline.html';
 
 const PRECACHE_URLS = [
@@ -40,10 +40,13 @@ self.addEventListener('fetch', (event) => {
       const fetchPromise = fetch(event.request)
         .then((response) => {
           if (response && response.status === 200 && response.type === 'basic') {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, clone);
-            });
+            const cacheControl = response.headers.get('cache-control') || '';
+            if (!cacheControl.includes('no-cache') && !cacheControl.includes('no-store')) {
+              const clone = response.clone();
+              caches.open(CACHE_NAME).then((cache) => {
+                cache.put(event.request, clone);
+              });
+            }
           }
           return response;
         })
