@@ -1,5 +1,6 @@
 import { AppProvider } from '@/providers';
 import { router } from '@/routes/router';
+import { Analytics } from '@vercel/analytics/react';
 
 import { Component, type ErrorInfo, type ReactNode, Suspense, lazy } from 'react';
 
@@ -69,6 +70,7 @@ const AppContent = () => {
             <CookieConsentBanner />
           </FirebaseAuthProvider>
           <ToastContainer />
+          <Analytics />
         </AppProvider>
       </ThemeProvider>
     </SimpleErrorBoundary>
