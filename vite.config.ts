@@ -72,6 +72,14 @@ export default defineConfig(() => {
                 return getDataChunk(id) ?? 'seed-data';
               if ((id.includes('/data/') || id.includes('seed')) && !id.includes('/localization/'))
                 return 'seed-data';
+              // Each UI-language file (data/en.ts, data/tr.ts, ...) is already
+              // dynamically imported one at a time (see localization/data) —
+              // give each its own chunk instead of merging all 15 languages
+              // into a single 'localization-data' file, which previously
+              // forced a full download of every language whenever just one
+              // was requested.
+              const langChunkMatch = id.match(/\/features\/localization\/data\/([a-z]{2})\.ts$/);
+              if (langChunkMatch) return `localization-lang-${langChunkMatch[1]}`;
               if (id.includes('/features/localization/') && id.includes('/data/'))
                 return 'localization-data';
               if (id.includes('/features/localization/translations/'))
