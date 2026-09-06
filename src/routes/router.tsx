@@ -18,6 +18,14 @@ import { OnboardingGate } from '@/features/profile';
 
 import { RouteErrorPage } from './RouteErrorPage';
 
+// The landing page ('/') is the entry point for the vast majority of
+// first-time visitors, so lazy-loading it (as every other route does)
+// actively hurts: the browser can't even start fetching its chunk until
+// the main JS bundle has been downloaded AND executed, adding a full
+// extra network round-trip before anything paints. Import it eagerly so
+// it downloads in parallel with the rest of the initial bundle instead.
+import LandingPage from '@/pages/LandingPage';
+
 const withSuspense = (Component: ComponentType) => (
   <Suspense fallback={<LoadingState />}>
     <Component />
@@ -38,7 +46,6 @@ const Curriculum = lazy(() => import('@/pages/CurriculumPage'));
 const Tools = lazy(() => import('@/pages/ToolsPage'));
 const Progress = lazy(() => import('@/pages/ProgressPage'));
 const NotFound = lazy(() => import('@/pages/NotFoundPage'));
-const Landing = lazy(() => import('@/pages/LandingPage'));
 const Pricing = lazy(() => import('@/pages/PricingPage'));
 const Business = lazy(() => import('@/pages/BusinessPage'));
 const Legal = lazy(() => import('@/pages/LegalPage'));
@@ -58,7 +65,7 @@ export const router = createHashRouter([
     children: [
       {
         path: '/',
-        element: withSuspense(Landing),
+        element: <LandingPage />,
       },
       {
         path: '/pricing',
