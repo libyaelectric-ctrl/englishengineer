@@ -21,15 +21,15 @@ const overviewStore = new Map<
 function getOverview(userId: string) {
   if (!overviewStore.has(userId)) {
     overviewStore.set(userId, {
-      vocabulary: { total: 120, learned: 74, mastered: 31, struggling: 12 },
-      grammar: { total: 85, learned: 52, mastered: 28, struggling: 8 },
-      reading: { total: 48, completed: 36, avgScore: 78.5 },
-      writing: { total: 24, submitted: 18, avgScore: 72.3 },
-      listening: { total: 32, completed: 25, avgScore: 81.2 },
-      speaking: { total: 16, submitted: 11, avgScore: 69.8 },
-      overallLevel: 'B1',
-      dailyGoal: { target: 5, completed: 3 },
-      weeklyGoal: { target: 15, completed: 9 },
+      vocabulary: { total: 0, learned: 0, mastered: 0, struggling: 0 },
+      grammar: { total: 0, learned: 0, mastered: 0, struggling: 0 },
+      reading: { total: 0, completed: 0, avgScore: 0 },
+      writing: { total: 0, submitted: 0, avgScore: 0 },
+      listening: { total: 0, completed: 0, avgScore: 0 },
+      speaking: { total: 0, submitted: 0, avgScore: 0 },
+      overallLevel: 'A1',
+      dailyGoal: { target: 5, completed: 0 },
+      weeklyGoal: { target: 15, completed: 0 },
     });
   }
   return overviewStore.get(userId)!;

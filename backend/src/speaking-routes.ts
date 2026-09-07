@@ -7,6 +7,7 @@ import path from 'node:path';
 
 import { checkCostLimits, createAIService } from './ai.js';
 import { ApiError } from './errors.js';
+import { aggregateByPromptCategory, averageScore } from './utils/stats.js';
 import { logger } from './logger.js';
 import { CircuitBreaker } from './utils/circuit-breaker.js';
 import { SpeakingSubmitBodySchema, validateBody } from './validation.js';
@@ -538,29 +539,10 @@ export const registerSpeakingRoutes = (
 
         const subs = getUserSubmissions(userId);
         const totalSubmissions = subs.length;
-        const averageScore =
-          totalSubmissions > 0
-            ? Math.round(
-                (subs.reduce((s, sub) => s + sub.overallScore, 0) / totalSubmissions) * 10
-              ) / 10
-            : 0;
+        const averageScoreVal = averageScore(subs.map((s) => s.overallScore));
+        const byCategory = aggregateByPromptCategory(subs as unknown as Array<{ promptId: string; [key: string]: unknown }>, SPEAKING_PROMPTS, 'overallScore');
 
-        const byCategory: Record<string, { count: number; avgScore: number }> = {};
-        const catMap = new Map<string, number[]>();
-        for (const sub of subs) {
-          const prompt = SPEAKING_PROMPTS.find((p) => p.id === sub.promptId);
-          const cat = prompt?.category ?? 'general';
-          if (!catMap.has(cat)) catMap.set(cat, []);
-          catMap.get(cat)!.push(sub.overallScore);
-        }
-        for (const [cat, scores] of catMap) {
-          byCategory[cat] = {
-            count: scores.length,
-            avgScore: Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10,
-          };
-        }
-
-        response.json({ totalSubmissions, averageScore, byCategory });
+        response.json({ totalSubmissions, averageScore: averageScoreVal, byCategory });
       } catch (error) {
         next(error);
       }
