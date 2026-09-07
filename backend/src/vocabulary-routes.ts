@@ -1,114 +1,14 @@
 import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
-
 import type { VocabularyLookupQuery } from '../types.js';
 import { getOrSet } from './cache/redis-cache.service.js';
 import { ApiError } from './errors.js';
-import {
-  ProgressBodySchema,
-  VocabularyLookupQuerySchema,
-  validateBody,
-  validateQuery,
-} from './validation.js';
+import { getLearningRepository } from './learning-repository.js';
+import { getPersistentPerformanceStats } from './progress-routes.js';
+import { ProgressBodySchema, VocabularyLookupQuerySchema, validateBody, validateQuery } from './validation.js';
 import type { VocabularyLookupService } from './vocabulary-service.js';
-import { categorizePerformance } from './utils/stats.js';
-
-interface VocabularyRecord {
-  wordId: string;
-  result: 'correct' | 'incorrect';
-  timestamp: string;
-}
-
-// Per-user vocabulary progress store
-const progressStore = new Map<string, VocabularyRecord[]>();
-
-function getUserRecords(userId: string): VocabularyRecord[] {
-  if (!progressStore.has(userId)) {
-    progressStore.set(userId, []);
-  }
-  return progressStore.get(userId)!;
-}
-
-export const registerVocabularyRoutes = (
-  app: Express,
-  service: VocabularyLookupService,
-  rateLimiter: RequestHandler,
-  requireBackendAuth: RequestHandler
-): void => {
-  app.get(
-    '/api/vocabulary/lookup',
-    rateLimiter,
-    validateQuery(VocabularyLookupQuerySchema),
-    async (request: Request, response: Response, next: NextFunction) => {
-      try {
-        const query = request.validatedQuery as unknown as VocabularyLookupQuery;
-        const cacheKey = `vocab:${query.word}`;
-        const { value: result, fromCache } = await getOrSet(cacheKey, 21600, () =>
-          service.lookup(query)
-        );
-        response.json({ ...result, cached: fromCache });
-      } catch (error) {
-        next(error);
-      }
-    }
-  );
-
-  app.post(
-    '/api/vocabulary/:id/progress',
-    requireBackendAuth,
-    validateBody(ProgressBodySchema),
-    async (request: Request, response: Response, next: NextFunction) => {
-      try {
-        const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
-
-        const wordId = request.params.id as string;
-        const { result } = request.validatedBody as {
-          result: 'correct' | 'incorrect';
-        };
-
-        const now = new Date().toISOString();
-        getUserRecords(userId).push({ wordId, result, timestamp: now });
-
-        response.json({
-          success: true,
-          wordId,
-          result,
-          updatedAt: now,
-          message:
-            result === 'correct'
-              ? 'Well done! Keep going.'
-              : 'No worries, you will get it next time.',
-        });
-      } catch (error) {
-        next(error);
-      }
-    }
-  );
-
-  app.get(
-    '/api/vocabulary/stats',
-    requireBackendAuth,
-    async (request: Request, response: Response, next: NextFunction) => {
-      try {
-        const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
-
-        const records = getUserRecords(userId);
-        const stats = categorizePerformance(records, 'wordId');
-
-        response.json({
-          total: stats.total,
-          correct: stats.correct,
-          incorrect: stats.incorrect,
-          new: stats.new,
-          learning: stats.learning,
-          learned: stats.learned,
-          mastered: stats.mastered,
-          struggling: stats.struggling,
-        });
-      } catch (error) {
-        next(error);
-      }
-    }
-  );
+const userIdFrom = (request: Request): string => { const userId = request.auth?.userId; if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required'); return userId; };
+export const registerVocabularyRoutes = (app: Express, service: VocabularyLookupService, rateLimiter: RequestHandler, requireBackendAuth: RequestHandler): void => {
+  app.get('/api/vocabulary/lookup', rateLimiter, validateQuery(VocabularyLookupQuerySchema), async (request: Request, response: Response, next: NextFunction) => { try { const query = request.validatedQuery as unknown as VocabularyLookupQuery; const { value: result, fromCache } = await getOrSet(`vocab:${query.word}`, 21600, () => service.lookup(query)); response.json({ ...result, cached: fromCache }); } catch (error) { next(error); } });
+  app.post('/api/vocabulary/:id/progress', requireBackendAuth, validateBody(ProgressBodySchema), async (request: Request, response: Response, next: NextFunction) => { try { const userId = userIdFrom(request); const wordId = request.params.id as string; const { result } = request.validatedBody as { result: 'correct' | 'incorrect' }; const event = await getLearningRepository().recordProgress({ userId, module: 'vocabulary', itemId: wordId, result, score: result === 'correct' ? 100 : 0, category: 'general', metadata: {} }); response.json({ success: true, wordId, result, updatedAt: event.occurredAt, message: result === 'correct' ? 'Well done! Keep going.' : 'No worries, you will get it next time.' }); } catch (error) { next(error); } });
+  app.get('/api/vocabulary/stats', requireBackendAuth, async (request: Request, response: Response, next: NextFunction) => { try { response.json(await getPersistentPerformanceStats(userIdFrom(request), 'vocabulary')); } catch (error) { next(error); } });
 };
