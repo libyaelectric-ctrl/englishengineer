@@ -5,6 +5,7 @@ import { getLearningRepository, type WritingSubmissionRecord } from './learning-
 import { aggregateByPromptCategory, averageScore } from './utils/stats.js';
 import { CircuitBreaker } from './utils/circuit-breaker.js';
 import { WritingSubmitBodySchema, validateBody } from './validation.js';
+
 type AiService = ReturnType<typeof createAIService>;
 interface WritingPrompt { id: string; title: string; category: string; level: string; prompt: string; wordLimit: number; }
 const WRITING_PROMPTS: WritingPrompt[] = [
@@ -50,6 +51,6 @@ export const registerWritingRoutes = (app: Express, requireBackendAuth: RequestH
       response.json({ success: true, id: submission.id, ...evaluation, status: submission.status, submittedAt: submission.submittedAt });
     } catch (error) { next(error); }
   });
-  app.get('/api/writing/stats', requireBackendAuth, async (request: Request, response: Response, next: NextFunction) => { try { const submissions = await getLearningRepository().listWritingSubmissions(userIdFrom(request)); response.json({ totalSubmissions: submissions.length, averageScore: averageScore(submissions.map((submission) => submission.score)), byCategory: aggregateByPromptCategory(submissions as unknown as Array<{ promptId: string; [key: string]: unknown }>, WRITING_PROMPTS, 'score') }); } catch (error) { next(error); } });
+  app.get('/api/writing/stats', requireBackendAuth, async (request: Request, response: Response, next: NextFunction) => { try { const submissions = await getLearningRepository().listWritingSubmissions(userIdFrom(request)); response.json({ totalSubmissions: submissions.length, averageScore: averageScore(submissions.map((submission) => submission.score)), byCategory: aggregateByPromptCategory(submissions, WRITING_PROMPTS, 'score') }); } catch (error) { next(error); } });
   app.get('/api/writing/:id', requireBackendAuth, async (request: Request, response: Response, next: NextFunction) => { try { response.json((await getLearningRepository().getWritingSubmission(userIdFrom(request), request.params.id as string)) ?? { notFound: true }); } catch (error) { next(error); } });
 };
