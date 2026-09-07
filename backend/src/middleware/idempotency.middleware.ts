@@ -1,175 +1,50 @@
+import { createHash } from 'node:crypto';
 import type { NextFunction, Request, Response } from 'express';
-
 import { ApiError } from '../errors.js';
-
-interface IdempotencyEntry {
-  statusCode: number;
-  body: unknown;
-  timestamp: number;
-}
-
-interface IdempotencyStore {
-  get(key: string): Promise<IdempotencyEntry | null>;
-  set(key: string, value: IdempotencyEntry): Promise<void>;
-  entries?: () => IterableIterator<[string, IdempotencyEntry]>;
-  delete?(key: string): void;
-}
-
-interface IdempotencyOptions {
-  headerName?: string;
-  ttlMs?: number;
-  store?: IdempotencyStore;
-}
-
+interface IdempotencyEntry { statusCode: number; body: unknown; timestamp: number; fingerprint?: string; }
+interface IdempotencyStore { get(key: string): Promise<IdempotencyEntry | null>; set(key: string, value: IdempotencyEntry): Promise<void>; entries?: () => IterableIterator<[string, IdempotencyEntry]>; delete?(key: string): void; }
+interface IdempotencyOptions { headerName?: string; ttlMs?: number; store?: IdempotencyStore; }
+interface PendingEntry { fingerprint: string; response: Promise<IdempotencyEntry | null>; resolve: (entry: IdempotencyEntry | null) => void; }
 let globalIdempotencyStore: IdempotencyStore | null = null;
-
-export const setGlobalIdempotencyStore = (store: IdempotencyStore): void => {
-  globalIdempotencyStore = store;
-};
-
+const pending = new Map<string, PendingEntry>();
+export const setGlobalIdempotencyStore = (store: IdempotencyStore): void => { globalIdempotencyStore = store; };
+const hash = (value: string): string => createHash('sha256').update(value).digest('hex');
+const stable = (value: unknown): string => { if (Array.isArray(value)) return `[${value.map(stable).join(',')}]`; if (value && typeof value === 'object') return `{${Object.entries(value as Record<string, unknown>).sort(([a], [b]) => a.localeCompare(b)).map(([key, item]) => `${JSON.stringify(key)}:${stable(item)}`).join(',')}}`; return JSON.stringify(value) ?? 'null'; };
+const identity = (req: Request): string => req.auth?.userId || 'anonymous';
+const requestPath = (req: Request): string => (req.originalUrl || req.url || '').split('?')[0];
+const scopeKey = (req: Request, key: string): string => req.method && requestPath(req) ? hash(`${identity(req)}\n${req.method.toUpperCase()}\n${requestPath(req)}\n${key}`) : key;
+const fingerprint = (req: Request): string => hash(`${req.method || ''}\n${requestPath(req)}\n${stable(req.body ?? null)}`);
+const conflict = (): ApiError => new ApiError(409, 'idempotency_key_reused', 'The idempotency key was already used with a different request.');
+const replay = (res: Response, entry: IdempotencyEntry): void => { res.setHeader?.('Idempotency-Replayed', 'true'); res.status(entry.statusCode).json(entry.body); };
 export const idempotencyKey = (options: IdempotencyOptions = {}) => {
-  const {
-    headerName = 'X-Idempotency-Key',
-    ttlMs = 24 * 60 * 60 * 1000,
-    store = options.store || globalIdempotencyStore || new Map(),
-  } = options;
-
+  const { headerName = 'X-Idempotency-Key', ttlMs = 86_400_000, store = globalIdempotencyStore || createMemoryStore() } = options;
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const key = req.headers[headerName.toLowerCase()] as string | undefined;
-
-      if (!key) {
-        return next();
-      }
-
-      if (typeof key !== 'string' || key.length < 16 || key.length > 256) {
-        throw new ApiError(
-          400,
-          'invalid_idempotency_key',
-          'Idempotency key must be a string between 16 and 256 characters.'
-        );
-      }
-
-      const existing = await store.get(key);
-      if (existing) {
-        res.status(existing.statusCode).json(existing.body);
-        return;
-      }
-
-      const originalJson = res.json.bind(res);
-      res.json = ((body: unknown) => {
-        void Promise.resolve(
-          store.set(key, {
-            statusCode: res.statusCode,
-            body,
-            timestamp: Date.now(),
-          })
-        ).catch(() => {});
-
-        if (typeof store.entries === 'function') {
-          const now = Date.now();
-          for (const [k, v] of store.entries()) {
-            if (now - v.timestamp > ttlMs && store.delete) {
-              store.delete(k);
-            }
-          }
-        }
-
-        return originalJson(body);
-      }) as typeof res.json;
-
+      const header = req.headers[headerName.toLowerCase()];
+      if (header === undefined) return next();
+      if (typeof header !== 'string' || header.length < 16 || header.length > 256) throw new ApiError(400, 'invalid_idempotency_key', 'Idempotency key must be a string between 16 and 256 characters.');
+      const scoped = scopeKey(req, header); const bodyFingerprint = fingerprint(req);
+      const existing = await store.get(scoped);
+      if (existing && Date.now() - existing.timestamp <= ttlMs) { if (existing.fingerprint && existing.fingerprint !== bodyFingerprint) throw conflict(); replay(res, existing); return; }
+      if (existing && store.delete) store.delete(scoped);
+      const inFlight = pending.get(scoped);
+      if (inFlight) { if (inFlight.fingerprint !== bodyFingerprint) throw conflict(); const result = await inFlight.response; if (result) replay(res, result); else next(); return; }
+      let resolvePending!: (entry: IdempotencyEntry | null) => void;
+      const response = new Promise<IdempotencyEntry | null>((resolve) => { resolvePending = resolve; });
+      pending.set(scoped, { fingerprint: bodyFingerprint, response, resolve: resolvePending });
+      const originalJson = res.json.bind(res); let settled = false;
+      const settle = (entry: IdempotencyEntry | null): void => { if (settled) return; settled = true; pending.delete(scoped); resolvePending(entry); };
+      res.json = ((body: unknown) => { const entry = { statusCode: res.statusCode, body, timestamp: Date.now(), fingerprint: bodyFingerprint }; void store.set(scoped, entry).then(() => settle(entry), () => settle(null)); return originalJson(body); }) as typeof res.json;
+      if (typeof res.once === 'function') res.once('close', () => settle(null));
       next();
-    } catch (error) {
-      next(error);
-    }
+    } catch (error) { next(error); }
   };
 };
-
-const createMemoryStore = (): IdempotencyStore => {
-  const map = new Map<string, IdempotencyEntry>();
-  return {
-    async get(key: string) {
-      return map.get(key) ?? null;
-    },
-    async set(key: string, value: IdempotencyEntry) {
-      map.set(key, value);
-    },
-    entries() {
-      return map.entries();
-    },
-    delete(key: string) {
-      map.delete(key);
-    },
-  };
+const createMemoryStore = (): IdempotencyStore => { const map = new Map<string, IdempotencyEntry>(); return { async get(key) { return map.get(key) ?? null; }, async set(key, value) { map.set(key, value); }, entries: () => map.entries(), delete: (key) => { map.delete(key); } }; };
+const createRedisStore = (config: { rateLimit?: { upstashUrl?: string; upstashToken?: string; storeTimeoutMs?: number } }, fetchImpl: typeof fetch): IdempotencyStore => {
+  const url = config.rateLimit?.upstashUrl || process.env.UPSTASH_REDIS_REST_URL; const token = config.rateLimit?.upstashToken || process.env.UPSTASH_REDIS_REST_TOKEN; const timeoutMs = config.rateLimit?.storeTimeoutMs || 3000;
+  if (!url || !token) throw new Error('Redis store configured but UPSTASH_REDIS_REST_URL or TOKEN is missing.');
+  const redisFetch = async (args: (string | number)[]) => { const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), timeoutMs); try { const response = await fetchImpl(url, { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(args), signal: controller.signal }); return response.ok ? await response.json() : null; } catch { return null; } finally { clearTimeout(timeoutId); } };
+  return { async get(key) { const payload = await redisFetch(['GET', `engineeros:idempotency:${key}`]); return payload?.result ? JSON.parse(payload.result) as IdempotencyEntry : null; }, async set(key, value) { await redisFetch(['SET', `engineeros:idempotency:${key}`, JSON.stringify(value), 'PX', '86400000']); } };
 };
-
-const createRedisStore = (
-  config: {
-    rateLimit?: {
-      upstashUrl?: string;
-      upstashToken?: string;
-      storeTimeoutMs?: number;
-    };
-  },
-  fetchImpl: typeof fetch
-): IdempotencyStore => {
-  const url = config.rateLimit?.upstashUrl || process.env.UPSTASH_REDIS_REST_URL;
-  const token = config.rateLimit?.upstashToken || process.env.UPSTASH_REDIS_REST_TOKEN;
-  const timeoutMs = config.rateLimit?.storeTimeoutMs || 3000;
-
-  if (!url || !token)
-    throw new Error('Redis store configured but UPSTASH_REDIS_REST_URL or TOKEN is missing.');
-
-  const redisFetch = async (args: (string | number)[]) => {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-    try {
-      const response = await fetchImpl(url, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(args),
-        signal: controller.signal,
-      });
-      return response.ok ? await response.json() : null;
-    } catch {
-      return null;
-    } finally {
-      clearTimeout(timeoutId);
-    }
-  };
-
-  return {
-    async get(key: string) {
-      const payload = await redisFetch(['GET', `engineeros:idempotency:${key}`]);
-      return payload?.result ? JSON.parse(payload.result) : null;
-    },
-    async set(key: string, value: IdempotencyEntry) {
-      await redisFetch([
-        'SET',
-        `engineeros:idempotency:${key}`,
-        JSON.stringify(value),
-        'PX',
-        '86400000',
-      ]);
-    },
-  };
-};
-
-export const createIdempotencyStore = (
-  type: 'memory' | 'redis' = 'memory',
-  config: {
-    rateLimit?: {
-      upstashUrl?: string;
-      upstashToken?: string;
-      storeTimeoutMs?: number;
-    };
-  } = {},
-  fetchImpl: typeof fetch = fetch
-): IdempotencyStore => {
-  if (type === 'memory') return createMemoryStore();
-  if (type === 'redis') return createRedisStore(config, fetchImpl);
-  throw new Error(`Unknown idempotency store type: ${type}`);
-};
+export const createIdempotencyStore = (type: 'memory' | 'redis' = 'memory', config: { rateLimit?: { upstashUrl?: string; upstashToken?: string; storeTimeoutMs?: number } } = {}, fetchImpl: typeof fetch = fetch): IdempotencyStore => type === 'memory' ? createMemoryStore() : type === 'redis' ? createRedisStore(config, fetchImpl) : (() => { throw new Error(`Unknown idempotency store type: ${type}`); })();
