@@ -24,7 +24,3 @@ export function loadVocabularyEntries(): Promise<VocabularyEntry[]> {
 export function getVocabularyEntries(): VocabularyEntry[] | null {
   return _entriesSync;
 }
-
-export function getVocabularyEntriesOrWait(): Promise<VocabularyEntry[]> {
-  return loadVocabularyEntries();
-}

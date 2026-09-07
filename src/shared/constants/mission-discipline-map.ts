@@ -93,7 +93,7 @@ const CROSS_DISCIPLINE_SET: ReadonlySet<CrossDisciplineDomain> = new Set([
  * Maps a free-text mission discipline label to a canonical VocabularyDomain.
  * Returns 'general' if no mapping found (missions shown to all disciplines).
  */
-export function mapMissionDiscipline(missionDiscipline: string | undefined): VocabularyDomain {
+function mapMissionDiscipline(missionDiscipline: string | undefined): VocabularyDomain {
   if (!missionDiscipline) return 'general';
   return MISSION_DISCIPLINE_MAP[missionDiscipline] ?? 'general';
 }
@@ -103,7 +103,7 @@ export function mapMissionDiscipline(missionDiscipline: string | undefined): Voc
  * Compatible means: mission discipline matches user discipline,
  * OR mission belongs to cross-discipline domains (general/engineering).
  */
-export function isMissionCompatible(
+function isMissionCompatible(
   missionDiscipline: string | undefined,
   userDiscipline: EngineeringDiscipline
 ): boolean {

@@ -23,7 +23,7 @@ const validateGrammarRuleFields = (rule: Record<string, unknown>): boolean =>
   hasArrayField(rule, 'canGenerateTaskTypes') &&
   hasArrayField(rule, 'domainFit');
 
-export const isGrammarRule = (value: unknown): value is GrammarRule => {
+const isGrammarRule = (value: unknown): value is GrammarRule => {
   if (!value || typeof value !== 'object') return false;
   return validateGrammarRuleFields(value as Record<string, unknown>);
 };

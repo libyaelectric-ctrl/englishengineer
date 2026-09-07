@@ -21,18 +21,7 @@ export const ENGINEERING_DISCIPLINES = [
 export type EngineeringDiscipline = (typeof ENGINEERING_DISCIPLINES)[number];
 
 /** Cross-discipline vocabulary domains available to all disciplines. */
-export const CROSS_DISCIPLINE_DOMAINS = ['general', 'engineering'] as const;
-export type CrossDisciplineDomain = (typeof CROSS_DISCIPLINE_DOMAINS)[number];
-
-/** Cross-discipline pool sizes (from the canonical corpus). Included in every discipline total. */
-export const CROSS_DOMAIN_WORD_COUNTS: Record<CrossDisciplineDomain, number> = {
-  general: 2327,
-  engineering: 1104,
-};
-
-/** General + Engineering core vocabulary shared by all disciplines. */
-export const CORE_VOCABULARY_WORD_COUNT =
-  CROSS_DOMAIN_WORD_COUNTS.general + CROSS_DOMAIN_WORD_COUNTS.engineering;
+export type CrossDisciplineDomain = 'general' | 'engineering';
 
 /** All vocabulary domains (core + cross-discipline). */
 export type VocabularyDomain = EngineeringDiscipline | CrossDisciplineDomain;

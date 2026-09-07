@@ -24,45 +24,6 @@ export interface LocalGrammarProgressSummary {
   strong: number;
 }
 
-const getReviewIsDue = (progress: GrammarRuleProgress, now: Date): boolean =>
-  progress.reviewStatus === 'Due' ||
-  (progress.nextReviewDate !== null &&
-    new Date(progress.nextReviewDate).getTime() <= now.getTime());
-
-const describeStrongWithMissingEvidence = (missingEvidence: GrammarTransferSkill[]): string =>
-  `The grammar practice is strong, but mastery still needs ${missingEvidence.join(' and ')} transfer evidence.`;
-
-const describeReviewOverdue = (progress: GrammarRuleProgress): string =>
-  progress.incorrectUsages > progress.correctUsages
-    ? 'Recent mistakes and the scheduled review date make this rule a current priority.'
-    : progress.strength >= 70
-      ? 'A maintenance review is due so this strong rule remains reliable.'
-      : 'The scheduled practice interval has ended, so this rule is ready for another use.';
-
-const describeReviewNotDue = (progress: GrammarRuleProgress): string => {
-  if (progress.reviewStatus === 'New')
-    return 'This is the next named topic in your current-level grammar path.';
-  if (progress.reviewStatus === 'Strong')
-    return 'This rule is strong and does not need urgent review.';
-  return progress.incorrectUsages > 0
-    ? 'A previous mistake keeps this rule in Learning until correct use becomes consistent.'
-    : 'This rule needs more correct uses before it can become Strong.';
-};
-
-export const getGrammarReviewReason = (progress: GrammarRuleProgress, now = new Date()): string => {
-  const missingEvidence = getMissingGrammarTransferEvidence(progress);
-  const reviewIsDue = getReviewIsDue(progress, now);
-  const hasStrongPractice =
-    progress.correctUsages >= MIN_CORRECT_USAGES_FOR_STRONG &&
-    progress.strength >= MIN_STRENGTH_FOR_STRONG;
-
-  if (hasStrongPractice && missingEvidence.length > 0) {
-    return describeStrongWithMissingEvidence(missingEvidence);
-  }
-  if (reviewIsDue) return describeReviewOverdue(progress);
-  return describeReviewNotDue(progress);
-};
-
 const STORAGE_KEY = 'EngVox_grammar_progress';
 const DAY_MS = 24 * 60 * 60 * 1000;
 const TRANSFER_MASTERY_SCORE = 80;
@@ -102,9 +63,7 @@ const saveOne = (progress: GrammarRuleProgress): GrammarRuleProgress => {
   return progress;
 };
 
-export const getMissingGrammarTransferEvidence = (
-  progress: GrammarRuleProgress
-): GrammarTransferSkill[] =>
+const getMissingGrammarTransferEvidence = (progress: GrammarRuleProgress): GrammarTransferSkill[] =>
   (['reading', 'writing'] as const).filter((skill) => {
     const evidence = progress.skillEvidence[skill];
     return !evidence || evidence.score < TRANSFER_MASTERY_SCORE;

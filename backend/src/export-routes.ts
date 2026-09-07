@@ -8,14 +8,12 @@ router.get('/export/user-data', async (req: Request, res: Response) => {
 
   const format = (req.query.format as 'json' | 'csv') || 'json';
 
-  // NOTE: placeholder data — this endpoint is not yet wired to the real
-  // learning/subscription data layer. Wiring it up is tracked separately;
-  // this file's job here was just restoring a broken build (see app.ts).
+  // TODO: Wire to real Supabase data layer (profile, progress, vocabulary, etc.)
+  // The placeholder below returns minimal identifying info for GDPR compliance.
   const userData = {
     profile: { id: userId, email: req.auth?.email },
-    learning: { xp: 1250, streak: 7, level: 5 },
-    subscriptions: [{ plan: 'pro', status: 'active' }],
     exportDate: new Date().toISOString(),
+    note: 'Full data export pending Supabase data layer integration.',
   };
 
   if (format === 'csv') {

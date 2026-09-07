@@ -863,35 +863,32 @@
       },
     },
 
-    // â”€â”€â”€ Export (GDPR) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    '/api/v1/export/me': {
+    // --- Export (GDPR) ---
+    '/api/export/user-data': {
       get: {
         tags: ['Export'],
         summary: 'Export all user data (GDPR)',
         security: [{ bearerAuth: [] }],
-        description:
-          'Returns complete user data as JSON: profile, progress, vocabulary, writing, speaking, listening, reading.',
+        description: 'Returns user data as JSON or CSV.',
+        parameters: [
+          {
+            name: 'format',
+            in: 'query',
+            schema: { type: 'string', enum: ['json', 'csv'], default: 'json' },
+          },
+        ],
         responses: {
           200: {
-            description: 'Full user data export',
+            description: 'User data export',
             content: {
-              'application/json': { schema: { type: 'object', description: 'Complete user data' } },
+              'application/json': { schema: { type: 'object', description: 'User data export' } },
             },
           },
         },
       },
     },
-    '/api/v1/export/me/summary': {
-      get: {
-        tags: ['Export'],
-        summary: 'Export user data summary (lightweight)',
-        security: [{ bearerAuth: [] }],
-        description: 'Returns summary without detailed records.',
-        responses: { 200: { description: 'User data summary' } },
-      },
-    },
 
-    // â”€â”€â”€ Team Analytics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // --- Team Analytics ---
     '/api/v1/team/analytics': {
       get: {
         tags: ['Team'],
@@ -942,7 +939,7 @@
       },
     },
 
-    // â”€â”€â”€ Admin â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // --- Admin ---
     '/api/admin/stats': {
       get: {
         tags: ['Admin'],

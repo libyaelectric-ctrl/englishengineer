@@ -40,7 +40,9 @@ const getUserMonthlyCost = (userId: string): number => {
   monthStart.setDate(1);
   monthStart.setHours(0, 0, 0, 0);
 
-  return usage.filter((r) => r.userId === userId && new Date(r.timestamp) >= monthStart).length;
+  return usage
+    .filter((r) => r.userId === userId && new Date(r.timestamp) >= monthStart)
+    .reduce((sum, r) => sum + (r.estimatedCostUsd ?? 0), 0);
 };
 
 /** Calculate estimated cost for a given model and token counts */

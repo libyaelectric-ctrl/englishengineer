@@ -269,10 +269,14 @@ export const registerTeamAnalyticsRoutes = (
         // - Fetch session data for engagement metrics
         logger.info('Team analytics requested', { userId, requestId: req.id });
 
+        // TODO: Replace empty arrays with real Supabase queries:
+        // const members = await fetchWorkspaceMembers(workspaceId);
+        // const summaries = await fetchMemberSummaries(workspaceId);
+        // const sessions = await fetchMemberSessions(workspaceId);
         const analytics = buildTeamAnalytics(
-          [], // members from Supabase
-          [], // summaries from Supabase
-          [] // sessions from Supabase
+          [], // TODO: members from Supabase
+          [], // TODO: summaries from Supabase
+          [] // TODO: sessions from Supabase
         );
 
         res.json(analytics);

@@ -237,9 +237,3 @@ export function createApiClient(config?: ApiClientConfig) {
 
   return { get, post, put, del };
 }
-
-// ---------------------------------------------------------------------------
-// Default singleton
-// ---------------------------------------------------------------------------
-
-export const apiClient = createApiClient();

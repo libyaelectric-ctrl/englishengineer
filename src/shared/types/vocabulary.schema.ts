@@ -23,7 +23,7 @@ const validateVocabularyTermFields = (term: Record<string, unknown>): boolean =>
   hasArrayField(term, 'grammarFits') &&
   hasArrayField(term, 'skillUse');
 
-export const isVocabularyTerm = (value: unknown): value is VocabularyTerm => {
+const isVocabularyTerm = (value: unknown): value is VocabularyTerm => {
   if (!value || typeof value !== 'object') return false;
   return validateVocabularyTermFields(value as Record<string, unknown>);
 };

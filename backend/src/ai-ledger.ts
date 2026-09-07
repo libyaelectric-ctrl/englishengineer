@@ -430,17 +430,3 @@ export const createAiLedger = (config: {
   }
   return createMemoryAiLedger();
 };
-
-interface PlanLimitInfo {
-  daily: number | null;
-  monthly: number | null;
-}
-
-const _getAiPlanLimits = (): Record<string, PlanLimitInfo> => ({
-  free: { daily: FREE_DAILY_LIMIT, monthly: null },
-  junior: { daily: null, monthly: 50 },
-  senior: { daily: null, monthly: 150 },
-  specialist: { daily: null, monthly: 300 },
-  master: { daily: null, monthly: 600 },
-  team: { daily: null, monthly: 1500 },
-});
