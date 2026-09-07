@@ -10,6 +10,7 @@ import { getOrSet } from './cache/redis-cache.service.js';
 import { checkUserLimits } from './cost-tracker.js';
 import { ApiError } from './errors.js';
 import { requireRole } from './middleware/rbac.middleware.js';
+import { DEFAULT_PLAN_LIMITS, PLAN_AI_LIMITS } from './plan-limits.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
 import { CircuitBreaker } from './utils/circuit-breaker.js';
 import { AiRequestBodySchema, validateBody } from './validation.js';
@@ -27,17 +28,6 @@ export const AI_ROUTES: Record<string, string> = {
   '/api/ai/generate-content': 'generateContent',
   '/api/ai/transcribe': 'transcribeAudio',
 };
-
-const PLAN_AI_LIMITS: Record<PlanId, { daily: number | null; monthly: number }> = {
-  free: { daily: 3, monthly: 0 },
-  junior: { daily: null, monthly: 50 },
-  senior: { daily: null, monthly: 150 },
-  specialist: { daily: null, monthly: 300 },
-  master: { daily: null, monthly: 600 },
-  team: { daily: null, monthly: 1500 },
-};
-
-const DEFAULT_PLAN_LIMITS: { daily: number | null; monthly: number } = { daily: 3, monthly: 0 };
 
 const getPlanLimits = (planId: PlanId) => PLAN_AI_LIMITS[planId] ?? DEFAULT_PLAN_LIMITS;
 
@@ -120,7 +110,7 @@ const checkRateLimits = async (
   if (topupCredits > 0) return { count, useTopup: true, subscription, topupCredits, planId };
 
   throwLimitError(planId);
-  return { count, useTopup: false, subscription: null, topupCredits: 0, planId };
+  return { count, useTopup: false, subscription: null, topupCredits: 0, planId } as never;
 };
 
 const decrementTopup = async (

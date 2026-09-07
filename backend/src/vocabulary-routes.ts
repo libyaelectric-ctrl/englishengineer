@@ -2,6 +2,7 @@ import type { Express, NextFunction, Request, RequestHandler, Response } from 'e
 
 import type { VocabularyLookupQuery } from '../types.js';
 import { getOrSet } from './cache/redis-cache.service.js';
+import { ApiError } from './errors.js';
 import {
   ProgressBodySchema,
   VocabularyLookupQuerySchema,
@@ -57,7 +58,7 @@ export const registerVocabularyRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new Error('Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const wordId = request.params.id as string;
         const { result } = request.validatedBody as {
@@ -89,7 +90,7 @@ export const registerVocabularyRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new Error('Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const records = getUserRecords(userId);
         const total = records.length;

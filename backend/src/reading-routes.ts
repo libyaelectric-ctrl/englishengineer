@@ -284,8 +284,8 @@ export const registerReadingRoutes = (
         const userId = request.auth?.userId;
         if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
-        const limit = Number(request.query.limit) || 10;
-        const offset = Number(request.query.offset) || 0;
+        const limit = Math.min(Number(request.query.limit) || 10, 100);
+        const offset = Math.max(Number(request.query.offset) || 0, 0);
 
         const paginated = READING_ITEMS.slice(offset, offset + limit);
 
