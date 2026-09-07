@@ -34,9 +34,10 @@ export const FirebaseBridge = () => {
     };
     if (isSignedIn && user) { setAuthTokenGetter(async () => (await getIdToken()) ?? null); void seed(); return () => { cancelled = true; }; }
     if (isSignedIn === false) {
+      setAuthTokenGetter(null);
       storage.globalRemove('auth_user');
       const state = useAuthStore.getState();
-      if (state.sessionKind === 'firebase' || bridgedUserId.current) { bridgedUserId.current = null; storage.deactivateSession(); useAuthStore.setState({ currentUser: null, isAuthenticated: false, isLoading: false, sessionKind: null, providerUserSync: null, providerSignOut: null }); setAuthTokenGetter(null); }
+      if (state.sessionKind === 'firebase' || bridgedUserId.current) { bridgedUserId.current = null; storage.deactivateSession(); useAuthStore.setState({ currentUser: null, isAuthenticated: false, isLoading: false, sessionKind: null, providerUserSync: null, providerSignOut: null }); }
       else if (!state.currentUser) useAuthStore.setState({ isLoading: false });
     }
     return () => { cancelled = true; };
