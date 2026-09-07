@@ -34,6 +34,7 @@ import { type ReactNode, createContext, useContext, useEffect, useMemo, useState
 
 import { logger } from '@/shared/logger';
 import { isNativePlatform } from '@/shared/utils/capacitor';
+import { runWhenIdle } from '@/shared/utils/idle';
 
 import { FIREBASE_CONFIG } from './firebase.config';
 
@@ -64,9 +65,34 @@ export interface FirebaseAuthContextValue {
 const FirebaseAuthContext = createContext<FirebaseAuthContextValue | null>(null);
 
 export const FirebaseAuthProvider = ({ children }: { children: ReactNode }) => {
-  const auth = useMemo(() => getFirebaseAuth(), []);
+  const [auth, setAuth] = useState<Auth | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [isLoaded, setIsLoaded] = useState(!auth);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!FIREBASE_CONFIG) {
+      setIsLoaded(true);
+      return;
+    }
+    // getAuth() spins up Firebase's cross-origin auth-state iframe (a
+    // request to the authDomain, which itself calls out to googleapis.com
+    // for project config) the moment it's called — confirmed via a real
+    // PageSpeed Insights trace on engvox.com: this chain alone accounted
+    // for ~1.94s of critical-path latency, for every visitor including
+    // anonymous landing-page traffic that never touches auth. Deferring
+    // the call keeps that network chain off the initial paint.
+    //
+    // This doesn't change the loading contract: isLoaded already started
+    // false and only flipped true after onAuthStateChanged's first
+    // (already-async) callback, same as before — this just delays when
+    // that round trip *starts*, so a returning signed-in user still sees
+    // their session resolve well before they could reach anything
+    // auth-gated (those routes are separately lazy-loaded and slower to
+    // reach than this).
+    return runWhenIdle(() => {
+      setAuth(getFirebaseAuth());
+    });
+  }, []);
 
   useEffect(() => {
     if (!auth) return;
