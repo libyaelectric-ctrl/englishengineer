@@ -37,3 +37,6 @@
         value: https://engvox.com,https://www.engvox.com
       - key: FIREBASE_PROJECT_ID
         value: engvox-59b85
+      - key: FIREBASE_SERVICE_ACCOUNT_KEY
+        sync: false
+        value: ""
