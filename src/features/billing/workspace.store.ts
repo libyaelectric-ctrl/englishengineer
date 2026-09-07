@@ -1,227 +1,26 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
 import { IdService } from '@/core/ids/id.service';
-
-import { logger } from '@/shared/logger';
 import { eosPersistConfig } from '@/shared/storage/persist-middleware';
-import { AICoachSession } from '@/shared/types/ai.types';
-
+import type { AICoachSession } from '@/shared/types/ai.types';
 import { useAIStore } from '@/features/ai';
-
-import { BillingPlanId } from './billing.types';
-
-export interface WorkspaceDocument {
-  id: string;
-  name: string;
-  content: string;
-  uploadedAt: string;
-}
-
-export interface Workspace {
-  id: string;
-  name: string;
-  memory: Record<string, string>;
-  documents: WorkspaceDocument[];
-  sessions: AICoachSession[];
-  createdAt: string;
-}
-
-interface WorkspaceStoreState {
-  workspaces: Workspace[];
-  activeWorkspaceId: string;
-  createWorkspace: (name: string, planId: BillingPlanId) => boolean;
-  deleteWorkspace: (id: string) => void;
-  switchWorkspace: (id: string) => void;
-  updateWorkspaceMemory: (id: string, key: string, value: string) => void;
-  addDocumentToWorkspace: (id: string, docName: string, docContent: string) => void;
-  deleteDocumentFromWorkspace: (id: string, docId: string) => void;
-  resetWorkspaces: () => void;
-}
-
+import type { BillingPlanId } from './billing.types';
+export interface WorkspaceDocument { id: string; name: string; content: string; uploadedAt: string; }
+export interface Workspace { id: string; name: string; memory: Record<string, string>; documents: WorkspaceDocument[]; sessions: AICoachSession[]; createdAt: string; }
+interface WorkspaceStoreState { workspaces: Workspace[]; activeWorkspaceId: string; createWorkspace: (name: string, planId: BillingPlanId) => boolean; deleteWorkspace: (id: string) => void; switchWorkspace: (id: string) => void; updateWorkspaceMemory: (id: string, key: string, value: string) => void; addDocumentToWorkspace: (id: string, name: string, content: string) => void; deleteDocumentFromWorkspace: (id: string, documentId: string) => void; resetWorkspaces: () => void; }
 const STORAGE_KEY = 'EngVox_workspaces';
-
-/**
- * Single source of truth for workspace limits, aligned with the backend
- * (backend/src/workspace.ts getWorkspaceLimit): free/junior 1, senior and
- * specialist 3, master/team unlimited.
- */
-export const getPlanWorkspaceLimit = (planId: BillingPlanId): number =>
-  planId === 'free' || planId === 'junior'
-    ? 1
-    : planId === 'senior' || planId === 'specialist'
-      ? 3
-      : Infinity;
-
-const createDefaultWorkspace = (): Workspace => ({
-  id: 'default-workspace',
-  name: 'Primary Workspace',
-  memory: {},
-  documents: [],
-  sessions: [],
-  createdAt: new Date().toISOString(),
-});
-
-export const useWorkspaceStore = create<WorkspaceStoreState>()(
-  persist(
-    (set, get) => {
-      const defaultWs = createDefaultWorkspace();
-
-      return {
-        workspaces: [defaultWs],
-        activeWorkspaceId: defaultWs.id,
-
-        createWorkspace: (name, planId) => {
-          const currentWorkspaces = get().workspaces;
-          const limit = getPlanWorkspaceLimit(planId);
-
-          if (currentWorkspaces.length >= limit) {
-            return false;
-          }
-
-          const newWs: Workspace = {
-            id: IdService.createId('ws'),
-            name: name.trim() || `Workspace ${currentWorkspaces.length + 1}`,
-            memory: {},
-            documents: [],
-            sessions: [],
-            createdAt: new Date().toISOString(),
-          };
-
-          const updatedWorkspaces = [...currentWorkspaces, newWs];
-          set({ workspaces: updatedWorkspaces, activeWorkspaceId: newWs.id });
-
-          useAIStore.getState().setSessions([]);
-          return true;
-        },
-
-        deleteWorkspace: (id) => {
-          const currentWorkspaces = get().workspaces;
-          if (currentWorkspaces.length <= 1) return;
-
-          const updatedWorkspaces = currentWorkspaces.filter((ws) => ws.id !== id);
-          let newActiveId = get().activeWorkspaceId;
-
-          if (newActiveId === id) {
-            newActiveId = updatedWorkspaces[0].id;
-          }
-
-          set({ workspaces: updatedWorkspaces, activeWorkspaceId: newActiveId });
-
-          const nextWs = updatedWorkspaces.find((ws) => ws.id === newActiveId);
-          if (nextWs) {
-            useAIStore.getState().setSessions(nextWs.sessions);
-          }
-        },
-
-        switchWorkspace: (id) => {
-          const currentWorkspaces = get().workspaces;
-          const activeId = get().activeWorkspaceId;
-          if (activeId === id) return;
-
-          const currentSessions = useAIStore.getState().sessions;
-          const updatedWorkspaces = currentWorkspaces.map((ws) => {
-            if (ws.id === activeId) {
-              return { ...ws, sessions: currentSessions };
-            }
-            return ws;
-          });
-
-          set({ workspaces: updatedWorkspaces, activeWorkspaceId: id });
-
-          const targetWs = updatedWorkspaces.find((ws) => ws.id === id);
-          if (targetWs) {
-            useAIStore.getState().setSessions(targetWs.sessions);
-          }
-        },
-
-        updateWorkspaceMemory: (id, key, value) => {
-          const updatedWorkspaces = get().workspaces.map((ws) => {
-            if (ws.id === id) {
-              return {
-                ...ws,
-                memory: { ...ws.memory, [key]: value },
-              };
-            }
-            return ws;
-          });
-
-          set({ workspaces: updatedWorkspaces });
-        },
-
-        addDocumentToWorkspace: (id, docName, docContent) => {
-          const newDoc: WorkspaceDocument = {
-            id: IdService.createId('doc'),
-            name: docName,
-            content: docContent,
-            uploadedAt: new Date().toISOString(),
-          };
-
-          const updatedWorkspaces = get().workspaces.map((ws) => {
-            if (ws.id === id) {
-              return {
-                ...ws,
-                documents: [...ws.documents, newDoc],
-              };
-            }
-            return ws;
-          });
-
-          set({ workspaces: updatedWorkspaces });
-        },
-
-        deleteDocumentFromWorkspace: (id, docId) => {
-          const updatedWorkspaces = get().workspaces.map((ws) => {
-            if (ws.id === id) {
-              return {
-                ...ws,
-                documents: ws.documents.filter((doc) => doc.id !== docId),
-              };
-            }
-            return ws;
-          });
-
-          set({ workspaces: updatedWorkspaces });
-        },
-
-        resetWorkspaces: () => {
-          const defaultWs = createDefaultWorkspace();
-          set({ workspaces: [defaultWs], activeWorkspaceId: defaultWs.id });
-          useAIStore.getState().setSessions([]);
-        },
-      };
-    },
-    {
-      ...eosPersistConfig(STORAGE_KEY),
-      // Workspace uses global storage (not user-scoped)
-      storage: {
-        getItem: (name) => {
-          try {
-            if (typeof window === 'undefined' || !window.localStorage) return null;
-            const item = localStorage.getItem(`eos_${name}`);
-            return item ? JSON.parse(item) : null;
-          } catch (e) {
-            logger.w('[WORKSPACE_STORE] Failed to read from localStorage', e);
-            return null;
-          }
-        },
-        setItem: (name, value) => {
-          try {
-            if (typeof window === 'undefined' || !window.localStorage) return;
-            localStorage.setItem(`eos_${name}`, JSON.stringify(value));
-          } catch (e) {
-            logger.w('[WORKSPACE_STORE] Failed to write to localStorage', e);
-          }
-        },
-        removeItem: (name) => {
-          try {
-            if (typeof window === 'undefined' || !window.localStorage) return;
-            localStorage.removeItem(`eos_${name}`);
-          } catch (e) {
-            logger.w('[WORKSPACE_STORE] Failed to remove from localStorage', e);
-          }
-        },
-      },
-    }
-  )
-);
+export const getPlanWorkspaceLimit = (planId: BillingPlanId): number => planId === 'free' || planId === 'junior' ? 1 : planId === 'senior' || planId === 'specialist' ? 3 : Infinity;
+const createDefaultWorkspace = (): Workspace => ({ id: 'default-workspace', name: 'Primary Workspace', memory: {}, documents: [], sessions: [], createdAt: new Date().toISOString() });
+export const useWorkspaceStore = create<WorkspaceStoreState>()(persist((set, get) => {
+  const defaultWorkspace = createDefaultWorkspace();
+  return {
+    workspaces: [defaultWorkspace], activeWorkspaceId: defaultWorkspace.id,
+    createWorkspace: (name, planId) => { const workspaces = get().workspaces; if (workspaces.length >= getPlanWorkspaceLimit(planId)) return false; const workspace: Workspace = { id: IdService.createId('ws'), name: name.trim() || `Workspace ${workspaces.length + 1}`, memory: {}, documents: [], sessions: [], createdAt: new Date().toISOString() }; set({ workspaces: [...workspaces, workspace], activeWorkspaceId: workspace.id }); useAIStore.getState().setSessions([]); return true; },
+    deleteWorkspace: (id) => { const current = get().workspaces; if (current.length <= 1) return; const workspaces = current.filter((workspace) => workspace.id !== id); const activeWorkspaceId = get().activeWorkspaceId === id ? workspaces[0].id : get().activeWorkspaceId; set({ workspaces, activeWorkspaceId }); useAIStore.getState().setSessions(workspaces.find((workspace) => workspace.id === activeWorkspaceId)?.sessions ?? []); },
+    switchWorkspace: (id) => { const activeId = get().activeWorkspaceId; if (activeId === id || !get().workspaces.some((workspace) => workspace.id === id)) return; const sessions = useAIStore.getState().sessions; const workspaces = get().workspaces.map((workspace) => workspace.id === activeId ? { ...workspace, sessions } : workspace); set({ workspaces, activeWorkspaceId: id }); useAIStore.getState().setSessions(workspaces.find((workspace) => workspace.id === id)?.sessions ?? []); },
+    updateWorkspaceMemory: (id, key, value) => set({ workspaces: get().workspaces.map((workspace) => workspace.id === id ? { ...workspace, memory: { ...workspace.memory, [key]: value } } : workspace) }),
+    addDocumentToWorkspace: (id, name, content) => { const document: WorkspaceDocument = { id: IdService.createId('doc'), name, content, uploadedAt: new Date().toISOString() }; set({ workspaces: get().workspaces.map((workspace) => workspace.id === id ? { ...workspace, documents: [...workspace.documents, document] } : workspace) }); },
+    deleteDocumentFromWorkspace: (id, documentId) => set({ workspaces: get().workspaces.map((workspace) => workspace.id === id ? { ...workspace, documents: workspace.documents.filter((document) => document.id !== documentId) } : workspace) }),
+    resetWorkspaces: () => { const workspace = createDefaultWorkspace(); set({ workspaces: [workspace], activeWorkspaceId: workspace.id }); useAIStore.getState().setSessions([]); },
+  };
+}, eosPersistConfig(STORAGE_KEY)));
