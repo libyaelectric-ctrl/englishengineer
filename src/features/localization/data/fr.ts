@@ -322,6 +322,7 @@ export const data: Record<string, string> = {
   'vocabulary.progressMetrics': 'Progrès du Vocabulaire',
   'common.loading': 'Chargement…',
   'common.toggleTheme': 'Changer de thème',
+  'common.selectLanguage': 'Sélectionner la langue',
   'common.skipToContent': 'Aller au contenu',
   'onboarding.missingSelection': 'Veuillez sélectionner votre domaine et votre langue.',
   'onboarding.saveError': "Impossible d'enregistrer vos préférences. Veuillez réessayer.",

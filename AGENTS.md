@@ -22,6 +22,6 @@ Project-level skills live under `.claude/skills/` (Claude Code / Copilot skill f
 1. Start the app (`npm run dev`) and open the changed page in a browser (playwright-cli or the environment's browser tooling).
 2. Take a screenshot and actually look at the rendered page — layout, overlaps, spacing, broken states.
 3. If anything is broken or off, fix it first. Do not tell the user a visual change is done without having seen the rendered result.
-4. Show the user before/after screenshots of the page.
+4. Save before/after screenshots with the helper `node scripts/preview-shot.mjs <url> <label>` (run once before the change and once after; PNGs land in `.freebuff/shots/`) and show the user the before/after pair.
 
 Never claim a UI change works without visually verifying the rendered page.

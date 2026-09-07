@@ -301,6 +301,7 @@ export const data: Record<string, string> = {
   'vocabulary.progressMetrics': 'Vocabulary Progress',
   'common.loading': 'Loading…',
   'common.toggleTheme': 'Toggle theme',
+  'common.selectLanguage': 'Select language',
   'common.skipToContent': 'Skip to content',
   'onboarding.missingSelection': 'Please select your discipline and language.',
   'onboarding.saveError': "Couldn't save your preferences. Please try again.",

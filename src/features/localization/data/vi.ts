@@ -312,6 +312,7 @@ export const data: Record<string, string> = {
   'vocabulary.progressMetrics': 'Tiến độ Từ vựng',
   'common.loading': 'Đang tải…',
   'common.toggleTheme': 'Đổi giao diện',
+  'common.selectLanguage': 'Chọn ngôn ngữ',
   'common.skipToContent': 'Chuyển đến nội dung',
   'onboarding.missingSelection': 'Vui lòng chọn chuyên ngành và ngôn ngữ.',
   'onboarding.saveError': 'Không thể lưu tùy chọn của bạn. Vui lòng thử lại.',

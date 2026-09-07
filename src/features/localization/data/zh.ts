@@ -289,6 +289,7 @@ export const data: Record<string, string> = {
   'vocabulary.progressMetrics': '词汇进度',
   'common.loading': '加载中…',
   'common.toggleTheme': '切换主题',
+  'common.selectLanguage': '选择语言',
   'common.skipToContent': '跳到主要内容',
   'onboarding.missingSelection': '请选择您的专业和语言。',
   'onboarding.saveError': '无法保存您的偏好设置，请重试。',

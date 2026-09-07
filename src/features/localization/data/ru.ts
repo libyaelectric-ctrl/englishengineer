@@ -316,6 +316,7 @@ export const data: Record<string, string> = {
   'vocabulary.progressMetrics': 'Прогресс словаря',
   'common.loading': 'Загрузка…',
   'common.toggleTheme': 'Переключить тему',
+  'common.selectLanguage': 'Выбрать язык',
   'common.skipToContent': 'Перейти к содержимому',
   'onboarding.missingSelection': 'Выберите специальность и язык.',
   'onboarding.saveError': 'Не удалось сохранить настройки. Попробуйте ещё раз.',

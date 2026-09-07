@@ -317,6 +317,7 @@ export const data: Record<string, string> = {
   'vocabulary.progressMetrics': 'Woordenschat Voortgang',
   'common.loading': 'Laden…',
   'common.toggleTheme': 'Wissel van thema',
+  'common.selectLanguage': 'Taal selecteren',
   'common.skipToContent': 'Naar inhoud springen',
   'onboarding.missingSelection': 'Selecteer je vakgebied en taal.',
   'onboarding.saveError': 'Je voorkeuren konden niet worden opgeslagen. Probeer het opnieuw.',

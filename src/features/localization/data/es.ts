@@ -319,6 +319,7 @@ export const data: Record<string, string> = {
   'vocabulary.progressMetrics': 'Progreso de Vocabulario',
   'common.loading': 'Cargando…',
   'common.toggleTheme': 'Cambiar tema',
+  'common.selectLanguage': 'Seleccionar idioma',
   'common.skipToContent': 'Saltar al contenido',
   'onboarding.missingSelection': 'Selecciona tu disciplina y tu idioma.',
   'onboarding.saveError': 'No se pudieron guardar tus preferencias. Inténtalo de nuevo.',

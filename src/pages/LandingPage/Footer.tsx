@@ -7,7 +7,10 @@ import { useLocalizationStore } from '@/features/localization';
 export function Footer({ className = '' }: { className?: string }) {
   const { translate } = useLocalizationStore();
   return (
-    <footer className={`border-t border-border-soft bg-background px-4 sm:px-6 py-2 md:py-3 md:px-12 ${className}`} style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom, 0px))' }}>
+    <footer
+      className={`border-t border-border-soft bg-background px-4 sm:px-6 py-2 md:py-3 md:px-12 ${className}`}
+      style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom, 0px))' }}
+    >
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-2">
           <div className="flex items-center gap-2">
@@ -25,17 +28,29 @@ export function Footer({ className = '' }: { className?: string }) {
               v{PRODUCT_VERSION}
             </span>
           </div>
-          <div className="flex items-center gap-3 sm:gap-5 text-[11px] sm:text-xs font-medium text-foreground/80">
-            <Link to="/pricing" className="hover:text-primary transition-colors">
+          <div className="flex items-center gap-1 sm:gap-3 text-[11px] sm:text-xs font-medium text-foreground/80">
+            <Link
+              to="/pricing"
+              className="inline-flex min-h-11 items-center px-2.5 hover:text-primary transition-colors"
+            >
               {translate('landing.navPricing')}
             </Link>
-            <Link to="/legal/privacy" className="hover:text-primary transition-colors">
+            <Link
+              to="/legal/privacy"
+              className="inline-flex min-h-11 items-center px-2.5 hover:text-primary transition-colors"
+            >
               {translate('common.privacy')}
             </Link>
-            <Link to="/legal/terms" className="hover:text-primary transition-colors">
+            <Link
+              to="/legal/terms"
+              className="inline-flex min-h-11 items-center px-2.5 hover:text-primary transition-colors"
+            >
               {translate('common.terms')}
             </Link>
-            <Link to="/business" className="hover:text-primary transition-colors">
+            <Link
+              to="/business"
+              className="inline-flex min-h-11 items-center px-2.5 hover:text-primary transition-colors"
+            >
               {translate('common.contact')}
             </Link>
           </div>

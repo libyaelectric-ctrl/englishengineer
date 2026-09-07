@@ -300,6 +300,7 @@ export const data: Record<string, string> = {
   'vocabulary.progressMetrics': 'تقدم المفردات',
   'common.loading': 'جاري التحميل…',
   'common.toggleTheme': 'تبديل المظهر',
+  'common.selectLanguage': 'اختر اللغة',
   'common.skipToContent': 'تخطي إلى المحتوى',
   'onboarding.missingSelection': 'يرجى اختيار تخصصك ولغتك.',
   'onboarding.saveError': 'تعذر حفظ تفضيلاتك. يرجى المحاولة مرة أخرى.',

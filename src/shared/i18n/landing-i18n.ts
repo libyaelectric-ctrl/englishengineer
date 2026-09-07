@@ -19,6 +19,10 @@ export interface LandingTranslations {
   slideHowItWorks: string;
   slideFeatures: string;
 
+  // Carousel controls
+  carouselPause: string;
+  carouselPlay: string;
+
   // Disciplines
   disciplinesTitle: string;
 
@@ -71,17 +75,20 @@ const EN: LandingTranslations = {
   slideHowItWorks: 'How It Works',
   slideFeatures: 'Features',
 
+  carouselPause: 'Pause carousel',
+  carouselPlay: 'Play carousel',
+
   disciplinesTitle: 'Choose Your Engineering Discipline',
 
   featuresHeaderBadge: 'Why EngineerOS?',
   featuresTitle: 'Everything You Need',
   featuresSubtitle:
-    'Six core skills, one platform — each module powered by AI and tailored to your discipline.',
+    'Six core skills, one platform: each module powered by AI and tailored to your discipline.',
 
   howItWorksHeaderBadge: 'How It Works',
   howItWorksTitle: 'Learn in 3 Steps',
   howItWorksSubtitle:
-    'Pick your discipline, practice with AI, track your progress — all in one flow.',
+    'Pick your discipline, practice with AI, track your progress: all in one flow.',
   howItWorksStep1Title: 'Choose Your Path',
   howItWorksStep1Desc: 'Select your engineering discipline and target English level.',
   howItWorksStep2Title: 'Practice with AI',
@@ -121,15 +128,18 @@ const TR: LandingTranslations = {
   slideHowItWorks: 'Nasıl Çalışır',
   slideFeatures: 'Özellikler',
 
+  carouselPause: 'Slaytı duraklat',
+  carouselPlay: 'Slaytı oynat',
+
   disciplinesTitle: 'Mühendislik Dalınızı Seçin',
 
   featuresHeaderBadge: 'Neden EngineerOS?',
   featuresTitle: 'İhtiyacınız Her Şey',
-  featuresSubtitle: 'Altı temel beceri, tek platform — her modül AI tarafından desteklenir.',
+  featuresSubtitle: 'Altı temel beceri, tek platform: her modül AI tarafından desteklenir.',
 
   howItWorksHeaderBadge: 'Nasıl Çalışır',
   howItWorksTitle: '3 Adımda Öğren',
-  howItWorksSubtitle: 'Dalinizi seçin, AI ile pratiğin, ilerleyi takip et — hepsi tek akışta.',
+  howItWorksSubtitle: 'Dalinizi seçin, AI ile pratiğin, ilerleyi takip et: hepsi tek akışta.',
   howItWorksStep1Title: 'Yolunuzu Seçin',
   howItWorksStep1Desc: 'Mühendislik dalınızı ve hedef İngilizce seviyenizi belirleyin.',
   howItWorksStep2Title: 'AI ile Pratik Yapın',
@@ -168,15 +178,18 @@ const AR: LandingTranslations = {
   slideHowItWorks: 'كيف يعمل',
   slideFeatures: 'الميزات',
 
+  carouselPause: 'إيقاف العرض مؤقتًا',
+  carouselPlay: 'تشغيل العرض',
+
   disciplinesTitle: 'اختر تخصصك الهندسي',
 
   featuresHeaderBadge: 'لماذا EngineerOS؟',
   featuresTitle: 'كل ما تحتاجه',
-  featuresSubtitle: 'ستة مهارات أساسية، منصة واحدة — كل وحدة مدعومة بالذكاء الاصطناعي.',
+  featuresSubtitle: 'ستة مهارات أساسية، منصة واحدة: كل وحدة مدعومة بالذكاء الاصطناعي.',
 
   howItWorksHeaderBadge: 'كيف يعمل',
   howItWorksTitle: 'تعلم في 3 خطوات',
-  howItWorksSubtitle: 'اختر تخصصك، تدرب مع الذكاء الاصطناعي، وتابع تقدمك — كل ذلك في تدفق واحد.',
+  howItWorksSubtitle: 'اختر تخصصك، تدرب مع الذكاء الاصطناعي، وتابع تقدمك: كل ذلك في تدفق واحد.',
   howItWorksStep1Title: 'اختر مسارك',
   howItWorksStep1Desc: 'اختر تخصصك الهندسي ومستوى الإنجليزية المستهدف.',
   howItWorksStep2Title: 'تدرب مع الذكاء الاصطناعي',
@@ -215,16 +228,19 @@ const DE: LandingTranslations = {
   slideHowItWorks: 'Wie es funktioniert',
   slideFeatures: 'Funktionen',
 
+  carouselPause: 'Diashow anhalten',
+  carouselPlay: 'Diashow abspielen',
+
   disciplinesTitle: 'Wählen Sie Ihr Ingenieur-Fachgebiet',
 
   featuresHeaderBadge: 'Warum EngineerOS?',
   featuresTitle: 'Alles was Sie brauchen',
-  featuresSubtitle: 'Sechs Kernkompetenzen, eine Plattform — jedes Modul von KI gestützt.',
+  featuresSubtitle: 'Sechs Kernkompetenzen, eine Plattform: jedes Modul von KI gestützt.',
 
   howItWorksHeaderBadge: 'Wie es funktioniert',
   howItWorksTitle: 'In 3 Schritten lernen',
   howItWorksSubtitle:
-    'Fachgebiet wählen, mit KI üben, Fortschritt verfolgen — alles in einem Fluss.',
+    'Fachgebiet wählen, mit KI üben, Fortschritt verfolgen: alles in einem Fluss.',
   howItWorksStep1Title: 'Pfad wählen',
   howItWorksStep1Desc: 'Ihr Ingenieur-Fachgebiet und Ziel-Englisch-Level auswählen.',
   howItWorksStep2Title: 'Mit KI üben',
@@ -263,15 +279,18 @@ const ES: LandingTranslations = {
   slideHowItWorks: 'Cómo funciona',
   slideFeatures: 'Características',
 
+  carouselPause: 'Pausar carrusel',
+  carouselPlay: 'Reproducir carrusel',
+
   disciplinesTitle: 'Elige tu rama de ingeniería',
 
   featuresHeaderBadge: '¿Por qué EngineerOS?',
   featuresTitle: 'Todo lo que necesitas',
-  featuresSubtitle: 'Seis habilidades clave, una plataforma — cada módulo impulsado por IA.',
+  featuresSubtitle: 'Seis habilidades clave, una plataforma: cada módulo impulsado por IA.',
 
   howItWorksHeaderBadge: 'Cómo funciona',
   howItWorksTitle: 'Aprende en 3 pasos',
-  howItWorksSubtitle: 'Elige tu rama, practica con IA, sigue tu progreso — todo en un flujo.',
+  howItWorksSubtitle: 'Elige tu rama, practica con IA, sigue tu progreso: todo en un flujo.',
   howItWorksStep1Title: 'Elige tu camino',
   howItWorksStep1Desc: 'Selecciona tu rama de ingeniería y nivel de inglés objetivo.',
   howItWorksStep2Title: 'Practica con IA',

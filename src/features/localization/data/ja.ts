@@ -301,6 +301,7 @@ export const data: Record<string, string> = {
   'vocabulary.progressMetrics': '語彙進捗',
   'common.loading': '読み込み中…',
   'common.toggleTheme': 'テーマを切り替え',
+  'common.selectLanguage': '言語を選択',
   'common.skipToContent': 'コンテンツへスキップ',
   'onboarding.missingSelection': '専門分野と言語を選択してください。',
   'onboarding.saveError': '設定を保存できませんでした。もう一度お試しください。',

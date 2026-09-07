@@ -1,5 +1,4 @@
 import type { SupportedInterfaceLanguage } from '../localization.types';
-
 import { data as EN_UI_TRANSLATIONS } from './en';
 
 /**
@@ -99,6 +98,8 @@ export function isLanguageLoaded(language: SupportedInterfaceLanguage): boolean 
 export function preloadLanguage(language: SupportedInterfaceLanguage): void {
   const loader = importMap[language];
   if (loader && !cache.has(language)) {
-    loader().then((mod) => cache.set(language, mod.data)).catch(() => {});
+    loader()
+      .then((mod) => cache.set(language, mod.data))
+      .catch(() => {});
   }
 }

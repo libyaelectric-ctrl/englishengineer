@@ -319,6 +319,7 @@ export const data: Record<string, string> = {
   'vocabulary.progressMetrics': 'Wortschatz-Fortschritt',
   'common.loading': 'Laden…',
   'common.toggleTheme': 'Design wechseln',
+  'common.selectLanguage': 'Sprache auswählen',
   'common.skipToContent': 'Zum Inhalt springen',
   'onboarding.missingSelection': 'Bitte wählen Sie Fachgebiet und Sprache aus.',
   'onboarding.saveError':

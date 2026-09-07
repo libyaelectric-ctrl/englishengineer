@@ -308,6 +308,7 @@ export const data: Record<string, string> = {
   'vocabulary.progressMetrics': 'Kelime İlerleme',
   'common.loading': 'Yükleniyor…',
   'common.toggleTheme': 'Temayı değiştir',
+  'common.selectLanguage': 'Dil seçin',
   'common.skipToContent': 'İçeriğe atla',
   'onboarding.missingSelection': 'Lütfen uzmanlık alanınızı ve dilinizi seçin.',
   'onboarding.saveError': 'Tercihleriniz kaydedilemedi. Lütfen tekrar deneyin.',

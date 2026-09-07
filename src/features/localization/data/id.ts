@@ -311,6 +311,7 @@ export const data: Record<string, string> = {
   'vocabulary.progressMetrics': 'Progres Kosakata',
   'common.loading': 'Memuat…',
   'common.toggleTheme': 'Ganti tema',
+  'common.selectLanguage': 'Pilih bahasa',
   'common.skipToContent': 'Lewati ke konten',
   'onboarding.missingSelection': 'Pilih disiplin dan bahasa Anda.',
   'onboarding.saveError': 'Preferensi tidak dapat disimpan. Silakan coba lagi.',

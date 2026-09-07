@@ -43,6 +43,7 @@
     "quality:gate:browser": "npm run quality:gate && npm run e2e:browser",
     "e2e:browser:install": "playwright install chromium",
     "preview": "vite preview",
+    "preview:shot": "node scripts/preview-shot.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "analyze": "ANALYZE=true npm run build",
