@@ -11,7 +11,7 @@
     }
   },
   "ignore": ["src/core/index.ts"],
-  "include": ["files", "dependencies", "types", "enumMembers"],
+  "include": ["files", "dependencies"],
   "ignoreFiles": [
     "scripts/**",
     "public/**",
