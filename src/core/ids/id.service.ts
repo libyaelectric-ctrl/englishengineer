@@ -1,39 +1,29 @@
-import { logger } from '@/shared/logger';
-
 import { IdPrefix } from './id.types';
 
 const hexEncode = (bytes: Uint8Array): string =>
-  Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+  Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+
+const secureCrypto = (): Crypto => {
+  const crypto = globalThis.crypto;
+  if (!crypto || typeof crypto.getRandomValues !== 'function') {
+    throw new Error('Secure random number generation is unavailable in this runtime.');
+  }
+  return crypto;
+};
 
 const secureRandomHex = (length: number): string => {
   const bytes = new Uint8Array(Math.ceil(length / 2));
-  if (typeof globalThis.crypto?.getRandomValues === 'function') {
-    globalThis.crypto.getRandomValues(bytes);
-  } else {
-    // Last resort: Node.js crypto (SSR / test environments)
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const nodeCrypto = require('node:crypto');
-      const buf = nodeCrypto.randomBytes(bytes.length);
-      bytes.set(buf);
-    } catch (e) {
-      logger.w('[ID] Node crypto fallback failed', e);
-      for (let i = 0; i < bytes.length; i++) bytes[i] = (Math.random() * 256) | 0;
-    }
-  }
+  secureCrypto().getRandomValues(bytes);
   return hexEncode(bytes).substring(0, length);
 };
 
 export const IdService = {
   createId(prefix?: IdPrefix | string): string {
-    let uuid: string;
-
-    if (typeof globalThis.crypto?.randomUUID === 'function') {
-      uuid = globalThis.crypto.randomUUID();
-    } else {
-      const ts = Date.now().toString(36);
-      uuid = `${ts}-${secureRandomHex(12)}-${secureRandomHex(8)}`;
-    }
+    const crypto = secureCrypto();
+    const uuid =
+      typeof crypto.randomUUID === 'function'
+        ? crypto.randomUUID()
+        : `${Date.now().toString(36)}-${secureRandomHex(12)}-${secureRandomHex(8)}`;
 
     return prefix ? `${prefix}_${uuid}` : uuid;
   },
