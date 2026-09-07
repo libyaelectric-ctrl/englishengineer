@@ -2,6 +2,8 @@ import { LogOut, Wallet } from 'lucide-react';
 
 import React from 'react';
 
+import { PRODUCT_VERSION } from '@/config/product.config';
+
 interface SidebarFooterProps {
   copy: {
     betaNotice: string;
@@ -78,7 +80,7 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({
         </div>
       )}
       <div className="flex items-center gap-2 text-[10px] text-muted-copy">
-        <span className="font-bold text-foreground">4.0.22</span>
+        <span className="font-bold text-foreground">{PRODUCT_VERSION}</span>
         <span className="px-1.5 py-0.5 rounded bg-primary/10 text-primary">{copy.betaNotice}</span>
         <span className="mx-1">|</span>
         <span>{copy.poweredBy} EngVox</span>

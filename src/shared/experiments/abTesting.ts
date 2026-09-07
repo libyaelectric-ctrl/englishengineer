@@ -7,7 +7,7 @@ export interface ExperimentDefinition {
   rolloutPercentage: number;
 }
 
-export const EXPERIMENTS = {
+const EXPERIMENTS = {
   quizFeedbackStyle: {
     key: 'quizFeedbackStyle',
     description: 'Immediate vs end-of-quiz feedback on vocabulary quizzes',

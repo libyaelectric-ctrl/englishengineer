@@ -23,8 +23,12 @@ export function Navbar() {
     location.pathname === AUTH_SIGN_IN_URL || location.pathname === AUTH_SIGN_UP_URL;
   const { language, setLanguage, translate } = useLocalizationStore();
   const [langOpen, setLangOpen] = useState(false);
+  const [activeLangId, setActiveLangId] = useState<string>(language);
   const langRef = useRef<HTMLDivElement>(null);
   const langBtnRef = useRef<HTMLButtonElement>(null);
+  const langListRef = useRef<HTMLUListElement>(null);
+  const listboxId = 'navbar-language-listbox';
+  const optionId = (id: string) => `navbar-language-option-${id}`;
 
   // Redirect signed-in users away from landing page, but NOT from /pricing
   useEffect(() => {
@@ -83,6 +87,76 @@ export function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [langOpen]);
 
+  // Move DOM focus into the listbox when it opens; keep the current
+  // language as the initial active option (WAI-ARIA listbox popup pattern).
+  useEffect(() => {
+    if (langOpen) {
+      setActiveLangId(language);
+      langListRef.current?.focus();
+    }
+  }, [langOpen, language]);
+
+  const openListbox = () => {
+    setActiveLangId(language);
+    setLangOpen(true);
+  };
+
+  const closeListbox = (focusTrigger = true) => {
+    setLangOpen(false);
+    if (focusTrigger) langBtnRef.current?.focus();
+  };
+
+  const selectLanguage = (id: string) => {
+    setLanguage(id as (typeof INTERFACE_LANGUAGES)[number]['id']);
+    closeListbox();
+  };
+
+  // Keyboard interaction per WAI-ARIA APG "Listbox Popup": the listbox
+  // holds focus; aria-activedescendant names the active option.
+  const onListboxKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
+    const options = INTERFACE_LANGUAGES;
+    const currentIndex = options.findIndex((l) => l.id === activeLangId);
+    let nextIndex = -1;
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeListbox();
+      return;
+    }
+    if (event.key === 'Tab') {
+      // Let focus leave the popup naturally; close it first.
+      setLangOpen(false);
+      return;
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (activeLangId) selectLanguage(activeLangId);
+      return;
+    }
+    if (event.key === 'ArrowDown') nextIndex = (currentIndex + 1) % options.length;
+    else if (event.key === 'ArrowUp')
+      nextIndex = (currentIndex - 1 + options.length) % options.length;
+    else if (event.key === 'Home') nextIndex = 0;
+    else if (event.key === 'End') nextIndex = options.length - 1;
+    else if (/^[a-zA-Z]$/.test(event.key)) {
+      // Type-ahead: jump to the first option whose label starts with the key
+      const typed = event.key.toLowerCase();
+      const match = options.findIndex((l) => l.label.toLowerCase().startsWith(typed));
+      if (match !== -1) nextIndex = match;
+    } else return;
+
+    event.preventDefault();
+    setActiveLangId(options[nextIndex].id);
+    // Keep the active option visible if the popup ever scrolls (jsdom
+    // test environments don't implement scrollIntoView).
+    const activeOption = langListRef.current?.querySelector<HTMLElement>(
+      `#${optionId(options[nextIndex].id)}`
+    );
+    if (activeOption && typeof activeOption.scrollIntoView === 'function') {
+      activeOption.scrollIntoView({ block: 'nearest' });
+    }
+  };
+
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 border-b border-border-soft bg-background/95 backdrop-blur-md shadow-sm"
@@ -112,11 +186,12 @@ export function Navbar() {
             <button
               ref={langBtnRef}
               type="button"
-              onClick={() => setLangOpen(!langOpen)}
-              className="flex items-center gap-1 rounded-lg border border-border-soft bg-surface px-2 py-1.5 sm:px-2.5 sm:py-1.5 text-sm transition-colors cursor-pointer hover:bg-surface-hover"
+              onClick={() => (langOpen ? closeListbox() : openListbox())}
+              className="flex items-center gap-1 rounded-lg border border-border-soft bg-surface px-2 py-2 sm:px-2.5 sm:py-2 text-sm transition-colors cursor-pointer hover:bg-surface-hover"
               aria-haspopup="listbox"
               aria-expanded={langOpen}
-              aria-label="Select language"
+              aria-controls={langOpen ? listboxId : undefined}
+              aria-label={translate('common.selectLanguage')}
             >
               <Globe className="h-3.5 w-3.5 text-muted-copy" />
               <span className="text-sm sm:text-base leading-none">
@@ -132,27 +207,36 @@ export function Navbar() {
 
             {langOpen && (
               <div className="absolute left-0 mt-1 w-44 origin-top-left rounded-lg border border-border-soft bg-background shadow-lg animate-in fade-in-0 zoom-in-95">
-                <ul className="py-1" role="listbox">
+                <ul
+                  ref={langListRef}
+                  id={listboxId}
+                  role="listbox"
+                  tabIndex={-1}
+                  aria-label={translate('common.selectLanguage')}
+                  aria-activedescendant={activeLangId ? optionId(activeLangId) : undefined}
+                  onKeyDown={onListboxKeyDown}
+                  className="py-1 focus:outline-none"
+                >
+                  {/* Keyboard support lives on the listbox (APG "Listbox Popup"): options
+                      are not focusable; the container handles all keys. */}
                   {INTERFACE_LANGUAGES.map((lang) => (
-                    <li key={lang.id}>
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={language === lang.id}
-                        onClick={() => {
-                          setLanguage(lang.id);
-                          setLangOpen(false);
-                        }}
-                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors ${
-                          language === lang.id
-                            ? 'bg-primary/10 text-primary font-semibold'
-                            : 'text-foreground hover:bg-surface'
-                        }`}
-                      >
-                        <span className="text-base">{lang.flag}</span>
-                        <span className="font-medium">{lang.nativeLabel}</span>
-                        <span className="ml-auto text-[10px] text-muted-copy">{lang.label}</span>
-                      </button>
+                    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                    <li
+                      key={lang.id}
+                      id={optionId(lang.id)}
+                      role="option"
+                      aria-selected={language === lang.id}
+                      onMouseEnter={() => setActiveLangId(lang.id)}
+                      onClick={() => selectLanguage(lang.id)}
+                      className={`flex items-center gap-2 px-3 py-2 text-sm transition-colors cursor-pointer ${
+                        activeLangId === lang.id
+                          ? 'bg-primary/10 text-primary font-semibold'
+                          : 'text-foreground hover:bg-surface'
+                      }`}
+                    >
+                      <span className="text-base">{lang.flag}</span>
+                      <span className="font-medium">{lang.nativeLabel}</span>
+                      <span className="ml-auto text-[10px] text-muted-copy">{lang.label}</span>
                     </li>
                   ))}
                 </ul>
@@ -169,7 +253,7 @@ export function Navbar() {
             <button
               type="button"
               onClick={enterDemo}
-              className="hidden sm:inline-flex items-center rounded-lg border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors cursor-pointer"
+              className="hidden sm:inline-flex items-center rounded-lg border border-primary/40 bg-primary/10 px-2.5 py-2 text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors cursor-pointer"
             >
               {translate('landing.tryDemo')}
             </button>
@@ -177,8 +261,8 @@ export function Navbar() {
             {/* Theme Toggle - compact */}
             <button
               onClick={toggleTheme}
-              className="inline-flex items-center h-8 w-8 sm:h-7 sm:w-7 justify-center rounded-lg border border-border-soft bg-background text-muted-copy hover:text-foreground transition-colors cursor-pointer"
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              className="inline-flex items-center h-10 w-10 justify-center rounded-lg border border-border-soft bg-background text-muted-copy hover:text-foreground transition-colors cursor-pointer"
+              aria-label={translate('common.toggleTheme')}
             >
               {theme === 'dark' ? (
                 <Sun className="h-3.5 w-3.5 text-amber-500" />

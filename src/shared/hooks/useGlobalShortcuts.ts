@@ -94,15 +94,3 @@ export function useGlobalShortcuts() {
 
   return { shortcuts };
 }
-
-/**
- * Returns the list of global shortcuts for display in help/tooltip UIs.
- */
-export function getShortcutList(): Array<{ key: string; description: string }> {
-  return [
-    { key: '⌘/Ctrl + K', description: 'Command Palette' },
-    { key: '⌘/Ctrl + /', description: 'Keyboard Shortcuts' },
-    { key: '1-9', description: 'Quick navigate to pages' },
-    { key: 'Esc', description: 'Close modals' },
-  ];
-}

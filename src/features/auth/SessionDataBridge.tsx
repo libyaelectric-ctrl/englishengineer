@@ -1,0 +1,14 @@
+import { useEffect } from 'react';
+import { useLearningStore } from '@/core/learning';
+import { queryClient } from '@/providers/QueryProvider';
+import { SESSION_NAMESPACE_EVENT, storage } from '@/shared/storage';
+import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
+import { useLearningIntelligenceStore } from '@/shared/stores/learning-intelligence.store';
+import { useAIStore } from '@/features/ai';
+import { BillingService } from '@/features/billing/billing.service';
+import { useBillingStore } from '@/features/billing/billing.store';
+import { createFreeSubscription } from '@/features/billing/billing.helpers';
+import { useWorkspaceStore } from '@/features/billing/workspace.store';
+const resetSensitiveMemory = (): void => { useLearningStore.getState().resetAll(); useAIStore.getState().resetCoach(); useWorkspaceStore.getState().resetWorkspaces(); useLearningIntelligenceStore.setState(LearningIntelligenceService.load()); useBillingStore.setState({ subscription: createFreeSubscription(), invoices: [], isLoading: false, isLoadingInvoices: false, error: null }); queryClient.clear(); };
+const hydrateActiveNamespace = (): void => { if (!storage.getSession()) return; void useLearningStore.persist.rehydrate(); void useAIStore.persist.rehydrate(); void useWorkspaceStore.persist.rehydrate(); useLearningIntelligenceStore.setState(LearningIntelligenceService.load()); useBillingStore.setState({ subscription: BillingService.getLocalSubscription(), invoices: [], error: null }); };
+export const SessionDataBridge = () => { useEffect(() => { const onNamespace = (event: Event): void => { const detail = (event as CustomEvent<{ phase: 'cleared' | 'activated' }>).detail; if (detail.phase === 'cleared') resetSensitiveMemory(); else hydrateActiveNamespace(); }; window.addEventListener(SESSION_NAMESPACE_EVENT, onNamespace); queryClient.clear(); hydrateActiveNamespace(); return () => window.removeEventListener(SESSION_NAMESPACE_EVENT, onNamespace); }, []); return null; };

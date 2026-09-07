@@ -2,22 +2,12 @@ import { createClient } from '@supabase/supabase-js';
 import { promises as fsp } from 'node:fs';
 import path from 'node:path';
 
+import type { PlanId } from '../types.js';
 import { logger } from './logger.js';
-
-const FREE_DAILY_LIMIT = 3;
-const PAID_MONTHLY_LIMIT = 300;
+import { PLAN_AI_LIMITS } from './plan-limits.js';
 
 const FREE_PERIOD_MS = 24 * 60 * 60 * 1000;
 const PAID_PERIOD_MS = 30 * 24 * 60 * 60 * 1000;
-
-const PLAN_LIMITS: Record<string, { daily: number | null; monthly: number }> = {
-  free: { daily: FREE_DAILY_LIMIT, monthly: 0 },
-  junior: { daily: null, monthly: 50 },
-  senior: { daily: null, monthly: 150 },
-  specialist: { daily: null, monthly: 300 },
-  master: { daily: null, monthly: 600 },
-  team: { daily: null, monthly: 1500 },
-};
 
 interface PlanLimits {
   max: number;
@@ -25,7 +15,7 @@ interface PlanLimits {
 }
 
 const getLimitForPlan = (planId: string): PlanLimits => {
-  const limits = PLAN_LIMITS[planId] ?? { daily: null, monthly: PAID_MONTHLY_LIMIT };
+  const limits = PLAN_AI_LIMITS[planId as PlanId] ?? { daily: null, monthly: 300 };
   if (limits.daily !== null) {
     return { max: limits.daily, windowMs: FREE_PERIOD_MS };
   }
@@ -430,17 +420,3 @@ export const createAiLedger = (config: {
   }
   return createMemoryAiLedger();
 };
-
-interface PlanLimitInfo {
-  daily: number | null;
-  monthly: number | null;
-}
-
-const _getAiPlanLimits = (): Record<string, PlanLimitInfo> => ({
-  free: { daily: FREE_DAILY_LIMIT, monthly: null },
-  junior: { daily: null, monthly: 50 },
-  senior: { daily: null, monthly: 150 },
-  specialist: { daily: null, monthly: 300 },
-  master: { daily: null, monthly: 600 },
-  team: { daily: null, monthly: 1500 },
-});

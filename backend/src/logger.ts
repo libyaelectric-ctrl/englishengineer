@@ -4,13 +4,6 @@ interface LogMeta {
   [key: string]: unknown;
 }
 
-const _LOG_LEVELS: Record<string, number> = {
-  debug: 0,
-  info: 1,
-  warn: 2,
-  error: 3,
-};
-
 // Create Winston logger with structured JSON format
 const winstonLogger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
@@ -43,16 +36,6 @@ export interface Logger {
   w: (msg: string, meta?: LogMeta) => void;
   e: (msg: string, meta?: LogMeta, err?: Error) => void;
 }
-
-// Helper to format log messages with metadata
-const _formatLogMessage = (level: string, message: string, meta: LogMeta = {}): object => ({
-  timestamp: new Date().toISOString(),
-  level,
-  message,
-  ...meta,
-  pid: process.pid,
-  env: process.env.NODE_ENV || 'development',
-});
 
 export const logger: Logger = {
   debug: (msg: string, meta?: LogMeta) => {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 /** Default duration of a count-up animation in milliseconds. */
-export const COUNT_UP_DURATION_MS = 900;
+const COUNT_UP_DURATION_MS = 900;
 
 const easeOutCubic = (t: number): number => 1 - Math.pow(1 - t, 3);
 

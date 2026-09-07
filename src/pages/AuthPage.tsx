@@ -1,9 +1,11 @@
 import { FirebaseError } from 'firebase/app';
-import { ArrowLeft, ArrowRight, LogIn, UserCheck } from 'lucide-react';
+import { ArrowLeft, LogIn, UserCheck } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+import { PRODUCT_VERSION } from '@/config/product.config';
 
 import { useAuthStore } from '@/features/auth';
 import { useFirebaseAuth } from '@/features/auth/FirebaseAuth';
@@ -143,9 +145,9 @@ const GoogleButton = ({
         type="button"
         onClick={() => void handleClick()}
         disabled={busy}
-        className="flex w-full items-center justify-center gap-2.5 rounded-button border border-border-soft bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-3 rounded-button border border-border-soft bg-white px-4 py-3 text-base font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+        <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
           <path
             fill="#4285F4"
             d="M23.52 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h6.47a5.53 5.53 0 0 1-2.4 3.58v3h3.87c2.26-2.09 3.58-5.17 3.58-8.82Z"
@@ -165,7 +167,7 @@ const GoogleButton = ({
         </svg>
         {busy ? 'Google açılıyor…' : 'Google ile devam et'}
       </button>
-      {error && <p className="mt-2 text-xs text-error">{error}</p>}
+      {error && <p className="mt-2 text-sm text-error">{error}</p>}
     </div>
   );
 };
@@ -203,14 +205,14 @@ const EmailPasswordForm = ({
   };
 
   return (
-    <form onSubmit={(e) => void handleSubmit(e)} className="space-y-2.5">
+    <form onSubmit={(e) => void handleSubmit(e)} className="space-y-3">
       {mode === 'sign-up' && (
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Ad Soyad (isteğe bağlı)"
-          className="w-full rounded-button border border-border-soft bg-background px-3 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-primary"
+          className="w-full rounded-button border border-border-soft bg-background px-4 py-3 text-base text-foreground outline-none transition-colors focus:border-primary"
         />
       )}
       <input
@@ -219,7 +221,7 @@ const EmailPasswordForm = ({
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="ornek@engvox.com"
-        className="w-full rounded-button border border-border-soft bg-background px-3 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-primary"
+        className="w-full rounded-button border border-border-soft bg-background px-4 py-3 text-base text-foreground outline-none transition-colors focus:border-primary"
       />
       <input
         type="password"
@@ -228,18 +230,18 @@ const EmailPasswordForm = ({
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Şifre (en az 6 karakter)"
-        className="w-full rounded-button border border-border-soft bg-background px-3 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-primary"
+        className="w-full rounded-button border border-border-soft bg-background px-4 py-3 text-base text-foreground outline-none transition-colors focus:border-primary"
       />
-      {error && <p className="text-xs text-error">{error}</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
       <button
         type="submit"
         disabled={busy}
-        className="flex w-full items-center justify-center gap-2 rounded-button bg-primary px-3 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-2 rounded-button bg-primary px-4 py-3 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
       >
         {mode === 'sign-in' ? (
-          <LogIn className="h-4 w-4" />
+          <LogIn className="h-5 w-5" />
         ) : (
-          <UserCheck className="h-4 w-4" />
+          <UserCheck className="h-5 w-5" />
         )}
         <span>{busy ? 'İşleniyor…' : mode === 'sign-in' ? 'Giriş yap' : 'Hesap oluştur'}</span>
       </button>
@@ -257,8 +259,6 @@ const AuthPage = ({ mode }: AuthPageProps) => {
   const signUpAfter = returnTarget ?? AUTH_SIGN_UP_FALLBACK_REDIRECT_URL;
   const targetDestination = mode === 'sign-in' ? signInAfter : signUpAfter;
 
-  const [directEmail, setDirectEmail] = useState('');
-  const [showDirectEmail, setShowDirectEmail] = useState(false);
   const [showAccountForm, setShowAccountForm] = useState(false);
   const [authBusy, setAuthBusy] = useState(false);
 
@@ -274,44 +274,37 @@ const AuthPage = ({ mode }: AuthPageProps) => {
     navigate(targetDestination, { replace: true });
   };
 
-  const handleDirectLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!directEmail.trim()) return;
-    useAuthStore.getState().loginAsLocal({ email: directEmail.trim() });
-    navigate(targetDestination, { replace: true });
-  };
-
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-background">
       <div className="flex min-h-full flex-col items-center justify-center px-4 py-10">
-        <div className="mb-6 flex w-full max-w-sm items-center justify-between">
+        <div className="mb-8 flex w-full max-w-md items-center justify-between">
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 text-sm text-muted-copy transition-colors hover:text-foreground"
+            className="inline-flex items-center gap-1.5 text-base text-muted-copy transition-colors hover:text-foreground"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-5 w-5" />
             <span>Ana sayfa</span>
           </Link>
-          <span className="text-sm font-semibold text-foreground">EngVox</span>
+          <img src="/brand/logo.svg" alt="EngVox" className="h-8" />
         </div>
 
-        <div className="w-full max-w-sm rounded-card border border-border-soft bg-surface p-6 shadow-card">
-          <h1 className="text-xl font-bold text-foreground">
+        <div className="w-full max-w-md rounded-card border border-border-soft bg-surface p-8 shadow-card">
+          <h1 className="text-2xl font-bold text-foreground">
             {mode === 'sign-in' ? 'Giriş yap' : 'Hesap oluştur'}
           </h1>
-          <p className="mt-1.5 text-sm text-muted-copy">
+          <p className="mt-2 text-base text-muted-copy">
             {mode === 'sign-in'
               ? 'Mühendislik İngilizcenizi kaldığınız yerden sürdürün.'
               : 'İlerlemenizin kaydedilmesi için birkaç saniye sürer.'}
           </p>
 
-          <div className="mt-5">
+          <div className="mt-6">
             <GoogleButton busy={authBusy} onBusyChange={setAuthBusy} />
           </div>
 
-          <div className="my-5 flex items-center gap-3">
+          <div className="my-6 flex items-center gap-3">
             <div className="h-px flex-1 bg-border-soft" />
-            <span className="text-xs text-muted-copy">veya</span>
+            <span className="text-sm text-muted-copy">veya</span>
             <div className="h-px flex-1 bg-border-soft" />
           </div>
 
@@ -319,7 +312,7 @@ const AuthPage = ({ mode }: AuthPageProps) => {
             <button
               type="button"
               onClick={() => setShowAccountForm(true)}
-              className="flex w-full items-center justify-center rounded-button border border-border-soft py-2.5 text-sm font-medium text-muted-copy transition-colors hover:border-border-hover hover:text-foreground"
+              className="flex w-full items-center justify-center rounded-button border border-border-soft py-3 text-base font-medium text-muted-copy transition-colors hover:border-border-hover hover:text-foreground"
             >
               E-posta ile devam et
             </button>
@@ -327,7 +320,7 @@ const AuthPage = ({ mode }: AuthPageProps) => {
             <EmailPasswordForm mode={mode} busy={authBusy} onBusyChange={setAuthBusy} />
           )}
 
-          <p className="mt-4 text-sm text-muted-copy">
+          <p className="mt-5 text-base text-muted-copy">
             {mode === 'sign-in' ? (
               <>
                 Hesabınız yok mu?{' '}
@@ -345,55 +338,22 @@ const AuthPage = ({ mode }: AuthPageProps) => {
             )}
           </p>
 
-          <div className="mt-6 border-t border-border-soft pt-5">
-            {!showDirectEmail ? (
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-xs text-muted-copy">Sadece göz atmak mı istiyorsunuz?</p>
-                <button
-                  type="button"
-                  onClick={handleQuickDemoStart}
-                  className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline"
-                >
-                  <span>Demo mühendis olarak devam et</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleDirectLogin} className="space-y-2.5">
-                <label className="block text-xs font-medium text-muted-copy">
-                  Mühendislik e-postanız
-                  <input
-                    type="email"
-                    required
-                    value={directEmail}
-                    onChange={(e) => setDirectEmail(e.target.value)}
-                    placeholder="ornek@engvox.com"
-                    className="mt-1 w-full rounded-button border border-border-soft bg-background px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-primary"
-                  />
-                </label>
-                <button
-                  type="submit"
-                  className="w-full rounded-button border border-border-soft py-2 text-sm font-medium text-foreground transition-colors hover:border-border-hover"
-                >
-                  Çalışma alanımı aç
-                </button>
-              </form>
-            )}
-            {!showDirectEmail && (
-              <button
-                type="button"
-                onClick={() => setShowDirectEmail(true)}
-                className="mt-2 text-xs text-muted-copy underline-offset-2 hover:text-foreground hover:underline"
-              >
-                Kendi e-postamla doğrudan giriş yap
-              </button>
-            )}
+          <div className="mt-7 flex items-center justify-between border-t border-border-soft pt-5">
+            <p className="text-sm text-muted-copy">Sadece göz atmak mı istiyorsunuz?</p>
+            <button
+              type="button"
+              onClick={handleQuickDemoStart}
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              Demo mühendis olarak devam et
+            </button>
           </div>
         </div>
 
-        <p className="mt-5 max-w-sm text-center text-xs text-muted-copy">
-          Verileriniz cihazınızda güvenle yerel depolanır.
-        </p>
+        <div className="mt-6 flex max-w-md flex-col items-center gap-1 text-center">
+          <p className="text-xs text-muted-copy">Verileriniz cihazınızda güvenle yerel depolanır.</p>
+          <p className="text-xs text-muted-copy/70">EngVox v{PRODUCT_VERSION}</p>
+        </div>
       </div>
     </div>
   );

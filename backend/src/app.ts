@@ -833,7 +833,13 @@ export const createApp = ({
     config.rateLimit?.upstashToken ?? undefined
   );
   initConnectionPool(config);
-  initAuditLog(config as unknown as { workspace?: Record<string, unknown> });
+  initAuditLog(config as unknown as { workspace?: Record<string, unknown> }).catch(
+    (err: unknown) => {
+      logger.warn('Audit log init failed (non-fatal)', {
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  );
   initIdempotency(config, fetchImpl);
   initSentryIfConfigured(config);
 

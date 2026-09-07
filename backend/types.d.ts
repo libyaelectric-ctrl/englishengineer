@@ -174,6 +174,7 @@ export interface AiRequestBody {
   operation?: AiOperation;
   modeId?: string;
   metadata?: { requestId?: string };
+  context?: Record<string, unknown>;
 }
 
 export interface AiResult {

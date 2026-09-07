@@ -54,7 +54,9 @@ if (typeof window !== 'undefined') {
       timestamp: new Date().toISOString(),
       url: window.location.href,
     });
-    event.preventDefault(); // Prevent default browser behavior (console error)
+    // Do NOT call event.preventDefault() — it would silence all unhandled
+    // rejection errors in the browser console, making debugging impossible.
+    // ObservabilityService.logError above already captures these for tracking.
   });
 }
 

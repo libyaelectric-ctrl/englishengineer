@@ -126,8 +126,7 @@ export const getFreeTierPreview = (
 };
 
 export const canUseAICoach = (
-  subscription: SubscriptionSnapshot,
-  _dailyUsageCount = 0
+  subscription: SubscriptionSnapshot
 ): EntitlementResult => canAccessFeature(subscription, 'aiCoach');
 
 export const canCreateMission = (subscription: SubscriptionSnapshot): EntitlementResult =>

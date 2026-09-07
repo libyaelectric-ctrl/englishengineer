@@ -3,11 +3,10 @@
   "workspaces": {
     ".": {
       "entry": ["api/translate.js"],
-      "ignoreDependencies": ["@testing-library/jest-dom", "lint-staged"]
+      "ignoreDependencies": ["@testing-library/jest-dom", "@playwright/cli", "lint-staged"]
     },
     "backend": {
-      "entry": ["src/app.ts"],
-      "ignoreDependencies": ["tsx", "swagger-ui-dist"]
+      "ignoreDependencies": ["swagger-ui-dist"]
     }
   },
   "ignore": ["src/core/index.ts"],
@@ -19,8 +18,6 @@
     "tests/**",
     "backend/scripts/**",
     "android/**",
-    "ios/**",
-    "dist/**",
-    ".vite/**"
+    "ios/**"
   ]
 }

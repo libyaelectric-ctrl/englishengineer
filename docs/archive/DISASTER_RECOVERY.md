@@ -68,7 +68,7 @@ This document outlines procedures for recovering EngineerOS from various disaste
 **Recovery Steps:**
 
 1. **Check status pages:**
-   - Vercel: https://vercel.status.com
+   - Vercel: https://vercelstatus.com
    - Railway: https://status.railway.app
 2. **If provider issue:** Wait for resolution
 3. **If configuration issue:**

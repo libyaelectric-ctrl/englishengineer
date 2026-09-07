@@ -206,6 +206,10 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
   }, []);
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setParallax({ x: 0, y: 0 });
+      return;
+    }
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', onMouseMove);
   }, [onMouseMove]);
@@ -255,15 +259,6 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
             <stop offset="100%" stopColor={colors.ring2} stopOpacity="0.3" />
           </radialGradient>
 
-          {/* Spark glow filter */}
-          <filter id="sparkGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="1.5" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-
           {/* Hologram glow */}
           <filter id="holoGlow" x="-20%" y="-20%" width="140%" height="140%">
             <feGaussianBlur stdDeviation="2" result="blur" />
@@ -287,8 +282,9 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
           .map((bldg, i) => {
             const opacity = 0.5 + bldg.depth * 0.15;
             const edgeW = 2;
-            const cols = Math.max(2, Math.floor(bldg.w / 8));
-            const rows = Math.max(3, Math.floor(bldg.h / 12));
+            // Halved grid density (bigger cells) — far fewer <rect>s to paint
+            const cols = Math.max(2, Math.floor(bldg.w / 16));
+            const rows = Math.max(3, Math.floor(bldg.h / 24));
             return (
               <g key={i} opacity={opacity} className="hero-building">
                 {/* Main body */}
@@ -613,8 +609,8 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
           />
         </g>
 
-        {/* ── Rising sparks ── */}
-        <g filter="url(#sparkGlow)">
+        {/* ── Rising sparks (no blur filter — 40 elements would repaint per frame) ── */}
+        <g>
           {useMemo(() => {
             const rand = mulberry32(99);
             return Array.from({ length: 40 }, () => ({

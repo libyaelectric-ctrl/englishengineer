@@ -52,7 +52,7 @@ export const FEATURE_FLAGS = {
 
 export type FeatureFlagKey = keyof typeof FEATURE_FLAGS;
 
-export const ANONYMOUS_USER_ID = 'anonymous';
+const ANONYMOUS_USER_ID = 'anonymous';
 
 export function hashBucket(key: string, userId: string): number {
   let hash = 5381;

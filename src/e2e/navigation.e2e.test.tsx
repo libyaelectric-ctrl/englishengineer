@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { configure, render, screen, waitFor } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
@@ -18,6 +18,167 @@ import VocabularyPage from '@/pages/VocabularyPage';
 import WritingPage from '@/pages/WritingPage';
 
 import { resetStores } from './test-utils/resetStores';
+
+// ─── Hoisted mock data ────────────────────────────────────────────────────
+// Use vi.hoisted() to ensure mock data is available before vi.mock() calls
+
+const { mockTerm } = vi.hoisted(() => ({
+  mockTerm: {
+    id: 'a1-test-001',
+    term: 'test',
+    turkishMeaning: 'test kelimesi',
+    definition: 'A test word',
+    exampleSentence: 'This is a test sentence.',
+    turkishExample: 'Bu bir test cümleridir.',
+    cefrLevel: 'A1',
+    domain: 'General',
+    skillUse: ['vocabulary'],
+    tags: [],
+    grammarFits: [],
+    relatedTerms: [],
+    partOfSpeech: 'noun',
+    contentDomain: 'General',
+    lifeContext: 'General',
+    normalizedTerm: 'test',
+    grammarDomainAlias: '',
+  },
+}));
+
+// ─── Mocks for pages that load seed data asynchronously ────────────────────
+// Mock the repositories and data loaders that load seed data to prevent timeouts
+
+vi.mock('@/features/vocabulary', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/features/vocabulary')>();
+  return {
+    ...actual,
+    VocabularyRepository: {
+      ...actual.VocabularyRepository,
+      getVocabularyByLevel: vi.fn().mockResolvedValue([mockTerm]),
+      getVocabularyForUserSkillLevel: vi.fn().mockResolvedValue([mockTerm]),
+      getVocabularyBySkill: vi.fn().mockResolvedValue([mockTerm]),
+      getVocabularyByDomain: vi.fn().mockResolvedValue([mockTerm]),
+      getVocabularyByDomains: vi.fn().mockResolvedValue([mockTerm]),
+      getVocabularyByContentDomain: vi.fn().mockResolvedValue([mockTerm]),
+      getVocabularyByLifeContext: vi.fn().mockResolvedValue([mockTerm]),
+      getVocabularyByPartOfSpeech: vi.fn().mockResolvedValue([mockTerm]),
+      getVocabularyByGrammarFit: vi.fn().mockResolvedValue([mockTerm]),
+      searchVocabulary: vi.fn().mockResolvedValue([mockTerm]),
+      clearCache: vi.fn(),
+    },
+    VocabularyMenuService: {
+      ...actual.VocabularyMenuService,
+      getState: vi.fn().mockReturnValue({ progress: {}, myVocabulary: [] }),
+    },
+  };
+});
+
+vi.mock('@/features/grammar', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/features/grammar')>();
+  return {
+    ...actual,
+    GrammarRepository: {
+      ...actual.GrammarRepository,
+      getAllRulesSorted: vi.fn().mockResolvedValue([]),
+      getGrammarRulesByLevel: vi.fn().mockResolvedValue([]),
+      getGrammarRuleById: vi.fn().mockResolvedValue(undefined),
+      getGrammarRulesBySkill: vi.fn().mockResolvedValue([]),
+      getGrammarRulesByTaskType: vi.fn().mockResolvedValue([]),
+      getGrammarRulesByCategory: vi.fn().mockResolvedValue([]),
+      getGrammarRulesByDomain: vi.fn().mockResolvedValue([]),
+      getGrammarRulesForUserSkillLevel: vi.fn().mockResolvedValue([]),
+      getAllRulesSortedSync: vi.fn().mockReturnValue(null),
+      searchGrammarRules: vi.fn().mockResolvedValue([]),
+      clearCache: vi.fn(),
+    },
+    useGrammarStore: vi.fn(() => ({
+      stats: { learned: 0, mastered: 0, struggling: 0 },
+    })),
+    GrammarProgressService: {
+      ...actual.GrammarProgressService,
+      get: vi.fn(() => ({
+        correctUsages: 0,
+        incorrectUsages: 0,
+        strength: 0,
+        reviewStatus: 'New',
+        isPassed: false,
+      })),
+      getSummary: vi.fn(() => ({ strong: 0 })),
+      isLessonUnlocked: vi.fn(() => Promise.resolve(true)),
+    },
+  };
+});
+
+vi.mock('@/features/profile', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/features/profile')>();
+  return {
+    ...actual,
+    useLearningCockpit: vi.fn(() => ({
+      profile: {
+        skills: {
+          vocabulary: { elo: 800, cefrBand: 'A1' },
+          grammar: { elo: 750, cefrBand: 'A1' },
+          reading: { elo: 700, cefrBand: 'A1' },
+          writing: { elo: 650, cefrBand: 'A1' },
+          speaking: { elo: 600, cefrBand: 'A1' },
+          listening: { elo: 700, cefrBand: 'A1' },
+        },
+      },
+      memory: {
+        total: 0,
+        new: 0,
+        learning: 0,
+        mastered: 0,
+        forgotten: 0,
+        dueToday: 0,
+        weakWords: 0,
+      },
+      missions: [],
+      isLoading: false,
+      learningState: { studySessions: [] },
+    })),
+  };
+});
+
+// Mock useLearningStore with proper selector support and all required methods
+vi.mock('@/core/learning', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/core/learning')>();
+  const state = {
+    vocabularyPool: [],
+    grammarPool: [],
+    speakingPool: [],
+    xp: 100,
+    streak: 5,
+    missions: [],
+    achievements: [],
+    studySessions: [],
+    lastActivityDate: new Date().toISOString(),
+    scoreHistory: [],
+    xpHistory: [],
+    eloHistory: [],
+    elo: 1000,
+    level: 1,
+    coins: 0,
+    hearts: 5,
+    heartsDepletedAt: null,
+    weakTermIds: [],
+    // Mock methods that are called by hooks
+    checkHeartsRefill: vi.fn(),
+    loseHeart: vi.fn(),
+    completeGenericPractice: vi.fn(),
+  };
+  return {
+    ...actual,
+    useLearningStore: Object.assign(
+      vi.fn((selector?: (s: typeof state) => unknown) => (selector ? selector(state) : state)),
+      { getState: () => state }
+    ),
+  };
+});
+
+// Mock the vocabulary data loader to prevent network requests
+vi.mock('@/data/vocabulary', () => ({
+  loadVocabularyByLevel: vi.fn().mockResolvedValue([mockTerm]),
+}));
 
 afterEach(() => {
   resetStores();
