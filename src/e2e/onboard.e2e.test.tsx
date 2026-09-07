@@ -1,11 +1,19 @@
-import { configure, render, screen, fireEvent } from '@testing-library/react';
-import { describe, expect, it, afterEach } from 'vitest';
+import { configure, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it } from 'vitest';
 
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import OnboardPage from '@/pages/OnboardPage';
 
 import { resetStores } from './test-utils/resetStores';
+
+// OnboardPage renders real translated copy — use the actual localization
+// module (with real English UI strings) instead of the key-returning global
+// test mock so the assertions below check real user-visible text.
+vi.mock('@/features/localization', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/features/localization')>();
+  return actual;
+});
 
 afterEach(() => {
   resetStores();
@@ -18,57 +26,59 @@ const renderOnboard = (initialEntries = ['/onboard']) =>
   render(
     <MemoryRouter initialEntries={initialEntries}>
       <OnboardPage />
+      <LocationProbe />
     </MemoryRouter>
   );
+
+const finishButton = () => screen.getByRole('button', { name: /Finish/i });
+
+const LocationProbe = () => {
+  const { search } = useLocation();
+  return <div data-testid="location-search">{search}</div>;
+};
 
 describe('OnboardPage E2E', () => {
   it('renders the onboard page with disciplines and languages', () => {
     renderOnboard();
-    expect(screen.getByText('Choose Your Path')).toBeInTheDocument();
-    expect(screen.getByText('Professions')).toBeInTheDocument();
-    expect(screen.getByText('Languages')).toBeInTheDocument();
-    // Discipline items
-    expect(screen.getByText('Architecture')).toBeInTheDocument();
-    expect(screen.getByText('Electrical Eng.')).toBeInTheDocument();
-    expect(screen.getByText('Software Eng.')).toBeInTheDocument();
-    // Language items
-    expect(screen.getByText('English')).toBeInTheDocument();
-    expect(screen.getByText('Türkçe')).toBeInTheDocument();
-    expect(screen.getByText('Deutsch')).toBeInTheDocument();
+    expect(screen.getByText('Set up your learning path')).toBeInTheDocument();
+    expect(screen.getByText('Select your discipline')).toBeInTheDocument();
+    expect(screen.getByText('Select your language')).toBeInTheDocument();
+    // Discipline + language options render as radio groups
+    expect(screen.getByRole('radio', { name: /^architecture/i })).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /English/i })).toBeInTheDocument();
   });
 
-  it('Enter button is disabled until both discipline and language selected', () => {
+  it('keeps Finish enabled and guides the user until both selections are made', () => {
     renderOnboard();
-    const enterBtn = screen.getByRole('button', { name: /Enter EngVox/i });
-    expect(enterBtn).toBeDisabled();
+    const enterBtn = finishButton();
+    expect(enterBtn).not.toBeDisabled();
 
-    // Select discipline only
-    fireEvent.click(screen.getByText('Electrical Eng.'));
-    expect(enterBtn).toBeDisabled();
+    // Incomplete submit surfaces guidance instead of submitting silently
+    fireEvent.click(enterBtn);
+    expect(screen.getByRole('alert')).toHaveTextContent(/select your discipline and language/i);
 
-    // Select language too
-    fireEvent.click(screen.getByText('English'));
+    // Selecting only a discipline keeps the guidance visible
+    fireEvent.click(screen.getByRole('radio', { name: /^architecture/i }));
+    fireEvent.click(enterBtn);
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+
+    // Selecting the language resolves the guidance
+    fireEvent.click(screen.getByRole('radio', { name: /English/i }));
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
     expect(enterBtn).not.toBeDisabled();
   });
 
-  it('selection summary bar appears when items are selected', () => {
+  it('marks selections as checked', () => {
     renderOnboard();
-    // No floating bar initially
-    expect(screen.queryByText('Electrical Eng.')).toBeInTheDocument(); // in list
-    // Click a discipline
-    fireEvent.click(screen.getByText('Electrical Eng.'));
-    // Now should have floating summary at bottom
-    awaitFloatingBar();
-    // Click a language
-    fireEvent.click(screen.getByText('English'));
-    // Summary should show both
-    const summaryTexts = screen.getAllByText('English');
-    expect(summaryTexts.length).toBeGreaterThanOrEqual(1);
+    fireEvent.click(screen.getByRole('radio', { name: /^architecture/i }));
+    fireEvent.click(screen.getByRole('radio', { name: /English/i }));
+    expect(screen.getByRole('radio', { name: /^architecture/i })).toBeChecked();
+    expect(screen.getByRole('radio', { name: /English/i })).toBeChecked();
   });
 
-  it('back button exists and shows Back text', () => {
+  it('back link exists and shows Back text', () => {
     renderOnboard();
-    expect(screen.getByText('Back')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Back/i })).toBeInTheDocument();
   });
 
   it('theme toggle button exists', () => {
@@ -78,16 +88,22 @@ describe('OnboardPage E2E', () => {
 
   it('discipline can be changed after initial selection', () => {
     renderOnboard();
-    // Select first
-    fireEvent.click(screen.getByText('Electrical Eng.'));
-    // Select different one
-    fireEvent.click(screen.getByText('Civil Eng.'));
-    // Enter button should still be disabled (no language)
-    const enterBtn = screen.getByRole('button', { name: /Enter EngVox/i });
-    expect(enterBtn).toBeDisabled();
+    fireEvent.click(screen.getByRole('radio', { name: /^architecture/i }));
+    fireEvent.click(screen.getByRole('radio', { name: /software/i }));
+    expect(screen.getByRole('radio', { name: /software/i })).toBeChecked();
+    expect(screen.getByRole('radio', { name: /^architecture/i })).not.toBeChecked();
+    expect(finishButton()).not.toBeDisabled();
+  });
+
+  it('selections are restored from and synced to the URL', () => {
+    renderOnboard(['/onboard?discipline=architecture&lang=en']);
+    expect(screen.getByRole('radio', { name: /^architecture/i })).toBeChecked();
+    expect(screen.getByRole('radio', { name: /English/i })).toBeChecked();
+    expect(finishButton()).not.toBeDisabled();
+
+    // Changing a selection keeps the other param and updates the URL
+    fireEvent.click(screen.getByRole('radio', { name: /software/i }));
+    expect(screen.getByTestId('location-search')).toHaveTextContent('discipline=software');
+    expect(screen.getByTestId('location-search')).toHaveTextContent('lang=en');
   });
 });
-
-function awaitFloatingBar() {
-  // floating bar appears with selection summary
-}

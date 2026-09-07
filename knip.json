@@ -3,10 +3,9 @@
   "workspaces": {
     ".": {
       "entry": ["api/translate.js"],
-      "ignoreDependencies": ["@testing-library/jest-dom", "lint-staged"]
+      "ignoreDependencies": ["@testing-library/jest-dom", "@playwright/cli"]
     },
     "backend": {
-      "entry": ["src/server.ts"],
       "ignoreDependencies": ["tsx", "swagger-ui-dist"]
     }
   },
@@ -17,10 +16,6 @@
     "public/**",
     ".lighthouserc.cjs",
     "tests/**",
-    "backend/scripts/**",
-    "android/**",
-    "ios/**",
-    "dist/**",
-    ".vite/**"
+    "backend/scripts/**"
   ]
 }
