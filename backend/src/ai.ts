@@ -50,9 +50,6 @@ const resolvePlanId = (subscription: SubscriptionSnapshot | null, configured: bo
   return normalizePlanId(subscription.planId);
 };
 
-const AI_WINDOW_MS = 24 * 60 * 60 * 1000;
-const AI_MONTH_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
-
 const isBypassUser = (userId: string): boolean => {
   if (process.env.NODE_ENV === 'production') return false;
   if (process.env.ALLOW_INSECURE_DEV_AUTH !== 'true') return false;
@@ -87,20 +84,12 @@ const throwLimitError = (planId: PlanId): never => {
   );
 };
 
-const getWindowMs = (planId: PlanId) => {
-  const limits = getPlanLimits(planId);
-  return limits.daily !== null ? AI_WINDOW_MS : AI_MONTH_WINDOW_MS;
-};
-
-export { getWindowMs };
 
 const countRequestsInWindow = async (
   ledger: { countRecentRequests: (userId: string, planId: PlanId) => Promise<number> },
   userId: string,
-  planId: PlanId,
-  windowMs: number
+  planId: PlanId
 ): Promise<number> => {
-  void windowMs;
   return ledger.countRecentRequests(userId, planId);
 };
 
@@ -123,8 +112,7 @@ const checkRateLimits = async (
     ? await billingRepository.getSubscriptionStatus(userId)
     : null;
   const planId = resolvePlanId(subscription, configured);
-  const windowMs = getWindowMs(planId);
-  const count = await countRequestsInWindow(ledger, userId, planId, windowMs);
+  const count = await countRequestsInWindow(ledger, userId, planId);
   if (!isLimitReached(planId, count))
     return { count, useTopup: false, subscription: subscription ?? null, topupCredits: 0, planId };
 

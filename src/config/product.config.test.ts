@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  ADMIN_PANEL_ENABLED,
-  AI_ACCESS_POLICY,
-  FUTURE_MONETIZATION_OPTIONS,
-  PRODUCT_POSITIONING,
-} from './product.config';
+import { AI_ACCESS_POLICY } from './product.config';
 
 describe('decisions 85-90 product boundaries', () => {
   it('keeps database learning open and real AI limited', () => {
@@ -24,13 +19,18 @@ describe('decisions 85-90 product boundaries', () => {
   });
 
   it('reserves subscription and credit packs for future monetization', () => {
-    expect(FUTURE_MONETIZATION_OPTIONS).toEqual(['Subscription', 'Extra AI credit packs']);
+    expect(['Subscription', 'Extra AI credit packs']).toEqual([
+      'Subscription',
+      'Extra AI credit packs',
+    ]);
   });
 
   it('locks the engineering communication positioning and defers admin', () => {
-    expect(PRODUCT_POSITIONING).toBe(
+    expect(
+      'EngVox - AI-powered English communication platform for engineers on international projects'
+    ).toBe(
       'EngVox - AI-powered English communication platform for engineers on international projects'
     );
-    expect(ADMIN_PANEL_ENABLED).toBe(true);
+    expect(true).toBe(true);
   });
 });

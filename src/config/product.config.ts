@@ -1,9 +1,5 @@
 export const PRODUCT_VERSION = '4.0.22';
 
-// Exported for testing only - not used by production code
-export const PRODUCT_POSITIONING =
-  'EngVox - AI-powered English communication platform for engineers on international projects';
-
 export const AI_ACCESS_POLICY = {
   freeAccess: 'Limited free AI demo',
   databaseLearning: 'Open without AI',
@@ -16,9 +12,3 @@ export const AI_ACCESS_POLICY = {
     'Personalized Task Generation',
   ],
 } as const;
-
-// Exported for testing only - not used by production code
-export const FUTURE_MONETIZATION_OPTIONS = ['Subscription', 'Extra AI credit packs'] as const;
-
-// Exported for testing only - not used by production code
-export const ADMIN_PANEL_ENABLED = true;

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { MAIN_NAVIGATION_LABELS, NAV_ITEMS, SKILL_NAV_ITEMS } from './navigation.config';
+import { NAV_ITEMS, SKILL_NAV_ITEMS } from './navigation.config';
 
 describe('main navigation configuration', () => {
   it('uses locked main navigation entries', () => {
-    expect(MAIN_NAVIGATION_LABELS).toEqual([
+    expect(NAV_ITEMS.map((item) => item.label)).toEqual([
       'Home',
       'Learning',
       'Skills',

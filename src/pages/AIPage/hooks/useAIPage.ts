@@ -183,10 +183,7 @@ export function useAIPage() {
   const coachContext = buildCoachContext(currentUser, learningState, mistakeLog);
   const assessmentProfile = AssessmentService.getProfile(learningState);
   const usage = useMemo(() => buildAIUsageSummary(sessions), [sessions]);
-  const todaysCoachSessions = sessions.filter(
-    (session) => new Date(session.timestamp).toDateString() === new Date().toDateString()
-  ).length;
-  const aiEntitlement = canUseAICoach(subscription, todaysCoachSessions);
+  const aiEntitlement = canUseAICoach(subscription);
   const providerTone = computeProviderTone(providerStatus.mode, providerStatus.state);
   const connectionValue = computeConnectionValue(providerStatus.mode, providerStatus.state);
   const connectionTrend = computeConnectionTrend(providerStatus.mode, providerStatus.state);

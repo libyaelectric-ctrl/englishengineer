@@ -64,5 +64,3 @@ export const NAV_ITEMS = [
   { label: 'Team', href: '/team', icon: User, comingSoon: false },
 ] as const;
 
-// Exported for testing only - not used by production code
-export const MAIN_NAVIGATION_LABELS = NAV_ITEMS.map((item) => item.label);
