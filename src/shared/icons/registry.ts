@@ -65,7 +65,6 @@ import {
   Monitor,
   Pause,
   PenLine,
-  PenTool,
   Play,
   Plus,
   RefreshCw,
@@ -97,7 +96,7 @@ import {
   Zap,
 } from 'lucide-react';
 
-export const IconRegistry: Record<string, LucideIcon> = {
+const IconRegistry: Record<string, LucideIcon> = {
   'chevron-down': ChevronDown,
   'chevron-right': ChevronRight,
   'chevron-left': ChevronLeft,
@@ -192,7 +191,7 @@ export const IconRegistry: Record<string, LucideIcon> = {
   'x-circle': XCircle,
 };
 
-export const DisciplineIcons: Record<string, LucideIcon> = {
+const DisciplineIcons: Record<string, LucideIcon> = {
   architecture: Landmark,
   chemical: FlaskConical,
   civil: Building2,
@@ -206,21 +205,12 @@ export const DisciplineIcons: Record<string, LucideIcon> = {
   general: Library,
 };
 
-export const RankIcons: Record<string, LucideIcon> = {
+const RankIcons: Record<string, LucideIcon> = {
   grandmaster: Crown,
   diamond: Gem,
   platinum: Trophy,
   gold: Award,
   silver: Award,
-};
-
-export const SkillIcons: Record<string, LucideIcon> = {
-  vocabulary: BookMarked,
-  grammar: Languages,
-  reading: BookOpen,
-  writing: PenTool,
-  listening: Headphones,
-  speaking: MessageSquare,
 };
 
 export function getIcon(name: string): LucideIcon | undefined {
@@ -233,8 +223,4 @@ export function getDisciplineIcon(discipline: string): LucideIcon {
 
 export function getRankIcon(rank: string): LucideIcon {
   return RankIcons[rank.toLowerCase()] ?? Award;
-}
-
-export function getSkillIcon(skill: string): LucideIcon {
-  return SkillIcons[skill.toLowerCase()] ?? BookOpen;
 }

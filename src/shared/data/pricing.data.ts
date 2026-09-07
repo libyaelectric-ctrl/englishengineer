@@ -59,7 +59,7 @@ export const PRICING_TIERS: PricingTier[] = [
     annualPrice: 16.67,
     annualTotal: 199.99,
     originalMonthlyPrice: 29.99,
-    originalAnnualPrice: 25.00,
+    originalAnnualPrice: 25.0,
     description: 'Essential learning core for daily engineering English practice.',
     audience: 'Getting started with discipline-specific vocabulary',
     bestFor: 'Individual engineers starting their journey',
@@ -93,7 +93,7 @@ export const PRICING_TIERS: PricingTier[] = [
     annualPrice: 33.33,
     annualTotal: 399.99,
     originalMonthlyPrice: 59.99,
-    originalAnnualPrice: 50.00,
+    originalAnnualPrice: 50.0,
     description: 'Expand your skills with reading, writing, and translation.',
     audience: 'Engineers who read and write technical documents',
     bestFor: 'Professional engineers improving documentation skills',
@@ -150,7 +150,7 @@ export const PRICING_TIERS: PricingTier[] = [
     id: 'master',
     name: 'Master',
     monthlyPrice: 59.99,
-    annualPrice: 50.00,
+    annualPrice: 50.0,
     annualTotal: 599.99,
     originalMonthlyPrice: 99.99,
     originalAnnualPrice: 83.33,
@@ -178,64 +178,9 @@ export const PRICING_TIERS: PricingTier[] = [
   },
 ];
 
-export const PRICING_FEATURE_ORDER = [
-  'Placement Test',
-  'Learning Hub',
-  'Progress Tracking',
-  'Vocabulary',
-  'Grammar',
-  'Translator',
-  'Reading',
-  'Writing',
-  'Speaking',
-  'Listening',
-  'Tool',
-  'AI Copilot',
-] as const;
-
 export const formatPrice = (amount: number, currencyCode = 'USD'): string => {
   if (amount === 0) return 'Free';
   const currency = CurrencyConfig.CURRENCIES.find((c) => c.code === currencyCode);
   const symbol = currency?.symbol ?? '$';
   return `${symbol}${amount}`;
-};
-
-export interface CurrencyConfigItem {
-  code: string;
-  symbol: string;
-  flag: string;
-  region: string;
-}
-
-export const CURRENCIES: CurrencyConfigItem[] = [
-  { code: 'USD', symbol: '$', flag: '🇺🇸', region: 'United States' },
-  { code: 'EUR', symbol: '€', flag: '🇪🇺', region: 'Europe' },
-  { code: 'GBP', symbol: '£', flag: '🇬🇧', region: 'United Kingdom' },
-  { code: 'TRY', symbol: '₺', flag: '🇹🇷', region: 'Turkey' },
-  { code: 'JPY', symbol: '¥', flag: '🇯🇵', region: 'Japan' },
-  { code: 'RUB', symbol: '₽', flag: '🇷🇺', region: 'Russia' },
-];
-
-export const getAnnualSavings = (tier: PricingTier): number => {
-  return Math.round(((tier.monthlyPrice - tier.annualPrice) / tier.monthlyPrice) * 100);
-};
-
-export const getRecommendedPlan = (totalItemCount: number): string => {
-  if (totalItemCount >= 4500) return 'master';
-  if (totalItemCount >= 4000) return 'specialist';
-  if (totalItemCount >= 3000) return 'senior';
-  return 'junior';
-};
-
-export const getDynamicPricingMessage = (
-  tier: PricingTier,
-  totalItemCount: number
-): string | null => {
-  if (totalItemCount >= 4500 && tier.id === 'master') {
-    return 'Best value for your extensive content library';
-  }
-  if (totalItemCount >= 4000 && tier.id === 'specialist') {
-    return 'Recommended for your content size';
-  }
-  return null;
 };

@@ -2,6 +2,7 @@ import type { Express, NextFunction, Request, RequestHandler, Response } from 'e
 
 import type { VocabularyLookupQuery } from '../types.js';
 import { getOrSet } from './cache/redis-cache.service.js';
+import { ApiError } from './errors.js';
 import {
   ProgressBodySchema,
   VocabularyLookupQuerySchema,
@@ -9,6 +10,7 @@ import {
   validateQuery,
 } from './validation.js';
 import type { VocabularyLookupService } from './vocabulary-service.js';
+import { categorizePerformance } from './utils/stats.js';
 
 interface VocabularyRecord {
   wordId: string;
@@ -57,7 +59,7 @@ export const registerVocabularyRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new Error('Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const wordId = request.params.id as string;
         const { result } = request.validatedBody as {
@@ -89,51 +91,20 @@ export const registerVocabularyRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new Error('Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const records = getUserRecords(userId);
-        const total = records.length;
-        const correctCount = records.filter((r) => r.result === 'correct').length;
-
-        // Classify words by performance
-        const wordMap = new Map<string, { correct: number; incorrect: number }>();
-        for (const r of records) {
-          if (!wordMap.has(r.wordId)) wordMap.set(r.wordId, { correct: 0, incorrect: 0 });
-          const entry = wordMap.get(r.wordId)!;
-          if (r.result === 'correct') entry.correct++;
-          else entry.incorrect++;
-        }
-
-        let newCount = 0;
-        let learning = 0;
-        let learned = 0;
-        let mastered = 0;
-        let struggling = 0;
-
-        for (const [, stats] of wordMap) {
-          const totalAttempts = stats.correct + stats.incorrect;
-          if (totalAttempts === 1 && stats.correct === 1) {
-            newCount++;
-          } else if (totalAttempts <= 3 && stats.correct >= 1) {
-            learning++;
-          } else if (stats.correct / totalAttempts >= 0.8) {
-            mastered++;
-          } else if (stats.correct / totalAttempts >= 0.5) {
-            learned++;
-          } else {
-            struggling++;
-          }
-        }
+        const stats = categorizePerformance(records, 'wordId');
 
         response.json({
-          total,
-          correct: correctCount,
-          incorrect: records.length - correctCount,
-          new: newCount,
-          learning,
-          learned,
-          mastered,
-          struggling,
+          total: stats.total,
+          correct: stats.correct,
+          incorrect: stats.incorrect,
+          new: stats.new,
+          learning: stats.learning,
+          learned: stats.learned,
+          mastered: stats.mastered,
+          struggling: stats.struggling,
         });
       } catch (error) {
         next(error);

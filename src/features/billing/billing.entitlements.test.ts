@@ -147,8 +147,8 @@ describe('billing entitlements', () => {
   });
 
   it('delegates canUseAICoach to the Master tier', () => {
-    expect(canUseAICoach(createFreeSubscription(), 100).allowed).toBe(false);
-    expect(canUseAICoach(withPlan('master'), 1000).allowed).toBe(true);
+    expect(canUseAICoach(createFreeSubscription()).allowed).toBe(false);
+    expect(canUseAICoach(withPlan('master')).allowed).toBe(true);
   });
 
   it('delegates canCreateMission to the Master tier', () => {

@@ -123,9 +123,7 @@ async function apiFetch<T>(
       const code =
         response.status === 401 || response.status === 403
           ? ErrorCode.AUTH
-          : response.status === 429
-            ? ErrorCode.NETWORK
-            : ErrorCode.NETWORK;
+          : ErrorCode.NETWORK;
 
       // 401/403 must be visible to the user — a silently-failing auth error
       // looks like "my progress isn't saving" with zero diagnostic signal.
@@ -237,9 +235,3 @@ export function createApiClient(config?: ApiClientConfig) {
 
   return { get, post, put, del };
 }
-
-// ---------------------------------------------------------------------------
-// Default singleton
-// ---------------------------------------------------------------------------
-
-export const apiClient = createApiClient();

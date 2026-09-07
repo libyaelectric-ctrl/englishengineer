@@ -252,7 +252,7 @@ export const router = createHashRouter([
             fallback={
               <div className="flex min-h-screen items-center justify-center bg-surface text-foreground">
                 <div className="text-center space-y-4">
-                  <p className="text-lg font-bold">Team sayfasÄ± yÃ¼klenemedi.</p>
+                  <p className="text-lg font-bold">Team sayfası yüklenemedi.</p>
                   <button
                     onClick={async () => {
                       const { reloadApp } = await import('@/shared/utils/capacitor');

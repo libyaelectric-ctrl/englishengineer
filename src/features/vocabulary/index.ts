@@ -1,145 +1,30 @@
-export {
-  type VocabularyTrainingMode,
-  type VocabularyWordStatus,
-  type VocabularyWordSource,
-  type MyVocabularyFilter,
-  type VocabularyEntry,
-  type VocabularyTerm,
-  type SavedVocabularyWord,
-  type VocabularyMemoryState,
-  type VocabularyMemoryStoreSummary,
-  type VocabularyMemorySummary,
-  type ExternalVocabularyResult,
-  type ExternalLookupState,
-  type VocabularyReviewState,
-  type VocabularyAnswer,
-  type VocabularyEvaluationResult,
-  type VocabularyHistoryEntry,
-  type VocabularyState,
-  type VocabularySummary,
-} from '@/shared/types/vocabulary.types';
-
 export { VocabularyRepository } from './services/core/vocabulary.repository';
-
-export { VocabularyEngine } from './engine/vocabulary.engine';
-
-export {
-  normalizeVocabularyText,
-  isVocabularyResponseCorrect,
-  getTodayDateKey,
-  getPreviousDateKey,
-  isDueForReview,
-  sortByNextReview,
-} from './engine/vocabulary.helpers';
-
-export { VocabularyEvaluator } from './engine/vocabulary.evaluator';
-
-export {
-  type ForgettingCurvePoint,
-  type ForgettingCurveData,
-  calculateRetention,
-  estimateStability,
-  generateForgettingCurve,
-  generateMultiWordCurves,
-  getRetentionColor,
-  getRetentionLabel,
-} from './engine/vocabulary.forgetting-curve';
-
-export {
-  type PrioritizedWord,
-  calculateWordPriority,
-  prioritizeWords,
-  getSessionPriorityLabel,
-} from './engine/vocabulary.session-optimizer';
 
 export { VocabularyService } from './services/core/vocabulary.service';
 
 export { useVocabularyStore } from './store/vocabulary.store';
 
 export {
-  isVocabularyWordDue,
-  filterMyVocabulary,
-  VocabularyMemoryService,
-} from './services/core/vocabulary.memory';
-
-export {
-  type VocabularySyncState,
-  type SyncConflict,
-  VocabularySyncService,
-} from './services/core/vocabulary.sync';
-
-export {
-  type ReviewReminderSettings,
-  type ReviewReminderStatus,
-  ReviewReminderService,
-} from './services/engagement/vocabulary.reminder';
-
-export {
-  type VocabularyBadge,
-  type VocabularyStats,
-  type BadgeUnlockResult,
-  VocabularyBadgeService,
-} from './services/engagement/vocabulary.badges';
-
-export {
-  type SentenceExample,
-  type GenerateSentencesResult,
-  SentenceGeneratorService,
-} from './services/content/vocabulary.sentences';
-
-export {
-  type PronunciationResult,
-  PronunciationService,
-} from './services/content/vocabulary.pronunciation';
-
-export {
-  type CsvWord,
-  type ImportResult,
-  VocabularyCsvService,
-} from './services/content/vocabulary.csv';
-
-export { useVocabularyMemoryStore } from './store/vocabulary.memory.store';
-
-export {
-  searchVocabularyEntries,
-  lookupExternalVocabulary,
-  isExternalVocabularyResult,
-  clearVocabularyLookupCache,
-} from './services/content/vocabulary.search';
-
-export {
-  createInitialReviewState,
-  updateSm2ReviewState,
-} from './spaced-repetition/vocabulary.spaced-repetition';
-
-export {
-  type DueTodayItem,
-  getDueTodayWords,
-  getUpcomingReviews,
-  getReviewStats,
-} from './spaced-repetition/vocabulary-due-today';
-
-export {
-  CANONICAL_VOCABULARY_TOTAL,
-  type VocabularyMenuStatus,
-  type VocabularyMenuProgress,
-  type MyVocabularyWord,
-  type VocabularyMenuState,
-  type VocabularyMenuSummary,
-  type AddMyVocabularyInput,
-  type VocabularySearchFilters,
-  type LearnedQuizCompletion,
-  repairVocabularyText,
-  isVocabularyProgressDue,
-  isVocabularyForgotten,
-  isLeechWord,
-  getVocabularyReviewReason,
-  getVocabularyMenuStatus,
-  searchVocabularyMenu,
   VocabularyMenuService,
+  isVocabularyProgressDue,
+  repairVocabularyText,
+  searchVocabularyMenu,
+  getVocabularyReviewReason,
 } from './services/core/vocabulary.menu';
 
-export {
-  type VocabularyLearningSetOptions,
-  selectVocabularyLearningSet,
-} from './services/core/vocabulary.selection';
+export { selectVocabularyLearningSet } from './services/core/vocabulary.selection';
+
+export { PronunciationService } from './services/content/vocabulary.pronunciation';
+
+export { SentenceGeneratorService } from './services/content/vocabulary.sentences';
+
+export type {
+  VocabularyMenuStatus,
+  VocabularyMenuProgress,
+  VocabularyMenuState,
+  VocabularySearchFilters,
+} from './services/core/vocabulary.menu';
+
+export type { VocabularyTerm } from '@/shared/types/vocabulary.types';
+
+export type { SentenceExample } from './services/content/vocabulary.sentences';

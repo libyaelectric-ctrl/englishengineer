@@ -68,7 +68,7 @@ curl https://englishengineer-backend.onrender.com/api/billing/subscription-statu
 ### High Latency
 
 **Symptoms:** Slow page loads, API timeouts
-**Check:** Railway metrics, Vercel analytics
+**Check:** Render metrics, Vercel analytics
 **Fix:** Scale up, check database queries, enable caching
 
 ### Frontend Build Failure

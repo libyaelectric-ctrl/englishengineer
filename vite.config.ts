@@ -58,8 +58,8 @@ export default defineConfig(() => {
       sourcemap: 'hidden',
       chunkSizeWarningLimit: 100,
       target: 'es2020',
-      minify: 'esbuild' as const,
-      cssMinify: 'esbuild' as const,
+      minify: 'esbuild',
+      cssMinify: 'esbuild',
       modulePreload: {
         polyfill: true,
       },

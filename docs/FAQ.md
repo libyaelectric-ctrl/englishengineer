@@ -22,7 +22,7 @@
 
 ### Q5: What tech stack does EngineerOS use?
 
-**A:** React 19, Vite 6, TypeScript 5.9, Tailwind CSS v4, Zustand 5, Express 5, Supabase, and multiple AI providers (Claude, OpenAI, Gemini).
+**A:** React 19, Vite 8, TypeScript 6.0, Tailwind CSS v4, Zustand 5, Express 5, Supabase, and multiple AI providers (Claude, OpenAI, Gemini).
 
 ### Q6: Is the code open source?
 

@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 
 const STORAGE_KEY = 'engvox_cookie_consent';
 
-export type CookieConsent = 'accepted' | 'rejected' | null;
+type CookieConsent = 'accepted' | 'rejected' | null;
 
-export const getCookieConsent = (): CookieConsent => {
+const getCookieConsent = (): CookieConsent => {
   try {
     return localStorage.getItem(STORAGE_KEY) as CookieConsent;
   } catch {
@@ -12,7 +12,7 @@ export const getCookieConsent = (): CookieConsent => {
   }
 };
 
-export const setCookieConsent = (consent: CookieConsent): void => {
+const setCookieConsent = (consent: CookieConsent): void => {
   try {
     if (consent) {
       localStorage.setItem(STORAGE_KEY, consent);

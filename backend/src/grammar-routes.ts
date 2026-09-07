@@ -1,6 +1,8 @@
 import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
 
+import { ApiError } from './errors.js';
 import { ProgressBodySchema, validateBody } from './validation.js';
+import { categorizePerformance } from './utils/stats.js';
 
 interface GrammarRecord {
   ruleId: string;
@@ -31,7 +33,7 @@ export const registerGrammarRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new Error('Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const ruleId = request.params.id as string;
         const { result } = request.validatedBody as {
@@ -58,52 +60,20 @@ export const registerGrammarRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new Error('Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const records = getUserRecords(userId);
-        const total = records.length;
-        const correctCount = records.filter((r) => r.result === 'correct').length;
-        const incorrectCount = records.filter((r) => r.result === 'incorrect').length;
-
-        // Classify rules by performance
-        const ruleMap = new Map<string, { correct: number; incorrect: number }>();
-        for (const r of records) {
-          if (!ruleMap.has(r.ruleId)) ruleMap.set(r.ruleId, { correct: 0, incorrect: 0 });
-          const entry = ruleMap.get(r.ruleId)!;
-          if (r.result === 'correct') entry.correct++;
-          else entry.incorrect++;
-        }
-
-        let newCount = 0;
-        let learning = 0;
-        let learned = 0;
-        let mastered = 0;
-        let struggling = 0;
-
-        for (const [, stats] of ruleMap) {
-          const totalAttempts = stats.correct + stats.incorrect;
-          if (totalAttempts === 1 && stats.correct === 1) {
-            newCount++;
-          } else if (totalAttempts <= 3 && stats.correct >= 1) {
-            learning++;
-          } else if (stats.correct / totalAttempts >= 0.8) {
-            mastered++;
-          } else if (stats.correct / totalAttempts >= 0.5) {
-            learned++;
-          } else {
-            struggling++;
-          }
-        }
+        const stats = categorizePerformance(records, 'ruleId');
 
         response.json({
-          total,
-          correct: correctCount,
-          incorrect: incorrectCount,
-          new: newCount,
-          learning,
-          learned,
-          mastered,
-          struggling,
+          total: stats.total,
+          correct: stats.correct,
+          incorrect: stats.incorrect,
+          new: stats.new,
+          learning: stats.learning,
+          learned: stats.learned,
+          mastered: stats.mastered,
+          struggling: stats.struggling,
         });
       } catch (error) {
         next(error);
@@ -117,7 +87,7 @@ export const registerGrammarRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new Error('Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const records = getUserRecords(userId);
         const grammarLearnedCount = records.filter((r) => r.result === 'correct').length;

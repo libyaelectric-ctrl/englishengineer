@@ -5,7 +5,7 @@
 - Node.js 22+
 - Vercel CLI (`npm i -g vercel`)
 - Supabase project access
-- Railway project access
+- Render project access
 
 ## Frontend Deploy (Vercel)
 
@@ -30,14 +30,14 @@ npx vercel rollback
 Vercel dashboard → Settings → Environment Variables
 Required:
 
-- `VITE_AUTH_PROVIDER=supabase`
+- `VITE_AUTH_PROVIDER=firebase`
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_ANON_KEY`
 - `VITE_AI_PROVIDER=backend`
 - `VITE_AI_PROXY_URL`
 - `VITE_BILLING_API_URL`
 
-## Backend Deploy (Railway)
+## Backend Deploy (Render)
 
 ### Otomatik Deploy
 
@@ -51,13 +51,13 @@ curl https://englishengineer-backend.onrender.com/api/health
 
 ### Environment Variables
 
-Railway dashboard → Variables:
+Render dashboard → Environment:
 
 - `NODE_ENV=production`
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
-- `STRIPE_SECRET_KEY`
-- `STRIPE_WEBHOOK_SECRET`
+- `DODO_PAYMENTS_API_KEY`
+- `DODO_PAYMENTS_WEBHOOK_SECRET`
 - `RATE_LIMIT_STORE=upstash`
 - `UPSTASH_REDIS_REST_URL`
 - `UPSTASH_REDIS_REST_TOKEN`
@@ -126,15 +126,15 @@ Plan bazlı günlük (free: 3/gün) veya aylık (ücretli) AI limitleri `backend
 
 ### Frontend Down
 
-1. Check Vercel status: https://vercel.com/status
+1. Check Vercel status: https://vercelstatus.com
 2. Check build logs in Vercel dashboard
 3. Rollback if needed: `npx vercel rollback`
 
 ### Backend Down
 
-1. Check Railway status: https://railway.app/status
+1. Check Render status: https://status.render.com
 2. Check health endpoint
-3. Check logs in Railway dashboard
+3. Check logs in Render dashboard
 4. Restart service if needed
 
 ### Auth Issues

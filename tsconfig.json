@@ -20,13 +20,5 @@
     "resolveJsonModule": true,
     "noEmit": true
   },
-  "exclude": [
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.e2e.test.tsx",
-    "tests/**",
-    "backend/**",
-    "yap/**",
-    "englishengineer/**",
-  ]
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "**/*.e2e.test.tsx", "tests/**", "backend/**"]
 }

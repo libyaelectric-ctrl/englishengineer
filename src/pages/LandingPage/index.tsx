@@ -6,7 +6,9 @@ import {
   CheckCircle2,
   Globe,
   Headphones,
+  Pause,
   PenTool,
+  Play,
   Sparkles,
   Volume2,
 } from 'lucide-react';
@@ -29,42 +31,12 @@ import { Navbar } from './Navbar';
 const HeroScene = lazy(() => import('./HeroScene'));
 
 const FEATURES = [
-  {
-    icon: BookOpen,
-    key: 'vocabulary',
-    color: 'from-blue-500 to-cyan-400',
-    glow: 'shadow-blue-500/25',
-  },
-  {
-    icon: BookOpen,
-    key: 'reading',
-    color: 'from-emerald-500 to-teal-400',
-    glow: 'shadow-emerald-500/25',
-  },
-  {
-    icon: PenTool,
-    key: 'writing',
-    color: 'from-violet-500 to-purple-400',
-    glow: 'shadow-violet-500/25',
-  },
-  {
-    icon: Volume2,
-    key: 'speaking',
-    color: 'from-orange-500 to-amber-400',
-    glow: 'shadow-orange-500/25',
-  },
-  {
-    icon: Headphones,
-    key: 'listening',
-    color: 'from-cyan-500 to-sky-400',
-    glow: 'shadow-cyan-500/25',
-  },
-  {
-    icon: Sparkles,
-    key: 'grammar',
-    color: 'from-pink-500 to-rose-400',
-    glow: 'shadow-pink-500/25',
-  },
+  { icon: BookOpen, key: 'vocabulary' },
+  { icon: BookOpen, key: 'reading' },
+  { icon: PenTool, key: 'writing' },
+  { icon: Volume2, key: 'speaking' },
+  { icon: Headphones, key: 'listening' },
+  { icon: Sparkles, key: 'grammar' },
 ] as const;
 
 const SLIDE_INTERVAL = 6000;
@@ -93,8 +65,10 @@ export const LandingPage = () => {
 
   const [slide, setSlide] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [paused, setPaused] = useState(false);
   const prefersReduced = useReducedMotion();
   const timerRef = useRef<ReturnType<typeof setInterval>>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   // Defer the 3D hero scene until first idle: the interactive shell paints
   // first, then the three.js chunk loads in the background.
@@ -110,15 +84,6 @@ export const LandingPage = () => {
     }
     const t = window.setTimeout(() => setSceneReady(true), 50);
     return () => window.clearTimeout(t);
-  }, []);
-
-  // Block middle-click auto-scroll pan
-  useEffect(() => {
-    const prevent = (e: MouseEvent) => {
-      if (e.button === 1) e.preventDefault();
-    };
-    window.addEventListener('mousedown', prevent);
-    return () => window.removeEventListener('mousedown', prevent);
   }, []);
 
   const totalSlides = 3;
@@ -139,18 +104,19 @@ export const LandingPage = () => {
     goTo((slide - 1 + totalSlides) % totalSlides);
   }, [slide, goTo]);
 
-  // Auto-advance
+  // Auto-advance (paused while hovered/focused or via the pause control)
   useEffect(() => {
-    if (prefersReduced) return;
+    if (prefersReduced || paused) return;
     timerRef.current = setInterval(next, SLIDE_INTERVAL);
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [next, prefersReduced]);
+  }, [next, prefersReduced, paused]);
 
-  // Keyboard navigation
+  // Keyboard navigation — only while focus is inside the carousel
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) return;
       if (e.key === 'ArrowRight') next();
       else if (e.key === 'ArrowLeft') prev();
     };
@@ -161,31 +127,25 @@ export const LandingPage = () => {
   const slideLabels = useMemo(() => [t.slideHero, t.slideDisciplines, t.slideFeatures], [t]);
 
   return (
-    <div
-      className="h-dvh w-full max-w-full bg-background text-foreground overflow-hidden overscroll-none relative select-none"
-      translate="no"
-    >
+    <div className="h-dvh w-full max-w-full bg-background text-foreground overflow-hidden overscroll-none relative">
       <Navbar />
 
       {/* 3D scene stays as fixed background */}
       <div className="absolute inset-0 z-0">
         <Suspense fallback={null}>{sceneReady && <HeroScene />}</Suspense>
-        {/* Aurora blobs */}
-        <div className="absolute -top-32 -left-32 w-[44rem] h-[44rem] rounded-full bg-primary/20 blur-3xl animate-ambient-glow" />
-        <div
-          className="absolute top-1/4 -right-40 w-[38rem] h-[38rem] rounded-full bg-fuchsia-600/20 blur-3xl animate-ambient-glow"
-          style={{ animationDelay: '1.4s' }}
-        />
-        <div
-          className="absolute bottom-0 left-1/3 w-[34rem] h-[34rem] rounded-full bg-cyan-800/15 blur-3xl animate-ambient-glow"
-          style={{ animationDelay: '2.6s' }}
-        />
+        {/* Aurora blob (single accent) */}
+        <div className="absolute -top-32 -left-32 w-[36rem] h-[36rem] rounded-full bg-primary/15 blur-3xl animate-ambient-glow" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--background)]" />
       </div>
 
-      {/* Slide content */}
-      <div
+      {/* Slide content — the page's main region (carousel + its controls) */}
+      <main
         id="main-content"
+        ref={rootRef}
+        onFocus={() => setPaused(true)}
+        onBlur={() => setPaused(false)}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
         className="relative z-10 h-full w-full flex items-center justify-center"
       >
         <AnimatePresence custom={direction} mode="wait">
@@ -210,14 +170,11 @@ export const LandingPage = () => {
                   {t.heroBadge}
                 </div>
 
-                <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight mt-4 sm:mt-8 mb-4 sm:mb-8">
+                <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight mt-4 sm:mt-8 mb-4 sm:mb-8 text-balance">
                   <span data-hero="line" className="block text-foreground">
                     {t.heroTitle1}
                   </span>
-                  <span
-                    data-hero="line"
-                    className="block bg-gradient-to-r from-primary via-blue-400 to-violet-400 bg-clip-text text-transparent"
-                  >
+                  <span data-hero="line" className="block text-primary">
                     {t.heroTitleHighlight}
                   </span>
                   <span data-hero="line" className="block text-foreground/80">
@@ -236,13 +193,12 @@ export const LandingPage = () => {
                   <Link
                     data-hero="cta"
                     to="/dashboard"
-                    className="group relative px-6 py-3 sm:px-8 sm:py-4 rounded-full bg-gradient-to-r from-primary to-blue-600 text-white font-bold text-sm sm:text-lg overflow-hidden transition-all hover:shadow-2xl hover:shadow-primary/50 flex items-center justify-center"
+                    className="group px-6 py-3 sm:px-8 sm:py-4 rounded-full bg-primary text-white font-bold text-sm sm:text-lg transition-all hover:bg-primary-hover hover:shadow-xl hover:shadow-primary/30 flex items-center justify-center"
                   >
-                    <span className="relative z-10 flex items-center gap-2 sm:gap-3">
+                    <span className="flex items-center gap-2 sm:gap-3">
                       {t.ctaSelectBranch}
                       <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-1" />
                     </span>
-                    <span className="absolute inset-0 bg-gradient-to-r from-blue-600 to-violet-600 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300" />
                   </Link>
                   <Link
                     data-hero="cta-demo"
@@ -307,7 +263,7 @@ export const LandingPage = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05, duration: 0.4 }}
                       >
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-blue-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
+                        <div className="absolute inset-0 bg-primary/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
                         <div className="relative flex flex-col items-center gap-3 p-5 rounded-2xl border border-border-soft bg-surface/80 backdrop-blur-xl hover:bg-surface-hover transition-all duration-300">
                           <DisciplineIcon className="h-9 w-9 text-primary transition-transform duration-300 group-hover:scale-125 group-hover:rotate-6" />
                           <span className="text-xs font-semibold text-foreground text-center">
@@ -346,7 +302,7 @@ export const LandingPage = () => {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                  {FEATURES.map(({ icon: Icon, key, color, glow }, index) => (
+                  {FEATURES.map(({ icon: Icon, key }, index) => (
                     <motion.div
                       key={key}
                       className="group relative"
@@ -354,14 +310,10 @@ export const LandingPage = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.06, duration: 0.4 }}
                     >
-                      <div
-                        className={`absolute inset-0 bg-gradient-to-r ${color} rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-xl`}
-                      />
+                      <div className="absolute inset-0 bg-primary/15 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
                       <div className="relative flex flex-col items-center gap-3 p-5 rounded-2xl border border-border-soft bg-surface/80 backdrop-blur-xl hover:bg-surface-hover transition-all duration-300">
-                        <div
-                          className={`w-10 h-10 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center shadow-lg ${glow} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
-                        >
-                          <Icon className="h-6 w-6 text-white" />
+                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                          <Icon className="h-6 w-6 text-primary" />
                         </div>
                         <h3 className="text-base font-bold text-foreground text-center capitalize">
                           {translate(`nav.${key}`)}
@@ -374,50 +326,62 @@ export const LandingPage = () => {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
 
-      {/* Navigation arrows - hidden on mobile to prevent overlap */}
-      <button
-        type="button"
-        onClick={prev}
-        className="hidden md:flex absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 items-center h-12 w-12 justify-center rounded-full border border-border-soft bg-surface/60 backdrop-blur-md text-muted-copy hover:text-foreground hover:bg-surface-hover transition-all"
-        aria-label="Previous slide"
-      >
-        <ArrowLeft className="h-5 w-5" />
-      </button>
-      <button
-        type="button"
-        onClick={next}
-        className="hidden md:flex absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 items-center h-12 w-12 justify-center rounded-full border border-border-soft bg-surface/60 backdrop-blur-md text-muted-copy hover:text-foreground hover:bg-surface-hover transition-all"
-        aria-label="Next slide"
-      >
-        <ArrowRight className="h-5 w-5" />
-      </button>
+        {/* Navigation arrows - hidden on mobile to prevent overlap */}
+        <button
+          type="button"
+          onClick={prev}
+          className="hidden md:flex absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 items-center h-12 w-12 justify-center rounded-full border border-border-soft bg-surface/60 backdrop-blur-md text-muted-copy hover:text-foreground hover:bg-surface-hover transition-all"
+          aria-label="Previous slide"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </button>
+        <button
+          type="button"
+          onClick={next}
+          className="hidden md:flex absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 items-center h-12 w-12 justify-center rounded-full border border-border-soft bg-surface/60 backdrop-blur-md text-muted-copy hover:text-foreground hover:bg-surface-hover transition-all"
+          aria-label="Next slide"
+        >
+          <ArrowRight className="h-5 w-5" />
+        </button>
 
-      {/* Slide indicators — 48px min touch target, fixed width to prevent CLS */}
-      <div className="absolute bottom-28 md:bottom-20 left-1/2 -translate-x-1/2 z-20 flex items-center">
-        {slideLabels.map((label, i) => (
+        {/* Slide indicators — 48px min touch target, fixed width to prevent CLS */}
+        <div className="absolute bottom-28 md:bottom-20 left-1/2 -translate-x-1/2 z-20 flex items-center">
+          {slideLabels.map((label, i) => (
+            <button
+              key={label}
+              type="button"
+              onClick={() => goTo(i)}
+              className="flex items-center justify-center w-12 h-12"
+              aria-label={`Go to ${label}`}
+              aria-current={i === slide ? 'true' : undefined}
+            >
+              <span
+                className={`block rounded-full transition-all duration-300 ${
+                  i === slide
+                    ? 'w-8 h-2.5 bg-primary'
+                    : 'w-2.5 h-2.5 bg-muted-copy/40 hover:bg-muted-copy/60'
+                }`}
+              />
+            </button>
+          ))}
           <button
-            key={label}
             type="button"
-            onClick={() => goTo(i)}
-            className="flex items-center justify-center w-12 h-12"
-            aria-label={`Go to ${label}`}
-            aria-current={i === slide ? 'true' : undefined}
+            onClick={() => setPaused((p) => !p)}
+            aria-label={paused ? t.carouselPlay : t.carouselPause}
+            aria-pressed={paused}
+            className="flex items-center justify-center w-12 h-12 text-muted-copy hover:text-foreground transition-colors"
           >
-            <span
-              className={`block rounded-full transition-all duration-300 ${
-                i === slide
-                  ? 'w-8 h-2.5 bg-primary'
-                  : 'w-2.5 h-2.5 bg-muted-copy/40 hover:bg-muted-copy/60'
-              }`}
-            />
+            {paused ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />}
           </button>
-        ))}
-      </div>
+        </div>
+      </main>
 
       {/* Watermark */}
-      <div className="fixed bottom-20 md:bottom-3 right-3 z-50 flex items-center gap-1 pointer-events-none select-none opacity-25 hover:opacity-50 transition-opacity duration-500">
+      <div
+        translate="no"
+        className="fixed bottom-20 md:bottom-3 right-3 z-50 flex items-center gap-1 pointer-events-none opacity-25 hover:opacity-50 transition-opacity duration-500"
+      >
         <img src="/brand/logo.svg" alt="" className="h-4 w-4" width="16" height="16" />
         <span className="text-[10px] font-bold text-foreground tracking-wide">EngVox</span>
         <span className="text-[9px] font-mono font-bold text-primary">v{PRODUCT_VERSION}</span>

@@ -6,6 +6,7 @@ import path from 'node:path';
 import { checkCostLimits, createAIService } from './ai.js';
 import { getOrSet } from './cache/redis-cache.service.js';
 import { ApiError } from './errors.js';
+import { aggregateByCategory, averageScore } from './utils/stats.js';
 import { CircuitBreaker } from './utils/circuit-breaker.js';
 import { ReadingGenerateBodySchema, ReadingScoreBodySchema, validateBody } from './validation.js';
 
@@ -284,8 +285,8 @@ export const registerReadingRoutes = (
         const userId = request.auth?.userId;
         if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
-        const limit = Number(request.query.limit) || 10;
-        const offset = Number(request.query.offset) || 0;
+        const limit = Math.min(Number(request.query.limit) || 10, 100);
+        const offset = Math.max(Number(request.query.offset) || 0, 0);
 
         const paginated = READING_ITEMS.slice(offset, offset + limit);
 
@@ -343,25 +344,10 @@ export const registerReadingRoutes = (
         const userProgress = getUserProgress(userId);
         const entries = Array.from(userProgress.values());
         const totalRead = entries.length;
-        const averageScore =
-          totalRead > 0
-            ? Math.round((entries.reduce((sum, e) => sum + e.score, 0) / totalRead) * 10) / 10
-            : 0;
+        const averageScoreVal = averageScore(entries.map((e) => e.score));
+        const byCategory = aggregateByCategory(entries);
 
-        const byCategory: Record<string, { count: number; avgScore: number }> = {};
-        const catMap = new Map<string, number[]>();
-        for (const e of entries) {
-          if (!catMap.has(e.category)) catMap.set(e.category, []);
-          catMap.get(e.category)!.push(e.score);
-        }
-        for (const [cat, scores] of catMap) {
-          byCategory[cat] = {
-            count: scores.length,
-            avgScore: Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10,
-          };
-        }
-
-        response.json({ totalRead, averageScore, byCategory });
+        response.json({ totalRead, averageScore: averageScoreVal, byCategory });
       } catch (error) {
         next(error);
       }
