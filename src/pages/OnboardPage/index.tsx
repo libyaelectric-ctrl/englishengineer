@@ -1,4 +1,4 @@
-﻿import { ArrowRight, Globe, Moon, Sun, Wrench } from 'lucide-react';
+import { ArrowRight, Check, Moon, Sun } from 'lucide-react';
 
 import { useCallback, useState } from 'react';
 
@@ -6,48 +6,25 @@ import { useNavigate } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
 
-import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import {
+  DISCIPLINE_META,
+  ENGINEERING_DISCIPLINES,
+  type EngineeringDiscipline,
+} from '@/shared/constants/engineering-disciplines';
+import { getDisciplineIcon } from '@/shared/icons/registry';
 import { storage } from '@/shared/storage';
 import type { CareerTrackId, InterfaceLanguage } from '@/shared/types/domain.types';
 import { cn } from '@/shared/utils/cn';
 
 import { useAuthStore } from '@/features/auth';
 import { AUTH_SIGN_IN_URL } from '@/features/auth/firebase.config';
-import { useLocalizationStore } from '@/features/localization';
+import {
+  AVAILABLE_INTERFACE_LANGUAGES,
+  useLocalizationStore,
+} from '@/features/localization';
 import type { SupportedInterfaceLanguage } from '@/features/localization';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 import { useTheme } from '@/features/theme/ThemeProvider';
-
-const DISCIPLINES = [
-  { id: 'architecture', full: 'Architecture', icon: 'ğŸ›ï¸' },
-  { id: 'chemical', full: 'Chemical Eng.', icon: 'âš—ï¸' },
-  { id: 'civil', full: 'Civil Eng.', icon: 'ğŸ—ï¸' },
-  { id: 'electrical', full: 'Electrical Eng.', icon: 'âš¡' },
-  { id: 'electronics', full: 'Electronics Eng.', icon: 'ğŸ”Œ' },
-  { id: 'software', full: 'Software Eng.', icon: 'ğŸ’»' },
-  { id: 'mechatronics', full: 'Mechatronics', icon: 'ğŸ¤–' },
-  { id: 'mechanical', full: 'Mechanical Eng.', icon: 'âš™ï¸' },
-  { id: 'industrial', full: 'Industrial Eng.', icon: 'ğŸ­' },
-  { id: 'hse', full: 'HSE Eng.', icon: 'ğŸ›¡ï¸' },
-];
-
-const LANGUAGES = [
-  { id: 'en', label: 'English', flag: 'ğŸ‡¬ğŸ‡§' },
-  { id: 'tr', label: 'TÃ¼rkÃ§e', flag: 'ğŸ‡¹ğŸ‡·' },
-  { id: 'ar', label: 'Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©', flag: 'ğŸ‡¸ğŸ‡¦' },
-  { id: 'de', label: 'Deutsch', flag: 'ğŸ‡©ğŸ‡ª' },
-  { id: 'es', label: 'EspaÃ±ol', flag: 'ğŸ‡ªğŸ‡¸' },
-  { id: 'fr', label: 'FranÃ§ais', flag: 'ğŸ‡«ğŸ‡·' },
-  { id: 'pt', label: 'PortuguÃªs', flag: 'ğŸ‡§ğŸ‡·' },
-  { id: 'ru', label: 'Ğ ÑƒÑÑĞºĞ¸Ğ¹', flag: 'ğŸ‡·ğŸ‡º' },
-  { id: 'zh', label: 'ä¸­æ–‡', flag: 'ğŸ‡¨ğŸ‡³' },
-  { id: 'ja', label: 'æ—¥æœ¬èª', flag: 'ğŸ‡¯ğŸ‡µ' },
-  { id: 'it', label: 'Italiano', flag: 'ğŸ‡®ğŸ‡¹' },
-  { id: 'vi', label: 'Tiáº¿ng Viá»‡t', flag: 'ğŸ‡»ğŸ‡³' },
-  { id: 'pl', label: 'Polski', flag: 'ğŸ‡µğŸ‡±' },
-  { id: 'id', label: 'Bahasa Indonesia', flag: 'ğŸ‡®ğŸ‡©' },
-  { id: 'nl', label: 'Nederlands', flag: 'ğŸ‡³ğŸ‡±' },
-];
 
 export const consumePendingOnboard = () => {
   const pending = storage.globalGet('engvox-pending-onboard');
@@ -62,10 +39,15 @@ const OnboardPage = () => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
+  const translate = useLocalizationStore((s) => s.translate);
   const setLanguage = useLocalizationStore((s) => s.setLanguage);
   const currentUser = useAuthStore((s) => s.currentUser);
-  const [selectedDiscipline, setSelectedDiscipline] = useState<string | null>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [selectedDiscipline, setSelectedDiscipline] = useState<EngineeringDiscipline | null>(
+    null
+  );
+  const [selectedLanguage, setSelectedLanguage] = useState<SupportedInterfaceLanguage | null>(
+    null
+  );
   const [saving, setSaving] = useState(false);
 
   const handleEnter = useCallback(async () => {
@@ -73,9 +55,9 @@ const OnboardPage = () => {
     setSaving(true);
     try {
       if (currentUser) {
-        setLanguage(selectedLanguage as SupportedInterfaceLanguage);
+        setLanguage(selectedLanguage);
         await LearningProfileRepository.updatePreferences(currentUser.id, {
-          discipline: selectedDiscipline as EngineeringDiscipline,
+          discipline: selectedDiscipline,
           professionalTrack: selectedDiscipline as CareerTrackId,
           interfaceLanguage: selectedLanguage as InterfaceLanguage,
           onboardingCompleted: true,
@@ -100,84 +82,116 @@ const OnboardPage = () => {
     }
   }, [selectedDiscipline, selectedLanguage, saving, currentUser, setLanguage, navigate]);
 
+  const canFinish = Boolean(selectedDiscipline && selectedLanguage);
+
   return (
-    <div
-      className={cn(
-        'min-h-screen flex flex-col',
-        isDark ? 'bg-[#04080f] text-gray-100' : 'bg-gray-50 text-gray-900'
-      )}
-    >
-      <header className="flex items-center justify-between px-6 py-4 border-b">
-        <div className="flex items-center gap-2">
-          <img src="/brand/logo.svg" className="h-6" alt="EngVox Logo" />
-          <b>EngVox</b>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={() => navigate('/')} className="px-3 py-1 border rounded text-xs">
-            Back
-          </button>
-          <button onClick={toggleTheme} className="p-1 border rounded" aria-label="Toggle theme">
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <header className="flex items-center justify-between border-b border-border-soft px-4 py-4 sm:px-6">
+        <button
+          onClick={() => navigate('/')}
+          className="rounded-button border border-border-soft px-3 py-1.5 text-sm text-muted-copy transition-colors hover:border-border-hover hover:text-foreground"
+        >
+          {translate('common.back')}
+        </button>
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-semibold">EngVox</span>
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            className="rounded-button border border-border-soft p-1.5 text-muted-copy transition-colors hover:border-border-hover hover:text-foreground"
+          >
             {isDark ? <Sun size={16} /> : <Moon size={16} />}
           </button>
         </div>
       </header>
-      <main className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 p-4 sm:p-8 max-w-6xl mx-auto w-full">
-        <section>
-          <h2 className="text-xs font-bold uppercase mb-4 flex items-center gap-2">
-            <Wrench size={14} /> Professions
-          </h2>
-          <div className="grid gap-2">
-            {DISCIPLINES.map((d) => (
-              <button
-                key={d.id}
-                onClick={() => setSelectedDiscipline(d.id)}
-                className={cn(
-                  'p-3.5 sm:p-4 border rounded-xl text-left transition-all',
-                  selectedDiscipline === d.id
-                    ? 'border-cyan-500 bg-cyan-500/10'
-                    : 'border-border-soft hover:bg-surface-hover'
-                )}
-              >
-                {d.icon} {d.full}
-              </button>
-            ))}
+
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
+        <h1 className="text-2xl font-bold">{translate('onboarding.title')}</h1>
+
+        <section className="mt-8">
+          <h2 className="text-base font-semibold">{translate('onboarding.selectDiscipline')}</h2>
+          <p className="mt-1 text-sm text-muted-copy">
+            {translate('onboarding.selectDisciplineDesc')}
+          </p>
+          <div className="mt-4 grid gap-2 sm:grid-cols-2">
+            {ENGINEERING_DISCIPLINES.map((id) => {
+              const meta = DISCIPLINE_META[id];
+              const Icon = getDisciplineIcon(id);
+              const isSelected = selectedDiscipline === id;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setSelectedDiscipline(id)}
+                  aria-pressed={isSelected}
+                  className={cn(
+                    'flex items-start gap-3 rounded-card border p-3.5 text-left transition-colors',
+                    isSelected
+                      ? 'border-primary bg-primary/5'
+                      : 'border-border-soft bg-surface hover:border-border-hover'
+                  )}
+                >
+                  <Icon
+                    className={cn(
+                      'mt-0.5 h-5 w-5 shrink-0',
+                      isSelected ? 'text-primary' : 'text-muted-copy'
+                    )}
+                  />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-medium text-foreground">
+                      {translate(meta.labelKey)}
+                    </span>
+                    <span className="mt-0.5 block text-xs text-muted-copy">
+                      {translate(meta.descriptionKey)}
+                    </span>
+                  </span>
+                  {isSelected && <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />}
+                </button>
+              );
+            })}
           </div>
         </section>
-        <section>
-          <h2 className="text-xs font-bold uppercase mb-4 flex items-center gap-2">
-            <Globe size={14} /> Languages
-          </h2>
-          <div className="grid gap-2">
-            {LANGUAGES.map((l) => (
-              <button
-                key={l.id}
-                onClick={() => setSelectedLanguage(l.id)}
-                className={cn(
-                  'p-3.5 sm:p-4 border rounded-xl text-left transition-all',
-                  selectedLanguage === l.id
-                    ? 'border-blue-500 bg-blue-500/10'
-                    : 'border-border-soft hover:bg-surface-hover'
-                )}
-              >
-                {l.flag} {l.label}
-              </button>
-            ))}
+
+        <section className="mt-8">
+          <h2 className="text-base font-semibold">{translate('onboarding.selectLanguageTitle')}</h2>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {AVAILABLE_INTERFACE_LANGUAGES.map((lang) => {
+              const isSelected = selectedLanguage === lang.id;
+              return (
+                <button
+                  key={lang.id}
+                  type="button"
+                  onClick={() => setSelectedLanguage(lang.id)}
+                  aria-pressed={isSelected}
+                  className={cn(
+                    'flex items-center gap-2 rounded-button border px-3 py-2 text-sm transition-colors',
+                    isSelected
+                      ? 'border-primary bg-primary/5 text-primary'
+                      : 'border-border-soft bg-surface text-foreground hover:border-border-hover'
+                  )}
+                >
+                  <span aria-hidden="true">{lang.flag}</span>
+                  <span>{lang.nativeLabel}</span>
+                </button>
+              );
+            })}
           </div>
         </section>
       </main>
-      <footer className="sticky bottom-0 bg-background/95 backdrop-blur-md p-4 sm:p-6 border-t flex justify-center z-20">
+
+      <footer className="sticky bottom-0 z-20 flex justify-center border-t border-border-soft bg-background/95 p-4 backdrop-blur-md sm:p-6">
         <button
-          onClick={handleEnter}
-          disabled={!selectedDiscipline || !selectedLanguage || saving}
+          onClick={() => void handleEnter()}
+          disabled={!canFinish || saving}
           className={cn(
-            'w-full sm:w-auto px-8 sm:px-12 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all',
-            selectedDiscipline && selectedLanguage
-              ? 'bg-primary text-white shadow-lg'
-              : 'bg-gray-200 text-gray-400'
+            'flex w-full items-center justify-center gap-2 rounded-button px-8 py-3 text-sm font-semibold transition-colors sm:w-auto sm:px-12',
+            canFinish
+              ? 'bg-primary text-primary-foreground hover:bg-primary-hover'
+              : 'bg-surface-hover text-muted-copy'
           )}
         >
-          {saving ? 'Loading...' : 'Enter EngVox'}
-          <ArrowRight size={18} />
+          <span>{saving ? translate('common.loading') : translate('onboarding.finish')}</span>
+          {!saving && <ArrowRight size={18} />}
         </button>
       </footer>
     </div>
