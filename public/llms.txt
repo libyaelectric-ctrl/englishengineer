@@ -1,0 +1,22 @@
+# EngVox
+
+> EngVox is an AI-powered engineering English platform, teaching
+> discipline-specific vocabulary, grammar, and communication for 10
+> engineering fields. Free plan available, no credit card required.
+
+EngVox helps engineers and technical professionals master the vocabulary,
+grammar, and writing conventions used in their specific discipline —
+including FIDIC-style contract writing — through AI-driven coaching and
+adaptive lessons.
+
+## Product
+
+- [Home](https://engvox.com/): Overview of the platform and its free plan.
+- [Pricing](https://engvox.com/pricing): Plans and pricing for individuals.
+- [Business](https://engvox.com/business): Team and organization plans.
+- [Get started](https://engvox.com/start): Begin the free placement flow.
+
+## Legal
+
+- [Terms of Service](https://engvox.com/legal/terms)
+- [Privacy Policy](https://engvox.com/legal/privacy)
