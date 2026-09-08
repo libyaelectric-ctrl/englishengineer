@@ -1,10 +1,9 @@
 import { expect, test } from '@playwright/test';
 
-import { skipIfNoClerkSecret } from '../helpers/clerk-login';
+import { skipIfNoFirebaseTestConfig } from '../helpers/firebase-login';
 
-skipIfNoClerkSecret();
+skipIfNoFirebaseTestConfig();
 
-// Speaking is a Specialist-tier feature: locked for the free-tier test user.
 test.describe.serial('Speaking page flow (free tier)', () => {
   test('free-tier user is redirected from /speaking to /pricing', async ({ page }) => {
     await page.goto('/speaking');

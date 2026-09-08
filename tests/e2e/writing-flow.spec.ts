@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-import { skipIfNoClerkSecret } from '../helpers/clerk-login';
+import { skipIfNoFirebaseTestConfig } from '../helpers/firebase-login';
 
-skipIfNoClerkSecret();
+skipIfNoFirebaseTestConfig();
 
 test.describe('Writing flow', () => {
   test('writing page loads after login', async ({ page }) => {
