@@ -1,4 +1,4 @@
-﻿import * as Sentry from '@sentry/node';
+import * as Sentry from '@sentry/node';
 import compression from 'compression';
 import cors from 'cors';
 import express, {
@@ -9,6 +9,7 @@ import express, {
   type Response,
 } from 'express';
 import helmet from 'helmet';
+import { timingSafeEqual } from 'node:crypto';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import type Stripe from 'stripe';
@@ -17,7 +18,7 @@ import type { BackendConfig } from '../types.js';
 import { registerAdminRoutes } from './admin-routes.js';
 import { createAIService, registerAIRoutes } from './ai.js';
 import { recordEndpoint } from './api-metrics.js';
-import { initAuditLog } from './audit-log.js';
+import { getAuditLogStatus, initAuditLog } from './audit-log.js';
 import { createBackendAuth } from './auth.js';
 import type { BackendAuthConfig } from './auth.js';
 import { registerBillingRoutes } from './billing-routes.js';
@@ -46,6 +47,7 @@ import { getPrometheusMetrics } from './prometheus.js';
 import { createRateLimitStore, createRateLimiter } from './rate-limit.js';
 import type { UpstashRateLimitStore } from './rate-limit.js';
 import { registerReadingRoutes } from './reading-routes.js';
+import type { RouteRegistrar } from './route-registrar.js';
 import { registerSpeakingRoutes } from './speaking-routes.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
 import { createSubscriptionRepository } from './subscription-repository.js';
@@ -178,14 +180,11 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
   }
 
   app.disable('x-powered-by');
-
-  // Response compression — gzip for all responses > 1KB
   app.use(
     compression({
       threshold: 1024,
-      level: 6, // balanced speed/ratio
+      level: 6,
       filter: (req, res) => {
-        // Don't compress webhook raw body responses
         if (req.path.includes('/webhooks/')) return false;
         return compression.filter(req, res);
       },
@@ -199,17 +198,14 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
   ];
   app.use(helmet(SECURITY_HEADERS as Parameters<typeof helmet>[0]));
 
-  // In production, always allow engvox.com even if APP_ORIGIN is misconfigured.
-  // Also allow Capacitor's https://localhost origin for Android/iOS app.
-  // NOTE: Render dashboard'da CORS_ALLOWED_ORIGINS'a da https://localhost ekleyin.
   const hardcodedProductionOrigins =
     config.environment === 'production'
       ? [
           'https://engvox.com',
           'https://www.engvox.com',
-          'https://localhost', // Capacitor Android/iOS
-          'capacitor://localhost', // Capacitor iOS fallback
-          'http://localhost', // Local development
+          'https://localhost',
+          'capacitor://localhost',
+          'http://localhost',
         ]
       : [];
   const configuredOrigins = [
@@ -218,12 +214,6 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
     ...hardcodedProductionOrigins,
   ].filter(Boolean) as string[];
 
-  // Automatically allow the www./non-www. counterpart of every configured
-  // origin, so a domain migration only requires updating APP_ORIGIN (and/or
-  // CORS_ALLOWED_ORIGINS) — no code change or redeploy-of-a-hardcoded-list
-  // is needed. This is what actually caused a production outage previously:
-  // the origin was migrated but the old hardcoded fallback here still only
-  // matched the old domain.
   const withWwwVariants = configuredOrigins.flatMap((origin) => {
     try {
       const url = new URL(origin);
@@ -235,18 +225,15 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
       return [origin];
     }
   });
-
   const allowedOrigins = [...new Set(withWwwVariants)].filter(Boolean) as string[];
 
   if (config.environment === 'production') {
-    // Force HTTPS for all non-GET requests
     app.use((req: Request, res: Response, next: NextFunction) => {
       if (req.headers['x-forwarded-proto'] !== 'https' && req.method !== 'GET') {
         return res.redirect(301, `https://${req.headers.host}${req.url}`);
       }
       next();
     });
-    // Remove unnecessary headers in production
     app.use((_req: Request, res: Response, next: NextFunction) => {
       res.removeHeader('X-Powered-By');
       res.removeHeader('Server');
@@ -286,8 +273,6 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
     })
   );
 
-  // Explicit 403 for disallowed origins: cors() with callback(null, false) just
-  // omits the CORS headers; this gives non-browser callers a clear, shaped error.
   app.use((req: Request, _res: Response, next: NextFunction) => {
     const origin = req.headers.origin;
     if (origin && !allowedOrigins.includes(origin)) {
@@ -329,7 +314,6 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
     });
     next();
   });
-
   app.use(createI18nMiddleware());
 };
 
@@ -452,11 +436,6 @@ const registerRoutes = (
   rateLimitStore: UpstashRateLimitStore | null
 ) => {
   const v1Router = express.Router();
-
-  // Global limiter must be mounted BEFORE the versioned router. It used to be
-  // registered after every route, so /api/v1 traffic never reached it and the
-  // global budget was effectively dead. Machine-to-machine traffic is exempt:
-  // payment webhooks, health probes, metrics scraping, CSP reports.
   const globalApiLimiter = createRateLimiter({
     windowMs: config.rateLimit.windowMs,
     max: config.rateLimit.max * 2,
@@ -476,72 +455,93 @@ const registerRoutes = (
   });
 
   app.use('/api/v1', v1Router);
-
-  const adaptPath = (path: string) => {
-    if (path.startsWith('/api/')) {
-      return path.slice(4);
-    }
-    return path;
-  };
-
-  const v1RouterAdapter = {
-    get: (path: string, ...handlers: RequestHandler[]) => {
-      v1Router.get(adaptPath(path), ...handlers);
+  const adaptPath = (routePath: string) =>
+    routePath.startsWith('/api/') ? routePath.slice(4) : routePath;
+  const v1RouterAdapter: RouteRegistrar = {
+    get: (routePath, ...handlers) => {
+      v1Router.get(adaptPath(routePath), ...handlers);
       return v1RouterAdapter;
     },
-    post: (path: string, ...handlers: RequestHandler[]) => {
-      if (path.startsWith('/api/webhooks/')) {
-        // Webhooks intentionally live at /api/webhooks (raw-body parsing and
-        // signature verification are wired there); never under /api/v1.
-        app.post(path, ...handlers);
-        return v1RouterAdapter;
-      }
-      v1Router.post(adaptPath(path), ...handlers);
+    post: (routePath, ...handlers) => {
+      if (routePath.startsWith('/api/webhooks/')) app.post(routePath, ...handlers);
+      else v1Router.post(adaptPath(routePath), ...handlers);
       return v1RouterAdapter;
     },
-    put: (path: string, ...handlers: RequestHandler[]) => {
-      v1Router.put(adaptPath(path), ...handlers);
+    put: (routePath, ...handlers) => {
+      v1Router.put(adaptPath(routePath), ...handlers);
       return v1RouterAdapter;
     },
-    delete: (path: string, ...handlers: RequestHandler[]) => {
-      v1Router.delete(adaptPath(path), ...handlers);
+    delete: (routePath, ...handlers) => {
+      v1Router.delete(adaptPath(routePath), ...handlers);
       return v1RouterAdapter;
     },
-    use: (...args: (string | RequestHandler)[]) => {
+    use: (...args) => {
       if (typeof args[0] === 'string') {
-        const path = args[0];
-        const handlers = args.slice(1) as RequestHandler[];
-        v1Router.use(adaptPath(path), ...handlers);
-      } else {
-        v1Router.use(...(args as unknown as RequestHandler[]));
-      }
+        const [routePath, ...handlers] = args;
+        v1Router.use(adaptPath(routePath), ...handlers);
+      } else v1Router.use(...args);
       return v1RouterAdapter;
     },
-    disable: () => {},
-    enabled: () => false,
   };
 
-  const healthHandler = async (_request: Request, response: Response) => {
+  const metricsToken = process.env.METRICS_TOKEN?.trim() || null;
+  const operationsTokenMatches = (provided: string | undefined): boolean => {
+    if (!provided || !metricsToken) return false;
+    const left = Buffer.from(provided);
+    const right = Buffer.from(metricsToken);
+    return left.length === right.length && timingSafeEqual(left, right);
+  };
+  const requireOperationsToken: RequestHandler = (req, _res, next) => {
+    if (!metricsToken) {
+      if (config.environment === 'production') {
+        return next(
+          new ApiError(503, 'operations_auth_unavailable', 'Operations token is not configured.')
+        );
+      }
+      return next();
+    }
+    const authorization = req.headers.authorization;
+    const bearer =
+      typeof authorization === 'string' && authorization.startsWith('Bearer ')
+        ? authorization.slice(7).trim()
+        : undefined;
+    if (!operationsTokenMatches(bearer)) {
+      return next(
+        new ApiError(401, 'operations_unauthorized', 'A valid Bearer token is required.')
+      );
+    }
+    return next();
+  };
+
+  const livenessHandler = (_request: Request, response: Response) => {
+    response.setHeader('Cache-Control', 'no-store');
+    response.json({ status: 'ok' });
+  };
+  const diagnosticsHandler = async (_request: Request, response: Response) => {
     const startTime = Date.now();
     const health = toPublicHealth(config);
     const checks: Record<string, unknown> = { ...health.checks };
     if (config.supabase?.configured) await checkSupabaseHealth(config, checks, health);
     await checkUpstashHealth(config, checks, health);
-    const responseTime = Date.now() - startTime;
-    const mem = process.memoryUsage();
-    response.json({
+    const audit = getAuditLogStatus();
+    checks.audit = audit;
+    if (audit.required && audit.status !== 'ready') {
+      health.status = 'degraded';
+      health.ok = false;
+    }
+    const memory = process.memoryUsage();
+    response.setHeader('Cache-Control', 'no-store');
+    response.status(health.ok ? 200 : 503).json({
       ...health,
       checks,
-      responseTimeMs: responseTime,
+      responseTimeMs: Date.now() - startTime,
       timestamp: new Date().toISOString(),
-      stripeConfigured: (checks.stripe as { configured?: boolean })?.configured ?? false,
       aiConfigured: config.ai.configured,
-      aiModel: config.ai.model ?? 'unknown',
       billingProvider: config.billing.provider ?? 'none',
       memory: {
-        heapUsedMB: Math.round(mem.heapUsed / 1048576),
-        heapTotalMB: Math.round(mem.heapTotal / 1048576),
-        rssMB: Math.round(mem.rss / 1048576),
+        heapUsedMB: Math.round(memory.heapUsed / 1048576),
+        heapTotalMB: Math.round(memory.heapTotal / 1048576),
+        rssMB: Math.round(memory.rss / 1048576),
       },
       pool: getPoolMetrics(),
       uptime: Math.round(process.uptime()),
@@ -549,40 +549,20 @@ const registerRoutes = (
     });
   };
 
-  v1Router.get('/health', healthHandler);
-  app.get('/api/health', healthHandler);
-
-  // Root route — Render health check hits /
-  app.get('/', (_req: Request, res: Response) => {
-    res.json({ ok: true, service: 'englishengineer-backend', health: '/api/health' });
-  });
-
-  // Prometheus metrics endpoint. Internal telemetry: when METRICS_TOKEN is set,
-  // require it via Authorization: Bearer <token> or ?token=. Without a token the
-  // endpoint stays open for backwards compatibility, but production should set one.
-  const metricsToken = process.env.METRICS_TOKEN?.trim() || null;
-  app.get('/api/metrics', (req: Request, res: Response, next: NextFunction) => {
-    if (metricsToken) {
-      const bearer = req.headers.authorization?.startsWith('Bearer ')
-        ? req.headers.authorization.slice(7).trim()
-        : undefined;
-      const queryToken = typeof req.query.token === 'string' ? req.query.token : undefined;
-      if ((bearer ?? queryToken) !== metricsToken) {
-        return next(new ApiError(403, 'metrics_forbidden', 'Metrics require a valid token.'));
-      }
-    }
+  v1Router.get('/health', livenessHandler);
+  app.get('/api/health', livenessHandler);
+  app.get('/', livenessHandler);
+  app.get('/api/diagnostics', requireOperationsToken, diagnosticsHandler);
+  app.get('/api/metrics', requireOperationsToken, (_req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Content-Type', 'text/plain; version=0.0.4');
     res.send(getPrometheusMetrics());
   });
 
-  app.get('/api-docs.json', (_req: Request, res: Response) => res.json(swaggerSpec));
-  // Self-hosted Swagger UI: assets are served same-origin from
-  // /api-docs-assets (no CDN), and the initializer is an external script, so
-  // the page works under the global script-src 'self' CSP.
+  app.get('/api-docs.json', (_req, res) => res.json(swaggerSpec));
   const nodeRequire = createRequire(import.meta.url);
   const swaggerUiDistPath = path.dirname(nodeRequire.resolve('swagger-ui-dist/package.json'));
-
-  app.get('/api-docs-assets/swagger-initializer.js', (_req: Request, res: Response) => {
+  app.get('/api-docs-assets/swagger-initializer.js', (_req, res) => {
     res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
     res.send(
       [
@@ -598,8 +578,7 @@ const registerRoutes = (
     );
   });
   app.use('/api-docs-assets', express.static(swaggerUiDistPath));
-
-  app.get('/api-docs', (_req: Request, res: Response) => {
+  app.get('/api-docs', (_req, res) => {
     res.setHeader(
       'Content-Security-Policy',
       [
@@ -635,7 +614,7 @@ const registerRoutes = (
   app.post(
     '/api/csp-report',
     express.json({ type: 'application/csp-report' }),
-    (req: Request, res: Response) => {
+    (req, res) => {
       logger.warn('CSP violation reported', { report: req.body });
       res.status(204).end();
     }
@@ -647,11 +626,10 @@ const registerRoutes = (
   );
   const { requireBackendAuth, optionalBackendAuth } = backendAuth;
   const limiters = createAllRateLimiters(config, rateLimitStore);
-
   const aiService = createAIService(config.ai, fetchImpl);
 
   registerAIRoutes(
-    v1RouterAdapter as unknown as Express,
+    v1RouterAdapter,
     aiService as unknown as Parameters<typeof registerAIRoutes>[1],
     requireBackendAuth,
     limiters.ai,
@@ -678,14 +656,14 @@ const registerRoutes = (
         })
       : new Map();
   registerVocabularyRoutes(
-    v1RouterAdapter as unknown as Express,
+    v1RouterAdapter,
     createVocabularyLookupService(config.vocabulary, fetchImpl, vocabCache as VocabularyCache),
     limiters.vocabulary,
     requireBackendAuth
   );
 
   registerBillingRoutes(
-    v1RouterAdapter as unknown as Express,
+    v1RouterAdapter,
     createBillingService({
       config: {
         ...config.stripe,
@@ -712,64 +690,32 @@ const registerRoutes = (
 
   const resolvedWorkspaceRepository = resolveWorkspaceRepo(workspaceRepository, config);
   registerWorkspaceRoutes(
-    v1RouterAdapter as unknown as Express,
+    v1RouterAdapter,
     [requireBackendAuth, requireTenantContext] as unknown as RequestHandler,
     limiters.workspace,
-    {
-      repository: resolvedWorkspaceRepository,
-    }
+    { repository: resolvedWorkspaceRepository }
   );
-
-  registerAdminRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, limiters.global);
-
-  registerProgressRoutes(
-    v1RouterAdapter as unknown as Express,
-    limiters.progress,
-    requireBackendAuth
-  );
-  registerReadingRoutes(
-    v1RouterAdapter as unknown as Express,
-    requireBackendAuth,
-    limiters.reading,
-    aiService
-  );
-  registerWritingRoutes(
-    v1RouterAdapter as unknown as Express,
-    requireBackendAuth,
-    limiters.writing,
-    aiService
-  );
-  registerListeningRoutes(
-    v1RouterAdapter as unknown as Express,
-    requireBackendAuth,
-    limiters.listening
-  );
+  registerAdminRoutes(v1RouterAdapter, requireBackendAuth, limiters.global);
+  registerProgressRoutes(v1RouterAdapter, limiters.progress, requireBackendAuth);
+  registerReadingRoutes(v1RouterAdapter, requireBackendAuth, limiters.reading, aiService);
+  registerWritingRoutes(v1RouterAdapter, requireBackendAuth, limiters.writing, aiService);
+  registerListeningRoutes(v1RouterAdapter, requireBackendAuth, limiters.listening);
   registerSpeakingRoutes(
-    v1RouterAdapter as unknown as Express,
+    v1RouterAdapter,
     requireBackendAuth,
     limiters.speaking,
-    aiService
+    aiService,
+    config.environment
   );
-  // Serves audio uploaded via POST /api/speaking/audio-upload. Scoped to
-  // this one directory only, never the whole filesystem.
-  app.use('/uploads/speaking', express.static(path.resolve(process.cwd(), 'uploads', 'speaking')));
-  registerGrammarRoutes(
-    v1RouterAdapter as unknown as Express,
-    requireBackendAuth,
-    limiters.grammar
-  ); // GDPR data export routes
-  registerExportRoutes(
-    v1RouterAdapter as unknown as Express,
-    requireBackendAuth,
-    config as unknown as { workspace?: Record<string, unknown> }
-  );
-
-  // Team analytics routes
-  registerTeamAnalyticsRoutes(
-    v1RouterAdapter as unknown as Express,
-    requireBackendAuth,
-    limiters.global
-  );
+  if (config.environment !== 'production') {
+    app.use(
+      '/uploads/speaking',
+      express.static(path.resolve(process.cwd(), 'uploads', 'speaking'))
+    );
+  }
+  registerGrammarRoutes(v1RouterAdapter, requireBackendAuth, limiters.grammar);
+  registerExportRoutes(v1RouterAdapter, requireBackendAuth, config, fetchImpl);
+  registerTeamAnalyticsRoutes(v1RouterAdapter, requireBackendAuth, limiters.global);
 };
 
 const initConnectionPool = (config: BackendConfig) => {
@@ -812,7 +758,7 @@ const initSentryIfConfigured = (config: BackendConfig) => {
 };
 
 const registerNotFoundAndErrorHandlers = (app: Express, config: BackendConfig) => {
-  app.use((_request: Request, _response: Response, next: NextFunction) => {
+  app.use((_request, _response, next) => {
     next(new ApiError(404, 'route_not_found', 'Route not found.'));
   });
   app.use(handleApiError(config));
@@ -833,13 +779,13 @@ export const createApp = ({
     config.rateLimit?.upstashToken ?? undefined
   );
   initConnectionPool(config);
-  initAuditLog(config as unknown as { workspace?: Record<string, unknown> }).catch(
-    (err: unknown) => {
-      logger.warn('Audit log init failed (non-fatal)', {
-        error: err instanceof Error ? err.message : String(err),
-      });
-    }
-  );
+  void initAuditLog(config).catch((error: unknown) => {
+    logger.error(
+      'Audit log initialization failed; readiness will remain unhealthy',
+      { required: config.environment === 'production' },
+      error as Error
+    );
+  });
   initIdempotency(config, fetchImpl);
   initSentryIfConfigured(config);
 
@@ -856,12 +802,8 @@ export const createApp = ({
   );
   registerNotFoundAndErrorHandlers(app, config);
 
-  // ── Keepalive self-ping ────────────────────────────────────────────
-  // Render free tier spins down after ~15 min of inactivity. A periodic
-  // self-ping keeps the service warm so that the first real request
-  // (e.g. Sync Status on the billing page) responds instantly.
   if (config.environment === 'production') {
-    const KEEPALIVE_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes
+    const KEEPALIVE_INTERVAL_MS = 10 * 60 * 1000;
     const selfUrl = process.env.RENDER_EXTERNAL_URL || process.env.APP_URL;
     if (selfUrl) {
       const keepAliveTimer = setInterval(async () => {
@@ -874,7 +816,7 @@ export const createApp = ({
           });
         }
       }, KEEPALIVE_INTERVAL_MS);
-      keepAliveTimer.unref(); // don't block process exit
+      keepAliveTimer.unref();
       logger.info('[Keepalive] self-ping scheduled', {
         intervalMin: KEEPALIVE_INTERVAL_MS / 60_000,
         target: selfUrl,
