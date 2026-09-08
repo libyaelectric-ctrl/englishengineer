@@ -1,4 +1,5 @@
-import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
+import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import type { RouteRegistrar } from './route-registrar.js';
 
 import type { WorkspaceConfig } from '../types.js';
 import { normalizePlanId } from './billing-plan-migration.js';
@@ -36,7 +37,7 @@ const getWorkspaceLimit = (planId: string): number => {
 };
 
 export const registerWorkspaceRoutes = (
-  app: Express,
+  app: RouteRegistrar,
   requireBackendAuth: RequestHandler,
   rateLimiter: RequestHandler,
   { repository }: { repository: WorkspaceRepository | null }
