@@ -59,6 +59,15 @@ describe('AI Analytics & Prompt Versioning', () => {
     );
   });
 
+  it('memory ledger ignores duplicate request ids for one user', async () => {
+    const ledger = createMemoryAiLedger();
+    await ledger.logSession('user-a', { operation: 'translate', requestId: 'req-1' });
+    await ledger.logSession('user-a', { operation: 'translate', requestId: 'req-1' });
+    await ledger.logSession('user-b', { operation: 'translate', requestId: 'req-1' });
+    assert.equal((await ledger.getUserAnalytics('user-a')).totalRequests, 1);
+    assert.equal((await ledger.getUserAnalytics('user-b')).totalRequests, 1);
+  });
+
   it('memory ledger returns empty analytics when no sessions exist', async () => {
     const ledger = createMemoryAiLedger();
     const analytics = await ledger.getUserAnalytics('nobody');
@@ -112,6 +121,7 @@ describe('AI Analytics & Prompt Versioning', () => {
         operation: 'translate',
         durationMs: 400,
         tokensUsed: 600,
+        requestId: 'file-request-1',
       });
 
       const second = createFileAiLedger(filePath);
@@ -121,6 +131,13 @@ describe('AI Analytics & Prompt Versioning', () => {
 
       const count = await second.countRecentRequests('user-a', 'free');
       assert.equal(count, 1);
+
+      await second.logSession('user-a', {
+        operation: 'translate',
+        tokensUsed: 600,
+        requestId: 'file-request-1',
+      });
+      assert.equal((await second.getUserAnalytics('user-a')).totalRequests, 1);
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

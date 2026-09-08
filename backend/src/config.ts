@@ -84,7 +84,14 @@ export const toPublicHealth = (config: BackendConfig): PublicHealth => {
   );
   const checks: PublicHealth['checks'] = {
     ai: { configured: config.ai.configured },
-    billing: { configured: config.billing.provider === 'dodo' ? config.dodo.configured : config.stripe.configured },
+    billing: {
+      configured:
+        config.billing.provider === 'dodo'
+          ? config.dodo.configured
+          : config.billing.provider === 'paddle'
+            ? false
+            : config.stripe.configured,
+    },
     supabase: { configured: config.supabase.configured },
     rateLimit: { configured: config.rateLimit.storeMode === 'upstash' },
     auth: {

@@ -1,9 +1,11 @@
+import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { describe, expect, it } from 'vitest';
+import { describe, it } from 'node:test';
+
 import { createMemorySubscriptionRepository } from '../src/subscription-repository.js';
 
 const activeSubscription = {
-  planId: 'pro' as const,
+  planId: 'senior' as const,
   status: 'active',
   currentPeriodEnd: null,
   cancelAtPeriodEnd: false,
@@ -23,8 +25,8 @@ describe('phase 4 billing concurrency', () => {
         repository.consumeTopupCredit('user-a', `request-${index}`)
       )
     );
-    expect(results.filter((result) => result.consumed)).toHaveLength(1);
-    expect((await repository.getSubscriptionStatus('user-a'))?.topupCredits).toBe(0);
+    assert.equal(results.filter((result) => result.consumed).length, 1);
+    assert.equal((await repository.getSubscriptionStatus('user-a'))?.topupCredits, 0);
   });
 
   it('does not consume twice for the same request id', async () => {
@@ -32,9 +34,9 @@ describe('phase 4 billing concurrency', () => {
     await repository.upsertSubscriptionStatus('user-a', activeSubscription);
     const first = await repository.consumeTopupCredit('user-a', 'same-request-id');
     const replay = await repository.consumeTopupCredit('user-a', 'same-request-id');
-    expect(first).toMatchObject({ consumed: true, duplicate: false });
-    expect(replay).toMatchObject({ consumed: true, duplicate: true });
-    expect((await repository.getSubscriptionStatus('user-a'))?.topupCredits).toBe(0);
+    assert.deepEqual(first, { consumed: true, duplicate: false, remainingCredits: 0 });
+    assert.deepEqual(replay, { consumed: true, duplicate: true, remainingCredits: 0 });
+    assert.equal((await repository.getSubscriptionStatus('user-a'))?.topupCredits, 0);
   });
 
   it('keeps idempotency storage scoped and body-bound', async () => {
@@ -42,10 +44,10 @@ describe('phase 4 billing concurrency', () => {
       new URL('../src/middleware/idempotency.middleware.ts', import.meta.url),
       'utf8'
     );
-    expect(source).toContain('identity(req)');
-    expect(source).toContain('req.method.toUpperCase()');
-    expect(source).toContain('bodyFingerprint');
-    expect(source).toContain('idempotency_key_reused');
-    expect(source).toContain('pending.get(scoped)');
+    assert.match(source, /identity\(req\)/);
+    assert.match(source, /req\.method\.toUpperCase\(\)/);
+    assert.match(source, /bodyFingerprint/);
+    assert.match(source, /idempotency_key_reused/);
+    assert.match(source, /pending\.get\(scoped\)/);
   });
 });

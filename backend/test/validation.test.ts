@@ -8,6 +8,7 @@ import {
   ReadingScoreBodySchema,
   VocabularyLookupQuerySchema,
   WritingSubmitBodySchema,
+  parsePaginationQuery,
 } from '../src/validation.js';
 
 describe('Validation Schemas', () => {
@@ -110,6 +111,28 @@ describe('Validation Schemas', () => {
     it('accepts empty optional fields', () => {
       const result = WritingSubmitBodySchema.safeParse({});
       assert.strictEqual(result.success, true);
+    });
+  });
+
+  describe('pagination', () => {
+    it('accepts bounded integer limit and offset', () => {
+      assert.deepStrictEqual(parsePaginationQuery({ limit: '25', offset: '10' }), {
+        limit: 25,
+        offset: 10,
+      });
+    });
+
+    it('rejects negative, fractional, zero-limit, and oversized values', () => {
+      for (const query of [
+        { limit: '-1' },
+        { limit: '1.5' },
+        { limit: '0' },
+        { limit: '101' },
+        { offset: '-1' },
+        { offset: '1.5' },
+      ]) {
+        assert.throws(() => parsePaginationQuery(query), /invalid_pagination|outside|integer/);
+      }
     });
   });
 

@@ -20,7 +20,7 @@ export const AiRequestBodySchema = z.object({
     .trim()
     .min(1, 'A non-empty prompt is required.')
     .max(20_000, 'Prompt must be 20,000 characters or fewer.'),
-  operation: z.enum(AI_OPERATIONS).optional(),
+  operation: z.enum([...AI_OPERATIONS, 'transcribeAudio'] as const).optional(),
   modeId: z.string().max(100).optional(),
   metadata: z
     .object({
@@ -144,6 +144,36 @@ export const ReadingGenerateBodySchema = z.object({
   level: z.string().trim().min(1).max(20).optional(),
   targetLanguage: z.string().trim().min(1).max(10).optional(),
 });
+
+export interface PaginationQuery {
+  limit: number;
+  offset: number;
+}
+
+export const parsePaginationQuery = (query: Record<string, unknown>): PaginationQuery => {
+  const parseInteger = (
+    value: unknown,
+    fallback: number,
+    name: string,
+    min: number,
+    max: number
+  ): number => {
+    if (value === undefined) return fallback;
+    if (typeof value !== 'string' || !/^(0|[1-9]\d*)$/.test(value)) {
+      throw new ApiError(400, 'invalid_pagination', `${name} must be a non-negative integer.`);
+    }
+    const parsed = Number(value);
+    if (!Number.isSafeInteger(parsed) || parsed < min || parsed > max) {
+      throw new ApiError(400, 'invalid_pagination', `${name} is outside the allowed range.`);
+    }
+    return parsed;
+  };
+
+  return {
+    limit: parseInteger(query.limit, 10, 'limit', 1, 100),
+    offset: parseInteger(query.offset, 0, 'offset', 0, Number.MAX_SAFE_INTEGER),
+  };
+};
 
 const formatZodError = (error: z.ZodError) => {
   return error.issues.map((i) => ({

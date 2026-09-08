@@ -3,6 +3,7 @@ import { promises as fsp } from 'node:fs';
 import path from 'node:path';
 
 import type { PlanId } from '../types.js';
+import { ApiError } from './errors.js';
 import { logger } from './logger.js';
 import { PLAN_AI_LIMITS } from './plan-limits.js';
 
@@ -23,6 +24,7 @@ const getLimitForPlan = (planId: string): PlanLimits => {
 };
 
 interface AiLedgerSession {
+  requestId?: string;
   modeId?: string;
   provider?: string;
   operation: string;
@@ -177,21 +179,31 @@ export const createSupabaseAiLedger = (config: {
 
         if (error) {
           logger.error('Ledger count error', { error: error.message });
-          return 0;
+          throw new ApiError(
+            503,
+            'ai_ledger_unavailable',
+            'AI usage limits are temporarily unavailable.'
+          );
         }
         return count ?? 0;
       } catch (err: unknown) {
+        if (err instanceof ApiError) throw err;
         logger.error('Ledger count error', {
           error: err instanceof Error ? err.message : String(err),
         });
-        return 0;
+        throw new ApiError(
+          503,
+          'ai_ledger_unavailable',
+          'AI usage limits are temporarily unavailable.'
+        );
       }
     },
 
     async logSession(userId, session) {
       try {
-        const { error } = await supabase.from('ai_sessions').insert({
+        const row = {
           user_id: userId,
+          request_id: session.requestId || null,
           mode_id: session.modeId || 'unknown',
           provider: session.provider || 'mock',
           operation: session.operation,
@@ -200,15 +212,33 @@ export const createSupabaseAiLedger = (config: {
           result_summary: session.resultSummary || '',
           tokens_used: session.tokensUsed || 0,
           metadata: session.metadata || {},
-        });
+        };
+        const query = session.requestId
+          ? supabase.from('ai_sessions').upsert(row, {
+              onConflict: 'user_id,request_id',
+              ignoreDuplicates: true,
+            })
+          : supabase.from('ai_sessions').insert(row);
+        const { error } = await query;
 
         if (error) {
           logger.error('Ledger log error', { error: error.message });
+          throw new ApiError(
+            503,
+            'ai_ledger_unavailable',
+            'AI usage recording is temporarily unavailable.'
+          );
         }
       } catch (err: unknown) {
+        if (err instanceof ApiError) throw err;
         logger.error('Ledger log error', {
           error: err instanceof Error ? err.message : String(err),
         });
+        throw new ApiError(
+          503,
+          'ai_ledger_unavailable',
+          'AI usage recording is temporarily unavailable.'
+        );
       }
     },
 
@@ -221,7 +251,11 @@ export const createSupabaseAiLedger = (config: {
 
         if (error) {
           logger.error('Ledger analytics error', { error: error.message });
-          return emptyAnalytics();
+          throw new ApiError(
+            503,
+            'ai_ledger_unavailable',
+            'AI analytics are temporarily unavailable.'
+          );
         }
 
         const rows = (data as Array<Record<string, unknown>>) ?? [];
@@ -236,10 +270,15 @@ export const createSupabaseAiLedger = (config: {
           }))
         );
       } catch (err: unknown) {
+        if (err instanceof ApiError) throw err;
         logger.error('Ledger analytics error', {
           error: err instanceof Error ? err.message : String(err),
         });
-        return emptyAnalytics();
+        throw new ApiError(
+          503,
+          'ai_ledger_unavailable',
+          'AI analytics are temporarily unavailable.'
+        );
       }
     },
 
@@ -249,7 +288,11 @@ export const createSupabaseAiLedger = (config: {
 
         if (error) {
           logger.error('Ledger admin analytics error', { error: error.message });
-          return emptyAdminAnalytics();
+          throw new ApiError(
+            503,
+            'ai_ledger_unavailable',
+            'AI analytics are temporarily unavailable.'
+          );
         }
 
         const rows = (data as Array<Record<string, unknown>>) ?? [];
@@ -261,10 +304,15 @@ export const createSupabaseAiLedger = (config: {
           }))
         );
       } catch (err: unknown) {
+        if (err instanceof ApiError) throw err;
         logger.error('Ledger admin analytics error', {
           error: err instanceof Error ? err.message : String(err),
         });
-        return emptyAdminAnalytics();
+        throw new ApiError(
+          503,
+          'ai_ledger_unavailable',
+          'AI analytics are temporarily unavailable.'
+        );
       }
     },
   };
@@ -294,6 +342,12 @@ export const createMemoryAiLedger = (): AiLedger => {
     },
 
     async logSession(userId, session) {
+      if (
+        session.requestId &&
+        ledger.some((entry) => entry.userId === userId && entry.requestId === session.requestId)
+      ) {
+        return;
+      }
       ledger.push({ userId, timestamp: Date.now(), ...session });
     },
 
@@ -373,12 +427,23 @@ export const createFileAiLedger = (filePath: string): AiLedger => {
       try {
         const now = Date.now();
         const entries = pruneEntries(await readPersistedEntries(filePath), now);
+        if (
+          session.requestId &&
+          entries.some((entry) => entry.userId === userId && entry.requestId === session.requestId)
+        ) {
+          return;
+        }
         entries.push({ userId, timestamp: now, ...session });
         await writePersistedEntries(filePath, entries);
       } catch (err: unknown) {
         logger.error('File ledger log error', {
           error: err instanceof Error ? err.message : String(err),
         });
+        throw new ApiError(
+          503,
+          'ai_ledger_unavailable',
+          'AI usage recording is temporarily unavailable.'
+        );
       }
     },
 

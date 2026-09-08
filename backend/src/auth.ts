@@ -35,6 +35,26 @@ const jwtAudienceMatches = (actual: JwtPayload['aud'], expected: string): boolea
     ? actual === expected
     : Array.isArray(actual) && actual.includes(expected);
 
+const hasValidClaims = (
+  header: JwtHeader,
+  payload: JwtPayload,
+  config: AuthConfig,
+  now: number
+): boolean => {
+  if (header.alg !== 'HS256' || header.typ !== 'JWT') return false;
+  if (typeof payload.sub !== 'string' || !SAFE_USER_ID_PATTERN.test(payload.sub)) return false;
+  if (!Number.isInteger(payload.exp) || !Number.isInteger(payload.iat)) return false;
+  if (payload.exp! <= now - 60 || payload.iat! > now + 60 || payload.exp! <= payload.iat!)
+    return false;
+  if (
+    typeof payload.iss !== 'string' ||
+    normalizeIssuer(payload.iss) !== normalizeIssuer(config.supabaseJwtIssuer!)
+  )
+    return false;
+  if (!jwtAudienceMatches(payload.aud, config.supabaseJwtAudience!)) return false;
+  return true;
+};
+
 export const verifyJwtLocally = async (
   token: string,
   config: AuthConfig,
@@ -47,19 +67,8 @@ export const verifyJwtLocally = async (
   const [headerB64, payloadB64, signatureB64] = parts;
   try {
     const header = JSON.parse(base64urlDecode(headerB64!).toString('utf8')) as JwtHeader;
-    if (header.alg !== 'HS256' || header.typ !== 'JWT') return null;
-
     const payload = JSON.parse(base64urlDecode(payloadB64!).toString('utf8')) as JwtPayload;
-    if (typeof payload.sub !== 'string' || !SAFE_USER_ID_PATTERN.test(payload.sub)) return null;
-    if (!Number.isInteger(payload.exp) || !Number.isInteger(payload.iat)) return null;
-    if (payload.exp! <= now - 60 || payload.iat! > now + 60 || payload.exp! <= payload.iat!)
-      return null;
-    if (
-      typeof payload.iss !== 'string' ||
-      normalizeIssuer(payload.iss) !== normalizeIssuer(config.supabaseJwtIssuer)
-    )
-      return null;
-    if (!jwtAudienceMatches(payload.aud, config.supabaseJwtAudience)) return null;
+    if (!hasValidClaims(header, payload, config, now)) return null;
 
     const secretKey = await subtle.importKey(
       'raw',
@@ -71,12 +80,12 @@ export const verifyJwtLocally = async (
     const isValid = await subtle.verify(
       'HMAC',
       secretKey,
-      base64urlDecode(signatureB64!),
+      new Uint8Array(base64urlDecode(signatureB64!)),
       new TextEncoder().encode(`${headerB64}.${payloadB64}`)
     );
     if (!isValid) return null;
     return {
-      userId: payload.sub,
+      userId: payload.sub as string,
       email: typeof payload.email === 'string' ? payload.email : undefined,
       role: typeof payload.role === 'string' ? payload.role : undefined,
       source: 'local-jwt',
@@ -367,6 +376,18 @@ export const createBackendAuth = (
     };
   };
 
+  const tryRemoteAuth = async (token: string): Promise<AuthenticatedUser | null> => {
+    if (config.firebaseProjectId) {
+      try {
+        return await verifyFirebaseToken(token, config.firebaseProjectId, fetchImpl);
+      } catch (error) {
+        logger.warn('Firebase token verification failed', { error: (error as Error).message });
+        return null;
+      }
+    }
+    return validateSupabaseToken(config, token, fetchImpl);
+  };
+
   const authenticate = async (request: Request): Promise<AuthenticatedUser> => {
     const token = readBearerToken(request);
 
@@ -378,16 +399,9 @@ export const createBackendAuth = (
       if (localUser) return localUser;
     }
 
-    if (config.firebaseProjectId && token) {
-      try {
-        const firebaseUser = await verifyFirebaseToken(token, config.firebaseProjectId, fetchImpl);
-        if (firebaseUser) return firebaseUser;
-      } catch (error) {
-        logger.warn('Firebase token verification failed', { error: (error as Error).message });
-      }
-    } else {
-      const supabaseUser = await validateSupabaseToken(config, token, fetchImpl);
-      if (supabaseUser) return supabaseUser;
+    if (token) {
+      const remoteUser = await tryRemoteAuth(token);
+      if (remoteUser) return remoteUser;
     }
 
     const devUser = authenticateDevBypass(request);

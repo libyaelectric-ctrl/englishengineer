@@ -477,9 +477,12 @@ const registerRoutes = (
     },
     use: (...args) => {
       if (typeof args[0] === 'string') {
-        const [routePath, ...handlers] = args;
+        const routePath = args[0];
+        const handlers = args.slice(1) as RequestHandler[];
         v1Router.use(adaptPath(routePath), ...handlers);
-      } else v1Router.use(...args);
+      } else {
+        v1Router.use(...(args as RequestHandler[]));
+      }
       return v1RouterAdapter;
     },
   };
@@ -611,14 +614,10 @@ const registerRoutes = (
       ].join('')
     );
   });
-  app.post(
-    '/api/csp-report',
-    express.json({ type: 'application/csp-report' }),
-    (req, res) => {
-      logger.warn('CSP violation reported', { report: req.body });
-      res.status(204).end();
-    }
-  );
+  app.post('/api/csp-report', express.json({ type: 'application/csp-report' }), (req, res) => {
+    logger.warn('CSP violation reported', { report: req.body });
+    res.status(204).end();
+  });
 
   const backendAuth = createBackendAuth(
     { ...config.auth, environment: config.environment } as BackendAuthConfig,

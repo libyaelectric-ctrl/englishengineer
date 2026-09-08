@@ -1,6 +1,9 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
+
 import { ApiError } from './errors.js';
 import type { RouteRegistrar } from './route-registrar.js';
+import { parsePaginationQuery } from './validation.js';
+
 interface ListeningItem {
   id: string;
   title: string;
@@ -124,8 +127,7 @@ export const registerListeningRoutes = (
       try {
         if (!request.auth?.userId)
           throw new ApiError(401, 'authentication_required', 'Auth required');
-        const limit = Math.min(Math.max(Number(request.query.limit) || 10, 1), 100);
-        const offset = Math.max(Number(request.query.offset) || 0, 0);
+        const { limit, offset } = parsePaginationQuery(request.query as Record<string, unknown>);
         response.json({
           items: LISTENING_ITEMS.slice(offset, offset + limit),
           total: LISTENING_ITEMS.length,

@@ -53,7 +53,11 @@ const markAuditFailure = (error: unknown): void => {
 
 export const initAuditLog = async (config: {
   environment?: string;
-  workspace?: Record<string, unknown>;
+  workspace?: {
+    configured?: boolean;
+    supabaseUrl?: string | null;
+    supabaseServiceRoleKey?: string | null;
+  };
 }): Promise<void> => {
   const ws = config?.workspace;
   const required = config.environment === 'production';
@@ -90,7 +94,7 @@ export const auditLog = (entry: Omit<AuditLogEntry, 'id' | 'timestamp'>): AuditL
   }
 
   const record: AuditLogEntry = {
-    id: randomUUID(),
+    id: `audit_${randomUUID()}`,
     timestamp: new Date().toISOString(),
     ...entry,
   };

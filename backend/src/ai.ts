@@ -1,5 +1,5 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
-import type { RouteRegistrar } from './route-registrar.js';
+import { randomUUID } from 'node:crypto';
 
 import type { PlanId } from '../types.js';
 import { AI_CONTRACT_VERSION, createAIService } from './ai-core/index.js';
@@ -10,8 +10,10 @@ import { normalizePlanId } from './billing-plan-migration.js';
 import { getOrSet } from './cache/redis-cache.service.js';
 import { checkUserLimits } from './cost-tracker.js';
 import { ApiError } from './errors.js';
+import { idempotencyKey } from './middleware/idempotency.middleware.js';
 import { requireRole } from './middleware/rbac.middleware.js';
 import { DEFAULT_PLAN_LIMITS, PLAN_AI_LIMITS } from './plan-limits.js';
+import type { RouteRegistrar } from './route-registrar.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
 import { CircuitBreaker } from './utils/circuit-breaker.js';
 import { AiRequestBodySchema, validateBody } from './validation.js';
@@ -113,22 +115,7 @@ const checkRateLimits = async (
   return { count, useTopup: false, subscription: null, topupCredits: 0, planId } as never;
 };
 
-const decrementTopup = async (
-  billingRepository: SubscriptionRepository | null,
-  userId: string,
-  subscription: SubscriptionSnapshot | null,
-  topupCredits: number
-) => {
-  if (!billingRepository || topupCredits <= 0 || !subscription) return;
-  await billingRepository.upsertSubscriptionStatus(userId, {
-    ...subscription,
-    topupCredits: topupCredits - 1,
-    updatedAt: new Date().toISOString(),
-    source: 'ai_billing_decrement',
-  });
-};
-
-const logAiUsage = (
+const logAiUsage = async (
   ledger: AiLedger,
   userId: string,
   result: {
@@ -137,21 +124,25 @@ const logAiUsage = (
     durationMs?: number;
     text?: string;
     tokensUsed?: number;
+    estimatedTokens?: number;
+    requestId?: string;
     promptVersion?: string;
   },
   body: { modeId?: string },
-  operation: string
+  operation: string,
+  requestId: string
 ) => {
   if (result && !result.error) {
-    ledger.logSession(userId, {
+    await ledger.logSession(userId, {
       modeId: body.modeId || 'unknown',
       provider: result.provider || 'mock',
       operation,
       durationMs: result.durationMs || 0,
       resultSummary: result.text ? result.text.slice(0, 100) : '',
-      tokensUsed: result.tokensUsed ?? 0,
+      tokensUsed: result.tokensUsed ?? result.estimatedTokens ?? 0,
       metadata: {
         promptVersion: result.promptVersion ?? null,
+        requestId,
         operation,
       },
     });
@@ -172,6 +163,8 @@ export const registerAIRoutes = (
     supabase?: Record<string, unknown>;
     ledger?: { filePath?: string };
     workspace?: Record<string, unknown>;
+    billing?: { provider?: string };
+    dodo?: { configured?: boolean };
   },
   _fetchImpl: typeof fetch = fetch
 ): void => {
@@ -180,7 +173,12 @@ export const registerAIRoutes = (
     workspace: config.workspace,
     ledger: { filePath: config.ledger?.filePath ?? process.env.AI_LEDGER_FILE },
   } as unknown as Parameters<typeof createAiLedger>[0]);
-  const configured = Boolean(config.stripe?.configured);
+  const configured =
+    config.billing?.provider === 'dodo'
+      ? config.dodo?.configured === true
+      : config.billing?.provider === 'paddle'
+        ? false
+        : config.stripe?.configured === true;
 
   const validateOperation = (body: Record<string, unknown>, defaultOp: string) => {
     if (body?.operation !== undefined && body.operation !== defaultOp) {
@@ -202,10 +200,11 @@ export const registerAIRoutes = (
     bypass: boolean,
     result: Record<string, unknown>,
     body: Record<string, unknown>,
-    operation: string
+    operation: string,
+    requestId: string
   ) => {
     if (bypass) return;
-    logAiUsage(
+    return logAiUsage(
       ledger,
       userId,
       {
@@ -214,11 +213,63 @@ export const registerAIRoutes = (
         durationMs: result.durationMs as number | undefined,
         text: result.text as string | undefined,
         tokensUsed: result.tokensUsed as number | undefined,
+        estimatedTokens: result.estimatedTokens as number | undefined,
+        requestId: result.requestId as string | undefined,
         promptVersion: result.promptVersion as string | undefined,
       },
       { modeId: body.modeId as string | undefined },
-      operation
+      operation,
+      requestId
     );
+  };
+
+  const resolveRequestId = (body: Record<string, unknown>, request: Request): string => {
+    const fromMeta =
+      typeof (body.metadata as { requestId?: unknown } | undefined)?.requestId === 'string'
+        ? (body.metadata as { requestId: string }).requestId.trim()
+        : '';
+    const fromHeader =
+      typeof request.headers['x-idempotency-key'] === 'string'
+        ? request.headers['x-idempotency-key'].trim()
+        : '';
+    return fromMeta || fromHeader || request.id || randomUUID();
+  };
+
+  const buildAiBody = (body: Record<string, unknown>, requestId: string) => ({
+    ...body,
+    metadata: {
+      ...(typeof body.metadata === 'object' && body.metadata !== null ? body.metadata : {}),
+      requestId,
+    },
+  });
+
+  const buildCacheKey = (
+    useTopup: boolean,
+    defaultOp: string,
+    userId: string,
+    requestId: string,
+    body: Record<string, unknown>
+  ) =>
+    useTopup
+      ? `ai:${defaultOp}:${userId}:request:${requestId}`
+      : `ai:${defaultOp}:${userId}:${JSON.stringify(body)}`;
+
+  const consumeTopupIfNeeded = async (
+    useTopup: boolean,
+    bypass: boolean,
+    userId: string,
+    requestId: string,
+    result: Record<string, unknown>
+  ) => {
+    if (!useTopup || bypass || result.error === true || result.mockMode === true) return;
+    const consumption = await billingRepository.consumeTopupCredit(userId, requestId);
+    if (!consumption.consumed) {
+      throw new ApiError(
+        429,
+        'topup_credit_unavailable',
+        'Top-up credits were consumed by another request. Please retry.'
+      );
+    }
   };
 
   Object.entries(AI_ROUTES).forEach(([path, defaultOperation]) => {
@@ -226,6 +277,7 @@ export const registerAIRoutes = (
       path,
       requireBackendAuth,
       rateLimiter,
+      idempotencyKey(),
       validateBody(AiRequestBodySchema),
       async (request: Request, response: Response, next: NextFunction) => {
         try {
@@ -234,18 +286,16 @@ export const registerAIRoutes = (
 
           const userId = request.auth?.userId || 'unknown';
           const bypass = isBypassUser(userId);
-
-          const { useTopup, subscription, topupCredits } = await resolveRateLimits(userId, bypass);
-
-          const cacheKey = `ai:${defaultOperation}:${userId}:${JSON.stringify(body)}`;
+          const { useTopup } = await resolveRateLimits(userId, bypass);
+          const requestId = resolveRequestId(body, request);
+          const aiBody = buildAiBody(body, requestId);
+          const cacheKey = buildCacheKey(useTopup, defaultOperation, userId, requestId, body);
           const { value: result } = await getOrSet(cacheKey, 3600, () =>
-            aiCircuitBreaker.execute(() => aiService.complete(defaultOperation, body))
+            aiCircuitBreaker.execute(() => aiService.complete(defaultOperation, aiBody))
           );
 
-          if (useTopup && !bypass) {
-            await decrementTopup(billingRepository, userId, subscription, topupCredits);
-          }
-          logUsage(userId, bypass, result, body, defaultOperation);
+          await consumeTopupIfNeeded(useTopup, bypass, userId, requestId, result);
+          await logUsage(userId, bypass, result, body, defaultOperation, requestId);
           response.json(result);
         } catch (error) {
           next(error);

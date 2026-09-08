@@ -4,13 +4,15 @@ import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { randomUUID } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+
 import type { RuntimeEnvironment } from '../types.js';
 import { createAIService } from './ai.js';
 import { apiSuccess } from './api-response.js';
 import { ApiError } from './errors.js';
 import { getLearningRepository } from './learning-repository.js';
-import { SpeakingSubmitBodySchema, validateBody } from './validation.js';
 import type { RouteRegistrar } from './route-registrar.js';
+import { SpeakingSubmitBodySchema, parsePaginationQuery, validateBody } from './validation.js';
+
 type AiService = ReturnType<typeof createAIService>;
 const UPLOAD_ROOT = path.resolve(process.cwd(), 'uploads', 'speaking');
 const AUDIO_TYPES: Record<string, string> = {
@@ -162,7 +164,9 @@ export const registerSpeakingRoutes = (
   requireBackendAuth: RequestHandler,
   speakingLimiter: RequestHandler,
   _aiService: AiService,
-  environment: RuntimeEnvironment = process.env.NODE_ENV === 'production' ? 'production' : 'development'
+  environment: RuntimeEnvironment = process.env.NODE_ENV === 'production'
+    ? 'production'
+    : 'development'
 ): void => {
   app.post(
     '/api/speaking/audio-upload',
@@ -243,8 +247,7 @@ export const registerSpeakingRoutes = (
     (request: Request, response: Response, next: NextFunction) => {
       try {
         userIdFrom(request);
-        const limit = Math.min(Math.max(Number(request.query.limit) || 10, 1), 100);
-        const offset = Math.max(Number(request.query.offset) || 0, 0);
+        const { limit, offset } = parsePaginationQuery(request.query as Record<string, unknown>);
         response.json({
           items: SPEAKING_PROMPTS.slice(offset, offset + limit),
           total: SPEAKING_PROMPTS.length,

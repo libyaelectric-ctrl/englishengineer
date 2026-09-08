@@ -1,11 +1,13 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { randomUUID } from 'node:crypto';
+
 import { checkCostLimits, createAIService } from './ai.js';
 import { getOrSet } from './cache/redis-cache.service.js';
 import { ApiError } from './errors.js';
-import { CircuitBreaker } from './utils/circuit-breaker.js';
-import { ReadingGenerateBodySchema, validateBody } from './validation.js';
 import type { RouteRegistrar } from './route-registrar.js';
+import { CircuitBreaker } from './utils/circuit-breaker.js';
+import { ReadingGenerateBodySchema, parsePaginationQuery, validateBody } from './validation.js';
+
 type AiService = ReturnType<typeof createAIService>;
 interface ReadingItem {
   id: string;
@@ -191,8 +193,7 @@ export const registerReadingRoutes = (
       try {
         if (!request.auth?.userId)
           throw new ApiError(401, 'authentication_required', 'Auth required');
-        const limit = Math.min(Math.max(Number(request.query.limit) || 10, 1), 100);
-        const offset = Math.max(Number(request.query.offset) || 0, 0);
+        const { limit, offset } = parsePaginationQuery(request.query as Record<string, unknown>);
         response.json({
           items: READING_ITEMS.slice(offset, offset + limit),
           total: READING_ITEMS.length,

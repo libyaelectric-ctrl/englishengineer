@@ -1,11 +1,12 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
+
 import { checkCostLimits, createAIService } from './ai.js';
 import { ApiError } from './errors.js';
-import { getLearningRepository, type WritingSubmissionRecord } from './learning-repository.js';
-import { aggregateByPromptCategory, averageScore } from './utils/stats.js';
-import { CircuitBreaker } from './utils/circuit-breaker.js';
-import { WritingSubmitBodySchema, validateBody } from './validation.js';
+import { type WritingSubmissionRecord, getLearningRepository } from './learning-repository.js';
 import type { RouteRegistrar } from './route-registrar.js';
+import { CircuitBreaker } from './utils/circuit-breaker.js';
+import { aggregateByPromptCategory, averageScore } from './utils/stats.js';
+import { WritingSubmitBodySchema, parsePaginationQuery, validateBody } from './validation.js';
 
 type AiService = ReturnType<typeof createAIService>;
 interface WritingPrompt {
@@ -145,8 +146,7 @@ export const registerWritingRoutes = (
     (request: Request, response: Response, next: NextFunction) => {
       try {
         userIdFrom(request);
-        const limit = Math.min(Math.max(Number(request.query.limit) || 10, 1), 100);
-        const offset = Math.max(Number(request.query.offset) || 0, 0);
+        const { limit, offset } = parsePaginationQuery(request.query as Record<string, unknown>);
         response.json({
           items: WRITING_PROMPTS.slice(offset, offset + limit),
           total: WRITING_PROMPTS.length,

@@ -79,7 +79,7 @@ describe('AI Routes', () => {
     );
 
     for (const route of app.registered.filter((r) => r.path in AI_ROUTES)) {
-      assert.equal(route.handlerCount, 4, `Route ${route.path} should have 4 middleware/handlers`);
+      assert.equal(route.handlerCount, 5, `Route ${route.path} should have 5 middleware/handlers`);
     }
   });
 
