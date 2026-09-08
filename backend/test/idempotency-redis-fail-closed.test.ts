@@ -1,8 +1,13 @@
 import assert from 'node:assert/strict';
+import { setImmediate as waitForImmediate } from 'node:timers/promises';
+import type { NextFunction, Request, Response } from 'express';
 import { describe, it } from 'node:test';
 
 import { ApiError } from '../src/errors.js';
-import { createIdempotencyStore } from '../src/middleware/idempotency.middleware.js';
+import {
+  createIdempotencyStore,
+  idempotencyKey,
+} from '../src/middleware/idempotency.middleware.js';
 
 const config = {
   rateLimit: {
@@ -49,5 +54,60 @@ describe('Redis idempotency store', () => {
       });
     const store = createIdempotencyStore('redis', config, fetchImpl as typeof fetch);
     await assert.rejects(() => store.get('request-key'), assertUnavailable);
+  });
+
+  it('does not send a successful response when persistence fails', async () => {
+    const persistenceError = new ApiError(
+      503,
+      'idempotency_store_unavailable',
+      'Idempotency unavailable.'
+    );
+    const store = {
+      async get() {
+        return null;
+      },
+      async set() {
+        throw persistenceError;
+      },
+    };
+    const middleware = idempotencyKey({ store });
+    const request = {
+      headers: { 'x-idempotency-key': 'request-key-00000001' },
+      method: 'POST',
+      originalUrl: '/api/v1/ai/translate',
+      body: { prompt: 'hello' },
+      auth: { userId: 'user-a' },
+    } as unknown as Request;
+    let successfulBodySent = false;
+    const response = {
+      statusCode: 200,
+      json() {
+        successfulBodySent = true;
+        return response;
+      },
+      setHeader() {
+        return response;
+      },
+      status(code: number) {
+        response.statusCode = code;
+        return response;
+      },
+      once() {
+        return response;
+      },
+    } as unknown as Response;
+    const nextCalls: unknown[] = [];
+    const next = ((error?: unknown) => {
+      nextCalls.push(error);
+    }) as NextFunction;
+
+    await middleware(request, response, next);
+    assert.equal(nextCalls.length, 1);
+    response.json({ ok: true });
+    await waitForImmediate();
+
+    assert.equal(successfulBodySent, false);
+    assert.equal(nextCalls.length, 2);
+    assert.equal(nextCalls[1], persistenceError);
   });
 });
