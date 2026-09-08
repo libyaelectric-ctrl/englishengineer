@@ -4,7 +4,7 @@ import { ApiError } from '../errors.js';
 interface IdempotencyEntry { statusCode: number; body: unknown; timestamp: number; fingerprint?: string; }
 interface IdempotencyStore { get(key: string): Promise<IdempotencyEntry | null>; set(key: string, value: IdempotencyEntry): Promise<void>; entries?: () => IterableIterator<[string, IdempotencyEntry]>; delete?(key: string): void; }
 interface IdempotencyOptions { headerName?: string; ttlMs?: number; store?: IdempotencyStore; }
-interface PendingEntry { fingerprint: string; response: Promise<IdempotencyEntry | null>; resolve: (entry: IdempotencyEntry | null) => void; }
+interface PendingEntry { fingerprint: string; response: Promise<IdempotencyEntry | null>; resolve: (entry: IdempotencyEntry | null) => void; reject: (error: unknown) => void; }
 let globalIdempotencyStore: IdempotencyStore | null = null;
 const pending = new Map<string, PendingEntry>();
 export const setGlobalIdempotencyStore = (store: IdempotencyStore): void => { globalIdempotencyStore = store; };
@@ -30,16 +30,19 @@ export const idempotencyKey = (options: IdempotencyOptions = {}) => {
       const inFlight = pending.get(scoped);
       if (inFlight) { if (inFlight.fingerprint !== bodyFingerprint) throw conflict(); const result = await inFlight.response; if (result) replay(res, result); else next(); return; }
       let resolvePending!: (entry: IdempotencyEntry | null) => void;
-      const response = new Promise<IdempotencyEntry | null>((resolve) => { resolvePending = resolve; });
-      pending.set(scoped, { fingerprint: bodyFingerprint, response, resolve: resolvePending });
+      let rejectPending!: (error: unknown) => void;
+      const response = new Promise<IdempotencyEntry | null>((resolve, reject) => { resolvePending = resolve; rejectPending = reject; });
+      void response.catch(() => undefined);
+      pending.set(scoped, { fingerprint: bodyFingerprint, response, resolve: resolvePending, reject: rejectPending });
       const originalJson = res.json.bind(res); let settled = false;
       const settle = (entry: IdempotencyEntry | null): void => { if (settled) return; settled = true; pending.delete(scoped); resolvePending(entry); };
+      const fail = (error: unknown): void => { if (settled) return; settled = true; pending.delete(scoped); rejectPending(error); };
       res.json = ((body: unknown) => {
         const entry = { statusCode: res.statusCode, body, timestamp: Date.now(), fingerprint: bodyFingerprint };
         res.json = originalJson as typeof res.json;
         void store.set(scoped, entry).then(
           () => { settle(entry); originalJson(body); },
-          (error: unknown) => { settle(null); next(error); }
+          (error: unknown) => { fail(error); next(error); }
         );
         return res;
       }) as typeof res.json;
