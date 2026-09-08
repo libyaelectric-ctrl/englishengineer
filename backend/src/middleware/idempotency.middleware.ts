@@ -34,7 +34,15 @@ export const idempotencyKey = (options: IdempotencyOptions = {}) => {
       pending.set(scoped, { fingerprint: bodyFingerprint, response, resolve: resolvePending });
       const originalJson = res.json.bind(res); let settled = false;
       const settle = (entry: IdempotencyEntry | null): void => { if (settled) return; settled = true; pending.delete(scoped); resolvePending(entry); };
-      res.json = ((body: unknown) => { const entry = { statusCode: res.statusCode, body, timestamp: Date.now(), fingerprint: bodyFingerprint }; void store.set(scoped, entry).then(() => settle(entry), () => settle(null)); return originalJson(body); }) as typeof res.json;
+      res.json = ((body: unknown) => {
+        const entry = { statusCode: res.statusCode, body, timestamp: Date.now(), fingerprint: bodyFingerprint };
+        res.json = originalJson as typeof res.json;
+        void store.set(scoped, entry).then(
+          () => { settle(entry); originalJson(body); },
+          (error: unknown) => { settle(null); next(error); }
+        );
+        return res;
+      }) as typeof res.json;
       if (typeof res.once === 'function') res.once('close', () => settle(null));
       next();
     } catch (error) { next(error); }
