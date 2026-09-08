@@ -1,11 +1,25 @@
-import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
+import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { ApiError } from './errors.js';
 import { logger } from './logger.js';
+import type { RouteRegistrar } from './route-registrar.js';
 
-const analyticsUnavailable = (): ApiError => new ApiError(503, 'team_analytics_unavailable', 'Team analytics is unavailable until the persistent analytics repository is configured.');
+const analyticsUnavailable = (): ApiError =>
+  new ApiError(
+    503,
+    'team_analytics_unavailable',
+    'Team analytics is unavailable until the persistent analytics repository is configured.'
+  );
 
-export const registerTeamAnalyticsRoutes = (app: Express, requireAuth: RequestHandler, rateLimiter: RequestHandler): void => {
-  const unavailableHandler = async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
+export const registerTeamAnalyticsRoutes = (
+  app: RouteRegistrar,
+  requireAuth: RequestHandler,
+  rateLimiter: RequestHandler
+): void => {
+  const unavailableHandler = async (
+    req: Request,
+    _res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const userId = req.auth?.userId;
       if (!userId) throw new ApiError(401, 'unauthorized', 'Authentication required.');
@@ -16,8 +30,6 @@ export const registerTeamAnalyticsRoutes = (app: Express, requireAuth: RequestHa
     }
   };
 
-  // The app adapter mounts /api/* routes under /api/v1. Registering /api/v1/*
-  // here would expose the accidental /api/v1/v1/* path.
   app.get('/api/team/analytics', requireAuth, rateLimiter, unavailableHandler);
   app.get('/api/team/analytics/export', requireAuth, rateLimiter, unavailableHandler);
 };

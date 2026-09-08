@@ -1,4 +1,5 @@
-import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
+import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import type { RouteRegistrar } from './route-registrar.js';
 
 import { getAuditLogs } from './audit-log.js';
 import { getCacheStats } from './cache/redis-cache.service.js';
@@ -7,7 +8,7 @@ import { getPerformanceMetrics, getRateLimitMetrics } from './performance-monito
 import { AdminAuditLogsQuerySchema, validateQuery } from './validation.js';
 
 export const registerAdminRoutes = (
-  app: Express,
+  app: RouteRegistrar,
   requireBackendAuth: RequestHandler,
   rateLimiter: RequestHandler
 ): void => {
