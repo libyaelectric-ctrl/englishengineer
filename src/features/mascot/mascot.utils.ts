@@ -1,30 +1,46 @@
+// Singleton AudioContext — reuse instead of creating a new one per tone
+let sharedCtx: AudioContext | null = null;
+
+const getAudioContext = (): AudioContext | null => {
+  if (sharedCtx && sharedCtx.state !== 'closed') return sharedCtx;
+  try {
+    const Ctor =
+      window.AudioContext ??
+      (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!Ctor) return null;
+    sharedCtx = new Ctor();
+    return sharedCtx;
+  } catch {
+    return null;
+  }
+};
+
 export const playTone = (
   frequencies: number[],
   duration: number,
   waveType: OscillatorType = 'sine',
   volume = 0.1
 ): void => {
-  try {
-    const AudioContextCtor =
-      window.AudioContext ??
-      (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContextCtor) return;
-    const audioCtx = new AudioContextCtor();
-    const now = audioCtx.currentTime;
-    frequencies.forEach((freq, i) => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = waveType;
-      osc.frequency.value = freq;
-      gain.gain.value = volume;
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(now + i * 0.08);
-      osc.stop(now + i * 0.08 + duration / 1000);
-    });
-  } catch {
-    // Silent fail if audio not supported
+  const audioCtx = getAudioContext();
+  if (!audioCtx) return;
+
+  // Resume if suspended ( autoplay policy )
+  if (audioCtx.state === 'suspended') {
+    void audioCtx.resume();
   }
+
+  const now = audioCtx.currentTime;
+  frequencies.forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = waveType;
+    osc.frequency.value = freq;
+    gain.gain.value = volume;
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now + i * 0.08);
+    osc.stop(now + i * 0.08 + duration / 1000);
+  });
 };
 
 export const spawnConfetti = (container: HTMLElement | null): void => {

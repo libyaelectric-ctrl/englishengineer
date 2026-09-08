@@ -1,4 +1,4 @@
-export const SLEEP_AFTER_MS = 30_000;
+export const SLEEP_AFTER_MS = 120_000;
 
 export const stateToastMap: Record<string, { icon: string; type: 'info' | 'success' | 'error' }> = {
   celebrate: { icon: '🎉', type: 'success' },

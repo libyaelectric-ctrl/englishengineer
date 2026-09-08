@@ -1,5 +1,7 @@
 import React, { forwardRef } from 'react';
 
+import { cn } from '@/shared/utils/cn';
+
 interface MascotFigureProps {
   state: string;
   imgSize: number;
@@ -12,6 +14,34 @@ interface MascotFigureProps {
   onPointerCancel: () => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
 }
+
+const STATE_EMOJIS: Record<string, string> = {
+  idle: '🦸',
+  thinking: '🤔',
+  celebrate: '🎉',
+  levelUp: '⬆️',
+  streak: '🔥',
+  sleeping: '😴',
+  concerned: '😟',
+  streakDanger: '⚠️',
+  empty: '😐',
+  farewell: '👋',
+  point: '👉',
+};
+
+const STATE_CSS: Record<string, string> = {
+  idle: 'engmascot-idle',
+  celebrate: 'engmascot-celebrate',
+  concerned: 'engmascot-concerned',
+  thinking: 'engmascot-thinking',
+  point: 'engmascot-point',
+  sleeping: 'engmascot-sleeping',
+  levelUp: 'engmascot-celebrate',
+  streak: 'engmascot-celebrate',
+  streakDanger: 'engmascot-concerned',
+  empty: 'engmascot-idle',
+  farewell: 'engmascot-celebrate',
+};
 
 export const MascotFigure = forwardRef<HTMLDivElement, MascotFigureProps>(
   (
@@ -29,19 +59,8 @@ export const MascotFigure = forwardRef<HTMLDivElement, MascotFigureProps>(
     },
     ref
   ) => {
-    const stateEmojis: Record<string, string> = {
-      idle: '🦸',
-      thinking: '🤔',
-      celebrate: '🎉',
-      levelUp: '⬆️',
-      streak: '🔥',
-      sleeping: '😴',
-      concerned: '😟',
-      streakDanger: '⚠️',
-      empty: '😐',
-    };
-
-    const emoji = stateEmojis[state] ?? '🦸';
+    const emoji = STATE_EMOJIS[state] ?? '🦸';
+    const stateClass = STATE_CSS[state] ?? 'engmascot-idle';
 
     return (
       <div
@@ -54,6 +73,7 @@ export const MascotFigure = forwardRef<HTMLDivElement, MascotFigureProps>(
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerCancel}
         onKeyDown={onKeyDown}
+        className={cn('engmascot-figure', stateClass, dragging && 'engmascot-dragging')}
         style={{
           width: imgSize,
           height: imgSize,
@@ -61,11 +81,13 @@ export const MascotFigure = forwardRef<HTMLDivElement, MascotFigureProps>(
           lineHeight: 1,
           cursor: inline ? 'default' : dragging ? 'grabbing' : 'grab',
           userSelect: 'none',
-          transition: 'transform 0.15s ease, filter 0.15s ease',
-          filter: dragging ? 'drop-shadow(0 8px 16px rgba(0,0,0,0.2))' : 'none',
         }}
       >
-        {emoji}
+        <span className="relative z-10 flex items-center justify-center w-full h-full">
+          {emoji}
+        </span>
+        <span className="engmascot-blink" />
+        <div className="engmascot-fx" />
       </div>
     );
   }

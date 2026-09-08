@@ -1,5 +1,8 @@
 import { useRef, useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+import { MASCOT_COPY } from '@/features/localization/translations/mascot.translations';
+
 import { volumeToNumber } from '../mascot.config';
 import { useMascotStore } from '../mascot.store';
 import { playTone, spawnConfetti } from '../mascot.utils';
@@ -68,14 +71,34 @@ export const useMascotHandlers = (inline: boolean): UseMascotHandlersReturn => {
 
   const handleTap = () => {
     if (minimized) return;
-    const states: ('celebrate' | 'levelUp' | 'streak')[] = ['celebrate', 'levelUp', 'streak'];
-    const randomState = states[Math.floor(Math.random() * states.length)];
-    setState(randomState);
+    touch();
+
+    const currentState = useMascotStore.getState().state;
+
+    if (currentState === 'sleeping') {
+      // Wake up from sleep
+      const language = useLocalizationStore.getState().language;
+      const copy = MASCOT_COPY[language] ?? MASCOT_COPY.en;
+      setState('idle', copy.wake);
+      if (soundEnabled) {
+        const vol = volumeToNumber(useMascotStore.getState().soundVolume);
+        playTone([523.25, 659.25], 120, 'sine', vol);
+      }
+      return;
+    }
+
+    // Normal tap: cycle through idle messages
+    const language = useLocalizationStore.getState().language;
+    const copy = MASCOT_COPY[language] ?? MASCOT_COPY.en;
+    const idleMsg = copy.idle[Math.floor(Math.random() * copy.idle.length)];
+    setState('idle', idleMsg);
     if (soundEnabled) {
       const vol = volumeToNumber(useMascotStore.getState().soundVolume);
       playTone([523.25, 659.25, 783.99], 140, 'sine', vol);
     }
-    spawnConfetti(document.body);
+    // Confetti inside the mascot figure, falling back to body
+    const fxContainer = document.querySelector('.engmascot-fx');
+    spawnConfetti(fxContainer as HTMLDivElement ?? document.body);
   };
 
   return {

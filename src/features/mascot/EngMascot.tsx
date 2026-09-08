@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { useLocalizationStore } from '@/features/localization';
 import {
@@ -14,9 +14,16 @@ import { useMascotEffects } from './hooks/useMascotEffects';
 import { useMascotHandlers } from './hooks/useMascotHandlers';
 import { useMascotStore } from './mascot.store';
 
-const getDisplayMessage = (m: string | null, s: string, c: MascotStateCopy) =>
-  m ??
-  (s === 'thinking' ? c.thinking : s === 'sleeping' ? c.sleeping : s === 'empty' ? c.empty : null);
+const pickRandom = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+
+const getDisplayMessage = (m: string | null, s: string, c: MascotStateCopy, idleMsg: string) => {
+  if (m) return m;
+  if (s === 'thinking') return c.thinking;
+  if (s === 'sleeping') return c.sleeping;
+  if (s === 'empty') return c.empty;
+  if (s === 'idle') return idleMsg;
+  return null;
+};
 
 export const EngMascot: React.FC<{ inline?: boolean; size?: number }> = ({
   inline = false,
@@ -33,8 +40,11 @@ export const EngMascot: React.FC<{ inline?: boolean; size?: number }> = ({
 
   useMascotEffects(inline, copy);
 
+  // Pick a stable random idle message per mount / language change
+  const idleMessage = useMemo(() => pickRandom(copy.idle), [language]);
+
   if (!visible) return null;
-  const msg = getDisplayMessage(message, state, copy);
+  const msg = getDisplayMessage(message, state, copy, idleMessage);
   const imgSize = inline ? size : minimized ? 40 : 64;
 
   return (

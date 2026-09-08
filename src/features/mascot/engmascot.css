@@ -259,6 +259,9 @@
   animation: engmascot-sleep-sway 3.6s ease-in-out infinite;
   filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.28)) saturate(0.7) brightness(0.9);
 }
+.engmascot-dragging {
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+}
 .engmascot-sleeping .engmascot-blink {
   opacity: 0.9;
   transform: scaleY(1);
