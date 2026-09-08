@@ -1,298 +1,51 @@
-﻿import {
-  ArrowRight,
-  BarChart3,
-  CheckCircle2,
-  ClipboardCheck,
-  FileCheck2,
-  HardHat,
-  Mail,
-  MessageSquareCode,
-  Settings2,
-  ShieldCheck,
-  Users,
-} from 'lucide-react';
+import { ArrowRight, BarChart3, CheckCircle2, ClipboardCheck, FileCheck2, HardHat, Mail, MessageSquareCode, Settings2, ShieldCheck, Users } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
 
+import { PRODUCT_VERSION } from '@/config/product.config';
 import { PageMetadata } from '@/shared/components/PageMetadata';
 
 import { AUTH_SIGN_UP_URL } from '@/features/auth/firebase.config';
-import { getTeamOverview, useTeamStore } from '@/features/team';
+
+import { Footer } from '@/pages/LandingPage/Footer';
+import { Navbar } from '@/pages/LandingPage/Navbar';
 
 const BUSINESS_CASES = [
-  {
-    icon: HardHat,
-    title: 'Site Coordination & BIM Meetings',
-    text: 'Prepare engineers to clarify sequence, BIM model clash detection, ownership, and structural constraints in international coordination meetings.',
-  },
-  {
-    icon: ClipboardCheck,
-    title: 'QA/QC Inspection & Audit Responses',
-    text: 'Practice concise Non-Conformance Report (NCR) responses, core slump test evidence requests, and audit defenses.',
-  },
-  {
-    icon: FileCheck2,
-    title: 'FIDIC Contract & Submittal Writing',
-    text: 'Standardize Sub-Clause 13.3 Variation notices, Extension of Time (EOT) claims, RFI drafts, and material approval requests.',
-  },
-  {
-    icon: MessageSquareCode,
-    title: 'Client Schematic Reviews & Defenses',
-    text: 'Explain design revisions, risk mitigation strategies, and budget recovery actions with crisp technical precision.',
-  },
-  {
-    icon: BarChart3,
-    title: 'Project Reporting & Executive Briefings',
-    text: 'Unify progress updates, delay root cause analyses, and C-level executive summaries across international project teams.',
-  },
-  {
-    icon: Users,
-    title: 'Toolbox Talks & Subcontractor Safety',
-    text: 'Conduct ISO 45001 safety briefings, pre-work Job Safety Analyses (JSA), and Permit to Work (PTW) authorizations.',
-  },
+  { icon: HardHat, title: 'Site Coordination & BIM Meetings', text: 'Prepare engineers for international coordination meetings, site decisions, and technical constraints.' },
+  { icon: ClipboardCheck, title: 'QA/QC Inspection Responses', text: 'Practice concise inspection answers, NCR responses, and audit-ready technical explanations.' },
+  { icon: FileCheck2, title: 'FIDIC & Submittal Writing', text: 'Draft variation notices, RFI messages, EOT claims, and material approval requests with confidence.' },
+  { icon: MessageSquareCode, title: 'Client Review Defenses', text: 'Explain design revisions, risks, and budget recovery actions with precise technical English.' },
+  { icon: BarChart3, title: 'Project Reporting', text: 'Turn progress updates and delay reasons into clear executive summaries.' },
+  { icon: Users, title: 'Toolbox Talks & Safety', text: 'Run safety briefings, JSA talks, and PTW conversations in professional English.' },
 ] as const;
 
 const ENTERPRISE_BENEFITS = [
-  {
-    icon: Users,
-    title: 'Strict Role-Based Isolation',
-    text: 'Team directors see aggregated readiness analytics. Individual engineer responses and mistake logs remain private.',
-  },
-  {
-    icon: BarChart3,
-    title: 'Manager Skill Readiness Summaries',
-    text: 'Track team CEFR progression, identify communication risk areas before site milestones, and deploy targeted modules.',
-  },
-  {
-    icon: Settings2,
-    title: 'Custom Discipline & Role Paths',
-    text: 'Tailored onboarding by discipline (Civil, Mechanical, Software, Electrical, etc.) and project role (Site Lead, QA/QC, BIM Manager).',
-  },
+  { icon: Users, title: 'Role-based privacy', text: 'Managers see readiness trends while individual practice stays private.' },
+  { icon: BarChart3, title: 'Readiness analytics', text: 'Find communication risks before important project milestones.' },
+  { icon: Settings2, title: 'Custom paths', text: 'Tailor learning by discipline, role, and project communication needs.' },
 ] as const;
 
 const BusinessPage = () => {
-  const { members, summaries } = useTeamStore();
-  const overview = getTeamOverview(members, summaries);
-
-  const avgSkillScore = (keys: string[]) => {
-    if (summaries.length === 0) return 0;
-    const total = summaries.reduce((sum, s) => {
-      const skillSum = keys.reduce(
-        (kSum, k) => kSum + ((s.skillScores as Record<string, number>)[k] || 0),
-        0
-      );
-      return sum + skillSum / keys.length;
-    }, 0);
-    return Math.round(total / summaries.length);
-  };
-
-  const riskFlagsPruned = [...new Set(summaries.flatMap((s) => s.mistakeCategories))].length;
-
-  const previewMetrics = [
-    { label: 'Active Engineers', value: String(overview.activeLearners) },
-    {
-      label: 'Overall Readiness',
-      value: overview.averageProgress > 0 ? `${overview.averageProgress}%` : 'â€”',
-    },
-    { label: 'Risk Flags Pruned', value: String(riskFlagsPruned) },
-  ] as const;
-
-  const previewSkills = [
-    { label: 'Writing & RFI Readiness', value: avgSkillScore(['writing']) },
-    { label: 'Speaking & Defense Confidence', value: avgSkillScore(['speaking']) },
-    { label: 'Technical Field Terminology', value: avgSkillScore(['vocabulary']) },
-  ] as const;
-
   return (
-    <main className="bg-background min-h-screen pt-20 sm:pt-24 pb-16 text-foreground">
-      <PageMetadata
-        title="EngVox for Teams & Enterprises â€” Engineering Communication OS"
-        description="Role-based technical English training, automated manager readiness analytics, and project workspace isolation across all 10 engineering disciplines."
-      />
-
-      {/* Hero Section */}
-      <section className="px-6 md:px-12 pb-12 max-w-7xl mx-auto border-b border-border-soft">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-7 space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full bg-soft border border-border-soft px-3 py-1 text-xs font-bold text-primary uppercase tracking-wider">
-              <ShieldCheck className="h-3.5 w-3.5" /> EngVox Enterprise & Teams
-            </div>
-
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
-              Engineering English readiness for <span className="text-primary">global teams</span>
-            </h1>
-
-            <p className="text-xs sm:text-sm text-muted-copy leading-relaxed max-w-2xl">
-              Equip your site teams, MEP engineers, QA/QC inspectors, and BIM managers with a
-              role-specific communication operating system. Protect data privacy while gaining team
-              readiness analytics.
-            </p>
-
-            <div className="pt-2 flex flex-wrap items-center gap-3">
-              <Link
-                to={AUTH_SIGN_UP_URL}
-                className="inline-flex items-center gap-2 rounded-[var(--radius-card)] bg-primary px-5 py-2.5 text-xs font-bold text-primary-foreground shadow transition-all hover:bg-primary/95"
-              >
-                Explore Team Workspace <ArrowRight className="h-4 w-4" />
-              </Link>
-              <button
-                type="button"
-                onClick={async () => {
-                  const { openMailto } = await import('@/shared/utils/capacitor');
-                  await openMailto('sales@engvox.com', 'EngVox Enterprise Inquiry', '');
-                }}
-                className="inline-flex items-center gap-2 rounded-[var(--radius-card)] bg-surface border border-border-soft px-5 py-2.5 text-xs font-bold text-foreground hover:bg-surface-hover transition-colors cursor-pointer"
-              >
-                <Mail className="h-4 w-4 text-primary" /> Contact Enterprise Sales
-              </button>
-            </div>
-
-            <div className="pt-3 flex flex-wrap items-center gap-4 text-xs font-medium text-muted-copy">
-              <span className="flex items-center gap-1.5 text-foreground">
-                <CheckCircle2 className="h-4 w-4 text-primary" /> SOC-2 Type II Bounds
-              </span>
-              <span className="flex items-center gap-1.5 text-foreground">
-                <CheckCircle2 className="h-4 w-4 text-primary" /> ISO/IEC 27001 Security
-              </span>
-              <span className="flex items-center gap-1.5 text-foreground">
-                <CheckCircle2 className="h-4 w-4 text-primary" /> Zero AI Model Training
-              </span>
-            </div>
+    <main className="min-h-screen bg-slate-50 pb-20 pt-20 text-slate-950 dark:bg-[#040611] dark:text-white">
+      <PageMetadata title="EngVox for Teams" description="AI-supported technical English training for engineering teams." />
+      <Navbar />
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_16%_8%,rgba(6,182,212,0.16),transparent_28%),radial-gradient(circle_at_86%_18%,rgba(168,85,247,0.12),transparent_28%)] dark:bg-[radial-gradient(circle_at_16%_8%,rgba(6,182,212,0.18),transparent_28%),radial-gradient(circle_at_86%_18%,rgba(168,85,247,0.18),transparent_28%)]" />
+      <section className="relative mx-auto max-w-7xl px-6 pb-10 md:px-12">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
+          <div className="space-y-5 lg:col-span-7">
+            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-black uppercase tracking-wider text-cyan-700 dark:text-cyan-100"><ShieldCheck className="h-3.5 w-3.5" /> EngVox Teams · v{PRODUCT_VERSION}</div>
+            <h1 className="text-4xl font-black tracking-tight sm:text-6xl">Engineering English readiness for <span className="bg-gradient-to-r from-cyan-600 to-fuchsia-600 bg-clip-text text-transparent dark:from-cyan-200 dark:to-fuchsia-200">global teams</span></h1>
+            <p className="max-w-2xl text-base leading-8 text-slate-700 dark:text-slate-200">Give site teams, MEP engineers, QA/QC inspectors, and BIM managers practical English training for real project communication.</p>
+            <div className="flex flex-wrap items-center gap-3"><Link to={AUTH_SIGN_UP_URL} className="inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:-translate-y-1 dark:bg-white dark:text-slate-950">Start team workspace <ArrowRight className="h-4 w-4" /></Link><button type="button" onClick={async () => { const { openMailto } = await import('@/shared/utils/capacitor'); await openMailto('sales@engvox.com', 'EngVox Enterprise Inquiry', ''); }} className="inline-flex items-center gap-2 rounded-2xl border border-slate-900/10 bg-white/70 px-5 py-3 text-sm font-black text-slate-950 backdrop-blur-xl transition hover:bg-white dark:border-white/10 dark:bg-white/[0.07] dark:text-white"><Mail className="h-4 w-4 text-cyan-600 dark:text-cyan-200" /> Contact sales</button></div>
+            <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-slate-700 dark:text-slate-200"><span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-cyan-600 dark:text-cyan-200" /> Privacy-first</span><span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-cyan-600 dark:text-cyan-200" /> Zero AI model training</span><span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-cyan-600 dark:text-cyan-200" /> Team analytics</span></div>
           </div>
-
-          {/* Team Dashboard Preview Card */}
-          <div className="lg:col-span-5 w-full">
-            <div className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-5 shadow-xl">
-              <div className="flex items-center justify-between border-b border-border-soft pb-3 mb-4">
-                <div>
-                  <h3 className="text-xs font-bold text-foreground">Team Readiness Dashboard</h3>
-                  <p className="text-[10px] text-muted-copy">Live Team Analytics Demo</p>
-                </div>
-                <span className="rounded bg-primary/10 border border-primary/20 px-2 py-0.5 text-[9px] font-bold text-primary uppercase tracking-wider">
-                  ENTERPRISE DEMO
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-4">
-                {previewMetrics.map((m) => (
-                  <div
-                    key={m.label}
-                    className="rounded-[var(--radius-card)] border border-border-soft bg-background p-2.5 text-center"
-                  >
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-                      {m.label}
-                    </p>
-                    <p className="text-lg font-extrabold text-foreground mt-0.5">{m.value}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="space-y-3">
-                {previewSkills.map((s) => (
-                  <div key={s.label}>
-                    <div className="flex justify-between text-xs font-medium text-foreground mb-1">
-                      <span>{s.label}</span>
-                      <span className="font-bold text-primary">{s.value}%</span>
-                    </div>
-                    <div className="h-2 rounded-full bg-border-soft/50 overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-primary transition-all duration-1000"
-                        style={{ width: `${s.value}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <div className="lg:col-span-5"><div className="rounded-[2rem] border border-slate-900/10 bg-white/72 p-5 shadow-2xl backdrop-blur-2xl dark:border-white/10 dark:bg-white/[0.07]"><div className="mb-4 flex items-center justify-between border-b border-slate-900/10 pb-3 dark:border-white/10"><div><h3 className="text-sm font-black">Team readiness dashboard</h3><p className="text-xs text-slate-600 dark:text-white/55">Live preview</p></div><span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-2 py-1 text-[10px] font-black text-cyan-700 dark:text-cyan-100">DEMO</span></div>{['Writing & RFI readiness', 'Speaking confidence', 'Technical terminology'].map((label, i) => (<div key={label} className="mb-4"><div className="mb-1 flex justify-between text-xs font-bold"><span>{label}</span><span className="text-cyan-700 dark:text-cyan-100">{82 + i * 5}%</span></div><div className="h-2 rounded-full bg-slate-900/10 dark:bg-white/10"><div className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-fuchsia-400" style={{ width: `${82 + i * 5}%` }} /></div></div>))}</div></div>
         </div>
       </section>
-
-      {/* Use Cases Section */}
-      <section className="px-6 md:px-12 py-12 max-w-7xl mx-auto border-b border-border-soft">
-        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border-soft pb-4">
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-              Use Cases
-            </span>
-            <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
-              Training connected directly to real project communication.
-            </h2>
-          </div>
-          <p className="text-xs text-muted-copy max-w-xl leading-tight">
-            Designed for site management, contract claims, BIM coordination, and technical audits.
-          </p>
-        </div>
-
-        <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-          {BUSINESS_CASES.map((item) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={item.title}
-                className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-4 shadow-sm hover:border-primary/40 transition-all"
-              >
-                <div className="flex items-center gap-2.5 mb-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded bg-soft text-primary border border-border-soft shrink-0">
-                    <Icon className="h-4 w-4" />
-                  </div>
-                  <h3 className="text-xs sm:text-sm font-bold text-foreground leading-tight">
-                    {item.title}
-                  </h3>
-                </div>
-                <p className="text-xs leading-relaxed text-muted-copy">{item.text}</p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Management & Privacy Section */}
-      <section className="px-6 md:px-12 py-12 max-w-7xl mx-auto">
-        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border-soft pb-4">
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-              Management & Privacy
-            </span>
-            <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
-              Enterprise governance without exposing individual learner privacy.
-            </h2>
-          </div>
-          <p className="text-xs text-muted-copy max-w-xl leading-tight">
-            Role-based privacy boundaries ensure individual practice stays private while managers
-            get actionable data.
-          </p>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-3">
-          {ENTERPRISE_BENEFITS.map((b) => {
-            const Icon = b.icon;
-            return (
-              <div
-                key={b.title}
-                className="rounded-[var(--radius-card)] border border-border-soft bg-surface p-5 shadow-sm hover:border-primary/40 transition-all"
-              >
-                <div className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-card)] bg-soft text-primary border border-border-soft mb-3">
-                  <Icon className="h-4.5 w-4.5" />
-                </div>
-                <h3 className="text-sm font-bold text-foreground mb-1.5">{b.title}</h3>
-                <p className="text-xs leading-relaxed text-muted-copy">{b.text}</p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Footer Link Back to Home */}
-      <section className="px-6 md:px-12 pt-8 pb-4 max-w-7xl mx-auto border-t border-border-soft">
-        <div className="flex items-center justify-between text-xs text-muted-copy">
-          <span>EngVox Engineering Operating System Â© 2026</span>
-          <Link to="/" className="font-bold text-primary hover:underline flex items-center gap-1">
-            <span>Back to Home</span>
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-      </section>
+      <section className="relative mx-auto max-w-7xl border-t border-slate-900/10 px-6 py-10 dark:border-white/10 md:px-12"><div className="mb-6"><h2 className="text-2xl font-black">Built for real project conversations</h2><p className="mt-2 text-sm text-slate-700 dark:text-slate-200">Not generic English. Practical communication for engineering work.</p></div><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{BUSINESS_CASES.map((item) => { const Icon = item.icon; return (<div key={item.title} className="rounded-3xl border border-slate-900/10 bg-white/70 p-4 shadow-sm backdrop-blur-2xl dark:border-white/10 dark:bg-white/[0.06]"><div className="mb-3 flex items-center gap-3"><div className="grid h-10 w-10 place-items-center rounded-2xl bg-cyan-500/10 text-cyan-700 dark:text-cyan-100"><Icon className="h-5 w-5" /></div><h3 className="text-sm font-black">{item.title}</h3></div><p className="text-sm leading-6 text-slate-700 dark:text-slate-200">{item.text}</p></div>); })}</div></section>
+      <section className="relative mx-auto max-w-7xl px-6 py-10 md:px-12"><div className="grid gap-4 md:grid-cols-3">{ENTERPRISE_BENEFITS.map((b) => { const Icon = b.icon; return (<div key={b.title} className="rounded-3xl border border-slate-900/10 bg-white/70 p-5 shadow-sm backdrop-blur-2xl dark:border-white/10 dark:bg-white/[0.06]"><Icon className="mb-3 h-6 w-6 text-cyan-700 dark:text-cyan-100" /><h3 className="font-black">{b.title}</h3><p className="mt-2 text-sm leading-6 text-slate-700 dark:text-slate-200">{b.text}</p></div>); })}</div></section>
+      <Footer className="fixed bottom-0 inset-x-0 z-40" />
     </main>
   );
 };
