@@ -186,7 +186,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
     <div className="fixed inset-0 z-50 flex flex-col overflow-hidden bg-background">
       {/* Header — brand + version, always visible, never scrolls */}
       <header className="flex shrink-0 items-center justify-between border-b border-border-soft px-4 py-3 sm:px-6">
-        <img src="/brand/logo.svg" alt="EngVox" className="h-7" />
+        <img src="/brand/logo.svg" alt="EngVox" style={{ height: 28, width: 'auto' }} />
         <span className="text-xs text-muted-copy">EngVox v{PRODUCT_VERSION}</span>
       </header>
 
