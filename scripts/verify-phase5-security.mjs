@@ -12,23 +12,58 @@ const [auth, app, tenant, speaking, audit, exportRoutes, exportRepo, types] = aw
   read('backend/src/compliance-export-repository.ts'),
   read('backend/types.d.ts'),
 ]);
+
 assert.match(auth, /header\.alg !== 'HS256'/);
 assert.match(auth, /header\.typ !== 'JWT'/);
-for (const claim of ['payload.exp', 'payload.iat', 'payload.iss', 'payload.aud'])
+for (const claim of ['payload.exp', 'payload.iat', 'payload.iss', 'payload.aud']) {
   assert.ok(auth.includes(claim));
+}
+
 const internalBlock = auth.slice(
   auth.indexOf('authenticateInternalSecret'),
   auth.indexOf('getRequestedUserId')
 );
 assert.doesNotMatch(internalBlock, /x-engineeros-user-(id|email|role)/);
 assert.match(types, /internalServiceId: string \| null/);
-assert.doesNotMatch(
-  app.slice(app.indexOf('const metricsToken'), app.indexOf("app.get('/api-docs.json'")),
-  /query\.token|req\.query/
+
+const operationsBlock = app.slice(
+  app.indexOf('const metricsToken'),
+  app.indexOf("app.get('/api-docs.json'")
 );
-assert.match(app, /operations_auth_unavailable/);
-assert.match(app, /response\.json\(\{ status: 'ok' \}\)/);
-assert.match(app, /getAuditLogStatus/);
+assert.doesNotMatch(operationsBlock, /query\.token|req\.query/);
+assert.match(operationsBlock, /operations_auth_unavailable/);
+assert.match(operationsBlock, /operations_unauthorized/);
+assert.match(app, /app\.get\('\/api\/diagnostics', requireOperationsToken, diagnosticsHandler\)/);
+assert.match(app, /app\.get\('\/api\/metrics', requireOperationsToken/);
+
+const livenessBlock = app.slice(
+  app.indexOf('const livenessHandler'),
+  app.indexOf('const diagnosticsHandler')
+);
+assert.match(livenessBlock, /toPublicHealth\(config\)/);
+for (const privateDetail of [
+  'process.memoryUsage',
+  'getPoolMetrics',
+  'process.version',
+  'responseTimeMs',
+]) {
+  assert.ok(!livenessBlock.includes(privateDetail), `Public liveness exposes ${privateDetail}`);
+}
+
+const diagnosticsBlock = app.slice(
+  app.indexOf('const diagnosticsHandler'),
+  app.indexOf("v1Router.get('/health'")
+);
+for (const privateDetail of [
+  'process.memoryUsage',
+  'getPoolMetrics',
+  'process.version',
+  'responseTimeMs',
+]) {
+  assert.ok(diagnosticsBlock.includes(privateDetail), `Private diagnostics lost ${privateDetail}`);
+}
+assert.match(diagnosticsBlock, /getAuditLogStatus\(\)/);
+
 assert.match(tenant, /organization_members/);
 assert.match(tenant, /organization_id/);
 assert.match(tenant, /user_id/);
@@ -45,4 +80,5 @@ for (const section of [
 ]) {
   assert.ok(exportRepo.includes(section) && exportRoutes.includes(section));
 }
+
 console.log('PHASE5_SECURITY_CONTRACT_OK');
