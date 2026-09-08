@@ -1,4 +1,5 @@
-import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
+import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import type { RouteRegistrar } from './route-registrar.js';
 
 import type { PlanId } from '../types.js';
 import { AI_CONTRACT_VERSION, createAIService } from './ai-core/index.js';
@@ -73,7 +74,6 @@ const throwLimitError = (planId: PlanId): never => {
       : `Monthly AI credit limit reached (${limits.monthly}). Upgrade your plan or buy top-up credits.`
   );
 };
-
 
 const countRequestsInWindow = async (
   ledger: { countRecentRequests: (userId: string, planId: PlanId) => Promise<number> },
@@ -159,7 +159,7 @@ const logAiUsage = (
 };
 
 export const registerAIRoutes = (
-  app: Express,
+  app: RouteRegistrar,
   aiService: {
     complete: (op: string, body: Record<string, unknown>) => Promise<Record<string, unknown>>;
   },
