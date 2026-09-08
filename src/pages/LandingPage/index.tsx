@@ -4,13 +4,21 @@ import {
   ArrowRight,
   BookOpen,
   CheckCircle2,
+  CircuitBoard,
+  Cpu,
+  Gauge,
   Globe,
   Headphones,
+  Layers3,
+  Mic2,
   Pause,
   PenTool,
   Play,
+  Rocket,
+  ShieldCheck,
   Sparkles,
   Volume2,
+  Zap,
 } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
@@ -18,7 +26,6 @@ import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } fro
 
 import { Link } from 'react-router-dom';
 
-import { GlowingOrb } from '@/shared/components/GlowingOrb';
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
 import { getLandingTranslations } from '@/shared/i18n/landing-i18n';
 import { getDisciplineIcon } from '@/shared/icons/registry';
@@ -31,32 +38,26 @@ import { Navbar } from './Navbar';
 const HeroScene = lazy(() => import('./HeroScene'));
 
 const FEATURES = [
-  { icon: BookOpen, key: 'vocabulary' },
-  { icon: BookOpen, key: 'reading' },
-  { icon: PenTool, key: 'writing' },
-  { icon: Volume2, key: 'speaking' },
-  { icon: Headphones, key: 'listening' },
-  { icon: Sparkles, key: 'grammar' },
+  { icon: BookOpen, key: 'vocabulary', accent: 'from-sky-400 to-cyan-300' },
+  { icon: BookOpen, key: 'reading', accent: 'from-violet-400 to-fuchsia-300' },
+  { icon: PenTool, key: 'writing', accent: 'from-amber-300 to-orange-400' },
+  { icon: Volume2, key: 'speaking', accent: 'from-emerald-300 to-teal-400' },
+  { icon: Headphones, key: 'listening', accent: 'from-blue-300 to-indigo-400' },
+  { icon: Sparkles, key: 'grammar', accent: 'from-rose-300 to-pink-400' },
 ] as const;
 
-const SLIDE_INTERVAL = 6000;
+const METRICS = [
+  { label: 'AI Coach', value: '24/7', icon: Cpu },
+  { label: 'CEFR Radar', value: 'A1-C2', icon: Gauge },
+  { label: 'Engineer Mode', value: '15+', icon: CircuitBoard },
+] as const;
+
+const SLIDE_INTERVAL = 7000;
 
 const slideVariants = {
-  enter: (dir: number) => ({
-    x: dir > 0 ? 300 : -300,
-    opacity: 0,
-    scale: 0.96,
-  }),
-  center: {
-    x: 0,
-    opacity: 1,
-    scale: 1,
-  },
-  exit: (dir: number) => ({
-    x: dir > 0 ? -300 : 300,
-    opacity: 0,
-    scale: 0.96,
-  }),
+  enter: (dir: number) => ({ x: dir > 0 ? 120 : -120, opacity: 0, scale: 0.98, filter: 'blur(10px)' }),
+  center: { x: 0, opacity: 1, scale: 1, filter: 'blur(0px)' },
+  exit: (dir: number) => ({ x: dir > 0 ? -120 : 120, opacity: 0, scale: 0.98, filter: 'blur(10px)' }),
 };
 
 export const LandingPage = () => {
@@ -69,56 +70,47 @@ export const LandingPage = () => {
   const prefersReduced = useReducedMotion();
   const timerRef = useRef<ReturnType<typeof setInterval>>(null);
   const rootRef = useRef<HTMLDivElement>(null);
-
-  // Defer the 3D hero scene until first idle: the interactive shell paints
-  // first, then the three.js chunk loads in the background.
   const [sceneReady, setSceneReady] = useState(false);
+
   useEffect(() => {
     const w = window as Window & {
       requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
       cancelIdleCallback?: (id: number) => void;
     };
     if (typeof w.requestIdleCallback === 'function') {
-      const id = w.requestIdleCallback(() => setSceneReady(true), { timeout: 200 });
+      const id = w.requestIdleCallback(() => setSceneReady(true), { timeout: 180 });
       return () => w.cancelIdleCallback?.(id);
     }
-    const t = window.setTimeout(() => setSceneReady(true), 50);
-    return () => window.clearTimeout(t);
+    const timeout = window.setTimeout(() => setSceneReady(true), 40);
+    return () => window.clearTimeout(timeout);
   }, []);
 
   const totalSlides = 3;
 
   const goTo = useCallback(
-    (next: number) => {
-      setDirection(next > slide ? 1 : -1);
-      setSlide(next);
+    (nextSlide: number) => {
+      setDirection(nextSlide > slide ? 1 : -1);
+      setSlide(nextSlide);
     },
     [slide]
   );
 
-  const next = useCallback(() => {
-    goTo((slide + 1) % totalSlides);
-  }, [slide, goTo]);
+  const next = useCallback(() => goTo((slide + 1) % totalSlides), [goTo, slide]);
+  const prev = useCallback(() => goTo((slide - 1 + totalSlides) % totalSlides), [goTo, slide]);
 
-  const prev = useCallback(() => {
-    goTo((slide - 1 + totalSlides) % totalSlides);
-  }, [slide, goTo]);
-
-  // Auto-advance (paused while hovered/focused or via the pause control)
   useEffect(() => {
     if (prefersReduced || paused) return;
     timerRef.current = setInterval(next, SLIDE_INTERVAL);
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [next, prefersReduced, paused]);
+  }, [next, paused, prefersReduced]);
 
-  // Keyboard navigation — only while focus is inside the carousel
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (!rootRef.current?.contains(e.target as Node)) return;
       if (e.key === 'ArrowRight') next();
-      else if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowLeft') prev();
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
@@ -127,18 +119,15 @@ export const LandingPage = () => {
   const slideLabels = useMemo(() => [t.slideHero, t.slideDisciplines, t.slideFeatures], [t]);
 
   return (
-    <div className="h-dvh w-full max-w-full bg-background text-foreground overflow-hidden overscroll-none relative">
+    <div className="relative h-dvh w-full max-w-full overflow-hidden bg-[#040611] text-white overscroll-none">
       <Navbar />
 
-      {/* 3D scene stays as fixed background */}
       <div className="absolute inset-0 z-0">
         <Suspense fallback={null}>{sceneReady && <HeroScene />}</Suspense>
-        {/* Aurora blob (single accent) */}
-        <div className="absolute -top-32 -left-32 w-[36rem] h-[36rem] rounded-full bg-primary/15 blur-3xl animate-ambient-glow" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--background)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(0,210,255,0.24),transparent_28%),radial-gradient(circle_at_82%_18%,rgba(151,71,255,0.25),transparent_30%),linear-gradient(180deg,rgba(4,6,17,0.08),rgba(4,6,17,0.92))]" />
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#040611] to-transparent" />
       </div>
 
-      {/* Slide content — the page's main region (carousel + its controls) */}
       <main
         id="main-content"
         ref={rootRef}
@@ -146,248 +135,238 @@ export const LandingPage = () => {
         onBlur={() => setPaused(false)}
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
-        className="relative z-10 h-full w-full flex items-center justify-center"
+        className="relative z-10 h-full w-full"
       >
         <AnimatePresence custom={direction} mode="wait">
-          {/* ── SLIDE 0: HERO ── */}
           {slide === 0 && (
-            <motion.div
+            <motion.section
               key="hero"
               custom={direction}
               variants={slideVariants}
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-              className="absolute inset-0 flex items-center justify-center text-center px-4 overflow-y-auto py-16 sm:py-0"
+              transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute inset-0 grid place-items-center overflow-y-auto px-4 pb-28 pt-20 md:pb-20"
             >
-              <div className="max-w-6xl mx-auto my-auto py-4 sm:py-0">
-                <div
-                  data-hero="badge"
-                  className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-border-soft bg-surface/60 backdrop-blur-md px-3.5 py-1.5 sm:px-6 sm:py-3 text-xs sm:text-sm font-semibold text-foreground/90"
-                >
-                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary animate-spin-slow" />
-                  {t.heroBadge}
-                </div>
+              <div className="mx-auto grid w-full max-w-7xl items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+                <div className="text-center lg:text-left">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-cyan-100 shadow-2xl shadow-cyan-500/10 backdrop-blur-2xl">
+                    <Sparkles className="h-4 w-4 text-cyan-300" />
+                    {t.heroBadge}
+                  </div>
 
-                <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight mt-4 sm:mt-8 mb-4 sm:mb-8 text-balance">
-                  <span data-hero="line" className="block text-foreground">
-                    {t.heroTitle1}
-                  </span>
-                  <span data-hero="line" className="block text-primary">
-                    {t.heroTitleHighlight}
-                  </span>
-                  <span data-hero="line" className="block text-foreground/80">
-                    {t.heroTitle2}
-                  </span>
-                </h1>
-
-                <p
-                  data-hero="subtitle"
-                  className="text-xs sm:text-base md:text-xl text-muted-copy max-w-3xl mx-auto mb-6 sm:mb-10 px-2 leading-relaxed"
-                >
-                  {t.heroSubtitle}
-                </p>
-
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-4 max-w-xs sm:max-w-none mx-auto w-full">
-                  <Link
-                    data-hero="cta"
-                    to="/dashboard"
-                    className="group px-6 py-3 sm:px-8 sm:py-4 rounded-full bg-primary text-white font-bold text-sm sm:text-lg transition-all hover:bg-primary-hover hover:shadow-xl hover:shadow-primary/30 flex items-center justify-center"
-                  >
-                    <span className="flex items-center gap-2 sm:gap-3">
-                      {t.ctaSelectBranch}
-                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-1" />
+                  <h1 className="mt-6 max-w-5xl text-4xl font-black leading-[0.92] tracking-[-0.08em] text-white sm:text-6xl md:text-7xl lg:text-8xl">
+                    <span className="block">{t.heroTitle1}</span>
+                    <span className="block bg-gradient-to-r from-cyan-200 via-white to-fuchsia-200 bg-clip-text text-transparent drop-shadow-[0_0_34px_rgba(125,211,252,0.35)]">
+                      {t.heroTitleHighlight}
                     </span>
-                  </Link>
-                  <Link
-                    data-hero="cta-demo"
-                    to="/dashboard"
-                    className="group px-6 py-3 sm:px-8 sm:py-4 rounded-full border-2 border-dashed border-primary/40 text-primary font-bold text-sm sm:text-lg backdrop-blur-md hover:bg-primary/10 hover:border-primary/60 transition-all flex items-center justify-center"
-                  >
-                    <span className="flex items-center gap-2 sm:gap-3">
-                      <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <span className="block text-white/72">{t.heroTitle2}</span>
+                  </h1>
+
+                  <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg lg:mx-0">
+                    {t.heroSubtitle}
+                  </p>
+
+                  <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row lg:justify-start">
+                    <Link
+                      to="/dashboard"
+                      className="group relative overflow-hidden rounded-2xl bg-white px-6 py-4 text-center text-sm font-black text-[#07111f] shadow-[0_0_60px_rgba(103,232,249,0.24)] transition-transform hover:-translate-y-1 sm:text-base"
+                    >
+                      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-cyan-200/80 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+                      <span className="relative inline-flex items-center justify-center gap-2">
+                        {t.ctaSelectBranch}
+                        <Rocket className="h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                      </span>
+                    </Link>
+                    <Link
+                      to="/dashboard"
+                      className="rounded-2xl border border-cyan-300/30 bg-cyan-300/10 px-6 py-4 text-center text-sm font-black text-cyan-100 backdrop-blur-xl transition-all hover:-translate-y-1 hover:bg-cyan-300/16 sm:text-base"
+                    >
                       {t.ctaTryDemo}
+                    </Link>
+                    <Link
+                      to="/pricing"
+                      className="rounded-2xl border border-white/15 bg-white/[0.06] px-6 py-4 text-center text-sm font-black text-white backdrop-blur-xl transition-all hover:-translate-y-1 hover:bg-white/10 sm:text-base"
+                    >
+                      {t.ctaViewPlans}
+                    </Link>
+                  </div>
+
+                  <div className="mt-7 flex flex-wrap items-center justify-center gap-3 text-xs font-bold text-slate-300 lg:justify-start">
+                    <span className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-2">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-300" /> {t.badgeNoCard}
                     </span>
-                  </Link>
-                  <Link
-                    data-hero="cta"
-                    to="/pricing"
-                    className="px-6 py-3 sm:px-8 sm:py-4 rounded-full border border-border-soft text-foreground font-bold text-sm sm:text-lg backdrop-blur-md hover:bg-surface-hover hover:border-primary/40 transition-all flex items-center justify-center"
-                  >
-                    {t.ctaViewPlans}
-                  </Link>
+                    <span className="inline-flex items-center gap-2 rounded-full border border-blue-300/20 bg-blue-300/10 px-3 py-2">
+                      <Globe className="h-4 w-4 text-blue-300" /> {t.badgeLanguages}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="mt-6 sm:mt-12 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm text-muted-copy">
-                  <span data-hero="trust" className="flex items-center gap-1.5 sm:gap-2">
-                    <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-400" />
-                    {t.badgeNoCard}
-                  </span>
-                  <span data-hero="trust" className="flex items-center gap-1.5 sm:gap-2">
-                    <Globe className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
-                    {t.badgeLanguages}
-                  </span>
+                <div className="relative mx-auto w-full max-w-xl">
+                  <div className="absolute -inset-10 rounded-[3rem] bg-gradient-to-br from-cyan-400/25 via-fuchsia-500/20 to-amber-300/10 blur-3xl" />
+                  <div className="relative overflow-hidden rounded-[2rem] border border-white/15 bg-white/[0.08] p-4 shadow-2xl backdrop-blur-2xl sm:p-6">
+                    <div className="mb-4 flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-black uppercase tracking-[0.2em] text-cyan-200">Live cockpit</p>
+                        <p className="text-sm font-bold text-white/70">Engineering English OS</p>
+                      </div>
+                      <span className="rounded-full border border-emerald-300/30 bg-emerald-300/10 px-3 py-1 text-xs font-black text-emerald-200">ONLINE</span>
+                    </div>
+
+                    <div className="grid gap-3 sm:grid-cols-3">
+                      {METRICS.map(({ label, value, icon: Icon }) => (
+                        <div key={label} className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                          <Icon className="mb-3 h-5 w-5 text-cyan-200" />
+                          <p className="text-2xl font-black tracking-tight text-white">{value}</p>
+                          <p className="text-xs font-bold text-slate-400">{label}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-4 rounded-3xl border border-white/10 bg-[#050916]/75 p-4">
+                      <div className="mb-4 flex items-center justify-between">
+                        <span className="text-sm font-black text-white">Skill neural map</span>
+                        <Zap className="h-5 w-5 text-amber-200" />
+                      </div>
+                      <div className="space-y-3">
+                        {FEATURES.slice(0, 4).map(({ key, accent }, index) => (
+                          <div key={key} className="grid grid-cols-[6.5rem_1fr_2.5rem] items-center gap-3 text-xs font-bold text-slate-300">
+                            <span>{translate(`nav.${key}`)}</span>
+                            <span className="h-2 overflow-hidden rounded-full bg-white/10">
+                              <motion.span
+                                className={`block h-full rounded-full bg-gradient-to-r ${accent}`}
+                                initial={{ width: 0 }}
+                                animate={{ width: `${78 + index * 5}%` }}
+                                transition={{ duration: 1.1, delay: 0.25 + index * 0.12 }}
+                              />
+                            </span>
+                            <span className="text-right text-cyan-100">{78 + index * 5}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </motion.div>
+            </motion.section>
           )}
 
-          {/* ── SLIDE 1: DISCIPLINES ── */}
           {slide === 1 && (
-            <motion.div
+            <motion.section
               key="disciplines"
               custom={direction}
               variants={slideVariants}
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-              className="absolute inset-0 flex items-center justify-center px-4"
+              transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute inset-0 grid place-items-center overflow-y-auto px-4 pb-28 pt-20 md:pb-20"
             >
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
-                <GlowingOrb size="lg" />
-              </div>
-              <div className="max-w-6xl w-full max-h-[calc(100dvh-10rem)] overflow-y-auto relative z-10">
-                <h2 className="text-center text-4xl md:text-5xl font-black text-foreground mb-12">
-                  {t.disciplinesTitle}
-                </h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+              <div className="w-full max-w-7xl">
+                <div className="mx-auto mb-8 max-w-3xl text-center">
+                  <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-200">Choose your cockpit</p>
+                  <h2 className="mt-3 text-4xl font-black tracking-[-0.05em] text-white md:text-6xl">{t.disciplinesTitle}</h2>
+                </div>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
                   {ENGINEERING_DISCIPLINES.map((id, index) => {
                     const DisciplineIcon = getDisciplineIcon(id);
                     return (
                       <motion.div
                         key={id}
-                        className="group relative"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05, duration: 0.4 }}
+                        initial={{ opacity: 0, y: 24, rotateX: -20 }}
+                        animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                        transition={{ delay: index * 0.035, duration: 0.45 }}
+                        className="group relative perspective-1000"
                       >
-                        <div className="absolute inset-0 bg-primary/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
-                        <div className="relative flex flex-col items-center gap-3 p-5 rounded-2xl border border-border-soft bg-surface/80 backdrop-blur-xl hover:bg-surface-hover transition-all duration-300">
-                          <DisciplineIcon className="h-9 w-9 text-primary transition-transform duration-300 group-hover:scale-125 group-hover:rotate-6" />
-                          <span className="text-xs font-semibold text-foreground text-center">
-                            {translate(`discipline.${id}`)}
-                          </span>
+                        <div className="absolute inset-0 rounded-3xl bg-cyan-300/20 opacity-0 blur-2xl transition-opacity group-hover:opacity-100" />
+                        <div className="relative min-h-32 rounded-3xl border border-white/12 bg-white/[0.075] p-4 text-center shadow-2xl backdrop-blur-2xl transition-all duration-300 group-hover:-translate-y-2 group-hover:border-cyan-200/50 group-hover:bg-white/[0.12]">
+                          <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-cyan-300/20 to-fuchsia-300/10 ring-1 ring-white/12">
+                            <DisciplineIcon className="h-7 w-7 text-cyan-100 transition-transform group-hover:scale-125 group-hover:rotate-6" />
+                          </div>
+                          <span className="text-xs font-black text-white/90">{translate(`discipline.${id}`)}</span>
                         </div>
                       </motion.div>
                     );
                   })}
                 </div>
               </div>
-            </motion.div>
+            </motion.section>
           )}
 
-          {/* ── SLIDE 2: FEATURES ── */}
           {slide === 2 && (
-            <motion.div
+            <motion.section
               key="features"
               custom={direction}
               variants={slideVariants}
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-              className="absolute inset-0 flex items-center justify-center px-4"
+              transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute inset-0 grid place-items-center overflow-y-auto px-4 pb-28 pt-20 md:pb-20"
             >
-              <div className="max-w-6xl w-full max-h-[calc(100dvh-10rem)] overflow-y-auto">
-                <div className="text-center mb-12">
-                  <span className="text-sm font-semibold uppercase tracking-wider text-primary inline-flex items-center gap-2">
-                    {t.featuresHeaderBadge}
+              <div className="w-full max-w-7xl">
+                <div className="mx-auto mb-8 max-w-3xl text-center">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.07] px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-fuchsia-100">
+                    <Layers3 className="h-4 w-4" /> {t.featuresHeaderBadge}
                   </span>
-                  <h2 className="text-4xl md:text-5xl font-black text-foreground mt-4 mb-4">
-                    {t.featuresTitle}
-                  </h2>
-                  <p className="text-lg text-muted-copy max-w-2xl mx-auto">{t.featuresSubtitle}</p>
+                  <h2 className="mt-4 text-4xl font-black tracking-[-0.06em] text-white md:text-6xl">{t.featuresTitle}</h2>
+                  <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-300">{t.featuresSubtitle}</p>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                  {FEATURES.map(({ icon: Icon, key }, index) => (
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {FEATURES.map(({ icon: Icon, key, accent }, index) => (
                     <motion.div
                       key={key}
-                      className="group relative"
-                      initial={{ opacity: 0, y: 20 }}
+                      initial={{ opacity: 0, y: 24 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.06, duration: 0.4 }}
+                      transition={{ delay: index * 0.06, duration: 0.45 }}
+                      className="group relative overflow-hidden rounded-[1.75rem] border border-white/12 bg-white/[0.075] p-5 backdrop-blur-2xl transition-all hover:-translate-y-2 hover:bg-white/[0.115]"
                     >
-                      <div className="absolute inset-0 bg-primary/15 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
-                      <div className="relative flex flex-col items-center gap-3 p-5 rounded-2xl border border-border-soft bg-surface/80 backdrop-blur-xl hover:bg-surface-hover transition-all duration-300">
-                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-                          <Icon className="h-6 w-6 text-primary" />
+                      <div className={`absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br ${accent} opacity-20 blur-2xl transition-opacity group-hover:opacity-40`} />
+                      <div className="relative flex items-start gap-4">
+                        <div className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${accent} text-[#06101f] shadow-xl`}>
+                          <Icon className="h-7 w-7" />
                         </div>
-                        <h3 className="text-base font-bold text-foreground text-center capitalize">
-                          {translate(`nav.${key}`)}
-                        </h3>
+                        <div>
+                          <h3 className="text-xl font-black capitalize tracking-tight text-white">{translate(`nav.${key}`)}</h3>
+                          <p className="mt-2 text-sm leading-6 text-slate-300">AI destekli, mühendislik bağlamlı, pratik odaklı mikro deneyim.</p>
+                        </div>
                       </div>
                     </motion.div>
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </motion.section>
           )}
         </AnimatePresence>
 
-        {/* Navigation arrows - hidden on mobile to prevent overlap */}
-        <button
-          type="button"
-          onClick={prev}
-          className="hidden md:flex absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 items-center h-12 w-12 justify-center rounded-full border border-border-soft bg-surface/60 backdrop-blur-md text-muted-copy hover:text-foreground hover:bg-surface-hover transition-all"
-          aria-label="Previous slide"
-        >
+        <button type="button" onClick={prev} className="hidden md:flex absolute left-6 top-1/2 z-20 h-12 w-12 -translate-y-1/2 items-center justify-center rounded-2xl border border-white/12 bg-white/[0.07] text-white backdrop-blur-xl transition-all hover:-translate-x-1 hover:bg-white/12" aria-label="Previous slide">
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <button
-          type="button"
-          onClick={next}
-          className="hidden md:flex absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 items-center h-12 w-12 justify-center rounded-full border border-border-soft bg-surface/60 backdrop-blur-md text-muted-copy hover:text-foreground hover:bg-surface-hover transition-all"
-          aria-label="Next slide"
-        >
+        <button type="button" onClick={next} className="hidden md:flex absolute right-6 top-1/2 z-20 h-12 w-12 -translate-y-1/2 items-center justify-center rounded-2xl border border-white/12 bg-white/[0.07] text-white backdrop-blur-xl transition-all hover:translate-x-1 hover:bg-white/12" aria-label="Next slide">
           <ArrowRight className="h-5 w-5" />
         </button>
 
-        {/* Slide indicators — 48px min touch target, fixed width to prevent CLS */}
-        <div className="absolute bottom-28 md:bottom-20 left-1/2 -translate-x-1/2 z-20 flex items-center">
+        <div className="absolute bottom-24 left-1/2 z-30 flex -translate-x-1/2 items-center rounded-full border border-white/12 bg-black/25 px-2 backdrop-blur-2xl md:bottom-16">
           {slideLabels.map((label, i) => (
-            <button
-              key={label}
-              type="button"
-              onClick={() => goTo(i)}
-              className="flex items-center justify-center w-12 h-12"
-              aria-label={`Go to ${label}`}
-              aria-current={i === slide ? 'true' : undefined}
-            >
-              <span
-                className={`block rounded-full transition-all duration-300 ${
-                  i === slide
-                    ? 'w-8 h-2.5 bg-primary'
-                    : 'w-2.5 h-2.5 bg-muted-copy/40 hover:bg-muted-copy/60'
-                }`}
-              />
+            <button key={label} type="button" onClick={() => goTo(i)} className="grid h-12 w-12 place-items-center" aria-label={`Go to ${label}`} aria-current={i === slide ? 'true' : undefined}>
+              <span className={`block rounded-full transition-all duration-300 ${i === slide ? 'h-2.5 w-8 bg-cyan-200 shadow-[0_0_18px_rgba(103,232,249,0.8)]' : 'h-2.5 w-2.5 bg-white/35 hover:bg-white/60'}`} />
             </button>
           ))}
-          <button
-            type="button"
-            onClick={() => setPaused((p) => !p)}
-            aria-label={paused ? t.carouselPlay : t.carouselPause}
-            aria-pressed={paused}
-            className="flex items-center justify-center w-12 h-12 text-muted-copy hover:text-foreground transition-colors"
-          >
+          <button type="button" onClick={() => setPaused((p) => !p)} aria-label={paused ? t.carouselPlay : t.carouselPause} aria-pressed={paused} className="grid h-12 w-12 place-items-center text-white/70 transition-colors hover:text-white">
             {paused ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />}
           </button>
         </div>
       </main>
 
-      {/* Watermark */}
-      <div
-        translate="no"
-        className="fixed bottom-20 md:bottom-3 right-3 z-50 flex items-center gap-1 pointer-events-none opacity-25 hover:opacity-50 transition-opacity duration-500"
-      >
-        <img src="/brand/logo.svg" alt="" className="h-4 w-4" width="16" height="16" />
-        <span className="text-[10px] font-bold text-foreground tracking-wide">EngVox</span>
-        <span className="text-[9px] font-mono font-bold text-primary">v{PRODUCT_VERSION}</span>
+      <div translate="no" className="fixed bottom-20 right-3 z-50 flex items-center gap-1 rounded-full border border-white/10 bg-black/25 px-2 py-1 text-white/50 backdrop-blur-xl md:bottom-3">
+        <ShieldCheck className="h-3.5 w-3.5 text-cyan-200" />
+        <span className="text-[10px] font-black tracking-wide">EngVox</span>
+        <span className="text-[9px] font-mono font-black text-cyan-200">v{PRODUCT_VERSION}</span>
       </div>
 
-      <Footer className="fixed bottom-0 inset-x-0 z-40" />
+      <Footer className="fixed bottom-0 inset-x-0 z-40 border-white/10 bg-[#040611]/78 text-white backdrop-blur-2xl" />
     </div>
   );
 };
