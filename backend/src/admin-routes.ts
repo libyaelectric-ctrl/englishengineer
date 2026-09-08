@@ -1,10 +1,11 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
-import type { RouteRegistrar } from './route-registrar.js';
 
+import { apiSuccess } from './api-response.js';
 import { getAuditLogs } from './audit-log.js';
 import { getCacheStats } from './cache/redis-cache.service.js';
 import { requireRole } from './middleware/rbac.middleware.js';
 import { getPerformanceMetrics, getRateLimitMetrics } from './performance-monitor.js';
+import type { RouteRegistrar } from './route-registrar.js';
 import { AdminAuditLogsQuerySchema, validateQuery } from './validation.js';
 
 export const registerAdminRoutes = (
@@ -35,7 +36,7 @@ export const registerAdminRoutes = (
             version: process.env.APP_VERSION || '4.0.22',
           },
         };
-        res.json({ success: true, data: stats });
+        res.json(apiSuccess(stats));
       } catch (error) {
         next(error);
       }
@@ -57,7 +58,7 @@ export const registerAdminRoutes = (
           limit: (req.validatedQuery?.limit as number) || 50,
         };
         const logs = await getAuditLogs(filters);
-        res.json({ success: true, data: logs });
+        res.json(apiSuccess(logs));
       } catch (error) {
         next(error);
       }
@@ -72,7 +73,7 @@ export const registerAdminRoutes = (
     async (_req: Request, res: Response, next: NextFunction) => {
       try {
         const metrics = getRateLimitMetrics();
-        res.json({ success: true, data: metrics });
+        res.json(apiSuccess(metrics));
       } catch (error) {
         next(error);
       }
@@ -87,7 +88,7 @@ export const registerAdminRoutes = (
     async (_req: Request, res: Response, next: NextFunction) => {
       try {
         const stats = getCacheStats();
-        res.json({ success: true, data: stats });
+        res.json(apiSuccess(stats));
       } catch (error) {
         next(error);
       }

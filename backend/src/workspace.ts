@@ -1,9 +1,10 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
-import type { RouteRegistrar } from './route-registrar.js';
 
 import type { WorkspaceConfig } from '../types.js';
+import { apiSuccess } from './api-response.js';
 import { normalizePlanId } from './billing-plan-migration.js';
 import { ApiError } from './errors.js';
+import type { RouteRegistrar } from './route-registrar.js';
 import {
   WorkspaceCreateBodySchema,
   WorkspaceDocumentBodySchema,
@@ -57,7 +58,7 @@ export const registerWorkspaceRoutes = (
           throw new ApiError(401, 'authentication_required', 'User ID is required.');
         }
         const data = await repository.getWorkspaces(userId);
-        res.json({ success: true, data });
+        res.json(apiSuccess(data));
       } catch (error) {
         next(error);
       }
@@ -78,7 +79,7 @@ export const registerWorkspaceRoutes = (
         if (!data) {
           throw new ApiError(404, 'workspace_not_found', 'Workspace not found.');
         }
-        res.json({ success: true, data });
+        res.json(apiSuccess(data));
       } catch (error) {
         next(error);
       }
@@ -113,7 +114,7 @@ export const registerWorkspaceRoutes = (
 
         const workspaceName = (name as string) || `Workspace ${existingCount + 1}`;
         const data = await repository.createWorkspace(userId, workspaceName, {});
-        res.json({ success: true, data });
+        res.json(apiSuccess(data));
       } catch (error) {
         next(error);
       }
@@ -153,7 +154,7 @@ export const registerWorkspaceRoutes = (
           userId,
           updatedMemory
         );
-        res.json({ success: true, data });
+        res.json(apiSuccess(data));
       } catch (error) {
         next(error);
       }
@@ -186,7 +187,7 @@ export const registerWorkspaceRoutes = (
         }
 
         await repository.deleteWorkspace(req.params.id as string, userId);
-        res.json({ success: true });
+        res.json(apiSuccess({ deleted: true }));
       } catch (error) {
         next(error);
       }
@@ -223,7 +224,7 @@ export const registerWorkspaceRoutes = (
         if (!data) {
           throw new ApiError(404, 'workspace_not_found', 'Workspace not found.');
         }
-        res.json({ success: true, data });
+        res.json(apiSuccess(data));
       } catch (error) {
         next(error);
       }
@@ -249,7 +250,7 @@ export const registerWorkspaceRoutes = (
         if (!data) {
           throw new ApiError(404, 'workspace_not_found', 'Workspace not found.');
         }
-        res.json({ success: true, data });
+        res.json(apiSuccess(data));
       } catch (error) {
         next(error);
       }

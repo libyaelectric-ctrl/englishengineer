@@ -29,13 +29,7 @@ describe('production routing security', () => {
 
     const response = await request(app).get('/api/health');
     assert.equal(response.status, 200);
-    for (const privateField of [
-      'memory',
-      'pool',
-      'nodeVersion',
-      'responseTimeMs',
-      'uptime',
-    ]) {
+    for (const privateField of ['memory', 'pool', 'nodeVersion', 'responseTimeMs', 'uptime']) {
       assert.equal(response.body[privateField], undefined);
     }
   });
@@ -63,6 +57,13 @@ describe('production routing security', () => {
       .redirects(0);
 
     assert.ok(![301, 302, 307, 308].includes(response.status));
-    assert.equal(response.status, 400);
+    // Production without remote audit storage fail-closes on the required
+    // WEBHOOK_RECEIVED audit write BEFORE signature validation (Phase 5
+    // policy: audit_log_unavailable 503). The invalid-signature 400 path is
+    // covered in stripe-webhook-security.test.ts where audit is disabled.
+    // This assertion keeps the routing contract: the canonical webhook path
+    // is served in place (no legacy /v1 redirect) and never silently succeeds.
+    assert.equal(response.status, 503);
+    assert.equal(response.body.error.code, 'audit_log_unavailable');
   });
 });

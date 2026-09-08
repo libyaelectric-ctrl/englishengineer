@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
 import { registerAdminRoutes } from '../src/admin-routes.js';
+import { API_CONTRACT_VERSION } from '../src/api-response.js';
 
 type MockHandler = (req: Request, res: Response, next: NextFunction) => unknown;
 
@@ -17,9 +18,11 @@ const createMockApp = (): MockApp => {
     get: (path: string, ...handlers: MockHandler[]) => {
       // The adapter strips /api prefix and registers on v1Router.
       // normalize so assertions can use the full public path.
-      const fullPath = path.startsWith('/api/v1') ? path
-        : path.startsWith('/api') ? path.replace('/api', '/api/v1')
-        : `/api/v1${path}`;
+      const fullPath = path.startsWith('/api/v1')
+        ? path
+        : path.startsWith('/api')
+          ? path.replace('/api', '/api/v1')
+          : `/api/v1${path}`;
       routes[`GET ${fullPath}`] = handlers;
     },
     routes,
@@ -66,7 +69,8 @@ describe('Admin Routes', () => {
     const next: NextFunction = () => {};
 
     await routeHandler(req, res, next);
-    assert.equal(responseBody?.success, true);
+    assert.equal(responseBody?.ok, true);
+    assert.equal(responseBody?.meta.contractVersion, API_CONTRACT_VERSION);
     assert.ok(responseBody?.data);
     assert.ok(responseBody?.data.performance);
     assert.equal(typeof responseBody?.data.performance.requestCount, 'number');
@@ -94,7 +98,7 @@ describe('Admin Routes', () => {
     const next: NextFunction = () => {};
 
     await routeHandler(req, res, next);
-    assert.equal(responseBody?.success, true);
+    assert.equal(responseBody?.ok, true);
     assert.ok(Array.isArray(responseBody?.data));
   });
 
@@ -118,7 +122,7 @@ describe('Admin Routes', () => {
     const next: NextFunction = () => {};
 
     await routeHandler(req, res, next);
-    assert.equal(responseBody?.success, true);
+    assert.equal(responseBody?.ok, true);
     assert.ok(responseBody?.data.length <= 5);
   });
 });

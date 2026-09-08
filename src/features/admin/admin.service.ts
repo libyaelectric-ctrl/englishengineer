@@ -4,6 +4,7 @@ import {
   isSupabaseConfigured,
 } from '@/shared/services/auth-backend/supabase.client';
 import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
+import { unwrapApiSuccess } from '@/shared/types/api-response';
 
 import type { AdminStats, AdminSystemLog, AdminUserRecord } from './admin.types';
 
@@ -127,15 +128,10 @@ export const AdminService = {
 
       if (!response.ok) return EMPTY_STATS;
 
-      const payload = (await response.json()) as {
-        success: boolean;
-        data?: {
-          performance: AdminStats['performance'];
-          system: AdminStats['system'];
-        };
-      };
-
-      if (!payload.success || !payload.data) return EMPTY_STATS;
+      const data = unwrapApiSuccess<{
+        performance: AdminStats['performance'];
+        system: AdminStats['system'];
+      }>(await response.json());
 
       // Backend stats don't include user counts; those come from Supabase
       const users = await AdminService.fetchUsers();
@@ -149,9 +145,9 @@ export const AdminService = {
         proMembers: users.filter(
           (u) => u.plan === 'senior' || u.plan === 'master' || u.plan === 'team'
         ).length,
-        aiRequestCount: payload.data.performance.requestCount,
-        performance: payload.data.performance,
-        system: payload.data.system,
+        aiRequestCount: data.performance.requestCount,
+        performance: data.performance,
+        system: data.system,
       };
     } catch {
       return EMPTY_STATS;
@@ -181,9 +177,8 @@ export const AdminService = {
 
       if (!response.ok) return [];
 
-      const payload = (await response.json()) as {
-        success: boolean;
-        data?: Array<{
+      const data = unwrapApiSuccess<
+        Array<{
           id: string;
           timestamp: string;
           action?: string;
@@ -191,12 +186,10 @@ export const AdminService = {
           details?: Record<string, unknown>;
           severity?: string;
           message?: string;
-        }>;
-      };
+        }>
+      >(await response.json());
 
-      if (!payload.success || !payload.data) return [];
-
-      return payload.data.map(mapAuditLog);
+      return data.map(mapAuditLog);
     } catch {
       return [];
     }
