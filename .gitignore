@@ -1,20 +1,13 @@
-# ── Dependencies ──
 node_modules/
 **/node_modules/
 backend/node_modules_off/
-
-# ── Build outputs ──
 dist/
 build/
 htmlcov/
 target/
 storybook-static
-
-# ── Data (moved to Supabase Storage CDN) ──
 /data/
 public/data/
-
-# ── Environment & secrets ──
 .env
 .env.*
 !.env.example
@@ -22,12 +15,8 @@ public/data/
 **/.env
 **/.env.*
 **/dodo-products-test.env
-
-# ── Logs ──
 *.log
 logs/
-
-# ── Testing ──
 test-results/
 playwright-report/
 .playwright-cli/
@@ -40,19 +29,13 @@ coverage/
 coverage.xml
 *.coverage
 stryker-results/
-
-# ── IDE ──
 .vscode/
 .idea/
 *.swp
 *.swo
 *.tmp
-
-# ── OS ──
 .DS_Store
 Thumbs.db
-
-# ── Python ──
 __pycache__/
 *.pyc
 *.pyo
@@ -62,8 +45,6 @@ __pycache__/
 env/
 venv/
 .venv/
-
-# ── Compressed files ──
 *.zip
 *.gz
 *.tar
@@ -75,14 +56,10 @@ venv/
 *.tar.gz
 *.tar.bz2
 *.tar.xz
-
-# ── Backup & temp files ──
 *.bak
 ~$*
 *.docx
 *.xlsx
-
-# ── ESLint output ──
 eslint_output.json
 eslint-out.json
 eslint-output.json
@@ -90,29 +67,19 @@ eslint_complexity.json
 eslint_output_max1.json
 eslint_output_src.json
 lint-output.txt
-
-# ── Analysis outputs ──
 analysis_output/
 depcruise-output.txt
 test-output.txt
 test-vocab.txt
 qa-report/
 bundle-report.html
-
-# ── Local tool config ──
 opencode.json
 .aider*
 .clerk/
-
-# ── Debug / recording ──
 .record.cjs
 *.debug.cjs
 /video/
-
-# ── Hook scratch ──
 .vitest-commit.log
-
-# ── Project-specific ──
 .vercel-tmp/
 .freebuff/
 tasrim/
@@ -133,18 +100,13 @@ gece.png
 !scripts/translate-grammar-deepl.py
 !scripts/translate-vocabulary-chunks.py
 !scripts/requirements-translations.txt
-
-# ── Runtime dirs ──
 test/
 uploads/
 !backend/test/
 !backend/test/** 
-
-# ── Monitoring data ──
 monitoring/grafana_data/
 monitoring/prometheus_data/
-
-# ── Auto-generated reports ──
 PRC_Kademe_8_Live_Service_Evidence_Report.md
 .vercel
 .env*
+.artifacts/

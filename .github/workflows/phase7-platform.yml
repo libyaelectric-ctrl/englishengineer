@@ -1,0 +1,65 @@
+name: Phase 7 Platform
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/routes/**'
+      - 'src/bootstrap/capacitor-deep-links.ts'
+      - 'src/main.tsx'
+      - 'public/sw.js'
+      - 'android/app/src/main/AndroidManifest.xml'
+      - 'vite.config.ts'
+      - 'vercel.json'
+      - 'scripts/verify-phase7-platform.mjs'
+      - 'scripts/check-initial-route-budget.mjs'
+      - 'tests/browser/history-routing.spec.ts'
+      - '.github/workflows/phase7-platform.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/routes/**'
+      - 'src/bootstrap/capacitor-deep-links.ts'
+      - 'src/main.tsx'
+      - 'public/sw.js'
+      - 'android/app/src/main/AndroidManifest.xml'
+      - 'vite.config.ts'
+      - 'vercel.json'
+      - 'scripts/verify-phase7-platform.mjs'
+      - 'scripts/check-initial-route-budget.mjs'
+      - 'tests/browser/history-routing.spec.ts'
+      - '.github/workflows/phase7-platform.yml'
+
+concurrency:
+  group: phase7-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  platform:
+    name: Routing, PWA and performance
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Verify Phase 7 contracts
+        run: node scripts/verify-phase7-platform.mjs
+      - name: Build production bundle
+        run: npm run build
+      - name: Enforce compressed initial-route budget
+        run: node scripts/check-initial-route-budget.mjs
+      - name: Upload private source maps
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: private-source-maps-${{ github.sha }}
+          path: .artifacts/sourcemaps/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Verify direct URLs and refreshes
+        run: npx playwright test tests/browser/history-routing.spec.ts --project=chromium-desktop --no-deps
+        env: { CI: true }
