@@ -1,17 +1,17 @@
-// Seed files moved to Supabase Storage; the test shim falls back to the
-// Storage origin when the local public/data copy is missing (CI checkouts
-// contain no public/data files).
-const DATA_CDN_BASE = (
-  process.env.VITE_DATA_CDN_URL ??
-  'https://wxabrwzitwsjtpmlvvqe.supabase.co/storage/v1/object/public/app-data'
-).replace(/\/+$/, "");
-
 // Mock global fetch for local JSON seed files in Node/Vitest
 import { afterEach, vi } from 'vitest';
 
 import React from 'react';
 
 import { logger } from '@/shared/logger';
+
+// Seed files moved to Supabase Storage; the test shim falls back to the
+// Storage origin when the local public/data copy is missing (CI checkouts
+// contain no public/data files).
+const DATA_CDN_BASE = (
+  process.env.VITE_DATA_CDN_URL ??
+  'https://wxabrwzitwsjtpmlvvqe.supabase.co/storage/v1/object/public/app-data'
+).replace(/\/+$/, '');
 
 // Mock canvas for THREE/WebGL tests (minimal mock, no canvas pkg dependency)
 globalThis.HTMLCanvasElement = class MockCanvas {
@@ -169,10 +169,23 @@ vi.mock('react-virtuoso', () => ({
 }));
 
 const originalFetch = globalThis.fetch;
+const isSeedRequest = (urlStr: string): boolean =>
+  urlStr.includes('/data/grammar/') ||
+  urlStr.includes('/data/vocabulary/') ||
+  urlStr.includes('/data/translations/');
+
+// The seed URL is relative (/data/...) when no CDN is configured, or absolute
+// (https://cdn.../data/...) when VITE_DATA_CDN_URL is set. In both cases the
+// local public/data copy (when present) is the hermetic source of truth, so
+// strip any origin and serve from disk before falling back to the CDN.
 globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
   const urlStr = typeof input === 'string' ? input : input.toString();
-  if (urlStr.startsWith('/data/grammar/') || urlStr.startsWith('/data/vocabulary/') || urlStr.startsWith('/data/translations/')) {
-    const relativePath = urlStr.replace(/^\//, '');
+  if (isSeedRequest(urlStr)) {
+    // Keep only the /data/... path portion: seed URLs may be relative
+    // (/data/...) or carry a CDN origin (https://cdn.../data/...).
+    const dataIndex = urlStr.indexOf('/data/');
+    const pathname = dataIndex >= 0 ? urlStr.slice(dataIndex) : urlStr;
+    const relativePath = pathname.replace(/^\//, '');
     const absolutePath = path?.resolve(process.cwd(), 'public', relativePath);
     try {
       if (!absolutePath || !fs) throw new Error('Node file APIs are unavailable');

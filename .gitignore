@@ -104,6 +104,8 @@ test/
 uploads/
 !backend/test/
 !backend/test/** 
+!src/test/
+!src/test/** 
 monitoring/grafana_data/
 monitoring/prometheus_data/
 PRC_Kademe_8_Live_Service_Evidence_Report.md
