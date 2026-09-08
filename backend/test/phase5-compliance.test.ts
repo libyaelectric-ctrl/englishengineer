@@ -1,12 +1,16 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { describe, it } from 'node:test';
+import { afterEach, describe, it } from 'node:test';
 
 import {
   createMemoryLearningRepository,
   resetLearningRepositoryForTests,
   setLearningRepositoryForTests,
 } from '../src/learning-repository.js';
+
+afterEach(() => {
+  resetLearningRepositoryForTests();
+});
 
 describe('phase 5 compliance export', () => {
   it('exports only the authenticated user persisted learning records', async () => {
@@ -47,10 +51,5 @@ describe('phase 5 compliance export', () => {
     assert.ok(source.includes("'Cache-Control', 'no-store, private'"));
     assert.ok(source.includes('AUDIT_ACTIONS.DATA_EXPORTED'));
     assert.ok(!source.includes('Full data export pending'));
-  });
-
-  // Clean up after tests
-  it('cleanup', () => {
-    resetLearningRepositoryForTests();
   });
 });
