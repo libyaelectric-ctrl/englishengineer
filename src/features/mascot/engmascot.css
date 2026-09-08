@@ -106,6 +106,12 @@
 .engmascot-mini-btn:hover {
   border-color: #5aa7ff;
 }
+/* Touch-friendly: bigger tap target on mobile */
+.engmascot-mini-btn--touch {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
 .engmascot-restore {
   width: 34px;
   height: 34px;

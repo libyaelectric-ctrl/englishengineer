@@ -875,10 +875,12 @@ describe('End-to-End App Wiring', () => {
       // Step 3: Verify subscription status endpoint
       const statusRes = await fetch(`${url}/api/v1/billing/subscription-status`);
       assert.equal(statusRes.status, 200);
-      const statusBody = (await statusRes.json()) as { planId: string; status: string };
+      const statusBody = (await statusRes.json()) as {
+        data: { planId: string; status: string };
+      };
       // Without auth, returns default free plan
-      assert.ok(statusBody);
-      assert.equal(typeof statusBody.planId, 'string');
+      assert.ok(statusBody.data);
+      assert.equal(typeof statusBody.data.planId, 'string');
     } finally {
       server.close();
     }

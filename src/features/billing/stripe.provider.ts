@@ -3,6 +3,7 @@ import { ErrorCode } from '@/core/errors/error-codes';
 
 import { logger } from '@/shared/logger';
 import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
+import { unwrapApiSuccess } from '@/shared/types/api-response';
 
 import {
   BillingPortalRequest,
@@ -21,7 +22,9 @@ const BILLING_TIMEOUT_MS = 30_000;
 
 const mapRequestError = (error: unknown): Error => {
   if (error instanceof DOMException && error.name === 'AbortError') {
-    return new Error('Billing backend timed out after 30 seconds. The server may be waking up — please try again.');
+    return new Error(
+      'Billing backend timed out after 30 seconds. The server may be waking up — please try again.'
+    );
   }
 
   if (error instanceof TypeError) {
@@ -86,7 +89,7 @@ const postJson = async <TResponse, TBody extends object>(
     });
   }
 
-  return response.json() as Promise<TResponse>;
+  return unwrapApiSuccess<TResponse>(await response.json());
 };
 
 const getJson = async <TResponse>(endpoint: string, userId?: string): Promise<TResponse> => {
@@ -101,7 +104,7 @@ const getJson = async <TResponse>(endpoint: string, userId?: string): Promise<TR
     });
   }
 
-  return response.json() as Promise<TResponse>;
+  return unwrapApiSuccess<TResponse>(await response.json());
 };
 
 export class StripeBillingProvider {

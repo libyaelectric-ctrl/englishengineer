@@ -21,7 +21,11 @@ describe('StripeBillingProvider', () => {
 
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ url: 'https://checkout.stripe.test/session' }),
+      json: async () => ({
+        ok: true,
+        data: { url: 'https://checkout.stripe.test/session' },
+        meta: { contractVersion: '2026-09-07.v1' },
+      }),
     });
     vi.stubGlobal('fetch', fetchMock);
 

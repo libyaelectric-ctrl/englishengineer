@@ -162,9 +162,9 @@ test('billing routes return a free fallback when Stripe is not configured', asyn
   const response = await fetch(`${url}/api/v1/billing/subscription-status?userId=user-1`);
   const body = await response.json();
   assert.equal(response.status, 200);
-  assert.equal(body.planId, 'free');
-  assert.equal(body.status, 'none');
-  assert.equal(body.source, 'backend');
+  assert.equal(body.data.planId, 'free');
+  assert.equal(body.data.status, 'none');
+  assert.equal(body.data.source, 'backend');
 });
 
 test('production billing status falls back safely without backend auth headers', async () => {
@@ -172,9 +172,9 @@ test('production billing status falls back safely without backend auth headers',
   const response = await fetch(`${url}/api/v1/billing/subscription-status`);
   const body = await response.json();
   assert.equal(response.status, 200);
-  assert.equal(body.planId, 'free');
-  assert.equal(body.status, 'none');
-  assert.equal(body.source, 'backend');
+  assert.equal(body.data.planId, 'free');
+  assert.equal(body.data.status, 'none');
+  assert.equal(body.data.source, 'backend');
 });
 
 test('subscription status route returns a free fallback when Stripe is not configured', async () => {
@@ -182,9 +182,9 @@ test('subscription status route returns a free fallback when Stripe is not confi
   const response = await fetch(`${url}/api/v1/subscription-status?userId=user-1`);
   const body = await response.json();
   assert.equal(response.status, 200);
-  assert.equal(body.planId, 'free');
-  assert.equal(body.status, 'none');
-  assert.equal(body.source, 'backend');
+  assert.equal(body.data.planId, 'free');
+  assert.equal(body.data.status, 'none');
+  assert.equal(body.data.source, 'backend');
 });
 
 test('webhook rejects an invalid Stripe signature', async () => {
@@ -273,12 +273,12 @@ test('subscription status can report active and payment-failed backend states', 
   const active = await (
     await fetch(`${url}/api/v1/billing/subscription-status?userId=user-1`)
   ).json();
-  assert.equal(active.status, 'active');
+  assert.equal(active.data.status, 'active');
   snapshot = { ...snapshot, status: 'past_due' };
   const failed = await (
     await fetch(`${url}/api/v1/billing/subscription-status?userId=user-1`)
   ).json();
-  assert.equal(failed.status, 'past_due');
+  assert.equal(failed.data.status, 'past_due');
 });
 
 test('vocabulary lookup rejects a missing word', async () => {
@@ -359,8 +359,8 @@ test('production AI routes reject missing authentication while billing status fa
   const billingBody = await billingResponse.json();
   assert.equal(aiResponse.status, 401);
   assert.equal(billingResponse.status, 200);
-  assert.equal(billingBody.planId, 'free');
-  assert.equal(billingBody.status, 'none');
+  assert.equal(billingBody.data.planId, 'free');
+  assert.equal(billingBody.data.status, 'none');
 });
 
 test('valid internal authentication protects identity and leaves health public', async () => {
@@ -702,8 +702,8 @@ test('billing status returns 200 Free/Lite when no subscription record exists', 
   });
   assert.equal(response.status, 200);
   const body = await response.json();
-  assert.equal(body.planId, 'free');
-  assert.equal(body.status, 'none');
+  assert.equal(body.data.planId, 'free');
+  assert.equal(body.data.status, 'none');
 });
 
 test('billing status returns 200 Pro when active Pro subscription exists in repository', async () => {
@@ -733,9 +733,9 @@ test('billing status returns 200 Pro when active Pro subscription exists in repo
   });
   assert.equal(response.status, 200);
   const body = await response.json();
-  assert.equal(body.planId, 'junior');
-  assert.equal(body.status, 'active');
-  assert.equal(body.stripeCustomerId, 'cus_123');
+  assert.equal(body.data.planId, 'junior');
+  assert.equal(body.data.status, 'active');
+  assert.equal(body.data.stripeCustomerId, 'cus_123');
 });
 
 test('billing status returns 503 BILLING_STATUS_UNAVAILABLE on repository infrastructure error', async () => {
@@ -837,7 +837,7 @@ test('checkout route permits request with valid Supabase token', async () => {
   });
   assert.equal(response.status, 200);
   const body = await response.json();
-  assert.equal(body.url, 'https://checkout.stripe.test/session');
+  assert.equal(body.data.url, 'https://checkout.stripe.test/session');
 });
 
 test('checkout route rejects request with missing authorization header', async () => {
@@ -1067,10 +1067,10 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
   );
   assert.equal(statusResponse.status, 200);
   const statusBody = await statusResponse.json();
-  assert.equal(statusBody.planId, 'junior');
-  assert.equal(statusBody.status, 'active');
-  assert.equal(statusBody.stripeCustomerId, 'cus_12345');
-  assert.equal(statusBody.stripeSubscriptionId, 'sub_56789');
+  assert.equal(statusBody.data.planId, 'junior');
+  assert.equal(statusBody.data.status, 'active');
+  assert.equal(statusBody.data.stripeCustomerId, 'cus_12345');
+  assert.equal(statusBody.data.stripeSubscriptionId, 'sub_56789');
 
   const duplicateResponse = await fetch(`${url}/api/webhooks/stripe`, {
     method: 'POST',

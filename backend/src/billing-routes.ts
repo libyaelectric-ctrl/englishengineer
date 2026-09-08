@@ -1,11 +1,12 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
-import type { RouteRegistrar } from './route-registrar.js';
 
+import { apiSuccess } from './api-response.js';
 import { AUDIT_ACTIONS, auditLog } from './audit-log.js';
 import { assertUserOwnership } from './billing-helpers.js';
 import type { BillingService } from './billing-service.js';
 import { logger } from './logger.js';
 import { idempotencyKey } from './middleware/idempotency.middleware.js';
+import type { RouteRegistrar } from './route-registrar.js';
 import {
   BillingCheckoutBodySchema,
   BillingPortalBodySchema,
@@ -34,7 +35,7 @@ export const registerBillingRoutes = (
           userId: userId || undefined,
           details: { planId: req.body?.planId },
         });
-        res.json(await billingService.createCheckoutSession(userId || '', req.body));
+        res.json(apiSuccess(await billingService.createCheckoutSession(userId || '', req.body)));
       } catch (error) {
         next(error);
       }
@@ -54,7 +55,9 @@ export const registerBillingRoutes = (
           userId: userId || undefined,
           details: { type: 'topup', credits: 50 },
         });
-        res.json(await billingService.createTopupCheckoutSession(userId || '', req.body));
+        res.json(
+          apiSuccess(await billingService.createTopupCheckoutSession(userId || '', req.body))
+        );
       } catch (error) {
         next(error);
       }
@@ -68,7 +71,9 @@ export const registerBillingRoutes = (
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         res.json(
-          await billingService.createPortalSession(assertUserOwnership(req) || '', req.body)
+          apiSuccess(
+            await billingService.createPortalSession(assertUserOwnership(req) || '', req.body)
+          )
         );
       } catch (error) {
         next(error);
@@ -78,10 +83,10 @@ export const registerBillingRoutes = (
   const subscriptionStatusHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!req.auth?.userId) {
-        res.json(await billingService.getSubscriptionStatus(null));
+        res.json(apiSuccess(await billingService.getSubscriptionStatus(null)));
         return;
       }
-      res.json(await billingService.getSubscriptionStatus(assertUserOwnership(req)));
+      res.json(apiSuccess(await billingService.getSubscriptionStatus(assertUserOwnership(req))));
     } catch (error) {
       next(error);
     }
@@ -95,10 +100,10 @@ export const registerBillingRoutes = (
       try {
         const userId = assertUserOwnership(req);
         if (!userId) {
-          res.json([]);
+          res.json(apiSuccess([]));
           return;
         }
-        res.json(await billingService.listInvoices(userId));
+        res.json(apiSuccess(await billingService.listInvoices(userId)));
       } catch (error) {
         next(error);
       }

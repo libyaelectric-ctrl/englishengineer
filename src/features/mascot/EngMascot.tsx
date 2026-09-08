@@ -25,6 +25,12 @@ const getDisplayMessage = (m: string | null, s: string, c: MascotStateCopy, idle
   return null;
 };
 
+/** Detect mobile via viewport width (matches Tailwind lg breakpoint at 1024px) */
+const useIsMobile = () => {
+  if (typeof window === 'undefined') return false;
+  return window.innerWidth < 1024;
+};
+
 export const EngMascot: React.FC<{ inline?: boolean; size?: number }> = ({
   inline = false,
   size = 64,
@@ -37,6 +43,7 @@ export const EngMascot: React.FC<{ inline?: boolean; size?: number }> = ({
   const { dragging, onPointerDown, onPointerMove, onPointerUp, handleTap } =
     useMascotHandlers(inline);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   useMascotEffects(inline, copy);
 
@@ -45,7 +52,10 @@ export const EngMascot: React.FC<{ inline?: boolean; size?: number }> = ({
 
   if (!visible) return null;
   const msg = getDisplayMessage(message, state, copy, idleMessage);
-  const imgSize = inline ? size : minimized ? 40 : 64;
+  // Mobile: smaller figure (48px) + slightly smaller minimized; Desktop: 64px
+  const imgSize = inline ? size : minimized ? 36 : isMobile ? 48 : 64;
+  // On mobile, push mascot above the bottom navigation bar (~64px tall)
+  const mobileBottom = isMobile ? Math.max(position.bottom, 72) : position.bottom;
 
   return (
     <div
@@ -53,19 +63,19 @@ export const EngMascot: React.FC<{ inline?: boolean; size?: number }> = ({
       style={
         inline
           ? {}
-          : { position: 'fixed', right: position.right, bottom: position.bottom, zIndex: 60 }
+          : { position: 'fixed', right: position.right, bottom: mobileBottom, zIndex: 60 }
       }
     >
       <div className="sr-only" role="status" aria-live="polite">
         {copy.ariaGreeting}: {msg ?? ''}
       </div>
-      <MascotBubble message={msg} minimized={minimized} />
+      <MascotBubble message={msg} minimized={minimized} isMobile={isMobile} />
       <MascotSettings
         open={settingsOpen}
         minimized={minimized}
         onClose={() => setSettingsOpen(false)}
       />
-      <div className="flex items-end gap-2">
+      <div className="flex items-end gap-1.5 sm:gap-2">
         {!inline && !minimized && (
           <button
             type="button"
@@ -73,7 +83,7 @@ export const EngMascot: React.FC<{ inline?: boolean; size?: number }> = ({
               e.stopPropagation();
               setSettingsOpen(!settingsOpen);
             }}
-            className="engmascot-mini-btn"
+            className={`engmascot-mini-btn ${isMobile ? 'engmascot-mini-btn--touch' : ''}`}
             aria-label="Settings"
           >
             ⚙️
@@ -100,7 +110,7 @@ export const EngMascot: React.FC<{ inline?: boolean; size?: number }> = ({
           <button
             type="button"
             onClick={toggleMinimized}
-            className={`engmascot-mini-btn ${minimized ? 'engmascot-restore' : ''}`}
+            className={`engmascot-mini-btn ${minimized ? 'engmascot-restore' : ''} ${isMobile ? 'engmascot-mini-btn--touch' : ''}`}
             aria-label={minimized ? 'Show' : 'Minimize'}
           >
             {minimized ? '+' : '—'}
