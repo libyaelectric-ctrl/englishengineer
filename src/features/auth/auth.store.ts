@@ -1,11 +1,9 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 import { logger } from '@/shared/logger';
 import { setAuthTokenGetter } from '@/shared/services/auth-backend/backend-auth.service';
 import { storage, type ClientSessionKind } from '@/shared/storage';
 import type { AuthState, UserProfile } from '@/shared/types/auth.types';
-import { LearningProfileRepository } from '@/features/profile/profile.repository';
 const SESSION_KEY = 'auth_session_v2';
 type LocalSessionKind = Extract<ClientSessionKind, 'local' | 'demo'>;
 interface PersistedLocalSession { kind: LocalSessionKind; user: UserProfile; }
@@ -24,7 +22,12 @@ const activateProfile = (profile: UserProfile, kind: LocalSessionKind): void => 
   storage.activateSession({ userId: profile.id, kind });
   storage.globalRemove('auth_user');
   persistLocalSession(kind, profile);
-  try { LearningProfileRepository.updatePreferences(profile.id, { discipline: (profile.engineeringDiscipline || 'electrical') as EngineeringDiscipline, onboardingCompleted: true, interfaceLanguage: 'tr' }); } catch (error) { logger.w('Failed to initialize local profile', error); }
+  // Deliberately does NOT write discipline/interfaceLanguage/onboardingCompleted
+  // here. Doing so used to force onboardingCompleted: true immediately, which
+  // made OnboardingGate's hasDiscipline/hasLanguage/onboardingCompleted check
+  // pass instantly and skip straight past the discipline+language picker
+  // (NeuralOrbPanel) into the app — for demo and local sessions alike. Both
+  // paths must go through the same picker as a real sign-in.
 };
 export const useAuthStore = create<AuthState & AuthActions>()(devtools((set) => ({
   currentUser: initialSession?.user ?? null, isAuthenticated: Boolean(initialSession), isLoading: false, sessionKind: initialSession?.kind ?? null, providerUserSync: null, providerSignOut: null,

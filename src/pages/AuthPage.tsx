@@ -275,9 +275,9 @@ const AuthPage = ({ mode }: AuthPageProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-background">
-      <div className="flex min-h-full flex-col items-center justify-center px-4 py-10">
-        <div className="mb-8 flex w-full max-w-md items-center justify-between">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-background">
+      <div className="flex h-full flex-col items-center justify-center gap-4 px-4 py-4">
+        <div className="flex w-full max-w-md shrink-0 items-center justify-between">
           <Link
             to="/"
             className="inline-flex items-center gap-1.5 text-base text-muted-copy transition-colors hover:text-foreground"
@@ -285,10 +285,13 @@ const AuthPage = ({ mode }: AuthPageProps) => {
             <ArrowLeft className="h-5 w-5" />
             <span>Ana sayfa</span>
           </Link>
-          <img src="/brand/logo.svg" alt="EngVox" className="h-8" />
+          <div className="flex items-center gap-2">
+            <img src="/brand/logo.svg" alt="EngVox" className="h-8" />
+            <span className="text-xs text-muted-copy">v{PRODUCT_VERSION}</span>
+          </div>
         </div>
 
-        <div className="w-full max-w-md rounded-card border border-border-soft bg-surface p-8 shadow-card">
+        <div className="w-full max-w-md shrink-0 rounded-card border border-border-soft bg-surface p-8 shadow-card">
           <h1 className="text-2xl font-bold text-foreground">
             {mode === 'sign-in' ? 'Giriş yap' : 'Hesap oluştur'}
           </h1>
@@ -350,9 +353,8 @@ const AuthPage = ({ mode }: AuthPageProps) => {
           </div>
         </div>
 
-        <div className="mt-6 flex max-w-md flex-col items-center gap-1 text-center">
+        <div className="max-w-md shrink-0 text-center">
           <p className="text-xs text-muted-copy">Verileriniz cihazınızda güvenle yerel depolanır.</p>
-          <p className="text-xs text-muted-copy/70">EngVox v{PRODUCT_VERSION}</p>
         </div>
       </div>
     </div>

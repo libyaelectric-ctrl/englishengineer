@@ -84,6 +84,10 @@ vi.mock('@/features/localization', () => ({
     { id: 'en', flag: '🇬🇧', label: 'English', nativeLabel: 'English', available: true, dir: 'ltr' },
     { id: 'tr', flag: '🇹🇷', label: 'Turkish', nativeLabel: 'Türkçe', available: true, dir: 'ltr' },
   ],
+  AVAILABLE_INTERFACE_LANGUAGES: [
+    { id: 'en', flag: '🇬🇧', label: 'English', nativeLabel: 'English', available: true, dir: 'ltr' },
+    { id: 'tr', flag: '🇹🇷', label: 'Turkish', nativeLabel: 'Türkçe', available: true, dir: 'ltr' },
+  ],
 }));
 
 type NodeFileSystem = {

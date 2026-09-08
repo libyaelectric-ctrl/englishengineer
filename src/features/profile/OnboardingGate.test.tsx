@@ -39,6 +39,13 @@ const renderGate = (initialPath: string) =>
 
 describe('OnboardingGate', () => {
   beforeEach(() => {
+    storage.deactivateSession();
+    // A real session is always active by the time this gate renders — via
+    // Firebase sign-in (FirebaseBridge), the demo shortcut, or local login —
+    // so LearningProfileRepository's scoped storage.get/set (which are
+    // no-ops without an active session) need one here too, or every
+    // save/read in these tests silently does nothing.
+    storage.activateSession({ userId: 'gate-user', kind: 'demo' });
     storage.clear();
     useAuthStore.setState({
       currentUser: {
@@ -60,6 +67,7 @@ describe('OnboardingGate', () => {
 
   afterEach(() => {
     storage.clear();
+    storage.deactivateSession();
     useAuthStore.setState({
       currentUser: null,
       isAuthenticated: false,
@@ -81,48 +89,48 @@ describe('OnboardingGate', () => {
     await waitFor(() => {
       expect(screen.getByTestId('guarded-content')).toBeInTheDocument();
     });
-    expect(screen.queryByRole('button', { name: /ENTER ►/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /common\.next/ })).not.toBeInTheDocument();
   });
 
   it('shows the centered selection panel when onboarding is incomplete', async () => {
     renderGate('/dashboard');
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /ENTER ►/ })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /common\.next/ })).toBeInTheDocument();
     });
-    expect(screen.getByRole('button', { name: /Architecture/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /architecture/i })).toBeInTheDocument();
     expect(screen.queryByTestId('guarded-content')).not.toBeInTheDocument();
   });
 
   it('gates every app route, not just the dashboard', async () => {
     renderGate('/vocabulary');
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /ENTER ►/ })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /common\.next/ })).toBeInTheDocument();
     });
     expect(screen.queryByTestId('guarded-content')).not.toBeInTheDocument();
   });
 
   it('unlocks the app on the same mounted gate once the panel is completed (no stale cache)', async () => {
-    const _user = userEvent.setup();
+    const user = userEvent.setup();
     renderGate('/dashboard');
 
     // Click Architecture discipline button
-    await waitFor(() => {
-      const btn = screen.getByRole('button', { name: /Architecture/ });
-      expect(btn).toBeInTheDocument();
-      userEvent.click(btn);
-    });
+    const disciplineBtn = await screen.findByRole('button', { name: /architecture/i });
+    await user.click(disciplineBtn);
 
-    // Click the Enter button - it should be enabled now
-    await waitFor(() => {
-      const enterBtn = screen.getByRole('button', { name: /ENTER ►/ });
-      expect(enterBtn).not.toBeDisabled();
-      userEvent.click(enterBtn);
-    });
+    // Click a language option (the mock only provides 'tr', English is
+    // excluded from the panel's own options by design)
+    const languageBtn = await screen.findByRole('button', { name: /türkçe/i });
+    await user.click(languageBtn);
+
+    // Click Next — it should be enabled now
+    const nextBtn = await screen.findByRole('button', { name: /common\.next/ });
+    expect(nextBtn).not.toBeDisabled();
+    await user.click(nextBtn);
 
     // Wait for guarded content to appear
     await waitFor(() => {
       expect(screen.getByTestId('guarded-content')).toBeInTheDocument();
     });
-    expect(screen.queryByRole('button', { name: /ENTER ►/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /common\.next/ })).not.toBeInTheDocument();
   });
 });
