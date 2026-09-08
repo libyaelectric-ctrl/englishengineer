@@ -10,7 +10,7 @@
 - Node.js ≥ 22
 - npm ≥ 10
 - Supabase account (optional, memory fallback available)
-- Clerk account (for authentication)
+- Firebase project with Email/Password authentication enabled
 
 ### Installation
 
@@ -30,21 +30,24 @@ cp .env.example .env.local
 
 ### Environment Variables
 
-| Variable                    | Required | Description                                                                    |
-| --------------------------- | -------- | ------------------------------------------------------------------------------ |
-| `VITE_AUTH_PROVIDER`        | ✅       | `firebase` (currently only supported provider)                                 |
-| `VITE_FIREBASE_API_KEY`     | ✅       | Firebase web API key (public by design, from Console → Web app)                |
-| `VITE_FIREBASE_PROJECT_ID`  | ✅       | Firebase project ID (e.g., `elemental-outlet-pnn32`)                           |
-| `VITE_FIREBASE_AUTH_DOMAIN` | ✅       | Firebase auth domain (`<projectId>.firebaseapp.com`)                           |
-| `VITE_FIREBASE_APP_ID`      | ⚠️       | Firebase app ID (optional, for Analytics)                                      |
-| `FIREBASE_PROJECT_ID`       | ✅       | Backend: Firebase project ID for ID token verification                         |
-| `VITE_BILLING_API_URL`      | ⚠️       | Backend URL for billing (e.g., `https://englishengineer-backend.onrender.com`) |
-| `ANTHROPIC_API_KEY`         | ⚠️       | For AI coach (optional, mock mode if missing)                                  |
-| `SUPABASE_URL`              | ⚠️       | Supabase project URL (optional, memory fallback)                               |
-| `SUPABASE_SERVICE_ROLE_KEY` | ⚠️       | Supabase service role key (optional)                                           |
-| `DODO_PAYMENTS_API_KEY`     | ⚠️       | Dodo Payments API key (test mode)                                              |
-| `DODO_PAYMENTS_WEBHOOK_KEY` | ⚠️       | Dodo Payments webhook secret                                                   |
-| `METRICS_TOKEN`             | Optional | Optional: bearer token protecting `/api/metrics` (recommended in production)   |
+| Variable                         | Required                          | Description                                                                    |
+| -------------------------------- | --------------------------------- | ------------------------------------------------------------------------------ |
+| `VITE_AUTH_PROVIDER`             | ✅                                | `firebase` (currently only supported provider)                                 |
+| `VITE_FIREBASE_API_KEY`          | ✅                                | Firebase web API key (public by design, from Console → Web app)                |
+| `VITE_FIREBASE_PROJECT_ID`       | ✅                                | Firebase project ID (e.g., `elemental-outlet-pnn32`)                           |
+| `VITE_FIREBASE_AUTH_DOMAIN`      | ✅                                | Firebase auth domain (`<projectId>.firebaseapp.com`)                           |
+| `VITE_FIREBASE_APP_ID`           | ⚠️                                | Firebase app ID (optional, for Analytics)                                      |
+| `FIREBASE_PROJECT_ID`            | ✅                                | Backend: Firebase project ID for ID token verification                         |
+| `VITE_BILLING_API_URL`           | ⚠️                                | Backend URL for billing (e.g., `https://englishengineer-backend.onrender.com`) |
+| `ANTHROPIC_API_KEY`              | ⚠️                                | For AI coach (optional, mock mode if missing)                                  |
+| `SUPABASE_URL`                   | ✅ backend                        | Supabase project URL for persistent learning, tenant, audit and export data    |
+| `SUPABASE_SERVICE_ROLE_KEY`      | ✅ backend                        | Server-only key for persistent repositories; never expose to the browser       |
+| `DODO_PAYMENTS_API_KEY`          | ⚠️                                | Dodo Payments API key (test mode)                                              |
+| `DODO_PAYMENTS_WEBHOOK_KEY`      | ⚠️                                | Dodo Payments webhook secret                                                   |
+| `METRICS_TOKEN`                  | ✅ backend                        | Production Bearer token for `/api/metrics` and `/api/diagnostics`              |
+| `ENGINEEROS_INTERNAL_SERVICE_ID` | If internal secret is set         | Fixed service identity bound to internal authentication                        |
+| `SUPABASE_JWT_ISSUER`            | If local JWT verification is used | Exact accepted Supabase JWT issuer                                             |
+| `SUPABASE_JWT_AUDIENCE`          | If local JWT verification is used | Exact accepted audience (normally `authenticated`)                             |
 
 ### Mobile (Android APK / iOS)
 
@@ -101,7 +104,7 @@ backend/
 tests/
 ├── browser/            # Browser E2E specs (Playwright)
 ├── e2e/                # E2E flow specs
-└── helpers/            # Test utilities (Clerk sign-in, auth setup)
+└── helpers/            # Test utilities (Firebase sign-in, auth setup)
 ```
 
 ## Tech Stack
@@ -110,7 +113,7 @@ tests/
 | -------------- | ------------------------------------------------------------------------- |
 | **Frontend**   | React 19, TypeScript 6.0, Vite 8, Tailwind CSS 4, Zustand, TanStack Query |
 | **Backend**    | Express 5, TypeScript, Node 22, Winston (logging), Zod (validation)       |
-| **Auth**       | Clerk (JWT + JWKS verification)                                           |
+| **Auth**       | Firebase Auth (ID token verification in the backend)                      |
 | **Billing**    | Dodo Payments (checkout + webhooks) / Stripe (legacy)                     |
 | **Database**   | Supabase (PostgreSQL) with memory fallback                                |
 | **AI**         | Anthropic Claude / OpenAI / Gemini (configurable)                         |
@@ -148,11 +151,11 @@ Auto-deploys on push to `main`. For manual trigger, use Render Dashboard or API.
 ### Environment Sync
 
 ```bash
-# Pull Clerk env vars
-clerk env pull
-
-# Sync Vercel env
+# Pull the currently configured Vercel environment
 vercel env pull .env.vercel
+
+# Firebase web values come from Firebase Console → Project settings → Web app.
+# Keep backend service credentials only in the deployment platform's secret store.
 ```
 
 ## Contributing
