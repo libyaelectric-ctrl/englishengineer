@@ -18,7 +18,7 @@ import {
 } from './learning.persistence';
 import { getLearningPorts, type LearningSkillName } from './learning.ports';
 import { DEFAULT_ACHIEVEMENTS } from './learning.achievements.data';
-import { MAX_HEARTS, loseHeart as computeLoseHeart, refillHeartsIfDue } from './learning.hearts';
+import { loseHeart as computeLoseHeart, refillHeartsIfDue } from './learning.hearts';
 import { DEFAULT_MISSIONS } from './learning.missions.data';
 import {
   INITIAL_ELO,
