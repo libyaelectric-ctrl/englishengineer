@@ -8,10 +8,15 @@ import { IdService } from '@/core/ids/id.service';
 
 import { eosPersistConfig } from '@/shared/storage/persist-middleware';
 
-import { useAuthStore } from '@/features/auth';
-import { LearningProfileRepository } from '@/features/profile/profile.repository';
-
 import { AchievementService } from './achievement.service';
+import { addUniqueContent, removeContent } from './domains/content-pool.domain';
+import { activateMission, completeMission } from './domains/mission.domain';
+import {
+  createInitialLearningState,
+  LEARNING_PERSISTENCE_VERSION,
+  migratePersistedLearningState,
+} from './learning.persistence';
+import { getLearningPorts, type LearningSkillName } from './learning.ports';
 import { DEFAULT_ACHIEVEMENTS } from './learning.achievements.data';
 import { MAX_HEARTS, loseHeart as computeLoseHeart, refillHeartsIfDue } from './learning.hearts';
 import { DEFAULT_MISSIONS } from './learning.missions.data';
@@ -62,29 +67,10 @@ export interface LearningStoreActions {
 export const useLearningStore = create<LearningState & LearningStoreActions>()(
   persist(
     (set, get) => ({
-      missions: DEFAULT_MISSIONS,
-      achievements: DEFAULT_ACHIEVEMENTS,
-      xp: 0,
-      level: 1,
-      coins: 0,
-      elo: INITIAL_ELO,
-      streak: 0,
-      lastActivityDate: null,
-      studySessions: [],
-      scoreHistory: [],
-      xpHistory: [],
-      eloHistory: [],
-      vocabularyPool: [],
-      grammarPool: [],
-      speakingPool: [],
-      hearts: MAX_HEARTS,
-      heartsDepletedAt: null,
-      weakTermIds: [],
+      ...createInitialLearningState(),
 
       startMission: (missionId: string) => {
-        const updated = get().missions.map((m) =>
-          m.id === missionId ? { ...m, status: 'active' as const } : m
-        );
+        const updated = activateMission(get().missions, missionId);
 
         set({ missions: updated });
 
@@ -125,15 +111,11 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
         const computedLevel = Math.floor(totalXP / XP_PER_LEVEL) + 1;
         const newElo = get().elo + result.eloChange;
 
-        const updatedMissions = get().missions.map((m) =>
-          m.id === missionId
-            ? {
-                ...m,
-                status: 'completed' as const,
-                completedAt: now.toISOString(),
-                score: result.score,
-              }
-            : m
+        const updatedMissions = completeMission(
+          get().missions,
+          missionId,
+          now.toISOString(),
+          result.score
         );
 
         const newSession: StudySession = {
@@ -225,17 +207,16 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
         const totalXP = get().xp + result.xp;
         const computedLevel = Math.floor(totalXP / XP_PER_LEVEL) + 1;
 
-        const skillName =
-          module.toLowerCase() as import('@/features/profile/profile.types').SkillName;
-        const userId = useAuthStore.getState().currentUser?.id || 'local-user';
-        const profile = LearningProfileRepository.getProfile(userId);
-        const currentSkillElo = profile.skills[skillName]?.elo || INITIAL_ELO;
-        const newSkillElo = Math.max(INITIAL_ELO, currentSkillElo + result.eloChange);
+        const skillName = module.toLowerCase() as LearningSkillName;
+        const ports = getLearningPorts();
+        const userId = ports.currentUser.getUserId() ?? 'local-user';
+        const currentSkill = ports.profile.getSkillProfile(userId, skillName);
+        const newSkillElo = Math.max(INITIAL_ELO, currentSkill.elo + result.eloChange);
 
-        LearningProfileRepository.updateSkill(userId, skillName, {
+        ports.profile.updateSkill(userId, skillName, {
           elo: newSkillElo,
           accuracy: score,
-          completedTasks: (profile.skills[skillName]?.completedTasks || 0) + 1,
+          completedTasks: currentSkill.completedTasks + 1,
           weaknessScore: 100 - score,
           lastPracticedAt: now.toISOString(),
         });
@@ -318,8 +299,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
 
       masterTerms: (termIds: string[]) => {
         const current = get().vocabularyPool ?? [];
-        const combined = Array.from(new Set([...current, ...termIds]));
-        set({ vocabularyPool: combined });
+        set({ vocabularyPool: addUniqueContent(current, termIds) });
       },
 
       markTermWeak: (termId: string) => {
@@ -332,7 +312,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
       clearWeakTerm: (termId: string) => {
         const current = get().weakTermIds ?? [];
         if (current.includes(termId)) {
-          set({ weakTermIds: current.filter((id) => id !== termId) });
+          set({ weakTermIds: removeContent(current, termId) });
         }
       },
 
@@ -347,33 +327,15 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
         }
       },
 
-      resetAll: () => {
-        set({
-          missions: DEFAULT_MISSIONS,
-          achievements: DEFAULT_ACHIEVEMENTS,
-          xp: 0,
-          level: 1,
-          coins: 0,
-          elo: INITIAL_ELO,
-          streak: 0,
-          lastActivityDate: null,
-          studySessions: [],
-          scoreHistory: [],
-          xpHistory: [],
-          eloHistory: [],
-          vocabularyPool: [],
-          grammarPool: [],
-          speakingPool: [],
-          hearts: MAX_HEARTS,
-          heartsDepletedAt: null,
-          weakTermIds: [],
-        });
-      },
+      resetAll: () => set(createInitialLearningState()),
     }),
     {
       ...eosPersistConfig(STORAGE_KEY),
+      version: LEARNING_PERSISTENCE_VERSION,
+      migrate: (persistedState) =>
+        migratePersistedLearningState(persistedState) as LearningState & LearningStoreActions,
       merge: (persistedState, currentState) => {
-        const persisted = persistedState as Partial<LearningState>;
+        const persisted = migratePersistedLearningState(persistedState);
         const state = currentState;
         const merged = {
           ...state,

@@ -1,4 +1,5 @@
 export * from './learning.types';
+export * from './learning.ports';
 export * from './scoring.service';
 export * from './progress.service';
 export * from './achievement.service';

@@ -4,11 +4,12 @@ import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
 import { ObservabilityService } from '@/core/observability/observability.service';
 
+import '@/bootstrap/learning.ports.adapter';
+
 import App from './App';
 import './index.css';
 import { logger } from './shared/logger';
 
-// Configure StatusBar for native platforms (overlay:false = WebView below status bar)
 const isCapacitor =
   typeof window !== 'undefined' && Boolean((window as Window & { Capacitor?: unknown }).Capacitor);
 if (isCapacitor) {
@@ -21,7 +22,6 @@ if (isCapacitor) {
     .catch(() => {});
 }
 
-// Polyfill: Safari < 16 does not support requestIdleCallback
 if (typeof window !== 'undefined' && !('requestIdleCallback' in window)) {
   (window as unknown as Record<string, unknown>).requestIdleCallback = (
     cb: (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void,
@@ -42,7 +42,6 @@ if (typeof window !== 'undefined' && !('requestIdleCallback' in window)) {
   };
 }
 
-// Global unhandled rejection handler for production error tracking
 if (typeof window !== 'undefined') {
   window.addEventListener('unhandledrejection', (event) => {
     const error = event.reason instanceof Error ? event.reason : new Error(String(event.reason));
@@ -54,17 +53,11 @@ if (typeof window !== 'undefined') {
       timestamp: new Date().toISOString(),
       url: window.location.href,
     });
-    // Do NOT call event.preventDefault() — it would silence all unhandled
-    // rejection errors in the browser console, making debugging impossible.
-    // ObservabilityService.logError above already captures these for tracking.
   });
 }
 
-// Theme is handled by ThemeProvider — no manual DOM manipulation here
-
 logger.i('EngVox Kernel Booting...');
 
-// Scroll-triggered animations via IntersectionObserver
 if (typeof window !== 'undefined') {
   const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
 
@@ -82,7 +75,6 @@ if (typeof window !== 'undefined') {
       observer.observe(el);
     });
 
-    // Mouse tracking for card hover effects (throttled via rAF)
     let mouseFrame = 0;
     document.addEventListener('mousemove', (e) => {
       window.cancelAnimationFrame(mouseFrame);
@@ -99,7 +91,6 @@ if (typeof window !== 'undefined') {
   });
 }
 
-// Publish app.started event to Core Event Bus
 try {
   const metaEnv = import.meta.env;
   eventBus.publish({
@@ -119,7 +110,6 @@ try {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 
-// Service Worker — only on web PWA (Capacitor native shell handles caching)
 if ('serviceWorker' in navigator && !isCapacitor) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
@@ -133,6 +123,4 @@ if ('serviceWorker' in navigator && !isCapacitor) {
   });
 }
 
-// Defer Sentry init to after React mount so router hooks are available
-// for reactRouterV7BrowserTracingIntegration (useLocation, etc.).
 requestIdleCallback(() => ObservabilityService.init());
