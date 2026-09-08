@@ -1,8 +1,11 @@
+import { randomUUID } from 'node:crypto';
+
+import { ApiError } from './errors.js';
 import { logger } from './logger.js';
 
 const MAX_LOG_SIZE = 10_000;
 
-interface AuditLogEntry {
+export interface AuditLogEntry {
   id: string;
   timestamp: string;
   action?: string;
@@ -12,79 +15,125 @@ interface AuditLogEntry {
   [key: string]: unknown;
 }
 
-interface AuditLogFilters {
+export interface AuditLogFilters {
   userId?: string;
   action?: string;
   since?: string;
   limit?: number;
 }
 
+interface AuditRepository {
+  insert(record: AuditLogEntry): Promise<void>;
+  query(filters: AuditLogFilters): Promise<AuditLogEntry[]>;
+  healthCheck(): Promise<void>;
+}
+
+interface AuditState {
+  status: 'uninitialized' | 'initializing' | 'ready' | 'disabled' | 'failed';
+  required: boolean;
+  lastError?: string;
+  lastSuccessfulWrite?: string;
+}
+
 const logs: AuditLogEntry[] = [];
-let supabaseRepository: {
-  insert: (record: AuditLogEntry) => void;
-  query: (filters: AuditLogFilters) => Promise<AuditLogEntry[]>;
-} | null = null;
+let supabaseRepository: AuditRepository | null = null;
+let auditState: AuditState = { status: 'uninitialized', required: false };
+
+export const getAuditLogStatus = (): Readonly<AuditState> => ({ ...auditState });
+export const isAuditLogReady = (): boolean =>
+  auditState.status === 'ready' || (!auditState.required && auditState.status === 'disabled');
+
+const markAuditFailure = (error: unknown): void => {
+  auditState = {
+    ...auditState,
+    status: 'failed',
+    lastError: error instanceof Error ? error.message : String(error),
+  };
+};
 
 export const initAuditLog = async (config: {
+  environment?: string;
   workspace?: Record<string, unknown>;
 }): Promise<void> => {
   const ws = config?.workspace;
-  if (!ws?.configured || !ws?.supabaseUrl || !ws?.supabaseServiceRoleKey) return;
+  const required = config.environment === 'production';
+  auditState = { status: 'initializing', required };
+  supabaseRepository = null;
+
+  if (!ws?.configured || !ws?.supabaseUrl || !ws?.supabaseServiceRoleKey) {
+    const error = new Error('Remote audit storage is not configured.');
+    if (required) {
+      markAuditFailure(error);
+      throw error;
+    }
+    auditState = { status: 'disabled', required: false };
+    return;
+  }
+
   try {
     const { createSupabaseAuditLogRepository } = await import('./supabase-audit-log-repository.js');
-    supabaseRepository = createSupabaseAuditLogRepository(ws);
-  } catch (error: unknown) {
-    logger.warn('Failed to initialize remote audit repository', {
-      error: error instanceof Error ? error.message : String(error),
-    });
-    supabaseRepository = null;
+    const repository = createSupabaseAuditLogRepository(ws);
+    if (!repository) throw new Error('Remote audit repository configuration is invalid.');
+    await repository.healthCheck();
+    supabaseRepository = repository;
+    auditState = { status: 'ready', required };
+  } catch (error) {
+    markAuditFailure(error);
+    logger.error('Failed to initialize remote audit repository', {}, error as Error);
+    throw error;
   }
 };
 
 export const auditLog = (entry: Omit<AuditLogEntry, 'id' | 'timestamp'>): AuditLogEntry => {
+  if (auditState.required && auditState.status !== 'ready') {
+    throw new ApiError(503, 'audit_log_unavailable', 'Required audit logging is unavailable.');
+  }
+
   const record: AuditLogEntry = {
-    id: `audit_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+    id: randomUUID(),
     timestamp: new Date().toISOString(),
     ...entry,
   };
-
   logs.push(record);
-
-  if (logs.length > MAX_LOG_SIZE) {
-    logs.splice(0, logs.length - MAX_LOG_SIZE);
-  }
+  if (logs.length > MAX_LOG_SIZE) logs.splice(0, logs.length - MAX_LOG_SIZE);
 
   if (supabaseRepository) {
-    supabaseRepository.insert(record);
+    void supabaseRepository
+      .insert(record)
+      .then(() => {
+        auditState = {
+          ...auditState,
+          status: 'ready',
+          lastError: undefined,
+          lastSuccessfulWrite: new Date().toISOString(),
+        };
+      })
+      .catch((error: unknown) => {
+        markAuditFailure(error);
+        logger.error('Remote audit write failed', { auditId: record.id }, error as Error);
+      });
   }
 
   if (entry.severity === 'critical' || entry.severity === 'error') {
-    logger.warn(`Audit ${entry.severity?.toUpperCase()}`, { record });
+    logger.warn(`Audit ${entry.severity.toUpperCase()}`, { record });
   }
-
   return record;
 };
 
 export const getAuditLogs = async (filters: AuditLogFilters = {}): Promise<AuditLogEntry[]> => {
-  if (supabaseRepository) {
-    const remoteLogs = await supabaseRepository.query(filters);
-    if (remoteLogs.length > 0) return remoteLogs;
+  if (auditState.required && !supabaseRepository) {
+    throw new ApiError(503, 'audit_log_unavailable', 'Required audit logging is unavailable.');
   }
+  if (supabaseRepository) return supabaseRepository.query(filters);
 
   let filtered = [...logs];
-
-  if (filters.userId) {
-    filtered = filtered.filter((l) => l.userId === filters.userId);
-  }
-  if (filters.action) {
-    filtered = filtered.filter((l) => l.action === filters.action);
-  }
+  if (filters.userId) filtered = filtered.filter((log) => log.userId === filters.userId);
+  if (filters.action) filtered = filtered.filter((log) => log.action === filters.action);
   if (filters.since) {
     const since = new Date(filters.since);
-    filtered = filtered.filter((l) => new Date(l.timestamp) >= since);
+    filtered = filtered.filter((log) => new Date(log.timestamp) >= since);
   }
-
-  const limit = filters.limit || 100;
+  const limit = Math.min(Math.max(filters.limit ?? 100, 1), 1_000);
   return filtered.slice(-limit);
 };
 
@@ -104,7 +153,6 @@ export const AUDIT_ACTIONS = {
   WORKSPACE_DELETED: 'workspace_deleted',
   RATE_LIMIT_EXCEEDED: 'rate_limit_exceeded',
   ADMIN_ACCESS: 'admin_access',
-  // Data mutation tracking
   DATA_CREATED: 'data_created',
   DATA_UPDATED: 'data_updated',
   DATA_DELETED: 'data_deleted',
