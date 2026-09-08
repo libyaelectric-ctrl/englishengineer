@@ -1,0 +1,46 @@
+name: Phase Contract Gates
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: phase-contracts-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    name: Phase 5-8 static contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+
+      - name: Verify Phase 5 security contracts
+        run: node scripts/verify-phase5-security.mjs
+
+      - name: Verify Phase 6 architecture contracts
+        run: node scripts/verify-phase6-architecture.mjs
+
+      - name: Verify Phase 7 platform contracts
+        run: node scripts/verify-phase7-platform.mjs
+
+      - name: Verify Phase 8 quality contracts
+        run: node scripts/verify-phase8-quality.mjs
+
+      - name: Audit quality debt baseline
+        run: node scripts/audit-quality-debt.mjs
