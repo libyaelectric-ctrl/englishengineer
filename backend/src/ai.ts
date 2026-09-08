@@ -134,6 +134,7 @@ const logAiUsage = async (
 ) => {
   if (result && !result.error) {
     await ledger.logSession(userId, {
+      requestId,
       modeId: body.modeId || 'unknown',
       provider: result.provider || 'mock',
       operation,
