@@ -517,8 +517,12 @@ const registerRoutes = (
   };
 
   const livenessHandler = (_request: Request, response: Response) => {
+    const health = toPublicHealth(config);
     response.setHeader('Cache-Control', 'no-store');
-    response.json({ status: 'ok' });
+    response.json({
+      ...health,
+      billingProvider: config.billing.provider ?? 'none',
+    });
   };
   const diagnosticsHandler = async (_request: Request, response: Response) => {
     const startTime = Date.now();

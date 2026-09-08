@@ -26,34 +26,36 @@ describe('createBackendAuth', () => {
     it('authenticates via internal API secret', async () => {
       const config = {
         internalApiSecret: 'secret-123',
+        internalServiceId: 'service-worker',
+        internalServiceEmail: 'svc@example.com',
+        internalServiceRole: 'service',
       } as unknown as BackendAuthConfig;
       const { requireBackendAuth } = createBackendAuth(config);
-      const req = createMockRequest(
-        {
-          authorization: 'Bearer secret-123',
-          'x-engineeros-user-id': 'user-1',
-        },
-        {}
-      );
+      const req = createMockRequest({
+        authorization: 'Bearer secret-123',
+      });
       const next: NextFunction = () => {};
       await requireBackendAuth(req, mockResponse as unknown as Response, next);
-      assert.equal(req.auth?.userId, 'user-1');
+      assert.equal(req.auth?.userId, 'service-worker');
+      assert.equal(req.auth?.email, 'svc@example.com');
+      assert.equal(req.auth?.role, 'service');
       assert.equal(req.auth?.source, 'internal-secret');
     });
 
-    it('throws 400 when internal secret used without user ID', async () => {
+    it('throws 503 when internal secret used without service identity', async () => {
       const config = {
         internalApiSecret: 'secret-123',
       } as unknown as BackendAuthConfig;
       const { requireBackendAuth } = createBackendAuth(config);
       const req = createMockRequest({ authorization: 'Bearer secret-123' }, {});
-      let caughtError: (Error & { status?: number }) | undefined;
+      let caughtError: (Error & { status?: number; code?: string }) | undefined;
       const next: NextFunction = ((err?: unknown) => {
-        caughtError = err as Error & { status?: number };
+        caughtError = err as Error & { status?: number; code?: string };
       }) as NextFunction;
       await requireBackendAuth(req, mockResponse as unknown as Response, next);
       assert.ok(caughtError);
-      assert.equal(caughtError?.status, 400);
+      assert.equal(caughtError?.status, 503);
+      assert.equal(caughtError?.code, 'internal_service_identity_unavailable');
     });
 
     it('throws 401 when no token provided and dev auth disabled', async () => {
@@ -148,19 +150,19 @@ describe('createBackendAuth', () => {
     it('internal-secret takes priority over dev-bypass when both configured', async () => {
       const config = {
         internalApiSecret: 'secret-123',
+        internalServiceId: 'service-priority',
         allowInsecureDevAuth: true,
       } as unknown as BackendAuthConfig;
       const { requireBackendAuth } = createBackendAuth(config);
       const req = createMockRequest(
         {
           authorization: 'Bearer secret-123',
-          'x-engineeros-user-id': 'user-priority',
         },
         { userId: 'dev-should-not-appear' }
       );
       const next: NextFunction = () => {};
       await requireBackendAuth(req, mockResponse as unknown as Response, next);
-      assert.equal(req.auth?.userId, 'user-priority');
+      assert.equal(req.auth?.userId, 'service-priority');
       assert.equal(req.auth?.source, 'internal-secret');
     });
   });

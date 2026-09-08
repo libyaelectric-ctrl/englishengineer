@@ -332,6 +332,7 @@ const productionAuthEnvironment = {
   NODE_ENV: 'production',
   FIREBASE_PROJECT_ID: 'test-firebase-project',
   ENGINEEROS_INTERNAL_API_SECRET: 'internal-test-secret',
+  ENGINEEROS_INTERNAL_SERVICE_ID: 'service-test-worker',
   ALLOW_MEMORY_BILLING_REPOSITORY: 'true',
   RATE_LIMIT_STORE: 'memory',
   ALLOW_IN_MEMORY_RATE_LIMIT_IN_PRODUCTION: 'true',
@@ -440,7 +441,7 @@ test('billing derives ownership from authenticated identity', async () => {
     headers: internalHeaders('owner-user'),
   });
   assert.equal(owned.status, 200);
-  assert.equal(requestedUserId, 'owner-user');
+  assert.equal(requestedUserId, 'service-test-worker');
 });
 
 test('checkout rejects a mismatched body user and accepts the authenticated user', async () => {
@@ -455,13 +456,14 @@ test('checkout rejects a mismatched body user and accepts the authenticated user
       },
     },
   };
+  const repository = createMemorySubscriptionRepository();
   const url = await start(
     {
       ...productionAuthEnvironment,
       STRIPE_SECRET_KEY: 'sk_test_value',
       STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
     },
-    { stripeClient }
+    { stripeClient, billingRepository: repository }
   );
   const payload = {
     userId: 'other-user',
@@ -480,10 +482,10 @@ test('checkout rejects a mismatched body user and accepts the authenticated user
   const accepted = await fetch(`${url}/api/v1/billing/create-checkout-session`, {
     method: 'POST',
     headers: internalHeaders('owner-user'),
-    body: JSON.stringify({ ...payload, userId: 'owner-user' }),
+    body: JSON.stringify({ ...payload, userId: 'service-test-worker' }),
   });
   assert.equal(accepted.status, 200);
-  assert.equal(checkoutUserId, 'owner-user');
+  assert.equal(checkoutUserId, 'service-test-worker');
 });
 
 test('memory billing repository is bounded and production-guarded', async () => {
@@ -973,13 +975,13 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
 
   const repository = {
     async getSubscriptionStatus(userId: string) {
-      if (userId === 'owner-user') {
+      if (userId === 'service-test-worker' || userId === 'owner-user') {
         return db.subscription;
       }
       return null;
     },
     async upsertSubscriptionStatus(userId: string, snapshot: unknown) {
-      if (userId === 'owner-user') {
+      if (userId === 'service-test-worker' || userId === 'owner-user') {
         db.subscription = snapshot;
       }
     },
@@ -1017,9 +1019,9 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
                 object: {
                   customer: 'cus_12345',
                   subscription: 'sub_56789',
-                  client_reference_id: 'owner-user',
+                  client_reference_id: 'service-test-worker',
                   metadata: {
-                    userId: 'owner-user',
+                    userId: 'service-test-worker',
                     planId: 'junior',
                   },
                 },
@@ -1051,9 +1053,9 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
   assert.equal(body.eventId, 'evt_1Tooe1LYQum3RaPO1NTqL56V');
 
   const statusResponse = await fetch(
-    `${url}/api/v1/billing/subscription-status?userId=owner-user`,
+    `${url}/api/v1/billing/subscription-status?userId=service-test-worker`,
     {
-      headers: internalHeaders('owner-user'),
+      headers: internalHeaders('service-test-worker'),
     }
   );
   assert.equal(statusResponse.status, 200);
