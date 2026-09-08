@@ -88,14 +88,43 @@ export const resolveAuth = (env: Env, runtimeEnv: RuntimeEnvironment): AuthConfi
     );
   }
 
+  const internalApiSecret = trimEnv(env.ENGINEEROS_INTERNAL_API_SECRET);
+  const internalServiceId = trimEnv(env.ENGINEEROS_INTERNAL_SERVICE_ID);
+  if (runtimeEnv === 'production' && internalApiSecret && !internalServiceId) {
+    throw new Error(
+      'ENGINEEROS_INTERNAL_SERVICE_ID is required when internal authentication is enabled.'
+    );
+  }
+
+  const supabaseUrl = supabaseAuthConfigured ? env.SUPABASE_URL!.trim().replace(/\/+$/, '') : null;
+  const supabaseJwtSecret = stripWhitespace(env.SUPABASE_JWT_SECRET);
+  const supabaseJwtIssuer =
+    trimEnv(env.SUPABASE_JWT_ISSUER) ?? (supabaseUrl ? `${supabaseUrl}/auth/v1` : null);
+  const supabaseJwtAudience =
+    trimEnv(env.SUPABASE_JWT_AUDIENCE) ?? (supabaseJwtSecret ? 'authenticated' : null);
+  if (
+    runtimeEnv === 'production' &&
+    supabaseJwtSecret &&
+    (!supabaseJwtIssuer || !supabaseJwtAudience)
+  ) {
+    throw new Error(
+      'SUPABASE_JWT_ISSUER and SUPABASE_JWT_AUDIENCE are required for local JWT verification.'
+    );
+  }
+
   return {
-    internalApiSecret: trimEnv(env.ENGINEEROS_INTERNAL_API_SECRET),
+    internalApiSecret,
+    internalServiceId,
+    internalServiceEmail: trimEnv(env.ENGINEEROS_INTERNAL_SERVICE_EMAIL),
+    internalServiceRole: trimEnv(env.ENGINEEROS_INTERNAL_SERVICE_ROLE) ?? 'service',
     allowInsecureDevAuth,
-    supabaseUrl: supabaseAuthConfigured ? env.SUPABASE_URL!.trim() : null,
+    supabaseUrl,
     supabaseAnonKey: supabaseAuthConfigured
       ? (env.SUPABASE_ANON_KEY || env.SUPABASE_SERVICE_ROLE_KEY)!.replace(/\s+/g, '')
       : null,
-    supabaseJwtSecret: stripWhitespace(env.SUPABASE_JWT_SECRET),
+    supabaseJwtSecret,
+    supabaseJwtIssuer,
+    supabaseJwtAudience,
     firebaseProjectId: stripWhitespace(env.FIREBASE_PROJECT_ID),
   };
 };
