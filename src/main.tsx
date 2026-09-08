@@ -10,6 +10,7 @@ import App from './App';
 import './index.css';
 import { logger } from './shared/logger';
 
+// Configure StatusBar for native platforms (overlay:false = WebView below status bar)
 const isCapacitor =
   typeof window !== 'undefined' && Boolean((window as Window & { Capacitor?: unknown }).Capacitor);
 if (isCapacitor) {
@@ -20,8 +21,13 @@ if (isCapacitor) {
       StatusBar.setBackgroundColor({ color: '#0f0f23' }).catch(() => {});
     })
     .catch(() => {});
+
+  import('@/bootstrap/capacitor-deep-links')
+    .then(({ registerCapacitorDeepLinks }) => registerCapacitorDeepLinks())
+    .catch((error) => logger.w('Capacitor deep-link registration failed:', error));
 }
 
+// Polyfill: Safari < 16 does not support requestIdleCallback
 if (typeof window !== 'undefined' && !('requestIdleCallback' in window)) {
   (window as unknown as Record<string, unknown>).requestIdleCallback = (
     cb: (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void,
@@ -42,6 +48,7 @@ if (typeof window !== 'undefined' && !('requestIdleCallback' in window)) {
   };
 }
 
+// Global unhandled rejection handler for production error tracking
 if (typeof window !== 'undefined') {
   window.addEventListener('unhandledrejection', (event) => {
     const error = event.reason instanceof Error ? event.reason : new Error(String(event.reason));
@@ -60,7 +67,6 @@ logger.i('EngVox Kernel Booting...');
 
 if (typeof window !== 'undefined') {
   const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
-
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -71,10 +77,7 @@ if (typeof window !== 'undefined') {
   }, observerOptions);
 
   window.addEventListener('load', () => {
-    document.querySelectorAll('.animate-on-scroll').forEach((el) => {
-      observer.observe(el);
-    });
-
+    document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el));
     let mouseFrame = 0;
     document.addEventListener('mousemove', (e) => {
       window.cancelAnimationFrame(mouseFrame);
@@ -82,10 +85,8 @@ if (typeof window !== 'undefined') {
         const target = (e.target as HTMLElement).closest('.card-interactive') as HTMLElement | null;
         if (!target) return;
         const rect = target.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        target.style.setProperty('--mouse-x', `${x}%`);
-        target.style.setProperty('--mouse-y', `${y}%`);
+        target.style.setProperty('--mouse-x', `${((e.clientX - rect.left) / rect.width) * 100}%`);
+        target.style.setProperty('--mouse-y', `${((e.clientY - rect.top) / rect.height) * 100}%`);
       });
     });
   });
@@ -114,12 +115,8 @@ if ('serviceWorker' in navigator && !isCapacitor) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register('/sw.js')
-      .then((registration) => {
-        logger.i('SW registered:', registration.scope);
-      })
-      .catch((error) => {
-        logger.w('SW registration failed:', error);
-      });
+      .then((registration) => logger.i('SW registered:', registration.scope))
+      .catch((error) => logger.w('SW registration failed:', error));
   });
 }
 
