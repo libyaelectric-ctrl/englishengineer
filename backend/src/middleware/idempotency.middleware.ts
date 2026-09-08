@@ -41,10 +41,43 @@ export const idempotencyKey = (options: IdempotencyOptions = {}) => {
   };
 };
 const createMemoryStore = (): IdempotencyStore => { const map = new Map<string, IdempotencyEntry>(); return { async get(key) { return map.get(key) ?? null; }, async set(key, value) { map.set(key, value); }, entries: () => map.entries(), delete: (key) => { map.delete(key); } }; };
+const idempotencyStoreUnavailable = (cause?: unknown): ApiError => {
+  const error = new ApiError(
+    503,
+    'idempotency_store_unavailable',
+    'Idempotent request processing is temporarily unavailable.'
+  );
+  if (cause instanceof Error) (error as Error & { cause?: Error }).cause = cause;
+  return error;
+};
 const createRedisStore = (config: { rateLimit?: { upstashUrl?: string; upstashToken?: string; storeTimeoutMs?: number } }, fetchImpl: typeof fetch): IdempotencyStore => {
   const url = config.rateLimit?.upstashUrl || process.env.UPSTASH_REDIS_REST_URL; const token = config.rateLimit?.upstashToken || process.env.UPSTASH_REDIS_REST_TOKEN; const timeoutMs = config.rateLimit?.storeTimeoutMs || 3000;
   if (!url || !token) throw new Error('Redis store configured but UPSTASH_REDIS_REST_URL or TOKEN is missing.');
-  const redisFetch = async (args: (string | number)[]) => { const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), timeoutMs); try { const response = await fetchImpl(url, { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(args), signal: controller.signal }); return response.ok ? await response.json() : null; } catch { return null; } finally { clearTimeout(timeoutId); } };
-  return { async get(key) { const payload = await redisFetch(['GET', `engineeros:idempotency:${key}`]); return payload?.result ? JSON.parse(payload.result) as IdempotencyEntry : null; }, async set(key, value) { await redisFetch(['SET', `engineeros:idempotency:${key}`, JSON.stringify(value), 'PX', '86400000']); } };
+  const redisFetch = async (args: (string | number)[]): Promise<{ result: unknown }> => {
+    const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const response = await fetchImpl(url, { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(args), signal: controller.signal });
+      if (!response.ok) throw new Error(`Redis returned HTTP ${response.status}.`);
+      const payload = await response.json() as { result?: unknown };
+      if (!Object.prototype.hasOwnProperty.call(payload, 'result')) throw new Error('Redis response is missing result.');
+      return { result: payload.result };
+    } catch (error) {
+      if (error instanceof ApiError) throw error;
+      throw idempotencyStoreUnavailable(error);
+    } finally { clearTimeout(timeoutId); }
+  };
+  return {
+    async get(key) {
+      const payload = await redisFetch(['GET', `engineeros:idempotency:${key}`]);
+      if (payload.result === null) return null;
+      if (typeof payload.result !== 'string') throw idempotencyStoreUnavailable();
+      try { return JSON.parse(payload.result) as IdempotencyEntry; }
+      catch (error) { throw idempotencyStoreUnavailable(error); }
+    },
+    async set(key, value) {
+      const payload = await redisFetch(['SET', `engineeros:idempotency:${key}`, JSON.stringify(value), 'PX', '86400000']);
+      if (payload.result !== 'OK') throw idempotencyStoreUnavailable();
+    }
+  };
 };
 export const createIdempotencyStore = (type: 'memory' | 'redis' = 'memory', config: { rateLimit?: { upstashUrl?: string; upstashToken?: string; storeTimeoutMs?: number } } = {}, fetchImpl: typeof fetch = fetch): IdempotencyStore => type === 'memory' ? createMemoryStore() : type === 'redis' ? createRedisStore(config, fetchImpl) : (() => { throw new Error(`Unknown idempotency store type: ${type}`); })();
