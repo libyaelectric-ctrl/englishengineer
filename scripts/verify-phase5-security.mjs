@@ -2,16 +2,18 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
-const [auth, app, tenant, speaking, audit, exportRoutes, exportRepo, types] = await Promise.all([
-  read('backend/src/auth.ts'),
-  read('backend/src/app.ts'),
-  read('backend/src/middleware/tenant.middleware.ts'),
-  read('backend/src/speaking-routes.ts'),
-  read('backend/src/audit-log.ts'),
-  read('backend/src/export-routes.ts'),
-  read('backend/src/compliance-export-repository.ts'),
-  read('backend/types.d.ts'),
-]);
+const [auth, app, tenant, speaking, audit, billingRoutes, exportRoutes, exportRepo, types] =
+  await Promise.all([
+    read('backend/src/auth.ts'),
+    read('backend/src/app.ts'),
+    read('backend/src/middleware/tenant.middleware.ts'),
+    read('backend/src/speaking-routes.ts'),
+    read('backend/src/audit-log.ts'),
+    read('backend/src/billing-routes.ts'),
+    read('backend/src/export-routes.ts'),
+    read('backend/src/compliance-export-repository.ts'),
+    read('backend/types.d.ts'),
+  ]);
 
 assert.match(auth, /header\.alg !== 'HS256'/);
 assert.match(auth, /header\.typ !== 'JWT'/);
@@ -69,8 +71,15 @@ assert.match(tenant, /organization_id/);
 assert.match(tenant, /user_id/);
 assert.match(speaking, /audio_signature_mismatch/);
 assert.match(speaking, /audio_storage_unavailable/);
+assert.match(audit, /export const auditLog = async/);
+assert.match(audit, /await supabaseRepository\.insert\(record\)/);
 assert.match(audit, /audit_log_unavailable/);
 assert.match(audit, /healthCheck/);
+assert.ok(
+  (billingRoutes.match(/await auditLog\(/g) ?? []).length >= 3,
+  'Billing and webhook audit writes must be awaited.'
+);
+assert.match(exportRoutes, /await auditLog\(/);
 for (const section of [
   'progressSnapshots',
   'workspaces',
