@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 import { Link, isRouteErrorResponse, useRouteError } from 'react-router-dom';
 
 import { Button } from '@/shared/components/Button';
+import { logBoundaryError } from '@/shared/errors/boundaryLogging';
 import { logger } from '@/shared/logger';
 
 const CHUNK_ERROR_MESSAGES = [
@@ -25,6 +26,17 @@ export const RouteErrorPage = () => {
       : 'The requested page could not be loaded.';
 
   const isChunkError = CHUNK_ERROR_MESSAGES.some((msg) => message.includes(msg));
+
+  // Report genuine runtime failures (not 4xx/5xx route responses) through the
+  // shared boundary logging core. Chunk-load errors are handled by the auto
+  // reload below and already filtered from Sentry at the SDK level.
+  // The error element re-mounts per failure, so the error reference is stable
+  // for the lifetime of this component.
+  useEffect(() => {
+    if (!isRouteErrorResponse(error)) {
+      logBoundaryError({ error, scope: 'route' });
+    }
+  }, [error]);
 
   useEffect(() => {
     if (!isChunkError) return;

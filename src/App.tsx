@@ -8,9 +8,9 @@ import { RouterProvider } from 'react-router-dom';
 
 import CookieConsentBanner from '@/shared/components/CookieConsentBanner';
 import { ToastContainer } from '@/shared/components/Toast';
+import { logBoundaryError } from '@/shared/errors/boundaryLogging';
 import { useCapacitorBackButton } from '@/shared/hooks/useCapacitorBackButton';
 import { useDirection } from '@/shared/hooks/useDirection';
-import { logger } from '@/shared/logger';
 
 import { FirebaseAuthProvider } from '@/features/auth/FirebaseAuth';
 import { FirebaseBridge } from '@/features/auth/FirebaseBridge';
@@ -29,8 +29,7 @@ class SimpleErrorBoundary extends Component<
     return { hasError: true, error };
   }
   componentDidCatch(error: Error, info: ErrorInfo) {
-    logger.e('[ErrorBoundary]', error, info.componentStack);
-    import('@sentry/react').then((module) => module.captureException(error)).catch(() => {});
+    logBoundaryError({ error, scope: 'global', componentStack: info.componentStack });
   }
   render() {
     if (this.state.hasError)
