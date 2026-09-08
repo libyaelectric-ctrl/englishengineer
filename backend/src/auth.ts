@@ -20,17 +20,47 @@ interface JwtPayload {
   email?: string;
   role?: string;
   exp?: number;
+  iat?: number;
+  iss?: string;
+  aud?: string | string[];
 }
 
-const verifyJwtLocally = async (
+interface JwtHeader {
+  alg?: string;
+  typ?: string;
+}
+
+const jwtAudienceMatches = (actual: JwtPayload['aud'], expected: string): boolean =>
+  typeof actual === 'string'
+    ? actual === expected
+    : Array.isArray(actual) && actual.includes(expected);
+
+export const verifyJwtLocally = async (
   token: string,
-  jwtSecret: string
+  config: AuthConfig,
+  now = Math.floor(Date.now() / 1000)
 ): Promise<AuthenticatedUser | null> => {
-  if (!token || !jwtSecret) return null;
+  const jwtSecret = config.supabaseJwtSecret;
+  if (!token || !jwtSecret || !config.supabaseJwtIssuer || !config.supabaseJwtAudience) return null;
   const parts = token.split('.');
   if (parts.length !== 3) return null;
   const [headerB64, payloadB64, signatureB64] = parts;
   try {
+    const header = JSON.parse(base64urlDecode(headerB64!).toString('utf8')) as JwtHeader;
+    if (header.alg !== 'HS256' || header.typ !== 'JWT') return null;
+
+    const payload = JSON.parse(base64urlDecode(payloadB64!).toString('utf8')) as JwtPayload;
+    if (typeof payload.sub !== 'string' || !SAFE_USER_ID_PATTERN.test(payload.sub)) return null;
+    if (!Number.isInteger(payload.exp) || !Number.isInteger(payload.iat)) return null;
+    if (payload.exp! <= now - 60 || payload.iat! > now + 60 || payload.exp! <= payload.iat!)
+      return null;
+    if (
+      typeof payload.iss !== 'string' ||
+      normalizeIssuer(payload.iss) !== normalizeIssuer(config.supabaseJwtIssuer)
+    )
+      return null;
+    if (!jwtAudienceMatches(payload.aud, config.supabaseJwtAudience)) return null;
+
     const secretKey = await subtle.importKey(
       'raw',
       new TextEncoder().encode(jwtSecret),
@@ -38,30 +68,21 @@ const verifyJwtLocally = async (
       false,
       ['verify']
     );
-    const signatureBytes = base64urlDecode(signatureB64!);
-    const dataBytes = new TextEncoder().encode(`${headerB64}.${payloadB64}`);
     const isValid = await subtle.verify(
       'HMAC',
       secretKey,
-      // DOM lib's `BufferSource` and Node's `NodeJS.ArrayBufferView` types
-      // conflict after the @types/node bump; both are satisfied at
-      // runtime by a real Buffer, this is a types-only workaround.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      signatureBytes as any,
-      dataBytes
+      base64urlDecode(signatureB64!),
+      new TextEncoder().encode(`${headerB64}.${payloadB64}`)
     );
     if (!isValid) return null;
-    const payloadJson = Buffer.from(payloadB64!, 'base64').toString('utf8');
-    const payload: JwtPayload = JSON.parse(payloadJson);
-    const now = Math.floor(Date.now() / 1000);
-    if (payload.exp && payload.exp < now) {
-      return null;
-    }
-    return typeof payload.sub === 'string' && payload.sub
-      ? { userId: payload.sub, email: payload.email, role: payload.role, source: 'local-jwt' }
-      : null;
+    return {
+      userId: payload.sub,
+      email: typeof payload.email === 'string' ? payload.email : undefined,
+      role: typeof payload.role === 'string' ? payload.role : undefined,
+      source: 'local-jwt',
+    };
   } catch {
-    logger.warn('Failed to parse local JWT payload');
+    logger.warn('Failed to verify local JWT');
     return null;
   }
 };
@@ -146,7 +167,7 @@ const base64UrlBytes = (value: string): Uint8Array => {
 };
 
 interface DecodedFirebaseToken {
-  header: { kid?: string; alg?: string };
+  header: { kid?: string; alg?: string; typ?: string };
   payload: FirebaseClaims;
   signingInput: string;
   signature: Uint8Array;
@@ -158,11 +179,12 @@ const decodeFirebaseToken = (token: string): DecodedFirebaseToken | null => {
   const [headerB64, payloadB64, signatureB64] = parts;
   try {
     return {
-      header: JSON.parse(Buffer.from(headerB64!, 'base64').toString('utf8')) as {
+      header: JSON.parse(base64urlDecode(headerB64!).toString('utf8')) as {
         kid?: string;
         alg?: string;
+        typ?: string;
       },
-      payload: JSON.parse(Buffer.from(payloadB64!, 'base64').toString('utf8')) as FirebaseClaims,
+      payload: JSON.parse(base64urlDecode(payloadB64!).toString('utf8')) as FirebaseClaims,
       signingInput: `${headerB64}.${payloadB64}`,
       signature: base64UrlBytes(signatureB64!),
     };
@@ -187,10 +209,9 @@ const hasValidFirebaseClaims = (
   ) {
     return false;
   }
-  if (typeof payload.exp === 'number' && payload.exp < now) return false;
-  // Firebase ID tokens carry iat (no nbf); the token must not be from the
-  // future (small clock skew tolerated by the caller's token refresh cycle).
-  if (typeof payload.iat === 'number' && payload.iat > now + 60) return false;
+  if (!Number.isInteger(payload.exp) || payload.exp! <= now - 60) return false;
+  if (!Number.isInteger(payload.iat) || payload.iat! > now + 60) return false;
+  if (payload.exp! <= payload.iat!) return false;
   return true;
 };
 
@@ -217,6 +238,8 @@ const verifyFirebaseToken = async (
   if (!projectId) return null;
   const decoded = decodeFirebaseToken(token);
   if (!decoded) return null;
+  if (decoded.header.alg !== 'RS256' || (decoded.header.typ && decoded.header.typ !== 'JWT'))
+    return null;
   if (!hasValidFirebaseClaims(decoded.payload, projectId, Math.floor(Date.now() / 1000))) {
     return null;
   }
@@ -247,12 +270,6 @@ const verifyFirebaseToken = async (
   }
 };
 
-// Restricts user IDs accepted from the internal-secret auth path to safe
-// identifier characters. This value can end up in filesystem paths (see
-// speaking-routes.ts local-disk upload fallback), so it must never contain
-// path separators, "..", or other characters that could enable path
-// traversal or header/log injection. Covers UUID, Firebase UID, and
-// Supabase-style identifiers.
 const SAFE_USER_ID_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
 
 const secretsMatch = (
@@ -290,8 +307,6 @@ const validateSupabaseToken = async (
       : null;
   } catch (error) {
     logger.error('validateSupabaseToken failed', {}, error as Error);
-    // Network errors (DNS failure, timeout, Supabase project suspended) should
-    // NOT block other auth methods. Return null so the auth chain continues.
     return null;
   }
 };
@@ -309,37 +324,19 @@ export const createBackendAuth = (
   config: BackendAuthConfig,
   fetchImpl: typeof fetch = fetch
 ): BackendAuth => {
-  const authenticateInternalSecret = (
-    token: string | undefined,
-    request: Request
-  ): AuthenticatedUser | null => {
+  const authenticateInternalSecret = (token: string | undefined): AuthenticatedUser | null => {
     if (!secretsMatch(token, config.internalApiSecret)) return null;
-    const userId = request.headers['x-engineeros-user-id'];
-    if (typeof userId !== 'string' || !userId.trim()) {
+    if (!config.internalServiceId || !SAFE_USER_ID_PATTERN.test(config.internalServiceId)) {
       throw new ApiError(
-        400,
-        'missing_authenticated_user',
-        'X-EngineerOS-User-Id is required for internal authentication.'
-      );
-    }
-    const trimmedUserId = userId.trim();
-    if (!SAFE_USER_ID_PATTERN.test(trimmedUserId)) {
-      throw new ApiError(
-        400,
-        'invalid_authenticated_user',
-        'X-EngineerOS-User-Id contains invalid characters.'
+        503,
+        'internal_service_identity_unavailable',
+        'Internal authentication is not bound to a valid service identity.'
       );
     }
     return {
-      userId: trimmedUserId,
-      email:
-        typeof request.headers['x-engineeros-user-email'] === 'string'
-          ? request.headers['x-engineeros-user-email']
-          : undefined,
-      role:
-        typeof request.headers['x-engineeros-user-role'] === 'string'
-          ? request.headers['x-engineeros-user-role']
-          : undefined,
+      userId: config.internalServiceId,
+      email: config.internalServiceEmail ?? undefined,
+      role: config.internalServiceRole ?? 'service',
       source: 'internal-secret',
     };
   };
@@ -373,11 +370,11 @@ export const createBackendAuth = (
   const authenticate = async (request: Request): Promise<AuthenticatedUser> => {
     const token = readBearerToken(request);
 
-    const internalUser = authenticateInternalSecret(token ?? undefined, request);
+    const internalUser = authenticateInternalSecret(token ?? undefined);
     if (internalUser) return internalUser;
 
     if (config.supabaseJwtSecret && token) {
-      const localUser = await verifyJwtLocally(token, config.supabaseJwtSecret);
+      const localUser = await verifyJwtLocally(token, config);
       if (localUser) return localUser;
     }
 
@@ -386,12 +383,8 @@ export const createBackendAuth = (
         const firebaseUser = await verifyFirebaseToken(token, config.firebaseProjectId, fetchImpl);
         if (firebaseUser) return firebaseUser;
       } catch (error) {
-        // JWKS fetch failure (network issue, Google API outage) should not
-        // block the entire auth chain — log and fall through.
         logger.warn('Firebase token verification failed', { error: (error as Error).message });
       }
-      // A Firebase ID token is never a valid Supabase JWT — skip the
-      // Supabase validation to avoid 503 errors when Supabase is unreachable.
     } else {
       const supabaseUser = await validateSupabaseToken(config, token, fetchImpl);
       if (supabaseUser) return supabaseUser;
@@ -400,11 +393,6 @@ export const createBackendAuth = (
     const devUser = authenticateDevBypass(request);
     if (devUser) return devUser;
 
-    // Diagnostic breadcrumb only — never logs the token itself. This turns
-    // "authentication_required" from an opaque dead end (in the client) into
-    // something triageable from the backend logs: was there no token at
-    // all, was Firebase auth not even configured on this deployment, or did
-    // a present token simply fail every configured verification method?
     logger.warn('Backend auth rejected request', {
       path: request.path,
       hadToken: Boolean(token),

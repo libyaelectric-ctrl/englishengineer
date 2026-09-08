@@ -1,8 +1,8 @@
 import { type Page, expect, test } from '@playwright/test';
 
-import { skipIfNoClerkSecret } from '../helpers/clerk-login';
+import { skipIfNoFirebaseTestConfig } from '../helpers/firebase-login';
 
-skipIfNoClerkSecret();
+skipIfNoFirebaseTestConfig();
 
 const expectNoHorizontalOverflow = async (page: Page) => {
   const dimensions = await page.evaluate(() => ({
@@ -35,7 +35,6 @@ test.describe('mobile-first learning shell', () => {
       })
       .toBeLessThanOrEqual(0);
 
-    // /curriculum/memory is locked for the free tier → pricing.
     await page.goto('/curriculum/memory');
     await expect(page).toHaveURL(/\/pricing/, { timeout: 20_000 });
     await expectNoHorizontalOverflow(page);

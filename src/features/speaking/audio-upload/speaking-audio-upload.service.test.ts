@@ -17,9 +17,13 @@ describe('uploadSpeakingAudio', () => {
     const fetchImpl = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({
-        audioUrl: '/uploads/speaking/user-1/abc.webm',
-        sizeBytes: 16,
-        uploadedAt: '2026-07-26T00:00:00.000Z',
+        ok: true,
+        data: {
+          audioUrl: '/uploads/speaking/user-1/abc.webm',
+          sizeBytes: 16,
+          uploadedAt: '2026-07-26T00:00:00.000Z',
+        },
+        meta: { contractVersion: '2026-09-07.v1' },
       }),
     });
 
@@ -40,6 +44,23 @@ describe('uploadSpeakingAudio', () => {
       })
     );
     expect(result.audioUrl).toBe('/uploads/speaking/user-1/abc.webm');
+  });
+
+  it('rejects a legacy unversioned success payload', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 201,
+      json: async () => ({
+        audioUrl: '/uploads/speaking/user-1/legacy.webm',
+        sizeBytes: 16,
+        uploadedAt: '2026-07-26T00:00:00.000Z',
+      }),
+    });
+
+    await expect(uploadSpeakingAudio(makeBlob(), { fetchImpl })).rejects.toMatchObject({
+      status: 502,
+      code: 'invalid_response_contract',
+    });
   });
 
   it('throws SpeakingAudioUploadError with the server-provided code on failure', async () => {

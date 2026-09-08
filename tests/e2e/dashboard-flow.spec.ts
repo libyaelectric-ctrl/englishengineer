@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-import { skipIfNoClerkSecret } from '../helpers/clerk-login';
+import { skipIfNoFirebaseTestConfig } from '../helpers/firebase-login';
 
-skipIfNoClerkSecret();
+skipIfNoFirebaseTestConfig();
 
 test.describe('Dashboard flow', () => {
   test('dashboard loads after login', async ({ page }) => {
@@ -13,8 +13,7 @@ test.describe('Dashboard flow', () => {
   test('dashboard shows streak widget', async ({ page }) => {
     await page.goto('/dashboard');
     await page.waitForURL(/\/(dashboard|curriculum|onboarding)/, { timeout: 15000 });
-    const body = page.locator('body');
-    await expect(body).toContainText(/dashboard|streak|goal/i);
+    await expect(page.locator('body')).toContainText(/dashboard|streak|goal/i);
   });
 
   test('navigation to grammar page works', async ({ page }) => {

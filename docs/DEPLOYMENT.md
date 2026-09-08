@@ -48,12 +48,15 @@ docker compose up --build
 
 Required for production:
 
-- `SUPABASE_URL` - Supabase project URL
-- `SUPABASE_ANON_KEY` - Supabase anonymous key
-- `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key
-- `STRIPE_SECRET_KEY` - Stripe secret key
-- `STRIPE_WEBHOOK_SECRET` - Stripe webhook secret
-- `ANTHROPIC_API_KEY` - Anthropic API key (if using AI)
+- `SUPABASE_URL` - Supabase project URL used by persistent repositories.
+- `SUPABASE_ANON_KEY` - Supabase anonymous key.
+- `SUPABASE_SERVICE_ROLE_KEY` - Server-only key used for tenant membership, audit, export and private audio storage. Never expose it to Vite/browser variables.
+- `SUPABASE_JWT_SECRET`, `SUPABASE_JWT_ISSUER`, `SUPABASE_JWT_AUDIENCE` - Required together when local Supabase JWT verification is enabled. Issuer and audience are exact-match checks.
+- `METRICS_TOKEN` - Required in production. Send only as `Authorization: Bearer <token>` to `/api/metrics` and `/api/diagnostics`; query-string tokens are rejected.
+- `ENGINEEROS_INTERNAL_API_SECRET` and `ENGINEEROS_INTERNAL_SERVICE_ID` - Required together when internal service authentication is enabled. Optional `ENGINEEROS_INTERNAL_SERVICE_EMAIL` and `ENGINEEROS_INTERNAL_SERVICE_ROLE` describe the fixed service identity; caller identity headers are ignored.
+- `SPEAKING_AUDIO_BUCKET` - Private Supabase Storage bucket for production speaking uploads (defaults to `speaking-audio`). Local-disk fallback is disabled in production.
+- Billing provider credentials (`DODO_PAYMENTS_*` or `STRIPE_*`) for the selected provider.
+- AI provider key such as `ANTHROPIC_API_KEY` when AI is enabled.
 
 Frontend-only (VITE\_ prefix):
 
@@ -72,4 +75,6 @@ npm run dev        # Development server on port 3000
 ## Health Checks
 
 - Frontend: `GET /` returns HTML
-- Backend: `GET /api/health` returns JSON status
+- Backend liveness: `GET /api/health` returns only `{ "status": "ok" }`.
+- Private readiness/diagnostics: `GET /api/diagnostics` with the operations Bearer token. A required audit repository that is not ready returns an unhealthy `503`.
+- Metrics: `GET /api/metrics` with the same Bearer token. Missing production operations configuration returns `503`, not public metrics.

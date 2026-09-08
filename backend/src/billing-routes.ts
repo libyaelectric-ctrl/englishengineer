@@ -1,4 +1,5 @@
-import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
+import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import type { RouteRegistrar } from './route-registrar.js';
 
 import { AUDIT_ACTIONS, auditLog } from './audit-log.js';
 import { assertUserOwnership } from './billing-helpers.js';
@@ -13,7 +14,7 @@ import {
 } from './validation.js';
 
 export const registerBillingRoutes = (
-  app: Express,
+  app: RouteRegistrar,
   billingService: BillingService,
   requireBackendAuth: RequestHandler,
   rateLimiter: RequestHandler,
@@ -76,9 +77,6 @@ export const registerBillingRoutes = (
   );
   const subscriptionStatusHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // Subscription data is only served for the request's authenticated
-      // identity. Unauthenticated callers get the anonymous fallback and must
-      // never read another user's record through a `?userId=` query (IDOR).
       if (!req.auth?.userId) {
         res.json(await billingService.getSubscriptionStatus(null));
         return;

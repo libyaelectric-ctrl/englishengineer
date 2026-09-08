@@ -1,11 +1,9 @@
 import { expect, test } from '@playwright/test';
 
-import { skipIfNoClerkSecret } from '../helpers/clerk-login';
+import { skipIfNoFirebaseTestConfig } from '../helpers/firebase-login';
 
-skipIfNoClerkSecret();
+skipIfNoFirebaseTestConfig();
 
-// Reading is a Senior-tier feature: the free-tier test user is redirected to
-// the pricing page both from the menu and from direct URL access.
 test.describe.serial('Reading page flow (free tier)', () => {
   test('free-tier user is redirected from /reading to /pricing', async ({ page }) => {
     await page.goto('/reading');

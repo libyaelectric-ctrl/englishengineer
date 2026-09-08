@@ -1,6 +1,10 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { IdService } from './id.service';
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe('IdService', () => {
   it('creates ID with prefix', () => {
@@ -19,6 +23,26 @@ describe('IdService', () => {
     const id1 = IdService.createId();
     const id2 = IdService.createId();
     expect(id1).not.toBe(id2);
+  });
+
+  it('uses getRandomValues when randomUUID is unavailable', () => {
+    let next = 0;
+    vi.stubGlobal('crypto', {
+      getRandomValues: (bytes: Uint8Array) => {
+        for (let index = 0; index < bytes.length; index += 1) {
+          bytes[index] = next++;
+        }
+        return bytes;
+      },
+    });
+
+    const id = IdService.createId('fallback');
+    expect(id).toMatch(/^fallback_[a-z0-9]+-000102030405-06070809$/);
+  });
+
+  it('fails closed when secure randomness is unavailable', () => {
+    vi.stubGlobal('crypto', undefined);
+    expect(() => IdService.createId()).toThrow('Secure random number generation is unavailable');
   });
 
   it('validates valid IDs', () => {

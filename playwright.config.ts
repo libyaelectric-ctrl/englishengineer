@@ -24,9 +24,6 @@ export default defineConfig({
     timeout: 120_000,
   },
   projects: [
-    // Signs in once as the Clerk test user and saves the session (cookie +
-    // localStorage) so every spec starts authenticated without a per-test
-    // sign-in. Skips when CLERK_SECRET_KEY is missing.
     {
       name: 'setup-auth',
       testMatch: /auth-setup\.ts/,

@@ -47,6 +47,12 @@ Push to `main` triggers automatic deployment via GitHub integration.
 
 ```bash
 curl https://englishengineer-backend.onrender.com/api/health
+# Expected public response: {"status":"ok"}
+
+curl -H "Authorization: Bearer $METRICS_TOKEN" \
+  https://englishengineer-backend.onrender.com/api/diagnostics
+curl -H "Authorization: Bearer $METRICS_TOKEN" \
+  https://englishengineer-backend.onrender.com/api/metrics
 ```
 
 ### Environment Variables
@@ -55,7 +61,12 @@ Render dashboard → Environment:
 
 - `NODE_ENV=production`
 - `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (server-only; tenant authorization, audit, export and audio storage)
+- `SUPABASE_JWT_SECRET`, `SUPABASE_JWT_ISSUER`, `SUPABASE_JWT_AUDIENCE` (set all three when local Supabase JWT verification is enabled)
+- `METRICS_TOKEN` (required; protects both metrics and private diagnostics with Bearer auth)
+- `ENGINEEROS_INTERNAL_API_SECRET` + `ENGINEEROS_INTERNAL_SERVICE_ID` (set together for fixed internal service identity)
+- `ENGINEEROS_INTERNAL_SERVICE_EMAIL` and `ENGINEEROS_INTERNAL_SERVICE_ROLE` (optional service metadata)
+- `SPEAKING_AUDIO_BUCKET` (private Supabase Storage bucket; defaults to `speaking-audio`)
 - `DODO_PAYMENTS_API_KEY`
 - `DODO_PAYMENTS_WEBHOOK_SECRET`
 - `RATE_LIMIT_STORE=upstash`
@@ -66,44 +77,48 @@ Render dashboard → Environment:
 ## Post-Deploy Checklist
 
 - [ ] Frontend loads (https://eng-vox.vercel.app)
-- [ ] Backend health check returns 200
+- [ ] Public backend liveness returns only `status: ok`
+- [ ] Authenticated diagnostics returns 200 and reports audit status `ready`
+- [ ] Metrics rejects missing/query tokens and accepts the Bearer token
+- [ ] Production speaking upload rejects local storage fallback
 - [ ] Login page loads
 - [ ] Google OAuth redirects correctly
 - [ ] API endpoints respond
 - [ ] Sentry captures errors (if configured)
 
-## Clerk Auth (Canlı Gözlem — 2026-08-18)
+## Firebase Auth
 
-### Instance
+### Production configuration
 
-- App: `app_3I251yNGqaZVZWzccI00jRzihhp` (EngVox)
-- Dev instance: `ins_3I2521N8mUolXuAU0OuvDvkX3OR` (`environment_type: development`)
-- Publishable key: `pk_test_...` (test modu)
-- Backend: `GET /api/v1/reading/feed` + geçerli Clerk JWT → 200 (JWKS doğrulaması canlıda çalışıyor)
+- Frontend requires `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_PROJECT_ID`,
+  `VITE_FIREBASE_AUTH_DOMAIN` and optionally `VITE_FIREBASE_APP_ID`.
+- Backend requires `FIREBASE_PROJECT_ID`; bearer tokens are verified against
+  Firebase public keys and the configured project audience.
+- Email/Password must be enabled in Firebase Authentication. Google sign-in
+  additionally requires the deployed domains in Authorized domains and the
+  Android SHA-1/SHA-256 fingerprints documented in `MOBILE.md`.
+- Never place Firebase Admin private keys in `VITE_*` variables. Browser API
+  keys are public identifiers; project restrictions and Security Rules enforce
+  access.
 
-### Doğrulanan Akışlar (eng-vox.vercel.app)
+### Post-deploy auth verification
 
-- `/login` Clerk UI ile render ediliyor (Apple/Google/LinkedIn + email/password, "Development mode" rozeti)
-- Email+password giriş akışı → "Check your email" yeni-cihaz doğrulama adımına ilerliyor
-- `clerk impersonate <user_id>` ile oturum kuruluyor; `clerk users create --email --password ...` ile test kullanıcısı oluşturulabiliyor
+1. Open `/login` and verify Email/Password and Google entry points render.
+2. Sign in with a dedicated production-smoke account and confirm `/dashboard`
+   survives a reload.
+3. Call one protected backend endpoint with the Firebase ID token and verify
+   the backend rejects expired, wrong-project and malformed tokens.
+4. Sign out and confirm protected routes redirect back to `/login` and stale
+   backend token getters are cleared.
 
-### Bilinen Sorun: Dashboard "Opening EngVox" Takılması
+### Playwright test-project configuration
 
-**Belirti:** `/dashboard` yükleme ekranında kalıyor; Clerk `useAuth().isLoaded` hiç `true` olmuyor (console hatasız).
-
-**Kök neden:** Instance'ın tüm redirect URL'leri (`home_url`, `after_sign_in_url`, `after_sign_up_url`, ...) Clerk'ın kendi `dominant-cricket-288.accounts.dev/default-redirect` portalına işaret ediyor. Uygulama origin'i (`eng-vox.vercel.app`) Clerk'e **Application URLs** üzerinden tanıtılmadığı için giriş sonrası oturum uygulamaya geri taşınamıyor.
-
-**Düzeltme:** Clerk Dashboard → EngVox → **Application URLs** → `https://eng-vox.vercel.app` (sign-in/sign-up/home) olarak ekleyin. CLI'den yapılamıyor (`clerk config` yalnızca relative path'leri kapsar).
-
-## Production Clerk Geçişi
-
-**Blocker:** Production instance özel bir alan adı gerektirir (örn. `auth.eng-vox.com`); `eng-vox.vercel.app` gibi platform alt alan adı geçersiz. Alan adı alınınca:
-
-1. `clerk deploy` (interaktif wizard, insan terminali gerekir) — domain + OAuth production kimlikleri sorar
-2. `clerk deploy status --mode agent` ile doğrulama
-3. Production instance'ın `CLERK_SECRET_KEY` / `VITE_CLERK_PUBLISHABLE_KEY`'ini env'e yazma (Render backend + Vercel frontend)
-4. Render + Vercel redeploy
-5. `clerk doctor --json` ile uçtan uca doğrulama
+Authenticated E2E suites require a dedicated Firebase test project and the
+following CI secrets: `VITE_FIREBASE_API_KEY`, `FIREBASE_E2E_TEST_EMAIL` and
+`FIREBASE_E2E_TEST_PASSWORD`. The setup creates/reuses only that test account,
+signs in through the real app UI and stores Firebase IndexedDB state. Forks or
+local runs without these values skip only authenticated suites; the public
+smoke suite remains mandatory.
 
 ## AI Analytics & Prompt Telemetry
 

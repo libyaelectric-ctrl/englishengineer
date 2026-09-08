@@ -25,10 +25,15 @@ export interface AiConfig {
 
 export interface AuthConfig {
   internalApiSecret: string | null;
+  internalServiceId: string | null;
+  internalServiceEmail: string | null;
+  internalServiceRole: string | null;
   allowInsecureDevAuth: boolean;
   supabaseUrl: string | null;
   supabaseAnonKey: string | null;
   supabaseJwtSecret: string | null;
+  supabaseJwtIssuer: string | null;
+  supabaseJwtAudience: string | null;
   /**
    * Firebase project id (e.g. elemental-outlet-pnn32). When set, Bearer
    * tokens that verify against Google's Firebase Auth JWKS authenticate as
@@ -157,6 +162,7 @@ export interface ApiErrorResponse {
 export interface ApiResponse<T> {
   ok: true;
   data: T;
+  meta: { contractVersion: '2026-09-07.v1' };
 }
 
 // --- AI ---
@@ -243,7 +249,13 @@ export interface WorkspaceDocumentBody {
 export type PlanId = 'free' | 'junior' | 'senior' | 'specialist' | 'master' | 'team';
 
 export type SubscriptionStatus =
-  'none' | 'active' | 'canceled' | 'past_due' | 'incomplete' | 'trialing' | 'unpaid';
+  | 'none'
+  | 'active'
+  | 'canceled'
+  | 'past_due'
+  | 'incomplete'
+  | 'trialing'
+  | 'unpaid';
 
 export interface SubscriptionSnapshot {
   planId: PlanId;

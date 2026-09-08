@@ -1,18 +1,140 @@
-import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
+import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { ApiError } from './errors.js';
-interface ListeningItem { id: string; title: string; category: string; level: string; description: string; durationSeconds: number; source: string; }
+import type { RouteRegistrar } from './route-registrar.js';
+interface ListeningItem {
+  id: string;
+  title: string;
+  category: string;
+  level: string;
+  description: string;
+  durationSeconds: number;
+  source: string;
+}
 const LISTENING_ITEMS: ListeningItem[] = [
-  { id: 'lst-001', title: 'Safety Briefing: Confined Space Entry', category: 'professional', level: 'B1', description: 'A safety officer explains the procedures for entering confined spaces in industrial settings.', durationSeconds: 180, source: 'Safety Training Department' },
-  { id: 'lst-002', title: 'Technical Discussion: Bridge Inspection Results', category: 'civil', level: 'B2', description: 'Engineers review the findings of a structural inspection on a reinforced concrete highway bridge.', durationSeconds: 240, source: 'Inspection Team Alpha' },
-  { id: 'lst-003', title: 'Lecture: Introduction to Machine Learning', category: 'electrical', level: 'C1', description: 'A professor discusses supervised vs unsupervised learning algorithms and their engineering applications.', durationSeconds: 360, source: 'Engineering Faculty' },
-  { id: 'lst-004', title: 'Equipment Calibration Discussion', category: 'mechanical', level: 'B1', description: 'A technician explains the calibration process for pressure transmitters in a process control environment.', durationSeconds: 150, source: 'Instrumentation Lab' },
-  { id: 'lst-005', title: 'Environmental Compliance Meeting', category: 'chemical', level: 'B2', description: 'A project manager outlines new environmental regulations affecting chemical processing plants.', durationSeconds: 300, source: 'Compliance Division' },
-  { id: 'lst-006', title: 'Construction Site Communication', category: 'civil', level: 'A2', description: 'A foreman gives instructions to the work crew regarding concrete pouring schedules and safety measures.', durationSeconds: 120, source: 'Site Operations' },
-  { id: 'lst-007', title: 'Renewable Energy Webinar', category: 'electrical', level: 'B2', description: 'An expert discusses the current state of offshore wind turbine technology and maintenance challenges.', durationSeconds: 420, source: 'Energy Conference 2025' },
-  { id: 'lst-008', title: 'Quality Assurance Audit Discussion', category: 'professional', level: 'B1', description: 'An auditor walks through ISO 9001 non-conformance findings and corrective action requirements.', durationSeconds: 270, source: 'QA Department' },
-  { id: 'lst-009', title: 'Materials Testing Lab Report', category: 'mechanical', level: 'C1', description: 'A research scientist explains fatigue testing results for a new titanium alloy used in aerospace components.', durationSeconds: 300, source: 'Materials Lab' },
-  { id: 'lst-010', title: 'Water Treatment Plant Operations', category: 'chemical', level: 'B1', description: 'An operator describes the daily monitoring routine for a municipal water treatment facility.', durationSeconds: 210, source: 'Utility Operations' },
+  {
+    id: 'lst-001',
+    title: 'Safety Briefing: Confined Space Entry',
+    category: 'professional',
+    level: 'B1',
+    description:
+      'A safety officer explains the procedures for entering confined spaces in industrial settings.',
+    durationSeconds: 180,
+    source: 'Safety Training Department',
+  },
+  {
+    id: 'lst-002',
+    title: 'Technical Discussion: Bridge Inspection Results',
+    category: 'civil',
+    level: 'B2',
+    description:
+      'Engineers review the findings of a structural inspection on a reinforced concrete highway bridge.',
+    durationSeconds: 240,
+    source: 'Inspection Team Alpha',
+  },
+  {
+    id: 'lst-003',
+    title: 'Lecture: Introduction to Machine Learning',
+    category: 'electrical',
+    level: 'C1',
+    description:
+      'A professor discusses supervised vs unsupervised learning algorithms and their engineering applications.',
+    durationSeconds: 360,
+    source: 'Engineering Faculty',
+  },
+  {
+    id: 'lst-004',
+    title: 'Equipment Calibration Discussion',
+    category: 'mechanical',
+    level: 'B1',
+    description:
+      'A technician explains the calibration process for pressure transmitters in a process control environment.',
+    durationSeconds: 150,
+    source: 'Instrumentation Lab',
+  },
+  {
+    id: 'lst-005',
+    title: 'Environmental Compliance Meeting',
+    category: 'chemical',
+    level: 'B2',
+    description:
+      'A project manager outlines new environmental regulations affecting chemical processing plants.',
+    durationSeconds: 300,
+    source: 'Compliance Division',
+  },
+  {
+    id: 'lst-006',
+    title: 'Construction Site Communication',
+    category: 'civil',
+    level: 'A2',
+    description:
+      'A foreman gives instructions to the work crew regarding concrete pouring schedules and safety measures.',
+    durationSeconds: 120,
+    source: 'Site Operations',
+  },
+  {
+    id: 'lst-007',
+    title: 'Renewable Energy Webinar',
+    category: 'electrical',
+    level: 'B2',
+    description:
+      'An expert discusses the current state of offshore wind turbine technology and maintenance challenges.',
+    durationSeconds: 420,
+    source: 'Energy Conference 2025',
+  },
+  {
+    id: 'lst-008',
+    title: 'Quality Assurance Audit Discussion',
+    category: 'professional',
+    level: 'B1',
+    description:
+      'An auditor walks through ISO 9001 non-conformance findings and corrective action requirements.',
+    durationSeconds: 270,
+    source: 'QA Department',
+  },
+  {
+    id: 'lst-009',
+    title: 'Materials Testing Lab Report',
+    category: 'mechanical',
+    level: 'C1',
+    description:
+      'A research scientist explains fatigue testing results for a new titanium alloy used in aerospace components.',
+    durationSeconds: 300,
+    source: 'Materials Lab',
+  },
+  {
+    id: 'lst-010',
+    title: 'Water Treatment Plant Operations',
+    category: 'chemical',
+    level: 'B1',
+    description:
+      'An operator describes the daily monitoring routine for a municipal water treatment facility.',
+    durationSeconds: 210,
+    source: 'Utility Operations',
+  },
 ];
-export const registerListeningRoutes = (app: Express, requireBackendAuth: RequestHandler, _listeningLimiter: RequestHandler): void => {
-  app.get('/api/listening/feed', requireBackendAuth, (request: Request, response: Response, next: NextFunction) => { try { if (!request.auth?.userId) throw new ApiError(401, 'authentication_required', 'Auth required'); const limit = Math.min(Math.max(Number(request.query.limit) || 10, 1), 100); const offset = Math.max(Number(request.query.offset) || 0, 0); response.json({ items: LISTENING_ITEMS.slice(offset, offset + limit), total: LISTENING_ITEMS.length, limit, offset }); } catch (error) { next(error); } });
+export const registerListeningRoutes = (
+  app: RouteRegistrar,
+  requireBackendAuth: RequestHandler,
+  _listeningLimiter: RequestHandler
+): void => {
+  app.get(
+    '/api/listening/feed',
+    requireBackendAuth,
+    (request: Request, response: Response, next: NextFunction) => {
+      try {
+        if (!request.auth?.userId)
+          throw new ApiError(401, 'authentication_required', 'Auth required');
+        const limit = Math.min(Math.max(Number(request.query.limit) || 10, 1), 100);
+        const offset = Math.max(Number(request.query.offset) || 0, 0);
+        response.json({
+          items: LISTENING_ITEMS.slice(offset, offset + limit),
+          total: LISTENING_ITEMS.length,
+          limit,
+          offset,
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
 };

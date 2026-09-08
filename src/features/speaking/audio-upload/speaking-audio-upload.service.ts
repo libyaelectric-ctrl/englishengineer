@@ -1,4 +1,5 @@
 import { logger } from '@/shared/logger';
+import { unwrapApiSuccess } from '@/shared/types/api-response';
 
 export interface SpeakingAudioUploadResult {
   audioUrl: string;
@@ -26,11 +27,6 @@ export class SpeakingAudioUploadError extends Error {
   }
 }
 
-/**
- * Uploads a recorded audio Blob (from useMicRecorder) to the backend's
- * POST /api/speaking/audio-upload endpoint. Kademe 5.2 counterpart to
- * useMicRecorder's Kademe 5.1 capture step.
- */
 export async function uploadSpeakingAudio(
   blob: Blob,
   options: SpeakingAudioUploadOptions = {}
@@ -69,5 +65,16 @@ export async function uploadSpeakingAudio(
     );
   }
 
-  return body as SpeakingAudioUploadResult;
+  try {
+    return unwrapApiSuccess<SpeakingAudioUploadResult>(body);
+  } catch (error) {
+    logger.w('[SPEAKING] Unsupported upload response contract', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    throw new SpeakingAudioUploadError(
+      502,
+      'invalid_response_contract',
+      'Audio upload returned an unsupported response contract.'
+    );
+  }
 }

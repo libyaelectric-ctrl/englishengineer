@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-import { skipIfNoClerkSecret } from '../../helpers/clerk-login';
+import { skipIfNoFirebaseTestConfig } from '../../helpers/firebase-login';
 import {
   type QaFinding,
   type QaPageReport,
@@ -14,7 +14,7 @@ import {
   scanEmptyState,
 } from './qa-helpers';
 
-skipIfNoClerkSecret();
+skipIfNoFirebaseTestConfig();
 
 const REPORT_DIR = resolve('qa-report');
 const SHOTS_DIR = resolve(REPORT_DIR, 'shots');
@@ -63,8 +63,6 @@ async function auditPage(
 ): Promise<QaPageReport> {
   const title = await page.title().catch(() => '');
   const findings: QaFinding[] = [];
-
-  // Give async errors a moment to surface in the console.
   await page.waitForTimeout(800);
 
   const overflows = await findOverflow(page);
@@ -78,8 +76,7 @@ async function auditPage(
     });
   }
 
-  const a11y = await scanAccessibility(page);
-  for (const issue of a11y) {
+  for (const issue of await scanAccessibility(page)) {
     findings.push({
       severity: 'warning',
       category: 'accessibility',
@@ -88,20 +85,26 @@ async function auditPage(
     });
   }
 
-  const dead = await scanDeadControls(page);
-  for (const d of dead) {
-    findings.push({ severity: 'warning', category: 'dead-button', message: d, url: page.url() });
+  for (const message of await scanDeadControls(page)) {
+    findings.push({
+      severity: 'warning',
+      category: 'dead-button',
+      message,
+      url: page.url(),
+    });
   }
 
-  const empty = await scanEmptyState(page);
-  for (const e of empty) {
-    findings.push({ severity: 'warning', category: 'empty-state', message: e, url: page.url() });
+  for (const message of await scanEmptyState(page)) {
+    findings.push({
+      severity: 'warning',
+      category: 'empty-state',
+      message,
+      url: page.url(),
+    });
   }
 
   const screenshotPath = screenshot ? resolve(SHOTS_DIR, `${safeName(route)}.png`) : undefined;
-  if (screenshotPath) {
-    await page.screenshot({ path: screenshotPath, fullPage: true });
-  }
+  if (screenshotPath) await page.screenshot({ path: screenshotPath, fullPage: true });
 
   const report: QaPageReport = {
     route,
@@ -145,8 +148,6 @@ test.describe('QA Agent — insan gibi sayfa sayfa denetim', () => {
   test('B) Demo kullanıcı ile giriş yapılıp ürün sayfaları denetlenir', async ({ page }) => {
     await test.step('Demo girişi', async () => {
       const collector = attachErrorCollectors(page);
-      // The demo button is gone (Clerk is the single auth path); the shared
-      // auth-setup session is already present, so load the dashboard.
       await page.goto('/dashboard');
       await page.waitForTimeout(1500);
       const current = new URL(page.url()).pathname;
@@ -178,15 +179,12 @@ test.describe('QA Agent — insan gibi sayfa sayfa denetim', () => {
   test('C) Kritik kullanıcı akışları işlevselliği', async ({ page }) => {
     const collector = attachErrorCollectors(page);
 
-    // C1. Onboarding akışı: /welcome üzerinde meslek + dil tek ekranda seçilip bitirilir.
     await test.step('Onboarding akışı', async () => {
       await page.goto('/login', { waitUntil: 'domcontentloaded' });
       const demoBtn = page
         .getByRole('button', { name: /launch instant demo|try demo|demo/i })
         .first();
-      if (await demoBtn.isVisible().catch(() => false)) {
-        await demoBtn.click();
-      }
+      if (await demoBtn.isVisible().catch(() => false)) await demoBtn.click();
       await page
         .waitForURL(/\/dashboard|\/welcome|\/curriculum/, { timeout: 20000 })
         .catch(() => {});
@@ -224,38 +222,30 @@ test.describe('QA Agent — insan gibi sayfa sayfa denetim', () => {
       }
     });
 
-    // C2. Vocabulary arama: Search butonu -> modal -> inputa yazıp sonuç görmek.
     await test.step('Vocabulary arama', async () => {
-      // Vocabulary ürün sayfası olduğu için önce demo girişi gerekir.
       await page.goto('/login', { waitUntil: 'domcontentloaded' });
       const demoBtn = page
         .getByRole('button', { name: /launch instant demo|try demo|demo/i })
         .first();
-      if (await demoBtn.isVisible().catch(() => false)) {
-        await demoBtn.click();
-      }
+      if (await demoBtn.isVisible().catch(() => false)) await demoBtn.click();
       await page
         .waitForURL(/\/dashboard|\/welcome|\/curriculum/, { timeout: 20000 })
         .catch(() => {});
       await page.waitForTimeout(800);
       await page.goto('/vocabulary', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(1200);
-      // Demo oturumu yeni context'te welcome'a düşer; bazen auth tam oturmadan
-      // ürün sayfasına gidilince login'e döner. Login'e düştüysek tekrar dene.
       if (new URL(page.url()).pathname === '/login') {
         const demoBtn2 = page
           .getByRole('button', { name: /launch instant demo|try demo|demo/i })
           .first();
-        if (await demoBtn2.isVisible().catch(() => false)) {
-          await demoBtn2.click();
-        }
+        if (await demoBtn2.isVisible().catch(() => false)) await demoBtn2.click();
         await page
           .waitForURL(/\/dashboard|\/welcome|\/curriculum/, { timeout: 20000 })
           .catch(() => {});
         await page.goto('/vocabulary', { waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(1200);
       }
-      // Arama bir modal üzerinden açılır: "Search vocabulary" butonu -> input.
+
       const searchBtn = page.getByTitle('Search vocabulary');
       let searchVisible = false;
       try {
@@ -323,7 +313,6 @@ test.describe('QA Agent — insan gibi sayfa sayfa denetim', () => {
       }
     });
 
-    // C3. Login form validation: boş submit denemesi -> native veya React uyarı.
     await test.step('Login form validation', async () => {
       await page.goto('/login', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(600);
@@ -332,7 +321,6 @@ test.describe('QA Agent — insan gibi sayfa sayfa denetim', () => {
         await submitBtn.click();
         await page.waitForTimeout(600);
         const hasValidation = await page.evaluate(() => {
-          // Native HTML5 validation marka required/boş alanlar invalid olur.
           const invalidNative = document.querySelectorAll('input:invalid').length;
           const invalid = document.querySelectorAll('[aria-invalid="true"]');
           const errText = (document.body.innerText || '').match(
@@ -384,12 +372,8 @@ test.describe('QA Agent — insan gibi sayfa sayfa denetim', () => {
       md.push(`| ${worst} | \`${r.route}\` |`);
     }
 
-    md.push('');
-    md.push('---');
-    md.push('');
-    for (const r of reports) {
-      md.push(renderMarkdown(r));
-    }
+    md.push('', '---', '');
+    for (const r of reports) md.push(renderMarkdown(r));
 
     writeFileSync(resolve(REPORT_DIR, 'qa-report.md'), md.join('\n'), 'utf8');
     console.log(`\nRapor: ${resolve(REPORT_DIR, 'qa-report.md')}`);

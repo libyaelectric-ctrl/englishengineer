@@ -1,15 +1,9 @@
 /**
- * Playwright global auth setup.
+ * Playwright global Firebase authentication setup.
  *
- * Signs in once as the shared free-tier Clerk test user (email + password +
- * fixed OTP 424242) and seeds the onboarding profile, then saves the browser
- * storage state (Clerk session cookie + localStorage) to
- * playwright/.auth/user.json. The chromium-desktop and mobile-safari projects
- * declare this as a dependency and load the saved state, so individual specs
- * skip the slow per-test sign-in entirely.
- *
- * Skips cleanly when CLERK_SECRET_KEY is missing; dependent tests are skipped
- * automatically when this setup is skipped.
+ * Provisions the configured test account, signs in through the real app UI,
+ * seeds onboarding, and saves Firebase IndexedDB/localStorage state for the
+ * authenticated desktop and mobile projects.
  */
 import { test as setup } from '@playwright/test';
 import { mkdirSync } from 'node:fs';
@@ -17,19 +11,22 @@ import { mkdirSync } from 'node:fs';
 import {
   completeOnboarding,
   ensureTestUser,
-  hasClerkSecret,
+  hasFirebaseTestConfig,
   signInAsTestUser,
-} from './clerk-login';
+} from './firebase-login';
 
-setup.skip(!hasClerkSecret(), 'CLERK_SECRET_KEY is required to run Clerk-based e2e tests');
+setup.skip(
+  !hasFirebaseTestConfig(),
+  'Firebase E2E test project credentials are required for authenticated suites'
+);
 
 const AUTH_STATE_PATH = 'playwright/.auth/user.json';
 
-setup('authenticate as free-tier Clerk test user', async ({ page, request }) => {
+setup('authenticate as Firebase test user', async ({ page, request }) => {
   const userId = await ensureTestUser(request);
   await signInAsTestUser(page);
   await completeOnboarding(page, userId);
 
   mkdirSync('playwright/.auth', { recursive: true });
-  await page.context().storageState({ path: AUTH_STATE_PATH });
+  await page.context().storageState({ path: AUTH_STATE_PATH, indexedDB: true });
 });
