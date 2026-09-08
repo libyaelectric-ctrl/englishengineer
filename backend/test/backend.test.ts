@@ -460,6 +460,10 @@ test('checkout rejects a mismatched body user and accepts the authenticated user
   const url = await start(
     {
       ...productionAuthEnvironment,
+      // Checkout exercises ownership + provider wiring; audit fail-closed is
+      // production-only (see phase5-tenant-audit.test.ts), so this test runs
+      // in staging where audit storage is not required.
+      NODE_ENV: 'staging',
       STRIPE_SECRET_KEY: 'sk_test_value',
       STRIPE_PRICE_JUNIOR_MONTHLY: 'price_test',
     },
@@ -1001,6 +1005,9 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
       NODE_ENV: 'staging',
       ALLOW_INSECURE_DEV_AUTH: 'true',
       ENGINEEROS_INTERNAL_API_SECRET: 'internal-test-secret',
+      // The webhook stores the subscription under this identity, so the
+      // status request must authenticate as the same internal service user.
+      ENGINEEROS_INTERNAL_SERVICE_ID: 'service-test-worker',
       SUPABASE_URL: 'https://example.supabase.co',
       SUPABASE_ANON_KEY: 'anon-key',
       STRIPE_SECRET_KEY: 'sk_test_value',

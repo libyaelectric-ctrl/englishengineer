@@ -173,7 +173,7 @@ test('webhook accepts valid signature and processes checkout event', async () =>
   assert.equal(body.duplicate, false);
 });
 
-test('webhook is not redirected to /api/v1 by legacy redirect middleware in production', async () => {
+test('webhook is served at the canonical /api/webhooks/stripe path without redirect', async () => {
   const event = {
     id: 'evt_no_redirect_test_001',
     type: 'checkout.session.completed',
@@ -187,9 +187,12 @@ test('webhook is not redirected to /api/v1 by legacy redirect middleware in prod
     },
   };
   const stripeClient = { webhooks: { constructEvent: () => event } };
+  // Runs in staging so audit fail-closed (a production-only policy) does not
+  // shadow the redirect regression this test guards; the legacy /api to
+  // /api/v1 redirect middleware no longer exists.
   const url = await start(
     {
-      NODE_ENV: 'production',
+      NODE_ENV: 'staging',
       FIREBASE_PROJECT_ID: 'test-firebase-project',
       BILLING_REPOSITORY: 'memory',
       ALLOW_MEMORY_BILLING_REPOSITORY: 'true',
