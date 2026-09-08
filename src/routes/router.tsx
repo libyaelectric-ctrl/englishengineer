@@ -1,10 +1,10 @@
-﻿import { AppShell } from '@/layouts/AppShell';
+import { AppShell } from '@/layouts/AppShell';
 import { PublicLayout } from '@/layouts/PublicLayout';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { type ComponentType, Suspense, lazy } from 'react';
 
-import { Navigate, createHashRouter } from 'react-router-dom';
+import { Navigate, createBrowserRouter } from 'react-router-dom';
 
 import { LoadingState } from '@/shared/components/LoadingState';
 import { PageErrorBoundary } from '@/shared/components/PageErrorBoundary';
@@ -51,31 +51,16 @@ const LearningPath = lazy(() => import('@/pages/LearningPathPage'));
 const LessonRunner = lazy(() => import('@/pages/LessonRunnerPage'));
 const AuthPage = lazy(() => import('@/pages/AuthPage'));
 
-export const router = createHashRouter([
+export const router = createBrowserRouter([
   {
     element: <PublicLayout />,
     errorElement: <RouteErrorPage />,
     children: [
-      {
-        path: '/',
-        element: withSuspense(Landing),
-      },
-      {
-        path: '/pricing',
-        element: withSuspense(Pricing),
-      },
-      {
-        path: '/business',
-        element: withSuspense(Business),
-      },
-      {
-        path: '/start',
-        element: withSuspense(Start),
-      },
-      {
-        path: '/demo',
-        element: <Navigate to="/start" replace />,
-      },
+      { path: '/', element: withSuspense(Landing) },
+      { path: '/pricing', element: withSuspense(Pricing) },
+      { path: '/business', element: withSuspense(Business) },
+      { path: '/start', element: withSuspense(Start) },
+      { path: '/demo', element: <Navigate to="/start" replace /> },
       ...(['terms', 'privacy'] as const).map((document) => ({
         path: `/legal/${document}`,
         element: (
@@ -109,19 +94,9 @@ export const router = createHashRouter([
       </AuthGuard>
     ),
     children: [
-      {
-        path: 'dashboard',
-        element: withSuspense(Dashboard),
-      },
-      {
-        path: 'onboarding',
-        element: <Navigate to="/dashboard" replace />,
-      },
-      {
-        path: 'onboarding/:step',
-        element: <Navigate to="/dashboard" replace />,
-      },
-
+      { path: 'dashboard', element: withSuspense(Dashboard) },
+      { path: 'onboarding', element: <Navigate to="/dashboard" replace /> },
+      { path: 'onboarding/:step', element: <Navigate to="/dashboard" replace /> },
       {
         path: 'learning-path',
         element: (
@@ -130,22 +105,10 @@ export const router = createHashRouter([
           </SubscriptionRouteGuard>
         ),
       },
-      {
-        path: 'lesson-runner/:levelId?',
-        element: withSuspense(LessonRunner),
-      },
-      {
-        path: 'profile',
-        element: withSuspense(Profile),
-      },
-      {
-        path: 'profile/:section',
-        element: withSuspense(Profile),
-      },
-      {
-        path: 'billing',
-        element: withSuspense(Billing),
-      },
+      { path: 'lesson-runner/:levelId?', element: withSuspense(LessonRunner) },
+      { path: 'profile', element: withSuspense(Profile) },
+      { path: 'profile/:section', element: withSuspense(Profile) },
+      { path: 'billing', element: withSuspense(Billing) },
       {
         path: 'placement',
         element: (
@@ -210,22 +173,10 @@ export const router = createHashRouter([
           </SubscriptionRouteGuard>
         ),
       },
-      {
-        path: 'ai',
-        element: <Navigate to="/tools/ai" replace />,
-      },
-      {
-        path: 'analytics',
-        element: <Navigate to="/progress" replace />,
-      },
-      {
-        path: 'progress',
-        element: withSuspense(Progress),
-      },
-      {
-        path: 'progress/:section',
-        element: withSuspense(Progress),
-      },
+      { path: 'ai', element: <Navigate to="/tools/ai" replace /> },
+      { path: 'analytics', element: <Navigate to="/progress" replace /> },
+      { path: 'progress', element: withSuspense(Progress) },
+      { path: 'progress/:section', element: withSuspense(Progress) },
       {
         path: 'curriculum',
         element: <CurriculumSectionGuard>{withSuspense(Curriculum)}</CurriculumSectionGuard>,
@@ -234,17 +185,13 @@ export const router = createHashRouter([
         path: 'curriculum/:section',
         element: <CurriculumSectionGuard>{withSuspense(Curriculum)}</CurriculumSectionGuard>,
       },
-      {
-        path: 'tools',
-        element: <Navigate to="/tools/work" replace />,
-      },
+      { path: 'tools', element: <Navigate to="/tools/work" replace /> },
       {
         path: 'tools/:section',
         element: (
           <SubscriptionRouteGuard feature="tool">{withSuspense(Tools)}</SubscriptionRouteGuard>
         ),
       },
-
       {
         path: 'team',
         element: isFeatureEnabled('teamBeta') ? (
@@ -372,9 +319,5 @@ export const router = createHashRouter([
       </Suspense>
     ),
   },
-  {
-    path: '*',
-    errorElement: <RouteErrorPage />,
-    element: withSuspense(NotFound),
-  },
+  { path: '*', errorElement: <RouteErrorPage />, element: withSuspense(NotFound) },
 ]);
