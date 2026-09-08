@@ -1,10 +1,9 @@
+import { PRODUCT_VERSION } from '@/config/product.config';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 
 import { useCallback, useMemo, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
-
-import { PRODUCT_VERSION } from '@/config/product.config';
 
 import { useLearningStore } from '@/core/learning';
 
@@ -102,7 +101,9 @@ const SummaryStep = ({ done, step, label }: SummaryStepProps) => (
     <span
       className={cn(
         'flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[10px]',
-        done ? 'border-primary bg-primary text-primary-foreground' : 'border-border-soft text-muted-copy'
+        done
+          ? 'border-primary bg-primary text-primary-foreground'
+          : 'border-border-soft text-muted-copy'
       )}
     >
       {done ? <Check className="h-3 w-3" /> : step}
@@ -130,9 +131,7 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
     []
   );
 
-  const [selectedDiscipline, setSelectedDiscipline] = useState<EngineeringDiscipline | null>(
-    null
-  );
+  const [selectedDiscipline, setSelectedDiscipline] = useState<EngineeringDiscipline | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<SupportedInterfaceLanguage | null>(
     currentLanguage !== 'en' ? currentLanguage : null
   );
@@ -166,11 +165,17 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
         },
       });
       useLearningStore.getState().resetAll();
-      onComplete?.();
+      if (onComplete) {
+        onComplete();
+      } else {
+        // Standalone route (e.g. /onboarding): the picker is the entry
+        // point, so send the user into the gated app once it completes.
+        navigate('/dashboard', { replace: true });
+      }
     } finally {
       setIsSaving(false);
     }
-  }, [selectedDiscipline, selectedLanguage, currentUser, isSaving, onComplete]);
+  }, [selectedDiscipline, selectedLanguage, currentUser, isSaving, onComplete, navigate]);
 
   const disciplineMeta = selectedDiscipline ? DISCIPLINE_META[selectedDiscipline] : null;
   const languageMeta = selectedLanguage
@@ -250,7 +255,11 @@ export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {})
               <SummaryStep
                 done={Boolean(languageMeta)}
                 step={2}
-                label={languageMeta ? languageMeta.nativeLabel : translate('onboarding.selectLanguageTitle')}
+                label={
+                  languageMeta
+                    ? languageMeta.nativeLabel
+                    : translate('onboarding.selectLanguageTitle')
+                }
               />
             </div>
           </div>

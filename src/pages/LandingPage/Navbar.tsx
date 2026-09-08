@@ -4,13 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { storage } from '@/shared/storage';
-
+import { useAuthStore } from '@/features/auth';
 import { AuthControls } from '@/features/auth/AuthControls';
 import { useFirebaseAuth } from '@/features/auth/FirebaseAuth';
-import { useAuthStore } from '@/features/auth/auth.store';
 import { AUTH_SIGN_IN_URL, AUTH_SIGN_UP_URL } from '@/features/auth/firebase.config';
-import { useBillingStore } from '@/features/billing';
 import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import { useTheme } from '@/features/theme/ThemeProvider';
 
@@ -38,38 +35,6 @@ export function Navbar() {
   }, [isSignedIn, navigate, location.pathname]);
 
   const currentLang = INTERFACE_LANGUAGES.find((l) => l.id === language) || INTERFACE_LANGUAGES[0];
-
-  const enterDemo = () => {
-    const demoId = `demo_engineer_${Date.now()}`;
-    storage.setUserId(demoId);
-    useAuthStore.setState({
-      currentUser: {
-        id: demoId,
-        displayName: 'Demo Engineer',
-        email: 'demo@engvox.com',
-        role: 'engineer',
-        isSuperUser: false,
-        engineeringDiscipline: '',
-        targetLevel: '',
-        location: '',
-        avatarInitials: 'DE',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-      isAuthenticated: true,
-      isLoading: false,
-    });
-    useBillingStore.getState().setSubscription({
-      planId: 'free',
-      status: 'none',
-      currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-      cancelAtPeriodEnd: false,
-      stripeCustomerId: null,
-      stripeSubscriptionId: null,
-      updatedAt: new Date().toISOString(),
-    });
-    navigate('/dashboard');
-  };
 
   useEffect(() => {
     if (!langOpen) return;
@@ -252,7 +217,12 @@ export function Navbar() {
             {/* Try Demo Button */}
             <button
               type="button"
-              onClick={enterDemo}
+              onClick={() => {
+                // Create the demo session first so the onboarding picker can
+                // finish (NeuralOrbPanel requires a currentUser).
+                useAuthStore.getState().enterDemoUser();
+                navigate('/onboarding');
+              }}
               className="hidden sm:inline-flex items-center rounded-lg border border-primary/40 bg-primary/10 px-2.5 py-2 text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors cursor-pointer"
             >
               {translate('landing.tryDemo')}

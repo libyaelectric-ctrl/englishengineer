@@ -61,6 +61,10 @@ export const router = createBrowserRouter([
       { path: '/business', element: withSuspense(Business) },
       { path: '/start', element: withSuspense(Start) },
       { path: '/demo', element: <Navigate to="/start" replace /> },
+      {
+        path: '/onboarding',
+        element: withSuspense(lazy(() => import('@/features/profile/NeuralOrbPanel'))),
+      },
       ...(['terms', 'privacy'] as const).map((document) => ({
         path: `/legal/${document}`,
         element: (
