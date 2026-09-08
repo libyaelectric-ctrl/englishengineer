@@ -1,5 +1,5 @@
-import { CEFR_LEVELS } from '@/features/level-system/level-system.types';
-import type { CefrLevel } from '@/features/level-system/level-system.types';
+import { CEFR_LEVELS } from '@/shared/types/domain.types';
+import type { CefrLevel } from '@/shared/types/domain.types';
 
 export const getLevelsThrough = (level: CefrLevel): CefrLevel[] =>
   CEFR_LEVELS.slice(0, CEFR_LEVELS.indexOf(level) + 1);

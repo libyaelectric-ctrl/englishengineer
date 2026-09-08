@@ -1,33 +1,15 @@
 import { eventBus } from '@/core/events/event-bus';
 
 import { logger } from '@/shared/logger';
-import {
-  getSupabaseClient,
-  isSupabaseConfigured,
-} from '@/shared/services/auth-backend/supabase.client';
 
-import { useAuthStore } from '@/features/auth';
-
+import { getLearningPorts } from './learning.ports';
 import { useLearningStore } from './learning.store';
 
-const syncPoolToSupabase = (
+const persistPoolEntry = (
   contentType: 'vocabulary' | 'grammar' | 'speaking',
   contentId: string
-) => {
-  if (!isSupabaseConfigured()) return;
-  const client = getSupabaseClient();
-  const userId = useAuthStore.getState().currentUser?.id;
-  if (!client || !userId) return;
-
-  client
-    .from('knowledge_pool_entries')
-    .upsert(
-      { user_id: userId, content_type: contentType, content_id: contentId },
-      { onConflict: 'user_id,content_type,content_id' }
-    )
-    .then(({ error }: { error: unknown }) => {
-      if (error) logger.w(`[${contentType}Pool] Supabase write failed: ${String(error)}`);
-    });
+): void => {
+  getLearningPorts().contentPool.persistEntry(contentType, contentId);
 };
 
 export const addToVocabularyPool = (termId: string) => {
@@ -36,7 +18,7 @@ export const addToVocabularyPool = (termId: string) => {
   const updated = [...current, termId];
   useLearningStore.setState({ vocabularyPool: updated });
   logger.i(`[VocabPool] +1 term → pool size: ${updated.length}`);
-  syncPoolToSupabase('vocabulary', termId);
+  persistPoolEntry('vocabulary', termId);
 };
 
 export const addToGrammarPool = (ruleId: string) => {
@@ -45,7 +27,7 @@ export const addToGrammarPool = (ruleId: string) => {
   const updated = [...current, ruleId];
   useLearningStore.setState({ grammarPool: updated });
   logger.i(`[GrammarPool] +1 rule → pool size: ${updated.length}`);
-  syncPoolToSupabase('grammar', ruleId);
+  persistPoolEntry('grammar', ruleId);
 };
 
 export const addToSpeakingPool = (missionId: string) => {
@@ -54,7 +36,7 @@ export const addToSpeakingPool = (missionId: string) => {
   const updated = [...current, missionId];
   useLearningStore.setState({ speakingPool: updated });
   logger.i(`[SpeakingPool] +1 mission → pool size: ${updated.length}`);
-  syncPoolToSupabase('speaking', missionId);
+  persistPoolEntry('speaking', missionId);
 };
 
 let poolSubscriptionsInitialized = false;
