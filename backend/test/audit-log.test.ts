@@ -4,8 +4,8 @@ import { describe, it } from 'node:test';
 import { AUDIT_ACTIONS, auditLog, getAuditLogs } from '../src/audit-log.js';
 
 describe('audit-log', () => {
-  it('auditLog returns a record with id and timestamp', () => {
-    const record = auditLog({
+  it('auditLog returns a record with id and timestamp', async () => {
+    const record = await auditLog({
       action: AUDIT_ACTIONS.AUTH_LOGIN,
       userId: 'user-1',
       details: { method: 'password' },
@@ -18,7 +18,7 @@ describe('audit-log', () => {
   });
 
   it('auditLog stores record retrievable via getAuditLogs', async () => {
-    auditLog({
+    await auditLog({
       action: AUDIT_ACTIONS.AI_REQUEST,
       userId: 'user-ai',
       details: { operation: 'evaluateEngineeringEnglish' },
@@ -30,16 +30,16 @@ describe('audit-log', () => {
   });
 
   it('getAuditLogs filters by action', async () => {
-    auditLog({ action: AUDIT_ACTIONS.AUTH_SIGNUP, userId: 'user-signup' });
-    auditLog({ action: AUDIT_ACTIONS.AUTH_LOGIN, userId: 'user-login' });
+    await auditLog({ action: AUDIT_ACTIONS.AUTH_SIGNUP, userId: 'user-signup' });
+    await auditLog({ action: AUDIT_ACTIONS.AUTH_LOGIN, userId: 'user-login' });
 
     const signupLogs = await getAuditLogs({ action: 'auth_signup' });
-    assert.ok(signupLogs.every((l) => l.action === 'auth_signup'));
+    assert.ok(signupLogs.every((log) => log.action === 'auth_signup'));
   });
 
   it('getAuditLogs applies limit', async () => {
-    for (let i = 0; i < 5; i++) {
-      auditLog({ action: AUDIT_ACTIONS.AI_REQUEST, userId: `user-${i}` });
+    for (let i = 0; i < 5; i += 1) {
+      await auditLog({ action: AUDIT_ACTIONS.AI_REQUEST, userId: `user-${i}` });
     }
 
     const limited = await getAuditLogs({ limit: 2 });

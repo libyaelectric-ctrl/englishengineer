@@ -65,7 +65,7 @@ export const registerExportRoutes = (
       exportDate: new Date().toISOString(),
     };
 
-    auditLog({
+    await auditLog({
       action: AUDIT_ACTIONS.DATA_EXPORTED,
       userId,
       details: { format: requestedFormat, schemaVersion: userData.schemaVersion },

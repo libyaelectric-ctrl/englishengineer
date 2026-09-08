@@ -88,11 +88,9 @@ export const initAuditLog = async (config: {
   }
 };
 
-export const auditLog = (entry: Omit<AuditLogEntry, 'id' | 'timestamp'>): AuditLogEntry => {
-  if (auditState.required && auditState.status !== 'ready') {
-    throw new ApiError(503, 'audit_log_unavailable', 'Required audit logging is unavailable.');
-  }
-
+const createAuditRecord = (
+  entry: Omit<AuditLogEntry, 'id' | 'timestamp'>
+): AuditLogEntry => {
   const record: AuditLogEntry = {
     id: `audit_${randomUUID()}`,
     timestamp: new Date().toISOString(),
@@ -100,23 +98,41 @@ export const auditLog = (entry: Omit<AuditLogEntry, 'id' | 'timestamp'>): AuditL
   };
   logs.push(record);
   if (logs.length > MAX_LOG_SIZE) logs.splice(0, logs.length - MAX_LOG_SIZE);
+  return record;
+};
 
-  if (supabaseRepository) {
-    void supabaseRepository
-      .insert(record)
-      .then(() => {
-        auditState = {
-          ...auditState,
-          status: 'ready',
-          lastError: undefined,
-          lastSuccessfulWrite: new Date().toISOString(),
-        };
-      })
-      .catch((error: unknown) => {
-        markAuditFailure(error);
-        logger.error('Remote audit write failed', { auditId: record.id }, error as Error);
-      });
+const persistAuditRecord = async (record: AuditLogEntry): Promise<void> => {
+  if (!supabaseRepository) {
+    if (auditState.required) {
+      throw new ApiError(503, 'audit_log_unavailable', 'Required audit logging is unavailable.');
+    }
+    return;
   }
+
+  try {
+    await supabaseRepository.insert(record);
+    auditState = {
+      ...auditState,
+      status: 'ready',
+      lastError: undefined,
+      lastSuccessfulWrite: new Date().toISOString(),
+    };
+  } catch (error) {
+    markAuditFailure(error);
+    logger.error('Remote audit write failed', { auditId: record.id }, error as Error);
+    throw new ApiError(503, 'audit_log_unavailable', 'Required audit logging is unavailable.');
+  }
+};
+
+export const auditLog = async (
+  entry: Omit<AuditLogEntry, 'id' | 'timestamp'>
+): Promise<AuditLogEntry> => {
+  if (auditState.required && auditState.status !== 'ready') {
+    throw new ApiError(503, 'audit_log_unavailable', 'Required audit logging is unavailable.');
+  }
+
+  const record = createAuditRecord(entry);
+  await persistAuditRecord(record);
 
   if (entry.severity === 'critical' || entry.severity === 'error') {
     logger.warn(`Audit ${entry.severity.toUpperCase()}`, { record });

@@ -98,7 +98,7 @@ describe('Phase 5 audit readiness', () => {
       lastError: 'Remote audit storage is not configured.',
     });
     assert.equal(isAuditLogReady(), false);
-    assert.throws(
+    await assert.rejects(
       () => auditLog({ action: 'test_action', userId, severity: 'info' }),
       (error: unknown) =>
         error instanceof ApiError && error.status === 503 && error.code === 'audit_log_unavailable'

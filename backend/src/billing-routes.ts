@@ -29,7 +29,7 @@ export const registerBillingRoutes = (
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const userId = assertUserOwnership(req);
-        auditLog({
+        await auditLog({
           action: AUDIT_ACTIONS.CHECKOUT_CREATED,
           userId: userId || undefined,
           details: { planId: req.body?.planId },
@@ -49,7 +49,7 @@ export const registerBillingRoutes = (
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const userId = assertUserOwnership(req);
-        auditLog({
+        await auditLog({
           action: AUDIT_ACTIONS.CHECKOUT_CREATED,
           userId: userId || undefined,
           details: { type: 'topup', credits: 50 },
@@ -146,12 +146,11 @@ export const registerBillingRoutes = (
         }
       }
 
-      auditLog({
-        action: AUDIT_ACTIONS.WEBHOOK_RECEIVED,
-        details: { eventId, eventType },
-      });
-
       try {
+        await auditLog({
+          action: AUDIT_ACTIONS.WEBHOOK_RECEIVED,
+          details: { eventId, eventType },
+        });
         res.json(
           await billingService.processWebhook(
             req.body,
