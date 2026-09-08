@@ -14,7 +14,6 @@ const walk = async (directory) => {
   }
   return files;
 };
-
 const qualityDebtAudit = await read('scripts/audit-quality-debt.mjs');
 assert.match(qualityDebtAudit, /counts\.tsIgnore/);
 assert.match(qualityDebtAudit, /suppression baseline increased/);
@@ -27,6 +26,15 @@ assert.doesNotMatch(preCommitHook, /--no-verify/);
 const vitestConfig = await read('vitest.config.ts');
 assert.match(vitestConfig, /maxWorkers:\s*1/);
 assert.match(vitestConfig, /pool:\s*'threads'/);
+assert.match(vitestConfig, /'json'/);
+const changedCoverage = await read('scripts/check-changed-coverage.mjs');
+assert.match(changedCoverage, /CHANGED_COVERAGE_THRESHOLD/);
+assert.match(changedCoverage, /coverage-final\.json/);
+assert.match(changedCoverage, /CHANGED_COVERAGE_OK/);
+const qualityWorkflow = await read('.github/workflows/phase8-quality.yml');
+assert.match(qualityWorkflow, /CHANGED_COVERAGE_THRESHOLD:\s*80/);
+assert.match(qualityWorkflow, /--max-old-space-size=2048/);
+assert.match(qualityWorkflow, /vitest-memory\.txt/);
 const idService = await read('src/core/ids/id.service.ts');
 assert.doesNotMatch(idService, /\brequire\s*\(/);
 assert.doesNotMatch(idService, /Math\.random/);

@@ -1,0 +1,55 @@
+name: Phase 8 Quality Evidence
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'backend/src/**'
+      - 'scripts/audit-quality-debt.mjs'
+      - 'scripts/check-changed-coverage.mjs'
+      - 'scripts/verify-phase8-quality.mjs'
+      - 'vitest.config.ts'
+      - '.husky/pre-commit'
+      - '.github/workflows/phase8-quality.yml'
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: phase8-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evidence:
+    name: Coverage, memory and debt evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { fetch-depth: 2 }
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Verify static quality contracts
+        run: |
+          node scripts/audit-quality-debt.mjs
+          node scripts/verify-phase8-quality.mjs
+      - name: Run coverage with memory evidence
+        run: /usr/bin/time -v -o vitest-memory.txt npm run test:coverage
+        env:
+          NODE_OPTIONS: --max-old-space-size=2048
+      - name: Enforce changed-code coverage
+        run: node scripts/check-changed-coverage.mjs
+        env:
+          COVERAGE_BASE_REF: HEAD^
+          CHANGED_COVERAGE_THRESHOLD: 80
+      - name: Upload coverage and memory evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: phase8-quality-evidence-${{ github.sha }}
+          path: |
+            coverage/
+            vitest-memory.txt
+          retention-days: 7
