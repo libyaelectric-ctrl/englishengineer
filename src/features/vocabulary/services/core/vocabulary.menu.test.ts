@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
+import { storage } from '@/shared/storage';
 
 import {
   CANONICAL_VOCABULARY_TOTAL,
@@ -24,6 +25,7 @@ const term = {
 describe('Vocabulary menu progress', () => {
   beforeEach(() => {
     localStorage.clear();
+    storage.activateSession({ userId: 'test-user', kind: 'local' });
     VocabularyMenuService.reset();
   });
 

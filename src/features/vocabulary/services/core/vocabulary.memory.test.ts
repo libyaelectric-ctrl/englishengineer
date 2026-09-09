@@ -1,6 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { VocabularyEntry } from '@/shared/types/vocabulary.types';
+import { storage } from '@/shared/storage';
 
 import { loadVocabularyEntries } from '../../data/vocabulary.data';
 import { VocabularyMemoryService, filterMyVocabulary } from './vocabulary.memory';
@@ -14,6 +15,7 @@ beforeAll(async () => {
 describe('My Vocabulary memory and review queue', () => {
   beforeEach(() => {
     localStorage.clear();
+    storage.activateSession({ userId: 'test-user', kind: 'local' });
     VocabularyMemoryService.reset();
   });
 
