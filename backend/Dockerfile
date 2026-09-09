@@ -17,5 +17,5 @@ COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/src/prompts ./dist/prompts
 COPY package.json ./
-EXPOSE 8080
+EXPOSE 8787
 CMD ["node", "dist/server.js"]
