@@ -1,6 +1,6 @@
 import { AI_BACKEND_PROXY_CONFIG } from '@/shared/services/ai-proxy.config';
 import { createApiClient } from '@/shared/services/apiClient';
-import type { ApiSuccessResponse } from '@/shared/types/api-response';
+import { unwrapApiSuccess } from '@/shared/types/api-response';
 
 interface SpeakingSubmitPayload {
   id: string;
@@ -20,11 +20,9 @@ export async function submitSpeakingToBackend(input: {
   const base = proxy.replace(/\/api\/(?:v1\/)?ai\/?$/, '');
   try {
     const client = createApiClient({ baseUrl: base });
-    const envelope = await client.post<ApiSuccessResponse<SpeakingSubmitPayload>>(
-      '/api/v1/speaking/submit',
-      input
+    return unwrapApiSuccess<SpeakingSubmitPayload>(
+      await client.post<SpeakingSubmitPayload>('/api/v1/speaking/submit', input)
     );
-    return envelope.data;
   } catch {
     return null;
   }

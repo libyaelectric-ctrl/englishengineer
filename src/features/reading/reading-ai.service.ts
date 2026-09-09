@@ -1,6 +1,6 @@
 import { AI_BACKEND_PROXY_CONFIG } from '@/shared/services/ai-proxy.config';
 import { createApiClient } from '@/shared/services/apiClient';
-import type { ApiSuccessResponse } from '@/shared/types/api-response';
+import { unwrapApiSuccess } from '@/shared/types/api-response';
 import type { ReadingMission, ReadingQuestion, VocabularyItem } from '@/shared/types/reading.types';
 
 interface GeneratedReadingPayload {
@@ -36,11 +36,9 @@ export async function generateReadingMission(params: {
 
   try {
     const client = createApiClient({ baseUrl: base });
-    const envelope = await client.post<ApiSuccessResponse<GeneratedReadingPayload>>(
-      '/api/v1/reading/generate',
-      params
+    const payload = unwrapApiSuccess<GeneratedReadingPayload>(
+      await client.post<GeneratedReadingPayload>('/api/v1/reading/generate', params)
     );
-    const payload = envelope.data;
     const item = payload.item;
     if (!item?.title || !item.text) return null;
 

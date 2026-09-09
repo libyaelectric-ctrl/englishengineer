@@ -1,6 +1,6 @@
 import { AI_BACKEND_PROXY_CONFIG } from '@/shared/services/ai-proxy.config';
 import { createApiClient } from '@/shared/services/apiClient';
-import type { ApiSuccessResponse } from '@/shared/types/api-response';
+import { unwrapApiSuccess } from '@/shared/types/api-response';
 
 interface WritingSubmitPayload {
   id: string;
@@ -30,11 +30,9 @@ export async function submitWritingToBackend(input: {
   const base = proxy.replace(/\/api\/(?:v1\/)?ai\/?$/, '');
   try {
     const client = createApiClient({ baseUrl: base });
-    const envelope = await client.post<ApiSuccessResponse<WritingSubmitPayload>>(
-      '/api/v1/writing/submit',
-      input
+    return unwrapApiSuccess<WritingSubmitPayload>(
+      await client.post<WritingSubmitPayload>('/api/v1/writing/submit', input)
     );
-    return envelope.data;
   } catch {
     return null;
   }

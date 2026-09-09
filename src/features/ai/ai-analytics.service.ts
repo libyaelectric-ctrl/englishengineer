@@ -1,5 +1,5 @@
 import { createApiClient } from '@/shared/services/apiClient';
-import type { ApiSuccessResponse } from '@/shared/types/api-response';
+import { unwrapApiSuccess } from '@/shared/types/api-response';
 
 import { AI_BACKEND_PROXY_CONFIG } from './ai.config';
 
@@ -63,9 +63,11 @@ export const AiAnalyticsService = {
   async fetchAdmin(): Promise<AiAdminAnalytics | null> {
     if (!analyticsClient) return null;
     try {
-      const envelope =
-        await analyticsClient.get<ApiSuccessResponse<AiAdminAnalytics>>('/analytics/admin');
-      return envelope.data ?? null;
+      return (
+        unwrapApiSuccess<AiAdminAnalytics>(
+          await analyticsClient.get<AiAdminAnalytics>('/analytics/admin')
+        ) ?? null
+      );
     } catch {
       return null;
     }
