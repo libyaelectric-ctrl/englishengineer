@@ -15,15 +15,23 @@ import { hasText, toPositiveInteger } from './config-helpers.js';
 
 type Env = Record<string, string | undefined>;
 
+const requireProductionSecret = (name: string, value: string | undefined, runtimeEnv: RuntimeEnvironment) => {
+  if (runtimeEnv === 'production' && !hasText(value)) {
+    throw new Error(`${name} is required in production`);
+  }
+};
+
 export const createBackendConfig = (environment: Env = process.env): BackendConfig => {
   const runtimeEnv = resolveEnvironment(environment);
   const supabase = resolveSupabase(environment);
+
+  requireProductionSecret('METRICS_TOKEN', environment.METRICS_TOKEN, runtimeEnv);
 
   return {
     port: toPositiveInteger(environment.PORT, 8787),
     appOrigin: environment.APP_ORIGIN || 'http://localhost:3000',
     environment: runtimeEnv,
-    version: environment.APP_VERSION || '4.0.22',
+    version: environment.APP_VERSION || '4.0.23',
     corsAllowedOrigins: hasText(environment.CORS_ALLOWED_ORIGINS)
       ? environment
           .CORS_ALLOWED_ORIGINS!.split(',')
@@ -71,13 +79,6 @@ interface PublicHealth {
 }
 
 export const toPublicHealth = (config: BackendConfig): PublicHealth => {
-  // firebaseProjectId is not a secret — it's already public in the
-  // frontend's own bundle/.env.production and in every Firebase console
-  // URL — so exposing it here (unlike a real secret) is safe and lets
-  // anyone directly compare "does the live backend's configured project
-  // match the frontend's project" without needing dashboard access to the
-  // hosting provider's environment variables. Secret material (JWT
-  // secrets, service keys) stays booleans only, never here.
   const firebaseConfigured = Boolean(config.auth?.firebaseProjectId);
   const supabaseAuthConfigured = Boolean(
     config.auth?.supabaseJwtSecret || (config.auth?.supabaseUrl && config.auth?.supabaseAnonKey)

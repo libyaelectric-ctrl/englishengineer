@@ -1,7 +1,7 @@
 {
   "name": "engvox-frontend",
   "private": true,
-  "version": "4.0.22",
+  "version": "4.0.23",
   "author": "Özcan ERENSAYIN",
   "type": "module",
   "scripts": {
@@ -11,9 +11,12 @@
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=2048 tsc --noEmit && cross-env NODE_OPTIONS=--max-old-space-size=2048 vite build --configLoader runner",
     "build:mobile": "cross-env NODE_OPTIONS=--max-old-space-size=2048 tsc --noEmit && cross-env NODE_OPTIONS=--max-old-space-size=2048 vite build --configLoader runner --mode mobile",
     "capacitor:sync": "npx cap sync",
-    "capacitor:android:build": "cd android && ./gradlew assembleRelease",
-    "capacitor:android:run": "cd android && ./gradlew installDebug",
-    "capacitor:android:build:release": "npx cap sync && cd android && ./gradlew assembleRelease",
+    "capacitor:android:build": "npm run build:mobile && npx cap sync android && cd android && ./gradlew clean assembleDebug",
+    "capacitor:android:run": "npm run build:mobile && npx cap sync android && cd android && ./gradlew installDebug",
+    "capacitor:android:build:release": "npm run build:mobile && npx cap sync android && cd android && ./gradlew clean assembleRelease",
+    "android:debug": "npm run build:mobile && npx cap sync android && cd android && ./gradlew clean assembleDebug",
+    "android:release": "npm run build:mobile && npx cap sync android && cd android && ./gradlew clean assembleRelease",
+    "android:run": "npm run build:mobile && npx cap sync android && cd android && ./gradlew installDebug",
     "clean": "node -e \"const fs=require('fs'); ['dist','.vite','.npm-cache','.turbo','node_modules/.cache'].forEach((p)=>{try{fs.rmSync(p,{recursive:true,force:true})}catch{}})\"",
     "clean:node": "node -e \"const fs=require('fs'); ['node_modules','package-lock.json'].forEach((p)=>{try{fs.rmSync(p,{recursive:true,force:true})}catch{}})\"",
     "reinstall": "npm run clean:node && npm install",
@@ -55,9 +58,7 @@
     "check:dead-code": "knip --no-progress",
     "check-languages": "node scripts/verify-language-completeness.mjs"
   },
-  "engines": {
-    "node": ">=22.0.0"
-  },
+  "engines": { "node": ">=22.0.0" },
   "dependencies": {
     "@capacitor-firebase/authentication": "^8.5.1",
     "@capacitor/android": "^8.5.1",
@@ -131,23 +132,10 @@
     "vitest": "^4.1.11"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix --max-warnings 0",
-      "prettier --write"
-    ],
-    "*.{js,mjs,cjs}": [
-      "eslint --fix --max-warnings 0",
-      "prettier --write"
-    ],
-    "*.{json,md,yml}": [
-      "prettier --write"
-    ]
+    "*.{ts,tsx}": ["eslint --fix --max-warnings 0", "prettier --write"],
+    "*.{js,mjs,cjs}": ["eslint --fix --max-warnings 0", "prettier --write"],
+    "*.{json,md,yml}": ["prettier --write"]
   },
-  "overrides": {
-    "uuid": "^11.1.1",
-    "axios": "^1.7.9"
-  },
-  "allowScripts": {
-    "esbuild@0.25.12": true
-  }
+  "overrides": { "uuid": "^11.1.1", "axios": "^1.7.9" },
+  "allowScripts": { "esbuild@0.25.12": true }
 }
