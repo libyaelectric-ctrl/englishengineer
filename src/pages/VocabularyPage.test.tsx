@@ -3,6 +3,8 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
 
+import { storage } from '@/shared/storage';
+
 import { CEFR_LEVELS } from '@/features/level-system';
 import { VocabularyMenuService, VocabularyRepository } from '@/features/vocabulary';
 
@@ -22,7 +24,15 @@ describe('VocabularyPage menu', () => {
 
   beforeEach(() => {
     localStorage.clear();
+    // The menu service persists through the identity-scoped storage (Phase 3),
+    // which fails closed without an activated session. Activate a test session
+    // so saveState/getState round-trip like they do for a signed-in user.
+    storage.activateSession({ userId: 'vocab-test-user', kind: 'local' });
     VocabularyMenuService.reset();
+  });
+
+  afterEach(() => {
+    storage.deactivateSession();
   });
 
   const renderLoadedPage = async () => {
@@ -123,14 +133,14 @@ describe('VocabularyPage menu', () => {
       // batched progress writes; retry the state assertions instead of
       // reading the store synchronously (order-dependent flake, see TD-018).
       await waitFor(
-      () => {
-        const statuses = Object.values(VocabularyMenuService.getState().progress);
-        expect(statuses.filter((word) => word.status === 'Mastered')).toHaveLength(1);
-        expect(statuses.filter((word) => word.status === 'Struggling')).toHaveLength(0);
-        expect(statuses.filter((word) => word.status === 'Learned')).toHaveLength(99);
-      },
-      // CI runner'larinda store flush'i 1s varsayilani asabiliyor (TD-018)
-      { timeout: 10000 }
+        () => {
+          const statuses = Object.values(VocabularyMenuService.getState().progress);
+          expect(statuses.filter((word) => word.status === 'Mastered')).toHaveLength(1);
+          expect(statuses.filter((word) => word.status === 'Struggling')).toHaveLength(0);
+          expect(statuses.filter((word) => word.status === 'Learned')).toHaveLength(99);
+        },
+        // CI runner'larinda store flush'i 1s varsayilani asabiliyor (TD-018)
+        { timeout: 10000 }
       );
     } finally {
       randomSpy.mockRestore();

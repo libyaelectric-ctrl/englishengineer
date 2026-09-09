@@ -22,7 +22,7 @@ const FeatureList = ({ tier, featureLabels, compact }: { tier: PricingTier; feat
   );
 };
 
-const PricingCta = ({ tier, isTeam, isAnnual, isCurrentPlan, isLoading, onSelect, copy, price, currency, compact }: { tier: PricingTier; isTeam: boolean; isAnnual: boolean; isCurrentPlan: boolean; isLoading: boolean; onSelect?: (tierId: string) => void; copy: ReturnType<typeof getPricingCopy>; price: number; currency: string; compact: boolean }) => {
+const PricingCta = ({ tier, isTeam, isCurrentPlan, isLoading, onSelect, copy, price, currency, compact }: { tier: PricingTier; isTeam: boolean; isCurrentPlan: boolean; isLoading: boolean; onSelect?: (tierId: string) => void; copy: ReturnType<typeof getPricingCopy>; price: number; currency: string; compact: boolean }) => {
   const handleClick = () => { if (tier.comingSoon || isLoading) return; onSelect?.(tier.id); };
   const btnClass = `${compact ? 'py-2 text-[10px]' : 'py-2.5 text-xs'} w-full rounded-[var(--radius-card)] px-3 font-bold uppercase tracking-wider transition-all shadow-sm`;
   if (isTeam) return <button type="button" onClick={async () => { const { openMailto } = await import('@/shared/utils/capacitor'); await openMailto('sales@engvox.io', 'EngVox Team plan', ''); }} className={`${btnClass} border border-border-soft bg-surface text-foreground hover:bg-surface-hover cursor-pointer`}>{copy.contactSales}</button>;
@@ -52,7 +52,7 @@ export const PricingCard = ({ tier, isAnnual, currency, isCurrentPlan = false, i
           <p className={compact ? 'line-clamp-2 min-h-[36px] text-[11px] leading-5 text-muted-copy' : 'min-h-[48px] text-xs leading-relaxed text-muted-copy'}>{publicCopy.tierDescriptions[tier.id as PricingTierId] ?? tier.description}</p>
           <FeatureList tier={tier} featureLabels={featureLabels} compact={compact} />
         </div>
-        <div className={compact ? 'mt-2 border-t border-border-soft pt-2' : 'mt-4 border-t border-border-soft pt-3'}><PricingCta tier={tier} isTeam={isTeam} isAnnual={isAnnual} isCurrentPlan={isCurrentPlan} isLoading={isLoading} onSelect={onSelect} copy={copy} price={price} currency={currency} compact={compact} /></div>
+        <div className={compact ? 'mt-2 border-t border-border-soft pt-2' : 'mt-4 border-t border-border-soft pt-3'}><PricingCta tier={tier} isTeam={isTeam} isCurrentPlan={isCurrentPlan} isLoading={isLoading} onSelect={onSelect} copy={copy} price={price} currency={currency} compact={compact} /></div>
       </div>
     </article>
   );
