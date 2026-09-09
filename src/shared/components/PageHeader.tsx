@@ -20,20 +20,20 @@ export function PageHeader({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="sticky -top-4 z-30 flex min-h-14 sm:h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-4 sm:mb-6 gap-2">
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0">
+    <div className="sticky top-0 z-30 -mx-4 mb-4 flex min-h-14 shrink-0 items-center justify-between gap-2 border-b border-border-soft bg-background/95 px-4 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div className="flex min-w-0 shrink items-center gap-2 sm:gap-3">
         {icon && (
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[4px] bg-surface border border-border-soft text-base shadow-sm">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-button)] border border-border-soft bg-surface text-base shadow-sm">
             {icon}
           </div>
         )}
-        <h1 className="text-sm sm:text-base font-bold tracking-tight text-foreground truncate">
+        <h1 className="truncate text-base font-black tracking-tight text-foreground sm:text-lg">
           {title}
         </h1>
         {badgeText && (
           <span
             className={cn(
-              'hidden sm:inline rounded-[4px] border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider',
+              'hidden rounded-[var(--radius-button)] border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider sm:inline',
               badgeColor || 'border-border-soft bg-surface text-primary'
             )}
           >
@@ -41,13 +41,15 @@ export function PageHeader({
           </span>
         )}
         {description && (
-          <p className="hidden text-[11px] font-medium text-muted-copy leading-tight lg:block">
+          <p className="hidden max-w-xl truncate text-[11px] font-semibold leading-tight text-muted-copy xl:block">
             {description}
           </p>
         )}
       </div>
       {actions && (
-        <div className="shrink-0 flex items-center gap-1.5 sm:gap-2 overflow-x-auto max-w-[65vw] sm:max-w-none py-1 scrollbar-none">{actions}</div>
+        <div className="scrollbar-none flex max-w-[58vw] shrink-0 items-center gap-1.5 overflow-x-auto py-1 sm:max-w-none sm:gap-2">
+          {actions}
+        </div>
       )}
       {children}
     </div>
