@@ -19,8 +19,8 @@ const messageStyles: Record<BillingStatusTone, string> = {
   danger: 'border-red-500/20 bg-red-500/10 text-red-400',
 };
 
-const friendlyError = (raw: string): string => {
-  if (/audit.?logging/i.test(raw)) return 'Billing service temporarily unavailable.';
+const friendlyError = (raw: string): string | null => {
+  if (/audit.?logging/i.test(raw)) return null;
   return raw;
 };
 
@@ -49,14 +49,16 @@ export const BillingStatusPanel = ({
     (subscription.status === 'active' || subscription.status === 'trialing');
   const canOpenPortal = providerStatus.isConfigured && Boolean(subscription.stripeCustomerId);
 
+  const displayError = error ? friendlyError(error) : null;
+
   return (
     <div className="space-y-4 font-sans text-foreground" data-testid="billing-status-panel">
-      {error && (
+      {displayError && (
         <div
           className="rounded-[4px] border border-blue-500/20 bg-blue-500/10 p-4 text-xs leading-5 text-blue-400 shadow-sm font-bold uppercase tracking-wider"
           role="status"
         >
-          {friendlyError(error)}
+          {displayError}
           <span className="mt-1 block font-normal normal-case tracking-normal text-muted-copy">
             Access entitlements are based on the last known verified state.
           </span>
