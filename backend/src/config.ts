@@ -17,7 +17,6 @@ type Env = Record<string, string | undefined>;
 
 export const createBackendConfig = (environment: Env = process.env): BackendConfig => {
   const runtimeEnv = resolveEnvironment(environment);
-  const supabase = resolveSupabase(environment);
 
   return {
     port: toPositiveInteger(environment.PORT, 8787),
@@ -40,7 +39,7 @@ export const createBackendConfig = (environment: Env = process.env): BackendConf
     billing: resolveBilling(environment),
     dodo: resolveDodo(environment),
     stripe: resolveStripe(environment, runtimeEnv),
-    supabase,
+    supabase: resolveSupabase(environment),
     vocabulary: resolveVocabulary(environment),
     workspace: resolveWorkspace(environment),
     rateLimit: resolveRateLimit(environment, runtimeEnv),

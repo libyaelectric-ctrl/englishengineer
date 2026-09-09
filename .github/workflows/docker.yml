@@ -92,9 +92,17 @@ jobs:
         run: |
           docker build -t engvox-frontend-test .
           docker run --rm -d --name test-frontend -p 8080:80 engvox-frontend-test
-          sleep 5
-          curl -f http://localhost:8080/ || (docker logs test-frontend && exit 1)
-          docker stop test-frontend
+          for i in {1..20}; do
+            if curl -f http://localhost:8080/; then
+              docker stop test-frontend
+              exit 0
+            fi
+            docker logs test-frontend || true
+            sleep 2
+          done
+          docker logs test-frontend
+          docker stop test-frontend || true
+          exit 1
 
   backend:
     name: Backend Image
@@ -144,6 +152,7 @@ jobs:
           docker build -t engvox-backend-test ./backend
           docker run --rm -d --name test-backend -p 8080:8787 \
             -e NODE_ENV=staging \
+            -e PORT=8787 \
             -e APP_ORIGIN=http://localhost:3000 \
             -e AI_PROVIDER=mock \
             -e FIREBASE_PROJECT_ID=engvox-ci \
@@ -153,6 +162,14 @@ jobs:
             -e RATE_LIMIT_STORE=memory \
             -e ALLOW_IN_MEMORY_RATE_LIMIT_IN_PRODUCTION=true \
             engvox-backend-test
-          sleep 5
-          curl -f http://localhost:8080/api/health || (docker logs test-backend && exit 1)
-          docker stop test-backend
+          for i in {1..20}; do
+            if curl -f http://localhost:8080/api/health; then
+              docker stop test-backend
+              exit 0
+            fi
+            docker logs test-backend || true
+            sleep 2
+          done
+          docker logs test-backend
+          docker stop test-backend || true
+          exit 1
