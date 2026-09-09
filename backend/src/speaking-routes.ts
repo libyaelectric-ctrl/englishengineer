@@ -23,6 +23,7 @@ const AUDIO_TYPES: Record<string, string> = {
   'audio/mp4': 'm4a',
 };
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
+const MAX_DURATION_SECONDS = 300;
 const AUDIO_BUCKET = process.env.SPEAKING_AUDIO_BUCKET || 'speaking-audio';
 const SAFE_STORAGE_SEGMENT = /^[A-Za-z0-9_-]{1,128}$/;
 const hasExpectedAudioSignature = (buffer: Buffer, contentType: string): boolean => {
@@ -47,6 +48,159 @@ const hasExpectedAudioSignature = (buffer: Buffer, contentType: string): boolean
   if (contentType === 'audio/mp4')
     return buffer.length >= 12 && buffer.subarray(4, 8).toString('ascii') === 'ftyp';
   return false;
+};
+const parseWavDuration = (buffer: Buffer): number | null => {
+  if (buffer.length < 44) return null;
+  const channels = buffer.readUInt16LE(22);
+  const sampleRate = buffer.readUInt32LE(24);
+  const bitsPerSample = buffer.readUInt16LE(34);
+  if (sampleRate === 0 || channels === 0 || bitsPerSample === 0) return null;
+  let dataChunkSize = 0;
+  let offset = 12;
+  while (offset + 8 <= buffer.length) {
+    const chunkId = buffer.subarray(offset, offset + 4).toString('ascii');
+    const chunkSize = buffer.readUInt32LE(offset + 4);
+    if (chunkId === 'data') { dataChunkSize = chunkSize; break; }
+    offset += 8 + chunkSize;
+  }
+  if (dataChunkSize === 0) dataChunkSize = buffer.length - 44;
+  const bytesPerSample = (channels * bitsPerSample) / 8;
+  if (bytesPerSample === 0) return null;
+  return dataChunkSize / (sampleRate * bytesPerSample);
+};
+const parseMp3Duration = (buffer: Buffer): number | null => {
+  const BITRATES = [
+    [0,0],[32,32],[40,40],[48,48],[56,56],[64,64],[80,80],[96,96],
+    [112,112],[128,128],[160,160],[192,192],[224,224],[256,256],[320,320],[0,0],
+  ];
+  let offset = 0;
+  if (buffer.length >= 3 && buffer.subarray(0, 3).toString('ascii') === 'ID3') {
+    if (buffer.length < 10) return null;
+    const size = ((buffer[6]! & 0x7f) << 21) | ((buffer[7]! & 0x7f) << 14) | ((buffer[8]! & 0x7f) << 7) | (buffer[9]! & 0x7f);
+    offset = 10 + size;
+  }
+  let totalSize = 0;
+  let bitrateSum = 0;
+  let frameCount = 0;
+  while (offset + 4 <= buffer.length) {
+    if (buffer[offset] === 0xff && (buffer[offset + 1]! & 0xe0) === 0xe0) {
+      const versionBits = (buffer[offset + 1]! >> 3) & 0x03;
+      const layerBits = (buffer[offset + 1]! >> 1) & 0x03;
+      const bitrateIdx = (buffer[offset + 2]! >> 4) & 0x0f;
+      if (layerBits === 0 || bitrateIdx === 0 || bitrateIdx === 15) { offset++; continue; }
+      const mpegVersion = versionBits === 3 ? 0 : 1;
+      const bitrate = BITRATES[bitrateIdx]?.[mpegVersion] ?? 0;
+      if (bitrate > 0) { bitrateSum += bitrate; frameCount++; }
+      offset += 4;
+    } else {
+      offset++;
+    }
+  }
+  if (frameCount === 0 || bitrateSum === 0) return null;
+  const avgBitrateKbps = bitrateSum / frameCount;
+  const totalBits = (buffer.length - offset) * 8;
+  return totalBits / (avgBitrateKbps * 1000);
+};
+const parseMp4Duration = (buffer: Buffer): number | null => {
+  const findAtom = (start: number, end: number, target: string): number | {
+    found: boolean; offset: number } => {
+    let pos = start;
+    while (pos + 8 <= end) {
+      const size = buffer.readUInt32BE(pos);
+      const type = buffer.subarray(pos + 4, pos + 8).toString('ascii');
+      if (size < 8) return { found: false, offset: end };
+      if (type === target) return { found: true, offset: pos };
+      pos += size;
+    }
+    return { found: false, offset: pos };
+  };
+  const moovResult = findAtom(0, buffer.length, 'moov');
+  if (!moovResult.found) return null;
+  const moovStart = moovResult.offset + 8;
+  const moovEnd = Math.min(buffer.length, moovResult.offset + buffer.readUInt32BE(moovResult.offset));
+  const mvhdResult = findAtom(moovStart, moovEnd, 'mvhd');
+  if (!mvhdResult.found) return null;
+  const mvhdOffset = mvhdResult.offset + 8;
+  if (mvhdOffset + 20 > buffer.length) return null;
+  const version = buffer[mvhdOffset]!;
+  let timescale: number;
+  let duration: number;
+  if (version === 0) {
+    timescale = buffer.readUInt32BE(mvhdOffset + 12);
+    duration = buffer.readUInt32BE(mvhdOffset + 16);
+  } else {
+    timescale = buffer.readUInt32BE(mvhdOffset + 20);
+    duration = Number(buffer.readBigUInt64BE(mvhdOffset + 24));
+  }
+  if (timescale === 0) return null;
+  return duration / timescale;
+};
+const parseWebmDuration = (buffer: Buffer): number | null => {
+  const readVint = (pos: number): { value: number; size: number } | null => {
+    if (pos >= buffer.length) return null;
+    const first = buffer[pos]!;
+    let size = 1;
+    let mask = 0x80;
+    while (size <= 8 && (first & mask) === 0) { mask >>= 1; size++; }
+    if (size > 8) return null;
+    let value = first & (0xff >> size);
+    for (let i = 1; i < size; i++) {
+      if (pos + i >= buffer.length) return null;
+      value = (value << 8) | buffer[pos + i]!;
+    }
+    return { value, size };
+  };
+  const readElementId = (pos: number): { id: number; size: number } | null => {
+    if (pos >= buffer.length) return null;
+    const first = buffer[pos]!;
+    let size = 1;
+    if (first === 0) return null;
+    let threshold = 0x80;
+    while (size <= 8 && (first & threshold) === 0) { threshold >>= 1; size++; }
+    if (size > 8) return null;
+    let id = first;
+    for (let i = 1; i < size; i++) {
+      if (pos + i >= buffer.length) return null;
+      id = (id << 8) | buffer[pos + i]!;
+    }
+    return { id, size };
+  };
+  const findEBML = (start: number, end: number, targetId: number): { found: boolean; dataOffset: number; dataSize: number } => {
+    let pos = start;
+    while (pos + 2 <= end) {
+      const el = readElementId(pos);
+      if (!el) break;
+      const sizeResult = readVint(pos + el.size);
+      if (!sizeResult) break;
+      const dataOffset = pos + el.size + sizeResult.size;
+      if (el.id === targetId) return { found: true, dataOffset, dataSize: sizeResult.value };
+      pos = dataOffset + sizeResult.value;
+    }
+    return { found: false, dataOffset: 0, dataSize: 0 };
+  };
+  const segment = findEBML(0, buffer.length, 0x18538067);
+  if (!segment.found) return null;
+  const segmentDataEnd = segment.dataOffset + segment.dataSize;
+  let timecodeScale = 1000000;
+  const tcResult = findEBML(segment.dataOffset, segmentDataEnd, 0x2AD7B1);
+  if (tcResult.found && tcResult.dataSize <= 8) {
+    let tc = 0;
+    for (let i = 0; i < tcResult.dataSize; i++) tc = (tc << 8) | buffer[tcResult.dataOffset + i]!;
+    if (tc > 0) timecodeScale = tc;
+  }
+  const durResult = findEBML(segment.dataOffset, segmentDataEnd, 0x4489);
+  if (!durResult.found) return null;
+  let dur = 0;
+  const bytesToRead = Math.min(durResult.dataSize, 8);
+  for (let i = 0; i < bytesToRead; i++) dur = (dur << 8) | buffer[durResult.dataOffset + i]!;
+  return dur / timecodeScale;
+};
+export const parseAudioDuration = (buffer: Buffer, contentType: string): number | null => {
+  if (contentType === 'audio/wav') return parseWavDuration(buffer);
+  if (contentType === 'audio/mpeg') return parseMp3Duration(buffer);
+  if (contentType === 'audio/mp4') return parseMp4Duration(buffer);
+  if (contentType === 'audio/webm') return parseWebmDuration(buffer);
+  return null;
 };
 const uploadToSupabase = async (
   userId: string,
@@ -197,6 +351,13 @@ export const registerSpeakingRoutes = (
             415,
             'audio_signature_mismatch',
             'Audio content does not match its declared media type.'
+          );
+        const durationSeconds = parseAudioDuration(buffer, contentType);
+        if (durationSeconds !== null && durationSeconds > MAX_DURATION_SECONDS)
+          throw new ApiError(
+            413,
+            'audio_too_long',
+            `Audio duration ${Math.round(durationSeconds)}s exceeds ${MAX_DURATION_SECONDS}s limit.`
           );
         if (!SAFE_STORAGE_SEGMENT.test(userId))
           throw new ApiError(

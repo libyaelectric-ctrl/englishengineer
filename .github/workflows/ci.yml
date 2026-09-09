@@ -59,6 +59,12 @@ jobs:
       - run: npm ci
       - name: Frontend Unit Tests
         run: npm test
+      - name: Vitest Peak Memory Measurement
+        run: |
+          /usr/bin/time -v npm test 2>&1 | grep -E 'Maximum resident|tests|pass|fail' | tee /tmp/mem.txt || true
+          PEAK=$(grep 'Maximum resident' /tmp/mem.txt | awk '{print $NF}' || echo 'N/A')
+          echo "### Vitest Peak Memory" >> $GITHUB_STEP_SUMMARY
+          echo "Peak RSS: ${PEAK} kB" >> $GITHUB_STEP_SUMMARY
       - name: Frontend E2E Tests (Vitest)
         run: npm run e2e
       - name: Test Coverage
