@@ -46,7 +46,7 @@ test.describe('Visual regression — auth-gated pages (demo mode)', () => {
           b.textContent?.includes('İleri') ||
           b.textContent?.includes('Weiter') ||
           b.textContent?.includes('Next') ||
-          b.textContent?.includes('Dalej')
+          b.textContent?.includes('Dalej'),
       );
       if (btn && !btn.disabled) btn.click();
     });
@@ -56,9 +56,8 @@ test.describe('Visual regression — auth-gated pages (demo mode)', () => {
 
   const AUTHED_PAGES = [
     { name: 'dashboard', path: '/dashboard' },
-    { name: 'curriculum', path: '/curriculum' },
-    { name: 'lesson', path: '/lesson/demo' },
-    { name: 'work-tools', path: '/work-tools' },
+    { name: 'vocabulary', path: '/vocabulary' },
+    { name: 'grammar', path: '/grammar' },
     { name: 'reading', path: '/reading' },
     { name: 'listening', path: '/listening' },
     { name: 'writing', path: '/writing' },

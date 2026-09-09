@@ -26,8 +26,6 @@ jobs:
         run: npm run build
 
       - name: Deploy to Vercel (Preview)
-        id: vercel
-        if: ${{ secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != '' }}
         uses: amondnet/vercel-action@16e87c0a08142b0d0d33b76aeaf20823c381b9b9 # v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
@@ -36,12 +34,7 @@ jobs:
           vercel-args: '--pre'
           working-directory: ./
 
-      - name: Skip Vercel deploy when secrets are unavailable
-        if: ${{ secrets.VERCEL_TOKEN == '' || secrets.VERCEL_ORG_ID == '' || secrets.VERCEL_PROJECT_ID == '' }}
-        run: echo "Vercel preview secrets are not available for this pull request; build validation completed."
-
       - name: Comment PR
-        if: ${{ steps.vercel.outcome == 'success' }}
         uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |

@@ -18,6 +18,8 @@ android {
 
     signingConfigs {
         release {
+            // Keystore dosyasi environment variable'dan okunur
+            // GitHub Actions'da: ANDROID_KEYSTORE_BASE64 decode edilir
             storeFile = file(System.getenv("ANDROID_KEYSTORE_PATH") ?: "release.keystore")
             storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD") ?: ""
             keyAlias = System.getenv("ANDROID_KEY_ALIAS") ?: ""
