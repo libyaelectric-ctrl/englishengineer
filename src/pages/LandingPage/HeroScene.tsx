@@ -85,15 +85,7 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
       )}
 
       {!isDark && (
-        <>
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(247,249,252,0.95))]" />
-          {/* Subtle warm glow accents — like soft daylight through a window */}
-          <div className="absolute -left-24 top-1/4 h-80 w-80 rounded-full bg-cyan-200/20 blur-3xl" />
-          <div className="absolute -right-24 top-10 h-[22rem] w-[22rem] rounded-full bg-indigo-200/15 blur-3xl" />
-          <div className="absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-amber-100/20 blur-3xl" />
-          {/* Soft radial highlight behind hero content */}
-          <div className="absolute left-1/2 top-[40%] h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-100/25 blur-[100px]" />
-        </>
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(247,249,252,0.96))]" />
       )}
 
       {nodes.map((node) => (

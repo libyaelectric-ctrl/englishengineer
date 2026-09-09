@@ -39,8 +39,8 @@ const PricingPage = () => {
     <main className="relative h-dvh overflow-hidden bg-[#f7f9fc] pt-14 text-slate-950 dark:bg-[#040611] dark:text-white">
       <PageMetadata title="Pricing Plans — EngVox" description="Choose the plan that fits your engineering communication goals." />
       <Navbar />
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(180deg,#ffffff_0%,#f7f9fc_52%,#eef4f8_100%)] dark:bg-[linear-gradient(180deg,#040611_0%,#070b18_54%,#040611_100%)]" /><div className="pointer-events-none absolute -left-32 top-1/4 h-80 w-80 rounded-full bg-cyan-200/12 blur-3xl" /><div className="pointer-events-none absolute -right-24 top-10 h-72 w-72 rounded-full bg-indigo-200/10 blur-3xl" />
-      <section className="relative mx-auto flex min-h-[calc(100dvh-7.5rem)] max-w-7xl flex-col px-4 pb-20 pt-3 md:px-6">
+      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(180deg,#ffffff_0%,#f7f9fc_52%,#eef4f8_100%)] dark:bg-[linear-gradient(180deg,#040611_0%,#070b18_54%,#040611_100%)]" />
+      <section className="relative mx-auto flex h-[calc(100dvh-7.5rem)] max-w-7xl flex-col px-4 py-3 md:px-6">
         <div className="mb-3 grid shrink-0 items-end gap-3 lg:grid-cols-[1fr_auto]">
           <div>
             <span className="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-cyan-800 dark:border-cyan-300/20 dark:bg-cyan-300/10 dark:text-cyan-100">EngVox Pricing</span>
