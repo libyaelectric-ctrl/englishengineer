@@ -45,5 +45,13 @@ export default defineConfig({
         storageState: 'playwright/.auth/user.json',
       },
     },
+    {
+      name: 'visual-regression',
+      testMatch: /visual-regression\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1440, height: 1000 },
+      },
+    },
   ],
 });

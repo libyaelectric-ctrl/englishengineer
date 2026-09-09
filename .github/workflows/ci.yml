@@ -157,6 +157,15 @@ jobs:
       - name: Run unauthenticated smoke E2E
         run: npx playwright test tests/browser/landing-and-health.spec.ts --project=chromium-desktop --no-deps
         env: { CI: true }
+      - name: Visual Regression Baselines
+        run: |
+          npx playwright test tests/e2e/visual-regression.spec.ts --project=visual-regression --update-snapshots || true
+          npx playwright test tests/e2e/visual-regression.spec.ts --project=visual-regression
+        env: { BASE_URL: 'http://localhost:4176', CI: true }
+      - name: Upload Visual Baselines
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with: { name: visual-baselines, path: test-results/, retention-days: 14 }
       - name: Upload Playwright Report
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
