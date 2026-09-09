@@ -1,6 +1,7 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 
 import { checkCostLimits, createAIService } from './ai.js';
+import { apiSuccess } from './api-response.js';
 import { ApiError } from './errors.js';
 import { type WritingSubmissionRecord, getLearningRepository } from './learning-repository.js';
 import type { RouteRegistrar } from './route-registrar.js';
@@ -208,13 +209,14 @@ export const registerWritingRoutes = (
           ...evaluation,
           status: 'graded',
         });
-        response.json({
-          success: true,
-          id: submission.id,
-          ...evaluation,
-          status: submission.status,
-          submittedAt: submission.submittedAt,
-        });
+        response.json(
+          apiSuccess({
+            id: submission.id,
+            ...evaluation,
+            status: submission.status,
+            submittedAt: submission.submittedAt,
+          })
+        );
       } catch (error) {
         next(error);
       }

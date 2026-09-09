@@ -1,9 +1,12 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
+
 import type { VocabularyLookupQuery } from '../types.js';
+import { apiSuccess } from './api-response.js';
 import { getOrSet } from './cache/redis-cache.service.js';
 import { ApiError } from './errors.js';
 import { getLearningRepository } from './learning-repository.js';
 import { getPersistentPerformanceStats } from './progress-routes.js';
+import type { RouteRegistrar } from './route-registrar.js';
 import {
   ProgressBodySchema,
   VocabularyLookupQuerySchema,
@@ -11,7 +14,7 @@ import {
   validateQuery,
 } from './validation.js';
 import type { VocabularyLookupService } from './vocabulary-service.js';
-import type { RouteRegistrar } from './route-registrar.js';
+
 const userIdFrom = (request: Request): string => {
   const userId = request.auth?.userId;
   if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
@@ -57,16 +60,17 @@ export const registerVocabularyRoutes = (
           category: 'general',
           metadata: {},
         });
-        response.json({
-          success: true,
-          wordId,
-          result,
-          updatedAt: event.occurredAt,
-          message:
-            result === 'correct'
-              ? 'Well done! Keep going.'
-              : 'No worries, you will get it next time.',
-        });
+        response.json(
+          apiSuccess({
+            wordId,
+            result,
+            updatedAt: event.occurredAt,
+            message:
+              result === 'correct'
+                ? 'Well done! Keep going.'
+                : 'No worries, you will get it next time.',
+          })
+        );
       } catch (error) {
         next(error);
       }

@@ -2,6 +2,7 @@ import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { randomUUID } from 'node:crypto';
 
 import { checkCostLimits, createAIService } from './ai.js';
+import { apiSuccess } from './api-response.js';
 import { getOrSet } from './cache/redis-cache.service.js';
 import { ApiError } from './errors.js';
 import type { RouteRegistrar } from './route-registrar.js';
@@ -174,13 +175,14 @@ export const registerReadingRoutes = (
             return mapGenerated(result.structuredResult, category, resolvedLevel) ?? fallback;
           }
         );
-        response.json({
-          success: true,
-          item,
-          source: item.id.startsWith('ai-') ? 'ai-generated' : 'static',
-          discipline: category,
-          level: resolvedLevel,
-        });
+        response.json(
+          apiSuccess({
+            item,
+            source: item.id.startsWith('ai-') ? 'ai-generated' : 'static',
+            discipline: category,
+            level: resolvedLevel,
+          })
+        );
       } catch (error) {
         next(error);
       }

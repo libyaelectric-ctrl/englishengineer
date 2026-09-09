@@ -1,9 +1,12 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
+
+import { apiSuccess } from './api-response.js';
 import { ApiError } from './errors.js';
 import { getLearningRepository } from './learning-repository.js';
 import { getPersistentPerformanceStats } from './progress-routes.js';
-import { ProgressBodySchema, validateBody } from './validation.js';
 import type { RouteRegistrar } from './route-registrar.js';
+import { ProgressBodySchema, validateBody } from './validation.js';
+
 const userIdFrom = (request: Request): string => {
   const userId = request.auth?.userId;
   if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
@@ -33,7 +36,7 @@ export const registerGrammarRoutes = (
           category: 'general',
           metadata: {},
         });
-        response.json({ success: true, ruleId, result, updatedAt: event.occurredAt });
+        response.json(apiSuccess({ ruleId, result, updatedAt: event.occurredAt }));
       } catch (error) {
         next(error);
       }

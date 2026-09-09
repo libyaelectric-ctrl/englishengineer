@@ -20,11 +20,14 @@ describe('submitWritingToBackend', () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({
-        success: true,
-        id: 'sub-1',
-        score: 82,
-        feedback: { grammar: 'Watch your verb tenses.' },
-        status: 'graded',
+        ok: true,
+        data: {
+          id: 'sub-1',
+          score: 82,
+          feedback: { grammar: 'Watch your verb tenses.' },
+          status: 'graded',
+        },
+        meta: { contractVersion: '2026-09-07.v1' },
       }),
     });
     vi.stubGlobal('fetch', fetchMock);

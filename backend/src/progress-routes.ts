@@ -1,9 +1,11 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
+
+import { apiSuccess } from './api-response.js';
 import { ApiError } from './errors.js';
-import { getLearningRepository, type ProgressModule } from './learning-repository.js';
+import { type ProgressModule, getLearningRepository } from './learning-repository.js';
+import type { RouteRegistrar } from './route-registrar.js';
 import { aggregateByCategory, averageScore, categorizePerformance } from './utils/stats.js';
 import { ListeningScoreBodySchema, ReadingScoreBodySchema, validateBody } from './validation.js';
-import type { RouteRegistrar } from './route-registrar.js';
 
 const READING_CATEGORIES: Record<string, string> = {
   'eng-001': 'mechanical',
@@ -63,13 +65,14 @@ const registerScoredProgress = (
           category: categoryFor(module, itemId),
           metadata: {},
         });
-        response.json({
-          success: true,
-          contentId: itemId,
-          score,
-          status: 'completed',
-          updatedAt: event.occurredAt,
-        });
+        response.json(
+          apiSuccess({
+            contentId: itemId,
+            score,
+            status: 'completed',
+            updatedAt: event.occurredAt,
+          })
+        );
       } catch (error) {
         next(error);
       }
