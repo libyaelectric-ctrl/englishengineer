@@ -409,12 +409,12 @@ export const registerSpeakingRoutes = (
       try {
         userIdFrom(request);
         const { limit, offset } = parsePaginationQuery(request.query as Record<string, unknown>);
-        response.json({
+        response.json(apiSuccess({
           items: SPEAKING_PROMPTS.slice(offset, offset + limit),
           total: SPEAKING_PROMPTS.length,
           limit,
           offset,
-        });
+        }));
       } catch (error) {
         next(error);
       }
@@ -493,12 +493,12 @@ export const registerSpeakingRoutes = (
     requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
-        response.json(
+        response.json(apiSuccess(
           (await getLearningRepository().getSpeakingSubmission(
             userIdFrom(request),
             request.params.id as string
           )) ?? { notFound: true }
-        );
+        ));
       } catch (error) {
         next(error);
       }

@@ -63,7 +63,10 @@ export const lookupExternalVocabulary = async (
     const endpoint = `${apiUrl.replace(/\/$/, '')}/api/v1/vocabulary/lookup?word=${encodeURIComponent(word.trim())}&targetLang=tr`;
     const response = await (options.fetchImpl ?? fetch)(endpoint);
     if (!response.ok) return { status: 'unavailable' };
-    const payload: unknown = await response.json();
+    const envelope: unknown = await response.json();
+    const payload = (envelope && typeof envelope === 'object' && 'data' in envelope)
+      ? (envelope as Record<string, unknown>).data
+      : envelope;
     if (!isExternalVocabularyResult(payload)) {
       return { status: 'unavailable' };
     }

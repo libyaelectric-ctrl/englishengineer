@@ -148,12 +148,12 @@ export const registerWritingRoutes = (
       try {
         userIdFrom(request);
         const { limit, offset } = parsePaginationQuery(request.query as Record<string, unknown>);
-        response.json({
+        response.json(apiSuccess({
           items: WRITING_PROMPTS.slice(offset, offset + limit),
           total: WRITING_PROMPTS.length,
           limit,
           offset,
-        });
+        }));
       } catch (error) {
         next(error);
       }
@@ -230,11 +230,11 @@ export const registerWritingRoutes = (
         const submissions = await getLearningRepository().listWritingSubmissions(
           userIdFrom(request)
         );
-        response.json({
+        response.json(apiSuccess({
           totalSubmissions: submissions.length,
           averageScore: averageScore(submissions.map((submission) => submission.score)),
           byCategory: aggregateByPromptCategory(submissions, WRITING_PROMPTS, 'score'),
-        });
+        }));
       } catch (error) {
         next(error);
       }
@@ -245,12 +245,12 @@ export const registerWritingRoutes = (
     requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
-        response.json(
+        response.json(apiSuccess(
           (await getLearningRepository().getWritingSubmission(
             userIdFrom(request),
             request.params.id as string
           )) ?? { notFound: true }
-        );
+        ));
       } catch (error) {
         next(error);
       }

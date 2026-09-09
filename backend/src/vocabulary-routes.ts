@@ -36,7 +36,7 @@ export const registerVocabularyRoutes = (
         const { value: result, fromCache } = await getOrSet(`vocab:${query.word}`, 21600, () =>
           service.lookup(query)
         );
-        response.json({ ...result, cached: fromCache });
+        response.json(apiSuccess({ ...result, cached: fromCache }));
       } catch (error) {
         next(error);
       }
@@ -81,7 +81,7 @@ export const registerVocabularyRoutes = (
     requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
-        response.json(await getPersistentPerformanceStats(userIdFrom(request), 'vocabulary'));
+        response.json(apiSuccess(await getPersistentPerformanceStats(userIdFrom(request), 'vocabulary')));
       } catch (error) {
         next(error);
       }

@@ -69,8 +69,8 @@ test('speaking submission remains ungraded and is persisted', async () => {
   assert.equal(body.data.status, 'not_graded');
   assert.equal(body.data.overallScore, undefined);
   const stored = await (await fetch(`${baseUrl}/api/v1/speaking/${body.data.id}`)).json();
-  assert.equal(stored.id, body.data.id);
-  assert.equal(stored.status, 'not_graded');
+  assert.equal(stored.data.id, body.data.id);
+  assert.equal(stored.data.status, 'not_graded');
 });
 test('team analytics rejects fabricated analytics', async () => {
   const baseUrl = await start();
@@ -85,6 +85,6 @@ test('progress overview returns persistent aggregation', async () => {
   const response = await fetch(`${baseUrl}/api/v1/progress/overview`);
   const body = await response.json();
   assert.equal(response.status, 200);
-  assert.equal(body.skills.vocabulary.correct, 1);
-  assert.equal(body.totalActivities, 1);
+  assert.equal(body.data.skills.vocabulary.correct, 1);
+  assert.equal(body.data.totalActivities, 1);
 });

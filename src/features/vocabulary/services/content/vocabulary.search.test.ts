@@ -1,5 +1,6 @@
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { storage } from '@/shared/storage';
 import { VocabularyEntry } from '@/shared/types/vocabulary.types';
 
 import { loadVocabularyEntries } from '../../data/vocabulary.data';
@@ -18,7 +19,12 @@ beforeAll(async () => {
 describe('vocabulary search and external lookup', () => {
   beforeEach(() => {
     localStorage.clear();
+    storage.activateSession({ userId: 'vocab-search-test', kind: 'local' });
     clearVocabularyLookupCache();
+  });
+
+  afterAll(() => {
+    storage.deactivateSession();
   });
 
   it('searches term, meaning, category, tags, related terms and examples', () => {

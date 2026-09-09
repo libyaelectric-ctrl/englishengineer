@@ -196,13 +196,13 @@ export const registerReadingRoutes = (
         if (!request.auth?.userId)
           throw new ApiError(401, 'authentication_required', 'Auth required');
         const { limit, offset } = parsePaginationQuery(request.query as Record<string, unknown>);
-        response.json({
+        response.json(apiSuccess({
           items: READING_ITEMS.slice(offset, offset + limit),
           total: READING_ITEMS.length,
           limit,
           offset,
           message: 'Reading feed — 75% current level, 25% next level',
-        });
+        }));
       } catch (error) {
         next(error);
       }

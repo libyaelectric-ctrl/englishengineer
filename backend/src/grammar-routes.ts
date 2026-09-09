@@ -47,7 +47,7 @@ export const registerGrammarRoutes = (
     requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
-        response.json(await getPersistentPerformanceStats(userIdFrom(request), 'grammar'));
+        response.json(apiSuccess(await getPersistentPerformanceStats(userIdFrom(request), 'grammar')));
       } catch (error) {
         next(error);
       }

@@ -322,9 +322,9 @@ test('vocabulary lookup reuses a successful cached result', async () => {
   const endpoint = `${url}/api/v1/vocabulary/lookup?word=panel&targetLang=tr`;
   const first = await (await fetch(endpoint)).json();
   const second = await (await fetch(endpoint)).json();
-  assert.equal(first.cached, false);
-  assert.equal(second.cached, true);
-  assert.equal(second.source, 'Free Dictionary API');
+  assert.equal(first.data.cached, false);
+  assert.equal(second.data.cached, true);
+  assert.equal(second.data.source, 'Free Dictionary API');
   assert.equal(providerCalls, 1);
 });
 

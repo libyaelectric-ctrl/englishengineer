@@ -37,9 +37,9 @@ describe('persistent learning API', () => {
     assert.equal(grammar.status, 200);
     const stats = await request(baseUrl).get('/api/v1/vocabulary/stats').set(authorized());
     assert.equal(stats.status, 200);
-    assert.equal(stats.body.total, 1);
-    assert.equal(stats.body.correct, 1);
-    assert.equal(stats.body.new, 1);
+    assert.equal(stats.body.data.total, 1);
+    assert.equal(stats.body.data.correct, 1);
+    assert.equal(stats.body.data.new, 1);
   });
   it('persists reading and listening progress', async () => {
     assert.equal(
@@ -89,12 +89,12 @@ describe('persistent learning API', () => {
   it('returns an aggregated overview and feature gates', async () => {
     const overview = await request(baseUrl).get('/api/v1/progress/overview').set(authorized());
     assert.equal(overview.status, 200);
-    assert.equal(overview.body.userId, 'engineeros-dev-user');
-    assert.ok(overview.body.skills.vocabulary);
-    assert.equal(typeof overview.body.totalActivities, 'number');
+    assert.equal(overview.body.data.userId, 'engineeros-dev-user');
+    assert.ok(overview.body.data.skills.vocabulary);
+    assert.equal(typeof overview.body.data.totalActivities, 'number');
     const access = await request(baseUrl).get('/api/v1/user/access-status').set(authorized());
     assert.equal(access.status, 200);
-    assert.equal(typeof access.body.canAccessReading, 'boolean');
+    assert.equal(typeof access.body.data.canAccessReading, 'boolean');
   });
 });
 describe('unchanged learning feeds and validation', () => {
