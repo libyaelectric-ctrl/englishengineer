@@ -24,13 +24,25 @@
 
 - [ ] `npm run typecheck` passes
 - [ ] `npm run lint` passes
-- [ ] `npm run test` passes
+- [ ] `npm test` passes
 - [ ] `npm run build` succeeds
+- [ ] `npm run check-languages` passes
+- [ ] Android web bundle refreshed with `npm run build:mobile && npx cap sync android`
+- [ ] Light/dark/auto theme checked on touched pages
+- [ ] Mobile viewport checked on touched pages
 - [ ] Manual testing performed (describe below)
 
 ## Screenshots (if applicable)
 
 <!-- Add screenshots to illustrate visual changes -->
+
+## Release Checklist
+
+- [ ] Version number updated where needed (`package.json`, backend, Android, product config)
+- [ ] Vercel/deployment status checked after merge
+- [ ] Android build uses fresh `dist` assets, not stale WebView files
+- [ ] User-visible copy is localized or intentionally language-neutral
+- [ ] No new secrets, tokens, debug logs, or localhost-only URLs were introduced
 
 ## Checklist
 
