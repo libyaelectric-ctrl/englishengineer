@@ -143,6 +143,7 @@ jobs:
         run: |
           docker build -t engvox-backend-test ./backend
           docker run --rm -d --name test-backend -p 8080:8787 \
+            -e NODE_ENV=staging \
             -e APP_ORIGIN=http://localhost:3000 \
             -e AI_PROVIDER=mock \
             -e FIREBASE_PROJECT_ID=engvox-ci \
