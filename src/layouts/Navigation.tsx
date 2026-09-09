@@ -18,200 +18,26 @@ import {
 } from '@/features/billing';
 import { NAVIGATION_TRANSLATIONS, useLocalizationStore } from '@/features/localization';
 
-interface NavigationProps {
-  onItemClick?: () => void;
-  collapsed?: boolean;
-}
+interface NavigationProps { onItemClick?: () => void; collapsed?: boolean; }
+interface LockableItem { label: string; href: string; icon: React.ComponentType<{ className?: string }>; feature?: BillingFeature; comingSoon?: boolean; }
 
-interface LockableItem {
-  label: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  feature?: BillingFeature;
-  comingSoon?: boolean;
-}
+const linkClasses = ({ isActive, collapsed }: { isActive: boolean; collapsed?: boolean }) => cn('group relative flex min-h-10 items-center gap-2.5 rounded-[var(--radius-button)] text-sm font-semibold transition-all duration-150', collapsed ? 'justify-center px-0 py-2' : 'px-3 py-2', isActive ? 'border border-primary/25 bg-primary/10 text-primary shadow-sm' : 'text-muted-copy hover:bg-surface-hover hover:text-foreground');
 
-const linkClasses = ({ isActive, collapsed }: { isActive: boolean; collapsed?: boolean }) =>
-  cn(
-    'group relative flex min-h-9 items-center gap-2.5 rounded-[4px] text-sm font-medium transition-all duration-150',
-    collapsed ? 'justify-center px-0 py-2' : 'px-3 py-2',
-    isActive
-      ? 'bg-primary/10 text-primary border border-primary/25 font-semibold'
-      : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
-  );
-
-/**
- * Styled tooltip shown on hover in collapsed sidebar mode.
- * Positioned to the right of the icon, with a small arrow.
- */
-function CollapsedTooltip({ label }: { label: string }) {
-  return (
-    <span
-      role="tooltip"
-      className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-[4px] border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-bold text-foreground shadow-lg opacity-0 transition-opacity duration-150 group-hover:opacity-100"
-    >
-      {label}
-      <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-border-soft" />
-    </span>
-  );
-}
-
-const isLocked = (item: LockableItem, subscription: SubscriptionSnapshot): boolean => {
-  if (item.comingSoon) return true;
-  if (!item.feature) return false;
-  return !canAccessFeature(subscription, item.feature).allowed;
-};
+function CollapsedTooltip({ label }: { label: string }) { return <span role="tooltip" className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-[var(--radius-button)] border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-bold text-foreground shadow-pop opacity-0 transition-opacity duration-150 group-hover:opacity-100">{label}<span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-border-soft" /></span>; }
+const isLocked = (item: LockableItem, subscription: SubscriptionSnapshot): boolean => { if (item.comingSoon) return true; if (!item.feature) return false; return !canAccessFeature(subscription, item.feature).allowed; };
 
 export const Navigation = React.memo(({ onItemClick, collapsed }: NavigationProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>(() => {
-    const initial: Record<string, boolean> = {};
-    NAV_ITEMS.forEach((item) => {
-      if ('children' in item && item.children) {
-        initial[item.label] = item.children.some((child) => child.href === location.pathname);
-      }
-    });
-    return initial;
-  });
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>(() => { const initial: Record<string, boolean> = {}; NAV_ITEMS.forEach((item) => { if ('children' in item && item.children) initial[item.label] = item.children.some((child) => child.href === location.pathname); }); return initial; });
   const language = useLocalizationStore((state) => state.language);
   const translations = NAVIGATION_TRANSLATIONS[language];
   const translate = (label: string) => translations[label] ?? label;
   const subscription = useBillingStore((state) => state.subscription);
   const [lockedItem, setLockedItem] = useState<LockedFeatureModalItem | null>(null);
-
-  const toggleMenu = (label: string) => {
-    setOpenMenus((prev) => ({ ...prev, [label]: !prev[label] }));
-  };
-
-  const openPricing = () => {
-    setLockedItem(null);
-    onItemClick?.();
-    navigate('/pricing');
-  };
-
-  const renderLockedLink = (item: LockableItem) => (
-    <button
-      key={item.label}
-      type="button"
-      onClick={() =>
-        setLockedItem({ label: item.label, feature: item.feature, comingSoon: item.comingSoon })
-      }
-      className={cn(
-        'group relative flex min-h-9 w-full cursor-pointer items-center gap-2.5 rounded-[4px] text-sm font-medium text-muted-copy transition-all hover:bg-surface-hover hover:text-foreground',
-        collapsed ? 'justify-center px-0 py-2' : 'px-3 py-2'
-      )}
-      aria-label={`${translate(item.label)} (locked)`}
-    >
-      <item.icon className="h-4 w-4 shrink-0" />
-      {!collapsed && <span className="flex-1 text-left">{translate(item.label)}</span>}
-      {!collapsed && item.comingSoon && (
-        <span className="rounded bg-amber-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-          Soon
-        </span>
-      )}
-      {!collapsed && <LockKeyhole className="h-3.5 w-3.5 shrink-0 text-muted-copy/60" />}
-      {collapsed && (
-        <CollapsedTooltip
-          label={`${translate(item.label)} (${item.comingSoon ? 'Coming soon' : 'Locked'})`}
-        />
-      )}
-    </button>
-  );
-
-  return (
-    <nav className="space-y-0.5" aria-label="Main navigation">
-      {NAV_ITEMS.map((item) => {
-        const Icon = item.icon;
-        if (item.href) {
-          const locked = isLocked(item as LockableItem, subscription);
-          if (locked) return renderLockedLink(item as LockableItem);
-
-          return (
-            <NavLink
-              key={item.label}
-              to={item.href}
-              onClick={onItemClick}
-              onMouseEnter={() => prefetchRoute(item.href)}
-              className={(state) => linkClasses({ isActive: state.isActive, collapsed })}
-            >
-              <Icon className="h-4 w-4 shrink-0" />
-              {!collapsed && <span>{translate(item.label)}</span>}
-              {collapsed && <CollapsedTooltip label={translate(item.label)} />}
-            </NavLink>
-          );
-        }
-
-        // In collapsed mode, group items become single icon links to first child
-        if (collapsed) {
-          const firstChild = 'children' in item && item.children?.[0];
-          if (firstChild) {
-            return (
-              <NavLink
-                key={item.label}
-                to={firstChild.href}
-                onClick={onItemClick}
-                onMouseEnter={() => prefetchRoute(firstChild.href)}
-                className={(state) => linkClasses({ isActive: state.isActive, collapsed: true })}
-              >
-                <Icon className="h-4 w-4 shrink-0" />
-                <CollapsedTooltip label={translate(item.label)} />
-              </NavLink>
-            );
-          }
-          return null;
-        }
-
-        const isOpen = openMenus[item.label] ?? false;
-
-        return (
-          <div key={item.label} className="space-y-0.5">
-            <button
-              type="button"
-              onClick={() => toggleMenu(item.label)}
-              className="group flex min-h-9 w-full items-center gap-2.5 rounded-[4px] px-3 py-2 text-sm font-medium text-muted-copy transition-all hover:bg-surface-hover hover:text-foreground"
-              aria-expanded={isOpen}
-            >
-              <Icon className="h-4 w-4 shrink-0" />
-              <span className="flex-1 text-left">{translate(item.label)}</span>
-              <ChevronDown
-                className={cn(
-                  'h-3.5 w-3.5 transition-transform text-muted-copy',
-                  isOpen && 'rotate-180'
-                )}
-              />
-            </button>
-            {isOpen && 'children' in item && (
-              <div className="ml-4 space-y-0.5 border-l border-border-soft pl-3">
-                {item.children.map((child) => {
-                  const childItem = child as LockableItem;
-                  const locked = isLocked(childItem, subscription);
-                  if (locked) return renderLockedLink(childItem);
-
-                  return (
-                    <NavLink
-                      key={child.label}
-                      to={child.href}
-                      onClick={onItemClick}
-                      onMouseEnter={() => prefetchRoute(child.href)}
-                      className={(state) => linkClasses({ isActive: state.isActive })}
-                    >
-                      <child.icon className="h-3.5 w-3.5 shrink-0" />
-                      <span>{translate(child.label)}</span>
-                    </NavLink>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        );
-      })}
-      <LockedFeatureModal
-        item={lockedItem}
-        onClose={() => setLockedItem(null)}
-        onSeePlans={openPricing}
-      />
-    </nav>
-  );
+  const toggleMenu = (label: string) => setOpenMenus((prev) => ({ ...prev, [label]: !prev[label] }));
+  const openPricing = () => { setLockedItem(null); onItemClick?.(); navigate('/pricing'); };
+  const renderLockedLink = (item: LockableItem) => <button key={item.label} type="button" onClick={() => setLockedItem({ label: item.label, feature: item.feature, comingSoon: item.comingSoon })} className={cn('group relative flex min-h-10 w-full cursor-pointer items-center gap-2.5 rounded-[var(--radius-button)] text-sm font-semibold text-muted-copy transition-all hover:bg-surface-hover hover:text-foreground', collapsed ? 'justify-center px-0 py-2' : 'px-3 py-2')} aria-label={`${translate(item.label)} (locked)`}><item.icon className="h-4 w-4 shrink-0" />{!collapsed && <span className="flex-1 text-left">{translate(item.label)}</span>}{!collapsed && item.comingSoon && <span className="rounded bg-warning/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-warning">Soon</span>}{!collapsed && <LockKeyhole className="h-3.5 w-3.5 shrink-0 text-muted-copy/60" />}{collapsed && <CollapsedTooltip label={`${translate(item.label)} (${item.comingSoon ? 'Coming soon' : 'Locked'})`} />}</button>;
+  return <nav className="space-y-1" aria-label="Main navigation">{NAV_ITEMS.map((item) => { const Icon = item.icon; if (item.href) { const locked = isLocked(item as LockableItem, subscription); if (locked) return renderLockedLink(item as LockableItem); return <NavLink key={item.label} to={item.href} onClick={onItemClick} onMouseEnter={() => prefetchRoute(item.href)} className={(state) => linkClasses({ isActive: state.isActive, collapsed })}><Icon className="h-4 w-4 shrink-0" />{!collapsed && <span>{translate(item.label)}</span>}{collapsed && <CollapsedTooltip label={translate(item.label)} />}</NavLink>; } if (collapsed) { const firstChild = 'children' in item && item.children?.[0]; if (!firstChild) return null; return <NavLink key={item.label} to={firstChild.href} onClick={onItemClick} onMouseEnter={() => prefetchRoute(firstChild.href)} className={(state) => linkClasses({ isActive: state.isActive, collapsed: true })}><Icon className="h-4 w-4 shrink-0" /><CollapsedTooltip label={translate(item.label)} /></NavLink>; } const isOpen = openMenus[item.label] ?? false; return <div key={item.label} className="space-y-1"><button type="button" onClick={() => toggleMenu(item.label)} className="group flex min-h-10 w-full items-center gap-2.5 rounded-[var(--radius-button)] px-3 py-2 text-sm font-semibold text-muted-copy transition-all hover:bg-surface-hover hover:text-foreground" aria-expanded={isOpen}><Icon className="h-4 w-4 shrink-0" /><span className="flex-1 text-left">{translate(item.label)}</span><ChevronDown className={cn('h-3.5 w-3.5 text-muted-copy transition-transform', isOpen && 'rotate-180')} /></button>{isOpen && 'children' in item && <div className="ml-4 space-y-1 border-l border-border-soft pl-3">{item.children.map((child) => { const childItem = child as LockableItem; const locked = isLocked(childItem, subscription); if (locked) return renderLockedLink(childItem); return <NavLink key={child.label} to={child.href} onClick={onItemClick} onMouseEnter={() => prefetchRoute(child.href)} className={(state) => linkClasses({ isActive: state.isActive })}><child.icon className="h-3.5 w-3.5 shrink-0" /><span>{translate(child.label)}</span></NavLink>; })}</div>}</div>; })}<LockedFeatureModal item={lockedItem} onClose={() => setLockedItem(null)} onSeePlans={openPricing} /></nav>;
 });
 Navigation.displayName = 'Navigation';
