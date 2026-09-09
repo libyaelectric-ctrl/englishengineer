@@ -3,7 +3,9 @@
   "version": "4.0.22",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "tsx watch --env-file=.env src/server.ts",
     "build": "tsc -p tsconfig.build.json",

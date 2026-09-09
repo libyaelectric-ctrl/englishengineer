@@ -15,17 +15,9 @@ import { hasText, toPositiveInteger } from './config-helpers.js';
 
 type Env = Record<string, string | undefined>;
 
-const requireProductionSecret = (name: string, value: string | undefined, runtimeEnv: RuntimeEnvironment) => {
-  if (runtimeEnv === 'production' && !hasText(value)) {
-    throw new Error(`${name} is required in production`);
-  }
-};
-
 export const createBackendConfig = (environment: Env = process.env): BackendConfig => {
   const runtimeEnv = resolveEnvironment(environment);
   const supabase = resolveSupabase(environment);
-
-  requireProductionSecret('METRICS_TOKEN', environment.METRICS_TOKEN, runtimeEnv);
 
   return {
     port: toPositiveInteger(environment.PORT, 8787),
