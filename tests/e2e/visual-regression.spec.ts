@@ -27,7 +27,53 @@ test.describe('Visual regression — public pages', () => {
   }
 });
 
-// Auth-gated pages require proper auth setup (Clerk/Firebase emulator).
-// To run these, set up auth state first:
-//   npx playwright test tests/browser/landing-and-health.spec.ts --project=chromium-desktop
-// Then uncomment the section below and adjust storageState path.
+test.describe('Visual regression — auth-gated pages (demo mode)', () => {
+  test.beforeEach(async ({ page: p }) => {
+    // Enter demo mode via onboard flow
+    await p.goto(`${BASE_URL}/onboard`, { waitUntil: 'networkidle' });
+    // Select discipline and language via JS
+    await p.evaluate(() => {
+      const sections = document.querySelectorAll('section');
+      if (sections.length >= 2) {
+        const btns = sections[0]!.querySelectorAll('button');
+        if (btns.length > 0) btns[9]!.click();
+      }
+    });
+    await p.waitForTimeout(500);
+    await p.evaluate(() => {
+      const btn = Array.from(document.querySelectorAll('button')).find(
+        (b) =>
+          b.textContent?.includes('İleri') ||
+          b.textContent?.includes('Weiter') ||
+          b.textContent?.includes('Next') ||
+          b.textContent?.includes('Dalej'),
+      );
+      if (btn && !btn.disabled) btn.click();
+    });
+    await p.waitForURL('**/dashboard', { timeout: 15000 });
+    await p.waitForLoadState('networkidle');
+  });
+
+  const AUTHED_PAGES = [
+    { name: 'dashboard', path: '/dashboard' },
+    { name: 'vocabulary', path: '/vocabulary' },
+    { name: 'grammar', path: '/grammar' },
+    { name: 'reading', path: '/reading' },
+    { name: 'listening', path: '/listening' },
+    { name: 'writing', path: '/writing' },
+    { name: 'speaking', path: '/speaking' },
+    { name: 'profile', path: '/profile' },
+    { name: 'settings', path: '/settings' },
+    { name: 'billing', path: '/billing' },
+  ];
+
+  for (const pg of AUTHED_PAGES) {
+    test(`${pg.name} matches baseline`, async ({ page: p }) => {
+      await p.goto(`${BASE_URL}${pg.path}`, { waitUntil: 'networkidle' });
+      await expect(p).toHaveScreenshot(`${pg.name}.png`, {
+        maxDiffPixelRatio: 0.02,
+        animations: 'disabled',
+      });
+    });
+  }
+});
