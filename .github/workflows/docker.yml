@@ -144,8 +144,11 @@ jobs:
           docker build -t engvox-backend-test ./backend
           docker run --rm -d --name test-backend -p 8080:8787 \
             -e APP_ORIGIN=http://localhost:3000 \
+            -e AI_PROVIDER=mock \
             -e FIREBASE_PROJECT_ID=engvox-ci \
             -e METRICS_TOKEN=ci-metrics-token \
+            -e BILLING_REPOSITORY=memory \
+            -e ALLOW_MEMORY_BILLING_REPOSITORY=true \
             -e RATE_LIMIT_STORE=memory \
             -e ALLOW_IN_MEMORY_RATE_LIMIT_IN_PRODUCTION=true \
             engvox-backend-test
