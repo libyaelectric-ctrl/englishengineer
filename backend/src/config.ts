@@ -17,6 +17,7 @@ type Env = Record<string, string | undefined>;
 
 export const createBackendConfig = (environment: Env = process.env): BackendConfig => {
   const runtimeEnv = resolveEnvironment(environment);
+  const supabase = resolveSupabase(environment);
 
   return {
     port: toPositiveInteger(environment.PORT, 8787),
@@ -39,7 +40,7 @@ export const createBackendConfig = (environment: Env = process.env): BackendConf
     billing: resolveBilling(environment),
     dodo: resolveDodo(environment),
     stripe: resolveStripe(environment, runtimeEnv),
-    supabase: resolveSupabase(environment),
+    supabase,
     vocabulary: resolveVocabulary(environment),
     workspace: resolveWorkspace(environment),
     rateLimit: resolveRateLimit(environment, runtimeEnv),
@@ -70,6 +71,13 @@ interface PublicHealth {
 }
 
 export const toPublicHealth = (config: BackendConfig): PublicHealth => {
+  // firebaseProjectId is not a secret — it's already public in the
+  // frontend's own bundle/.env.production and in every Firebase console
+  // URL — so exposing it here (unlike a real secret) is safe and lets
+  // anyone directly compare "does the live backend's configured project
+  // match the frontend's project" without needing dashboard access to the
+  // hosting provider's environment variables. Secret material (JWT
+  // secrets, service keys) stays booleans only, never here.
   const firebaseConfigured = Boolean(config.auth?.firebaseProjectId);
   const supabaseAuthConfigured = Boolean(
     config.auth?.supabaseJwtSecret || (config.auth?.supabaseUrl && config.auth?.supabaseAnonKey)
