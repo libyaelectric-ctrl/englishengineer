@@ -5,6 +5,7 @@ import type { PlanId } from '../types.js';
 import { AI_CONTRACT_VERSION, createAIService } from './ai-core/index.js';
 import { createAiLedger } from './ai-ledger.js';
 import type { AiLedger } from './ai-ledger.js';
+import { apiSuccess } from './api-response.js';
 import type { SubscriptionSnapshot } from './billing-helpers.js';
 import { normalizePlanId } from './billing-plan-migration.js';
 import { getOrSet } from './cache/redis-cache.service.js';
@@ -349,13 +350,12 @@ export const registerAIRoutes = (
       try {
         const adminAnalytics = await ledger.getAdminAnalytics();
         const { getPromptVersionTelemetry } = await import('./ai-core/prompt-version-telemetry.js');
-        response.json({
-          success: true,
-          data: {
+        response.json(
+          apiSuccess({
             ...adminAnalytics,
             promptVersionUsage: getPromptVersionTelemetry(),
-          },
-        });
+          })
+        );
       } catch (error) {
         next(error);
       }

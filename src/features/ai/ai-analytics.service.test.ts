@@ -102,7 +102,7 @@ describe('AiAnalyticsService', () => {
       async () =>
         new Response(
           JSON.stringify({
-            success: true,
+            ok: true,
             data: {
               totalRequests: 10,
               totalEstimatedTokens: 20000,
@@ -116,6 +116,7 @@ describe('AiAnalyticsService', () => {
                 },
               ],
             },
+            meta: { contractVersion: '2026-09-07.v1' },
           }),
           { status: 200 }
         )
