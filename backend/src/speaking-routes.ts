@@ -286,13 +286,14 @@ export const registerSpeakingRoutes = (
           status: 'not_graded',
           reason: 'speech_assessment_pipeline_not_configured',
         });
-        response.status(202).json({
-          success: true,
-          id: submission.id,
-          status: submission.status,
-          reason: submission.reason,
-          submittedAt: submission.submittedAt,
-        });
+        response.status(202).json(
+          apiSuccess({
+            id: submission.id,
+            status: submission.status,
+            reason: submission.reason,
+            submittedAt: submission.submittedAt,
+          })
+        );
       } catch (error) {
         next(error);
       }

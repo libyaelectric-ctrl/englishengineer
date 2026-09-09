@@ -83,8 +83,8 @@ describe('persistent learning API', () => {
       .set(authorized())
       .send({ missionId: 'sp-001', transcript: 'I coordinated commissioning.' });
     assert.equal(response.status, 202);
-    assert.equal(response.body.status, 'not_graded');
-    assert.equal(response.body.overallScore, undefined);
+    assert.equal(response.body.data.status, 'not_graded');
+    assert.equal(response.body.data.overallScore, undefined);
   });
   it('returns an aggregated overview and feature gates', async () => {
     const overview = await request(baseUrl).get('/api/v1/progress/overview').set(authorized());
