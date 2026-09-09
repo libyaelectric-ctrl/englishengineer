@@ -1,6 +1,6 @@
 {
-  "name": "engvox-backend",
-  "version": "4.0.23",
+  "name": "engineeros-backend",
+  "version": "4.0.22",
   "private": true,
   "type": "module",
   "engines": { "node": ">=22" },

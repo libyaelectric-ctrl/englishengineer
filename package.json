@@ -1,7 +1,7 @@
 {
   "name": "engvox-frontend",
   "private": true,
-  "version": "4.0.23",
+  "version": "4.0.22",
   "author": "Özcan ERENSAYIN",
   "type": "module",
   "scripts": {
@@ -58,7 +58,9 @@
     "check:dead-code": "knip --no-progress",
     "check-languages": "node scripts/verify-language-completeness.mjs"
   },
-  "engines": { "node": ">=22.0.0" },
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "dependencies": {
     "@capacitor-firebase/authentication": "^8.5.1",
     "@capacitor/android": "^8.5.1",
