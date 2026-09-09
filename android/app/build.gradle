@@ -7,8 +7,8 @@ android {
         applicationId = "com.engvox.app"
         minSdkVersion = rootProject.ext.minSdkVersion
         targetSdkVersion = rootProject.ext.targetSdkVersion
-        versionCode = 6
-        versionName = "4.0.23"
+        versionCode = 5
+        versionName = "4.0.22"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
         aaptOptions {

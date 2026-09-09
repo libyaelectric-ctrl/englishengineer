@@ -1,4 +1,4 @@
-export const PRODUCT_VERSION = '4.0.23';
+export const PRODUCT_VERSION = '4.0.22';
 
 export const AI_ACCESS_POLICY = {
   freeAccess: 'Limited free AI demo',

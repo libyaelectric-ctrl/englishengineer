@@ -31,7 +31,7 @@ export const createBackendConfig = (environment: Env = process.env): BackendConf
     port: toPositiveInteger(environment.PORT, 8787),
     appOrigin: environment.APP_ORIGIN || 'http://localhost:3000',
     environment: runtimeEnv,
-    version: environment.APP_VERSION || '4.0.23',
+    version: environment.APP_VERSION || '4.0.22',
     corsAllowedOrigins: hasText(environment.CORS_ALLOWED_ORIGINS)
       ? environment
           .CORS_ALLOWED_ORIGINS!.split(',')
