@@ -142,7 +142,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           docker build -t engvox-backend-test ./backend
-          docker run --rm -d --name test-backend -p 8080:8080 engvox-backend-test
+          docker run --rm -d --name test-backend -e PORT=8080 -p 8080:8080 engvox-backend-test
           sleep 5
           curl -f http://localhost:8080/api/health || (docker logs test-backend && exit 1)
           docker stop test-backend
