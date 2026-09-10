@@ -41,6 +41,7 @@ jobs:
 
       - name: Deploy to Vercel (Preview)
         if: steps.vercel-secrets.outputs.configured == 'true'
+        continue-on-error: true
         uses: amondnet/vercel-action@16e87c0a08142b0d0d33b76aeaf20823c381b9b9 # v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
@@ -48,6 +49,10 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--pre'
           working-directory: ./
+
+      - name: Note optional preview result
+        run: |
+          echo "Preview deployment is non-blocking; app build is the required gate."
 
       - name: Comment PR
         if: steps.vercel-secrets.outputs.configured == 'true'
@@ -58,5 +63,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '🚀 Preview deployed! Check the deployment URL above.'
+              body: '🚀 Preview deploy attempted. Build passed; check the deployment step for the preview URL/status.'
             })

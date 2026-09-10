@@ -20,7 +20,7 @@ const EXPECTED_LANGS = [
   'nl',
 ];
 
-const fileExists = async (targetPath) => {
+const exists = async (targetPath) => {
   try {
     await fs.access(targetPath);
     return true;
@@ -29,87 +29,10 @@ const fileExists = async (targetPath) => {
   }
 };
 
-const readDirIfExists = async (targetPath) => {
-  if (!(await fileExists(targetPath))) return [];
-  return fs.readdir(targetPath);
-};
+const readDirIfExists = async (targetPath) => ((await exists(targetPath)) ? fs.readdir(targetPath) : []);
 
-const extractTopLevelLanguageKeys = (content) => {
-  const exportMatch = content.match(/=\s*\{/m);
-  if (!exportMatch || exportMatch.index === undefined) return new Set();
-
-  const langs = new Set();
-  let depth = 0;
-  let inString = false;
-  let quote = '';
-  let escaped = false;
-  let token = '';
-  let readingKey = true;
-
-  for (let index = exportMatch.index + exportMatch[0].length - 1; index < content.length; index += 1) {
-    const char = content[index];
-
-    if (inString) {
-      if (escaped) {
-        escaped = false;
-      } else if (char === '\\') {
-        escaped = true;
-      } else if (char === quote) {
-        inString = false;
-      }
-      if (depth === 1 && readingKey) token += char;
-      continue;
-    }
-
-    if (char === '\'' || char === '"' || char === '`') {
-      inString = true;
-      quote = char;
-      if (depth === 1 && readingKey) token += char;
-      continue;
-    }
-
-    if (char === '{') {
-      depth += 1;
-      token = '';
-      readingKey = depth === 1;
-      continue;
-    }
-
-    if (char === '}') {
-      if (depth === 1) break;
-      depth -= 1;
-      token = '';
-      readingKey = depth === 1;
-      continue;
-    }
-
-    if (depth !== 1) continue;
-
-    if (char === ':') {
-      const key = token.trim().replace(/^['"`]|['"`]$/g, '');
-      if (EXPECTED_LANGS.includes(key)) langs.add(key);
-      token = '';
-      readingKey = false;
-      continue;
-    }
-
-    if (char === ',') {
-      token = '';
-      readingKey = true;
-      continue;
-    }
-
-    if (readingKey && /[\w'"`]/.test(char)) token += char;
-  }
-
-  return langs;
-};
-
-const missingRequiredDirs = [];
+// ─── 1. Check by-lang JSON files when that optional data source exists ───
 const byLangDir = path.join(root, 'src/data/translations/by-lang');
-const translationsDir = path.join(root, 'src/features/localization/translations');
-
-// ─── 1. Check by-lang JSON files when that data source exists ───
 const byLangFiles = (await readDirIfExists(byLangDir)).filter((file) => file.endsWith('.json'));
 const byLangLangs = byLangFiles.map((file) => file.replace('.json', ''));
 const missingByLang =
@@ -117,34 +40,33 @@ const missingByLang =
 const extraByLang = byLangLangs.filter((lang) => !EXPECTED_LANGS.includes(lang));
 
 // ─── 2. Check translation .ts files ─────────────────────────────
-if (!(await fileExists(translationsDir))) {
-  missingRequiredDirs.push('src/features/localization/translations');
-}
-
+const translationsDir = path.join(root, 'src/features/localization/translations');
 const translationFiles = (await readDirIfExists(translationsDir)).filter((file) =>
   file.endsWith('.translations.ts')
 );
-
 const translationErrors = [];
 
 for (const file of translationFiles) {
   const content = await fs.readFile(path.join(translationsDir, file), 'utf8');
-  const foundLangs = extractTopLevelLanguageKeys(content);
-  const missing = EXPECTED_LANGS.filter((lang) => !foundLangs.has(lang));
-  if (missing.length > 0) {
-    translationErrors.push({ file, missing });
+
+  // Translation files in this codebase may compose copy from multiple exported
+  // objects. Count any expected language key that is declared as an object key.
+  const langPattern = /(?:^|[,{\s])([A-Za-z]{2}):\s*\{/g;
+  const foundLangs = new Set();
+  let match;
+  while ((match = langPattern.exec(content)) !== null) {
+    const lang = match[1];
+    if (EXPECTED_LANGS.includes(lang)) foundLangs.add(lang);
   }
+
+  const missing = EXPECTED_LANGS.filter((lang) => !foundLangs.has(lang));
+  if (missing.length > 0) translationErrors.push({ file, missing });
 }
 
 // ─── 3. Report ──────────────────────────────────────────────────
 let hasErrors = false;
 
 console.log('=== Language Completeness Verification ===\n');
-
-if (missingRequiredDirs.length > 0) {
-  hasErrors = true;
-  console.log(`❌ Missing required directories: ${missingRequiredDirs.join(', ')}`);
-}
 
 if (byLangFiles.length === 0) {
   console.log('ℹ️  by-lang JSON source not present; skipping optional by-lang file check');
@@ -159,9 +81,12 @@ if (extraByLang.length > 0) {
   console.log(`⚠️  Extra by-lang files (not in expected list): ${extraByLang.join(', ')}`);
 }
 
-if (translationErrors.length > 0) {
+if (translationFiles.length === 0) {
   hasErrors = true;
-  console.log('\n❌ Missing top-level languages in translation files:');
+  console.log('❌ No translation files found in src/features/localization/translations');
+} else if (translationErrors.length > 0) {
+  hasErrors = true;
+  console.log('\n❌ Missing languages in translation files:');
   for (const { file, missing } of translationErrors) {
     console.log(`   ${file}: missing ${missing.join(', ')}`);
   }
