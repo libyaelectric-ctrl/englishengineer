@@ -49,17 +49,16 @@ test('WAV duration: returns null for zero sample rate', () => {
 // --- MP3 tests ---
 
 const makeMp3Frame = (bitrateIndex: number = 9): Buffer => {
-  // MPEG1 Layer3 frame: 0xFF 0xFB (sync + version=1, layer=1)
   const buf = Buffer.alloc(4);
   buf[0] = 0xff;
-  buf[1] = 0xfb; // 1111 1011 = sync(11111111111) + version=11(MPEG1) + layer=01(Layer3) + no CRC
-  buf[2] = (bitrateIndex << 4) | 0x00; // bitrate index + padding=0
+  buf[1] = 0xfb;
+  buf[2] = (bitrateIndex << 4) | 0x00;
   buf[3] = 0x00;
   return buf;
 };
 
 test('MP3 duration: returns null or zero for header-only buffer', () => {
-  const frame = makeMp3Frame(9); // 128 kbps
+  const frame = makeMp3Frame(9);
   const buf = Buffer.alloc(400);
   for (let i = 0; i < 100; i++) frame.copy(buf, i * 4);
   const duration = parseAudioDuration(buf, 'audio/mpeg');
@@ -74,7 +73,6 @@ test('MP3 duration: returns null for empty buffer', () => {
 // --- MP4 tests ---
 
 const makeMp4Mvhd = (timescale: number, duration: number, version: number = 0): Buffer => {
-  // Minimal mp4: ftyp + moov(mvhd)
   const mvhdPayloadSize = version === 0 ? 100 : 112;
   const mvhdAtomSize = 8 + mvhdPayloadSize;
   const moovAtomSize = 8 + mvhdAtomSize;
@@ -82,17 +80,14 @@ const makeMp4Mvhd = (timescale: number, duration: number, version: number = 0): 
   const totalSize = ftypSize + moovAtomSize;
   const buf = Buffer.alloc(totalSize);
 
-  // ftyp
   buf.writeUInt32BE(ftypSize, 0);
   buf.write('ftyp', 4, 'ascii');
   buf.write('isom', 8, 'ascii');
 
-  // moov
   let pos = ftypSize;
   buf.writeUInt32BE(moovAtomSize, pos);
   buf.write('moov', pos + 4, 'ascii');
 
-  // mvhd inside moov
   pos += 8;
   buf.writeUInt32BE(mvhdAtomSize, pos);
   buf.write('mvhd', pos + 4, 'ascii');
@@ -123,28 +118,20 @@ test('MP4 duration: returns null when moov atom missing', () => {
 
 // --- WebM tests ---
 
-
-
 test('WebM duration: parses TimecodeScale and Duration', () => {
   const buf = Buffer.alloc(128);
   let pos = 0;
-  // EBML header (with minimal valid children)
   buf[pos++] = 0x1a; buf[pos++] = 0x45; buf[pos++] = 0xdf; buf[pos++] = 0xa3;
   const hdrSizePos = pos++;
   const hdrDataStart = pos;
-  // EBMLVersion id=0x4286, size=1, value=1
   buf[pos++] = 0x42; buf[pos++] = 0x86; buf[pos++] = 0x81; buf[pos++] = 0x01;
   buf[hdrSizePos] = 0x80 | (pos - hdrDataStart);
-  // Segment
-  const segStart = pos;
   buf[pos++] = 0x18; buf[pos++] = 0x53; buf[pos++] = 0x80; buf[pos++] = 0x67;
   const sizePos = pos++;
   const dataStart = pos;
-  // TimecodeScale id=0x2AD7B1, size=3, value=1000000
   buf[pos++] = 0x2a; buf[pos++] = 0xd7; buf[pos++] = 0xb1;
   buf[pos++] = 0x83;
   buf.writeUIntBE(1000000, pos, 3); pos += 3;
-  // Duration id=0x4489, size=8, value=25000000 (25s at timecodeScale=1000000)
   buf[pos++] = 0x44; buf[pos++] = 0x89;
   buf[pos++] = 0x88;
   buf.writeBigUInt64BE(BigInt(25000000), pos); pos += 8;
@@ -153,12 +140,9 @@ test('WebM duration: parses TimecodeScale and Duration', () => {
 });
 
 test('WebM duration: returns null for buffer without Segment', () => {
-  // Valid EBML header but no Segment element
   const buf = Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 0x84, 0x42, 0x86, 0x81, 0x01, 0x42, 0x87, 0x81, 0x01]);
   assert.equal(parseAudioDuration(buf, 'audio/webm'), null);
 });
-
-// --- Unsupported type ---
 
 test('returns null for unsupported content type', () => {
   assert.equal(parseAudioDuration(Buffer.alloc(100), 'audio/ogg'), null);

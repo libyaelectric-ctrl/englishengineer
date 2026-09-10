@@ -29,43 +29,33 @@ test.describe('Visual regression — public pages', () => {
 
 test.describe('Visual regression — auth-gated pages (demo mode)', () => {
   test.beforeEach(async ({ page: p }) => {
-    // Enter demo mode by calling auth store directly — avoids unreliable carousel
-    await p.goto(`${BASE_URL}/`, { waitUntil: 'networkidle' });
-    await p.evaluate(() => {
-      // @ts-expect-error — accessing Zustand store internals for test setup
-      const authStore = window.__ZUSTAND_STORES__?.auth;
-      // Fallback: click the Demo button on sign-in page
-    });
-    // Navigate to sign-in and click demo button
     await p.goto(`${BASE_URL}/sign-in`, { waitUntil: 'networkidle' });
     const demoBtn = p.getByRole('button', { name: /demo/i });
     if (await demoBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
       await demoBtn.click();
     }
-    // If redirected to onboard, complete it via JS
     await p.waitForTimeout(1000);
     const url = p.url();
-    if (url.includes('/onboard') || url.includes('/dashboard')) {
-      if (url.includes('/onboard')) {
-        await p.evaluate(() => {
-          // Set onboard completed via localStorage manipulation
-          const keys = Object.keys(localStorage);
-          for (const key of keys) {
-            if (key.includes('auth_user') || key.includes('session_')) {
-              try {
-                const data = JSON.parse(localStorage.getItem(key) || '{}');
-                if (data.user) {
-                  data.user.onboardingCompleted = true;
-                  data.user.engineeringDiscipline = data.user.engineeringDiscipline || 'software';
-                  data.user.interfaceLanguage = data.user.interfaceLanguage || 'en';
-                  localStorage.setItem(key, JSON.stringify(data));
-                }
-              } catch {}
-            }
+    if (url.includes('/onboard')) {
+      await p.evaluate(() => {
+        const keys = Object.keys(localStorage);
+        for (const key of keys) {
+          if (key.includes('auth_user') || key.includes('session_')) {
+            try {
+              const data = JSON.parse(localStorage.getItem(key) || '{}');
+              if (data.user) {
+                data.user.onboardingCompleted = true;
+                data.user.engineeringDiscipline = data.user.engineeringDiscipline || 'software';
+                data.user.interfaceLanguage = data.user.interfaceLanguage || 'en';
+                localStorage.setItem(key, JSON.stringify(data));
+              }
+            } catch {}
           }
-        });
-        await p.reload({ waitUntil: 'networkidle' });
-      }
+        }
+      });
+      await p.reload({ waitUntil: 'networkidle' });
+    }
+    if (p.url().includes('/onboard') || p.url().includes('/dashboard')) {
       await p.waitForURL('**/dashboard', { timeout: 15000 });
       await p.waitForLoadState('networkidle');
     }
