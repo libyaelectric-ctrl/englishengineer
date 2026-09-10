@@ -25,7 +25,22 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Check Vercel secrets
+        id: vercel-secrets
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          if [ -n "$VERCEL_TOKEN" ] && [ -n "$VERCEL_ORG_ID" ] && [ -n "$VERCEL_PROJECT_ID" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Vercel preview skipped because one or more Vercel secrets are not configured. Build already passed."
+          fi
+
       - name: Deploy to Vercel (Preview)
+        if: steps.vercel-secrets.outputs.configured == 'true'
         uses: amondnet/vercel-action@16e87c0a08142b0d0d33b76aeaf20823c381b9b9 # v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
@@ -35,6 +50,7 @@ jobs:
           working-directory: ./
 
       - name: Comment PR
+        if: steps.vercel-secrets.outputs.configured == 'true'
         uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |

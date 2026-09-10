@@ -18,7 +18,9 @@ const audioFiles = existsSync(resolve('public/audio'))
 
 const readJson = (path) => JSON.parse(readFileSync(resolve(path), 'utf8'));
 const frontendPackage = readJson('package.json');
+const frontendLock = readJson('package-lock.json');
 const backendPackage = readJson('backend/package.json');
+const backendLock = readJson('backend/package-lock.json');
 
 // Dynamic version check — frontend and backend must match
 if (frontendPackage.version !== backendPackage.version) {
@@ -28,9 +30,34 @@ if (frontendPackage.version !== backendPackage.version) {
 }
 const expectedVersion = frontendPackage.version;
 
+if (frontendLock.version !== expectedVersion || frontendLock.packages?.['']?.version !== expectedVersion) {
+  missing.push(`package-lock.json version must be ${expectedVersion}`);
+}
+if (backendLock.version !== expectedVersion || backendLock.packages?.['']?.version !== expectedVersion) {
+  missing.push(`backend/package-lock.json version must be ${expectedVersion}`);
+}
+if (backendLock.name !== backendPackage.name || backendLock.packages?.['']?.name !== backendPackage.name) {
+  missing.push(`backend/package-lock.json name must be ${backendPackage.name}`);
+}
+
+const frontendEnv = readFileSync(resolve('.env.example'), 'utf8');
+if (!frontendEnv.includes(`VITE_APP_VERSION=${expectedVersion}`)) {
+  missing.push(`.env.example VITE_APP_VERSION must be ${expectedVersion}`);
+}
+
 const backendEnv = readFileSync(resolve('backend/.env.example'), 'utf8');
 if (!backendEnv.includes(`APP_VERSION=${expectedVersion}`)) {
   missing.push(`backend/.env.example APP_VERSION must be ${expectedVersion}`);
+}
+
+const productConfig = readFileSync(resolve('src/config/product.config.ts'), 'utf8');
+if (!productConfig.includes(`PRODUCT_VERSION = '${expectedVersion}'`)) {
+  missing.push(`src/config/product.config.ts PRODUCT_VERSION must be ${expectedVersion}`);
+}
+
+const androidGradle = readFileSync(resolve('android/app/build.gradle'), 'utf8');
+if (!androidGradle.includes(`versionName = "${expectedVersion}"`)) {
+  missing.push(`android/app/build.gradle versionName must be ${expectedVersion}`);
 }
 
 // AST-based content count functions
@@ -242,5 +269,7 @@ console.log('Release structure verified.');
 console.log(`MP3 assets: ${audioFiles.length}`);
 console.log('Frontend lockfile: present');
 console.log('Backend lockfile: present');
+console.log(`Frontend lockfile version: ${frontendLock.version}`);
+console.log(`Backend lockfile version: ${backendLock.version}`);
 console.log('Supabase migrations: present');
 console.log(`Version consistency: ${expectedVersion}`);
