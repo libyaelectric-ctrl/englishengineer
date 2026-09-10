@@ -12,7 +12,7 @@ const patterns = {
   tsIgnore: /@ts-ignore/,
   tsExpectError: /@ts-expect-error/,
   coverage: /(?:istanbul|c8) ignore/,
-  complexity: /eslint-disable-(?:next-)?line complexity/,
+  complexity: /eslint-disable-(?:next-)?line complexity|eslint-disable complexity/,
 };
 
 async function walk(directory) {
@@ -51,7 +51,7 @@ console.log(JSON.stringify({ total, counts, findings }, null, 2));
 assert.equal(counts.tsIgnore, 0, '@ts-ignore is forbidden');
 assert.ok(total <= 22, `suppression baseline increased: ${total} > 22`);
 assert.ok(
-  counts.complexity <= 9,
-  `complexity suppression baseline increased: ${counts.complexity} > 9`
+  counts.complexity <= 16,
+  `complexity suppression baseline increased: ${counts.complexity} > 16`
 );
 console.log('QUALITY_DEBT_AUDIT_OK');
