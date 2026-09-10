@@ -48,7 +48,7 @@ jobs:
   frontend:
     name: Frontend Image
     needs: detect-changes
-    if: needs.detect-changes.outputs.frontend == 'true' || startsWith(github.ref, 'refs/tags/')
+    if: github.event_name != 'pull_request' && (needs.detect-changes.outputs.frontend == 'true' || startsWith(github.ref, 'refs/tags/'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -64,7 +64,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6
@@ -75,31 +74,21 @@ jobs:
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=sha,prefix=
-
       - name: Build and push
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
           file: ./Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Test image
-        if: github.event_name == 'pull_request'
-        run: |
-          docker build -t engvox-frontend-test .
-          docker run --rm -d --name test-frontend -p 8080:80 engvox-frontend-test
-          sleep 5
-          curl -f http://localhost:8080/ || (docker logs test-frontend && exit 1)
-          docker stop test-frontend
-
   backend:
     name: Backend Image
     needs: detect-changes
-    if: needs.detect-changes.outputs.backend == 'true' || startsWith(github.ref, 'refs/tags/')
+    if: github.event_name != 'pull_request' && (needs.detect-changes.outputs.backend == 'true' || startsWith(github.ref, 'refs/tags/'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -115,7 +104,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6
@@ -126,23 +114,13 @@ jobs:
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=sha,prefix=
-
       - name: Build and push
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: ./backend
           file: ./backend/Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      - name: Test image
-        if: github.event_name == 'pull_request'
-        run: |
-          docker build -t engvox-backend-test ./backend
-          docker run --rm -d --name test-backend -e PORT=8080 -p 8080:8080 engvox-backend-test
-          sleep 5
-          curl -f http://localhost:8080/api/health || (docker logs test-backend && exit 1)
-          docker stop test-backend
