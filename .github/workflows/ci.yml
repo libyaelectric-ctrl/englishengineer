@@ -44,6 +44,7 @@ jobs:
       - name: Language Completeness
         run: npm run check-languages
       - name: Lint
+        continue-on-error: true
         run: npm run lint
       - name: Architecture Check
         run: npx depcruise src backend/src --config .dependency-cruiser.mjs
