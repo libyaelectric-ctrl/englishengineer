@@ -44,7 +44,7 @@ cp .env.example .env.local
 | `SUPABASE_SERVICE_ROLE_KEY`      | ✅ backend                        | Server-only key for persistent repositories; never expose to the browser       |
 | `DODO_PAYMENTS_API_KEY`          | ⚠️                                | Dodo Payments API key (test mode)                                              |
 | `DODO_PAYMENTS_WEBHOOK_KEY`      | ⚠️                                | Dodo Payments webhook secret                                                   |
-| `METRICS_TOKEN`                  | ✅ backend                        | Production Bearer token for `/api/metrics` and `/api/diagnostics`              |
+| `METRICS_TOKEN`                  | ✅ backend production             | Production Bearer token for `/api/metrics` and `/api/diagnostics`              |
 | `ENGINEEROS_INTERNAL_SERVICE_ID` | If internal secret is set         | Fixed service identity bound to internal authentication                        |
 | `SUPABASE_JWT_ISSUER`            | If local JWT verification is used | Exact accepted Supabase JWT issuer                                             |
 | `SUPABASE_JWT_AUDIENCE`          | If local JWT verification is used | Exact accepted audience (normally `authenticated`)                             |
@@ -54,6 +54,32 @@ cp .env.example .env.local
 Google OAuth on the native apps uses **@capacitor-firebase/authentication** — it performs a **native Google Sign-In** via Play Services / Credential Manager (no embedded WebView, no custom scheme deep link). The ID token is handed to the Firebase Web SDK via `signInWithCredential()`. Email/password sign-in runs entirely in-app and is unaffected.
 
 The full runbook — Firebase Console settings (Android app package + SHA-1/256 + `google-services.json`), the `cap sync` workflow, and the emulator test procedure — lives in [MOBILE.md](./MOBILE.md).
+
+#### Android build runbook
+
+Use the package scripts for Android builds so the native project never packages stale WebView assets:
+
+```bash
+# Debug APK
+npm run android:debug
+
+# Release build
+npm run android:release
+
+# Install/run on a connected emulator or device
+npm run android:run
+```
+
+Manual equivalent:
+
+```bash
+npm run build:mobile
+npx cap sync android
+cd android
+./gradlew clean assembleDebug
+```
+
+If Android still shows an older UI after pulling `main`, remove the old app from the emulator/device, run the commands above again, and verify `android/app/src/main/assets/public` was refreshed by Capacitor sync.
 
 ### Development
 
@@ -75,6 +101,8 @@ npm run backend:test           # Backend tests
 npm run e2e:browser            # E2E tests (Playwright)
 npm run typecheck              # TypeScript check
 npm run lint                   # ESLint
+npm run check-languages        # i18n language completeness gate
+npm run verify:release         # package/env/product/android version consistency
 ```
 
 ### Production Build
@@ -82,6 +110,22 @@ npm run lint                   # ESLint
 ```bash
 npm run build
 ```
+
+## Release / CI stabilization runbook
+
+Before merging a release, Android, backend, or localization change, keep the release gate narrow and verify these checks:
+
+1. `npm run typecheck`
+2. `npm run lint`
+3. `npm test`
+4. `npm run check-languages`
+5. `npm run verify:release`
+6. `npm run build`
+7. `npm run android:debug` or `npm run android:release` when native assets are affected
+
+Release metadata must stay aligned across `package.json`, `package-lock.json`, `backend/package.json`, `backend/package-lock.json`, `.env.example`, `backend/.env.example`, `src/config/product.config.ts`, and `android/app/build.gradle`.
+
+Preview deploys are expected to build the app first. If Vercel secrets are not configured in GitHub Actions, the preview deploy step may be skipped after the build check instead of blocking the PR for missing deployment credentials.
 
 ## Project Structure
 

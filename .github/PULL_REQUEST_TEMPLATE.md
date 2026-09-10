@@ -27,6 +27,7 @@
 - [ ] `npm test` passes
 - [ ] `npm run build` succeeds
 - [ ] `npm run check-languages` passes
+- [ ] `npm run verify:release` passes
 - [ ] Android web bundle refreshed with `npm run build:mobile && npx cap sync android`
 - [ ] Light/dark/auto theme checked on touched pages
 - [ ] Mobile viewport checked on touched pages
@@ -38,11 +39,18 @@
 
 ## Release Checklist
 
-- [ ] Version number updated where needed (`package.json`, backend, Android, product config)
+- [ ] Version number updated where needed (`package.json`, lockfiles, backend, Android, product config, env examples)
+- [ ] `package-lock.json` and `backend/package-lock.json` match their package manifests
 - [ ] Vercel/deployment status checked after merge
 - [ ] Android build uses fresh `dist` assets, not stale WebView files
 - [ ] User-visible copy is localized or intentionally language-neutral
 - [ ] No new secrets, tokens, debug logs, or localhost-only URLs were introduced
+
+## CI Notes
+
+<!-- If a deploy-only check is skipped because secrets are unavailable, document that the build check still passed. Do not merge required test/type/lint failures. -->
+
+-
 
 ## Checklist
 
