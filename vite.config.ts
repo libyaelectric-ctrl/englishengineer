@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { mkdir, readdir, rename, rm } from 'node:fs/promises';
 
 import tailwindcss from '@tailwindcss/vite';

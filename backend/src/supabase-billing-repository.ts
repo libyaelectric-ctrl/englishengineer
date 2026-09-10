@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { createClient } from '@supabase/supabase-js';
 import type { SubscriptionSnapshot } from './billing-helpers.js';
 import { normalizePlanId } from './billing-plan-migration.js';

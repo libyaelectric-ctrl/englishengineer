@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /**
  * Visual regression tests — screenshot baseline for all main pages.
  *

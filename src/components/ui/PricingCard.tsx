@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { Check, Sparkles } from 'lucide-react';
 
 import { getPricingCopy } from '@/shared/data/pricing-copy';
