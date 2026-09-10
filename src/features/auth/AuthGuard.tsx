@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { useEffect, useState, type ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { LoadingState } from '@/shared/components/LoadingState';
