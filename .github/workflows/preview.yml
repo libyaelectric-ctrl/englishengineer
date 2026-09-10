@@ -53,15 +53,3 @@ jobs:
       - name: Note optional preview result
         run: |
           echo "Preview deployment is non-blocking; app build is the required gate."
-
-      - name: Comment PR
-        if: steps.vercel-secrets.outputs.configured == 'true'
-        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '🚀 Preview deploy attempted. Build passed; check the deployment step for the preview URL/status.'
-            })

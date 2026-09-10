@@ -51,7 +51,7 @@ for (const file of translationFiles) {
 
   // Translation files in this codebase may compose copy from multiple exported
   // objects. Count any expected language key that is declared as an object key.
-  const langPattern = /(?:^|[,{\s])([A-Za-z]{2}):\s*\{/g;
+  const langPattern = /(\w+):\s*\{/g;
   const foundLangs = new Set();
   let match;
   while ((match = langPattern.exec(content)) !== null) {
