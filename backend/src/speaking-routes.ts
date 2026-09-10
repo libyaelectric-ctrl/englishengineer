@@ -15,26 +15,31 @@ import { SpeakingSubmitBodySchema, parsePaginationQuery, validateBody } from './
 
 type AiService = ReturnType<typeof createAIService>;
 const UPLOAD_ROOT = path.resolve(process.cwd(), 'uploads', 'speaking');
-const AUDIO_TYPES: Record<string, string> = {
+const AUDIO_TYPES = {
   'audio/webm': 'webm',
   'audio/ogg': 'ogg',
   'audio/wav': 'wav',
   'audio/mpeg': 'mp3',
   'audio/mp4': 'm4a',
-};
+} as const;
+type SupportedAudioType = keyof typeof AUDIO_TYPES;
+const SUPPORTED_AUDIO_TYPES = Object.keys(AUDIO_TYPES) as SupportedAudioType[];
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
 const MAX_DURATION_SECONDS = 300;
 const AUDIO_BUCKET = process.env.SPEAKING_AUDIO_BUCKET || 'speaking-audio';
 const SAFE_STORAGE_SEGMENT = /^[A-Za-z0-9_-]{1,128}$/;
 
-const firstString = (value: string | string[] | undefined): string => {
-  if (Array.isArray(value)) return value[0] ?? '';
-  return value ?? '';
+const routeParam = (request: Request, name: string): string => String(request.params[name] ?? '');
+
+const normalizeAudioContentType = (request: Request): SupportedAudioType | null => {
+  const rawContentType = request.get('content-type') ?? '';
+  const contentType = rawContentType.split(';', 1)[0]!.trim().toLowerCase();
+  return SUPPORTED_AUDIO_TYPES.includes(contentType as SupportedAudioType)
+    ? (contentType as SupportedAudioType)
+    : null;
 };
 
-const routeParam = (request: Request, name: string): string => firstString(request.params[name]);
-
-const hasExpectedAudioSignature = (buffer: Buffer, contentType: string): boolean => {
+const hasExpectedAudioSignature = (buffer: Buffer, contentType: SupportedAudioType): boolean => {
   if (contentType === 'audio/wav') {
     return (
       buffer.length >= 12 &&
@@ -251,7 +256,7 @@ const parseWebmDuration = (buffer: Buffer): number | null => {
   return dur / timecodeScale;
 };
 
-export const parseAudioDuration = (buffer: Buffer, contentType: string): number | null => {
+export const parseAudioDuration = (buffer: Buffer, contentType: SupportedAudioType): number | null => {
   if (contentType === 'audio/wav') return parseWavDuration(buffer);
   if (contentType === 'audio/mpeg') return parseMp3Duration(buffer);
   if (contentType === 'audio/mp4') return parseMp4Duration(buffer);
@@ -263,7 +268,7 @@ const uploadToSupabase = async (
   userId: string,
   fileName: string,
   buffer: Buffer,
-  contentType: string
+  contentType: SupportedAudioType
 ): Promise<string | null> => {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -387,18 +392,15 @@ export const registerSpeakingRoutes = (
     '/api/speaking/audio-upload',
     requireBackendAuth,
     speakingLimiter,
-    express.raw({ type: Object.keys(AUDIO_TYPES), limit: '15mb' }),
+    express.raw({ type: SUPPORTED_AUDIO_TYPES, limit: '15mb' }),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = userIdFrom(request);
-        const contentType = firstString(request.headers['content-type'])
-          .split(';', 1)[0]!
-          .trim()
-          .toLowerCase();
-        const extension = AUDIO_TYPES[contentType];
-        if (!extension) {
-          throw new ApiError(415, 'unsupported_media_type', `Unsupported audio content-type: ${contentType}`);
+        const contentType = normalizeAudioContentType(request);
+        if (!contentType) {
+          throw new ApiError(415, 'unsupported_media_type', 'Unsupported audio content-type.');
         }
+        const extension = AUDIO_TYPES[contentType];
         const buffer = request.body as Buffer;
         if (!Buffer.isBuffer(buffer) || buffer.length === 0) {
           throw new ApiError(400, 'empty_audio', 'No audio data received');
@@ -541,9 +543,10 @@ export const registerSpeakingRoutes = (
 
   app.get('/api/speaking/:id', requireBackendAuth, async (request: Request, response: Response, next: NextFunction) => {
     try {
+      const submissionId = routeParam(request, 'id');
       response.json(
         apiSuccess(
-          (await getLearningRepository().getSpeakingSubmission(userIdFrom(request), routeParam(request, 'id'))) ?? {
+          (await getLearningRepository().getSpeakingSubmission(userIdFrom(request), submissionId)) ?? {
             notFound: true,
           }
         )
