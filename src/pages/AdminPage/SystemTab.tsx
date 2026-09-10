@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
+import { logger } from '@/shared/logger';
 
 import type { AdminSystemLog } from '@/features/admin';
 
@@ -32,8 +33,8 @@ export const SystemTab = ({ systemLogs, isLoading }: SystemTabProps) => {
           headers,
         });
         if (res.ok) setAiAnalytics(await res.json());
-      } catch {
-        // Silently fail — analytics is optional
+      } catch (err) {
+        logger.e('[ADMIN] Failed to fetch AI analytics for SystemTab:', err);
       }
     };
     fetchAnalytics();

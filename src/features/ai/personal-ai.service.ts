@@ -47,10 +47,26 @@ export interface GenerateLessonParams {
   userName?: string;
 }
 
+const isPersonalLessonContent = (value: unknown): value is PersonalLessonContent => {
+  if (!value || typeof value !== 'object') return false;
+  const obj = value as Record<string, unknown>;
+  return (
+    Array.isArray(obj.vocabulary) &&
+    typeof obj.reading === 'object' &&
+    obj.reading !== null &&
+    typeof obj.writing === 'object' &&
+    obj.writing !== null &&
+    typeof obj.speaking === 'object' &&
+    obj.speaking !== null &&
+    typeof obj.listening === 'object' &&
+    obj.listening !== null
+  );
+};
+
 const parseStructuredContent = (response: AIResponse): PersonalLessonContent | null => {
-  const structured = response.structuredResult as Record<string, unknown> | undefined;
-  if (!structured || typeof structured !== 'object') return null;
-  return structured as unknown as PersonalLessonContent;
+  const structured = response.structuredResult;
+  if (!isPersonalLessonContent(structured)) return null;
+  return structured;
 };
 
 const buildExamples = (): MockExample[] => [

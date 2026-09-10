@@ -1,7 +1,5 @@
 import { BookOpen, Briefcase, Shield, Sparkles, Zap } from 'lucide-react';
 
-import React from 'react';
-
 import { useNavigate } from 'react-router-dom';
 
 interface PlanSectionProps {
@@ -16,7 +14,7 @@ interface PlanSectionProps {
   navigate: ReturnType<typeof useNavigate>;
 }
 
-export const PlanSection: React.FC<PlanSectionProps> = ({ copy, isFree, navigate }) => {
+export const PlanSection = ({ copy, isFree, navigate }: PlanSectionProps) => {
   if (!isFree) return null;
 
   return (
@@ -47,10 +45,10 @@ interface WorkspaceSectionProps {
   displayName: string;
 }
 
-export const WorkspaceSection: React.FC<WorkspaceSectionProps> = ({
+export const WorkspaceSection = ({
   userInitials,
   displayName,
-}) => {
+}: WorkspaceSectionProps) => {
   return (
     <div className="p-4 bg-surface border border-border-soft rounded-xl mb-4">
       <div className="flex items-center gap-3">
@@ -70,7 +68,7 @@ interface ActionsSectionProps {
   navigate: (path: string) => void;
 }
 
-export const ActionsSection: React.FC<ActionsSectionProps> = ({ navigate }) => {
+export const ActionsSection = ({ navigate }: ActionsSectionProps) => {
   return (
     <div className="space-y-2">
       <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-copy px-2">

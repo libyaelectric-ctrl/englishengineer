@@ -31,11 +31,11 @@ const useIsMobile = () => {
   return window.innerWidth < 1024;
 };
 
-export const EngMascot: React.FC<{ inline?: boolean; size?: number }> = ({
+export const EngMascot = ({
   inline = false,
   size = 64,
   // eslint-disable-next-line complexity -- large mascot render with settings/state branches
-}) => {
+}: { inline?: boolean; size?: number }) => {
   const language = useLocalizationStore((s) => s.language);
   const copy = MASCOT_COPY[language] ?? MASCOT_COPY.en;
   const { state, message, visible, minimized, position, contrastMode, toggleMinimized } =

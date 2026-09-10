@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -45,10 +45,13 @@ vi.mock('./hooks/useGrammarPage', () => ({
 
 describe('GrammarPage', () => {
   it('renders without crashing', () => {
-    render(
+    const { container } = render(
       <MemoryRouter initialEntries={['/grammar']}>
         <GrammarPage />
       </MemoryRouter>
     );
+    expect(container.firstChild).toBeTruthy();
+    expect(container.querySelector('[class*="animate-pulse"]')).toBeTruthy();
+    expect(container.querySelector('[class*="space-y-6"]')).toBeTruthy();
   });
 });

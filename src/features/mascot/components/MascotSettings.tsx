@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useMascotStore } from '../mascot.store';
 
 interface MascotSettingsProps {
@@ -10,7 +8,7 @@ interface MascotSettingsProps {
 
 const VOLUME_OPTIONS = ['off', 'low', 'high'] as const;
 
-export const MascotSettings: React.FC<MascotSettingsProps> = ({ open, minimized, onClose }) => {
+export const MascotSettings = ({ open, minimized, onClose }: MascotSettingsProps) => {
   const {
     soundEnabled,
     setSoundEnabled,

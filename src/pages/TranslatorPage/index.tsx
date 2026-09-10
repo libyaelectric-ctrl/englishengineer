@@ -62,14 +62,14 @@ const VIRTUAL_CHAR_BARS: Partial<Record<SupportedLang, string[]>> = {
   ko: ['안녕하세요', '오세요', '감사합니다', '네', '아니오', '프로젝트'],
 };
 
-const LanguageBar: React.FC<{
+const LanguageBar = ({ sourceLang, setSourceLang, targetLang, setTargetLang, handleSwapLanguages, translate }: {
   sourceLang: SupportedLang;
   setSourceLang: React.Dispatch<React.SetStateAction<SupportedLang>>;
   targetLang: SupportedLang;
   setTargetLang: React.Dispatch<React.SetStateAction<SupportedLang>>;
   handleSwapLanguages: () => void;
   translate: (key: TranslationKey) => string;
-}> = ({ sourceLang, setSourceLang, targetLang, setTargetLang, handleSwapLanguages, translate }) => (
+}) => (
   <div className="flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 bg-background p-2.5 sm:p-3 rounded-[var(--radius-card)] border border-border-soft text-xs">
     <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
       <Globe2 className="h-4 w-4 text-primary shrink-0" />
@@ -114,7 +114,7 @@ const LanguageBar: React.FC<{
   </div>
 );
 
-const SourceInputPanel: React.FC<{
+const SourceInputPanel = (props: {
   inputText: string;
   setInputText: (v: string) => void;
   sourceLang: SupportedLang;
@@ -124,7 +124,7 @@ const SourceInputPanel: React.FC<{
   handleClear: () => void;
   speakText: (text: string, lang: SupportedLang, type: 'source' | 'target') => void;
   translate: (key: TranslationKey) => string;
-}> = (props) => {
+}) => {
   const {
     inputText,
     setInputText,
@@ -218,7 +218,7 @@ const SourceInputPanel: React.FC<{
   );
 };
 
-const OutputPanel: React.FC<{
+const OutputPanel = (props: {
   translatedText: string;
   targetLang: SupportedLang;
   isTranslating: boolean;
@@ -228,7 +228,7 @@ const OutputPanel: React.FC<{
   handleCopy: () => void;
   speakText: (text: string, lang: SupportedLang, type: 'source' | 'target') => void;
   translate: (key: TranslationKey) => string;
-}> = (props) => {
+}) => {
   const {
     translatedText,
     targetLang,
@@ -308,11 +308,11 @@ const OutputPanel: React.FC<{
   );
 };
 
-const WordAnalysisCard: React.FC<{
+const WordAnalysisCard = (props: {
   resultData: TranslationResult | null;
   translatedText: string;
   translate: (key: TranslationKey) => string;
-}> = (props) => {
+}) => {
   const { resultData, translatedText, translate } = props;
   const alternatives = resultData?.wordAnalysis?.alternativeMeanings;
   const hasAlternatives = alternatives && alternatives.length > 0;

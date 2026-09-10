@@ -2,6 +2,7 @@ import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
 
 import { showToast } from '@/shared/components/Toast';
+import { logger } from '@/shared/logger';
 import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
 
 // ---------------------------------------------------------------------------
@@ -80,8 +81,8 @@ async function parseErrorBody(response: Response): Promise<string> {
       if (typeof e.message === 'string') return e.message;
     }
     if (typeof data.message === 'string') return data.message;
-  } catch {
-    // body not JSON
+  } catch (err) {
+    logger.e('[API] Failed to parse error body as JSON:', err);
   }
   return `API ${response.status}: ${response.statusText}`;
 }

@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -80,12 +80,15 @@ vi.mock('@/features/profile/profile.preferences', () => ({
 
 describe('ProfilePage', () => {
   it('renders without crashing', () => {
-    render(
+    const { container } = render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter initialEntries={['/profile']}>
           <ProfilePage />
         </MemoryRouter>
       </QueryClientProvider>
     );
+    expect(container.firstChild).toBeTruthy();
+    expect(screen.getAllByText('Test User').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText('Profile Information')).toBeInTheDocument();
   });
 });

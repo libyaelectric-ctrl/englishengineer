@@ -20,6 +20,7 @@ import {
 
 import { AIService } from '@/features/ai';
 import { VocabularyService } from '@/features/vocabulary';
+import { logger } from '@/shared/logger';
 
 import { READING_MISSIONS } from './reading.data';
 import { ReadingEvaluator } from './reading.evaluator';
@@ -85,7 +86,8 @@ const buildAiFeedback = async (mission: ReadingMission) => {
       weaknesses: structured.weaknesses || [],
       summary: structured.summary || '',
     };
-  } catch {
+  } catch (err) {
+    logger.e('[READING] Failed to build AI feedback:', err);
     return null;
   }
 };

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import type { GrammarExample } from '@/shared/types/grammar.types';
+import { logger } from '@/shared/logger';
 
 import { useLocalizationStore } from '@/features/localization';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
@@ -35,7 +36,8 @@ const loadPersisted = (ruleId: string, language: string): GrammarTranslation | n
   try {
     const raw = localStorage.getItem(LS_PREFIX + buildCacheKey(ruleId, language));
     return raw ? (JSON.parse(raw) as GrammarTranslation) : null;
-  } catch {
+  } catch (err) {
+    logger.e('[GRAMMAR] Failed to load cached translation from localStorage:', err);
     return null;
   }
 };
@@ -43,8 +45,8 @@ const loadPersisted = (ruleId: string, language: string): GrammarTranslation | n
 const persist = (ruleId: string, language: string, value: GrammarTranslation): void => {
   try {
     localStorage.setItem(LS_PREFIX + buildCacheKey(ruleId, language), JSON.stringify(value));
-  } catch {
-    // localStorage full or unavailable — ignore
+  } catch (err) {
+    logger.e('[GRAMMAR] Failed to persist translation to localStorage:', err);
   }
 };
 
@@ -142,7 +144,8 @@ export const useGrammarTranslation = (
         memoryCache.set(buildCacheKey(rule.id, language), next);
         persist(rule.id, language, next);
         setTranslation(next);
-      } catch {
+      } catch (err) {
+        logger.e('[GRAMMAR] AI translation failed, keeping English fallback:', err);
         // Keep the English fallback on failure.
       } finally {
         if (active) setIsTranslating(false);

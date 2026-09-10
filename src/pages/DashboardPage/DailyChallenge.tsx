@@ -17,6 +17,7 @@ import { useLearningStore } from '@/core/learning';
 
 import { useLocalizationStore } from '@/features/localization';
 import { VocabularyRepository } from '@/features/vocabulary';
+import { logger } from '@/shared/logger';
 
 interface ChallengeQuestion {
   id: string;
@@ -137,7 +138,8 @@ const generateDailyQuestions = async (): Promise<ChallengeQuestion[]> => {
         explanation: grammarQ.explanation,
       });
     }
-  } catch {
+  } catch (err) {
+    logger.e('[DAILY_CHALLENGE] Failed to generate questions, using fallbacks:', err);
     // Fallback questions if vocabulary load fails
     questions.push({
       id: 'vocab-fallback',
@@ -169,7 +171,8 @@ const loadChallengeState = (): ChallengeState | null => {
       return null;
     }
     return parsed;
-  } catch {
+  } catch (err) {
+    logger.e('[DAILY_CHALLENGE] Failed to load challenge state:', err);
     return null;
   }
 };
@@ -181,8 +184,8 @@ const saveChallengeState = (state: ChallengeState): void => {
       STORAGE_KEY,
       JSON.stringify({ ...state, date: new Date().toISOString().split('T')[0] })
     );
-  } catch {
-    // localStorage not available
+  } catch (err) {
+    logger.e('[DAILY_CHALLENGE] Failed to save challenge state:', err);
   }
 };
 

@@ -1,5 +1,6 @@
 // Singleton AudioContext — reuse instead of creating a new one per tone
 let sharedCtx: AudioContext | null = null;
+import { logger } from '@/shared/logger';
 
 const getAudioContext = (): AudioContext | null => {
   if (sharedCtx && sharedCtx.state !== 'closed') return sharedCtx;
@@ -10,7 +11,8 @@ const getAudioContext = (): AudioContext | null => {
     if (!Ctor) return null;
     sharedCtx = new Ctor();
     return sharedCtx;
-  } catch {
+  } catch (err) {
+    logger.e('[MASCOT] Failed to create AudioContext:', err);
     return null;
   }
 };

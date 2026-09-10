@@ -1,7 +1,5 @@
 import { LogOut, Wallet } from 'lucide-react';
 
-import React from 'react';
-
 import { PRODUCT_VERSION } from '@/config/product.config';
 
 interface SidebarFooterProps {
@@ -26,14 +24,14 @@ interface SidebarFooterProps {
   notificationsCount?: number;
 }
 
-export const SidebarFooter: React.FC<SidebarFooterProps> = ({
+export const SidebarFooter = ({
   copy,
   collapsed = false,
   currentUser,
   planName = 'free',
   onLogout,
   onBilling,
-}) => {
+}: SidebarFooterProps) => {
   if (collapsed) return null;
 
   return (

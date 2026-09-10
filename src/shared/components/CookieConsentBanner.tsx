@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { logger } from '@/shared/logger';
 
 const STORAGE_KEY = 'engvox_cookie_consent';
 
@@ -7,7 +8,8 @@ type CookieConsent = 'accepted' | 'rejected' | null;
 const getCookieConsent = (): CookieConsent => {
   try {
     return localStorage.getItem(STORAGE_KEY) as CookieConsent;
-  } catch {
+  } catch (err) {
+    logger.e('[COOKIE] Failed to read cookie consent state:', err);
     return null;
   }
 };
@@ -19,8 +21,8 @@ const setCookieConsent = (consent: CookieConsent): void => {
     } else {
       localStorage.removeItem(STORAGE_KEY);
     }
-  } catch {
-    // localStorage unavailable
+  } catch (err) {
+    logger.e('[COOKIE] Failed to persist cookie consent:', err);
   }
 };
 

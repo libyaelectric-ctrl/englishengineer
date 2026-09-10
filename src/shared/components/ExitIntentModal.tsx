@@ -2,6 +2,7 @@ import { Sparkles, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { logger } from '@/shared/logger';
 
 import { Link } from 'react-router-dom';
 
@@ -26,8 +27,8 @@ export function ExitIntentModal() {
       hasShown.current = true;
       try {
         localStorage.setItem(STORAGE_KEY, '1');
-      } catch {
-        // localStorage may be unavailable
+      } catch (err) {
+        logger.e('[EXIT_INTENT] Failed to persist exit intent flag (mouse):', err);
       }
     }
   }, []);
@@ -39,8 +40,8 @@ export function ExitIntentModal() {
       hasShown.current = true;
       try {
         localStorage.setItem(STORAGE_KEY, '1');
-      } catch {
-        // localStorage may be unavailable
+      } catch (err) {
+        logger.e('[EXIT_INTENT] Failed to persist exit intent flag (visibility):', err);
       }
     }
   }, []);
@@ -49,8 +50,8 @@ export function ExitIntentModal() {
     // Don't show if already shown in this session
     try {
       if (localStorage.getItem(STORAGE_KEY)) return;
-    } catch {
-      // localStorage may be unavailable
+    } catch (err) {
+      logger.e('[EXIT_INTENT] Failed to check exit intent state:', err);
     }
 
     // Only on pricing page

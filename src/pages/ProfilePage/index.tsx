@@ -636,9 +636,7 @@ const ProfilePage = () => {
   const streak = useLearningStore((s) => s.streak);
   const hearts = useLearningStore((s) => s.hearts);
   const studySessions = useLearningStore((s) => s.studySessions);
-  const achievements = useLearningStore(
-    (s) => (s as unknown as { achievements: unknown }).achievements
-  );
+  const achievements = useLearningStore((s) => s.achievements);
   const {
     currentUser,
     subscription,

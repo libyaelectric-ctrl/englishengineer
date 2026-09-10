@@ -1,12 +1,10 @@
-import React from 'react';
-
 interface MascotBubbleProps {
   message: string | null;
   minimized: boolean;
   isMobile?: boolean;
 }
 
-export const MascotBubble: React.FC<MascotBubbleProps> = ({ message, minimized, isMobile }) => {
+export const MascotBubble = ({ message, minimized, isMobile }: MascotBubbleProps) => {
   if (minimized || !message) return null;
 
   // On mobile, make the bubble narrower and position it further up to avoid bottom nav

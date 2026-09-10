@@ -1,6 +1,7 @@
 import { AI_BACKEND_PROXY_CONFIG } from '@/shared/services/ai-proxy.config';
 import { createApiClient } from '@/shared/services/apiClient';
 import { unwrapApiSuccess } from '@/shared/types/api-response';
+import { logger } from '@/shared/logger';
 
 interface WritingSubmitPayload {
   id: string;
@@ -33,7 +34,8 @@ export async function submitWritingToBackend(input: {
     return unwrapApiSuccess<WritingSubmitPayload>(
       await client.post<WritingSubmitPayload>('/api/v1/writing/submit', input)
     );
-  } catch {
+  } catch (err) {
+    logger.e('[WRITING] Failed to submit to backend:', err);
     return null;
   }
 }

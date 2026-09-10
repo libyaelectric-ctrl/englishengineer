@@ -71,8 +71,8 @@ const NODE_H = 80;
 const H_GAP = 20; // horizontal gap between nodes
 const ROW_H = 140; // vertical height per row (node + label + connector)
 
-export const HighSpeedRailwayPath: React.FC<HighSpeedRailwayPathProps> = React.memo(
-  ({ path, onSelectLevel }) => {
+export const HighSpeedRailwayPath = React.memo(
+  ({ path, onSelectLevel }: HighSpeedRailwayPathProps) => {
     const translate = useLocalizationStore((s) => s.translate);
     const isRTL = useDirection();
     const [hovered, setHovered] = useState<string | null>(null);

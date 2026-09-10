@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -140,5 +140,8 @@ describe('ProgressPage', () => {
         <ProgressPage />
       </MemoryRouter>
     );
+    expect(screen.getByTestId('hero-banner')).toBeInTheDocument();
+    expect(screen.getByText('Vocabulary')).toBeInTheDocument();
+    expect(screen.getByText('Targeted Modules')).toBeInTheDocument();
   });
 });

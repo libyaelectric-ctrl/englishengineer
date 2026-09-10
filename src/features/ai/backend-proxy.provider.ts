@@ -219,7 +219,7 @@ export const parseBackendResponse = (data: unknown): BackendProxyResponse => {
     contractVersion: data.contractVersion === CONTRACT_VERSION ? CONTRACT_VERSION : undefined,
     requestId: safeString(data.requestId),
     operation: safeString(data.operation) as AIOperation | undefined,
-    structuredResult: data.structuredResult as unknown as AICoachResult,
+    structuredResult: isAICoachResult(data.structuredResult) ? data.structuredResult : undefined,
     text: safeString(data.text),
     result: safeString(data.result),
     message: safeString(data.message),

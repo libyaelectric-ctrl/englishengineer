@@ -8,12 +8,10 @@ target/
 storybook-static
 /data/
 public/data/
-.env
-.env.*
+.env*
 !.env.example
-!.env.staging
-**/.env
-**/.env.*
+!scripts/.env.example
+**/.env*
 **/dodo-products-test.env
 *.log
 logs/
@@ -94,8 +92,6 @@ gece.png
 .gunduz.png
 .gnndz.txt
 *.py
-!.env.example
-!scripts/.env.example
 !scripts/translate-vocabulary-nllb.py
 !scripts/translate-grammar-deepl.py
 !scripts/translate-vocabulary-chunks.py
@@ -110,6 +106,5 @@ monitoring/grafana_data/
 monitoring/prometheus_data/
 PRC_Kademe_8_Live_Service_Evidence_Report.md
 .vercel
-.env*
 .artifacts/
 .cache/

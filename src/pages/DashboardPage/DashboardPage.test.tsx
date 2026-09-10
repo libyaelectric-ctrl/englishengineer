@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -120,10 +120,13 @@ vi.mock('./DashboardSkeleton', () => ({
 
 describe('DashboardPage', () => {
   it('renders without crashing', () => {
-    render(
+    const { container } = render(
       <MemoryRouter initialEntries={['/dashboard']}>
         <DashboardPage />
       </MemoryRouter>
     );
+    expect(container.firstChild).toBeTruthy();
+    expect(container.querySelector('header')).toBeTruthy();
+    expect(screen.getByText(/dashboard\.commandCenter/i)).toBeInTheDocument();
   });
 });

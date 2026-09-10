@@ -1,6 +1,7 @@
 import { AI_BACKEND_PROXY_CONFIG } from '@/shared/services/ai-proxy.config';
 import { createApiClient } from '@/shared/services/apiClient';
 import { unwrapApiSuccess } from '@/shared/types/api-response';
+import { logger } from '@/shared/logger';
 
 interface SpeakingSubmitPayload {
   id: string;
@@ -23,7 +24,8 @@ export async function submitSpeakingToBackend(input: {
     return unwrapApiSuccess<SpeakingSubmitPayload>(
       await client.post<SpeakingSubmitPayload>('/api/v1/speaking/submit', input)
     );
-  } catch {
+  } catch (err) {
+    logger.e('[SPEAKING] Failed to submit to backend:', err);
     return null;
   }
 }

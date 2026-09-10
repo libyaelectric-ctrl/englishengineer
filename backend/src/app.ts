@@ -203,9 +203,7 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
       ? [
           'https://engvox.com',
           'https://www.engvox.com',
-          'https://localhost',
           'capacitor://localhost',
-          'http://localhost',
         ]
       : [];
   const configuredOrigins = [

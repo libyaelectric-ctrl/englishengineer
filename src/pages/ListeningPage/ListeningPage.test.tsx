@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -72,10 +72,13 @@ vi.mock('@/shared/components/SectionCard', () => ({
 
 describe('ListeningPage', () => {
   it('renders without crashing', () => {
-    render(
+    const { container } = render(
       <MemoryRouter initialEntries={['/listening']}>
         <ListeningPage />
       </MemoryRouter>
     );
+    expect(container.firstChild).toBeTruthy();
+    expect(screen.getByText('Listening')).toBeInTheDocument();
+    expect(screen.getByText(/engineering site audio/i)).toBeInTheDocument();
   });
 });

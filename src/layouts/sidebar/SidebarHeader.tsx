@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { cn } from '@/shared/utils/cn';
 
 interface SidebarHeaderProps {
@@ -8,11 +6,11 @@ interface SidebarHeaderProps {
   onToggle?: () => void;
 }
 
-export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
+export const SidebarHeader = ({
   copy,
   collapsed = false,
   onToggle,
-}) => {
+}: SidebarHeaderProps) => {
   return (
     <div
       className={cn(

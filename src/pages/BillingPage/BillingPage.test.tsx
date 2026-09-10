@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -69,5 +69,8 @@ describe('BillingPage', () => {
         <BillingPage />
       </MemoryRouter>
     );
+    expect(screen.getByText('Billing & Subscriptions')).toBeInTheDocument();
+    expect(screen.getByText('Sync')).toBeInTheDocument();
+    expect(screen.getByText('No transactions yet.')).toBeInTheDocument();
   });
 });

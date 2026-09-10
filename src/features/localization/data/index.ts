@@ -1,5 +1,6 @@
 import type { SupportedInterfaceLanguage } from '../localization.types';
 import { data as EN_UI_TRANSLATIONS } from './en';
+import { logger } from '@/shared/logger';
 
 /**
  * Lazy-loaded language chunks. Each language is a separate module that is
@@ -66,7 +67,8 @@ export async function getUiTranslations(
     const mod = await loader();
     cache.set(language, mod.data);
     return mod.data;
-  } catch {
+  } catch (err) {
+    logger.e(`[LOCALIZATION] Failed to load language chunk "${language}":`, err);
     // If load fails, fallback to English
     if (language !== 'en') {
       return getUiTranslations('en');
@@ -100,6 +102,6 @@ export function preloadLanguage(language: SupportedInterfaceLanguage): void {
   if (loader && !cache.has(language)) {
     loader()
       .then((mod) => cache.set(language, mod.data))
-      .catch(() => {});
+      .catch((err) => { logger.e(`[LOCALIZATION] Failed to preload language "${language}":`, err); });
   }
 }

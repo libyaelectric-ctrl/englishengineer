@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 import { showToast } from '@/shared/components/Toast';
+import { logger } from '@/shared/logger';
 
 const STORAGE_KEY = 'engvox:shortcut-hint-seen';
 
@@ -17,13 +18,13 @@ export function useShortcutHint() {
         showToast('💡 Pro tip: Press Ctrl+K to quickly navigate anywhere', 'info');
         try {
           localStorage.setItem(STORAGE_KEY, '1');
-        } catch {
-          // localStorage may be full or unavailable
+        } catch (err) {
+          logger.e('[SHORTCUT] Failed to persist shortcut hint flag:', err);
         }
       }, 3000);
       return () => clearTimeout(id);
-    } catch {
-      // localStorage may be unavailable
+    } catch (err) {
+      logger.e('[SHORTCUT] Failed to read shortcut hint state:', err);
     }
   }, []);
 }

@@ -100,7 +100,8 @@ export const AdminService = {
       }
 
       return (data || []).map(mapSupabaseUser);
-    } catch {
+    } catch (err) {
+      logger.e('[ADMIN] Failed to fetch users:', err);
       return [];
     }
   },
@@ -149,7 +150,8 @@ export const AdminService = {
         performance: data.performance,
         system: data.system,
       };
-    } catch {
+    } catch (err) {
+      logger.e('[ADMIN] Failed to fetch stats:', err);
       return EMPTY_STATS;
     }
   },
@@ -190,7 +192,8 @@ export const AdminService = {
       >(await response.json());
 
       return data.map(mapAuditLog);
-    } catch {
+    } catch (err) {
+      logger.e('[ADMIN] Failed to fetch system logs:', err);
       return [];
     }
   },

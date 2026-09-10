@@ -49,7 +49,8 @@ const initSentry = () => {
       logger.d('[Observability] Cookie consent rejected, skipping Sentry init.');
       return;
     }
-  } catch {
+  } catch (err) {
+    logger.e('[Observability] Failed to read cookie consent for Sentry init:', err);
     // localStorage unavailable, proceed normally
   }
   sentryInitialized = true;

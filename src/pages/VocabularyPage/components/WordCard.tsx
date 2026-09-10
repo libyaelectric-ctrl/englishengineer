@@ -74,7 +74,7 @@ interface WordCardFrontProps {
   onToggleFlip: () => void;
 }
 
-const WordCardFront: React.FC<WordCardFrontProps> = ({
+const WordCardFront = ({
   term,
   progress,
   mode,
@@ -91,7 +91,7 @@ const WordCardFront: React.FC<WordCardFrontProps> = ({
   onReview,
   onToggleDetails,
   onToggleFlip,
-}) => (
+}: WordCardFrontProps) => (
   <div
     className={`absolute inset-0 flex min-h-0 flex-col justify-between overflow-hidden rounded-[var(--radius-card)] bg-surface/90 p-5 border border-primary/20 backdrop-blur-md ${getBorderClass(progress?.isWeak)}`}
     style={{ backfaceVisibility: 'hidden' }}

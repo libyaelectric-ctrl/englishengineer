@@ -92,7 +92,8 @@ export const getDisciplineDomains = async (
       logger.d(`[ProfileEngine] User ${userId} selected domains: [${domains.join(', ')}]`);
     }
     return domains;
-  } catch {
+  } catch (err) {
+    logger.e(`[ProfileEngine] Failed to load discipline vocabulary for user ${userId}:`, err);
     if (process.env.NODE_ENV === 'development') {
       logger.d(
         `[ProfileEngine] User ${userId} selected domains: [general, engineering] (error fallback)`

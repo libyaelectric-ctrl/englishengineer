@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { logger } from '@/shared/logger';
 
 /**
  * WebGL orb renderer for GlowingOrb. Kept in its own module so the three.js
@@ -120,7 +121,8 @@ export const mountGlowingOrbScene = (container: HTMLElement): (() => void) | und
       (probe.getContext('experimental-webgl') as WebGLRenderingContext | null);
     if (!gl) return undefined;
     gl.getExtension?.('WEBGL_lose_context')?.loseContext?.();
-  } catch {
+  } catch (err) {
+    logger.e('[ORB] WebGL probe failed, skipping orb render:', err);
     return undefined;
   }
 

@@ -1,5 +1,5 @@
 import { ArrowRight, BookOpen, Globe, Hash, Settings, Target, TrendingUp, Zap } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLearningStore } from '@/core/learning';
 import { MetricCard } from '@/shared/components/MetricCard';
@@ -18,7 +18,7 @@ import { DailyChallenge } from './DailyChallenge';
 import { DailyDigest } from './DailyDigest';
 import { ProgressNudge } from './ProgressNudge';
 
-export const DashboardPage: React.FC = () => {
+export const DashboardPage = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const translate = useLocalizationStore((state) => state.translate);
   const currentLanguage = useLocalizationStore((state) => state.language);

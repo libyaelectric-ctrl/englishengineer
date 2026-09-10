@@ -1,5 +1,6 @@
 import { createApiClient } from '@/shared/services/apiClient';
 import { unwrapApiSuccess } from '@/shared/types/api-response';
+import { logger } from '@/shared/logger';
 
 import { AI_BACKEND_PROXY_CONFIG } from './ai.config';
 
@@ -55,7 +56,8 @@ export const AiAnalyticsService = {
     if (!analyticsClient) return EMPTY;
     try {
       return await analyticsClient.get<AiAnalyticsData>('/analytics');
-    } catch {
+    } catch (err) {
+      logger.e('[AI] Failed to fetch analytics:', err);
       return EMPTY;
     }
   },
@@ -68,7 +70,8 @@ export const AiAnalyticsService = {
           await analyticsClient.get<AiAdminAnalytics>('/analytics/admin')
         ) ?? null
       );
-    } catch {
+    } catch (err) {
+      logger.e('[AI] Failed to fetch admin analytics:', err);
       return null;
     }
   },

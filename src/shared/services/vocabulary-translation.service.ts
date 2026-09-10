@@ -7,6 +7,7 @@
  * offline access.
  */
 import { getCachedSeed, setCachedSeed } from '@/shared/utils/indexed-db';
+import { logger } from '@/shared/logger';
 
 export interface TermTranslation {
   meaning?: string;
@@ -61,7 +62,8 @@ export const loadLanguageCorpus = (language: string): Promise<LanguageMap> => {
       }
 
       return map;
-    } catch {
+    } catch (err) {
+      logger.e(`[VOCAB] Failed to load translation corpus for language "${language}":`, err);
       langCache.set(language, emptyMap);
       return emptyMap;
     }

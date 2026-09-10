@@ -22,6 +22,7 @@ import { AVAILABLE_INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/
 import type { SupportedInterfaceLanguage } from '@/features/localization';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 import { useTheme } from '@/features/theme/ThemeProvider';
+import { logger } from '@/shared/logger';
 
 export const consumePendingOnboard = () => {
   const pending = storage.globalGet('engvox-pending-onboard');
@@ -137,7 +138,8 @@ const OnboardPage = () => {
         });
         navigate(`${AUTH_SIGN_IN_URL}?redirect=/onboard`, { replace: true });
       }
-    } catch {
+    } catch (err) {
+      logger.e('[ONBOARD] Failed to save onboarding preferences:', err);
       setSaveError(translate('onboarding.saveError'));
     } finally {
       setSaving(false);

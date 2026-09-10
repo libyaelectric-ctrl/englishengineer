@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { describe, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -130,5 +130,8 @@ describe('SpeakingPage', () => {
         </MemoryRouter>
       );
     });
+    expect(screen.getByText('Speaking')).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /roleplay/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /interview simulator/i })).toBeInTheDocument();
   });
 });

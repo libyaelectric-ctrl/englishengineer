@@ -9,6 +9,7 @@ import { useLearningStore } from '@/core/learning';
 
 import { resolveTermMeaningAsync } from '@/shared/services/vocabulary-translation.service';
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
+import { logger } from '@/shared/logger';
 
 import { useAuthStore } from '@/features/auth';
 import {
@@ -138,7 +139,8 @@ const LessonRunnerPage = () => {
 
         setQuestions(questionList);
         setLoading(false);
-      } catch {
+      } catch (err) {
+        logger.e('[LESSON] Failed to initialize lesson:', err);
         if (active) {
           setLoading(false);
           setLoadError(true);

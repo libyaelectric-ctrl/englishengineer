@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -106,10 +106,13 @@ vi.mock('@/shared/components/MetricCard', () => ({
 
 describe('WritingPage', () => {
   it('renders without crashing', () => {
-    render(
+    const { container } = render(
       <MemoryRouter initialEntries={['/writing']}>
         <WritingPage />
       </MemoryRouter>
     );
+    expect(container.firstChild).toBeTruthy();
+    expect(screen.getByText(/No Writing content yet/i)).toBeInTheDocument();
+    expect(screen.getByText(/Go to Dashboard/i)).toBeInTheDocument();
   });
 });

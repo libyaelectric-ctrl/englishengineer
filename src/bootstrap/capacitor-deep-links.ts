@@ -1,3 +1,5 @@
+import { logger } from '@/shared/logger';
+
 const WEB_DEEP_LINK_HOSTS = new Set(['engvox.com', 'www.engvox.com']);
 const NATIVE_SCHEME = 'com.engvox.app:';
 
@@ -11,7 +13,8 @@ export function toInternalDeepLinkPath(rawUrl: string): string | null {
       const path = `/${url.host}${url.pathname}`.replace(/\/{2,}/g, '/');
       return `${path}${url.search}${url.hash}`;
     }
-  } catch {
+  } catch (err) {
+    logger.e('[DEEP_LINK] Failed to parse deep link URL:', err);
     return null;
   }
   return null;

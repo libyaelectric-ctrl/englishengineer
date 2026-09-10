@@ -98,7 +98,8 @@ export const useBillingStore = create<BillingState & BillingActions>()(
         try {
           const invoices = await BillingService.fetchInvoices(userId);
           set({ invoices, isLoadingInvoices: false });
-        } catch {
+        } catch (err) {
+          logger.e('[BILLING] Failed to fetch invoices:', err);
           set({ invoices: [], isLoadingInvoices: false });
         }
       },

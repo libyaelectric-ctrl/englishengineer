@@ -2,6 +2,7 @@ import { AI_BACKEND_PROXY_CONFIG } from '@/shared/services/ai-proxy.config';
 import { createApiClient } from '@/shared/services/apiClient';
 import { unwrapApiSuccess } from '@/shared/types/api-response';
 import type { ReadingMission, ReadingQuestion, VocabularyItem } from '@/shared/types/reading.types';
+import { logger } from '@/shared/logger';
 
 interface GeneratedReadingPayload {
   source: 'static' | 'ai-generated';
@@ -70,7 +71,8 @@ export async function generateReadingMission(params: {
         schemaVersion: 1,
       },
     };
-  } catch {
+  } catch (err) {
+    logger.e('[READING] Failed to generate AI reading mission:', err);
     return null;
   }
 }

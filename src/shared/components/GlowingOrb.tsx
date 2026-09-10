@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { logger } from '@/shared/logger';
 
 interface GlowingOrbProps {
   className?: string;
@@ -61,7 +62,8 @@ export const GlowingOrb = ({ className = '', size = 'md' }: GlowingOrbProps) => 
         (probe.getContext('experimental-webgl') as WebGLRenderingContext | null);
       if (!gl) return;
       gl.getExtension?.('WEBGL_lose_context')?.loseContext?.();
-    } catch {
+    } catch (err) {
+      logger.e('[ORB] WebGL probe failed, skipping orb render:', err);
       return;
     }
 
