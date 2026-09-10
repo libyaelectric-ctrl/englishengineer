@@ -14,29 +14,47 @@ import type { RouteRegistrar } from './route-registrar.js';
 import { SpeakingSubmitBodySchema, parsePaginationQuery, validateBody } from './validation.js';
 
 type AiService = ReturnType<typeof createAIService>;
+type SupportedAudioType = 'audio/webm' | 'audio/ogg' | 'audio/wav' | 'audio/mpeg' | 'audio/mp4';
+type SupportedAudioExtension = 'webm' | 'ogg' | 'wav' | 'mp3' | 'm4a';
+type AtomSearchResult = { found: boolean; offset: number };
+
 const UPLOAD_ROOT = path.resolve(process.cwd(), 'uploads', 'speaking');
-const AUDIO_TYPES = {
+const SUPPORTED_AUDIO_TYPES: readonly SupportedAudioType[] = [
+  'audio/webm',
+  'audio/ogg',
+  'audio/wav',
+  'audio/mpeg',
+  'audio/mp4',
+] as const;
+const AUDIO_EXTENSIONS: Readonly<Record<SupportedAudioType, SupportedAudioExtension>> = {
   'audio/webm': 'webm',
   'audio/ogg': 'ogg',
   'audio/wav': 'wav',
   'audio/mpeg': 'mp3',
   'audio/mp4': 'm4a',
-} as const;
-type SupportedAudioType = keyof typeof AUDIO_TYPES;
-const SUPPORTED_AUDIO_TYPES = Object.keys(AUDIO_TYPES) as SupportedAudioType[];
+};
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
 const MAX_DURATION_SECONDS = 300;
 const AUDIO_BUCKET = process.env.SPEAKING_AUDIO_BUCKET || 'speaking-audio';
 const SAFE_STORAGE_SEGMENT = /^[A-Za-z0-9_-]{1,128}$/;
 
-const routeParam = (request: Request, name: string): string => String(request.params[name] ?? '');
+const routeParam = (request: Request, name: string): string => {
+  const value = request.params[name];
+  if (Array.isArray(value) || typeof value !== 'string' || value.length === 0) {
+    throw new ApiError(400, 'invalid_route_parameter', 'Invalid route parameter.');
+  }
+  return value;
+};
+
+const isSupportedAudioType = (value: string): value is SupportedAudioType =>
+  SUPPORTED_AUDIO_TYPES.some((supportedType) => supportedType === value);
 
 const normalizeAudioContentType = (request: Request): SupportedAudioType | null => {
-  const rawContentType = request.get('content-type') ?? '';
-  const contentType = rawContentType.split(';', 1)[0]!.trim().toLowerCase();
-  return SUPPORTED_AUDIO_TYPES.includes(contentType as SupportedAudioType)
-    ? (contentType as SupportedAudioType)
-    : null;
+  const rawHeader = request.get('content-type');
+  if (typeof rawHeader !== 'string') return null;
+  const [mimeType = ''] = rawHeader.split(';', 1);
+  const normalized = mimeType.trim().toLowerCase();
+  return isSupportedAudioType(normalized) ? normalized : null;
 };
 
 const hasExpectedAudioSignature = (buffer: Buffer, contentType: SupportedAudioType): boolean => {
@@ -62,10 +80,7 @@ const hasExpectedAudioSignature = (buffer: Buffer, contentType: SupportedAudioTy
         (buffer[0] === 0xff && (buffer[1]! & 0xe0) === 0xe0))
     );
   }
-  if (contentType === 'audio/mp4') {
-    return buffer.length >= 12 && buffer.subarray(4, 8).toString('ascii') === 'ftyp';
-  }
-  return false;
+  return buffer.length >= 12 && buffer.subarray(4, 8).toString('ascii') === 'ftyp';
 };
 
 const parseWavDuration = (buffer: Buffer): number | null => {
@@ -79,11 +94,13 @@ const parseWavDuration = (buffer: Buffer): number | null => {
   while (offset + 8 <= buffer.length) {
     const chunkId = buffer.subarray(offset, offset + 4).toString('ascii');
     const chunkSize = buffer.readUInt32LE(offset + 4);
+    const nextOffset = offset + 8 + chunkSize;
+    if (!Number.isSafeInteger(nextOffset) || nextOffset > buffer.length + 1) return null;
     if (chunkId === 'data') {
       dataChunkSize = chunkSize;
       break;
     }
-    offset += 8 + chunkSize;
+    offset = nextOffset;
   }
   if (dataChunkSize === 0) dataChunkSize = buffer.length - 44;
   const bytesPerSample = (channels * bitsPerSample) / 8;
@@ -93,22 +110,8 @@ const parseWavDuration = (buffer: Buffer): number | null => {
 
 const parseMp3Duration = (buffer: Buffer): number | null => {
   const BITRATES = [
-    [0, 0],
-    [32, 32],
-    [40, 40],
-    [48, 48],
-    [56, 56],
-    [64, 64],
-    [80, 80],
-    [96, 96],
-    [112, 112],
-    [128, 128],
-    [160, 160],
-    [192, 192],
-    [224, 224],
-    [256, 256],
-    [320, 320],
-    [0, 0],
+    [0, 0], [32, 32], [40, 40], [48, 48], [56, 56], [64, 64], [80, 80], [96, 96],
+    [112, 112], [128, 128], [160, 160], [192, 192], [224, 224], [256, 256], [320, 320], [0, 0],
   ];
   let offset = 0;
   if (buffer.length >= 3 && buffer.subarray(0, 3).toString('ascii') === 'ID3') {
@@ -118,7 +121,9 @@ const parseMp3Duration = (buffer: Buffer): number | null => {
       ((buffer[7]! & 0x7f) << 14) |
       ((buffer[8]! & 0x7f) << 7) |
       (buffer[9]! & 0x7f);
-    offset = 10 + size;
+    const id3End = 10 + size;
+    if (!Number.isSafeInteger(id3End) || id3End > buffer.length) return null;
+    offset = id3End;
   }
   let bitrateSum = 0;
   let frameCount = 0;
@@ -129,18 +134,18 @@ const parseMp3Duration = (buffer: Buffer): number | null => {
       const layerBits = (buffer[offset + 1]! >> 1) & 0x03;
       const bitrateIdx = (buffer[offset + 2]! >> 4) & 0x0f;
       if (layerBits === 0 || bitrateIdx === 0 || bitrateIdx === 15) {
-        offset++;
+        offset += 1;
         continue;
       }
       const mpegVersion = versionBits === 3 ? 0 : 1;
       const bitrate = BITRATES[bitrateIdx]?.[mpegVersion] ?? 0;
       if (bitrate > 0) {
         bitrateSum += bitrate;
-        frameCount++;
+        frameCount += 1;
       }
       offset += 4;
     } else {
-      offset++;
+      offset += 1;
     }
   }
   if (frameCount === 0 || bitrateSum === 0) return null;
@@ -149,24 +154,34 @@ const parseMp3Duration = (buffer: Buffer): number | null => {
   return totalBits / (avgBitrateKbps * 1000);
 };
 
+const readAtomSize = (buffer: Buffer, offset: number, end: number): number | null => {
+  if (offset < 0 || offset + 8 > end || offset + 8 > buffer.length) return null;
+  const size = buffer.readUInt32BE(offset);
+  if (!Number.isSafeInteger(size) || size < 8 || size > end - offset) return null;
+  return size;
+};
+
+const findAtom = (buffer: Buffer, start: number, end: number, target: string): AtomSearchResult => {
+  let pos = Math.max(0, start);
+  const safeEnd = Math.min(buffer.length, Math.max(0, end));
+  while (pos + 8 <= safeEnd) {
+    const size = readAtomSize(buffer, pos, safeEnd);
+    if (size === null) return { found: false, offset: safeEnd };
+    const type = buffer.subarray(pos + 4, pos + 8).toString('ascii');
+    if (type === target) return { found: true, offset: pos };
+    pos += size;
+  }
+  return { found: false, offset: pos };
+};
+
 const parseMp4Duration = (buffer: Buffer): number | null => {
-  type AtomSearchResult = { found: boolean; offset: number };
-  const findAtom = (start: number, end: number, target: string): AtomSearchResult => {
-    let pos = start;
-    while (pos + 8 <= end) {
-      const size = buffer.readUInt32BE(pos);
-      const type = buffer.subarray(pos + 4, pos + 8).toString('ascii');
-      if (size < 8) return { found: false, offset: end };
-      if (type === target) return { found: true, offset: pos };
-      pos += size;
-    }
-    return { found: false, offset: pos };
-  };
-  const moovResult = findAtom(0, buffer.length, 'moov');
+  const moovResult = findAtom(buffer, 0, buffer.length, 'moov');
   if (!moovResult.found) return null;
+  const moovSize = readAtomSize(buffer, moovResult.offset, buffer.length);
+  if (moovSize === null) return null;
   const moovStart = moovResult.offset + 8;
-  const moovEnd = Math.min(buffer.length, moovResult.offset + buffer.readUInt32BE(moovResult.offset));
-  const mvhdResult = findAtom(moovStart, moovEnd, 'mvhd');
+  const moovEnd = moovResult.offset + moovSize;
+  const mvhdResult = findAtom(buffer, moovStart, moovEnd, 'mvhd');
   if (!mvhdResult.found) return null;
   const mvhdOffset = mvhdResult.offset + 8;
   if (mvhdOffset + 20 > buffer.length) return null;
@@ -181,7 +196,7 @@ const parseMp4Duration = (buffer: Buffer): number | null => {
     timescale = buffer.readUInt32BE(mvhdOffset + 20);
     duration = Number(buffer.readBigUInt64BE(mvhdOffset + 24));
   }
-  if (timescale === 0) return null;
+  if (timescale === 0 || !Number.isFinite(duration)) return null;
   return duration / timescale;
 };
 
@@ -193,66 +208,59 @@ const parseWebmDuration = (buffer: Buffer): number | null => {
     let mask = 0x80;
     while (size <= 8 && (first & mask) === 0) {
       mask >>= 1;
-      size++;
+      size += 1;
     }
-    if (size > 8) return null;
+    if (size > 8 || pos + size > buffer.length) return null;
     let value = first & (0xff >> size);
-    for (let i = 1; i < size; i++) {
-      if (pos + i >= buffer.length) return null;
-      value = (value << 8) | buffer[pos + i]!;
-    }
+    for (let i = 1; i < size; i += 1) value = (value << 8) | buffer[pos + i]!;
     return { value, size };
   };
   const readElementId = (pos: number): { id: number; size: number } | null => {
     if (pos >= buffer.length) return null;
     const first = buffer[pos]!;
-    let size = 1;
     if (first === 0) return null;
+    let size = 1;
     let threshold = 0x80;
     while (size <= 8 && (first & threshold) === 0) {
       threshold >>= 1;
-      size++;
+      size += 1;
     }
-    if (size > 8) return null;
+    if (size > 8 || pos + size > buffer.length) return null;
     let id = first;
-    for (let i = 1; i < size; i++) {
-      if (pos + i >= buffer.length) return null;
-      id = (id << 8) | buffer[pos + i]!;
-    }
+    for (let i = 1; i < size; i += 1) id = (id << 8) | buffer[pos + i]!;
     return { id, size };
   };
-  const findEBML = (
-    start: number,
-    end: number,
-    targetId: number
-  ): { found: boolean; dataOffset: number; dataSize: number } => {
-    let pos = start;
-    while (pos + 2 <= end) {
+  const findEBML = (start: number, end: number, targetId: number): { found: boolean; dataOffset: number; dataSize: number } => {
+    let pos = Math.max(0, start);
+    const safeEnd = Math.min(buffer.length, Math.max(0, end));
+    while (pos + 2 <= safeEnd) {
       const el = readElementId(pos);
       if (!el) break;
       const sizeResult = readVint(pos + el.size);
       if (!sizeResult) break;
       const dataOffset = pos + el.size + sizeResult.size;
+      const dataEnd = dataOffset + sizeResult.value;
+      if (!Number.isSafeInteger(dataEnd) || dataEnd > safeEnd) break;
       if (el.id === targetId) return { found: true, dataOffset, dataSize: sizeResult.value };
-      pos = dataOffset + sizeResult.value;
+      pos = dataEnd;
     }
     return { found: false, dataOffset: 0, dataSize: 0 };
   };
   const segment = findEBML(0, buffer.length, 0x18538067);
   if (!segment.found) return null;
-  const segmentDataEnd = segment.dataOffset + segment.dataSize;
+  const segmentDataEnd = Math.min(buffer.length, segment.dataOffset + segment.dataSize);
   let timecodeScale = 1000000;
   const tcResult = findEBML(segment.dataOffset, segmentDataEnd, 0x2ad7b1);
-  if (tcResult.found && tcResult.dataSize <= 8) {
+  if (tcResult.found && tcResult.dataSize <= 8 && tcResult.dataOffset + tcResult.dataSize <= buffer.length) {
     let tc = 0;
-    for (let i = 0; i < tcResult.dataSize; i++) tc = (tc << 8) | buffer[tcResult.dataOffset + i]!;
+    for (let i = 0; i < tcResult.dataSize; i += 1) tc = (tc << 8) | buffer[tcResult.dataOffset + i]!;
     if (tc > 0) timecodeScale = tc;
   }
   const durResult = findEBML(segment.dataOffset, segmentDataEnd, 0x4489);
-  if (!durResult.found) return null;
+  if (!durResult.found || durResult.dataOffset >= buffer.length) return null;
   let dur = 0;
-  const bytesToRead = Math.min(durResult.dataSize, 8);
-  for (let i = 0; i < bytesToRead; i++) dur = (dur << 8) | buffer[durResult.dataOffset + i]!;
+  const bytesToRead = Math.min(durResult.dataSize, 8, buffer.length - durResult.dataOffset);
+  for (let i = 0; i < bytesToRead; i += 1) dur = (dur << 8) | buffer[durResult.dataOffset + i]!;
   return dur / timecodeScale;
 };
 
@@ -273,21 +281,12 @@ const uploadToSupabase = async (
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) return null;
-  const client = createClient(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
+  const client = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
   const storagePath = `${userId}/${fileName}`;
-  const { error } = await client.storage.from(AUDIO_BUCKET).upload(storagePath, buffer, {
-    contentType,
-    upsert: false,
-  });
+  const { error } = await client.storage.from(AUDIO_BUCKET).upload(storagePath, buffer, { contentType, upsert: false });
   if (error) throw new ApiError(502, 'audio_storage_failed', 'Audio could not be stored securely.');
-  const { data, error: signedError } = await client.storage
-    .from(AUDIO_BUCKET)
-    .createSignedUrl(storagePath, 3600);
-  if (signedError || !data?.signedUrl) {
-    throw new ApiError(502, 'audio_url_failed', 'Audio was stored but its access URL failed.');
-  }
+  const { data, error: signedError } = await client.storage.from(AUDIO_BUCKET).createSignedUrl(storagePath, 3600);
+  if (signedError || !data?.signedUrl) throw new ApiError(502, 'audio_url_failed', 'Audio was stored but its access URL failed.');
   return data.signedUrl;
 };
 
@@ -301,78 +300,14 @@ interface SpeakingPrompt {
 }
 
 const SPEAKING_PROMPTS: SpeakingPrompt[] = [
-  {
-    id: 'sp-001',
-    title: 'Describe a Project You Worked On',
-    category: 'professional',
-    level: 'B1',
-    prompt:
-      'Describe a recent engineering project you were involved in. Explain your role, the challenges you faced, and the outcome.',
-    durationHint: '2-3 minutes',
-  },
-  {
-    id: 'sp-002',
-    title: 'Explain a Technical Concept',
-    category: 'technical',
-    level: 'B2',
-    prompt:
-      'Explain the concept of torque to a non-engineer. Use everyday examples to make your explanation clear.',
-    durationHint: '2-3 minutes',
-  },
-  {
-    id: 'sp-003',
-    title: 'Report a Workplace Issue',
-    category: 'professional',
-    level: 'B1',
-    prompt:
-      'You have noticed a safety hazard in your workplace. Describe the issue and explain what steps should be taken to address it.',
-    durationHint: '1-2 minutes',
-  },
-  {
-    id: 'sp-004',
-    title: 'Present a Design Proposal',
-    category: 'technical',
-    level: 'C1',
-    prompt:
-      'Present a brief proposal for redesigning a common household tool to improve its usability. Describe the current problems and your solution.',
-    durationHint: '3-4 minutes',
-  },
-  {
-    id: 'sp-005',
-    title: 'Discuss Sustainable Practices',
-    category: 'professional',
-    level: 'B2',
-    prompt:
-      'Discuss how engineers can incorporate sustainable practices into their daily work. Provide specific examples from your field.',
-    durationHint: '2-3 minutes',
-  },
-  {
-    id: 'sp-006',
-    title: 'Troubleshooting Scenario',
-    category: 'technical',
-    level: 'B1',
-    prompt:
-      'A hydraulic pump in your system is making unusual noises and not maintaining pressure. Walk through your troubleshooting steps.',
-    durationHint: '2-3 minutes',
-  },
-  {
-    id: 'sp-007',
-    title: 'Team Meeting Discussion',
-    category: 'professional',
-    level: 'B2',
-    prompt:
-      'You are leading a project status meeting. Summarize the current progress, highlight two risks, and propose mitigation strategies.',
-    durationHint: '3-4 minutes',
-  },
-  {
-    id: 'sp-008',
-    title: 'Explain a Reading or Lecture',
-    category: 'technical',
-    level: 'C1',
-    prompt:
-      'Summarize the key findings from a recent technical paper or lecture you attended. Explain why these findings are significant for your field.',
-    durationHint: '3-4 minutes',
-  },
+  { id: 'sp-001', title: 'Describe a Project You Worked On', category: 'professional', level: 'B1', prompt: 'Describe a recent engineering project you were involved in. Explain your role, the challenges you faced, and the outcome.', durationHint: '2-3 minutes' },
+  { id: 'sp-002', title: 'Explain a Technical Concept', category: 'technical', level: 'B2', prompt: 'Explain the concept of torque to a non-engineer. Use everyday examples to make your explanation clear.', durationHint: '2-3 minutes' },
+  { id: 'sp-003', title: 'Report a Workplace Issue', category: 'professional', level: 'B1', prompt: 'You have noticed a safety hazard in your workplace. Describe the issue and explain what steps should be taken to address it.', durationHint: '1-2 minutes' },
+  { id: 'sp-004', title: 'Present a Design Proposal', category: 'technical', level: 'C1', prompt: 'Present a brief proposal for redesigning a common household tool to improve its usability. Describe the current problems and your solution.', durationHint: '3-4 minutes' },
+  { id: 'sp-005', title: 'Discuss Sustainable Practices', category: 'professional', level: 'B2', prompt: 'Discuss how engineers can incorporate sustainable practices into their daily work. Provide specific examples from your field.', durationHint: '2-3 minutes' },
+  { id: 'sp-006', title: 'Troubleshooting Scenario', category: 'technical', level: 'B1', prompt: 'A hydraulic pump in your system is making unusual noises and not maintaining pressure. Walk through your troubleshooting steps.', durationHint: '2-3 minutes' },
+  { id: 'sp-007', title: 'Team Meeting Discussion', category: 'professional', level: 'B2', prompt: 'You are leading a project status meeting. Summarize the current progress, highlight two risks, and propose mitigation strategies.', durationHint: '3-4 minutes' },
+  { id: 'sp-008', title: 'Explain a Reading or Lecture', category: 'technical', level: 'C1', prompt: 'Summarize the key findings from a recent technical paper or lecture you attended. Explain why these findings are significant for your field.', durationHint: '3-4 minutes' },
 ];
 
 const userIdFrom = (request: Request): string => {
@@ -388,154 +323,76 @@ export const registerSpeakingRoutes = (
   _aiService: AiService,
   environment: RuntimeEnvironment = process.env.NODE_ENV === 'production' ? 'production' : 'development'
 ): void => {
-  app.post(
-    '/api/speaking/audio-upload',
-    requireBackendAuth,
-    speakingLimiter,
-    express.raw({ type: SUPPORTED_AUDIO_TYPES, limit: '15mb' }),
-    async (request: Request, response: Response, next: NextFunction) => {
-      try {
-        const userId = userIdFrom(request);
-        const contentType = normalizeAudioContentType(request);
-        if (!contentType) {
-          throw new ApiError(415, 'unsupported_media_type', 'Unsupported audio content-type.');
-        }
-        const extension = AUDIO_TYPES[contentType];
-        const buffer = request.body as Buffer;
-        if (!Buffer.isBuffer(buffer) || buffer.length === 0) {
-          throw new ApiError(400, 'empty_audio', 'No audio data received');
-        }
-        if (buffer.length > MAX_AUDIO_BYTES) {
-          throw new ApiError(413, 'audio_too_large', `Audio exceeds ${MAX_AUDIO_BYTES} byte limit`);
-        }
-        if (!hasExpectedAudioSignature(buffer, contentType)) {
-          throw new ApiError(
-            415,
-            'audio_signature_mismatch',
-            'Audio content does not match its declared media type.'
-          );
-        }
-        const durationSeconds = parseAudioDuration(buffer, contentType);
-        if (durationSeconds !== null && durationSeconds > MAX_DURATION_SECONDS) {
-          throw new ApiError(
-            413,
-            'audio_too_long',
-            `Audio duration ${Math.round(durationSeconds)}s exceeds ${MAX_DURATION_SECONDS}s limit.`
-          );
-        }
-        if (!SAFE_STORAGE_SEGMENT.test(userId)) {
-          throw new ApiError(400, 'invalid_authenticated_user', 'Authenticated user cannot be used as a storage key.');
-        }
-        const fileName = `${randomUUID()}.${extension}`;
-        const stored = await uploadToSupabase(userId, fileName, buffer, contentType);
-        if (stored) {
-          response.status(201).json(
-            apiSuccess({
-              audioUrl: stored,
-              sizeBytes: buffer.length,
-              uploadedAt: new Date().toISOString(),
-              storage: 'supabase' as const,
-            })
-          );
-          return;
-        }
-        if (environment === 'production') {
-          throw new ApiError(503, 'audio_storage_unavailable', 'Production audio storage is not configured.');
-        }
-        const directory = path.resolve(UPLOAD_ROOT, userId);
-        if (directory !== UPLOAD_ROOT && !directory.startsWith(UPLOAD_ROOT + path.sep)) {
-          throw new ApiError(400, 'invalid_authenticated_user', 'Invalid user identifier.');
-        }
-        await mkdir(directory, { recursive: true });
-        await writeFile(path.join(directory, fileName), buffer);
-        response.status(201).json(
-          apiSuccess({
-            audioUrl: `/uploads/speaking/${userId}/${fileName}`,
-            sizeBytes: buffer.length,
-            uploadedAt: new Date().toISOString(),
-            storage: 'local-fallback' as const,
-          })
-        );
-      } catch (error) {
-        next(error);
-      }
-    }
-  );
-
-  app.get('/api/speaking/prompts', requireBackendAuth, (request: Request, response: Response, next: NextFunction) => {
+  app.post('/api/speaking/audio-upload', requireBackendAuth, speakingLimiter, express.raw({ type: SUPPORTED_AUDIO_TYPES, limit: '15mb' }), async (request: Request, response: Response, next: NextFunction) => {
     try {
-      userIdFrom(request);
-      const { limit, offset } = parsePaginationQuery(request.query as Record<string, unknown>);
-      response.json(
-        apiSuccess({
-          items: SPEAKING_PROMPTS.slice(offset, offset + limit),
-          total: SPEAKING_PROMPTS.length,
-          limit,
-          offset,
-        })
-      );
+      const userId = userIdFrom(request);
+      const contentType = normalizeAudioContentType(request);
+      if (!contentType) throw new ApiError(415, 'unsupported_media_type', 'Unsupported audio content-type.');
+      const extension = AUDIO_EXTENSIONS[contentType];
+      const buffer = request.body as Buffer;
+      if (!Buffer.isBuffer(buffer) || buffer.length === 0) throw new ApiError(400, 'empty_audio', 'No audio data received');
+      if (buffer.length > MAX_AUDIO_BYTES) throw new ApiError(413, 'audio_too_large', `Audio exceeds ${MAX_AUDIO_BYTES} byte limit`);
+      if (!hasExpectedAudioSignature(buffer, contentType)) throw new ApiError(415, 'audio_signature_mismatch', 'Audio content does not match its declared media type.');
+      const durationSeconds = parseAudioDuration(buffer, contentType);
+      if (durationSeconds !== null && durationSeconds > MAX_DURATION_SECONDS) throw new ApiError(413, 'audio_too_long', `Audio duration ${Math.round(durationSeconds)}s exceeds ${MAX_DURATION_SECONDS}s limit.`);
+      if (!SAFE_STORAGE_SEGMENT.test(userId)) throw new ApiError(400, 'invalid_authenticated_user', 'Authenticated user cannot be used as a storage key.');
+      const fileName = `${randomUUID()}.${extension}`;
+      const stored = await uploadToSupabase(userId, fileName, buffer, contentType);
+      if (stored) {
+        response.status(201).json(apiSuccess({ audioUrl: stored, sizeBytes: buffer.length, uploadedAt: new Date().toISOString(), storage: 'supabase' as const }));
+        return;
+      }
+      if (environment === 'production') throw new ApiError(503, 'audio_storage_unavailable', 'Production audio storage is not configured.');
+      const directory = path.resolve(UPLOAD_ROOT, userId);
+      if (directory !== UPLOAD_ROOT && !directory.startsWith(UPLOAD_ROOT + path.sep)) throw new ApiError(400, 'invalid_authenticated_user', 'Invalid user identifier.');
+      await mkdir(directory, { recursive: true });
+      await writeFile(path.join(directory, fileName), buffer);
+      response.status(201).json(apiSuccess({ audioUrl: `/uploads/speaking/${userId}/${fileName}`, sizeBytes: buffer.length, uploadedAt: new Date().toISOString(), storage: 'local-fallback' as const }));
     } catch (error) {
       next(error);
     }
   });
 
-  app.post(
-    '/api/speaking/submit',
-    requireBackendAuth,
-    speakingLimiter,
-    validateBody(SpeakingSubmitBodySchema),
-    async (request: Request, response: Response, next: NextFunction) => {
-      try {
-        const userId = userIdFrom(request);
-        const { missionId, audioUrl = '', transcript = '' } = request.validatedBody as {
-          missionId?: string;
-          audioUrl?: string;
-          transcript?: string;
-        };
-        const submission = await getLearningRepository().createSpeakingSubmission({
-          userId,
-          promptId: missionId ?? 'unknown',
-          audioUrl,
-          transcript: transcript.trim(),
-          pronunciationScore: null,
-          fluencyScore: null,
-          grammarScore: null,
-          vocabularyScore: null,
-          overallScore: null,
-          feedback: {},
-          status: 'not_graded',
-          reason: 'speech_assessment_pipeline_not_configured',
-        });
-        response.status(202).json(
-          apiSuccess({
-            id: submission.id,
-            status: submission.status,
-            reason: submission.reason,
-            submittedAt: submission.submittedAt,
-          })
-        );
-      } catch (error) {
-        next(error);
-      }
+  app.get('/api/speaking/prompts', requireBackendAuth, (request: Request, response: Response, next: NextFunction) => {
+    try {
+      userIdFrom(request);
+      const { limit, offset } = parsePaginationQuery(request.query as Record<string, unknown>);
+      response.json(apiSuccess({ items: SPEAKING_PROMPTS.slice(offset, offset + limit), total: SPEAKING_PROMPTS.length, limit, offset }));
+    } catch (error) {
+      next(error);
     }
-  );
+  });
+
+  app.post('/api/speaking/submit', requireBackendAuth, speakingLimiter, validateBody(SpeakingSubmitBodySchema), async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const userId = userIdFrom(request);
+      const { missionId, audioUrl = '', transcript = '' } = request.validatedBody as { missionId?: string; audioUrl?: string; transcript?: string };
+      const submission = await getLearningRepository().createSpeakingSubmission({
+        userId,
+        promptId: missionId ?? 'unknown',
+        audioUrl,
+        transcript: transcript.trim(),
+        pronunciationScore: null,
+        fluencyScore: null,
+        grammarScore: null,
+        vocabularyScore: null,
+        overallScore: null,
+        feedback: {},
+        status: 'not_graded',
+        reason: 'speech_assessment_pipeline_not_configured',
+      });
+      response.status(202).json(apiSuccess({ id: submission.id, status: submission.status, reason: submission.reason, submittedAt: submission.submittedAt }));
+    } catch (error) {
+      next(error);
+    }
+  });
 
   app.get('/api/speaking/stats', requireBackendAuth, async (request: Request, response: Response, next: NextFunction) => {
     try {
       const submissions = await getLearningRepository().listSpeakingSubmissions(userIdFrom(request));
-      const graded = submissions.filter(
-        (submission) => submission.status === 'graded' && submission.overallScore !== null
-      );
-      const averageScore = graded.length
-        ? Math.round(graded.reduce((sum, submission) => sum + submission.overallScore!, 0) / graded.length)
-        : null;
-      response.json({
-        totalSubmissions: submissions.length,
-        gradedSubmissions: graded.length,
-        averageScore,
-        byCategory: {},
-        status: graded.length ? 'configured' : 'not_configured',
-      });
+      const graded = submissions.filter((submission) => submission.status === 'graded' && submission.overallScore !== null);
+      const averageScore = graded.length ? Math.round(graded.reduce((sum, submission) => sum + submission.overallScore!, 0) / graded.length) : null;
+      response.json({ totalSubmissions: submissions.length, gradedSubmissions: graded.length, averageScore, byCategory: {}, status: graded.length ? 'configured' : 'not_configured' });
     } catch (error) {
       next(error);
     }
@@ -544,13 +401,7 @@ export const registerSpeakingRoutes = (
   app.get('/api/speaking/:id', requireBackendAuth, async (request: Request, response: Response, next: NextFunction) => {
     try {
       const submissionId = routeParam(request, 'id');
-      response.json(
-        apiSuccess(
-          (await getLearningRepository().getSpeakingSubmission(userIdFrom(request), submissionId)) ?? {
-            notFound: true,
-          }
-        )
-      );
+      response.json(apiSuccess((await getLearningRepository().getSpeakingSubmission(userIdFrom(request), submissionId)) ?? { notFound: true }));
     } catch (error) {
       next(error);
     }
