@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { storage } from '@/shared/storage';
 import {
   GrammarProgressService,
   getGrammarReviewReason,
@@ -8,6 +9,7 @@ import {
 
 describe('Grammar progression', () => {
   beforeEach(() => {
+    storage.activateSession({ userId: 'test-grammar', kind: 'local' });
     localStorage.clear();
     GrammarProgressService.reset();
   });

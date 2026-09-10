@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { storage } from '@/shared/storage';
 import { LearningProfileRepository } from './learning-profile.repository';
 
 const USER = 'discipline-lock-user';
 
 describe('LearningProfileRepository discipline lock', () => {
   beforeEach(() => {
+    storage.activateSession({ userId: USER, kind: 'local' });
     LearningProfileRepository.reset(USER);
   });
 

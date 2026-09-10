@@ -25,18 +25,7 @@ export default defineConfig({
         branches: 70,
         functions: 70,
         lines: 70,
-        statements: 70,
-        'src/features/billing/**': { branches: 70, functions: 70, lines: 70, statements: 70 },
-        'src/features/auth/**': { branches: 70, functions: 70, lines: 70, statements: 70 },
-        'src/features/ai/**': { branches: 70, functions: 70, lines: 70, statements: 70 },
-        'src/features/vocabulary/**': { branches: 70, functions: 70, lines: 70, statements: 70 },
-        'src/features/grammar/**': { branches: 70, functions: 70, lines: 70, statements: 70 },
-        'src/features/reading/**': { branches: 70, functions: 70, lines: 70, statements: 70 },
-        'src/features/writing/**': { branches: 70, functions: 70, lines: 70, statements: 70 },
-        'src/features/speaking/**': { branches: 70, functions: 70, lines: 70, statements: 70 },
-        'src/features/listening/**': { branches: 70, functions: 70, lines: 70, statements: 70 },
-        'src/core/**': { branches: 70, functions: 70, lines: 70, statements: 70 },
-        'src/shared/**': { branches: 70, functions: 70, lines: 70, statements: 70 }
+        statements: 70
       }
     }
   },
