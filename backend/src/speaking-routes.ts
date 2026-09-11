@@ -15,12 +15,37 @@ import { SpeakingSubmitBodySchema, parsePaginationQuery, validateBody } from './
 
 type AiService = ReturnType<typeof createAIService>;
 const UPLOAD_ROOT = path.resolve(process.cwd(), 'uploads', 'speaking');
-const AUDIO_TYPES: Record<string, string> = {
-  'audio/webm': 'webm',
-  'audio/ogg': 'ogg',
-  'audio/wav': 'wav',
-  'audio/mpeg': 'mp3',
-  'audio/mp4': 'm4a',
+const EXPRESS_AUDIO_TYPES: string[] = [
+  'audio/webm',
+  'audio/ogg',
+  'audio/wav',
+  'audio/mpeg',
+  'audio/mp4',
+];
+type SupportedAudioType = 'audio/webm' | 'audio/ogg' | 'audio/wav' | 'audio/mpeg' | 'audio/mp4';
+type SupportedAudioExtension = 'webm' | 'ogg' | 'wav' | 'mp3' | 'm4a';
+
+const normalizeAudioContentType = (rawHeader: unknown): SupportedAudioType | null => {
+  if (typeof rawHeader !== 'string') return null;
+  const mimeType = rawHeader.split(';')[0]?.trim().toLowerCase();
+  switch (mimeType) {
+    case 'audio/webm': return 'audio/webm';
+    case 'audio/ogg': return 'audio/ogg';
+    case 'audio/wav': return 'audio/wav';
+    case 'audio/mpeg': return 'audio/mpeg';
+    case 'audio/mp4': return 'audio/mp4';
+    default: return null;
+  }
+};
+
+const audioExtensionFor = (contentType: SupportedAudioType): SupportedAudioExtension => {
+  switch (contentType) {
+    case 'audio/webm': return 'webm';
+    case 'audio/ogg': return 'ogg';
+    case 'audio/wav': return 'wav';
+    case 'audio/mpeg': return 'mp3';
+    case 'audio/mp4': return 'm4a';
+  }
 };
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
 const MAX_DURATION_SECONDS = 300;
@@ -79,7 +104,6 @@ const parseMp3Duration = (buffer: Buffer): number | null => {
     const size = ((buffer[6]! & 0x7f) << 21) | ((buffer[7]! & 0x7f) << 14) | ((buffer[8]! & 0x7f) << 7) | (buffer[9]! & 0x7f);
     offset = 10 + size;
   }
-  let totalSize = 0;
   let bitrateSum = 0;
   let frameCount = 0;
   while (offset + 4 <= buffer.length) {
@@ -102,7 +126,7 @@ const parseMp3Duration = (buffer: Buffer): number | null => {
   return totalBits / (avgBitrateKbps * 1000);
 };
 const parseMp4Duration = (buffer: Buffer): number | null => {
-  const findAtom = (start: number, end: number, target: string): number | {
+  const findAtom = (start: number, end: number, target: string): {
     found: boolean; offset: number } => {
     let pos = start;
     while (pos + 8 <= end) {

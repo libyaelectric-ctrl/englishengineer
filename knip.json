@@ -3,13 +3,13 @@
   "workspaces": {
     ".": {
       "entry": ["api/translate.js"],
-      "ignoreDependencies": ["@testing-library/jest-dom", "@playwright/cli", "lint-staged"]
+      "ignoreDependencies": ["@playwright/cli", "lint-staged", "three", "@types/three"]
     },
     "backend": {
       "ignoreDependencies": ["swagger-ui-dist"]
     }
   },
-  "ignore": ["src/core/index.ts"],
+  "ignore": ["src/core/index.ts", "src/shared/components/GlowingOrb*"],
   "include": ["files", "dependencies"],
   "ignoreFiles": [
     "scripts/**",
