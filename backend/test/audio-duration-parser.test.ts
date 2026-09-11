@@ -136,7 +136,7 @@ test('WebM duration: parses TimecodeScale and Duration', () => {
   buf[pos++] = 0x42; buf[pos++] = 0x86; buf[pos++] = 0x81; buf[pos++] = 0x01;
   buf[hdrSizePos] = 0x80 | (pos - hdrDataStart);
   // Segment
-  const segStart = pos;
+  const _segStart = pos;
   buf[pos++] = 0x18; buf[pos++] = 0x53; buf[pos++] = 0x80; buf[pos++] = 0x67;
   const sizePos = pos++;
   const dataStart = pos;

@@ -350,21 +350,19 @@ export const registerSpeakingRoutes = (
     '/api/speaking/audio-upload',
     requireBackendAuth,
     speakingLimiter,
-    express.raw({ type: Object.keys(AUDIO_TYPES), limit: '15mb' }),
+    express.raw({ type: EXPRESS_AUDIO_TYPES, limit: '15mb' }),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = userIdFrom(request);
-        const contentType = (request.headers['content-type'] ?? '')
-          .split(';', 1)[0]!
-          .trim()
-          .toLowerCase();
-        const extension = AUDIO_TYPES[contentType];
-        if (!extension)
+        const rawContentType = request.get('content-type');
+        const contentType = normalizeAudioContentType(rawContentType);
+        if (!contentType)
           throw new ApiError(
             415,
             'unsupported_media_type',
-            `Unsupported audio content-type: ${contentType}`
+            'Unsupported audio content-type.'
           );
+        const extension = audioExtensionFor(contentType);
         const buffer = request.body as Buffer;
         if (!Buffer.isBuffer(buffer) || buffer.length === 0)
           throw new ApiError(400, 'empty_audio', 'No audio data received');
@@ -517,10 +515,19 @@ export const registerSpeakingRoutes = (
     requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
+        const rawSubmissionId = request.params.id;
+        if (
+          Array.isArray(rawSubmissionId) ||
+          typeof rawSubmissionId !== 'string' ||
+          rawSubmissionId.length === 0
+        ) {
+          throw new ApiError(400, 'invalid_route_parameter', 'Invalid route parameter.');
+        }
+        const submissionId = rawSubmissionId;
         response.json(apiSuccess(
           (await getLearningRepository().getSpeakingSubmission(
             userIdFrom(request),
-            request.params.id as string
+            submissionId
           )) ?? { notFound: true }
         ));
       } catch (error) {

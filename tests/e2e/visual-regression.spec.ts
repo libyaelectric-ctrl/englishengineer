@@ -33,7 +33,7 @@ test.describe('Visual regression — auth-gated pages (demo mode)', () => {
     await p.goto(`${BASE_URL}/`, { waitUntil: 'networkidle' });
     await p.evaluate(() => {
       // @ts-expect-error — accessing Zustand store internals for test setup
-      const authStore = window.__ZUSTAND_STORES__?.auth;
+      void window.__ZUSTAND_STORES__?.auth;
       // Fallback: click the Demo button on sign-in page
     });
     // Navigate to sign-in and click demo button
@@ -60,7 +60,7 @@ test.describe('Visual regression — auth-gated pages (demo mode)', () => {
                   data.user.interfaceLanguage = data.user.interfaceLanguage || 'en';
                   localStorage.setItem(key, JSON.stringify(data));
                 }
-              } catch {}
+              } catch { /* ignore parse errors */ }
             }
           }
         });

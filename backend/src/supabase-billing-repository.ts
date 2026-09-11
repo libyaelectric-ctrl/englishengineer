@@ -16,7 +16,7 @@ export const createSupabaseBillingRepository = (config: { supabaseUrl: string; s
     let headersObj: Record<string, string> = {};
     if (init?.headers) { const headers = init.headers; if (headers instanceof Headers) headers.forEach((value, key) => { headersObj[key.toLowerCase() === 'authorization' ? 'Authorization' : key] = value; }); else headersObj = { ...(headers as Record<string, string>) }; }
     const response = await fetchImpl(url, { ...init, headers: headersObj });
-    if (!response.ok) { let bodyText = ''; try { bodyText = await response.text(); } catch {} logger.warn('Billing repo error body', { body: bodyText }); const error = new Error(`Supabase billing repository request failed with status ${response.status}`) as Error & { status: number }; error.status = response.status; throw error; }
+    if (!response.ok) { let bodyText = ''; try { bodyText = await response.text(); } catch { /* ignore read error */ } logger.warn('Billing repo error body', { body: bodyText }); const error = new Error(`Supabase billing repository request failed with status ${response.status}`) as Error & { status: number }; error.status = response.status; throw error; }
     return response;
   };
   const supabase = createClient(config.supabaseUrl, config.supabaseServiceRoleKey, { auth: { persistSession: false }, global: { fetch: wrappedFetch as typeof fetch } });
