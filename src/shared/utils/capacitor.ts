@@ -5,6 +5,8 @@
  */
 import { Capacitor } from '@capacitor/core';
 
+import { logger } from '@/shared/logger';
+
 /** True when running inside a Capacitor native shell (Android or iOS). */
 export const isNativePlatform = (): boolean => Capacitor.isNativePlatform();
 
@@ -25,6 +27,7 @@ export async function openExternalUrl(url: string): Promise<void> {
       await Browser.open({ url, toolbarColor: '#1a1a2e' });
     } catch {
       // Fallback if plugin fails
+      logger.e('Capacitor Browser.open failed, falling back to window.open');
       window.open(url, '_blank', 'noopener,noreferrer');
     }
   } else {
@@ -43,6 +46,7 @@ export async function copyToClipboard(text: string): Promise<boolean> {
       await Clipboard.write({ string: text });
       return true;
     } catch {
+      logger.e('Capacitor Clipboard.write failed');
       return false;
     }
   }
@@ -50,6 +54,7 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     await navigator.clipboard.writeText(text);
     return true;
   } catch {
+    logger.e('navigator.clipboard.writeText failed');
     return false;
   }
 }
@@ -63,6 +68,7 @@ export async function reloadApp(): Promise<void> {
     try {
       window.location.href = '/';
     } catch {
+      logger.e('window.location.href assignment failed, falling back to reload');
       window.location.reload();
     }
   } else {
@@ -123,6 +129,7 @@ export async function openMailto(to: string, subject: string, body: string): Pro
       const { Browser } = await import('@capacitor/browser');
       await Browser.open({ url: mailtoUrl });
     } catch {
+      logger.e('Capacitor Browser.open for mailto failed, falling back to window.open');
       window.open(mailtoUrl);
     }
   } else {
@@ -170,6 +177,7 @@ export async function downloadFile(
         directory: Directory.Cache,
       });
     } catch {
+      logger.e('Capacitor download failed, falling back to <a download>');
       // Last resort: try standard <a download>
       const blob = typeof content === 'string' ? new Blob([content], { type: mimeType }) : content;
       const url = URL.createObjectURL(blob);

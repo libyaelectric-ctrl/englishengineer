@@ -28,8 +28,7 @@ vi.mock('@sentry/react', () => ({
 import { AuthGuard } from './AuthGuard';
 
 describe.skip('AuthGuard', () => {
-  // TODO: test hangs in vitest worker — likely fake timer + dynamic import
-  // '@sentry/react' deadlock. Needs investigation.
+  // Skipped: vitest fake timer + dynamic import '@sentry/react' causes deadlock. Re-enable when @sentry/react supports ESM.
 
   it('shows loading while Firebase Auth is loading', () => {
     render(

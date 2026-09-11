@@ -4,7 +4,7 @@ import { logger } from '@/shared/logger';
 import { isNativePlatform } from '@/shared/utils/capacitor';
 
 export const startSpeechRecognition = (
-  w: Record<string, unknown>,
+  _w: Window,
   setCurrentAnswer: Dispatch<SetStateAction<string>>,
   recognitionRef: MutableRefObject<unknown>,
   setIsRecording: (v: boolean) => void
@@ -16,8 +16,8 @@ export const startSpeechRecognition = (
     return;
   }
 
-  const SpeechRecognitionConstructor = (w.SpeechRecognition ||
-    w.webkitSpeechRecognition) as new () => {
+  const SpeechRecognitionConstructor = (window.SpeechRecognition ||
+    window.webkitSpeechRecognition) as new () => {
     continuous: boolean;
     interimResults: boolean;
     lang: string;
@@ -40,12 +40,9 @@ export const startSpeechRecognition = (
   recognition.lang = 'en-US';
 
   recognition.onresult = (event: unknown) => {
-    const e = event as { results: SpeechRecognitionResultList };
+    const e = event as SpeechRecognitionEvent;
     const finalTranscript = Array.from({ length: e.results.length }, (_, i) => {
-      const result = e.results[i] as unknown as {
-        isFinal: boolean;
-        item: (index: number) => { transcript: string };
-      };
+      const result = e.results[i];
       return result.isFinal ? result.item(0).transcript : '';
     }).join('');
     if (finalTranscript) {

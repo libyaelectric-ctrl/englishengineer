@@ -52,11 +52,7 @@ export function useSpeechRecognition(): SpeechRecognitionResult {
   const confidenceCountRef = useRef(0);
 
   const getRecognition = useCallback((): SpeechRecognitionLike | null => {
-    const w = window as unknown as {
-      SpeechRecognition?: new () => SpeechRecognitionLike;
-      webkitSpeechRecognition?: new () => SpeechRecognitionLike;
-    };
-    const Ctor = w.SpeechRecognition ?? w.webkitSpeechRecognition;
+    const Ctor = window.SpeechRecognition ?? window.webkitSpeechRecognition;
     if (!Ctor) return null;
     return new Ctor();
   }, []);

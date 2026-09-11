@@ -29,10 +29,7 @@ if (isCapacitor) {
 
 // Polyfill: Safari < 16 does not support requestIdleCallback
 if (typeof window !== 'undefined' && !('requestIdleCallback' in window)) {
-  (window as unknown as Record<string, unknown>).requestIdleCallback = (
-    cb: (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void,
-    options?: { timeout?: number }
-  ): number => {
+  window.requestIdleCallback = (cb, options): number => {
     const start = Date.now();
     return window.setTimeout(() => {
       cb({
@@ -43,7 +40,7 @@ if (typeof window !== 'undefined' && !('requestIdleCallback' in window)) {
       });
     }, options?.timeout ?? 1);
   };
-  (window as unknown as Record<string, unknown>).cancelIdleCallback = (id: number): void => {
+  window.cancelIdleCallback = (id: number): void => {
     clearTimeout(id);
   };
 }

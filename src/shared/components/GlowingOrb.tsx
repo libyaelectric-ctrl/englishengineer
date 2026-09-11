@@ -75,8 +75,8 @@ export const GlowingOrb = ({ className = '', size = 'md' }: GlowingOrbProps) => 
         if (cancelled) return;
         dispose = mountGlowingOrbScene(container) ?? null;
       })
-      .catch(() => {
-        // Scene failed to load; the container keeps its CSS fallback styling.
+      .catch((err) => {
+        logger.e('[ORB] GlowingOrbScene failed to load:', err);
       });
 
     return () => {

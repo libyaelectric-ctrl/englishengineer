@@ -6,7 +6,7 @@ import { CEFR_LEVELS } from '@/shared/types/domain.types';
 import { GrammarEngine } from './grammar.engine';
 import { GrammarRepository } from './grammar.repository';
 
-describe.skip('grammar database integration', () => {  // TODO: seed JSON files (a1–c2.seed.json) not generated yet — 360 rules expected
+describe.skip('grammar database integration', () => {  // Pending: seed JSON files (a1-c2.seed.json) need generation. 360 grammar rules expected.
   it('loads 360 unique grammar rules across every CEFR level', async () => {
     const levels = await Promise.all(
       CEFR_LEVELS.map((level) => GrammarRepository.getGrammarRulesByLevel(level))

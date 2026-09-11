@@ -61,8 +61,7 @@ export const InterviewSimulator = () => {
   }, [state, currentQuestion, stopTimer]);
 
   const toggleRecording = useCallback(() => {
-    const w = window as unknown as Record<string, unknown>;
-    if (!('webkitSpeechRecognition' in w) && !('SpeechRecognition' in w)) {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
       alert('Speech recognition is not supported in this browser.');
       return;
     }
@@ -74,7 +73,7 @@ export const InterviewSimulator = () => {
       return;
     }
 
-    startSpeechRecognition(w, setCurrentAnswer, recognitionRef, setIsRecording);
+    startSpeechRecognition(window, setCurrentAnswer, recognitionRef, setIsRecording);
   }, [isRecording]);
 
   const submitAnswer = useCallback(async () => {
