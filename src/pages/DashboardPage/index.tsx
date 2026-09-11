@@ -268,7 +268,7 @@ const PersonalReasonBanner: React.FC<{ personalReason?: string }> = ({ personalR
   );
 };
 
-export const DashboardPage: React.FC = () => {
+export const DashboardPage = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const translate = useLocalizationStore((state) => state.translate);
   const currentLanguage = useLocalizationStore((state) => state.language);

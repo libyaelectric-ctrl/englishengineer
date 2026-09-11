@@ -11,8 +11,8 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     pool: 'threads',
     maxWorkers: 1,
-    testTimeout: 60_000,
-    hookTimeout: 120_000,
+    testTimeout: 15_000,
+    hookTimeout: 30_000,
     teardownTimeout: 30_000,
     isolate: true,
     exclude: [
@@ -39,6 +39,7 @@ export default defineConfig({
         'src/features/localization/localization.data.ts',
       ],
       thresholds: {
+        perFile: true,
         branches: 28,
         functions: 35,
         lines: 40,
