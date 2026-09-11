@@ -278,9 +278,9 @@ const postJson = async (
     body: body ? JSON.stringify(body) : undefined,
   });
   if (!response.ok) {
-    let detail = '';
+    let _detail = '';
     try {
-      detail = await response.text();
+      _detail = await response.text();
     } catch {
       /* ignore read errors */
     }

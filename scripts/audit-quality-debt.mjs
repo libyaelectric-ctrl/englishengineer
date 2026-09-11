@@ -20,8 +20,9 @@ async function walk(directory) {
   const files = [];
   for (const entry of entries) {
     const relative = path.join(directory, entry.name);
+    const normalizedRelative = relative.split(path.sep).join('/');
     if (entry.isDirectory()) files.push(...(await walk(relative)));
-    else if (extensions.has(path.extname(entry.name)) && !excludedFiles.has(relative))
+    else if (extensions.has(path.extname(entry.name)) && !excludedFiles.has(normalizedRelative))
       files.push(relative);
   }
   return files;

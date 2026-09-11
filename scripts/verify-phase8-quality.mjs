@@ -62,6 +62,6 @@ for (const file of workflowFiles) {
   }
 }
 assert.ok(pinnedActionCount > 0);
-const activeFiles = ['README.md', '.env.example', 'playwright.config.ts', ...(await walk('tests')), ...(await walk('docs')).filter((file) => !file.startsWith('docs/archive/'))];
+const activeFiles = ['README.md', '.env.example', 'playwright.config.ts', ...(await walk('tests')), ...(await walk('docs')).filter((file) => !file.replace(/\\/g, '/').startsWith('docs/archive/'))];
 for (const file of activeFiles) assert.doesNotMatch(await read(file), /clerk/i, `Active Clerk reference remains in ${file}`);
 console.log(`PHASE8_QUALITY_CONTRACT_OK files=${activeFiles.length}`);

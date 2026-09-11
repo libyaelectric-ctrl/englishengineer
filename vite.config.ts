@@ -77,6 +77,7 @@ export default defineConfig(() => ({
     modulePreload: { polyfill: true },
     rollupOptions: {
       output: {
+        // eslint-disable-next-line complexity -- manual chunk splitting rules
         manualChunks(id) {
           if (!id.includes('node_modules')) {
             if (id.includes('/data/') && id.includes('by-level/'))

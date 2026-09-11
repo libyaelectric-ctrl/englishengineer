@@ -10,6 +10,7 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     pool: 'threads',
+    maxWorkers: 1,
     testTimeout: 15_000,
     hookTimeout: 30_000,
     teardownTimeout: 30_000,
