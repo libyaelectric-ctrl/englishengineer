@@ -1,4 +1,6 @@
 // Mock global fetch for local JSON seed files in Node/Vitest
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { afterEach, vi } from 'vitest';
 
 import React from 'react';
@@ -89,18 +91,6 @@ vi.mock('@/features/localization', () => ({
     { id: 'tr', flag: '🇹🇷', label: 'Turkish', nativeLabel: 'Türkçe', available: true, dir: 'ltr' },
   ],
 }));
-
-type NodeFileSystem = {
-  readFileSync: (filePath: string, encoding: 'utf-8') => string;
-};
-type NodePath = { resolve: (...segments: string[]) => string };
-type NodeProcess = {
-  getBuiltinModule?: (name: string) => unknown;
-};
-
-const nodeProcess = (globalThis as typeof globalThis & { process?: NodeProcess }).process;
-const fs = nodeProcess?.getBuiltinModule?.('fs') as NodeFileSystem | undefined;
-const path = nodeProcess?.getBuiltinModule?.('path') as NodePath | undefined;
 
 let cleanupDom: (() => void) | undefined;
 if (typeof document !== 'undefined') {

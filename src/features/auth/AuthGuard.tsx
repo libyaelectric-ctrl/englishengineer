@@ -41,7 +41,7 @@ const WorkspaceLoading = () => (
 );
 
 interface SessionContext {
-  sessionKind?: string;
+  sessionKind?: string | null;
   isAuthenticated: boolean;
   currentUser: { id?: string } | null;
   isLoaded: boolean;
