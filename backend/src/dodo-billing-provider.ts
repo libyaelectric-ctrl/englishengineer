@@ -287,7 +287,7 @@ const postJson = async (
     throw new ApiError(
       502,
       'dodo_api_error',
-      `Dodo Payments request failed (${response.status}).${detail ? ` ${detail.slice(0, 300)}` : ''}`
+      `Dodo Payments request failed (${response.status}).`
     );
   }
   const parsed = (await response.json()) as unknown;
