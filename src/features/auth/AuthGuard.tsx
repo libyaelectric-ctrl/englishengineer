@@ -40,26 +40,45 @@ const WorkspaceLoading = () => (
   <LoadingState title="Opening EngVox" description="Restoring your professional learning workspace." />
 );
 
+interface SessionContext {
+  sessionKind?: string;
+  isAuthenticated: boolean;
+  currentUser: { id?: string } | null;
+  isLoaded: boolean;
+  isSignedIn: boolean;
+  firebaseUserId?: string;
+}
+
+const resolveSessionState = (ctx: SessionContext) => {
+  const isLocalKind = ctx.sessionKind === 'local' || ctx.sessionKind === 'demo' || !ctx.sessionKind;
+  const hasLocalSession = isLocalKind && ctx.isAuthenticated && Boolean(ctx.currentUser);
+  const isFirebaseMatch = ctx.sessionKind === 'firebase' && ctx.currentUser?.id === ctx.firebaseUserId;
+  const firebaseReady = ctx.isLoaded && ctx.isSignedIn && (!ctx.firebaseUserId || isFirebaseMatch);
+  const waitingForAuth = (!ctx.isLoaded || (ctx.isSignedIn && !firebaseReady)) && !hasLocalSession;
+
+  return {
+    hasSession: hasLocalSession || firebaseReady,
+    waitingForAuth,
+  };
+};
+
 export const AuthGuard = ({ children }: { children: ReactNode }) => {
-  const authState = useAuthStore();
-  const { isAuthenticated, isLoading, currentUser, sessionKind } = authState;
+  const { isAuthenticated, isLoading, currentUser, sessionKind } = useAuthStore();
   const location = useLocation();
   const { isLoaded, isSignedIn, user } = useFirebaseAuth();
 
-  const explicitLocal =
-    sessionKind === 'local' ||
-    sessionKind === 'demo' ||
-    !Object.prototype.hasOwnProperty.call(authState, 'sessionKind');
-  const hasLocalSession = explicitLocal && isAuthenticated && Boolean(currentUser);
-  const firebaseReady =
-    isLoaded &&
-    isSignedIn &&
-    (!user?.uid || (sessionKind === 'firebase' && currentUser?.id === user.uid));
-  const hasSession = hasLocalSession || firebaseReady;
+  const session = resolveSessionState({
+    sessionKind,
+    isAuthenticated,
+    currentUser,
+    isLoaded,
+    isSignedIn,
+    firebaseUserId: user?.uid,
+  });
 
   const timedOut = useAuthTimeout(isLoaded, location.pathname);
 
-  if ((!isLoaded || (isSignedIn && !firebaseReady)) && !hasLocalSession) {
+  if (session.waitingForAuth) {
     if (timedOut) {
       return (
         <LoadingState
@@ -72,7 +91,7 @@ export const AuthGuard = ({ children }: { children: ReactNode }) => {
     return <WorkspaceLoading />;
   }
 
-  if (!hasSession) {
+  if (!session.hasSession) {
     if (isLoading) return <WorkspaceLoading />;
     return <Navigate to={AUTH_SIGN_IN_URL} state={{ from: location }} replace />;
   }
