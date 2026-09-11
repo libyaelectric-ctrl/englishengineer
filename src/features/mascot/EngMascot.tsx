@@ -48,7 +48,7 @@ export const EngMascot: React.FC<{ inline?: boolean; size?: number }> = ({
   useMascotEffects(inline, copy);
 
   // Pick a stable random idle message per mount / language change
-  const idleMessage = useMemo(() => pickRandom(copy.idle), [language]);
+  const idleMessage = useMemo(() => pickRandom(copy.idle), [copy.idle]);
 
   if (!visible) return null;
   const msg = getDisplayMessage(message, state, copy, idleMessage);
@@ -61,9 +61,7 @@ export const EngMascot: React.FC<{ inline?: boolean; size?: number }> = ({
     <div
       className={`${inline ? 'relative inline-flex flex-col items-center' : 'select-none'} ${contrastMode ? 'engmascot-high-contrast' : ''}`}
       style={
-        inline
-          ? {}
-          : { position: 'fixed', right: position.right, bottom: mobileBottom, zIndex: 60 }
+        inline ? {} : { position: 'fixed', right: position.right, bottom: mobileBottom, zIndex: 60 }
       }
     >
       <div className="sr-only" role="status" aria-live="polite">

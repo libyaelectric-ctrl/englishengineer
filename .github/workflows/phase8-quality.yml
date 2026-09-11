@@ -53,4 +53,5 @@ jobs:
           path: |
             coverage/
             vitest-memory.txt
+          if-no-files-found: warn
           retention-days: 7

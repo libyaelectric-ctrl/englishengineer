@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readdir, readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = process.cwd();
@@ -50,7 +50,10 @@ const authSetup = await read('tests/helpers/auth-setup.ts');
 assert.match(authSetup, /indexedDB:\s*true/);
 assert.match(authSetup, /hasFirebaseTestConfig/);
 const environment = await read('.env.example');
-const keys = environment.split(/\r?\n/).filter((line) => /^[A-Z0-9_]+=/.test(line)).map((line) => line.split('=', 1)[0]);
+const keys = environment
+  .split(/\r?\n/)
+  .filter((line) => /^[A-Z0-9_]+=/.test(line))
+  .map((line) => line.split('=', 1)[0]);
 assert.equal(new Set(keys).size, keys.length);
 const workflowFiles = await walk('.github/workflows');
 let pinnedActionCount = 0;
@@ -62,6 +65,13 @@ for (const file of workflowFiles) {
   }
 }
 assert.ok(pinnedActionCount > 0);
-const activeFiles = ['README.md', '.env.example', 'playwright.config.ts', ...(await walk('tests')), ...(await walk('docs')).filter((file) => !file.startsWith('docs/archive/'))];
-for (const file of activeFiles) assert.doesNotMatch(await read(file), /clerk/i, `Active Clerk reference remains in ${file}`);
+const activeFiles = [
+  'README.md',
+  '.env.example',
+  'playwright.config.ts',
+  ...(await walk('tests')),
+  ...(await walk('docs')).filter((file) => !file.replace(/\\/g, '/').startsWith('docs/archive/')),
+];
+for (const file of activeFiles)
+  assert.doesNotMatch(await read(file), /clerk/i, `Active Clerk reference remains in ${file}`);
 console.log(`PHASE8_QUALITY_CONTRACT_OK files=${activeFiles.length}`);

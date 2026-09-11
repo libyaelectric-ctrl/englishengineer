@@ -1,7 +1,10 @@
 /* eslint-disable complexity */
-import { useEffect, useState, type ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
+
 import { Navigate, useLocation } from 'react-router-dom';
+
 import { LoadingState } from '@/shared/components/LoadingState';
+
 import { useFirebaseAuth } from './FirebaseAuth';
 import { useAuthStore } from './auth.store';
 import { AUTH_SIGN_IN_URL } from './firebase.config';
@@ -17,9 +20,11 @@ export const AuthGuard = ({ children }: { children: ReactNode }) => {
     sessionKind === 'local' ||
     sessionKind === 'demo' ||
     !Object.prototype.hasOwnProperty.call(authState, 'sessionKind');
-  const hasLocalSession = explicitLocal && isAuthenticated && Boolean(currentUser);
+  const hasLocalSession = explicitLocal && (isAuthenticated || Boolean(currentUser));
   const firebaseReady =
-    isLoaded && isSignedIn && (!user?.uid || (sessionKind === 'firebase' && currentUser?.id === user.uid));
+    isLoaded &&
+    isSignedIn &&
+    (!user?.uid || (sessionKind === 'firebase' && currentUser?.id === user.uid));
   const hasSession = hasLocalSession || firebaseReady;
   const [timedOut, setTimedOut] = useState(false);
 
@@ -54,12 +59,25 @@ export const AuthGuard = ({ children }: { children: ReactNode }) => {
         />
       );
     }
-    return <LoadingState title="Opening EngVox" description="Restoring your professional learning workspace." />;
+    return (
+      <LoadingState
+        title="Opening EngVox"
+        description="Restoring your professional learning workspace."
+      />
+    );
   }
 
   if (!hasSession) {
     if (isLoading) {
-      return <LoadingState title="Opening EngVox" description="Restoring your professional learning workspace." />;
+      return (
+        <LoadingState
+          title="Opening EngVox"
+          description="Restoring your professional learning workspace."
+        />
+      );
+    }
+    if (location.pathname === AUTH_SIGN_IN_URL) {
+      return null;
     }
     return <Navigate to={AUTH_SIGN_IN_URL} state={{ from: location }} replace />;
   }

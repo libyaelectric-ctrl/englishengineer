@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
-import { readdir, readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = process.cwd();
@@ -20,8 +20,9 @@ async function walk(directory) {
   const files = [];
   for (const entry of entries) {
     const relative = path.join(directory, entry.name);
+    const normalized = relative.replace(/\\/g, '/');
     if (entry.isDirectory()) files.push(...(await walk(relative)));
-    else if (extensions.has(path.extname(entry.name)) && !excludedFiles.has(relative))
+    else if (extensions.has(path.extname(entry.name)) && !excludedFiles.has(normalized))
       files.push(relative);
   }
   return files;

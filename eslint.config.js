@@ -30,6 +30,8 @@ export default tseslint.config(
       'backend/src/errors.ts',
       '.record.cjs',
       '*.debug.cjs',
+      '.freebuff',
+      '.freebuff/**',
     ],
   },
   {

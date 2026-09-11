@@ -27,6 +27,26 @@ export class SpeakingAudioUploadError extends Error {
   }
 }
 
+const safeParseJson = async (response: Response): Promise<unknown> => {
+  try {
+    return await response.json();
+  } catch (e) {
+    logger.w('[SPEAKING] Failed to parse upload response', e);
+    return null;
+  }
+};
+
+const buildUploadError = (response: Response, body: unknown): SpeakingAudioUploadError => {
+  const errorObj =
+    body && typeof body === 'object' && 'error' in body
+      ? (body as { error?: { code?: string; message?: string } }).error
+      : undefined;
+  const code = errorObj && typeof errorObj.code === 'string' ? errorObj.code : 'upload_failed';
+  const message =
+    errorObj && typeof errorObj.message === 'string' ? errorObj.message : 'Audio upload failed.';
+  return new SpeakingAudioUploadError(response.status, code, message);
+};
+
 export async function uploadSpeakingAudio(
   blob: Blob,
   options: SpeakingAudioUploadOptions = {}
@@ -48,29 +68,17 @@ export async function uploadSpeakingAudio(
     body: blob,
   });
 
-  let body: unknown;
-  try {
-    body = await response.json();
-  } catch (e) {
-    logger.w('[SPEAKING] Failed to parse upload response', e);
-    body = null;
-  }
+  const body = await safeParseJson(response);
 
   if (!response.ok) {
-    const errorBody = body as { error?: { code?: string; message?: string } };
-    throw new SpeakingAudioUploadError(
-      response.status,
-      errorBody?.error?.code ?? 'upload_failed',
-      errorBody?.error?.message ?? 'Audio upload failed.'
-    );
+    throw buildUploadError(response, body);
   }
 
   try {
     return unwrapApiSuccess<SpeakingAudioUploadResult>(body);
   } catch (error) {
-    logger.w('[SPEAKING] Unsupported upload response contract', {
-      error: error instanceof Error ? error.message : String(error),
-    });
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    logger.w('[SPEAKING] Unsupported upload response contract', { error: errorMsg });
     throw new SpeakingAudioUploadError(
       502,
       'invalid_response_contract',

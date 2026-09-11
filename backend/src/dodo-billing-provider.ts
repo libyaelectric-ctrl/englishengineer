@@ -12,6 +12,7 @@ import {
 } from './billing-provider.js';
 import type { BillingRepository } from './billing-webhook-handlers.js';
 import { ApiError } from './errors.js';
+
 const WEBHOOK_PATH = '/api/webhooks/dodo';
 
 /** Standard Webhooks headers Dodo sends on every webhook delivery. */
@@ -278,17 +279,13 @@ const postJson = async (
     body: body ? JSON.stringify(body) : undefined,
   });
   if (!response.ok) {
-    let detail = '';
+    let _detail = '';
     try {
-      detail = await response.text();
+      _detail = await response.text();
     } catch {
       /* ignore read errors */
     }
-    throw new ApiError(
-      502,
-      'dodo_api_error',
-      `Dodo Payments request failed (${response.status}).`
-    );
+    throw new ApiError(502, 'dodo_api_error', `Dodo Payments request failed (${response.status}).`);
   }
   const parsed = (await response.json()) as unknown;
   return isRecord(parsed) ? parsed : {};

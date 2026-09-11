@@ -1,16 +1,20 @@
-// Mock global fetch for local JSON seed files in Node/Vitest
-import { afterEach, vi } from 'vitest';
+import * as nodeFs from 'node:fs';
+import * as nodePath from 'node:path';
+import { afterEach, beforeEach, vi } from 'vitest';
 
 import React from 'react';
 
 import { logger } from '@/shared/logger';
+import { storage } from '@/shared/storage';
 
 // Seed files moved to Supabase Storage; the test shim falls back to the
 // Storage origin when the local public/data copy is missing (CI checkouts
 // contain no public/data files).
+const rawCdnUrl = process.env.VITE_DATA_CDN_URL;
 const DATA_CDN_BASE = (
-  process.env.VITE_DATA_CDN_URL ??
-  'https://wxabrwzitwsjtpmlvvqe.supabase.co/storage/v1/object/public/app-data'
+  rawCdnUrl && /^https?:\/\//.test(rawCdnUrl)
+    ? rawCdnUrl
+    : 'https://wxabrwzitwsjtpmlvvqe.supabase.co/storage/v1/object/public/app-data'
 ).replace(/\/+$/, '');
 
 // Mock canvas for THREE/WebGL tests (minimal mock, no canvas pkg dependency)
@@ -99,8 +103,8 @@ type NodeProcess = {
 };
 
 const nodeProcess = (globalThis as typeof globalThis & { process?: NodeProcess }).process;
-const fs = nodeProcess?.getBuiltinModule?.('fs') as NodeFileSystem | undefined;
-const path = nodeProcess?.getBuiltinModule?.('path') as NodePath | undefined;
+const fs = (nodeFs ?? nodeProcess?.getBuiltinModule?.('fs')) as NodeFileSystem | undefined;
+const path = (nodePath ?? nodeProcess?.getBuiltinModule?.('path')) as NodePath | undefined;
 
 let cleanupDom: (() => void) | undefined;
 if (typeof document !== 'undefined') {
@@ -140,6 +144,10 @@ if (typeof window !== 'undefined' && typeof window.matchMedia !== 'function') {
 // when window.indexedDB is undefined, so getCachedSeed / setCachedSeed become
 // no-ops. Vocabulary data loads directly from JSON seed files via mock fetch.
 // This avoids complex async mock chains that cause test timeouts.
+
+beforeEach(() => {
+  storage.activateSession({ userId: 'test-user', kind: 'local' });
+});
 
 afterEach(() => {
   cleanupDom?.();

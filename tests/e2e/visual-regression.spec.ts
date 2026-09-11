@@ -1,11 +1,10 @@
-/* eslint-disable complexity */
 /**
  * Visual regression tests — screenshot baseline for all main pages.
  *
  * Run: npx playwright test src/e2e/visual-regression.e2e.test.ts
  * Update baselines: npx playwright test --update-snapshots src/e2e/visual-regression.e2e.test.ts
  */
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 const BASE_URL = process.env.BASE_URL ?? 'http://localhost:3000';
 
@@ -50,7 +49,9 @@ test.describe('Visual regression — auth-gated pages (demo mode)', () => {
                 data.user.interfaceLanguage = data.user.interfaceLanguage || 'en';
                 localStorage.setItem(key, JSON.stringify(data));
               }
-            } catch {}
+            } catch {
+              /* ignore parse errors */
+            }
           }
         }
       });
