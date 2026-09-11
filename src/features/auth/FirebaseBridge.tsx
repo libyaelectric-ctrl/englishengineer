@@ -1,6 +1,7 @@
 import { updateProfile } from 'firebase/auth';
 import { useEffect, useRef } from 'react';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { logger } from '@/shared/logger';
 import { setAuthTokenGetter } from '@/shared/services/auth-backend/backend-auth.service';
 import { storage } from '@/shared/storage';
 import type { UserProfile } from '@/shared/types/auth.types';
@@ -11,7 +12,7 @@ import { consumePendingOnboard } from '@/pages/OnboardPage';
 import { useFirebaseAuth } from './FirebaseAuth';
 import { useAuthStore } from './auth.store';
 const initials = (name: string, email: string): string => name.split(/\s+/).filter(Boolean).map((part) => part[0]).join('').slice(0, 2).toUpperCase() || (email[0] || 'U').toUpperCase();
-const buildProfile = async (user: NonNullable<ReturnType<typeof useFirebaseAuth>['user']>): Promise<UserProfile> => { const email = user.email || ''; let role: string | null = null; let isSuperUser = false; try { const token = await user.getIdTokenResult(); role = typeof token.claims.role === 'string' ? token.claims.role : null; isSuperUser = token.claims.isSuperUser === true || role === 'Super Administrator'; } catch { /* Offline claims use least privilege. */ } return { id: user.uid, displayName: user.displayName || email.split('@')[0] || 'Engineer', email, role: role || 'engineer', isSuperUser, engineeringDiscipline: '', targetLevel: '', location: '', avatarInitials: initials(user.displayName || '', email), createdAt: new Date(user.metadata.creationTime || Date.now()).toISOString(), updatedAt: new Date(user.metadata.lastSignInTime || Date.now()).toISOString() }; };
+const buildProfile = async (user: NonNullable<ReturnType<typeof useFirebaseAuth>['user']>): Promise<UserProfile> => { const email = user.email || ''; let role: string | null = null; let isSuperUser = false; try { const token = await user.getIdTokenResult(); role = typeof token.claims.role === 'string' ? token.claims.role : null; isSuperUser = token.claims.isSuperUser === true || role === 'Super Administrator'; } catch (err) { logger.e('FirebaseBridge offline claim error:', err); } return { id: user.uid, displayName: user.displayName || email.split('@')[0] || 'Engineer', email, role: role || 'engineer', isSuperUser, engineeringDiscipline: '', targetLevel: '', location: '', avatarInitials: initials(user.displayName || '', email), createdAt: new Date(user.metadata.creationTime || Date.now()).toISOString(), updatedAt: new Date(user.metadata.lastSignInTime || Date.now()).toISOString() }; };
 export const FirebaseBridge = () => {
   const { isLoaded, isSignedIn, user, getIdToken, signOut } = useFirebaseAuth();
   const bridgedUserId = useRef<string | null>(null);

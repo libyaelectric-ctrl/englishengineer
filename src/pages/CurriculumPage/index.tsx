@@ -13,6 +13,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
 
+import { logger } from '@/shared/logger';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
 import { GrammarProgressService } from '@/features/grammar';
@@ -96,7 +97,7 @@ const CurriculumPage = () => {
       .then((queue) => {
         if (active) setUnifiedReviewQueue(queue);
       })
-      .catch(() => {});
+      .catch((err) => { logger.e('CurriculumPage build review queue:', err); });
     return () => {
       active = false;
     };

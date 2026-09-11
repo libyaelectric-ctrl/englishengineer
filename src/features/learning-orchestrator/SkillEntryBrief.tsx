@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
 
+import { logger } from '@/shared/logger';
 import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
 import { LearningProfileEngine } from '@/shared/services/profile-engine.service';
 import type { SkillName } from '@/shared/types/domain.types';
@@ -62,7 +63,7 @@ export const SkillEntryBrief = ({
       .then((next) => {
         if (active) setRecommendation(next);
       })
-      .catch(() => {});
+      .catch((err) => { logger.e('SkillEntryBrief create recommendation:', err); });
     return () => {
       active = false;
     };

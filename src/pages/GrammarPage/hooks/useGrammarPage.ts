@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLearningStore } from '@/core/learning';
 
 import { showToast } from '@/shared/components/Toast';
+import { logger } from '@/shared/logger';
 
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
@@ -98,7 +99,7 @@ export function useGrammarPage() {
           setSelectedId(currentActive?.id ?? all[0]?.id ?? null);
         }
       })
-      .catch(() => {});
+      .catch((err) => { logger.e('GrammarPage load rules:', err); });
     return () => {
       active = false;
     };
@@ -116,7 +117,7 @@ export function useGrammarPage() {
         if (!active) return;
         setLevelCounts(buildLevelCounts(entries));
       })
-      .catch(() => {});
+      .catch((err) => { logger.e('GrammarPage load level counts:', err); });
     return () => {
       active = false;
     };
@@ -129,7 +130,7 @@ export function useGrammarPage() {
         if (!active) return;
         setVocabularyIndex(buildVocabularyIndex(terms));
       })
-      .catch(() => {});
+      .catch((err) => { logger.e('GrammarPage load vocabulary:', err); });
     return () => {
       active = false;
     };
