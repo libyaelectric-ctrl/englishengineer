@@ -1,9 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { storage } from '@/shared/storage';
+
 import { SpeakingService } from './speaking.service';
 
 describe('SpeakingService', () => {
   beforeEach(() => {
+    storage.activateSession({ userId: 'test-user', kind: 'local' });
     SpeakingService.resetSpeakingState();
   });
 
