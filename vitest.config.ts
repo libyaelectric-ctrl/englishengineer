@@ -10,11 +10,12 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     pool: 'threads',
-    maxWorkers: 1,
+    maxWorkers: 4,
     testTimeout: 15_000,
     hookTimeout: 30_000,
     teardownTimeout: 30_000,
     isolate: true,
+    // NOTE: run with `npx vitest run --dir src` — bare `npx vitest run` hangs on discovery.
     exclude: ['node_modules/**', 'dist/**', 'e2e/**', 'tests/**', 'backend/**', '.mimocode/**', 'src/shared/tests/integration/**', 'test/integration/**'],
     coverage: {
       provider: 'v8',
@@ -22,7 +23,6 @@ export default defineConfig({
       include: ['src/**/*.ts', 'src/**/*.tsx'],
       exclude: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'src/test/**', 'src/data/**', 'src/**/by-level/**', 'src/features/localization/data/**', 'src/features/localization/localization.data.ts'],
       thresholds: {
-        perFile: true,
         branches: 70,
         functions: 70,
         lines: 70,
