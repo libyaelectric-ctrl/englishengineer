@@ -40,7 +40,6 @@ import {
   setGlobalIdempotencyStore,
 } from './middleware/idempotency.middleware.js';
 import { inputSanitization } from './middleware/sanitize.middleware.js';
-import { requireTenantContext } from './middleware/tenant.middleware.js';
 import { createMetricsRepository } from './supabase-metrics-repository.js';
 import { recordRequest } from './performance-monitor.js';
 import { registerProgressRoutes } from './progress-routes.js';
@@ -632,7 +631,7 @@ const registerRoutes = (
 
   registerAIRoutes(
     v1RouterAdapter,
-    aiService as unknown as Parameters<typeof registerAIRoutes>[1],
+    { complete: aiService.complete } as Parameters<typeof registerAIRoutes>[1],
     requireBackendAuth,
     limiters.ai,
     billingRepository ??
@@ -644,7 +643,15 @@ const registerRoutes = (
         },
         fetchImpl
       ),
-    config as unknown as Parameters<typeof registerAIRoutes>[5],
+    {
+      ai: config.ai,
+      stripe: config.stripe,
+      supabase: config.supabase,
+      ledger: config.ai,
+      workspace: undefined,
+      billing: config.billing,
+      dodo: config.dodo,
+    } as Parameters<typeof registerAIRoutes>[5],
     fetchImpl
   );
 
@@ -671,7 +678,9 @@ const registerRoutes = (
         ...config.stripe,
         provider: config.billing.provider,
         dodo: config.dodo,
-      } as unknown as BillingServiceConfig,
+        environment: config.environment,
+        allowedReturnOrigins: config.stripe.allowedReturnOrigins,
+      } as BillingServiceConfig,
       stripeClient: stripeClient as Stripe,
       repository:
         billingRepository ??
@@ -693,7 +702,7 @@ const registerRoutes = (
   const resolvedWorkspaceRepository = resolveWorkspaceRepo(workspaceRepository, config);
   registerWorkspaceRoutes(
     v1RouterAdapter,
-    [requireBackendAuth, requireTenantContext] as unknown as RequestHandler,
+    requireBackendAuth,
     limiters.workspace,
     { repository: resolvedWorkspaceRepository }
   );

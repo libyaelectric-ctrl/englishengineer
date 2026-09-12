@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 
 import { runWhenIdle } from '@/shared/utils/idle';
 
-import { ErrorBoundaryProvider } from './ErrorBoundaryProvider';
 import { QueryProvider } from './QueryProvider';
 
 interface AppProviderProps {
@@ -34,8 +33,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   }, []);
 
   return (
-    <ErrorBoundaryProvider>
-      <QueryProvider>{children}</QueryProvider>
-    </ErrorBoundaryProvider>
+    <QueryProvider>{children}</QueryProvider>
   );
 };
