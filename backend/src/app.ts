@@ -17,7 +17,7 @@ import type Stripe from 'stripe';
 import type { BackendConfig } from '../types.js';
 import { registerAdminRoutes } from './admin-routes.js';
 import { createAIService, registerAIRoutes } from './ai.js';
-import { recordEndpoint } from './api-metrics.js';
+import { recordEndpoint, setMetricsRepository } from './api-metrics.js';
 import { getAuditLogStatus, initAuditLog } from './audit-log.js';
 import { createBackendAuth } from './auth.js';
 import type { BackendAuthConfig } from './auth.js';
@@ -41,6 +41,7 @@ import {
 } from './middleware/idempotency.middleware.js';
 import { inputSanitization } from './middleware/sanitize.middleware.js';
 import { requireTenantContext } from './middleware/tenant.middleware.js';
+import { createMetricsRepository } from './supabase-metrics-repository.js';
 import { recordRequest } from './performance-monitor.js';
 import { registerProgressRoutes } from './progress-routes.js';
 import { getPrometheusMetrics } from './prometheus.js';
@@ -788,6 +789,12 @@ export const createApp = ({
     );
   });
   initIdempotency(config, fetchImpl);
+  // Initialize metrics repository (Supabase in production, in-memory for dev/test)
+  setMetricsRepository(createMetricsRepository({
+    repositoryMode: config.supabase?.configured ? 'supabase' : 'memory',
+    supabaseUrl: process.env.SUPABASE_URL ?? undefined,
+    supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? undefined,
+  }, fetchImpl));
   initSentryIfConfigured(config);
 
   const app = express();

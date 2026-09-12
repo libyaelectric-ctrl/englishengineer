@@ -8,7 +8,33 @@ import { logger } from '../logger.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const cache = new Map<string, string>();
+/* ------------------------------------------------------------------ */
+/*  TTL cache — replaces bare in-memory Map with time-bounded entries  */
+/*  so multi-instance deployments refresh periodically from Supabase.  */
+/* ------------------------------------------------------------------ */
+
+const CACHE_TTL_MS = 5 * 60_000; // 5 minutes
+
+interface CacheEntry {
+  value: string;
+  expiresAt: number;
+}
+
+const cache = new Map<string, CacheEntry>();
+
+const cacheGet = (key: string): string | null => {
+  const entry = cache.get(key);
+  if (!entry) return null;
+  if (Date.now() > entry.expiresAt) {
+    cache.delete(key);
+    return null;
+  }
+  return entry.value;
+};
+
+const cacheSet = (key: string, value: string, ttlMs = CACHE_TTL_MS): void => {
+  cache.set(key, { value, expiresAt: Date.now() + ttlMs });
+};
 
 // Tracks where each dynamic prompt key was last resolved from so callers can
 // report which version/source actually served a request (prompt versioning).
@@ -45,18 +71,21 @@ const getSupabaseClient = () => {
 };
 
 const loadPrompt = (filename: string): string => {
-  if (cache.has(filename)) return cache.get(filename)!;
+  const cached = cacheGet(`file:${filename}`);
+  if (cached !== null) return cached;
   const filePath = join(__dirname, filename);
   const content = readFileSync(filePath, 'utf8').trim();
-  cache.set(filename, content);
+  // File prompts don't change at runtime — use a long TTL
+  cacheSet(`file:${filename}`, content, 60 * 60_000);
   return content;
 };
 
 const loadPromptFromDb = async (key: string, fallbackFilename: string): Promise<string> => {
   const cacheKey = `db:${key}`;
-  if (cache.has(cacheKey)) {
+  const cached = cacheGet(cacheKey);
+  if (cached !== null) {
     resolvedSources.set(key, 'db');
-    return cache.get(cacheKey)!;
+    return cached;
   }
 
   const client = getSupabaseClient();
@@ -71,7 +100,7 @@ const loadPromptFromDb = async (key: string, fallbackFilename: string): Promise<
       const row = data as { content?: string } | null;
       if (!error && row?.content) {
         const content = row.content.trim();
-        cache.set(cacheKey, content);
+        cacheSet(cacheKey, content);
         resolvedSources.set(key, 'db');
         logger.info(`[PromptLoader] Loaded ${key} instruction from database`);
         return content;

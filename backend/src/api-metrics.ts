@@ -1,50 +1,34 @@
-interface EndpointMetricData {
-  count: number;
-  totalTime: number;
-  errors: number;
-}
+/**
+ * API endpoint metrics — now delegates to a MetricsRepository for persistence.
+ *
+ * The repository is set at startup via {@link setMetricsRepository}.
+ * Falls back to an in-memory implementation when Supabase is not configured.
+ */
+import { createMemoryMetricsRepository, type MetricsRepository } from './supabase-metrics-repository.js';
 
-interface EndpointMetricResult {
+type EndpointMetricResult = {
   endpoint: string;
   count: number;
   avgTime: number;
   errorRate: string;
-}
+};
 
-const endpointMetrics = new Map<string, EndpointMetricData>();
+let repo: MetricsRepository = createMemoryMetricsRepository();
+
+export const setMetricsRepository = (repository: MetricsRepository): void => {
+  repo = repository;
+};
+
+export const getMetricsRepository = (): MetricsRepository => repo;
 
 export const recordEndpoint = (
   method: string,
   path: string,
   duration: number,
-  isError: boolean
+  isError: boolean,
 ): void => {
-  const endpoint = `${method} ${path}`;
-
-  if (!endpointMetrics.has(endpoint)) {
-    endpointMetrics.set(endpoint, { count: 0, totalTime: 0, errors: 0 });
-  }
-
-  const data = endpointMetrics.get(endpoint)!;
-  data.count++;
-  data.totalTime += duration;
-  if (isError) data.errors++;
+  repo.recordEndpoint(method, path, duration, isError);
 };
 
-export const getEndpointMetrics = (): EndpointMetricResult[] => {
-  const results: EndpointMetricResult[] = [];
-
-  for (const [endpoint, data] of endpointMetrics.entries()) {
-    const avgTime = data.count > 0 ? data.totalTime / data.count : 0;
-    const errorRate = data.count > 0 ? (data.errors / data.count) * 100 : 0;
-
-    results.push({
-      endpoint,
-      count: data.count,
-      avgTime: Math.round(avgTime),
-      errorRate: errorRate.toFixed(2) + '%',
-    });
-  }
-
-  return results.sort((a, b) => b.count - a.count);
-};
+export const getEndpointMetrics = (): EndpointMetricResult[] =>
+  repo.getEndpointMetrics();
