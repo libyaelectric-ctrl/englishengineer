@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { GrammarProgressService } from '@/shared/services/grammar-progress.service';
 import { GrammarRepository } from '@/shared/services/grammar.repository';
+import { storage } from '@/shared/storage';
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import { getInitialUserLearningProfile } from '@/shared/utils/profile.utils';
 
@@ -12,6 +13,7 @@ import { UnifiedReviewQueueService } from './review-queue';
 
 describe('UnifiedReviewQueueService', () => {
   beforeEach(() => {
+    storage.activateSession({ userId: 'test-user', kind: 'local' });
     localStorage.clear();
     GrammarProgressService.reset();
     VocabularyMenuService.reset();

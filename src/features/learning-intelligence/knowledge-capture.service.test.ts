@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { GrammarProgressService } from '@/shared/services/grammar-progress.service';
+import { storage } from '@/shared/storage';
 
 import { GrammarRepository } from '@/features/grammar';
 import { VocabularyMenuService, VocabularyRepository } from '@/features/vocabulary';
@@ -9,6 +10,7 @@ import { KnowledgeCaptureService } from './knowledge-capture.service';
 
 describe('KnowledgeCaptureService', () => {
   beforeEach(() => {
+    storage.activateSession({ userId: 'test-user', kind: 'local' });
     localStorage.clear();
     GrammarProgressService.reset();
     VocabularyMenuService.reset();

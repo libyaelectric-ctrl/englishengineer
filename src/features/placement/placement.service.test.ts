@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
+import { storage } from '@/shared/storage';
 
 import { PLACEMENT_QUESTIONS } from './placement.data';
 import { PlacementService } from './placement.service';
@@ -9,6 +10,7 @@ describe('PlacementService', () => {
   const userId = 'placement-test-user';
 
   beforeEach(() => {
+    storage.activateSession({ userId: 'test-user', kind: 'local' });
     localStorage.clear();
     LearningProfileRepository.reset(userId);
   });

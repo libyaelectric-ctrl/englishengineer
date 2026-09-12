@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
+import { storage } from '@/shared/storage';
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import { getInitialUserLearningProfile } from '@/shared/utils/profile.utils';
 
@@ -11,6 +12,7 @@ import { TaskEvaluationService } from './task-evaluation.service';
 
 describe('connected learning task orchestration', () => {
   beforeEach(() => {
+    storage.activateSession({ userId: 'test-user', kind: 'local' });
     localStorage.clear();
     LearningProfileRepository.reset();
     VocabularyMenuService.reset();

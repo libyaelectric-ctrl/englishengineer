@@ -1,10 +1,15 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { storage } from '@/shared/storage';
+
 import { EMAIL_TEMPLATES, ENGINEERING_TEMPLATES, PHRASE_LIBRARY } from './work-tools.data';
 import { WorkToolsService } from './work-tools.service';
 
 describe('Work Tools content pack', () => {
-  beforeEach(() => localStorage.clear());
+  beforeEach(() => {
+    storage.activateSession({ userId: 'test-user', kind: 'local' });
+    localStorage.clear();
+  });
 
   it('meets commercial content minimums', () => {
     expect(ENGINEERING_TEMPLATES).toHaveLength(62);

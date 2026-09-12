@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { storage } from '@/shared/storage';
 import {
   SPEAKING_MISSIONS,
   SPEAKING_MVP_MODE,
@@ -39,6 +40,7 @@ const evaluation: SpeakingEvaluationResult = {
 
 describe('decisions 61-70', () => {
   beforeEach(() => {
+    storage.activateSession({ userId: 'test-user', kind: 'local' });
     LearningIntelligenceService.save({
       careerRole: 'Site Engineer',
       completedTaskDates: {},
