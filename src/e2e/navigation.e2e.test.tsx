@@ -90,9 +90,10 @@ vi.mock('@/features/grammar', async (importOriginal) => {
       searchGrammarRules: vi.fn().mockResolvedValue([]),
       clearCache: vi.fn(),
     },
-    useGrammarStore: vi.fn(() => ({
-      stats: { learned: 0, mastered: 0, struggling: 0 },
-    })),
+    // useGrammarStore is intentionally NOT mocked: a hand-rolled partial state
+    // dropped fields the page reads (`rules`), and re-implementing selectors here
+    // produced unstable snapshots that made React re-render forever. Only the
+    // data access below is stubbed; the real store already starts from [] entries.
     GrammarProgressService: {
       ...actual.GrammarProgressService,
       get: vi.fn(() => ({

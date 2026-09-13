@@ -32,7 +32,10 @@ export interface WorkspaceRepository {
   deleteDocument(workspaceId: string, userId: string, docId: string): Promise<Workspace | null>;
 }
 
-export const createSupabaseWorkspaceRepository = (config: WorkspaceConfig): WorkspaceRepository => {
+export const createSupabaseWorkspaceRepository = (
+  config: WorkspaceConfig,
+  fetchImpl: typeof fetch = fetch
+): WorkspaceRepository => {
   if (!config?.configured) {
     throw new ApiError(
       503,
@@ -43,6 +46,7 @@ export const createSupabaseWorkspaceRepository = (config: WorkspaceConfig): Work
 
   const supabase = createClient(config.supabaseUrl!, config.supabaseServiceRoleKey!, {
     auth: { persistSession: false },
+    global: { fetch: fetchImpl },
   });
 
   return {

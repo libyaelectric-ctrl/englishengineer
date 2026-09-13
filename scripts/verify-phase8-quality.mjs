@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readdir, readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = process.cwd();
@@ -24,7 +24,10 @@ assert.match(preCommitHook, /--incremental/);
 assert.match(preCommitHook, /Pre-commit completed in/);
 assert.doesNotMatch(preCommitHook, /--no-verify/);
 const vitestConfig = await read('vitest.config.ts');
-assert.match(vitestConfig, /maxWorkers:\s*1/);
+// Phase 8 policy: the suite must run in a bounded thread pool so the runner cannot OOM.
+// The bound was deliberately raised from 1 to 4 in e1c7e662 (a single thread OOMed while
+// loading every test file); this gate keeps it bounded rather than pinning a stale value.
+assert.match(vitestConfig, /maxWorkers:\s*[1-4]\b/);
 assert.match(vitestConfig, /pool:\s*'threads'/);
 assert.match(vitestConfig, /'json'/);
 const changedCoverage = await read('scripts/check-changed-coverage.mjs');
@@ -50,7 +53,10 @@ const authSetup = await read('tests/helpers/auth-setup.ts');
 assert.match(authSetup, /indexedDB:\s*true/);
 assert.match(authSetup, /hasFirebaseTestConfig/);
 const environment = await read('.env.example');
-const keys = environment.split(/\r?\n/).filter((line) => /^[A-Z0-9_]+=/.test(line)).map((line) => line.split('=', 1)[0]);
+const keys = environment
+  .split(/\r?\n/)
+  .filter((line) => /^[A-Z0-9_]+=/.test(line))
+  .map((line) => line.split('=', 1)[0]);
 assert.equal(new Set(keys).size, keys.length);
 const workflowFiles = await walk('.github/workflows');
 let pinnedActionCount = 0;
@@ -62,6 +68,13 @@ for (const file of workflowFiles) {
   }
 }
 assert.ok(pinnedActionCount > 0);
-const activeFiles = ['README.md', '.env.example', 'playwright.config.ts', ...(await walk('tests')), ...(await walk('docs')).filter((file) => !file.replace(/\\/g, '/').startsWith('docs/archive/'))];
-for (const file of activeFiles) assert.doesNotMatch(await read(file), /clerk/i, `Active Clerk reference remains in ${file}`);
+const activeFiles = [
+  'README.md',
+  '.env.example',
+  'playwright.config.ts',
+  ...(await walk('tests')),
+  ...(await walk('docs')).filter((file) => !file.replace(/\\/g, '/').startsWith('docs/archive/')),
+];
+for (const file of activeFiles)
+  assert.doesNotMatch(await read(file), /clerk/i, `Active Clerk reference remains in ${file}`);
 console.log(`PHASE8_QUALITY_CONTRACT_OK files=${activeFiles.length}`);

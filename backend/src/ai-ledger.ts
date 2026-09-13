@@ -149,13 +149,16 @@ export interface AiLedger {
   getAdminAnalytics(): Promise<AiAdminAnalytics>;
 }
 
-export const createSupabaseAiLedger = (config: {
-  workspace?: {
-    configured?: boolean;
-    supabaseUrl?: string;
-    supabaseServiceRoleKey?: string;
-  };
-}): AiLedger => {
+export const createSupabaseAiLedger = (
+  config: {
+    workspace?: {
+      configured?: boolean;
+      supabaseUrl?: string;
+      supabaseServiceRoleKey?: string;
+    };
+  },
+  fetchImpl: typeof fetch = fetch
+): AiLedger => {
   if (!config.workspace?.configured) {
     throw new Error('AI ledger requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.');
   }
@@ -163,7 +166,7 @@ export const createSupabaseAiLedger = (config: {
   const supabase = createClient(
     config.workspace!.supabaseUrl!,
     config.workspace!.supabaseServiceRoleKey!,
-    { auth: { persistSession: false } }
+    { auth: { persistSession: false }, global: { fetch: fetchImpl } }
   );
 
   return {
@@ -472,12 +475,15 @@ export const createFileAiLedger = (filePath: string): AiLedger => {
   };
 };
 
-export const createAiLedger = (config: {
-  workspace?: Record<string, unknown>;
-  ledger?: { filePath?: string };
-}): AiLedger => {
+export const createAiLedger = (
+  config: {
+    workspace?: Record<string, unknown>;
+    ledger?: { filePath?: string };
+  },
+  fetchImpl: typeof fetch = fetch
+): AiLedger => {
   if (config.workspace?.configured) {
-    return createSupabaseAiLedger(config);
+    return createSupabaseAiLedger(config, fetchImpl);
   }
   const filePath = config.ledger?.filePath;
   if (filePath) {

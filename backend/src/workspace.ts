@@ -16,9 +16,9 @@ import type { WorkspaceRepository } from './workspace-repository.js';
 
 export const createWorkspaceRepository = (
   config: { workspace?: WorkspaceConfig },
-  _fetchImpl: typeof fetch = fetch
+  fetchImpl: typeof fetch = fetch
 ): WorkspaceRepository => {
-  return createSupabaseWorkspaceRepository(config.workspace as WorkspaceConfig);
+  return createSupabaseWorkspaceRepository(config.workspace as WorkspaceConfig, fetchImpl);
 };
 
 const getWorkspaceLimit = (planId: string): number => {

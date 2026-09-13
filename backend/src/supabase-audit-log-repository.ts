@@ -14,12 +14,14 @@ interface AuditLogConfig {
 }
 
 export const createSupabaseAuditLogRepository = (
-  config: AuditLogConfig
+  config: AuditLogConfig,
+  fetchImpl: typeof fetch = fetch
 ): AuditLogRepository | null => {
   if (!config.supabaseUrl || !config.supabaseServiceRoleKey) return null;
 
   const client = createClient(config.supabaseUrl, config.supabaseServiceRoleKey, {
     auth: { persistSession: false, autoRefreshToken: false },
+    global: { fetch: fetchImpl },
   });
 
   const healthCheck = async (): Promise<void> => {

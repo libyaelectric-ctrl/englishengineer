@@ -2,12 +2,37 @@ name: CI
 
 on:
   workflow_dispatch:
+    inputs:
+      update_visual_baselines:
+        description: 'Rewrite the committed visual baselines instead of comparing against them'
+        type: boolean
+        default: false
   push:
     branches: [main]
-    paths-ignore: ['docs/**', '**.md', '.vscode/**', 'public/mascot/**', 'public/agentic/**', 'public/brand/**', 'storybook-static/**', '.storybook/**']
+    paths-ignore:
+      [
+        'docs/**',
+        '**.md',
+        '.vscode/**',
+        'public/mascot/**',
+        'public/agentic/**',
+        'public/brand/**',
+        'storybook-static/**',
+        '.storybook/**',
+      ]
   pull_request:
     branches: [main]
-    paths-ignore: ['docs/**', '**.md', '.vscode/**', 'public/mascot/**', 'public/agentic/**', 'public/brand/**', 'storybook-static/**', '.storybook/**']
+    paths-ignore:
+      [
+        'docs/**',
+        '**.md',
+        '.vscode/**',
+        'public/mascot/**',
+        'public/agentic/**',
+        'public/brand/**',
+        'storybook-static/**',
+        '.storybook/**',
+      ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -39,6 +64,8 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
+      - name: Install backend dependencies
+        run: npm --prefix backend ci
       - name: Type Check
         run: npm run typecheck
       - name: Lint
@@ -157,25 +184,62 @@ jobs:
       - name: Run unauthenticated smoke E2E
         run: npx playwright test tests/browser/landing-and-health.spec.ts --project=chromium-desktop --no-deps
         env: { CI: true }
-      - name: Visual Regression Baselines
-        run: |
-          npx playwright test tests/e2e/visual-regression.spec.ts --project=visual-regression --update-snapshots || true
-          npx playwright test tests/e2e/visual-regression.spec.ts --project=visual-regression
-        env: { BASE_URL: 'http://localhost:4176', CI: true }
-      - name: Upload Visual Baselines
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with: { name: visual-baselines, path: test-results/, retention-days: 14 }
       - name: Upload Playwright Report
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with: { name: playwright-report, path: test-results/, retention-days: 7 }
 
+  visual:
+    name: 🖼️ Visual Regression
+    # All 14 committed baselines are platform-suffixed (`-win32.png`), so the
+    # comparison only carries meaning on Windows. This job runs the spec WITHOUT
+    # `--update-snapshots`: a pixel drift fails the job instead of silently
+    # rewriting the expectation and reporting success. Refresh the baselines only
+    # through a manual `workflow_dispatch` with `update_visual_baselines: true`.
+    runs-on: windows-latest
+    needs: [build]
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Install Backend
+        run: npm --prefix backend ci
+      - name: Cache Playwright Browsers
+        id: playwright-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: ~\AppData\Local\ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install chromium
+      - name: Compare against committed baselines
+        if: github.event.inputs.update_visual_baselines != 'true'
+        run: npx playwright test tests/e2e/visual-regression.spec.ts --project=visual-regression
+        env: { CI: true }
+      - name: Rewrite baselines (manual dispatch only)
+        if: github.event.inputs.update_visual_baselines == 'true'
+        run: npx playwright test tests/e2e/visual-regression.spec.ts --project=visual-regression --update-snapshots
+        env: { CI: true }
+      - name: Upload rewritten baselines
+        if: github.event.inputs.update_visual_baselines == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: updated-visual-baselines
+          path: tests/e2e/visual-regression.spec.ts-snapshots/
+          retention-days: 14
+      - name: Upload visual diffs
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with: { name: visual-regression-diff, path: test-results/, retention-days: 14 }
+
   ci-complete:
     name: ✅ CI Complete
     runs-on: ubuntu-latest
     if: always()
-    needs: [secret-scan, quality, test, backend, build, e2e]
+    needs: [secret-scan, quality, test, backend, build, e2e, visual]
     steps:
       - name: Check all jobs
         run: |
@@ -185,7 +249,8 @@ jobs:
           echo "Backend: ${{ needs.backend.result }}"
           echo "Build: ${{ needs.build.result }}"
           echo "E2E: ${{ needs.e2e.result }}"
-          if [ "${{ needs.secret-scan.result }}" != "success" ] || [ "${{ needs.quality.result }}" != "success" ] || [ "${{ needs.test.result }}" != "success" ] || [ "${{ needs.backend.result }}" != "success" ] || [ "${{ needs.build.result }}" != "success" ] || [ "${{ needs.e2e.result }}" != "success" ]; then
+          echo "Visual: ${{ needs.visual.result }}"
+          if [ "${{ needs.secret-scan.result }}" != "success" ] || [ "${{ needs.quality.result }}" != "success" ] || [ "${{ needs.test.result }}" != "success" ] || [ "${{ needs.backend.result }}" != "success" ] || [ "${{ needs.build.result }}" != "success" ] || [ "${{ needs.e2e.result }}" != "success" ] || [ "${{ needs.visual.result }}" != "success" ]; then
             exit 1
           fi
           echo "All checks passed"
