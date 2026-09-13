@@ -6,6 +6,10 @@
  */
 import { createMemoryMetricsRepository, type MetricsRepository } from './supabase-metrics-repository.js';
 
+// Consumers (performance-monitor, future repositories) describe themselves in
+// terms of the repository contract, so it must stay reachable from here.
+export type { MetricsRepository } from './supabase-metrics-repository.js';
+
 type EndpointMetricResult = {
   endpoint: string;
   count: number;

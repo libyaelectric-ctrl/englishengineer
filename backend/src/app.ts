@@ -679,7 +679,9 @@ const registerRoutes = (
         provider: config.billing.provider,
         dodo: config.dodo,
         environment: config.environment,
-        allowedReturnOrigins: config.stripe.allowedReturnOrigins,
+        // StripeConfig has no origin list of its own; the app's allowed web
+        // origins are what a billing return URL may point back to.
+        allowedReturnOrigins: config.corsAllowedOrigins,
       } as BillingServiceConfig,
       stripeClient: stripeClient as Stripe,
       repository:
