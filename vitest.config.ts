@@ -15,8 +15,8 @@ export default defineConfig({
     hookTimeout: 30_000,
     teardownTimeout: 30_000,
     isolate: true,
-    // NOTE: run with `npx vitest run --dir src` — bare `npx vitest run` hangs on discovery.
-    exclude: ['node_modules/**', 'dist/**', 'e2e/**', 'tests/**', 'backend/**', '.mimocode/**', 'src/shared/tests/integration/**', 'test/integration/**'],
+    include: ['src/**/*.test.{ts,tsx}', 'src/**/*.spec.{ts,tsx}'],
+    exclude: ['node_modules/**', 'dist/**', 'e2e/**', 'tests/**', 'backend/**', '.mimocode/**', '.freebuff/**', 'src/e2e/**', 'src/shared/tests/integration/**', 'test/integration/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'json-summary', 'json'],
