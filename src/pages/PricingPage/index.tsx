@@ -1,4 +1,4 @@
-﻿import { PricingCard } from '@/components/ui/PricingCard';
+import { PricingCard } from '@/components/ui/PricingCard';
 import { Globe } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -31,31 +31,128 @@ const PricingPage = () => {
   const [isAnnual, setIsAnnual] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
-  useEffect(() => { ProductAnalyticsService.track('screen_viewed', 'pricing'); ProductAnalyticsService.trackOnce('paywall_viewed', 'pricing'); }, []);
+  useEffect(() => {
+    ProductAnalyticsService.track('screen_viewed', 'pricing');
+    ProductAnalyticsService.trackOnce('paywall_viewed', 'pricing');
+  }, []);
   const { isCheckoutLoading, startCheckout, subscription } = useBillingStore();
-  const handleSelectPlan = async (tierId: string) => { setCheckoutError(null); if (tierId === 'free') { navigate('/dashboard'); return; } if (!currentUser) { navigate(AUTH_SIGN_IN_URL, { state: { from: location } }); return; } if (currentUser.id.startsWith('demo_engineer_')) { setCheckoutError('Demo profiles cannot make purchases.'); return; } try { await startCheckout(currentUser.id, currentUser.email, tierId as BillingPlanId, isAnnual ? 'year' : 'month'); } catch (err: unknown) { setCheckoutError(err instanceof Error ? err.message : 'Checkout failed.'); } };
+  const handleSelectPlan = async (tierId: string) => {
+    setCheckoutError(null);
+    if (tierId === 'free') {
+      navigate('/dashboard');
+      return;
+    }
+    if (!currentUser) {
+      navigate(AUTH_SIGN_IN_URL, { state: { from: location } });
+      return;
+    }
+    if (currentUser.id.startsWith('demo_engineer_')) {
+      setCheckoutError('Demo profiles cannot make purchases.');
+      return;
+    }
+    try {
+      await startCheckout(
+        currentUser.id,
+        currentUser.email,
+        tierId as BillingPlanId,
+        isAnnual ? 'year' : 'month'
+      );
+    } catch (err: unknown) {
+      setCheckoutError(err instanceof Error ? err.message : 'Checkout failed.');
+    }
+  };
 
   return (
-    <main className="relative h-dvh overflow-hidden bg-[#f7f9fc] pt-14 text-slate-950 dark:bg-[#040611] dark:text-white">
-      <PageMetadata title="Pricing Plans — EngVox" description="Choose the plan that fits your engineering communication goals." />
+    <main className="relative h-dvh overflow-hidden bg-background pt-14 text-foreground">
+      <PageMetadata
+        title="Pricing Plans — EngVox"
+        description="Choose the plan that fits your engineering communication goals."
+      />
       <Navbar />
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(180deg,#ffffff_0%,#f7f9fc_52%,#eef4f8_100%)] dark:bg-[linear-gradient(180deg,#040611_0%,#070b18_54%,#040611_100%)]" />
       <section className="relative mx-auto flex h-[calc(100dvh-7.5rem)] max-w-7xl flex-col px-4 py-3 md:px-6">
         <div className="mb-3 grid shrink-0 items-end gap-3 lg:grid-cols-[1fr_auto]">
           <div>
-            <span className="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-cyan-800 dark:border-cyan-300/20 dark:bg-cyan-300/10 dark:text-cyan-100">EngVox Pricing</span>
-            <h1 className="mt-2 text-[clamp(1.75rem,3.2vw,3rem)] font-black leading-none tracking-tight text-slate-950 dark:text-white">{pricingCopy.title}</h1>
-            <p className="mt-1 max-w-3xl text-sm font-semibold leading-5 text-slate-600 dark:text-slate-300">{pricingCopy.subtitle}</p>
+            <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+              EngVox Pricing
+            </span>
+            <h1 className="mt-2 text-[clamp(1.75rem,3.2vw,3rem)] font-black leading-none tracking-tight text-foreground">
+              {pricingCopy.title}
+            </h1>
+            <p className="mt-1 max-w-3xl text-sm font-medium leading-5 text-muted-copy">
+              {pricingCopy.subtitle}
+            </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2 rounded-3xl border border-slate-200 bg-white/90 p-2 shadow-sm backdrop-blur-2xl dark:border-white/10 dark:bg-white/[0.07]">
-            <div className="flex items-center gap-1 rounded-2xl border border-slate-200 bg-white p-1 dark:border-white/10 dark:bg-black/20"><button type="button" onClick={() => setIsAnnual(false)} aria-pressed={!isAnnual} className={`rounded-xl px-3 py-2 text-xs font-black transition-all ${!isAnnual ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950' : 'text-slate-600 dark:text-white/65'}`}>{pricingCopy.monthly}</button><button type="button" onClick={() => setIsAnnual(true)} aria-pressed={isAnnual} className={`flex items-center gap-1 rounded-xl px-3 py-2 text-xs font-black transition-all ${isAnnual ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950' : 'text-slate-600 dark:text-white/65'}`}><span>{pricingCopy.annual}</span><span className="rounded bg-emerald-500 px-1 py-0.5 text-[9px] text-white">{pricingCopy.save20}</span></button></div>
-            <div className="flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-3 py-2 dark:border-white/10 dark:bg-black/20"><Globe className="h-4 w-4 text-cyan-600 dark:text-cyan-200" /><select value={selectedCurrency} onChange={(e) => setSelectedCurrency(e.target.value)} aria-label="Select currency" className="bg-transparent text-xs font-black text-slate-950 outline-none dark:text-white">{CurrencyConfig.CURRENCIES.map((c) => (<option key={c.code} value={c.code}>{c.flag} {c.code}</option>))}</select></div>
+          <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-border-soft bg-surface p-1.5 shadow-sm">
+            <div className="flex items-center gap-1 rounded-xl border border-border-soft bg-surface-hover p-1">
+              <button
+                type="button"
+                onClick={() => setIsAnnual(false)}
+                aria-pressed={!isAnnual}
+                className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${!isAnnual ? 'bg-primary text-white shadow-sm' : 'text-muted-copy hover:text-foreground'}`}
+              >
+                {pricingCopy.monthly}
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsAnnual(true)}
+                aria-pressed={isAnnual}
+                className={`flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${isAnnual ? 'bg-primary text-white shadow-sm' : 'text-muted-copy hover:text-foreground'}`}
+              >
+                <span>{pricingCopy.annual}</span>
+                <span className="rounded bg-emerald-500 px-1 py-0.5 text-[9px] text-white">
+                  {pricingCopy.save20}
+                </span>
+              </button>
+            </div>
+            <div className="flex items-center gap-1.5 rounded-xl border border-border-soft bg-surface px-3 py-1.5">
+              <Globe className="h-4 w-4 text-primary" />
+              <select
+                value={selectedCurrency}
+                onChange={(e) => setSelectedCurrency(e.target.value)}
+                aria-label="Select currency"
+                className="bg-transparent text-xs font-bold text-foreground outline-none cursor-pointer"
+              >
+                {CurrencyConfig.CURRENCIES.map((c) => (
+                  <option key={c.code} value={c.code} className="bg-surface text-foreground">
+                    {c.flag} {c.code}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
-        {checkoutError && <p className="mb-2 shrink-0 rounded-2xl border border-red-200 bg-red-50 px-4 py-2 text-center text-xs font-bold text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300" role="alert">{checkoutError}</p>}
-        <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">{PRICING_TIERS.map((tier, idx) => (<motion.div key={tier.id} className="min-h-0" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.28, delay: idx * 0.035 }}><PricingCard tier={tier} isAnnual={isAnnual} currency={selectedCurrency} isCurrentPlan={subscription?.planId === tier.id} isLoading={isCheckoutLoading} variant="pricing" onSelect={handleSelectPlan} /></motion.div>))}</div>
+        {checkoutError && (
+          <p
+            className="mb-2 shrink-0 rounded-2xl border border-error/25 bg-error/10 px-4 py-2 text-center text-xs font-bold text-error"
+            role="alert"
+          >
+            {checkoutError}
+          </p>
+        )}
+        <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {PRICING_TIERS.map((tier, idx) => (
+            <motion.div
+              key={tier.id}
+              className="min-h-0"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.28, delay: idx * 0.035 }}
+            >
+              <PricingCard
+                tier={tier}
+                isAnnual={isAnnual}
+                currency={selectedCurrency}
+                isCurrentPlan={subscription?.planId === tier.id}
+                isLoading={isCheckoutLoading}
+                variant="pricing"
+                onSelect={handleSelectPlan}
+              />
+            </motion.div>
+          ))}
+        </div>
       </section>
-      <ExitIntentModal /><Footer className="fixed bottom-0 inset-x-0 z-40" />
+      <ExitIntentModal />
+      <Footer className="fixed bottom-0 inset-x-0 z-40" />
     </main>
   );
 };
