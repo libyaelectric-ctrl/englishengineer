@@ -1,8 +1,16 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { randomUUID } from 'node:crypto';
 
-import type { PlanId } from '../types.js';
+import type {
+  AiConfig,
+  BillingConfig,
+  DodoConfig,
+  PlanId,
+  StripeConfig,
+  WorkspaceConfig,
+} from '../types.js';
 import { AI_CONTRACT_VERSION, createAIService } from './ai-core/index.js';
+import type { AiRequestBody, AiResult } from './ai-core/index.js';
 import { createAiLedger } from './ai-ledger.js';
 import type { AiLedger } from './ai-ledger.js';
 import { apiSuccess } from './api-response.js';
@@ -20,6 +28,15 @@ import { CircuitBreaker } from './utils/circuit-breaker.js';
 import { AiRequestBodySchema, validateBody } from './validation.js';
 
 export { createAIService, AI_CONTRACT_VERSION };
+
+/**
+ * The AI service returns {@link AiResult}. Providers may additionally report
+ * `error` / `tokensUsed`, which the usage ledger records when present.
+ */
+type AiRouteResult = AiResult & {
+  error?: boolean;
+  tokensUsed?: number;
+};
 
 const aiCircuitBreaker = new CircuitBreaker('AIService', 5, 30000);
 
@@ -154,19 +171,19 @@ const logAiUsage = async (
 export const registerAIRoutes = (
   app: RouteRegistrar,
   aiService: {
-    complete: (op: string, body: Record<string, unknown>) => Promise<Record<string, unknown>>;
+    complete: (op: string, body: AiRequestBody) => Promise<AiResult>;
   },
   requireBackendAuth: RequestHandler,
   rateLimiter: RequestHandler,
   billingRepository: SubscriptionRepository,
   config: {
-    ai?: { rateLimitWindowMs?: number; rateLimitMax?: number };
-    stripe?: Record<string, unknown>;
-    supabase?: Record<string, unknown>;
+    ai?: AiConfig;
+    stripe?: StripeConfig;
+    supabase?: { configured: boolean };
     ledger?: { filePath?: string };
-    workspace?: Record<string, unknown>;
-    billing?: { provider?: string };
-    dodo?: { configured?: boolean };
+    workspace?: WorkspaceConfig;
+    billing?: BillingConfig;
+    dodo?: DodoConfig;
   },
   _fetchImpl: typeof fetch = fetch
 ): void => {
@@ -200,7 +217,7 @@ export const registerAIRoutes = (
   const logUsage = (
     userId: string,
     bypass: boolean,
-    result: Record<string, unknown>,
+    result: AiRouteResult,
     body: Record<string, unknown>,
     operation: string,
     requestId: string
@@ -261,7 +278,7 @@ export const registerAIRoutes = (
     bypass: boolean,
     userId: string,
     requestId: string,
-    result: Record<string, unknown>
+    result: AiRouteResult
   ) => {
     if (!useTopup || bypass || result.error === true || result.mockMode === true) return;
     const consumption = await billingRepository.consumeTopupCredit(userId, requestId);

@@ -114,7 +114,7 @@ const withTimeout = async <T>(
   }
 };
 
-interface AiResult {
+export interface AiResult {
   contractVersion: string;
   requestId: string;
   operation: string;
@@ -130,7 +130,7 @@ interface AiResult {
   estimatedTokens: number;
 }
 
-interface AiRequestBody {
+export interface AiRequestBody {
   prompt?: string;
   operation?: string;
   modeId?: string;

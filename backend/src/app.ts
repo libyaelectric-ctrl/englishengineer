@@ -40,7 +40,6 @@ import {
   setGlobalIdempotencyStore,
 } from './middleware/idempotency.middleware.js';
 import { inputSanitization } from './middleware/sanitize.middleware.js';
-import { createMetricsRepository } from './supabase-metrics-repository.js';
 import { recordRequest } from './performance-monitor.js';
 import { registerProgressRoutes } from './progress-routes.js';
 import { getPrometheusMetrics } from './prometheus.js';
@@ -51,6 +50,7 @@ import type { RouteRegistrar } from './route-registrar.js';
 import { registerSpeakingRoutes } from './speaking-routes.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
 import { createSubscriptionRepository } from './subscription-repository.js';
+import { createMetricsRepository } from './supabase-metrics-repository.js';
 import { swaggerSpec } from './swagger.js';
 import { registerTeamAnalyticsRoutes } from './team-analytics.js';
 import type { VocabularyCache } from './vocabulary-service.js';
@@ -200,11 +200,7 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
 
   const hardcodedProductionOrigins =
     config.environment === 'production'
-      ? [
-          'https://engvox.com',
-          'https://www.engvox.com',
-          'capacitor://localhost',
-        ]
+      ? ['https://engvox.com', 'https://www.engvox.com', 'capacitor://localhost']
       : [];
   const configuredOrigins = [
     config.appOrigin,
@@ -631,7 +627,7 @@ const registerRoutes = (
 
   registerAIRoutes(
     v1RouterAdapter,
-    { complete: aiService.complete } as Parameters<typeof registerAIRoutes>[1],
+    aiService,
     requireBackendAuth,
     limiters.ai,
     billingRepository ??
@@ -647,11 +643,10 @@ const registerRoutes = (
       ai: config.ai,
       stripe: config.stripe,
       supabase: config.supabase,
-      ledger: config.ai,
       workspace: undefined,
       billing: config.billing,
       dodo: config.dodo,
-    } as Parameters<typeof registerAIRoutes>[5],
+    },
     fetchImpl
   );
 
@@ -702,12 +697,9 @@ const registerRoutes = (
   );
 
   const resolvedWorkspaceRepository = resolveWorkspaceRepo(workspaceRepository, config);
-  registerWorkspaceRoutes(
-    v1RouterAdapter,
-    requireBackendAuth,
-    limiters.workspace,
-    { repository: resolvedWorkspaceRepository }
-  );
+  registerWorkspaceRoutes(v1RouterAdapter, requireBackendAuth, limiters.workspace, {
+    repository: resolvedWorkspaceRepository,
+  });
   registerAdminRoutes(v1RouterAdapter, requireBackendAuth, limiters.global);
   registerProgressRoutes(v1RouterAdapter, limiters.progress, requireBackendAuth);
   registerReadingRoutes(v1RouterAdapter, requireBackendAuth, limiters.reading, aiService);
@@ -777,16 +769,7 @@ const registerNotFoundAndErrorHandlers = (app: Express, config: BackendConfig) =
   app.use(handleApiError(config));
 };
 
-export const createApp = ({
-  config,
-  fetchImpl = fetch,
-  stripeClient = createStripeClient(config!.stripe),
-  billingRepository,
-  workspaceRepository,
-  rateLimitStore = createRateLimitStore(config!.rateLimit, fetchImpl),
-}: CreateAppOpts = {}) => {
-  if (!config) throw new Error('Backend config is required.');
-
+const initRuntimeServices = (config: BackendConfig, fetchImpl: typeof fetch): void => {
   initRedisCache(
     config.rateLimit?.upstashUrl ?? undefined,
     config.rateLimit?.upstashToken ?? undefined
@@ -801,12 +784,54 @@ export const createApp = ({
   });
   initIdempotency(config, fetchImpl);
   // Initialize metrics repository (Supabase in production, in-memory for dev/test)
-  setMetricsRepository(createMetricsRepository({
-    repositoryMode: config.supabase?.configured ? 'supabase' : 'memory',
-    supabaseUrl: process.env.SUPABASE_URL ?? undefined,
-    supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? undefined,
-  }, fetchImpl));
+  setMetricsRepository(
+    createMetricsRepository(
+      {
+        repositoryMode: config.supabase?.configured ? 'supabase' : 'memory',
+        supabaseUrl: process.env.SUPABASE_URL ?? undefined,
+        supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? undefined,
+      },
+      fetchImpl
+    )
+  );
   initSentryIfConfigured(config);
+};
+
+const startKeepAliveSelfPing = (): void => {
+  const KEEPALIVE_INTERVAL_MS = 10 * 60 * 1000;
+  const selfUrl = process.env.RENDER_EXTERNAL_URL || process.env.APP_URL;
+  if (!selfUrl) {
+    logger.warn('[Keepalive] RENDER_EXTERNAL_URL not set — self-ping disabled');
+    return;
+  }
+  const keepAliveTimer = setInterval(async () => {
+    try {
+      const res = await fetch(`${selfUrl}/api/health`);
+      logger.info('[Keepalive] ping', { status: res.status });
+    } catch (err) {
+      logger.warn('[Keepalive] ping failed', {
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  }, KEEPALIVE_INTERVAL_MS);
+  keepAliveTimer.unref();
+  logger.info('[Keepalive] self-ping scheduled', {
+    intervalMin: KEEPALIVE_INTERVAL_MS / 60_000,
+    target: selfUrl,
+  });
+};
+
+export const createApp = ({
+  config,
+  fetchImpl = fetch,
+  stripeClient = createStripeClient(config!.stripe),
+  billingRepository,
+  workspaceRepository,
+  rateLimitStore = createRateLimitStore(config!.rateLimit, fetchImpl),
+}: CreateAppOpts = {}) => {
+  if (!config) throw new Error('Backend config is required.');
+
+  initRuntimeServices(config, fetchImpl);
 
   const app = express();
   setupMiddleware(app, config);
@@ -822,27 +847,7 @@ export const createApp = ({
   registerNotFoundAndErrorHandlers(app, config);
 
   if (config.environment === 'production') {
-    const KEEPALIVE_INTERVAL_MS = 10 * 60 * 1000;
-    const selfUrl = process.env.RENDER_EXTERNAL_URL || process.env.APP_URL;
-    if (selfUrl) {
-      const keepAliveTimer = setInterval(async () => {
-        try {
-          const res = await fetch(`${selfUrl}/api/health`);
-          logger.info('[Keepalive] ping', { status: res.status });
-        } catch (err) {
-          logger.warn('[Keepalive] ping failed', {
-            error: err instanceof Error ? err.message : String(err),
-          });
-        }
-      }, KEEPALIVE_INTERVAL_MS);
-      keepAliveTimer.unref();
-      logger.info('[Keepalive] self-ping scheduled', {
-        intervalMin: KEEPALIVE_INTERVAL_MS / 60_000,
-        target: selfUrl,
-      });
-    } else {
-      logger.warn('[Keepalive] RENDER_EXTERNAL_URL not set — self-ping disabled');
-    }
+    startKeepAliveSelfPing();
   }
 
   return app;

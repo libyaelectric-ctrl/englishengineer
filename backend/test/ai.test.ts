@@ -3,7 +3,13 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
 import { createMemoryAiLedger } from '../src/ai-ledger.js';
-import { AI_ROUTES, getPlanLimits, isLimitReached, registerAIRoutes } from '../src/ai.js';
+import {
+  AI_CONTRACT_VERSION,
+  AI_ROUTES,
+  getPlanLimits,
+  isLimitReached,
+  registerAIRoutes,
+} from '../src/ai.js';
 import type { SubscriptionRepository } from '../src/subscription-repository.js';
 import type { PlanId } from '../types.js';
 
@@ -28,6 +34,22 @@ const createMockApp = () => {
 
 const noopMiddleware = () => async (_req: Request, _res: Response, next: NextFunction) => next();
 
+// registerAIRoutes now takes the real AiService contract, so the stub has to
+// return a complete result instead of a bare { text, provider }.
+const createMockAiService = (): Parameters<typeof registerAIRoutes>[1] => ({
+  complete: async () => ({
+    contractVersion: AI_CONTRACT_VERSION,
+    requestId: 'test-request-id',
+    operation: 'analyzeProgress',
+    text: 'ok',
+    provider: 'mock',
+    mode: 'mock',
+    mockMode: true,
+    durationMs: 1,
+    estimatedTokens: 0,
+  }),
+});
+
 describe('AI Routes', () => {
   it('exports AI_ROUTES mapping with expected paths', () => {
     assert.equal(AI_ROUTES['/api/ai/coach'], 'analyzeProgress');
@@ -38,9 +60,7 @@ describe('AI Routes', () => {
 
   it('registers a POST route for each entry in AI_ROUTES', () => {
     const app = createMockApp();
-    const mockAiService = {
-      complete: async () => ({ text: 'ok', provider: 'mock' }),
-    };
+    const mockAiService = createMockAiService();
     const mockBillingRepo = {
       getSubscriptionStatus: async () => ({ planId: 'free', topupCredits: 0 }),
     } as unknown as SubscriptionRepository;
@@ -62,9 +82,7 @@ describe('AI Routes', () => {
 
   it('each registered route has auth, rateLimiter, validator, and handler', () => {
     const app = createMockApp();
-    const mockAiService = {
-      complete: async () => ({ text: 'ok', provider: 'mock' }),
-    };
+    const mockAiService = createMockAiService();
     const mockBillingRepo = {
       getSubscriptionStatus: async () => ({ planId: 'free', topupCredits: 0 }),
     } as unknown as SubscriptionRepository;
@@ -85,9 +103,7 @@ describe('AI Routes', () => {
 
   it('registers a GET /api/ai/analytics route with auth, rateLimiter, and handler', () => {
     const app = createMockApp();
-    const mockAiService = {
-      complete: async () => ({ text: 'ok', provider: 'mock' }),
-    };
+    const mockAiService = createMockAiService();
     const mockBillingRepo = {
       getSubscriptionStatus: async () => ({ planId: 'free', topupCredits: 0 }),
     } as unknown as SubscriptionRepository;
@@ -109,9 +125,7 @@ describe('AI Routes', () => {
 
   it('registers a GET /api/ai/analytics/admin route with auth, role, rateLimiter, and handler', () => {
     const app = createMockApp();
-    const mockAiService = {
-      complete: async () => ({ text: 'ok', provider: 'mock' }),
-    };
+    const mockAiService = createMockAiService();
     const mockBillingRepo = {
       getSubscriptionStatus: async () => ({ planId: 'free', topupCredits: 0 }),
     } as unknown as SubscriptionRepository;
