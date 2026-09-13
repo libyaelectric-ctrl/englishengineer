@@ -51,14 +51,17 @@ const markAuditFailure = (error: unknown): void => {
   };
 };
 
-export const initAuditLog = async (config: {
-  environment?: string;
-  workspace?: {
-    configured?: boolean;
-    supabaseUrl?: string | null;
-    supabaseServiceRoleKey?: string | null;
-  };
-}): Promise<void> => {
+export const initAuditLog = async (
+  config: {
+    environment?: string;
+    workspace?: {
+      configured?: boolean;
+      supabaseUrl?: string | null;
+      supabaseServiceRoleKey?: string | null;
+    };
+  },
+  fetchImpl: typeof fetch = fetch
+): Promise<void> => {
   const ws = config?.workspace;
   const required = config.environment === 'production';
   auditState = { status: 'initializing', required };
@@ -76,7 +79,7 @@ export const initAuditLog = async (config: {
 
   try {
     const { createSupabaseAuditLogRepository } = await import('./supabase-audit-log-repository.js');
-    const repository = createSupabaseAuditLogRepository(ws);
+    const repository = createSupabaseAuditLogRepository(ws, fetchImpl);
     if (!repository) throw new Error('Remote audit repository configuration is invalid.');
     await repository.healthCheck();
     supabaseRepository = repository;

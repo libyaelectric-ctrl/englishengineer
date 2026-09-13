@@ -385,12 +385,13 @@ const createAllRateLimiters = (
 
 const resolveWorkspaceRepo = (
   workspaceRepository: WorkspaceRepository | null | undefined,
-  config: BackendConfig
+  config: BackendConfig,
+  fetchImpl: typeof fetch
 ): WorkspaceRepository | null => {
   if (workspaceRepository) return workspaceRepository;
   if (!config.workspace?.configured) return null;
   try {
-    return createWorkspaceRepository(config);
+    return createWorkspaceRepository(config, fetchImpl);
   } catch (err: unknown) {
     logger.warn('Failed to create workspace repository', {
       error: err instanceof Error ? err.message : String(err),
@@ -696,7 +697,7 @@ const registerRoutes = (
     optionalBackendAuth
   );
 
-  const resolvedWorkspaceRepository = resolveWorkspaceRepo(workspaceRepository, config);
+  const resolvedWorkspaceRepository = resolveWorkspaceRepo(workspaceRepository, config, fetchImpl);
   registerWorkspaceRoutes(v1RouterAdapter, requireBackendAuth, limiters.workspace, {
     repository: resolvedWorkspaceRepository,
   });
@@ -775,7 +776,7 @@ const initRuntimeServices = (config: BackendConfig, fetchImpl: typeof fetch): vo
     config.rateLimit?.upstashToken ?? undefined
   );
   initConnectionPool(config);
-  void initAuditLog(config).catch((error: unknown) => {
+  void initAuditLog(config, fetchImpl).catch((error: unknown) => {
     logger.error(
       'Audit log initialization failed; readiness will remain unhealthy',
       { required: config.environment === 'production' },

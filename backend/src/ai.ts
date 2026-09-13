@@ -185,13 +185,16 @@ export const registerAIRoutes = (
     billing?: BillingConfig;
     dodo?: DodoConfig;
   },
-  _fetchImpl: typeof fetch = fetch
+  fetchImpl: typeof fetch = fetch
 ): void => {
-  const ledger = createAiLedger({
-    ...config,
-    workspace: config.workspace,
-    ledger: { filePath: config.ledger?.filePath ?? process.env.AI_LEDGER_FILE },
-  } as unknown as Parameters<typeof createAiLedger>[0]);
+  const ledger = createAiLedger(
+    {
+      ...config,
+      workspace: config.workspace,
+      ledger: { filePath: config.ledger?.filePath ?? process.env.AI_LEDGER_FILE },
+    } as unknown as Parameters<typeof createAiLedger>[0],
+    fetchImpl
+  );
   const configured =
     config.billing?.provider === 'dodo'
       ? config.dodo?.configured === true
