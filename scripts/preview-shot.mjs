@@ -8,14 +8,18 @@
  * viewports, and saves PNGs to .freebuff/shots/.
  *
  * Usage:
- *   node scripts/preview-shot.mjs [url] [label]
+ *   node scripts/preview-shot.mjs [url] [label] [light|dark]
  *
  * Examples:
  *   node scripts/preview-shot.mjs http://localhost:3000/ onboard-before
- *   node scripts/preview-shot.mjs http://localhost:3000/onboard onboard-after
+ *   node scripts/preview-shot.mjs http://localhost:3000/onboard onboard-after dark
  *
  * Run it once BEFORE making a page change and once AFTER — the output
- * paths are the before/after pair to show the user.
+ * paths are the before/after pair to show the user. The optional third
+ * argument pins the app's stored theme mode, so a dark capture is deterministic
+ * regardless of the wall clock (auto mode resolves to light between 07:00 and
+ * 19:00). The resolved `data-theme` is printed so a capture can be proven to
+ * be the palette you meant; capture both themes when a change touches theming.
  *
  * Note: `playwright-cli screenshot` produces frozen frames in this
  * environment (every capture is byte-identical), so the helper uses the
@@ -39,6 +43,8 @@ try {
 
 const url = process.argv[2] ?? 'http://localhost:3000/';
 const label = (process.argv[3] ?? 'page').replace(/[^a-zA-Z0-9._-]+/g, '-') || 'page';
+const themeMode = process.argv[4] === 'dark' ? 'dark' : 'light';
+const THEME_STORAGE_KEY = 'engvox-theme-mode';
 const port = new URL(url).port || 3000;
 const shotsDir = path.join(ROOT, '.freebuff', 'shots');
 
@@ -118,12 +124,31 @@ async function capture() {
   const saved = [];
   try {
     for (const vp of VIEWPORTS) {
-      const page = await browser.newPage({ viewport: { width: vp.width, height: vp.height } });
+      const page = await browser.newPage({
+        viewport: { width: vp.width, height: vp.height },
+        colorScheme: themeMode,
+      });
+      // The app resolves `auto` from the clock, so pin the stored mode instead of
+      // emulating prefers-color-scheme — otherwise a dark capture silently isn't one.
+      await page.addInitScript(
+        ([key, mode]) => {
+          try {
+            localStorage.setItem(key, mode);
+          } catch {
+            /* storage unavailable — fall through and let the app decide */
+          }
+        },
+        [THEME_STORAGE_KEY, themeMode]
+      );
       await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
       await page.waitForTimeout(1500);
+      const theme = await page.evaluate(
+        () => globalThis.document.documentElement.dataset.theme ?? '(unset)'
+      );
       const file = path.join(shotsDir, `${label}-${ts}-${vp.name}.png`);
       await page.screenshot({ path: file });
       saved.push(file);
+      console.log(`[preview-shot] ${vp.name}: mode=${themeMode} → data-theme=${theme}`);
       await page.close();
     }
   } finally {

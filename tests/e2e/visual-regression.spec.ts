@@ -4,9 +4,26 @@
  * Run: npx playwright test src/e2e/visual-regression.e2e.test.ts
  * Update baselines: npx playwright test --update-snapshots src/e2e/visual-regression.e2e.test.ts
  */
-import { test, expect } from '@playwright/test';
+import { type Page, expect, test } from '@playwright/test';
 
 const BASE_URL = process.env.BASE_URL ?? 'http://localhost:3000';
+
+/**
+ * The app's `auto` theme mode resolves from the wall clock (light between 07:00
+ * and 19:00), so an unpinned run renders a different theme depending on what
+ * time of day CI happens to execute. Every committed baseline was captured in
+ * dark, so pin the stored mode before the first navigation — otherwise these
+ * tests fail purely because of the time of day.
+ */
+const BASELINE_THEME = 'dark';
+const pinTheme = (p: Page) =>
+  p.addInitScript((mode) => {
+    try {
+      localStorage.setItem('engvox-theme-mode', mode);
+    } catch {
+      /* storage unavailable — the app falls back to its own default */
+    }
+  }, BASELINE_THEME);
 
 const PUBLIC_PAGES = [
   { name: 'landing', path: '/' },
@@ -18,6 +35,7 @@ const PUBLIC_PAGES = [
 test.describe('Visual regression — public pages', () => {
   for (const page of PUBLIC_PAGES) {
     test(`${page.name} matches baseline`, async ({ page: p }) => {
+      await pinTheme(p);
       await p.goto(`${BASE_URL}${page.path}`, { waitUntil: 'networkidle' });
       await expect(p).toHaveScreenshot(`${page.name}.png`, {
         maxDiffPixelRatio: 0.01,
@@ -29,6 +47,7 @@ test.describe('Visual regression — public pages', () => {
 
 test.describe('Visual regression — auth-gated pages (demo mode)', () => {
   test.beforeEach(async ({ page: p }) => {
+    await pinTheme(p);
     // Enter demo mode by calling auth store directly — avoids unreliable carousel
     await p.goto(`${BASE_URL}/`, { waitUntil: 'networkidle' });
     await p.evaluate(() => {
@@ -60,7 +79,9 @@ test.describe('Visual regression — auth-gated pages (demo mode)', () => {
                   data.user.interfaceLanguage = data.user.interfaceLanguage || 'en';
                   localStorage.setItem(key, JSON.stringify(data));
                 }
-              } catch { /* ignore parse errors */ }
+              } catch {
+                /* ignore parse errors */
+              }
             }
           }
         });

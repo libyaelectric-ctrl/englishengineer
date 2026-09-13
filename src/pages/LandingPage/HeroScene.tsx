@@ -46,54 +46,103 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
     }));
   }, [isDark]);
 
-  const onMouseMove = useCallback((event: MouseEvent) => {
-    if (!isDark || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const x = (event.clientX / window.innerWidth - 0.5) * 22;
-    const y = (event.clientY / window.innerHeight - 0.5) * 16;
-    setPointer({ x, y });
-  }, [isDark]);
+  const onMouseMove = useCallback(
+    (event: MouseEvent) => {
+      if (!isDark || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const x = (event.clientX / window.innerWidth - 0.5) * 22;
+      const y = (event.clientY / window.innerHeight - 0.5) * 16;
+      setPointer({ x, y });
+    },
+    [isDark]
+  );
 
   useEffect(() => {
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', onMouseMove);
   }, [onMouseMove]);
 
-  const gridColor = isDark ? 'rgba(103,232,249,0.12)' : 'rgba(15,23,42,0.045)';
-  const nodeColor = isDark ? '#A5F3FC' : '#64748B';
+  const gridColor = isDark
+    ? 'color-mix(in oklab, var(--color-primary) 16%, transparent)'
+    : 'color-mix(in oklab, var(--color-primary) 6%, transparent)';
+  const nodeColor = isDark ? 'var(--color-primary-hover)' : 'var(--color-muted-copy)';
 
   return (
-    <div aria-hidden="true" className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}>
-      <div className={isDark ? 'absolute inset-0 bg-[#040611]' : 'absolute inset-0 bg-[#f7f9fc]'} />
-      <div className={isDark ? 'absolute inset-0 opacity-35' : 'absolute inset-0 opacity-45'} style={{ backgroundImage: `linear-gradient(${gridColor} 1px, transparent 1px), linear-gradient(90deg, ${gridColor} 1px, transparent 1px)`, backgroundSize: '72px 72px' }} />
+    <div
+      aria-hidden="true"
+      className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}
+    >
+      <div className="absolute inset-0 bg-background" />
+      <div
+        className={isDark ? 'absolute inset-0 opacity-35' : 'absolute inset-0 opacity-45'}
+        style={{
+          backgroundImage: `linear-gradient(${gridColor} 1px, transparent 1px), linear-gradient(90deg, ${gridColor} 1px, transparent 1px)`,
+          backgroundSize: '72px 72px',
+        }}
+      />
 
       {isDark && (
         <>
-          <div className="absolute left-1/2 top-1/2 h-[min(76vw,700px)] w-[min(76vw,700px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-200/10" style={{ transform: `translate(calc(-50% + ${pointer.x * 0.4}px), calc(-50% + ${pointer.y * 0.4}px))` }}>
+          <div
+            className="absolute left-1/2 top-1/2 h-[min(76vw,700px)] w-[min(76vw,700px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/10"
+            style={{
+              transform: `translate(calc(-50% + ${pointer.x * 0.4}px), calc(-50% + ${pointer.y * 0.4}px))`,
+            }}
+          >
             <div className="absolute inset-8 rounded-full border border-fuchsia-200/10" />
-            <div className="absolute inset-20 rounded-full border border-cyan-200/10" />
+            <div className="absolute inset-20 rounded-full border border-primary/10" />
             <div className="absolute inset-32 rounded-full border border-amber-100/10" />
           </div>
-          <div className="absolute left-1/2 top-[54%] h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-[42%] border border-cyan-200/25 bg-cyan-200/5 shadow-[0_0_120px_rgba(103,232,249,0.18)] backdrop-blur-sm" style={{ transform: `translate(calc(-50% + ${pointer.x}px), calc(-50% + ${pointer.y}px)) rotate(45deg)` }}>
+          <div
+            className="absolute left-1/2 top-[54%] h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-[42%] border border-primary/25 bg-primary/5 shadow-[0_0_120px_color-mix(in_oklab,var(--color-primary)_20%,transparent)] backdrop-blur-sm"
+            style={{
+              transform: `translate(calc(-50% + ${pointer.x}px), calc(-50% + ${pointer.y}px)) rotate(45deg)`,
+            }}
+          >
             <div className="absolute inset-10 rounded-[38%] border border-fuchsia-200/20" />
             <div className="absolute inset-20 rounded-[34%] border border-white/15" />
             <div className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-white/90 shadow-[0_0_80px_rgba(255,255,255,0.55)]" />
           </div>
-          <div className="absolute -left-32 top-1/4 h-80 w-80 rounded-full bg-cyan-400/18 blur-3xl" />
+          <div className="absolute -left-32 top-1/4 h-80 w-80 rounded-full bg-primary/25 blur-3xl" />
           <div className="absolute -right-32 top-10 h-[26rem] w-[26rem] rounded-full bg-fuchsia-500/18 blur-3xl" />
           <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-amber-300/10 blur-3xl" />
         </>
       )}
 
       {!isDark && (
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(247,249,252,0.96))]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/70 to-background" />
       )}
 
       {nodes.map((node) => (
-        <span key={node.id} className="absolute rounded-full" style={{ left: `${node.x}%`, top: `${node.y}%`, width: node.size, height: node.size, opacity: node.opacity, backgroundColor: nodeColor, boxShadow: isDark ? '0 0 22px rgba(103,232,249,0.7)' : 'none', animation: isDark ? `landingNodeFloat ${node.duration}s ease-in-out ${node.delay}s infinite alternate` : 'none' }} />
+        <span
+          key={node.id}
+          className="absolute rounded-full"
+          style={{
+            left: `${node.x}%`,
+            top: `${node.y}%`,
+            width: node.size,
+            height: node.size,
+            opacity: node.opacity,
+            backgroundColor: nodeColor,
+            boxShadow: isDark
+              ? '0 0 22px color-mix(in oklab, var(--color-primary-hover) 70%, transparent)'
+              : 'none',
+            animation: isDark
+              ? `landingNodeFloat ${node.duration}s ease-in-out ${node.delay}s infinite alternate`
+              : 'none',
+          }}
+        />
       ))}
 
       {beams.map((beam) => (
-        <span key={beam.id} className="absolute bottom-0 w-px bg-gradient-to-t from-cyan-200/0 via-cyan-200/35 to-transparent" style={{ left: `${beam.left}%`, height: `${beam.height}%`, animation: `landingBeam ${beam.duration}s ease-in-out ${beam.delay}s infinite` }} />
+        <span
+          key={beam.id}
+          className="absolute bottom-0 w-px bg-gradient-to-t from-primary/0 via-primary/35 to-transparent"
+          style={{
+            left: `${beam.left}%`,
+            height: `${beam.height}%`,
+            animation: `landingBeam ${beam.duration}s ease-in-out ${beam.delay}s infinite`,
+          }}
+        />
       ))}
 
       <style>{`
