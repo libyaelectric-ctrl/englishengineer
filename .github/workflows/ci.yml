@@ -66,6 +66,8 @@ jobs:
         run: npm run typecheck
       - name: Lint
         run: npm run lint
+      - name: Format Check
+        run: npm run format:check
       - name: Architecture Check
         run: npx depcruise src backend/src --config .dependency-cruiser.mjs
       - name: Dead Code Detection
