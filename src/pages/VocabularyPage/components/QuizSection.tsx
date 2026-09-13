@@ -1,7 +1,8 @@
-import { AppError, ErrorCode } from '@/core/errors';
 import { Award, CheckCircle2, LoaderCircle } from 'lucide-react';
 
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+
+import { AppError, ErrorCode } from '@/core/errors';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 import { logger } from '@/shared/logger';

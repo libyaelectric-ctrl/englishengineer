@@ -1,6 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+
+import { AuthGuard } from './AuthGuard';
 
 // --- mocks -----------------------------------------------------------
 
@@ -32,8 +35,6 @@ vi.mock('@sentry/react', () => ({
   withScope: vi.fn(),
   captureMessage: vi.fn(),
 }));
-
-import { AuthGuard } from './AuthGuard';
 
 // AuthGuard is mounted inside a real route tree. If it were rendered alone,
 // its `<Navigate to="/sign-in">` would never unmount and the redirect would

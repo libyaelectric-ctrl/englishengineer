@@ -6,8 +6,8 @@
  * selected learning language at runtime and caches it in IndexedDB for
  * offline access.
  */
-import { getCachedSeed, setCachedSeed } from '@/shared/utils/indexed-db';
 import { logger } from '@/shared/logger';
+import { getCachedSeed, setCachedSeed } from '@/shared/utils/indexed-db';
 
 export interface TermTranslation {
   meaning?: string;

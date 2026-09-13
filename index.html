@@ -3,8 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <!-- Preload critical self-hosted fonts to avoid render-blocking -->
-    <link rel="preload" href="/fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fonts/hanken-grotesk-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/jetbrains-mono-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link rel="icon" type="image/svg+xml" href="/brand/logo.svg" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
     <link rel="manifest" href="/manifest.json" />
@@ -14,22 +26,33 @@
     <meta name="apple-mobile-web-app-title" content="EngVox" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <script>
-      (function() {
+      (function () {
         function showErr(title, msg) {
           var el = document.getElementById('engvox-boot-err');
           if (!el) {
             el = document.createElement('div');
             el.id = 'engvox-boot-err';
-            el.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#0f0f23;color:#ff6b6b;padding:20px;z-index:99999999;font-family:monospace;font-size:12px;overflow:auto;box-sizing:border-box;white-space:pre-wrap;line-height:1.4;';
+            el.style.cssText =
+              'position:fixed;top:0;left:0;width:100%;height:100%;background:#0f0f23;color:#ff6b6b;padding:20px;z-index:99999999;font-family:monospace;font-size:12px;overflow:auto;box-sizing:border-box;white-space:pre-wrap;line-height:1.4;';
             (document.body || document.documentElement).appendChild(el);
           }
           el.innerText += '\n[' + title + ']\n' + msg + '\n-------------------------\n';
         }
-        window.addEventListener('error', function(e) {
-          showErr('RUNTIME ERROR', (e.message || e.error) + '\nAt: ' + e.filename + ':' + e.lineno + ':' + e.colno + (e.error && e.error.stack ? '\n' + e.error.stack : ''));
+        window.addEventListener('error', function (e) {
+          showErr(
+            'RUNTIME ERROR',
+            (e.message || e.error) +
+              '\nAt: ' +
+              e.filename +
+              ':' +
+              e.lineno +
+              ':' +
+              e.colno +
+              (e.error && e.error.stack ? '\n' + e.error.stack : '')
+          );
         });
-        window.addEventListener('unhandledrejection', function(e) {
-          var r = e.reason ? (e.reason.stack || e.reason.message || String(e.reason)) : 'Unknown';
+        window.addEventListener('unhandledrejection', function (e) {
+          var r = e.reason ? e.reason.stack || e.reason.message || String(e.reason) : 'Unknown';
           showErr('UNHANDLED REJECTION', r);
         });
       })();
@@ -162,7 +185,7 @@
         color: var(--foreground, #fff);
         font-weight: 600;
         border-radius: 0 0 8px 0;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         transition: top 0.2s ease;
       }
       .skip-link:focus {
@@ -179,12 +202,7 @@
         height: auto;
       }
     </style>
-    <a
-      href="#main-content"
-      class="skip-link"
-    >
-      Skip to main content
-    </a>
+    <a href="#main-content" class="skip-link"> Skip to main content </a>
     <div id="root"></div>
     <noscript>
       <main

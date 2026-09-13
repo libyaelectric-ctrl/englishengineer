@@ -1,11 +1,10 @@
-import type { ExpansionCategory } from './types';
-
 import { civilCategories } from './civil';
 import { electricalCategories } from './electrical';
 import { hseCategories } from './hse';
 import { mechanicalCategories } from './mechanical';
 import { projectManagementCategories } from './project-management';
 import { specializedCategories } from './specialized';
+import type { ExpansionCategory } from './types';
 
 export const expansionCategories: ExpansionCategory[] = [
   ...electricalCategories,

@@ -76,7 +76,9 @@ for (const item of plan) {
     ok += 1;
     console.log('OK  ' + item.objectPath);
   } else {
-    console.error('FAIL ' + item.objectPath + ' :: ' + res.status + ' ' + (await res.text()).slice(0, 120));
+    console.error(
+      'FAIL ' + item.objectPath + ' :: ' + res.status + ' ' + (await res.text()).slice(0, 120)
+    );
     process.exit(1);
   }
 }

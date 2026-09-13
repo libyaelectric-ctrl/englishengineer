@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { GrammarProgressService } from '@/shared/services/grammar-progress.service';
 import { GrammarRepository } from '@/shared/services/grammar.repository';
-import { storage } from '@/shared/storage';
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
+import { storage } from '@/shared/storage';
 import { getInitialUserLearningProfile } from '@/shared/utils/profile.utils';
 
 import { VocabularyMenuService } from '@/features/vocabulary';

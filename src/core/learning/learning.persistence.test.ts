@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  createInitialLearningState,
   LEARNING_PERSISTENCE_VERSION,
+  createInitialLearningState,
   migratePersistedLearningState,
 } from './learning.persistence';
 

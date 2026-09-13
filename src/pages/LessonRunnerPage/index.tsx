@@ -7,9 +7,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
 
+import { logger } from '@/shared/logger';
 import { resolveTermMeaningAsync } from '@/shared/services/vocabulary-translation.service';
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
-import { logger } from '@/shared/logger';
 
 import { useAuthStore } from '@/features/auth';
 import {

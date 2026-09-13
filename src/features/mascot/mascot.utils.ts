@@ -1,6 +1,7 @@
+import { logger } from '@/shared/logger';
+
 // Singleton AudioContext — reuse instead of creating a new one per tone
 let sharedCtx: AudioContext | null = null;
-import { logger } from '@/shared/logger';
 
 const getAudioContext = (): AudioContext | null => {
   if (sharedCtx && sharedCtx.state !== 'closed') return sharedCtx;

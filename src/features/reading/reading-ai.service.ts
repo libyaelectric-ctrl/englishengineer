@@ -1,8 +1,8 @@
+import { logger } from '@/shared/logger';
 import { AI_BACKEND_PROXY_CONFIG } from '@/shared/services/ai-proxy.config';
 import { createApiClient } from '@/shared/services/apiClient';
 import { unwrapApiSuccess } from '@/shared/types/api-response';
 import type { ReadingMission, ReadingQuestion, VocabularyItem } from '@/shared/types/reading.types';
-import { logger } from '@/shared/logger';
 
 interface GeneratedReadingPayload {
   source: 'static' | 'ai-generated';

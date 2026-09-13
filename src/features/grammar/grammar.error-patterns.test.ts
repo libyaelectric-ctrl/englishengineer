@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { storage } from '@/shared/storage';
+
 import { ErrorPatternAnalyzer } from './grammar.error-patterns';
 
 describe('ErrorPatternAnalyzer', () => {

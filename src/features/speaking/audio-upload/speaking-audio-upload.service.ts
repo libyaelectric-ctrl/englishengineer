@@ -27,15 +27,37 @@ export class SpeakingAudioUploadError extends Error {
   }
 }
 
+const validateBlob = (blob: Blob | null | undefined): void => {
+  if (!blob || blob.size === 0) {
+    throw new SpeakingAudioUploadError(400, 'empty_audio', 'No audio was recorded to upload.');
+  }
+};
+
+const parseResponseBody = async (response: Response): Promise<unknown> => {
+  try {
+    return await response.json();
+  } catch (e) {
+    logger.w('[SPEAKING] Failed to parse upload response', e);
+    return null;
+  }
+};
+
+const handleErrorResponse = (response: Response, body: unknown): never => {
+  const errorBody = body as { error?: { code?: string; message?: string } };
+  throw new SpeakingAudioUploadError(
+    response.status,
+    errorBody?.error?.code ?? 'upload_failed',
+    errorBody?.error?.message ?? 'Audio upload failed.'
+  );
+};
+
 export async function uploadSpeakingAudio(
   blob: Blob,
   options: SpeakingAudioUploadOptions = {}
 ): Promise<SpeakingAudioUploadResult> {
   const { apiBaseUrl = '', authHeaders = {}, fetchImpl = fetch } = options;
 
-  if (!blob || blob.size === 0) {
-    throw new SpeakingAudioUploadError(400, 'empty_audio', 'No audio was recorded to upload.');
-  }
+  validateBlob(blob);
 
   const contentType = blob.type || 'audio/webm';
 
@@ -48,21 +70,10 @@ export async function uploadSpeakingAudio(
     body: blob,
   });
 
-  let body: unknown;
-  try {
-    body = await response.json();
-  } catch (e) {
-    logger.w('[SPEAKING] Failed to parse upload response', e);
-    body = null;
-  }
+  const body = await parseResponseBody(response);
 
   if (!response.ok) {
-    const errorBody = body as { error?: { code?: string; message?: string } };
-    throw new SpeakingAudioUploadError(
-      response.status,
-      errorBody?.error?.code ?? 'upload_failed',
-      errorBody?.error?.message ?? 'Audio upload failed.'
-    );
+    handleErrorResponse(response, body);
   }
 
   try {

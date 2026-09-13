@@ -124,9 +124,7 @@ const collectEnvironmentErrors = (
     errors.push('Production requires VITE_AI_PROVIDER=backend and VITE_AI_PROXY_URL.');
   }
   if (authProvider !== 'firebase') {
-    errors.push(
-      'Production requires VITE_AUTH_PROVIDER=firebase.'
-    );
+    errors.push('Production requires VITE_AUTH_PROVIDER=firebase.');
   }
   if (!hasBillingApiUrl) {
     errors.push('Production requires VITE_BILLING_API_URL.');

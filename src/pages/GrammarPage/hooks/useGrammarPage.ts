@@ -99,7 +99,9 @@ export function useGrammarPage() {
           setSelectedId(currentActive?.id ?? all[0]?.id ?? null);
         }
       })
-      .catch((err) => { logger.e('GrammarPage load rules:', err); });
+      .catch((err) => {
+        logger.e('GrammarPage load rules:', err);
+      });
     return () => {
       active = false;
     };
@@ -117,7 +119,9 @@ export function useGrammarPage() {
         if (!active) return;
         setLevelCounts(buildLevelCounts(entries));
       })
-      .catch((err) => { logger.e('GrammarPage load level counts:', err); });
+      .catch((err) => {
+        logger.e('GrammarPage load level counts:', err);
+      });
     return () => {
       active = false;
     };
@@ -130,7 +134,9 @@ export function useGrammarPage() {
         if (!active) return;
         setVocabularyIndex(buildVocabularyIndex(terms));
       })
-      .catch((err) => { logger.e('GrammarPage load vocabulary:', err); });
+      .catch((err) => {
+        logger.e('GrammarPage load vocabulary:', err);
+      });
     return () => {
       active = false;
     };

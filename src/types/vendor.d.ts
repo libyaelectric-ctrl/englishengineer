@@ -4,6 +4,9 @@ interface IdleDeadline {
 }
 
 interface Window {
-  requestIdleCallback?: (callback: (deadline: IdleDeadline) => void, options?: { timeout?: number }) => number;
+  requestIdleCallback?: (
+    callback: (deadline: IdleDeadline) => void,
+    options?: { timeout?: number }
+  ) => number;
   cancelIdleCallback?: (handle: number) => void;
 }

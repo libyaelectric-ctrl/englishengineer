@@ -1,6 +1,6 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
-import { apiSuccess } from './api-response.js';
 
+import { apiSuccess } from './api-response.js';
 import { ApiError } from './errors.js';
 import type { RouteRegistrar } from './route-registrar.js';
 import { parsePaginationQuery } from './validation.js';
@@ -129,12 +129,14 @@ export const registerListeningRoutes = (
         if (!request.auth?.userId)
           throw new ApiError(401, 'authentication_required', 'Auth required');
         const { limit, offset } = parsePaginationQuery(request.query as Record<string, unknown>);
-        response.json(apiSuccess({
-          items: LISTENING_ITEMS.slice(offset, offset + limit),
-          total: LISTENING_ITEMS.length,
-          limit,
-          offset,
-        }));
+        response.json(
+          apiSuccess({
+            items: LISTENING_ITEMS.slice(offset, offset + limit),
+            total: LISTENING_ITEMS.length,
+            limit,
+            offset,
+          })
+        );
       } catch (error) {
         next(error);
       }

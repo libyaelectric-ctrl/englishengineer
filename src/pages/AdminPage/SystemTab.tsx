@@ -3,8 +3,8 @@ import { Activity, Bot } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { SectionCard } from '@/shared/components/SectionCard';
-import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
 import { logger } from '@/shared/logger';
+import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
 
 import type { AdminSystemLog } from '@/features/admin';
 

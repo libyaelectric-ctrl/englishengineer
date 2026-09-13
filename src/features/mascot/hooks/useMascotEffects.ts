@@ -9,8 +9,7 @@ import { MascotState, useMascotStore } from '../mascot.store';
 import { playTone, spawnConfetti } from '../mascot.utils';
 
 export const useMascotEffects = (inline: boolean, copy: MascotStateCopy) => {
-  const { state, message, soundEnabled, soundVolume, toastEnabled } =
-    useMascotStore();
+  const { state, message, soundEnabled, soundVolume, toastEnabled } = useMascotStore();
   const prevStateRef = useRef<MascotState>(state);
   const sleepTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -39,11 +38,7 @@ export const useMascotEffects = (inline: boolean, copy: MascotStateCopy) => {
     if (state === 'sleeping' || state === 'idle' || state === 'empty') return;
     const cfg = stateToastMap[state];
     if (!cfg) return;
-    const msg =
-      message ??
-      (state === 'thinking'
-        ? copy.thinking
-        : null);
+    const msg = message ?? (state === 'thinking' ? copy.thinking : null);
     if (msg) showToast(`${cfg.icon} ${msg}`, cfg.type);
   }, [state, message, toastEnabled, copy]);
 
@@ -52,7 +47,10 @@ export const useMascotEffects = (inline: boolean, copy: MascotStateCopy) => {
     if (inline) return;
     const check = () => {
       const { state: current, setState: set } = useMascotStore.getState();
-      if (Date.now() - useMascotStore.getState().lastInteractionAt > SLEEP_AFTER_MS && current !== 'sleeping') {
+      if (
+        Date.now() - useMascotStore.getState().lastInteractionAt > SLEEP_AFTER_MS &&
+        current !== 'sleeping'
+      ) {
         set('sleeping', copy.sleeping);
       }
     };

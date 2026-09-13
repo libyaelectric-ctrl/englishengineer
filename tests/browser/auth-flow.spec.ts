@@ -4,7 +4,7 @@
  * Public rendering and auth-guard tests run without credentials. Authenticated
  * tests use the configured Firebase test project through the shared helper.
  */
-import { expect, test, type Page } from '@playwright/test';
+import { type Page, expect, test } from '@playwright/test';
 
 import { hasFirebaseTestConfig, signInAsTestUser } from '../helpers/firebase-login';
 

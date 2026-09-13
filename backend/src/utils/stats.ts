@@ -36,10 +36,7 @@ export function aggregateByCategory<T extends ScoredItem>(
   return summarizeCategories(categories);
 }
 
-export function aggregateByPromptCategory<
-  T extends { promptId: string },
-  K extends keyof T,
->(
+export function aggregateByPromptCategory<T extends { promptId: string }, K extends keyof T>(
   submissions: readonly T[],
   prompts: readonly PromptItem[],
   scoreKey: K

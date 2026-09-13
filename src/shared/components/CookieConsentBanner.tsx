@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import { logger } from '@/shared/logger';
 
 const STORAGE_KEY = 'engvox_cookie_consent';

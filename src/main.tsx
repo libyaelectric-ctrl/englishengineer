@@ -1,10 +1,9 @@
+import '@/bootstrap/learning.ports.adapter';
 import ReactDOM from 'react-dom/client';
 
 import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
 import { ObservabilityService } from '@/core/observability/observability.service';
-
-import '@/bootstrap/learning.ports.adapter';
 
 import App from './App';
 import './index.css';

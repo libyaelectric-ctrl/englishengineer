@@ -1,13 +1,13 @@
-import { configureLearningPorts, type LearningSkillName } from '@/core/learning/learning.ports';
-
-import { useAuthStore } from '@/features/auth';
-import { LearningProfileRepository } from '@/features/profile/profile.repository';
+import { type LearningSkillName, configureLearningPorts } from '@/core/learning/learning.ports';
 
 import { logger } from '@/shared/logger';
 import {
   getSupabaseClient,
   isSupabaseConfigured,
 } from '@/shared/services/auth-backend/supabase.client';
+
+import { useAuthStore } from '@/features/auth';
+import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 configureLearningPorts({
   currentUser: {

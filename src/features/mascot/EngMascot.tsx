@@ -35,7 +35,10 @@ export const EngMascot = ({
   inline = false,
   size = 64,
   // eslint-disable-next-line complexity -- large mascot render with settings/state branches
-}: { inline?: boolean; size?: number }) => {
+}: {
+  inline?: boolean;
+  size?: number;
+}) => {
   const language = useLocalizationStore((s) => s.language);
   const copy = MASCOT_COPY[language] ?? MASCOT_COPY.en;
   const { state, message, visible, minimized, position, contrastMode, toggleMinimized } =
@@ -48,7 +51,7 @@ export const EngMascot = ({
   useMascotEffects(inline, copy);
 
   // Pick a stable random idle message per mount / language change
-  const idleMessage = useMemo(() => pickRandom(copy.idle), [language]);
+  const idleMessage = useMemo(() => pickRandom(copy.idle), [copy.idle]);
 
   if (!visible) return null;
   const msg = getDisplayMessage(message, state, copy, idleMessage);
@@ -61,9 +64,7 @@ export const EngMascot = ({
     <div
       className={`${inline ? 'relative inline-flex flex-col items-center' : 'select-none'} ${contrastMode ? 'engmascot-high-contrast' : ''}`}
       style={
-        inline
-          ? {}
-          : { position: 'fixed', right: position.right, bottom: mobileBottom, zIndex: 60 }
+        inline ? {} : { position: 'fixed', right: position.right, bottom: mobileBottom, zIndex: 60 }
       }
     >
       <div className="sr-only" role="status" aria-live="polite">

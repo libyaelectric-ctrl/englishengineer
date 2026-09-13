@@ -5,7 +5,9 @@ import { parseAudioDuration } from '../src/speaking-routes.js';
 
 // --- WAV tests ---
 
-const makeWav = (opts: { sampleRate?: number; channels?: number; bitsPerSample?: number; dataSize?: number } = {}): Buffer => {
+const makeWav = (
+  opts: { sampleRate?: number; channels?: number; bitsPerSample?: number; dataSize?: number } = {}
+): Buffer => {
   const sampleRate = opts.sampleRate ?? 44100;
   const channels = opts.channels ?? 1;
   const bitsPerSample = opts.bitsPerSample ?? 16;
@@ -28,12 +30,22 @@ const makeWav = (opts: { sampleRate?: number; channels?: number; bitsPerSample?:
 };
 
 test('WAV duration: 2 seconds at 44100 Hz mono 16-bit', () => {
-  const buf = makeWav({ sampleRate: 44100, channels: 1, bitsPerSample: 16, dataSize: 44100 * 1 * 2 * 2 });
+  const buf = makeWav({
+    sampleRate: 44100,
+    channels: 1,
+    bitsPerSample: 16,
+    dataSize: 44100 * 1 * 2 * 2,
+  });
   assert.equal(parseAudioDuration(buf, 'audio/wav'), 2);
 });
 
 test('WAV duration: 5 seconds at 48000 Hz stereo 16-bit', () => {
-  const buf = makeWav({ sampleRate: 48000, channels: 2, bitsPerSample: 16, dataSize: 48000 * 2 * 2 * 5 });
+  const buf = makeWav({
+    sampleRate: 48000,
+    channels: 2,
+    bitsPerSample: 16,
+    dataSize: 48000 * 2 * 2 * 5,
+  });
   assert.equal(parseAudioDuration(buf, 'audio/wav'), 5);
 });
 
@@ -123,38 +135,52 @@ test('MP4 duration: returns null when moov atom missing', () => {
 
 // --- WebM tests ---
 
-
-
 test('WebM duration: parses TimecodeScale and Duration', () => {
   const buf = Buffer.alloc(128);
   let pos = 0;
   // EBML header (with minimal valid children)
-  buf[pos++] = 0x1a; buf[pos++] = 0x45; buf[pos++] = 0xdf; buf[pos++] = 0xa3;
+  buf[pos++] = 0x1a;
+  buf[pos++] = 0x45;
+  buf[pos++] = 0xdf;
+  buf[pos++] = 0xa3;
   const hdrSizePos = pos++;
   const hdrDataStart = pos;
   // EBMLVersion id=0x4286, size=1, value=1
-  buf[pos++] = 0x42; buf[pos++] = 0x86; buf[pos++] = 0x81; buf[pos++] = 0x01;
+  buf[pos++] = 0x42;
+  buf[pos++] = 0x86;
+  buf[pos++] = 0x81;
+  buf[pos++] = 0x01;
   buf[hdrSizePos] = 0x80 | (pos - hdrDataStart);
   // Segment
   const _segStart = pos;
-  buf[pos++] = 0x18; buf[pos++] = 0x53; buf[pos++] = 0x80; buf[pos++] = 0x67;
+  buf[pos++] = 0x18;
+  buf[pos++] = 0x53;
+  buf[pos++] = 0x80;
+  buf[pos++] = 0x67;
   const sizePos = pos++;
   const dataStart = pos;
   // TimecodeScale id=0x2AD7B1, size=3, value=1000000
-  buf[pos++] = 0x2a; buf[pos++] = 0xd7; buf[pos++] = 0xb1;
+  buf[pos++] = 0x2a;
+  buf[pos++] = 0xd7;
+  buf[pos++] = 0xb1;
   buf[pos++] = 0x83;
-  buf.writeUIntBE(1000000, pos, 3); pos += 3;
+  buf.writeUIntBE(1000000, pos, 3);
+  pos += 3;
   // Duration id=0x4489, size=8, value=25000000 (25s at timecodeScale=1000000)
-  buf[pos++] = 0x44; buf[pos++] = 0x89;
+  buf[pos++] = 0x44;
+  buf[pos++] = 0x89;
   buf[pos++] = 0x88;
-  buf.writeBigUInt64BE(BigInt(25000000), pos); pos += 8;
+  buf.writeBigUInt64BE(BigInt(25000000), pos);
+  pos += 8;
   buf[sizePos] = 0x80 | (pos - dataStart);
   assert.equal(parseAudioDuration(buf.subarray(0, pos), 'audio/webm'), 25);
 });
 
 test('WebM duration: returns null for buffer without Segment', () => {
   // Valid EBML header but no Segment element
-  const buf = Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 0x84, 0x42, 0x86, 0x81, 0x01, 0x42, 0x87, 0x81, 0x01]);
+  const buf = Buffer.from([
+    0x1a, 0x45, 0xdf, 0xa3, 0x84, 0x42, 0x86, 0x81, 0x01, 0x42, 0x87, 0x81, 0x01,
+  ]);
   assert.equal(parseAudioDuration(buf, 'audio/webm'), null);
 });
 

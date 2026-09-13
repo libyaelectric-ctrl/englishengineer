@@ -1,6 +1,5 @@
-import { LogOut, Wallet } from 'lucide-react';
-
 import { PRODUCT_VERSION } from '@/config/product.config';
+import { LogOut, Wallet } from 'lucide-react';
 
 interface SidebarFooterProps {
   copy: {

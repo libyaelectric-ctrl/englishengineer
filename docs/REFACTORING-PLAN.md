@@ -8,20 +8,26 @@ Status: approved architecture baseline for incremental implementation
 
 ## Target boundaries
 
-| Boundary | Owns | Must not import |
-| --- | --- | --- |
-| Mission | mission catalogue, start/complete transitions | auth, profile UI, gamification store |
-| Progress | study sessions, score/XP/ELO history, streak | auth feature, components/pages |
-| Gamification | XP, level, coins, hearts, achievements | profile feature, content pools |
-| ContentPool | vocabulary/grammar/speaking pools, weak terms | auth, profile, mission UI |
-| Orchestrator | coordinates one practice completion transaction | React pages/components |
+| Boundary     | Owns                                            | Must not import                      |
+| ------------ | ----------------------------------------------- | ------------------------------------ |
+| Mission      | mission catalogue, start/complete transitions   | auth, profile UI, gamification store |
+| Progress     | study sessions, score/XP/ELO history, streak    | auth feature, components/pages       |
+| Gamification | XP, level, coins, hearts, achievements          | profile feature, content pools       |
+| ContentPool  | vocabulary/grammar/speaking pools, weak terms   | auth, profile, mission UI            |
+| Orchestrator | coordinates one practice completion transaction | React pages/components               |
 
 Domain modules publish typed commands/events. They do not reach into feature stores. User identity and profile persistence are injected through ports owned by `core`:
 
 ```ts
-interface CurrentUserPort { getUserId(): string | null }
-interface LearningProfilePort { recordPractice(input: PracticeProfileUpdate): void }
-interface LearningEventPort { publish(event: LearningDomainEvent): void }
+interface CurrentUserPort {
+  getUserId(): string | null;
+}
+interface LearningProfilePort {
+  recordPractice(input: PracticeProfileUpdate): void;
+}
+interface LearningEventPort {
+  publish(event: LearningDomainEvent): void;
+}
 ```
 
 Feature adapters implement these ports outside `core`.
