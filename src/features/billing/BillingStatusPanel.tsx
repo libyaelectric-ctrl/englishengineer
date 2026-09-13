@@ -1,4 +1,4 @@
-import { Crown, ExternalLink } from 'lucide-react';
+import { Crown, ExternalLink, Loader2 } from 'lucide-react';
 
 import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
@@ -19,9 +19,29 @@ const messageStyles: Record<BillingStatusTone, string> = {
   danger: 'border-red-500/20 bg-red-500/10 text-red-400',
 };
 
-const friendlyError = (raw: string): string | null => {
-  if (/audit.?logging/i.test(raw)) return null;
-  return raw;
+/**
+ * Maps internal backend wording onto copy a customer can act on.
+ *
+ * This must never return null. Dropping the message entirely is what made a
+ * failed checkout look like a dead button: the request failed, the panel
+ * rendered nothing, and the user had no way to tell what went wrong.
+ */
+const KNOWN_INTERNAL_ERRORS: Array<{ pattern: RegExp; message: string }> = [
+  {
+    pattern: /audit.?logging|audit_log_unavailable/i,
+    message:
+      'Billing could not be started because the service is temporarily unavailable. Please try again in a few minutes.',
+  },
+  {
+    pattern: /idempotency/i,
+    message:
+      'A previous billing attempt is still being processed. Please wait a moment and try again.',
+  },
+];
+
+const friendlyError = (raw: string): string => {
+  const known = KNOWN_INTERNAL_ERRORS.find((entry) => entry.pattern.test(raw));
+  return known ? known.message : raw;
 };
 
 interface BillingStatusPanelProps {
@@ -55,13 +75,10 @@ export const BillingStatusPanel = ({
     <div className="space-y-4 font-sans text-foreground" data-testid="billing-status-panel">
       {displayError && (
         <div
-          className="rounded-[4px] border border-blue-500/20 bg-blue-500/10 p-4 text-xs leading-5 text-blue-400 shadow-sm font-bold uppercase tracking-wider"
-          role="status"
+          className={`rounded-[4px] border p-4 text-xs leading-5 shadow-sm font-bold ${messageStyles.danger}`}
+          role="alert"
         >
           {displayError}
-          <span className="mt-1 block font-normal normal-case tracking-normal text-muted-copy">
-            Access entitlements are based on the last known verified state.
-          </span>
         </div>
       )}
       <div className="flex flex-col gap-3 rounded-[4px] border border-border-soft bg-surface p-4 sm:flex-row sm:items-start sm:justify-between shadow-sm">
@@ -134,8 +151,12 @@ export const BillingStatusPanel = ({
             disabled={isLoading}
             className="text-xs bg-primary hover:bg-primary/90 border border-primary text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5 min-h-9 px-4"
           >
-            <Crown className="h-3.5 w-3.5" />
-            Upgrade Plan
+            {isLoading ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+            ) : (
+              <Crown className="h-3.5 w-3.5" aria-hidden="true" />
+            )}
+            {isLoading ? 'Starting checkout…' : 'Upgrade Plan'}
           </Button>
         ) : (
           <Button

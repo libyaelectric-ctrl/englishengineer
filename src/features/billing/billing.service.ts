@@ -10,7 +10,61 @@ const STORAGE_KEY = 'billing_subscription';
 const getProvider = (): StripeBillingProvider | null => { const url = getBillingApiUrl(); return url ? new StripeBillingProvider(url) : null; };
 const returnUrl = (path: string): string => typeof window === 'undefined' ? path : `${window.location.origin}${path}`;
 const ALLOWED_HOSTS = ['checkout.stripe.com', 'billing.stripe.com', 'portal.stripe.com', 'checkout.dodopayments.com', 'test.checkout.dodopayments.com', 'customer.dodopayments.com', 'test.customer.dodopayments.com'];
-const safeRedirect = async (url: string): Promise<void> => { try { const parsed = new URL(url); if (!ALLOWED_HOSTS.includes(parsed.hostname) && !parsed.hostname.endsWith('.dodopayments.com')) { logger.w('[BILLING] Blocked untrusted redirect host:', parsed.hostname); return; } if (isNativePlatform()) { const { openExternalUrl } = await import('@/shared/utils/capacitor'); await openExternalUrl(url); } else window.location.assign(url); } catch { logger.w('[BILLING] Invalid redirect URL.'); } };
+/**
+ * Opens the provider-hosted checkout page.
+ *
+ * Every early exit here throws instead of returning quietly: a silent return
+ * left the caller thinking checkout had started while the user saw a button
+ * that did nothing and no message explaining why.
+ */
+const safeRedirect = async (url: unknown): Promise<void> => {
+  if (typeof url !== 'string' || url.trim().length === 0) {
+    throw new AppError({
+      code: ErrorCode.NETWORK,
+      message:
+        'The payment provider did not return a checkout link. Please try again in a moment.',
+    });
+  }
+
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    logger.w('[BILLING] Billing provider returned an invalid redirect URL.');
+    throw new AppError({
+      code: ErrorCode.NETWORK,
+      message:
+        'The payment provider returned an invalid checkout link. Please try again in a moment.',
+    });
+  }
+
+  const hostIsTrusted =
+    ALLOWED_HOSTS.includes(parsed.hostname) || parsed.hostname.endsWith('.dodopayments.com');
+  if (!hostIsTrusted) {
+    logger.w('[BILLING] Blocked untrusted checkout host:', parsed.hostname);
+    throw new AppError({
+      code: ErrorCode.NETWORK,
+      message:
+        'The checkout link pointed at an untrusted host and was not opened. Please contact support.',
+    });
+  }
+
+  if (!isNativePlatform()) {
+    window.location.assign(url);
+    return;
+  }
+
+  try {
+    const { openExternalUrl } = await import('@/shared/utils/capacitor');
+    await openExternalUrl(url);
+  } catch (error) {
+    logger.w('[BILLING] Could not hand off the checkout URL to the system browser.', error);
+    throw new AppError({
+      code: ErrorCode.NETWORK,
+      message: 'Could not open the secure checkout page on this device. Please try again.',
+    });
+  }
+};
 const save = (subscription: SubscriptionSnapshot): void => { storage.set(STORAGE_KEY, subscription); };
 const providerRequired = (): StripeBillingProvider => { const provider = getProvider(); if (!provider) throw new AppError({ code: ErrorCode.NETWORK, message: 'Billing backend is not connected.' }); return provider; };
 export const BillingService = {

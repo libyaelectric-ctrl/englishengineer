@@ -100,6 +100,42 @@ describe('BillingStatusPanel', () => {
     expect(screen.getByText('Backend configured')).toBeVisible();
   });
 
+  it('shows an actionable message for an internal audit-logging failure instead of silence', () => {
+    render(
+      <BrowserRouter>
+        <BillingStatusPanel
+          subscription={createSubscription('none')}
+          providerStatus={backendStatus}
+          isLoading={false}
+          onUpgrade={vi.fn()}
+          onOpenPortal={vi.fn()}
+          error="Required audit logging is unavailable."
+        />
+      </BrowserRouter>
+    );
+
+    const alert = screen.getByRole('alert');
+    expect(alert).toBeVisible();
+    expect(alert).toHaveTextContent(/billing could not be started/i);
+    expect(alert).not.toHaveTextContent(/audit logging is unavailable/i);
+  });
+
+  it('names the in-flight checkout state on the Upgrade button', () => {
+    render(
+      <BrowserRouter>
+        <BillingStatusPanel
+          subscription={createSubscription('none')}
+          providerStatus={backendStatus}
+          isLoading
+          onUpgrade={vi.fn()}
+          onOpenPortal={vi.fn()}
+        />
+      </BrowserRouter>
+    );
+
+    expect(screen.getByRole('button', { name: /starting checkout/i })).toBeDisabled();
+  });
+
   it('does not present cached paid data as verified in local billing mode', () => {
     renderPanel(createSubscription('active'), localStatus);
 

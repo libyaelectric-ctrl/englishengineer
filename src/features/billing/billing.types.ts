@@ -130,6 +130,8 @@ export interface BillingState {
   subscription: SubscriptionSnapshot;
   providerStatus: BillingProviderStatus;
   isLoading: boolean;
+  /** True only while a checkout/portal redirect is being requested. */
+  isCheckoutLoading: boolean;
   error: string | null;
   invoices: InvoiceRecord[];
   isLoadingInvoices: boolean;

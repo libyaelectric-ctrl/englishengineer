@@ -19,6 +19,8 @@ interface BillingActions {
   startTopupCheckout: (userId: string, email: string) => Promise<void>;
   setSubscription: (subscription: SubscriptionSnapshot) => void;
   fetchInvoices: (userId: string) => Promise<void>;
+  /** Lets a caller surface its own precondition failure in the same panel copy. */
+  setBillingError: (message: string | null) => void;
 }
 
 const fetchSubscription = async (
@@ -47,6 +49,7 @@ export const useBillingStore = create<BillingState & BillingActions>()(
       subscription: BillingService.getLocalSubscription(),
       providerStatus: BillingService.getProviderStatus(),
       isLoading: false,
+      isCheckoutLoading: false,
       error: null,
       invoices: [],
       isLoadingInvoices: false,
@@ -55,43 +58,55 @@ export const useBillingStore = create<BillingState & BillingActions>()(
       refreshBilling: async (userId) => fetchSubscription(set, userId, 'Billing refresh'),
 
       startCheckout: async (userId, email, planId, billingInterval = 'month') => {
-        set({ isLoading: true, error: null });
+        set({ isCheckoutLoading: true, error: null });
         try {
           await BillingService.startCheckout(userId, email, planId, billingInterval);
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Checkout session failed.';
-          set({ isLoading: false, error: message });
+          set({ error: message });
           throw error;
+        } finally {
+          // A successful checkout navigates away, but if the redirect never
+          // happens the flag must not stay set — otherwise the Upgrade button
+          // is disabled forever and the click looks like it did nothing.
+          set({ isCheckoutLoading: false });
         }
       },
 
       openCustomerPortal: async (userId) => {
-        set({ isLoading: true, error: null });
+        set({ isCheckoutLoading: true, error: null });
         try {
           await BillingService.openCustomerPortal(userId);
         } catch (error) {
           const message =
             error instanceof Error ? error.message : 'Customer portal session failed.';
-          set({ isLoading: false, error: message });
+          set({ error: message });
           throw error;
+        } finally {
+          set({ isCheckoutLoading: false });
         }
       },
 
       startTopupCheckout: async (userId, email) => {
-        set({ isLoading: true, error: null });
+        set({ isCheckoutLoading: true, error: null });
         try {
           await BillingService.startTopupCheckout(userId, email);
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Top-up checkout failed.';
-          set({ isLoading: false, error: message });
+          set({ error: message });
           throw error;
+        } finally {
+          set({ isCheckoutLoading: false });
         }
       },
+
+      setBillingError: (message) => set({ error: message }),
 
       setSubscription: (subscription) => {
         BillingService.persistSubscription(subscription);
         set({ subscription });
       },
+
 
       fetchInvoices: async (userId) => {
         set({ isLoadingInvoices: true });

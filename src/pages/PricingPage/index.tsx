@@ -32,7 +32,7 @@ const PricingPage = () => {
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   useEffect(() => { ProductAnalyticsService.track('screen_viewed', 'pricing'); ProductAnalyticsService.trackOnce('paywall_viewed', 'pricing'); }, []);
-  const { isLoading: isCheckoutLoading, startCheckout, subscription } = useBillingStore();
+  const { isCheckoutLoading, startCheckout, subscription } = useBillingStore();
   const handleSelectPlan = async (tierId: string) => { setCheckoutError(null); if (tierId === 'free') { navigate('/dashboard'); return; } if (!currentUser) { navigate(AUTH_SIGN_IN_URL, { state: { from: location } }); return; } if (currentUser.id.startsWith('demo_engineer_')) { setCheckoutError('Demo profiles cannot make purchases.'); return; } try { await startCheckout(currentUser.id, currentUser.email, tierId as BillingPlanId, isAnnual ? 'year' : 'month'); } catch (err: unknown) { setCheckoutError(err instanceof Error ? err.message : 'Checkout failed.'); } };
 
   return (
