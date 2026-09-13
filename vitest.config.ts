@@ -24,7 +24,6 @@ export default defineConfig({
       'backend/**',
       '.mimocode/**',
       '.freebuff/**',
-      'src/e2e/**',
       'src/shared/tests/integration/**',
       'test/integration/**',
     ],

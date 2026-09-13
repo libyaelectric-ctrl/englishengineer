@@ -31,7 +31,8 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--pre'
+          # No --pre: preview is already the default target for non-production
+          # deploys, and the CLI bundled with the action rejects the flag.
           working-directory: ./
 
       - name: Comment PR

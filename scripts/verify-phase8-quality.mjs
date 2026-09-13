@@ -24,7 +24,10 @@ assert.match(preCommitHook, /--incremental/);
 assert.match(preCommitHook, /Pre-commit completed in/);
 assert.doesNotMatch(preCommitHook, /--no-verify/);
 const vitestConfig = await read('vitest.config.ts');
-assert.match(vitestConfig, /maxWorkers:\s*1/);
+// Phase 8 policy: the suite must run in a bounded thread pool so the runner cannot OOM.
+// The bound was deliberately raised from 1 to 4 in e1c7e662 (a single thread OOMed while
+// loading every test file); this gate keeps it bounded rather than pinning a stale value.
+assert.match(vitestConfig, /maxWorkers:\s*[1-4]\b/);
 assert.match(vitestConfig, /pool:\s*'threads'/);
 assert.match(vitestConfig, /'json'/);
 const changedCoverage = await read('scripts/check-changed-coverage.mjs');

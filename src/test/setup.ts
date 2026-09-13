@@ -107,6 +107,11 @@ if (typeof globalThis.IntersectionObserver === 'undefined') {
   } as unknown as typeof globalThis.IntersectionObserver;
 }
 
+// Mock scrollIntoView for jsdom (absent in jsdom, used by navbar listbox keyboard handler)
+if (typeof Element !== 'undefined' && !('scrollIntoView' in Element.prototype)) {
+  (Element.prototype as unknown as { scrollIntoView: () => void }).scrollIntoView = () => {};
+}
+
 // Mock matchMedia for jsdom (required by prefers-reduced-motion hooks)
 if (typeof window !== 'undefined' && typeof window.matchMedia !== 'function') {
   Object.defineProperty(window, 'matchMedia', {
