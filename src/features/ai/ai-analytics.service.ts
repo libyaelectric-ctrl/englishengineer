@@ -1,6 +1,6 @@
+import { logger } from '@/shared/logger';
 import { createApiClient } from '@/shared/services/apiClient';
 import { unwrapApiSuccess } from '@/shared/types/api-response';
-import { logger } from '@/shared/logger';
 
 import { AI_BACKEND_PROXY_CONFIG } from './ai.config';
 

@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
-import { router } from '@/routes/router';
+
 import { isNativePlatform } from '@/shared/utils/capacitor';
+
+import { router } from '@/routes/router';
 
 /**
  * Handles the Android hardware back button.
@@ -16,9 +18,7 @@ export function useCapacitorBackButton() {
     import('@capacitor/app').then(({ App }) => {
       App.addListener('backButton', ({ canGoBack }) => {
         const currentPath =
-          router?.state?.location?.pathname ||
-          window.location.hash.replace(/^#/, '') ||
-          '/';
+          router?.state?.location?.pathname || window.location.hash.replace(/^#/, '') || '/';
         const rootPaths = ['/', '/dashboard', '/pricing', '/onboard', '/start'];
 
         if (rootPaths.includes(currentPath)) {
@@ -38,4 +38,3 @@ export function useCapacitorBackButton() {
     };
   }, []);
 }
-

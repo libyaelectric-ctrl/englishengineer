@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { afterEach, describe, test } from 'node:test';
 
-import { getAuditLogStatus, initAuditLog, isAuditLogReady, auditLog } from '../src/audit-log.js';
+import { auditLog, getAuditLogStatus, initAuditLog, isAuditLogReady } from '../src/audit-log.js';
 import { ApiError } from '../src/errors.js';
 import {
   requireTenantContext,

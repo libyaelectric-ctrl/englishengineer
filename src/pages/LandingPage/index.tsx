@@ -1,4 +1,3 @@
-import { PRODUCT_VERSION } from '@/config/product.config';
 import {
   ArrowLeft,
   ArrowRight,
@@ -28,6 +27,8 @@ import { Link } from 'react-router-dom';
 import { getLandingTranslations } from '@/shared/i18n/landing-i18n';
 
 import { useLocalizationStore } from '@/features/localization';
+
+import { PRODUCT_VERSION } from '@/config/product.config';
 
 import { DisciplineShowcase } from './DisciplineShowcase';
 import { Footer } from './Footer';

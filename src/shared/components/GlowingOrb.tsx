@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+
 import { logger } from '@/shared/logger';
 
 interface GlowingOrbProps {

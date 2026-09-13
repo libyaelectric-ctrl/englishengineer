@@ -14,7 +14,12 @@ import { GrammarRepository } from './grammar.repository';
 /* ------------------------------------------------------------------ */
 
 const LEVEL_COUNTS: Record<CefrLevel, number> = {
-  A1: 6, A2: 6, B1: 6, B2: 6, C1: 6, C2: 6,
+  A1: 6,
+  A2: 6,
+  B1: 6,
+  B2: 6,
+  C1: 6,
+  C2: 6,
 };
 
 const LEVEL_INDEX: Record<CefrLevel, number> = { A1: 0, A2: 1, B1: 2, B2: 3, C1: 4, C2: 5 };

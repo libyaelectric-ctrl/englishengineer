@@ -1,5 +1,3 @@
-import { ErrorBoundaryProvider } from '@/providers/ErrorBoundaryProvider';
-import { router } from '@/routes/router';
 import { configure, render, screen } from '@testing-library/react';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -22,6 +20,10 @@ import { VocabularyService } from '@/features/vocabulary';
 import { loadVocabularyEntries } from '@/features/vocabulary/data/vocabulary.data';
 import { WritingService } from '@/features/writing';
 
+import { ErrorBoundaryProvider } from '@/providers/ErrorBoundaryProvider';
+
+import { router } from '@/routes/router';
+
 const ThrowingComponent = () => {
   throw new Error('release candidate boundary smoke');
 };
@@ -31,11 +33,14 @@ const getCorrectAnswerMap = (
 ): Record<string, string> =>
   Object.fromEntries(questions.map((question) => [question.id, question.correctAnswer]));
 
-// Lazy/Suspense-loaded components resolve slowly under a full multi-file
-// CI run; give async utility assertions more headroom (see the matching
-// configure() call in new-features.e2e.test.tsx).
-configure({ asyncUtilTimeout: 10000 });
-
+// Lazy/Suspense-loaded components resolve slowly under a full multi-file
+
+// CI run; give async utility assertions more headroom (see the matching
+
+// configure() call in new-features.e2e.test.tsx).
+
+configure({ asyncUtilTimeout: 10000 });
+
 describe('EngVox release candidate E2E smoke fallback', () => {
   beforeAll(async () => {
     await loadVocabularyEntries();

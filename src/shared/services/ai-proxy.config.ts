@@ -1,6 +1,6 @@
-import { isConfiguredPublicUrl } from '@/config/environment.config';
-
 import type { AIProviderMode } from '@/shared/types/ai.types';
+
+import { isConfiguredPublicUrl } from '@/config/environment.config';
 
 interface AIEnv {
   VITE_AI_PROVIDER?: string;

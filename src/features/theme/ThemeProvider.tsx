@@ -77,15 +77,19 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     root.classList.toggle('dark', theme === 'dark');
   }, [mode, theme]);
 
-  const value = useMemo<ThemeContextValue>(() => ({
-    mode,
-    theme,
-    isAuto: mode === 'auto',
-    toggleTheme: () => setModeState((current) => (resolveMode(current) === 'light' ? 'dark' : 'light')),
-    setTheme: (newTheme) => setModeState(newTheme),
-    setMode: (newMode) => setModeState(newMode),
-    resetToAuto: () => setModeState('auto'),
-  }), [mode, theme]);
+  const value = useMemo<ThemeContextValue>(
+    () => ({
+      mode,
+      theme,
+      isAuto: mode === 'auto',
+      toggleTheme: () =>
+        setModeState((current) => (resolveMode(current) === 'light' ? 'dark' : 'light')),
+      setTheme: (newTheme) => setModeState(newTheme),
+      setMode: (newMode) => setModeState(newMode),
+      resetToAuto: () => setModeState('auto'),
+    }),
+    [mode, theme]
+  );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

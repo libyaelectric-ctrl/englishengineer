@@ -12,11 +12,14 @@ const renderPalette = (initialEntries = ['/dashboard']) =>
     </MemoryRouter>
   );
 
-// Lazy/Suspense-loaded components resolve slowly under a full multi-file
-// CI run; give async utility assertions more headroom (see the matching
-// configure() call in new-features.e2e.test.tsx).
-configure({ asyncUtilTimeout: 10000 });
-
+// Lazy/Suspense-loaded components resolve slowly under a full multi-file
+
+// CI run; give async utility assertions more headroom (see the matching
+
+// configure() call in new-features.e2e.test.tsx).
+
+configure({ asyncUtilTimeout: 10000 });
+
 describe('Command Palette E2E', () => {
   it('does not render when closed', () => {
     renderPalette();

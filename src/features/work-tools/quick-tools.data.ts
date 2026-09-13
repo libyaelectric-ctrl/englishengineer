@@ -1,7 +1,7 @@
 import { EXPANDED_MEETING_PHRASES, EXPANDED_SITE_DICTIONARY } from './quick-tools.expanded.data';
+import type { MeetingPhrase, QuickAIAction, SiteDictionaryTerm } from './quick-tools.types';
 
 export type { MeetingPhrase, SiteDictionaryTerm, QuickAIAction } from './quick-tools.types';
-import type { MeetingPhrase, SiteDictionaryTerm, QuickAIAction } from './quick-tools.types';
 
 type BaseMeetingPhrase = Omit<MeetingPhrase, 'tone' | 'tags'>;
 type BaseSiteDictionaryTerm = Omit<SiteDictionaryTerm, 'tags'>;

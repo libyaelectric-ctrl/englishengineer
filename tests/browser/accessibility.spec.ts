@@ -76,7 +76,7 @@ test.describe('Keyboard Navigation', () => {
     await page.goto('/');
 
     // Open a modal if present
-    const modalTrigger = page.locator('[data-testid*="mascot"], [aria-label*="mascot"]').first();
+    const modalTrigger = page.locator('[data-testid*="modal"], [aria-label*="modal"]').first();
     if (await modalTrigger.isVisible()) {
       await modalTrigger.click();
       await page.waitForTimeout(300);

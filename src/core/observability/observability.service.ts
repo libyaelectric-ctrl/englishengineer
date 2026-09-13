@@ -1,6 +1,7 @@
-import { type EngVoxEnv, validateEnvironment } from '@/config/environment.config';
 import * as Sentry from '@sentry/react';
+
 import * as React from 'react';
+
 import {
   createRoutesFromChildren,
   matchRoutes,
@@ -9,6 +10,8 @@ import {
 } from 'react-router-dom';
 
 import { logger } from '@/shared/logger';
+
+import { type EngVoxEnv, validateEnvironment } from '@/config/environment.config';
 
 import {
   ErrorMonitoringConfig,

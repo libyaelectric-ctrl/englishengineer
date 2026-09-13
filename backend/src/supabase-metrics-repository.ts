@@ -18,7 +18,8 @@
  * When Supabase is unavailable, the in-memory buffer continues to serve
  * real-time reads. Failed flushes are logged but do not block requests.
  */
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient, createClient } from '@supabase/supabase-js';
+
 import { logger } from './logger.js';
 
 /* ------------------------------------------------------------------ */
@@ -54,8 +55,8 @@ interface RateLimitEvent {
 /*  Configuration                                                      */
 /* ------------------------------------------------------------------ */
 
-const FLUSH_INTERVAL_MS = 60_000;        // flush every 60s
-const MAX_BUFFERED_REQUESTS = 1_000;     // ring buffer for real-time reads
+const FLUSH_INTERVAL_MS = 60_000; // flush every 60s
+const MAX_BUFFERED_REQUESTS = 1_000; // ring buffer for real-time reads
 const MAX_BUFFERED_RATE_LIMITS = 500;
 
 /* ------------------------------------------------------------------ */
@@ -177,7 +178,9 @@ export const createSupabaseMetricsRepository = (
       if (error) {
         logger.warn('[MetricsRepository] Request flush failed', { error: error.message });
         // Re-add to buffer on failure (keep most recent)
-        requests = [...toFlush.slice(-MAX_BUFFERED_REQUESTS), ...requests].slice(-MAX_BUFFERED_REQUESTS);
+        requests = [...toFlush.slice(-MAX_BUFFERED_REQUESTS), ...requests].slice(
+          -MAX_BUFFERED_REQUESTS
+        );
       } else {
         requestsFlushed = rows.length;
       }
@@ -195,13 +198,19 @@ export const createSupabaseMetricsRepository = (
       const { error } = await supabase.from('rate_limit_events').insert(rows);
       if (error) {
         logger.warn('[MetricsRepository] Rate limit flush failed', { error: error.message });
-        rateLimits = [...toFlush.slice(-MAX_BUFFERED_RATE_LIMITS), ...rateLimits].slice(-MAX_BUFFERED_RATE_LIMITS);
+        rateLimits = [...toFlush.slice(-MAX_BUFFERED_RATE_LIMITS), ...rateLimits].slice(
+          -MAX_BUFFERED_RATE_LIMITS
+        );
       } else {
         rateLimitsFlushed = rows.length;
       }
     }
 
-    return { endpoints: endpointsFlushed, requests: requestsFlushed, rateLimits: rateLimitsFlushed };
+    return {
+      endpoints: endpointsFlushed,
+      requests: requestsFlushed,
+      rateLimits: rateLimitsFlushed,
+    };
   }
 
   return {
@@ -242,9 +251,8 @@ export const createSupabaseMetricsRepository = (
 
     getPerformanceMetrics() {
       const durations = requests.map((r) => r.duration);
-      const avgDuration = durations.length > 0
-        ? durations.reduce((a, b) => a + b, 0) / durations.length
-        : 0;
+      const avgDuration =
+        durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0;
       const sorted = [...durations].sort((a, b) => a - b);
       const p95 = sorted.length > 0 ? sorted[Math.floor(sorted.length * 0.95)] : 0;
       const p99 = sorted.length > 0 ? sorted[Math.floor(sorted.length * 0.99)] : 0;
@@ -261,13 +269,17 @@ export const createSupabaseMetricsRepository = (
       ];
       for (const d of durations) {
         for (const bucket of histogramBuckets) {
-          if (d >= bucket.min && d < bucket.max) { bucket.count++; break; }
+          if (d >= bucket.min && d < bucket.max) {
+            bucket.count++;
+            break;
+          }
         }
       }
       const responseTimeHistogram = histogramBuckets.map(({ label, count }) => ({
         bucket: label,
         count,
-        percentage: durations.length > 0 ? ((count / durations.length) * 100).toFixed(1) + '%' : '0%',
+        percentage:
+          durations.length > 0 ? ((count / durations.length) * 100).toFixed(1) + '%' : '0%',
       }));
 
       const endpointStats = new Map<string, { total: number; count: number }>();
@@ -363,7 +375,12 @@ export const createMemoryMetricsRepository = (): MetricsRepository => {
       for (const [endpoint, data] of endpointMap.entries()) {
         const avgTime = data.count > 0 ? data.totalTime / data.count : 0;
         const errorRate = data.count > 0 ? (data.errors / data.count) * 100 : 0;
-        results.push({ endpoint, count: data.count, avgTime: Math.round(avgTime), errorRate: errorRate.toFixed(2) + '%' });
+        results.push({
+          endpoint,
+          count: data.count,
+          avgTime: Math.round(avgTime),
+          errorRate: errorRate.toFixed(2) + '%',
+        });
       }
       return results.sort((a, b) => b.count - a.count);
     },
@@ -377,7 +394,8 @@ export const createMemoryMetricsRepository = (): MetricsRepository => {
 
     getPerformanceMetrics() {
       const durations = requests.map((r) => r.duration);
-      const avgDuration = durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0;
+      const avgDuration =
+        durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0;
       const sorted = [...durations].sort((a, b) => a - b);
       const p95 = sorted.length > 0 ? sorted[Math.floor(sorted.length * 0.95)] : 0;
       const p99 = sorted.length > 0 ? sorted[Math.floor(sorted.length * 0.99)] : 0;
@@ -394,11 +412,17 @@ export const createMemoryMetricsRepository = (): MetricsRepository => {
       ];
       for (const d of durations) {
         for (const bucket of histogramBuckets) {
-          if (d >= bucket.min && d < bucket.max) { bucket.count++; break; }
+          if (d >= bucket.min && d < bucket.max) {
+            bucket.count++;
+            break;
+          }
         }
       }
       const responseTimeHistogram = histogramBuckets.map(({ label, count }) => ({
-        bucket: label, count, percentage: durations.length > 0 ? ((count / durations.length) * 100).toFixed(1) + '%' : '0%',
+        bucket: label,
+        count,
+        percentage:
+          durations.length > 0 ? ((count / durations.length) * 100).toFixed(1) + '%' : '0%',
       }));
 
       const endpointStats = new Map<string, { total: number; count: number }>();
@@ -411,14 +435,25 @@ export const createMemoryMetricsRepository = (): MetricsRepository => {
         endpointStats.set(key, existing);
       }
       const slowestEndpoints = [...endpointStats.entries()]
-        .map(([endpoint, stats]) => ({ endpoint, avgDurationMs: Math.round(stats.total / stats.count), requestCount: stats.count }))
+        .map(([endpoint, stats]) => ({
+          endpoint,
+          avgDurationMs: Math.round(stats.total / stats.count),
+          requestCount: stats.count,
+        }))
         .sort((a, b) => b.avgDurationMs - a.avgDurationMs)
         .slice(0, 10);
 
       return {
-        uptime: Date.now() - systemStartTime, requestCount: totalRequests, errorCount: totalErrors,
-        errorRate: errorRate.toFixed(2) + '%', avgDuration: Math.round(avgDuration), p95Duration: Math.round(p95), p99Duration: Math.round(p99),
-        memoryUsage: process.memoryUsage(), responseTimeHistogram, slowestEndpoints,
+        uptime: Date.now() - systemStartTime,
+        requestCount: totalRequests,
+        errorCount: totalErrors,
+        errorRate: errorRate.toFixed(2) + '%',
+        avgDuration: Math.round(avgDuration),
+        p95Duration: Math.round(p95),
+        p99Duration: Math.round(p99),
+        memoryUsage: process.memoryUsage(),
+        responseTimeHistogram,
+        slowestEndpoints,
       };
     },
 
@@ -437,11 +472,16 @@ export const createMemoryMetricsRepository = (): MetricsRepository => {
         byScope[entry.scope].total++;
         if (entry.blocked) byScope[entry.scope].blocked++;
       }
-      const recentBlocks = rateLimits.filter((r) => r.blocked).slice(-20).map(({ scope }) => ({ scope, timestamp: Date.now() }));
+      const recentBlocks = rateLimits
+        .filter((r) => r.blocked)
+        .slice(-20)
+        .map(({ scope }) => ({ scope, timestamp: Date.now() }));
       return { totalRequests: total, blockedRequests: blocked, blockRate, byScope, recentBlocks };
     },
 
-    async flush() { return { endpoints: 0, requests: 0, rateLimits: 0 }; },
+    async flush() {
+      return { endpoints: 0, requests: 0, rateLimits: 0 };
+    },
     destroy() {},
   };
 };
@@ -452,16 +492,12 @@ export const createMemoryMetricsRepository = (): MetricsRepository => {
 
 export const createMetricsRepository = (
   config: { repositoryMode?: string; supabaseUrl?: string; supabaseServiceRoleKey?: string },
-  fetchImpl: typeof fetch = fetch,
+  fetchImpl: typeof fetch = fetch
 ): MetricsRepository => {
-  if (
-    config.repositoryMode === 'supabase' &&
-    config.supabaseUrl &&
-    config.supabaseServiceRoleKey
-  ) {
+  if (config.repositoryMode === 'supabase' && config.supabaseUrl && config.supabaseServiceRoleKey) {
     return createSupabaseMetricsRepository(
       { supabaseUrl: config.supabaseUrl, supabaseServiceRoleKey: config.supabaseServiceRoleKey },
-      fetchImpl,
+      fetchImpl
     );
   }
   return createMemoryMetricsRepository();

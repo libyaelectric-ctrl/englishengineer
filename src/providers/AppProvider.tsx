@@ -1,9 +1,9 @@
-import { reportEnvironmentValidation } from '@/config/environment.config';
-
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 
 import { runWhenIdle } from '@/shared/utils/idle';
+
+import { reportEnvironmentValidation } from '@/config/environment.config';
 
 import { QueryProvider } from './QueryProvider';
 
@@ -32,7 +32,5 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     });
   }, []);
 
-  return (
-    <QueryProvider>{children}</QueryProvider>
-  );
+  return <QueryProvider>{children}</QueryProvider>;
 };

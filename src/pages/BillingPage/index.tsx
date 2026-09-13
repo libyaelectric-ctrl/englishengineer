@@ -18,20 +18,203 @@ import { useLearningCockpit } from '@/features/profile';
 
 export const BillingPage = () => {
   const { currentUser } = useAuthStore();
-  const { subscription, providerStatus, isLoading: isBillingLoading, isCheckoutLoading, error: billingError, refreshBilling, startCheckout, openCustomerPortal, setBillingError, invoices, isLoadingInvoices, fetchInvoices } = useBillingStore();
+  const {
+    subscription,
+    providerStatus,
+    isLoading: isBillingLoading,
+    isCheckoutLoading,
+    error: billingError,
+    refreshBilling,
+    startCheckout,
+    openCustomerPortal,
+    setBillingError,
+    invoices,
+    isLoadingInvoices,
+    fetchInvoices,
+  } = useBillingStore();
   const { memory, learningState } = useLearningCockpit(currentUser?.id);
   const { sessions } = useAIStore();
-  const todaysCoachSessions = sessions.filter((s) => new Date(s.timestamp).toDateString() === new Date().toDateString()).length;
-  useEffect(() => { if (currentUser?.id) { refreshBilling?.(currentUser.id)?.catch((err) => logger.e('Billing refresh failed:', err)); fetchInvoices?.(currentUser.id)?.catch((err) => logger.e('Invoices fetch failed:', err)); } }, [currentUser?.id, refreshBilling, fetchInvoices]);
+  const todaysCoachSessions = sessions.filter(
+    (s) => new Date(s.timestamp).toDateString() === new Date().toDateString()
+  ).length;
+  useEffect(() => {
+    if (currentUser?.id) {
+      refreshBilling?.(currentUser.id)?.catch((err) => logger.e('Billing refresh failed:', err));
+      fetchInvoices?.(currentUser.id)?.catch((err) => logger.e('Invoices fetch failed:', err));
+    }
+  }, [currentUser?.id, refreshBilling, fetchInvoices]);
   const handleUpgrade = async () => {
-    if (!currentUser?.id) { setBillingError('Please sign in before starting a subscription.'); return; }
+    if (!currentUser?.id) {
+      setBillingError('Please sign in before starting a subscription.');
+      return;
+    }
     // Mirrors the Pricing page: a demo profile cannot buy anything, and telling
     // it to "sign in" only sends the user in a circle.
-    if (currentUser.id.startsWith('demo_engineer_')) { setBillingError('Demo profiles cannot make purchases. Create an account to subscribe.'); return; }
-    if (!currentUser.email) { setBillingError('Your account has no email address on file, so checkout cannot be started. Please sign in again.'); return; }
-    try { await startCheckout(currentUser.id, currentUser.email, 'senior'); } catch (err) { logger.e('Checkout failed:', err); }
+    if (currentUser.id.startsWith('demo_engineer_')) {
+      setBillingError('Demo profiles cannot make purchases. Create an account to subscribe.');
+      return;
+    }
+    if (!currentUser.email) {
+      setBillingError(
+        'Your account has no email address on file, so checkout cannot be started. Please sign in again.'
+      );
+      return;
+    }
+    try {
+      await startCheckout(currentUser.id, currentUser.email, 'senior');
+    } catch (err) {
+      logger.e('Checkout failed:', err);
+    }
   };
-  const handleManageSubscription = () => { if (!currentUser?.id) return; openCustomerPortal(currentUser.id).catch((err) => logger.e('Portal failed:', err)); };
-  return <PageContainer className="max-w-6xl space-y-6"><PageHeader title="Billing & Subscriptions" description="Subscription status, quota limits, and invoice history." actions={<button onClick={() => currentUser?.id && refreshBilling(currentUser.id)} disabled={isBillingLoading} className="inline-flex min-h-10 items-center gap-1.5 rounded-[var(--radius-button)] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground shadow-sm transition-all hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50"><RefreshCw className={`h-3.5 w-3.5 ${isBillingLoading ? 'animate-spin' : ''}`} />Sync</button>} /><div className="grid gap-6 lg:grid-cols-3"><div className="space-y-6 lg:col-span-2"><SectionCard title="Subscription Entitlements" subtitle="Current status and quick upgrade controls" icon={Wallet}><BillingStatusPanel subscription={subscription} providerStatus={providerStatus} isLoading={isCheckoutLoading} onUpgrade={handleUpgrade} onOpenPortal={handleManageSubscription} error={billingError} /></SectionCard><SectionCard title="Plan Quota Limits" subtitle="Daily usage compared with the current plan" icon={ShieldCheck}><div className="space-y-5"><BillingPlanCards subscription={subscription} todaysCoachSessions={todaysCoachSessions} todaysAttempts={learningState.studySessions.filter((s) => new Date(s.timestamp).toDateString() === new Date().toDateString()).length} todaysReviews={memory.dueToday} uploadedDocsCount={0} voiceMinutesUsed={0} /><BillingUpgradeCTA planId={subscription.planId} /></div></SectionCard><SectionCard title="Transaction History" subtitle="Invoices and receipts" icon={Download}><div className="overflow-x-auto rounded-[var(--radius-card)] border border-border-soft bg-surface shadow-sm"><table className="w-full border-collapse text-left"><thead><tr className="border-b border-border-soft bg-surface-hover"><th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-copy">Invoice ID</th><th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-copy">Billing Date</th><th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-copy">Amount Paid</th><th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-copy">Status</th><th className="px-4 py-3 text-right text-[10px] font-bold uppercase tracking-wider text-muted-copy">Receipt</th></tr></thead><tbody className="divide-y divide-border-soft">{isLoadingInvoices ? <tr><td colSpan={5} className="px-4 py-8 text-center text-xs text-muted-copy">Loading invoices...</td></tr> : (invoices ?? []).length === 0 ? <tr><td colSpan={5} className="px-4 py-8 text-center text-xs text-muted-copy">No transactions yet.</td></tr> : (invoices ?? []).map((inv: InvoiceRecord) => <tr key={inv.id} className="transition-colors hover:bg-surface-hover"><td className="px-4 py-3 font-mono text-xs font-bold text-foreground">{inv.id}</td><td className="px-4 py-3 text-xs font-medium text-muted-copy">{inv.date ? new Intl.DateTimeFormat(undefined, { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(inv.date)) : '—'}</td><td className="px-4 py-3 text-xs font-bold text-foreground">{inv.amount}</td><td className="px-4 py-3 text-xs"><span className={`inline-flex items-center rounded-[var(--radius-button)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${inv.status === 'paid' ? 'border border-success/30 bg-success/15 text-success' : inv.status === 'open' ? 'border border-warning/30 bg-warning/15 text-warning' : 'border border-border-soft bg-surface-hover text-muted-copy'}`}>{inv.status}</span></td><td className="px-4 py-3 text-right">{inv.invoicePdf ? <a href={inv.invoicePdf} target="_blank" rel="noopener noreferrer" className="inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius-button)] border border-border-soft bg-surface text-muted-copy shadow-sm transition-all hover:border-primary hover:text-primary" aria-label="Download receipt"><Download className="h-4 w-4" /></a> : <button type="button" disabled className="inline-flex h-8 w-8 cursor-not-allowed items-center justify-center rounded-[var(--radius-button)] border border-border-soft bg-surface text-muted-copy/50" aria-label="No receipt available"><Download className="h-4 w-4" /></button>}</td></tr>)}</tbody></table></div></SectionCard></div></div></PageContainer>;
+  const handleManageSubscription = () => {
+    if (!currentUser?.id) return;
+    openCustomerPortal(currentUser.id).catch((err) => logger.e('Portal failed:', err));
+  };
+  return (
+    <PageContainer className="max-w-6xl space-y-6">
+      <PageHeader
+        title="Billing & Subscriptions"
+        description="Subscription status, quota limits, and invoice history."
+        actions={
+          <button
+            onClick={() => currentUser?.id && refreshBilling(currentUser.id)}
+            disabled={isBillingLoading}
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-[var(--radius-button)] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground shadow-sm transition-all hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 ${isBillingLoading ? 'animate-spin' : ''}`} />
+            Sync
+          </button>
+        }
+      />
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2">
+          <SectionCard
+            title="Subscription Entitlements"
+            subtitle="Current status and quick upgrade controls"
+            icon={Wallet}
+          >
+            <BillingStatusPanel
+              subscription={subscription}
+              providerStatus={providerStatus}
+              isLoading={isCheckoutLoading}
+              onUpgrade={handleUpgrade}
+              onOpenPortal={handleManageSubscription}
+              error={billingError}
+            />
+          </SectionCard>
+          <SectionCard
+            title="Plan Quota Limits"
+            subtitle="Daily usage compared with the current plan"
+            icon={ShieldCheck}
+          >
+            <div className="space-y-5">
+              <BillingPlanCards
+                subscription={subscription}
+                todaysCoachSessions={todaysCoachSessions}
+                todaysAttempts={
+                  learningState.studySessions.filter(
+                    (s) => new Date(s.timestamp).toDateString() === new Date().toDateString()
+                  ).length
+                }
+                todaysReviews={memory.dueToday}
+                uploadedDocsCount={0}
+                voiceMinutesUsed={0}
+              />
+              <BillingUpgradeCTA planId={subscription.planId} />
+            </div>
+          </SectionCard>
+          <SectionCard title="Transaction History" subtitle="Invoices and receipts" icon={Download}>
+            <div className="overflow-x-auto rounded-[var(--radius-card)] border border-border-soft bg-surface shadow-sm">
+              <table className="w-full border-collapse text-left">
+                <thead>
+                  <tr className="border-b border-border-soft bg-surface-hover">
+                    <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+                      Invoice ID
+                    </th>
+                    <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+                      Billing Date
+                    </th>
+                    <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+                      Amount Paid
+                    </th>
+                    <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+                      Status
+                    </th>
+                    <th className="px-4 py-3 text-right text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+                      Receipt
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border-soft">
+                  {isLoadingInvoices ? (
+                    <tr>
+                      <td colSpan={5} className="px-4 py-8 text-center text-xs text-muted-copy">
+                        Loading invoices...
+                      </td>
+                    </tr>
+                  ) : (invoices ?? []).length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="px-4 py-8 text-center text-xs text-muted-copy">
+                        No transactions yet.
+                      </td>
+                    </tr>
+                  ) : (
+                    (invoices ?? []).map((inv: InvoiceRecord) => (
+                      <tr key={inv.id} className="transition-colors hover:bg-surface-hover">
+                        <td className="px-4 py-3 font-mono text-xs font-bold text-foreground">
+                          {inv.id}
+                        </td>
+                        <td className="px-4 py-3 text-xs font-medium text-muted-copy">
+                          {inv.date
+                            ? new Intl.DateTimeFormat(undefined, {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              }).format(new Date(inv.date))
+                            : '—'}
+                        </td>
+                        <td className="px-4 py-3 text-xs font-bold text-foreground">
+                          {inv.amount}
+                        </td>
+                        <td className="px-4 py-3 text-xs">
+                          <span
+                            className={`inline-flex items-center rounded-[var(--radius-button)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${inv.status === 'paid' ? 'border border-success/30 bg-success/15 text-success' : inv.status === 'open' ? 'border border-warning/30 bg-warning/15 text-warning' : 'border border-border-soft bg-surface-hover text-muted-copy'}`}
+                          >
+                            {inv.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          {inv.invoicePdf ? (
+                            <a
+                              href={inv.invoicePdf}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius-button)] border border-border-soft bg-surface text-muted-copy shadow-sm transition-all hover:border-primary hover:text-primary"
+                              aria-label="Download receipt"
+                            >
+                              <Download className="h-4 w-4" />
+                            </a>
+                          ) : (
+                            <button
+                              type="button"
+                              disabled
+                              className="inline-flex h-8 w-8 cursor-not-allowed items-center justify-center rounded-[var(--radius-button)] border border-border-soft bg-surface text-muted-copy/50"
+                              aria-label="No receipt available"
+                            >
+                              <Download className="h-4 w-4" />
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </SectionCard>
+        </div>
+      </div>
+    </PageContainer>
+  );
 };
 export default BillingPage;

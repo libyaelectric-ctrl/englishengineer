@@ -1,10 +1,10 @@
-import { AI_ACCESS_POLICY } from '@/config/product.config';
-
 import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 
 import type { AIProviderStatus } from '@/features/ai';
 import type { SubscriptionSnapshot } from '@/features/billing';
+
+import { AI_ACCESS_POLICY } from '@/config/product.config';
 
 const getProviderBadge = (status: AIProviderStatus): { label: string; description: string } => {
   if (status.mode === 'backend' && status.state === 'backend-configured') {

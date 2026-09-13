@@ -21,7 +21,12 @@ export interface SubscriptionRepository {
   markStripeEventProcessed(eventId: string, metadata?: Record<string, unknown>): Promise<void>;
   getProcessedEventCount?(): number;
 }
-const pruneEvents = (events: Map<string, number>, now: number, ttlMs: number, maxEntries: number): void => {
+const pruneEvents = (
+  events: Map<string, number>,
+  now: number,
+  ttlMs: number,
+  maxEntries: number
+): void => {
   for (const [id, timestamp] of events) if (now - timestamp >= ttlMs) events.delete(id);
   while (events.size > maxEntries) {
     const oldest = events.keys().next().value;
@@ -53,30 +58,73 @@ export const createMemorySubscriptionRepository = ({
   };
   return {
     mode: 'memory',
-    async getSubscriptionStatus(userId) { return subscriptions.get(userId) ?? null; },
-    async upsertSubscriptionStatus(userId, snapshot) { subscriptions.set(userId, snapshot); pruneSubscriptions(); },
+    async getSubscriptionStatus(userId) {
+      return subscriptions.get(userId) ?? null;
+    },
+    async upsertSubscriptionStatus(userId, snapshot) {
+      subscriptions.set(userId, snapshot);
+      pruneSubscriptions();
+    },
     async consumeTopupCredit(userId, requestId) {
       const key = `${userId}\n${requestId}`;
       const existing = consumptions.get(key);
       if (existing) return { ...existing, duplicate: true };
       const subscription = subscriptions.get(userId);
       const current = subscription?.topupCredits ?? 0;
-      const result = { consumed: current > 0, duplicate: false, remainingCredits: Math.max(0, current - 1) };
-      if (subscription && result.consumed) subscriptions.set(userId, { ...subscription, topupCredits: result.remainingCredits, updatedAt: new Date(now()).toISOString(), source: 'ai_atomic_credit_consumption' });
+      const result = {
+        consumed: current > 0,
+        duplicate: false,
+        remainingCredits: Math.max(0, current - 1),
+      };
+      if (subscription && result.consumed)
+        subscriptions.set(userId, {
+          ...subscription,
+          topupCredits: result.remainingCredits,
+          updatedAt: new Date(now()).toISOString(),
+          source: 'ai_atomic_credit_consumption',
+        });
       consumptions.set(key, result);
       return result;
     },
-    async hasStripeEventBeenProcessed(eventId) { pruneEvents(events, now(), eventTtlMs, eventCacheMax); return events.has(eventId); },
+    async hasStripeEventBeenProcessed(eventId) {
+      pruneEvents(events, now(), eventTtlMs, eventCacheMax);
+      return events.has(eventId);
+    },
     async upsertBillingCustomer() {},
-    async markStripeEventProcessed(eventId) { events.delete(eventId); events.set(eventId, now()); pruneEvents(events, now(), eventTtlMs, eventCacheMax); },
-    getProcessedEventCount() { pruneEvents(events, now(), eventTtlMs, eventCacheMax); return events.size; },
+    async markStripeEventProcessed(eventId) {
+      events.delete(eventId);
+      events.set(eventId, now());
+      pruneEvents(events, now(), eventTtlMs, eventCacheMax);
+    },
+    getProcessedEventCount() {
+      pruneEvents(events, now(), eventTtlMs, eventCacheMax);
+      return events.size;
+    },
   };
 };
 export const createSubscriptionRepository = (
-  config: { repositoryMode?: string; environment?: string; allowMemoryRepository?: boolean; eventCacheTtlMs?: number; eventCacheMax?: number; supabaseUrl?: string; supabaseServiceRoleKey?: string },
+  config: {
+    repositoryMode?: string;
+    environment?: string;
+    allowMemoryRepository?: boolean;
+    eventCacheTtlMs?: number;
+    eventCacheMax?: number;
+    supabaseUrl?: string;
+    supabaseServiceRoleKey?: string;
+  },
   fetchImpl: typeof fetch = fetch
 ): SubscriptionRepository => {
-  if (config.repositoryMode === 'supabase') return createSupabaseBillingRepository({ supabaseUrl: config.supabaseUrl!, supabaseServiceRoleKey: config.supabaseServiceRoleKey! }, fetchImpl);
-  if (config.environment === 'production' && !config.allowMemoryRepository) throw new Error('Persistent billing repository is required in production. Configure a repository adapter or explicitly allow memory storage for a non-public environment.');
-  return createMemorySubscriptionRepository({ eventTtlMs: config.eventCacheTtlMs, eventCacheMax: config.eventCacheMax });
+  if (config.repositoryMode === 'supabase')
+    return createSupabaseBillingRepository(
+      { supabaseUrl: config.supabaseUrl!, supabaseServiceRoleKey: config.supabaseServiceRoleKey! },
+      fetchImpl
+    );
+  if (config.environment === 'production' && !config.allowMemoryRepository)
+    throw new Error(
+      'Persistent billing repository is required in production. Configure a repository adapter or explicitly allow memory storage for a non-public environment.'
+    );
+  return createMemorySubscriptionRepository({
+    eventTtlMs: config.eventCacheTtlMs,
+    eventCacheMax: config.eventCacheMax,
+  });
 };

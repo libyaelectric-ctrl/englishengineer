@@ -11,13 +11,7 @@ export const isSubscriptionActive = (subscription: SubscriptionSnapshot): boolea
   subscription.status === 'active' ||
   subscription.status === 'trialing';
 
-const PLAN_HIERARCHY: BillingPlanId[] = [
-  'free',
-  'junior',
-  'senior',
-  'specialist',
-  'master',
-];
+const PLAN_HIERARCHY: BillingPlanId[] = ['free', 'junior', 'senior', 'specialist', 'master'];
 
 const findMinimumPlanForFeature = (feature: BillingFeature): BillingPlanId | null => {
   for (const planId of PLAN_HIERARCHY) {
@@ -125,9 +119,8 @@ export const getFreeTierPreview = (
   return scope ? { limited: true, scope } : { limited: false, scope: null };
 };
 
-export const canUseAICoach = (
-  subscription: SubscriptionSnapshot
-): EntitlementResult => canAccessFeature(subscription, 'aiCoach');
+export const canUseAICoach = (subscription: SubscriptionSnapshot): EntitlementResult =>
+  canAccessFeature(subscription, 'aiCoach');
 
 export const canCreateMission = (subscription: SubscriptionSnapshot): EntitlementResult =>
   canAccessFeature(subscription, 'missionCreation');

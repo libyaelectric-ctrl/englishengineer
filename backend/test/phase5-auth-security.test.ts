@@ -2,9 +2,9 @@ import assert from 'node:assert/strict';
 import { createHmac } from 'node:crypto';
 import { describe, test } from 'node:test';
 
-import type { AuthConfig } from '../types.js';
 import { createBackendAuth, verifyJwtLocally } from '../src/auth.js';
 import { ApiError } from '../src/errors.js';
+import type { AuthConfig } from '../types.js';
 
 const secret = 'phase5-test-secret-with-enough-entropy';
 const now = 1_789_000_000;

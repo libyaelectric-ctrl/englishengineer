@@ -4,6 +4,7 @@
   "tabWidth": 2,
   "trailingComma": "es5",
   "printWidth": 100,
+  "endOfLine": "auto",
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
   "importOrder": [
     "^react$",
@@ -12,7 +13,15 @@
     "^@/core/(.*)$",
     "^@/shared/(.*)$",
     "^@/features/(.*)$",
+    "^@/layouts/(.*)$",
     "^@/pages/(.*)$",
+    "^@/providers/(.*)$",
+    "^@/routes/(.*)$",
+    "^@/store/(.*)$",
+    "^@/config/(.*)$",
+    "^@/components/(.*)$",
+    "^@/test/(.*)$",
+    "^@/bootstrap/(.*)$",
     "^[./]"
   ],
   "importOrderSeparation": true,

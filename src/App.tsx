@@ -1,5 +1,4 @@
 import { AppProvider, ErrorBoundaryProvider } from '@/providers';
-import { router } from '@/routes/router';
 import { Analytics } from '@vercel/analytics/react';
 
 import { Suspense, lazy } from 'react';
@@ -15,6 +14,8 @@ import { FirebaseAuthProvider } from '@/features/auth/FirebaseAuth';
 import { FirebaseBridge } from '@/features/auth/FirebaseBridge';
 import { SessionDataBridge } from '@/features/auth/SessionDataBridge';
 import { ThemeProvider } from '@/features/theme/ThemeProvider';
+
+import { router } from '@/routes/router';
 
 const BillingSync = lazy(() =>
   import('@/features/billing/BillingSync').then((module) => ({ default: module.BillingSync }))

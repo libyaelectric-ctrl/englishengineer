@@ -1,4 +1,3 @@
-import { PRODUCT_VERSION } from '@/config/product.config';
 import { CheckCircle2, Lock, ShieldCheck } from 'lucide-react';
 
 import { useState } from 'react';
@@ -7,6 +6,8 @@ import { PageMetadata } from '@/shared/components/PageMetadata';
 
 import { Footer } from '@/pages/LandingPage/Footer';
 import { Navbar } from '@/pages/LandingPage/Navbar';
+
+import { PRODUCT_VERSION } from '@/config/product.config';
 
 export type LegalDocument = 'terms' | 'privacy';
 

@@ -1,12 +1,11 @@
 import type { Request, RequestHandler, Response } from 'express';
-import type { RouteRegistrar } from './route-registrar.js';
 
 import type { BackendConfig } from '../types.js';
-
-import { auditLog, AUDIT_ACTIONS } from './audit-log.js';
+import { AUDIT_ACTIONS, auditLog } from './audit-log.js';
 import { createComplianceExportRepository } from './compliance-export-repository.js';
 import { ApiError } from './errors.js';
 import { getLearningRepository } from './learning-repository.js';
+import type { RouteRegistrar } from './route-registrar.js';
 
 const csvEscape = (value: unknown): string => {
   const text = typeof value === 'string' ? value : JSON.stringify(value);

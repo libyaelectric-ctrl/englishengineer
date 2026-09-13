@@ -32,7 +32,7 @@ export const recordRequest = (
   duration: number,
   isError: boolean,
   method?: string,
-  path?: string,
+  path?: string
 ): void => {
   getMetricsRepository().recordRequest(duration, isError, method, path);
 };

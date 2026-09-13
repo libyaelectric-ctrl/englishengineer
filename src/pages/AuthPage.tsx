@@ -1,4 +1,3 @@
-import { PRODUCT_VERSION } from '@/config/product.config';
 import { FirebaseError } from 'firebase/app';
 import {
   ArrowLeft,
@@ -13,7 +12,7 @@ import {
   UserCheck,
 } from 'lucide-react';
 
-import { useEffect, useId, useState, type FormEvent } from 'react';
+import { type FormEvent, useEffect, useId, useState } from 'react';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -27,6 +26,8 @@ import {
   AUTH_SIGN_UP_FALLBACK_REDIRECT_URL,
   AUTH_SIGN_UP_URL,
 } from '@/features/auth/firebase.config';
+
+import { PRODUCT_VERSION } from '@/config/product.config';
 
 type AuthPageProps = { mode: 'sign-in' | 'sign-up' };
 type AuthLocationState = { from?: { pathname?: string } } | null;
@@ -181,7 +182,10 @@ const EmailPasswordForm = ({
           E-posta adresi
         </label>
         <div className="relative">
-          <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy" aria-hidden="true" />
+          <Mail
+            className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy"
+            aria-hidden="true"
+          />
           <input
             id={`${formId}-email`}
             type="email"
@@ -202,7 +206,10 @@ const EmailPasswordForm = ({
           Şifre
         </label>
         <div className="relative">
-          <KeyRound className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy" aria-hidden="true" />
+          <KeyRound
+            className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy"
+            aria-hidden="true"
+          />
           <input
             id={`${formId}-password`}
             type="password"
@@ -216,10 +223,15 @@ const EmailPasswordForm = ({
             className={`${inputClass} pl-11`}
           />
         </div>
-        {mode === 'sign-up' && <p className="mt-1.5 text-xs text-muted-copy">En az 6 karakter kullanın.</p>}
+        {mode === 'sign-up' && (
+          <p className="mt-1.5 text-xs text-muted-copy">En az 6 karakter kullanın.</p>
+        )}
       </div>
       {error && (
-        <p className="rounded-[var(--radius-button)] border border-error/25 bg-error/10 px-3 py-2.5 text-sm leading-5 text-error" role="alert">
+        <p
+          className="rounded-[var(--radius-button)] border border-error/25 bg-error/10 px-3 py-2.5 text-sm leading-5 text-error"
+          role="alert"
+        >
           {error}
         </p>
       )}
@@ -228,7 +240,13 @@ const EmailPasswordForm = ({
         disabled={busy}
         className="flex min-h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-button)] bg-primary px-4 py-3 text-sm font-black text-primary-foreground shadow-sm transition-[background-color,transform,opacity] duration-200 hover:bg-primary-hover active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-wait disabled:opacity-60"
       >
-        {busy ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : mode === 'sign-in' ? <LogIn className="h-4 w-4" aria-hidden="true" /> : <UserCheck className="h-4 w-4" aria-hidden="true" />}
+        {busy ? (
+          <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
+        ) : mode === 'sign-in' ? (
+          <LogIn className="h-4 w-4" aria-hidden="true" />
+        ) : (
+          <UserCheck className="h-4 w-4" aria-hidden="true" />
+        )}
         <span>{busy ? 'İşleniyor…' : mode === 'sign-in' ? 'Giriş yap' : 'Hesap oluştur'}</span>
       </button>
     </form>
@@ -240,9 +258,10 @@ const AuthPage = ({ mode }: AuthPageProps) => {
   const navigate = useNavigate();
   const { isSignedIn } = useFirebaseAuth();
   const returnTarget = getReturnTarget(location.search, location.state as AuthLocationState);
-  const targetDestination = mode === 'sign-in'
-    ? (returnTarget ?? AUTH_SIGN_IN_FALLBACK_REDIRECT_URL)
-    : (returnTarget ?? AUTH_SIGN_UP_FALLBACK_REDIRECT_URL);
+  const targetDestination =
+    mode === 'sign-in'
+      ? (returnTarget ?? AUTH_SIGN_IN_FALLBACK_REDIRECT_URL)
+      : (returnTarget ?? AUTH_SIGN_UP_FALLBACK_REDIRECT_URL);
   const [authBusy, setAuthBusy] = useState(false);
 
   useEffect(() => {
@@ -275,8 +294,16 @@ const AuthPage = ({ mode }: AuthPageProps) => {
           <div className="flex items-center gap-3">
             <ThemeToggle />
             <Link to="/" className="flex items-center gap-2" aria-label="EngVox ana sayfa">
-              <img src="/brand/logo.svg" alt="EngVox" width="36" height="36" className="h-9 w-9 rounded-[var(--radius-button)]" />
-              <span className="hidden text-xs font-black text-primary sm:inline">v{PRODUCT_VERSION}</span>
+              <img
+                src="/brand/logo.svg"
+                alt="EngVox"
+                width="36"
+                height="36"
+                className="h-9 w-9 rounded-[var(--radius-button)]"
+              />
+              <span className="hidden text-xs font-black text-primary sm:inline">
+                v{PRODUCT_VERSION}
+              </span>
             </Link>
           </div>
         </div>
@@ -289,7 +316,9 @@ const AuthPage = ({ mode }: AuthPageProps) => {
             Mühendislik İngilizcesi için çalışma alanın
           </div>
           <h1 className="mt-5 max-w-lg text-balance text-4xl font-black leading-[1.02] tracking-[-0.045em] sm:text-6xl">
-            {isSignIn ? 'Çalışmalarına kaldığın yerden devam et.' : 'Teknik iletişimde daha net ol.'}
+            {isSignIn
+              ? 'Çalışmalarına kaldığın yerden devam et.'
+              : 'Teknik iletişimde daha net ol.'}
           </h1>
           <p className="mt-5 max-w-lg text-base leading-7 text-muted-copy sm:text-lg">
             {isSignIn
@@ -297,7 +326,11 @@ const AuthPage = ({ mode }: AuthPageProps) => {
               : 'Alanına uygun kelimeler, gerçek iş senaryoları ve ölçülebilir ilerleme tek bir yerde.'}
           </p>
           <ul className="mt-8 space-y-4" aria-label="EngVox avantajları">
-            {['Alanına uygun teknik içerik', 'Kısa ve düzenli pratikler', 'İlerlemeni tek panelden takip et'].map((item) => (
+            {[
+              'Alanına uygun teknik içerik',
+              'Kısa ve düzenli pratikler',
+              'İlerlemeni tek panelden takip et',
+            ].map((item) => (
               <li key={item} className="flex items-center gap-3 text-sm font-bold text-foreground">
                 <CheckCircle2 className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
                 {item}
@@ -316,7 +349,9 @@ const AuthPage = ({ mode }: AuthPageProps) => {
                 {isSignIn ? 'Giriş yap' : 'Ücretsiz başlayın'}
               </h2>
               <p className="mt-2 text-sm leading-6 text-muted-copy">
-                {isSignIn ? 'Güvenli çalışma alanına devam edin.' : 'İlerlemenizi kaydetmek için hesabınızı oluşturun.'}
+                {isSignIn
+                  ? 'Güvenli çalışma alanına devam edin.'
+                  : 'İlerlemenizi kaydetmek için hesabınızı oluşturun.'}
               </p>
             </div>
 
@@ -347,7 +382,10 @@ const AuthPage = ({ mode }: AuthPageProps) => {
                 className="group flex min-h-11 w-full items-center justify-center gap-2 rounded-[var(--radius-button)] border border-primary/25 bg-primary/5 px-4 py-2.5 text-sm font-black text-primary transition-[background-color,transform] duration-200 hover:bg-primary/10 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
                 Kayıt olmadan demo ile başla
-                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
+                <ArrowRight
+                  className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
               </button>
             </div>
           </div>

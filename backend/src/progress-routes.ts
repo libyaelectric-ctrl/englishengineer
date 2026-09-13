@@ -95,11 +95,13 @@ const registerScoredStats = (
         for (const event of events)
           latestByItem.set(event.itemId, { score: event.score ?? 0, category: event.category });
         const entries = [...latestByItem.values()];
-        response.json(apiSuccess({
-          [module === 'reading' ? 'totalRead' : 'totalListened']: entries.length,
-          averageScore: averageScore(entries.map((entry) => entry.score)),
-          byCategory: aggregateByCategory(entries),
-        }));
+        response.json(
+          apiSuccess({
+            [module === 'reading' ? 'totalRead' : 'totalListened']: entries.length,
+            averageScore: averageScore(entries.map((entry) => entry.score)),
+            byCategory: aggregateByCategory(entries),
+          })
+        );
       } catch (error) {
         next(error);
       }
@@ -128,16 +130,18 @@ const registerAccessStatus = (app: RouteRegistrar, auth: RequestHandler): void =
         const grammarLearnedCount = overview.skills.grammar.correct;
         const readingActivitiesDone = overview.skills.reading.completed;
         const writingActivitiesDone = overview.skills.writing.completed;
-        response.json(apiSuccess({
-          vocabularyLearnedCount,
-          grammarLearnedCount,
-          readingActivitiesDone,
-          writingActivitiesDone,
-          canAccessReading: grammarLearnedCount >= 5,
-          canAccessWriting: grammarLearnedCount >= 10,
-          canAccessSpeaking: grammarLearnedCount >= 8,
-          canAccessListening: grammarLearnedCount >= 3,
-        }));
+        response.json(
+          apiSuccess({
+            vocabularyLearnedCount,
+            grammarLearnedCount,
+            readingActivitiesDone,
+            writingActivitiesDone,
+            canAccessReading: grammarLearnedCount >= 5,
+            canAccessWriting: grammarLearnedCount >= 10,
+            canAccessSpeaking: grammarLearnedCount >= 8,
+            canAccessListening: grammarLearnedCount >= 3,
+          })
+        );
       } catch (error) {
         next(error);
       }

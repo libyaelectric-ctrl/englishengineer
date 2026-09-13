@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
-import { storage } from '@/shared/storage';
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
+import { storage } from '@/shared/storage';
 import { getInitialUserLearningProfile } from '@/shared/utils/profile.utils';
 
 import { VocabularyMenuService } from '@/features/vocabulary';

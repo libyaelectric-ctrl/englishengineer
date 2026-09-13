@@ -24,11 +24,14 @@ const renderWithProviders = (component: React.ReactElement) =>
     </QueryClientProvider>
   );
 
-// Lazy/Suspense-loaded components resolve slowly under a full multi-file
-// CI run; give async utility assertions more headroom (see the matching
-// configure() call in new-features.e2e.test.tsx).
-configure({ asyncUtilTimeout: 10000 });
-
+// Lazy/Suspense-loaded components resolve slowly under a full multi-file
+
+// CI run; give async utility assertions more headroom (see the matching
+
+// configure() call in new-features.e2e.test.tsx).
+
+configure({ asyncUtilTimeout: 10000 });
+
 describe('Landing page E2E', () => {
   it('renders hero section with correct branding', () => {
     renderWithProviders(<LandingPage />);

@@ -88,9 +88,7 @@ export const initAuditLog = async (config: {
   }
 };
 
-const createAuditRecord = (
-  entry: Omit<AuditLogEntry, 'id' | 'timestamp'>
-): AuditLogEntry => {
+const createAuditRecord = (entry: Omit<AuditLogEntry, 'id' | 'timestamp'>): AuditLogEntry => {
   const record: AuditLogEntry = {
     id: `audit_${randomUUID()}`,
     timestamp: new Date().toISOString(),

@@ -1,6 +1,3 @@
-import { AppShell } from '@/layouts/AppShell';
-import { PublicLayout } from '@/layouts/PublicLayout';
-
 import { type ComponentType, Suspense, lazy } from 'react';
 
 import { Navigate, createBrowserRouter } from 'react-router-dom';
@@ -14,6 +11,9 @@ import { RequireAdminRole } from '@/features/auth/RequireAdminRole';
 import { AUTH_SIGN_IN_URL, AUTH_SIGN_UP_URL } from '@/features/auth/firebase.config';
 import { CurriculumSectionGuard, SubscriptionRouteGuard } from '@/features/billing';
 import { OnboardingGate } from '@/features/profile';
+
+import { AppShell } from '@/layouts/AppShell';
+import { PublicLayout } from '@/layouts/PublicLayout';
 
 import { RouteErrorPage } from './RouteErrorPage';
 

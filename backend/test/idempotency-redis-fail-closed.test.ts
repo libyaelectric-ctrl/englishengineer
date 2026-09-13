@@ -1,7 +1,7 @@
-import assert from 'node:assert/strict';
-import { setImmediate as waitForImmediate } from 'node:timers/promises';
 import type { NextFunction, Request, Response } from 'express';
+import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
+import { setImmediate as waitForImmediate } from 'node:timers/promises';
 
 import { ApiError } from '../src/errors.js';
 import {

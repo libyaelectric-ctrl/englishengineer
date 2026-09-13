@@ -96,14 +96,12 @@ const resolveSupabaseJwt = (
   env: Env,
   runtimeEnv: RuntimeEnvironment
 ): { issuer: string | null; audience: string | null } => {
-  const issuer = trimEnv(env.SUPABASE_JWT_ISSUER) ?? (supabaseUrl ? `${supabaseUrl}/auth/v1` : null);
-  const audience = trimEnv(env.SUPABASE_JWT_AUDIENCE) ?? (supabaseJwtSecret ? 'authenticated' : null);
+  const issuer =
+    trimEnv(env.SUPABASE_JWT_ISSUER) ?? (supabaseUrl ? `${supabaseUrl}/auth/v1` : null);
+  const audience =
+    trimEnv(env.SUPABASE_JWT_AUDIENCE) ?? (supabaseJwtSecret ? 'authenticated' : null);
 
-  if (
-    runtimeEnv === 'production' &&
-    supabaseJwtSecret &&
-    (!issuer || !audience)
-  ) {
+  if (runtimeEnv === 'production' && supabaseJwtSecret && (!issuer || !audience)) {
     throw new Error(
       'SUPABASE_JWT_ISSUER and SUPABASE_JWT_AUDIENCE are required for local JWT verification.'
     );
@@ -112,10 +110,7 @@ const resolveSupabaseJwt = (
   return { issuer, audience };
 };
 
-const resolveAllowInsecureDevAuth = (
-  runtimeEnv: RuntimeEnvironment,
-  env: Env
-): boolean => {
+const resolveAllowInsecureDevAuth = (runtimeEnv: RuntimeEnvironment, env: Env): boolean => {
   if (runtimeEnv === 'production') return false;
   return runtimeEnv === 'test' || isTrue(env.ALLOW_INSECURE_DEV_AUTH);
 };

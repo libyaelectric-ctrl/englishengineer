@@ -23,7 +23,7 @@ for (const p of pages) {
     await page.waitForTimeout(3000);
     // Dismiss cookie
     const cookie = page.locator('button:has-text("Kabul"), button:has-text("Accept")');
-    if (await cookie.count() > 0) {
+    if ((await cookie.count()) > 0) {
       await cookie.first().click({ force: true });
       await page.waitForTimeout(500);
     }

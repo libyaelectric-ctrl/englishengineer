@@ -1,10 +1,11 @@
-import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
-import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 import { useShallow } from 'zustand/shallow';
 
 import { useLocalizationStore } from '@/features/localization';
 import { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
 import { useReadingStore } from '@/features/reading';
+
+import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
+import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 
 export function ReadingSidebar() {
   const language = useLocalizationStore((s) => s.language);

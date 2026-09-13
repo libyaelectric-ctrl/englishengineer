@@ -1,6 +1,7 @@
 // @vitest-environment node
-import { createLearningState } from '@/test/fixtures';
 import { describe, expect, it } from 'vitest';
+
+import { createLearningState } from '@/test/fixtures';
 
 import { AchievementService } from './achievement.service';
 import { Achievement } from './learning.types';

@@ -308,7 +308,7 @@ then tail the log. Implemented on 2026-08-29.
 | TD-015 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-016 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-017 | Low      | ✅ Resolved | TBD      | TBD        |
-| TD-021 | Low      | Open | TBD      | TBD      |
+| TD-021 | Low      | Open        | TBD      | TBD        |
 | TD-018 | Medium   | Resolved    | TBD      | TBD        |
 | TD-019 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-020 | Medium   | Resolved    | TBD      | TBD        |

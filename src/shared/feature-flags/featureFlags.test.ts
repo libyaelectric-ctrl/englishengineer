@@ -36,11 +36,6 @@ describe('featureFlags', () => {
       enabled: false,
       source: 'env',
     });
-    vi.stubEnv('VITE_FLAG_MASCOT_ENGAGEMENT', 'true');
-    expect(getFlagDetail('mascotEngagement', 'user-1')).toMatchObject({
-      enabled: true,
-      source: 'env',
-    });
   });
 
   it('returns false for unknown flags', () => {

@@ -1,6 +1,9 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
+
 import { Navigate, useLocation } from 'react-router-dom';
+
 import { LoadingState } from '@/shared/components/LoadingState';
+
 import { useFirebaseAuth } from './FirebaseAuth';
 import { useAuthStore } from './auth.store';
 import { AUTH_SIGN_IN_URL } from './firebase.config';
@@ -37,7 +40,10 @@ const useAuthTimeout = (isLoaded: boolean, pathname: string) => {
 };
 
 const WorkspaceLoading = () => (
-  <LoadingState title="Opening EngVox" description="Restoring your professional learning workspace." />
+  <LoadingState
+    title="Opening EngVox"
+    description="Restoring your professional learning workspace."
+  />
 );
 
 interface SessionContext {
@@ -52,7 +58,8 @@ interface SessionContext {
 const resolveSessionState = (ctx: SessionContext) => {
   const isLocalKind = ctx.sessionKind === 'local' || ctx.sessionKind === 'demo' || !ctx.sessionKind;
   const hasLocalSession = isLocalKind && ctx.isAuthenticated && Boolean(ctx.currentUser);
-  const isFirebaseMatch = ctx.sessionKind === 'firebase' && ctx.currentUser?.id === ctx.firebaseUserId;
+  const isFirebaseMatch =
+    ctx.sessionKind === 'firebase' && ctx.currentUser?.id === ctx.firebaseUserId;
   const firebaseReady = ctx.isLoaded && ctx.isSignedIn && (!ctx.firebaseUserId || isFirebaseMatch);
   const waitingForAuth = (!ctx.isLoaded || (ctx.isSignedIn && !firebaseReady)) && !hasLocalSession;
 

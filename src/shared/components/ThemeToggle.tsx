@@ -20,7 +20,11 @@ export const ThemeToggle = () => {
       aria-label={label}
     >
       {isAuto && <Clock3 className="h-3.5 w-3.5 text-muted-copy" aria-hidden="true" />}
-      {theme === 'dark' ? <Sun className="h-4.5 w-4.5 text-warning" /> : <Moon className="h-4.5 w-4.5 text-primary" />}
+      {theme === 'dark' ? (
+        <Sun className="h-4.5 w-4.5 text-warning" />
+      ) : (
+        <Moon className="h-4.5 w-4.5 text-primary" />
+      )}
     </button>
   );
 };

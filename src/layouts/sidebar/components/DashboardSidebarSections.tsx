@@ -45,10 +45,7 @@ interface WorkspaceSectionProps {
   displayName: string;
 }
 
-export const WorkspaceSection = ({
-  userInitials,
-  displayName,
-}: WorkspaceSectionProps) => {
+export const WorkspaceSection = ({ userInitials, displayName }: WorkspaceSectionProps) => {
   return (
     <div className="p-4 bg-surface border border-border-soft rounded-xl mb-4">
       <div className="flex items-center gap-3">

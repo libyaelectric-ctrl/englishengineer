@@ -1,4 +1,3 @@
-import { PricingCard } from '@/components/ui/PricingCard';
 import { Globe } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -21,6 +20,8 @@ import { useLocalizationStore } from '@/features/localization';
 
 import { Footer } from '@/pages/LandingPage/Footer';
 import { Navbar } from '@/pages/LandingPage/Navbar';
+
+import { PricingCard } from '@/components/ui/PricingCard';
 
 const PricingPage = () => {
   const navigate = useNavigate();

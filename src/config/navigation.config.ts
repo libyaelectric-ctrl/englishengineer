@@ -63,4 +63,3 @@ export const NAV_ITEMS = [
   { label: 'Profile', href: '/profile', icon: User },
   { label: 'Team', href: '/team', icon: User, comingSoon: false },
 ] as const;
-

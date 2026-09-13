@@ -135,7 +135,9 @@ export const FirebaseAuthProvider = ({ children }: { children: ReactNode }) => {
           try {
             const { FirebaseAuthentication } = await import('@capacitor-firebase/authentication');
             await FirebaseAuthentication.signOut();
-          } catch (err) { logger.e('FirebaseAuth native plugin error:', err); }
+          } catch (err) {
+            logger.e('FirebaseAuth native plugin error:', err);
+          }
         }
       },
       signInWithGoogle: async () => {

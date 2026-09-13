@@ -1,8 +1,8 @@
-import { PRODUCT_VERSION } from '@/config/product.config';
-
 import { Link } from 'react-router-dom';
 
 import { useLocalizationStore } from '@/features/localization';
+
+import { PRODUCT_VERSION } from '@/config/product.config';
 
 export function Footer({ className = '' }: { className?: string }) {
   const { translate } = useLocalizationStore();

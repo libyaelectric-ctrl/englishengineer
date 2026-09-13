@@ -1,5 +1,3 @@
-import { PRODUCT_VERSION } from '@/config/product.config';
-
 import { useCallback, useEffect, useReducer, useState } from 'react';
 
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -14,6 +12,8 @@ import { useLearningIntelligenceStore } from '@/features/learning-intelligence';
 import { useLearningCockpit } from '@/features/profile';
 import { useSpeakingStore } from '@/features/speaking';
 import { useVocabularyStore } from '@/features/vocabulary';
+
+import { PRODUCT_VERSION } from '@/config/product.config';
 
 import { type ProfileUIState, uiReducer } from './ProfilePageReducer';
 import { useProfileEdit } from './useProfileEdit';

@@ -1,6 +1,7 @@
+import { logger } from '@/shared/logger';
+
 import type { SupportedInterfaceLanguage } from '../localization.types';
 import { data as EN_UI_TRANSLATIONS } from './en';
-import { logger } from '@/shared/logger';
 
 /**
  * Lazy-loaded language chunks. Each language is a separate module that is
@@ -102,6 +103,8 @@ export function preloadLanguage(language: SupportedInterfaceLanguage): void {
   if (loader && !cache.has(language)) {
     loader()
       .then((mod) => cache.set(language, mod.data))
-      .catch((err) => { logger.e(`[LOCALIZATION] Failed to preload language "${language}":`, err); });
+      .catch((err) => {
+        logger.e(`[LOCALIZATION] Failed to preload language "${language}":`, err);
+      });
   }
 }

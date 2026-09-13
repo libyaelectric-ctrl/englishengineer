@@ -29,22 +29,33 @@ const normalizeAudioContentType = (rawHeader: unknown): SupportedAudioType | nul
   if (typeof rawHeader !== 'string') return null;
   const mimeType = rawHeader.split(';')[0]?.trim().toLowerCase();
   switch (mimeType) {
-    case 'audio/webm': return 'audio/webm';
-    case 'audio/ogg': return 'audio/ogg';
-    case 'audio/wav': return 'audio/wav';
-    case 'audio/mpeg': return 'audio/mpeg';
-    case 'audio/mp4': return 'audio/mp4';
-    default: return null;
+    case 'audio/webm':
+      return 'audio/webm';
+    case 'audio/ogg':
+      return 'audio/ogg';
+    case 'audio/wav':
+      return 'audio/wav';
+    case 'audio/mpeg':
+      return 'audio/mpeg';
+    case 'audio/mp4':
+      return 'audio/mp4';
+    default:
+      return null;
   }
 };
 
 const audioExtensionFor = (contentType: SupportedAudioType): SupportedAudioExtension => {
   switch (contentType) {
-    case 'audio/webm': return 'webm';
-    case 'audio/ogg': return 'ogg';
-    case 'audio/wav': return 'wav';
-    case 'audio/mpeg': return 'mp3';
-    case 'audio/mp4': return 'm4a';
+    case 'audio/webm':
+      return 'webm';
+    case 'audio/ogg':
+      return 'ogg';
+    case 'audio/wav':
+      return 'wav';
+    case 'audio/mpeg':
+      return 'mp3';
+    case 'audio/mp4':
+      return 'm4a';
   }
 };
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
@@ -85,7 +96,10 @@ const parseWavDuration = (buffer: Buffer): number | null => {
   while (offset + 8 <= buffer.length) {
     const chunkId = buffer.subarray(offset, offset + 4).toString('ascii');
     const chunkSize = buffer.readUInt32LE(offset + 4);
-    if (chunkId === 'data') { dataChunkSize = chunkSize; break; }
+    if (chunkId === 'data') {
+      dataChunkSize = chunkSize;
+      break;
+    }
     offset += 8 + chunkSize;
   }
   if (dataChunkSize === 0) dataChunkSize = buffer.length - 44;
@@ -95,13 +109,31 @@ const parseWavDuration = (buffer: Buffer): number | null => {
 };
 const parseMp3Duration = (buffer: Buffer): number | null => {
   const BITRATES = [
-    [0,0],[32,32],[40,40],[48,48],[56,56],[64,64],[80,80],[96,96],
-    [112,112],[128,128],[160,160],[192,192],[224,224],[256,256],[320,320],[0,0],
+    [0, 0],
+    [32, 32],
+    [40, 40],
+    [48, 48],
+    [56, 56],
+    [64, 64],
+    [80, 80],
+    [96, 96],
+    [112, 112],
+    [128, 128],
+    [160, 160],
+    [192, 192],
+    [224, 224],
+    [256, 256],
+    [320, 320],
+    [0, 0],
   ];
   let offset = 0;
   if (buffer.length >= 3 && buffer.subarray(0, 3).toString('ascii') === 'ID3') {
     if (buffer.length < 10) return null;
-    const size = ((buffer[6]! & 0x7f) << 21) | ((buffer[7]! & 0x7f) << 14) | ((buffer[8]! & 0x7f) << 7) | (buffer[9]! & 0x7f);
+    const size =
+      ((buffer[6]! & 0x7f) << 21) |
+      ((buffer[7]! & 0x7f) << 14) |
+      ((buffer[8]! & 0x7f) << 7) |
+      (buffer[9]! & 0x7f);
     offset = 10 + size;
   }
   let bitrateSum = 0;
@@ -111,10 +143,16 @@ const parseMp3Duration = (buffer: Buffer): number | null => {
       const versionBits = (buffer[offset + 1]! >> 3) & 0x03;
       const layerBits = (buffer[offset + 1]! >> 1) & 0x03;
       const bitrateIdx = (buffer[offset + 2]! >> 4) & 0x0f;
-      if (layerBits === 0 || bitrateIdx === 0 || bitrateIdx === 15) { offset++; continue; }
+      if (layerBits === 0 || bitrateIdx === 0 || bitrateIdx === 15) {
+        offset++;
+        continue;
+      }
       const mpegVersion = versionBits === 3 ? 0 : 1;
       const bitrate = BITRATES[bitrateIdx]?.[mpegVersion] ?? 0;
-      if (bitrate > 0) { bitrateSum += bitrate; frameCount++; }
+      if (bitrate > 0) {
+        bitrateSum += bitrate;
+        frameCount++;
+      }
       offset += 4;
     } else {
       offset++;
@@ -126,8 +164,14 @@ const parseMp3Duration = (buffer: Buffer): number | null => {
   return totalBits / (avgBitrateKbps * 1000);
 };
 const parseMp4Duration = (buffer: Buffer): number | null => {
-  const findAtom = (start: number, end: number, target: string): {
-    found: boolean; offset: number } => {
+  const findAtom = (
+    start: number,
+    end: number,
+    target: string
+  ): {
+    found: boolean;
+    offset: number;
+  } => {
     let pos = start;
     while (pos + 8 <= end) {
       const size = buffer.readUInt32BE(pos);
@@ -141,7 +185,10 @@ const parseMp4Duration = (buffer: Buffer): number | null => {
   const moovResult = findAtom(0, buffer.length, 'moov');
   if (!moovResult.found) return null;
   const moovStart = moovResult.offset + 8;
-  const moovEnd = Math.min(buffer.length, moovResult.offset + buffer.readUInt32BE(moovResult.offset));
+  const moovEnd = Math.min(
+    buffer.length,
+    moovResult.offset + buffer.readUInt32BE(moovResult.offset)
+  );
   const mvhdResult = findAtom(moovStart, moovEnd, 'mvhd');
   if (!mvhdResult.found) return null;
   const mvhdOffset = mvhdResult.offset + 8;
@@ -165,7 +212,10 @@ const parseWebmDuration = (buffer: Buffer): number | null => {
     const first = buffer[pos]!;
     let size = 1;
     let mask = 0x80;
-    while (size <= 8 && (first & mask) === 0) { mask >>= 1; size++; }
+    while (size <= 8 && (first & mask) === 0) {
+      mask >>= 1;
+      size++;
+    }
     if (size > 8) return null;
     let value = first & (0xff >> size);
     for (let i = 1; i < size; i++) {
@@ -180,7 +230,10 @@ const parseWebmDuration = (buffer: Buffer): number | null => {
     let size = 1;
     if (first === 0) return null;
     let threshold = 0x80;
-    while (size <= 8 && (first & threshold) === 0) { threshold >>= 1; size++; }
+    while (size <= 8 && (first & threshold) === 0) {
+      threshold >>= 1;
+      size++;
+    }
     if (size > 8) return null;
     let id = first;
     for (let i = 1; i < size; i++) {
@@ -189,7 +242,11 @@ const parseWebmDuration = (buffer: Buffer): number | null => {
     }
     return { id, size };
   };
-  const findEBML = (start: number, end: number, targetId: number): { found: boolean; dataOffset: number; dataSize: number } => {
+  const findEBML = (
+    start: number,
+    end: number,
+    targetId: number
+  ): { found: boolean; dataOffset: number; dataSize: number } => {
     let pos = start;
     while (pos + 2 <= end) {
       const el = readElementId(pos);
@@ -206,7 +263,7 @@ const parseWebmDuration = (buffer: Buffer): number | null => {
   if (!segment.found) return null;
   const segmentDataEnd = segment.dataOffset + segment.dataSize;
   let timecodeScale = 1000000;
-  const tcResult = findEBML(segment.dataOffset, segmentDataEnd, 0x2AD7B1);
+  const tcResult = findEBML(segment.dataOffset, segmentDataEnd, 0x2ad7b1);
   if (tcResult.found && tcResult.dataSize <= 8) {
     let tc = 0;
     for (let i = 0; i < tcResult.dataSize; i++) tc = (tc << 8) | buffer[tcResult.dataOffset + i]!;
@@ -357,11 +414,7 @@ export const registerSpeakingRoutes = (
         const rawContentType = request.get('content-type');
         const contentType = normalizeAudioContentType(rawContentType);
         if (!contentType)
-          throw new ApiError(
-            415,
-            'unsupported_media_type',
-            'Unsupported audio content-type.'
-          );
+          throw new ApiError(415, 'unsupported_media_type', 'Unsupported audio content-type.');
         const extension = audioExtensionFor(contentType);
         const buffer = request.body as Buffer;
         if (!Buffer.isBuffer(buffer) || buffer.length === 0)
@@ -431,12 +484,14 @@ export const registerSpeakingRoutes = (
       try {
         userIdFrom(request);
         const { limit, offset } = parsePaginationQuery(request.query as Record<string, unknown>);
-        response.json(apiSuccess({
-          items: SPEAKING_PROMPTS.slice(offset, offset + limit),
-          total: SPEAKING_PROMPTS.length,
-          limit,
-          offset,
-        }));
+        response.json(
+          apiSuccess({
+            items: SPEAKING_PROMPTS.slice(offset, offset + limit),
+            total: SPEAKING_PROMPTS.length,
+            limit,
+            offset,
+          })
+        );
       } catch (error) {
         next(error);
       }
@@ -524,12 +579,14 @@ export const registerSpeakingRoutes = (
           throw new ApiError(400, 'invalid_route_parameter', 'Invalid route parameter.');
         }
         const submissionId = rawSubmissionId;
-        response.json(apiSuccess(
-          (await getLearningRepository().getSpeakingSubmission(
-            userIdFrom(request),
-            submissionId
-          )) ?? { notFound: true }
-        ));
+        response.json(
+          apiSuccess(
+            (await getLearningRepository().getSpeakingSubmission(
+              userIdFrom(request),
+              submissionId
+            )) ?? { notFound: true }
+          )
+        );
       } catch (error) {
         next(error);
       }

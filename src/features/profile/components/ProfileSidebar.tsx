@@ -1,6 +1,3 @@
-import { Section } from '@/layouts/sidebar/SidebarComponents';
-import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
-import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 import { Monitor, Smartphone } from 'lucide-react';
 
 import { useAuthStore } from '@/features/auth';
@@ -8,6 +5,10 @@ import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import { useLocalizationStore } from '@/features/localization';
 import { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
 import type { SkillName } from '@/features/profile/profile.types';
+
+import { Section } from '@/layouts/sidebar/SidebarComponents';
+import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
+import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 
 /** Map CEFR target levels to a readiness score (0-100). */
 const LEVEL_READINESS: Record<string, number> = {

@@ -1,4 +1,3 @@
-import { PRODUCT_VERSION } from '@/config/product.config';
 import {
   ArrowRight,
   BarChart3,
@@ -21,6 +20,8 @@ import { AUTH_SIGN_UP_URL } from '@/features/auth/firebase.config';
 
 import { Footer } from '@/pages/LandingPage/Footer';
 import { Navbar } from '@/pages/LandingPage/Navbar';
+
+import { PRODUCT_VERSION } from '@/config/product.config';
 
 const BUSINESS_CASES = [
   {

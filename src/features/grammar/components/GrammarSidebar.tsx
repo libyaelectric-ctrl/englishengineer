@@ -1,5 +1,3 @@
-import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
-import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 import { PenLine, RefreshCw } from 'lucide-react';
 import { useShallow } from 'zustand/shallow';
 
@@ -11,6 +9,9 @@ import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import { useLocalizationStore } from '@/features/localization';
 import { interpolate } from '@/features/localization/interpolate';
 import { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
+
+import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
+import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 
 const log = (_page: string, _action: string, _details: string) => {};
 

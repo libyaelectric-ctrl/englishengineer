@@ -1,5 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { BillingService } from './billing.service';
+import { useBillingStore } from './billing.store';
+
 // A real browser never reaches the provider from a unit test, so the provider
 // is stubbed and its response is driven per test.
 const mocks = vi.hoisted(() => ({ createCheckoutSession: vi.fn() }));
@@ -14,9 +17,6 @@ vi.mock('./billing.helpers', async (importOriginal) => {
   const original = await importOriginal<typeof import('./billing.helpers')>();
   return { ...original, getBillingApiUrl: () => 'https://billing.engvox.test' };
 });
-
-import { BillingService } from './billing.service';
-import { useBillingStore } from './billing.store';
 
 const checkout = (url: unknown) => mocks.createCheckoutSession.mockResolvedValue({ url });
 

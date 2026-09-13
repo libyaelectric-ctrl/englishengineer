@@ -1,5 +1,3 @@
-import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
-import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 import { Plus, RefreshCw } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
@@ -14,6 +12,9 @@ import {
   VocabularyMenuService,
   type VocabularyMenuState,
 } from '@/features/vocabulary/services/core/vocabulary.menu';
+
+import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
+import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 
 const VOCAB_LEVELS = [
   { id: 'A1', max: 500 },

@@ -11,15 +11,15 @@ import { eosPersistConfig } from '@/shared/storage/persist-middleware';
 import { AchievementService } from './achievement.service';
 import { addUniqueContent, removeContent } from './domains/content-pool.domain';
 import { activateMission, completeMission } from './domains/mission.domain';
-import {
-  createInitialLearningState,
-  LEARNING_PERSISTENCE_VERSION,
-  migratePersistedLearningState,
-} from './learning.persistence';
-import { getLearningPorts, type LearningSkillName } from './learning.ports';
 import { DEFAULT_ACHIEVEMENTS } from './learning.achievements.data';
 import { loseHeart as computeLoseHeart, refillHeartsIfDue } from './learning.hearts';
 import { DEFAULT_MISSIONS } from './learning.missions.data';
+import {
+  LEARNING_PERSISTENCE_VERSION,
+  createInitialLearningState,
+  migratePersistedLearningState,
+} from './learning.persistence';
+import { type LearningSkillName, getLearningPorts } from './learning.ports';
 import {
   INITIAL_ELO,
   MAX_HISTORY_SIZE,

@@ -1,4 +1,3 @@
-import { PRODUCT_VERSION } from '@/config/product.config';
 import { ArrowRight, BookOpen, Brain, LogIn, Target, UserPlus, Zap } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 
@@ -11,6 +10,8 @@ import { AUTH_SIGN_IN_URL, AUTH_SIGN_UP_URL } from '@/features/auth/firebase.con
 
 import { Footer } from '@/pages/LandingPage/Footer';
 import { Navbar } from '@/pages/LandingPage/Navbar';
+
+import { PRODUCT_VERSION } from '@/config/product.config';
 
 const ONBOARDING_STEPS = [
   {

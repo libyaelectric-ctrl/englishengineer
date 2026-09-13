@@ -12,6 +12,7 @@ import {
   type EngineeringDiscipline,
 } from '@/shared/constants/engineering-disciplines';
 import { getDisciplineIcon } from '@/shared/icons/registry';
+import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
 import type { CareerTrackId, InterfaceLanguage } from '@/shared/types/domain.types';
 import { cn } from '@/shared/utils/cn';
@@ -22,7 +23,6 @@ import { AVAILABLE_INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/
 import type { SupportedInterfaceLanguage } from '@/features/localization';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 import { useTheme } from '@/features/theme/ThemeProvider';
-import { logger } from '@/shared/logger';
 
 export const consumePendingOnboard = () => {
   const pending = storage.globalGet('engvox-pending-onboard');

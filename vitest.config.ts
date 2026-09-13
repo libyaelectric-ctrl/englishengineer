@@ -16,19 +16,38 @@ export default defineConfig({
     teardownTimeout: 30_000,
     isolate: true,
     include: ['src/**/*.test.{ts,tsx}', 'src/**/*.spec.{ts,tsx}'],
-    exclude: ['node_modules/**', 'dist/**', 'e2e/**', 'tests/**', 'backend/**', '.mimocode/**', '.freebuff/**', 'src/e2e/**', 'src/shared/tests/integration/**', 'test/integration/**'],
+    exclude: [
+      'node_modules/**',
+      'dist/**',
+      'e2e/**',
+      'tests/**',
+      'backend/**',
+      '.mimocode/**',
+      '.freebuff/**',
+      'src/e2e/**',
+      'src/shared/tests/integration/**',
+      'test/integration/**',
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'json-summary', 'json'],
       include: ['src/**/*.ts', 'src/**/*.tsx'],
-      exclude: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'src/test/**', 'src/data/**', 'src/**/by-level/**', 'src/features/localization/data/**', 'src/features/localization/localization.data.ts'],
+      exclude: [
+        'src/**/*.test.ts',
+        'src/**/*.test.tsx',
+        'src/test/**',
+        'src/data/**',
+        'src/**/by-level/**',
+        'src/features/localization/data/**',
+        'src/features/localization/localization.data.ts',
+      ],
       thresholds: {
         branches: 70,
         functions: 70,
         lines: 70,
-        statements: 70
-      }
-    }
+        statements: 70,
+      },
+    },
   },
-  resolve: { alias: { '@': srcPath } }
+  resolve: { alias: { '@': srcPath } },
 });

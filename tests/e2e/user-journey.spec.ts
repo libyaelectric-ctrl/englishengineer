@@ -14,18 +14,27 @@ test.describe('Full user journey', () => {
 
     const skillsMenu = page.getByRole('button', { name: /^skills$/i });
     if (await skillsMenu.isVisible({ timeout: 3000 }).catch(() => false)) await skillsMenu.click();
-    await page.getByRole('link', { name: /^vocabulary$/i }).first().click();
+    await page
+      .getByRole('link', { name: /^vocabulary$/i })
+      .first()
+      .click();
     await page.waitForURL(/\/vocabulary/);
     await expect(page.getByRole('heading', { name: 'Vocabulary', exact: true })).toBeVisible();
 
-    await page.getByRole('link', { name: /^grammar$/i }).first().click();
+    await page
+      .getByRole('link', { name: /^grammar$/i })
+      .first()
+      .click();
     await page.waitForURL(/\/grammar/);
     await expect(page.locator('body')).toContainText(/grammar/i);
 
     const profileMenu = page.getByRole('button', { name: /^profile$/i });
     if (await profileMenu.isVisible({ timeout: 3000 }).catch(() => false))
       await profileMenu.click();
-    await page.getByRole('link', { name: /overview/i }).last().click();
+    await page
+      .getByRole('link', { name: /overview/i })
+      .last()
+      .click();
     await page.waitForURL(/\/profile\/overview/);
 
     const toolsMenu = page.getByRole('button', { name: /^tools$/i });

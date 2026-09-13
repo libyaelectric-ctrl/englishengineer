@@ -15,9 +15,10 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useLearningStore } from '@/core/learning';
 
+import { logger } from '@/shared/logger';
+
 import { useLocalizationStore } from '@/features/localization';
 import { VocabularyRepository } from '@/features/vocabulary';
-import { logger } from '@/shared/logger';
 
 interface ChallengeQuestion {
   id: string;

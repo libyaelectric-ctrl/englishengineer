@@ -1,10 +1,11 @@
-import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
-import { createMissionSidebarConfig } from '@/layouts/sidebar/createMissionSidebarConfig';
 import { useShallow } from 'zustand/shallow';
 
 import { useListeningMissionsStore } from '@/features/listening';
 import { useLocalizationStore } from '@/features/localization';
 import { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
+
+import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
+import { createMissionSidebarConfig } from '@/layouts/sidebar/createMissionSidebarConfig';
 
 export function ListeningSidebar() {
   const language = useLocalizationStore((s) => s.language);

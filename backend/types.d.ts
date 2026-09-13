@@ -249,13 +249,7 @@ export interface WorkspaceDocumentBody {
 export type PlanId = 'free' | 'junior' | 'senior' | 'specialist' | 'master' | 'team';
 
 export type SubscriptionStatus =
-  | 'none'
-  | 'active'
-  | 'canceled'
-  | 'past_due'
-  | 'incomplete'
-  | 'trialing'
-  | 'unpaid';
+  'none' | 'active' | 'canceled' | 'past_due' | 'incomplete' | 'trialing' | 'unpaid';
 
 export interface SubscriptionSnapshot {
   planId: PlanId;

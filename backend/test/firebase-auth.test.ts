@@ -64,9 +64,7 @@ const createJwksFetch = (keys: JwkWithKid[]): typeof fetch =>
 
 /** Captures the URL(s) requested through a fetch impl, while still serving
  * the given keys — for asserting the exact Google endpoint that gets hit. */
-const createJwksFetchSpy = (
-  keys: JwkWithKid[]
-): { fetchImpl: typeof fetch; calls: string[] } => {
+const createJwksFetchSpy = (keys: JwkWithKid[]): { fetchImpl: typeof fetch; calls: string[] } => {
   const calls: string[] = [];
   const fetchImpl = (async (input: unknown) => {
     calls.push(String(input));
