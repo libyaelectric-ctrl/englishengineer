@@ -19,7 +19,6 @@ const LEVEL_COUNTS: Record<CefrLevel, number> = {
 
 const LEVEL_INDEX: Record<CefrLevel, number> = { A1: 0, A2: 1, B1: 2, B2: 3, C1: 4, C2: 5 };
 
-let fixtureId = 0;
 const makeRule = (level: CefrLevel, idx: number): GrammarRule => ({
   id: `grammar_${level.toLowerCase()}_${idx}`,
   title: `Rule ${level}-${idx}`,

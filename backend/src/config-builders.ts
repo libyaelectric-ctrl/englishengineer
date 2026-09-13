@@ -71,23 +71,16 @@ export const resolveAI = (env: Env): AiConfig => {
   };
 };
 
-export const resolveAuth = (env: Env, runtimeEnv: RuntimeEnvironment): AuthConfig => {
-  const supabaseAuthConfigured =
-    hasText(env.SUPABASE_URL) &&
-    (hasText(env.SUPABASE_ANON_KEY) || hasText(env.SUPABASE_SERVICE_ROLE_KEY));
-
-  const allowInsecureDevAuth =
-    runtimeEnv === 'production'
-      ? false
-      : runtimeEnv === 'test' || isTrue(env.ALLOW_INSECURE_DEV_AUTH);
-
+const validateInsecureDevAuth = (runtimeEnv: RuntimeEnvironment, env: Env): void => {
   if (runtimeEnv === 'production' && isTrue(env.ALLOW_INSECURE_DEV_AUTH)) {
     throw new Error(
       'ALLOW_INSECURE_DEV_AUTH must not be true in production. ' +
         'Set ALLOW_INSECURE_DEV_AUTH=false or remove it from your environment.'
     );
   }
+};
 
+const validateInternalAuth = (runtimeEnv: RuntimeEnvironment, env: Env): void => {
   const internalApiSecret = trimEnv(env.ENGINEEROS_INTERNAL_API_SECRET);
   const internalServiceId = trimEnv(env.ENGINEEROS_INTERNAL_SERVICE_ID);
   if (runtimeEnv === 'production' && internalApiSecret && !internalServiceId) {
@@ -95,26 +88,60 @@ export const resolveAuth = (env: Env, runtimeEnv: RuntimeEnvironment): AuthConfi
       'ENGINEEROS_INTERNAL_SERVICE_ID is required when internal authentication is enabled.'
     );
   }
+};
 
-  const supabaseUrl = supabaseAuthConfigured ? env.SUPABASE_URL!.trim().replace(/\/+$/, '') : null;
-  const supabaseJwtSecret = stripWhitespace(env.SUPABASE_JWT_SECRET);
-  const supabaseJwtIssuer =
-    trimEnv(env.SUPABASE_JWT_ISSUER) ?? (supabaseUrl ? `${supabaseUrl}/auth/v1` : null);
-  const supabaseJwtAudience =
-    trimEnv(env.SUPABASE_JWT_AUDIENCE) ?? (supabaseJwtSecret ? 'authenticated' : null);
+const resolveSupabaseJwt = (
+  supabaseUrl: string | null,
+  supabaseJwtSecret: string | null,
+  env: Env,
+  runtimeEnv: RuntimeEnvironment
+): { issuer: string | null; audience: string | null } => {
+  const issuer = trimEnv(env.SUPABASE_JWT_ISSUER) ?? (supabaseUrl ? `${supabaseUrl}/auth/v1` : null);
+  const audience = trimEnv(env.SUPABASE_JWT_AUDIENCE) ?? (supabaseJwtSecret ? 'authenticated' : null);
+
   if (
     runtimeEnv === 'production' &&
     supabaseJwtSecret &&
-    (!supabaseJwtIssuer || !supabaseJwtAudience)
+    (!issuer || !audience)
   ) {
     throw new Error(
       'SUPABASE_JWT_ISSUER and SUPABASE_JWT_AUDIENCE are required for local JWT verification.'
     );
   }
 
+  return { issuer, audience };
+};
+
+const resolveAllowInsecureDevAuth = (
+  runtimeEnv: RuntimeEnvironment,
+  env: Env
+): boolean => {
+  if (runtimeEnv === 'production') return false;
+  return runtimeEnv === 'test' || isTrue(env.ALLOW_INSECURE_DEV_AUTH);
+};
+
+export const resolveAuth = (env: Env, runtimeEnv: RuntimeEnvironment): AuthConfig => {
+  const supabaseAuthConfigured =
+    hasText(env.SUPABASE_URL) &&
+    (hasText(env.SUPABASE_ANON_KEY) || hasText(env.SUPABASE_SERVICE_ROLE_KEY));
+
+  const allowInsecureDevAuth = resolveAllowInsecureDevAuth(runtimeEnv, env);
+
+  validateInsecureDevAuth(runtimeEnv, env);
+  validateInternalAuth(runtimeEnv, env);
+
+  const supabaseUrl = supabaseAuthConfigured ? env.SUPABASE_URL!.trim().replace(/\/+$/, '') : null;
+  const supabaseJwtSecret = stripWhitespace(env.SUPABASE_JWT_SECRET);
+  const { issuer: supabaseJwtIssuer, audience: supabaseJwtAudience } = resolveSupabaseJwt(
+    supabaseUrl,
+    supabaseJwtSecret,
+    env,
+    runtimeEnv
+  );
+
   return {
-    internalApiSecret,
-    internalServiceId,
+    internalApiSecret: trimEnv(env.ENGINEEROS_INTERNAL_API_SECRET),
+    internalServiceId: trimEnv(env.ENGINEEROS_INTERNAL_SERVICE_ID),
     internalServiceEmail: trimEnv(env.ENGINEEROS_INTERNAL_SERVICE_EMAIL),
     internalServiceRole: trimEnv(env.ENGINEEROS_INTERNAL_SERVICE_ROLE) ?? 'service',
     allowInsecureDevAuth,

@@ -48,7 +48,7 @@ export const EngMascot = ({
   useMascotEffects(inline, copy);
 
   // Pick a stable random idle message per mount / language change
-  const idleMessage = useMemo(() => pickRandom(copy.idle), [language]);
+  const idleMessage = useMemo(() => pickRandom(copy.idle), [copy.idle]);
 
   if (!visible) return null;
   const msg = getDisplayMessage(message, state, copy, idleMessage);

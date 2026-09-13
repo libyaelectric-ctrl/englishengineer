@@ -108,7 +108,7 @@ export interface RateLimitMetricsResult {
 
 export const createSupabaseMetricsRepository = (
   config: { supabaseUrl: string; supabaseServiceRoleKey: string },
-  fetchImpl: typeof fetch = fetch,
+  _fetchImpl: typeof fetch = fetch,
 ): MetricsRepository => {
   const supabase: SupabaseClient = createClient(
     config.supabaseUrl,

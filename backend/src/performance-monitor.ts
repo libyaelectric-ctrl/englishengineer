@@ -5,7 +5,7 @@
  * api-metrics.ts, which shares the same repository instance).
  * Falls back to an in-memory implementation when Supabase is not configured.
  */
-import { getMetricsRepository, type MetricsRepository } from './api-metrics.js';
+import { getMetricsRepository } from './api-metrics.js';
 
 type PerformanceMetricsResult = {
   uptime: number;
