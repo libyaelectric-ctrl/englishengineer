@@ -108,13 +108,12 @@ export interface RateLimitMetricsResult {
 
 export const createSupabaseMetricsRepository = (
   config: { supabaseUrl: string; supabaseServiceRoleKey: string },
-  _fetchImpl: typeof fetch = fetch,
+  fetchImpl: typeof fetch = fetch
 ): MetricsRepository => {
-  const supabase: SupabaseClient = createClient(
-    config.supabaseUrl,
-    config.supabaseServiceRoleKey,
-    { auth: { persistSession: false, autoRefreshToken: false } },
-  );
+  const supabase: SupabaseClient = createClient(config.supabaseUrl, config.supabaseServiceRoleKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { fetch: fetchImpl },
+  });
 
   // --- In-memory buffers (source of truth for current window) ---
   const endpointMap = new Map<string, EndpointMetricData>();
