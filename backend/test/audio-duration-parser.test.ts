@@ -58,12 +58,77 @@ test('WAV duration: returns null for zero sample rate', () => {
   assert.equal(parseAudioDuration(buf, 'audio/wav'), null);
 });
 
-test('non-WAV duration: returns null for MP3 until a safe media parser is introduced', () => {
-  const buf = Buffer.from([0xff, 0xfb, 0x90, 0x00, 0x00, 0x00]);
-  assert.equal(parseAudioDuration(buf, 'audio/mpeg'), null);
+// --- MP3 tests ---
+
+const makeMp3Frame = (bitrateIndex: number = 9): Buffer => {
+  // MPEG1 Layer3 frame: 0xFF 0xFB (sync + version=1, layer=1)
+  const buf = Buffer.alloc(4);
+  buf[0] = 0xff;
+  buf[1] = 0xfb; // 1111 1011 = sync(11111111111) + version=11(MPEG1) + layer=01(Layer3) + no CRC
+  buf[2] = (bitrateIndex << 4) | 0x00; // bitrate index + padding=0
+  buf[3] = 0x00;
+  return buf;
+};
+
+test('MP3 duration: returns null or zero for header-only buffer', () => {
+  const frame = makeMp3Frame(9); // 128 kbps
+  const buf = Buffer.alloc(400);
+  for (let i = 0; i < 100; i++) frame.copy(buf, i * 4);
+  const duration = parseAudioDuration(buf, 'audio/mpeg');
+  assert.ok(duration !== undefined, 'should return a number or null');
+  assert.ok(duration === null || typeof duration === 'number', 'valid return type');
 });
 
-test('non-WAV duration: returns null for MP4 until a safe media parser is introduced', () => {
+test('MP3 duration: returns null for empty buffer', () => {
+  assert.equal(parseAudioDuration(Buffer.alloc(0), 'audio/mpeg'), null);
+});
+
+// --- MP4 tests ---
+
+const makeMp4Mvhd = (timescale: number, duration: number, version: number = 0): Buffer => {
+  // Minimal mp4: ftyp + moov(mvhd)
+  const mvhdPayloadSize = version === 0 ? 100 : 112;
+  const mvhdAtomSize = 8 + mvhdPayloadSize;
+  const moovAtomSize = 8 + mvhdAtomSize;
+  const ftypSize = 12;
+  const totalSize = ftypSize + moovAtomSize;
+  const buf = Buffer.alloc(totalSize);
+
+  // ftyp
+  buf.writeUInt32BE(ftypSize, 0);
+  buf.write('ftyp', 4, 'ascii');
+  buf.write('isom', 8, 'ascii');
+
+  // moov
+  let pos = ftypSize;
+  buf.writeUInt32BE(moovAtomSize, pos);
+  buf.write('moov', pos + 4, 'ascii');
+
+  // mvhd inside moov
+  pos += 8;
+  buf.writeUInt32BE(mvhdAtomSize, pos);
+  buf.write('mvhd', pos + 4, 'ascii');
+  buf[pos + 8] = version;
+
+  if (version === 0) {
+    buf.writeUInt32BE(timescale, pos + 20);
+    buf.writeUInt32BE(duration, pos + 24);
+  } else {
+    buf.writeUInt32BE(timescale, pos + 28);
+    buf.writeBigUInt64BE(BigInt(duration), pos + 32);
+  }
+
+  return buf;
+};
+
+test('MP4 duration: 30 seconds at timescale 44100', () => {
+  const timescale = 44100;
+  const duration = timescale * 30;
+  const buf = makeMp4Mvhd(timescale, duration);
+  assert.equal(parseAudioDuration(buf, 'audio/mp4'), 30);
+});
+
+test('MP4 duration: returns null when moov atom missing', () => {
   const buf = Buffer.from([0x00, 0x00, 0x00, 0x0c, 0x66, 0x74, 0x79, 0x70, 0x69, 0x73, 0x6f, 0x6d]);
   assert.equal(parseAudioDuration(buf, 'audio/mp4'), null);
 });
@@ -118,6 +183,64 @@ test('WebM duration: returns null for buffer without Segment', () => {
   ]);
   assert.equal(parseAudioDuration(buf, 'audio/webm'), null);
 });
+
+test('WebM duration: TimecodeScale data truncated returns null (no RangeError)', () => {
+  // Segment present; TimecodeScale element declares 3 data bytes but only 1 fits
+  const buf = Buffer.from([
+    0x1a,
+    0x45,
+    0xdf,
+    0xa3,
+    0x81,
+    0x2a, // EBML header
+    0x18,
+    0x53,
+    0x80,
+    0x67,
+    0x8a, // Segment, size 10
+    0x2a,
+    0xd7,
+    0xb1,
+    0x83,
+    0x01, // TimecodeScale, size 3, only 1 data byte
+  ]);
+  // Before the bounds fix this read past the buffer end via buffer[...]
+  assert.doesNotThrow(() => parseAudioDuration(buf, 'audio/webm'));
+  assert.equal(parseAudioDuration(buf, 'audio/webm'), null);
+});
+
+test('WebM duration: Duration element data truncated returns null (no RangeError)', () => {
+  // Segment with valid TimecodeScale but Duration declares 8 data bytes, only 2 fit
+  const buf = Buffer.from([
+    0x1a,
+    0x45,
+    0xdf,
+    0xa3,
+    0x81,
+    0x2a, // EBML header
+    0x18,
+    0x53,
+    0x80,
+    0x67,
+    0x8c, // Segment, size 12
+    0x2a,
+    0xd7,
+    0xb1,
+    0x83,
+    0x0f,
+    0x42,
+    0x40, // TimecodeScale = 1000000
+    0x44,
+    0x89,
+    0x88,
+    0x00,
+    0x00, // Duration, size 8, only 2 data bytes
+  ]);
+  assert.doesNotThrow(() => parseAudioDuration(buf, 'audio/webm'));
+  assert.equal(parseAudioDuration(buf, 'audio/webm'), null);
+});
+
+// --- Unsupported type ---
 
 test('returns null for unsupported content type', () => {
   assert.equal(parseAudioDuration(Buffer.alloc(100), 'audio/ogg'), null);

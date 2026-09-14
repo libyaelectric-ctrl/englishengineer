@@ -29,22 +29,33 @@ const normalizeAudioContentType = (rawHeader: unknown): SupportedAudioType | nul
   if (typeof rawHeader !== 'string') return null;
   const mimeType = rawHeader.split(';')[0]?.trim().toLowerCase();
   switch (mimeType) {
-    case 'audio/webm': return 'audio/webm';
-    case 'audio/ogg': return 'audio/ogg';
-    case 'audio/wav': return 'audio/wav';
-    case 'audio/mpeg': return 'audio/mpeg';
-    case 'audio/mp4': return 'audio/mp4';
-    default: return null;
+    case 'audio/webm':
+      return 'audio/webm';
+    case 'audio/ogg':
+      return 'audio/ogg';
+    case 'audio/wav':
+      return 'audio/wav';
+    case 'audio/mpeg':
+      return 'audio/mpeg';
+    case 'audio/mp4':
+      return 'audio/mp4';
+    default:
+      return null;
   }
 };
 
 const audioExtensionFor = (contentType: SupportedAudioType): SupportedAudioExtension => {
   switch (contentType) {
-    case 'audio/webm': return 'webm';
-    case 'audio/ogg': return 'ogg';
-    case 'audio/wav': return 'wav';
-    case 'audio/mpeg': return 'mp3';
-    case 'audio/mp4': return 'm4a';
+    case 'audio/webm':
+      return 'webm';
+    case 'audio/ogg':
+      return 'ogg';
+    case 'audio/wav':
+      return 'wav';
+    case 'audio/mpeg':
+      return 'mp3';
+    case 'audio/mp4':
+      return 'm4a';
   }
 };
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024;
@@ -96,14 +107,188 @@ const parseWavDuration = (buffer: Buffer): number | null => {
   if (bytesPerSample === 0) return null;
   return dataChunkSize / (sampleRate * bytesPerSample);
 };
-
+const parseMp3Duration = (buffer: Buffer): number | null => {
+  const BITRATES = [
+    [0, 0],
+    [32, 32],
+    [40, 40],
+    [48, 48],
+    [56, 56],
+    [64, 64],
+    [80, 80],
+    [96, 96],
+    [112, 112],
+    [128, 128],
+    [160, 160],
+    [192, 192],
+    [224, 224],
+    [256, 256],
+    [320, 320],
+    [0, 0],
+  ];
+  let offset = 0;
+  if (buffer.length >= 3 && buffer.subarray(0, 3).toString('ascii') === 'ID3') {
+    if (buffer.length < 10) return null;
+    const size =
+      ((buffer[6]! & 0x7f) << 21) |
+      ((buffer[7]! & 0x7f) << 14) |
+      ((buffer[8]! & 0x7f) << 7) |
+      (buffer[9]! & 0x7f);
+    offset = 10 + size;
+  }
+  let bitrateSum = 0;
+  let frameCount = 0;
+  while (offset + 4 <= buffer.length) {
+    if (buffer[offset] === 0xff && (buffer[offset + 1]! & 0xe0) === 0xe0) {
+      const versionBits = (buffer[offset + 1]! >> 3) & 0x03;
+      const layerBits = (buffer[offset + 1]! >> 1) & 0x03;
+      const bitrateIdx = (buffer[offset + 2]! >> 4) & 0x0f;
+      if (layerBits === 0 || bitrateIdx === 0 || bitrateIdx === 15) {
+        offset++;
+        continue;
+      }
+      const mpegVersion = versionBits === 3 ? 0 : 1;
+      const bitrate = BITRATES[bitrateIdx]?.[mpegVersion] ?? 0;
+      if (bitrate > 0) {
+        bitrateSum += bitrate;
+        frameCount++;
+      }
+      offset += 4;
+    } else {
+      offset++;
+    }
+  }
+  if (frameCount === 0 || bitrateSum === 0) return null;
+  const avgBitrateKbps = bitrateSum / frameCount;
+  const totalBits = (buffer.length - offset) * 8;
+  return totalBits / (avgBitrateKbps * 1000);
+};
+const parseMp4Duration = (buffer: Buffer): number | null => {
+  const findAtom = (
+    start: number,
+    end: number,
+    target: string
+  ): {
+    found: boolean;
+    offset: number;
+  } => {
+    let pos = start;
+    while (pos + 8 <= end) {
+      const size = buffer.readUInt32BE(pos);
+      const type = buffer.subarray(pos + 4, pos + 8).toString('ascii');
+      if (size < 8) return { found: false, offset: end };
+      if (type === target) return { found: true, offset: pos };
+      pos += size;
+    }
+    return { found: false, offset: pos };
+  };
+  const moovResult = findAtom(0, buffer.length, 'moov');
+  if (!moovResult.found) return null;
+  const moovStart = moovResult.offset + 8;
+  const moovEnd = Math.min(
+    buffer.length,
+    moovResult.offset + buffer.readUInt32BE(moovResult.offset)
+  );
+  const mvhdResult = findAtom(moovStart, moovEnd, 'mvhd');
+  if (!mvhdResult.found) return null;
+  const mvhdOffset = mvhdResult.offset + 8;
+  if (mvhdOffset + 20 > buffer.length) return null;
+  const version = buffer[mvhdOffset]!;
+  let timescale: number;
+  let duration: number;
+  if (version === 0) {
+    timescale = buffer.readUInt32BE(mvhdOffset + 12);
+    duration = buffer.readUInt32BE(mvhdOffset + 16);
+  } else {
+    // Version 1 mvhd reads timescale at +20 and duration at +24..31.
+    if (mvhdOffset + 32 > buffer.length) return null;
+    timescale = buffer.readUInt32BE(mvhdOffset + 20);
+    duration = Number(buffer.readBigUInt64BE(mvhdOffset + 24));
+  }
+  if (timescale === 0) return null;
+  return duration / timescale;
+};
+const parseWebmDuration = (buffer: Buffer): number | null => {
+  const readVint = (pos: number): { value: number; size: number } | null => {
+    if (pos >= buffer.length) return null;
+    const first = buffer[pos]!;
+    let size = 1;
+    let mask = 0x80;
+    while (size <= 8 && (first & mask) === 0) {
+      mask >>= 1;
+      size++;
+    }
+    if (size > 8) return null;
+    let value = first & (0xff >> size);
+    for (let i = 1; i < size; i++) {
+      if (pos + i >= buffer.length) return null;
+      value = (value << 8) | buffer[pos + i]!;
+    }
+    return { value, size };
+  };
+  const readElementId = (pos: number): { id: number; size: number } | null => {
+    if (pos >= buffer.length) return null;
+    const first = buffer[pos]!;
+    let size = 1;
+    if (first === 0) return null;
+    let threshold = 0x80;
+    while (size <= 8 && (first & threshold) === 0) {
+      threshold >>= 1;
+      size++;
+    }
+    if (size > 8) return null;
+    let id = first;
+    for (let i = 1; i < size; i++) {
+      if (pos + i >= buffer.length) return null;
+      id = (id << 8) | buffer[pos + i]!;
+    }
+    return { id, size };
+  };
+  const findEBML = (
+    start: number,
+    end: number,
+    targetId: number
+  ): { found: boolean; dataOffset: number; dataSize: number } => {
+    let pos = start;
+    while (pos + 2 <= end) {
+      const el = readElementId(pos);
+      if (!el) break;
+      const sizeResult = readVint(pos + el.size);
+      if (!sizeResult) break;
+      const dataOffset = pos + el.size + sizeResult.size;
+      if (el.id === targetId) return { found: true, dataOffset, dataSize: sizeResult.value };
+      pos = dataOffset + sizeResult.value;
+    }
+    return { found: false, dataOffset: 0, dataSize: 0 };
+  };
+  const segment = findEBML(0, buffer.length, 0x18538067);
+  if (!segment.found) return null;
+  const segmentDataEnd = segment.dataOffset + segment.dataSize;
+  let timecodeScale = 1000000;
+  const tcResult = findEBML(segment.dataOffset, segmentDataEnd, 0x2ad7b1);
+  if (
+    tcResult.found &&
+    tcResult.dataSize > 0 &&
+    tcResult.dataSize <= 8 &&
+    tcResult.dataOffset + tcResult.dataSize <= buffer.length
+  ) {
+    let tc = 0;
+    for (let i = 0; i < tcResult.dataSize; i++) tc = (tc << 8) | buffer[tcResult.dataOffset + i]!;
+    if (tc > 0) timecodeScale = tc;
+  }
+  const durResult = findEBML(segment.dataOffset, segmentDataEnd, 0x4489);
+  if (!durResult.found) return null;
+  let dur = 0;
+  const bytesToRead = Math.min(durResult.dataSize, 8);
+  if (durResult.dataOffset + bytesToRead > buffer.length) return null;
+  for (let i = 0; i < bytesToRead; i++) dur = (dur << 8) | buffer[durResult.dataOffset + i]!;
+  return dur / timecodeScale;
+};
 export const parseAudioDuration = (buffer: Buffer, contentType: string): number | null => {
-  // Keep the server-side upload limit strict for the one container format whose
-  // duration can be read safely with fixed offsets. MP3/MP4/WebM duration parsing
-  // previously walked attacker-controlled binary structures and triggered CodeQL
-  // type-confusion alerts; those formats still pass signature and byte-size checks,
-  // but duration enforcement is deferred until a vetted media parser is introduced.
   if (contentType === 'audio/wav') return parseWavDuration(buffer);
+  if (contentType === 'audio/mpeg') return parseMp3Duration(buffer);
+  if (contentType === 'audio/mp4') return parseMp4Duration(buffer);
+  if (contentType === 'audio/webm') return parseWebmDuration(buffer);
   return null;
 };
 const uploadToSupabase = async (
@@ -237,17 +422,17 @@ export const registerSpeakingRoutes = (
         const rawContentType = request.get('content-type');
         const contentType = normalizeAudioContentType(rawContentType);
         if (!contentType)
-          throw new ApiError(
-            415,
-            'unsupported_media_type',
-            'Unsupported audio content-type.'
-          );
+          throw new ApiError(415, 'unsupported_media_type', 'Unsupported audio content-type.');
         const extension = audioExtensionFor(contentType);
-        const buffer = request.body as Buffer;
-        if (!Buffer.isBuffer(buffer) || buffer.length === 0)
+        const requestBody: unknown = request.body;
+        if (!Buffer.isBuffer(requestBody) || requestBody.length === 0)
           throw new ApiError(400, 'empty_audio', 'No audio data received');
-        if (buffer.length > MAX_AUDIO_BYTES)
+        if (requestBody.length > MAX_AUDIO_BYTES)
           throw new ApiError(413, 'audio_too_large', `Audio exceeds ${MAX_AUDIO_BYTES} byte limit`);
+        // Copy into a locally allocated Buffer: the duration parsers below must
+        // operate on a proven Buffer, never on the raw request parameter
+        // (CWE-843 type-confusion barrier).
+        const buffer = Buffer.from(requestBody);
         if (!hasExpectedAudioSignature(buffer, contentType))
           throw new ApiError(
             415,
@@ -406,12 +591,14 @@ export const registerSpeakingRoutes = (
           throw new ApiError(400, 'invalid_route_parameter', 'Invalid route parameter.');
         }
         const submissionId = rawSubmissionId;
-        response.json(apiSuccess(
-          (await getLearningRepository().getSpeakingSubmission(
-            userIdFrom(request),
-            submissionId
-          )) ?? { notFound: true }
-        ));
+        response.json(
+          apiSuccess(
+            (await getLearningRepository().getSpeakingSubmission(
+              userIdFrom(request),
+              submissionId
+            )) ?? { notFound: true }
+          )
+        );
       } catch (error) {
         next(error);
       }
