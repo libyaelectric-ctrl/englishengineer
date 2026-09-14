@@ -25,20 +25,52 @@ const getDisplayMessage = (m: string | null, s: string, c: MascotStateCopy, idle
   return null;
 };
 
-/** Detect mobile via viewport width (matches Tailwind lg breakpoint at 1024px) */
 const useIsMobile = () => {
   if (typeof window === 'undefined') return false;
   return window.innerWidth < 1024;
 };
 
-export const EngMascot = ({
-  inline = false,
-  size = 64,
-  // eslint-disable-next-line complexity -- large mascot render with settings/state branches
+/** Settings gear + minimize button row — extracted to keep parent complexity ≤ 16 */
+const MascotControls = ({
+  inline,
+  minimized,
+  isMobile,
+  onToggleSettings,
+  onToggleMinimized,
 }: {
-  inline?: boolean;
-  size?: number;
+  inline: boolean;
+  minimized: boolean;
+  isMobile: boolean;
+  settingsOpen: boolean;
+  onToggleSettings: (e: React.MouseEvent) => void;
+  onToggleMinimized: () => void;
 }) => {
+  if (inline) return null;
+  return (
+    <>
+      {!minimized && (
+        <button
+          type="button"
+          onClick={onToggleSettings}
+          className={`engmascot-mini-btn ${isMobile ? 'engmascot-mini-btn--touch' : ''}`}
+          aria-label="Settings"
+        >
+          ⚙️
+        </button>
+      )}
+      <button
+        type="button"
+        onClick={onToggleMinimized}
+        className={`engmascot-mini-btn ${minimized ? 'engmascot-restore' : ''} ${isMobile ? 'engmascot-mini-btn--touch' : ''}`}
+        aria-label={minimized ? 'Show' : 'Minimize'}
+      >
+        {minimized ? '+' : '—'}
+      </button>
+    </>
+  );
+};
+
+export const EngMascot = ({ inline = false, size = 64 }: { inline?: boolean; size?: number }) => {
   const language = useLocalizationStore((s) => s.language);
   const copy = MASCOT_COPY[language] ?? MASCOT_COPY.en;
   const { state, message, visible, minimized, position, contrastMode, toggleMinimized } =
@@ -50,15 +82,25 @@ export const EngMascot = ({
 
   useMascotEffects(inline, copy);
 
-  // Pick a stable random idle message per mount / language change
   const idleMessage = useMemo(() => pickRandom(copy.idle), [copy.idle]);
 
   if (!visible) return null;
+
   const msg = getDisplayMessage(message, state, copy, idleMessage);
-  // Mobile: smaller figure (48px) + slightly smaller minimized; Desktop: 64px
   const imgSize = inline ? size : minimized ? 36 : isMobile ? 48 : 64;
-  // On mobile, push mascot above the bottom navigation bar (~64px tall)
   const mobileBottom = isMobile ? Math.max(position.bottom, 72) : position.bottom;
+
+  const handleFigureKeyDown = (e: React.KeyboardEvent) => {
+    if (!inline && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      handleTap();
+    }
+  };
+
+  const handleSettingsToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSettingsOpen((prev) => !prev);
+  };
 
   return (
     <div
@@ -77,19 +119,14 @@ export const EngMascot = ({
         onClose={() => setSettingsOpen(false)}
       />
       <div className="flex items-end gap-1.5 sm:gap-2">
-        {!inline && !minimized && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setSettingsOpen(!settingsOpen);
-            }}
-            className={`engmascot-mini-btn ${isMobile ? 'engmascot-mini-btn--touch' : ''}`}
-            aria-label="Settings"
-          >
-            ⚙️
-          </button>
-        )}
+        <MascotControls
+          inline={inline}
+          minimized={minimized}
+          isMobile={isMobile}
+          settingsOpen={settingsOpen}
+          onToggleSettings={handleSettingsToggle}
+          onToggleMinimized={toggleMinimized}
+        />
         <MascotFigure
           state={state}
           imgSize={imgSize}
@@ -100,23 +137,8 @@ export const EngMascot = ({
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={() => {}}
-          onKeyDown={(e: React.KeyboardEvent) => {
-            if (!inline && (e.key === 'Enter' || e.key === ' ')) {
-              e.preventDefault();
-              handleTap();
-            }
-          }}
+          onKeyDown={handleFigureKeyDown}
         />
-        {!inline && (
-          <button
-            type="button"
-            onClick={toggleMinimized}
-            className={`engmascot-mini-btn ${minimized ? 'engmascot-restore' : ''} ${isMobile ? 'engmascot-mini-btn--touch' : ''}`}
-            aria-label={minimized ? 'Show' : 'Minimize'}
-          >
-            {minimized ? '+' : '—'}
-          </button>
-        )}
       </div>
     </div>
   );
