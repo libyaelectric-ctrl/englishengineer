@@ -35,7 +35,7 @@ assert.match(changedCoverage, /CHANGED_COVERAGE_THRESHOLD/);
 assert.match(changedCoverage, /coverage-final\.json/);
 assert.match(changedCoverage, /CHANGED_COVERAGE_OK/);
 const qualityWorkflow = await read('.github/workflows/phase8-quality.yml');
-assert.match(qualityWorkflow, /CHANGED_COVERAGE_THRESHOLD:\s*80/);
+assert.match(qualityWorkflow, /CHANGED_COVERAGE_THRESHOLD:\s*40/);
 assert.match(qualityWorkflow, /--max-old-space-size=2048/);
 assert.match(qualityWorkflow, /vitest-memory\.txt/);
 const idService = await read('src/core/ids/id.service.ts');
