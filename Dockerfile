@@ -19,19 +19,20 @@ RUN npm run build
 # === Stage 2: Production ===
 FROM nginx:alpine AS production
 
+# Create non-root user first
+RUN addgroup -g 1001 -S engvox && \
+    adduser -S engvox -u 1001 -G engvox
+
 # Copy nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+# Allow non-root user to bind port, write pid, and use cache
+RUN mkdir -p /var/run /var/cache/nginx /var/log/nginx && \
+    chown -R engvox:engvox /var/run /var/cache/nginx /var/log/nginx /etc/nginx
+
 # Copy built assets
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Create non-root user with write access to nginx runtime dirs
-RUN addgroup -g 1001 -S engvox && \
-    adduser -S engvox -u 1001 -G engvox && \
-    chown -R engvox:engvox /usr/share/nginx/html && \
-    chown -R engvox:engvox /var/cache/nginx && \
-    chown -R engvox:engvox /var/log/nginx && \
-    chown -R engvox:engvox /var/run
+RUN chown -R engvox:engvox /usr/share/nginx/html
 
 USER engvox
 
