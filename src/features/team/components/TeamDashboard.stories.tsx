@@ -40,13 +40,13 @@ const DEMO_SUMMARIES = [
   { memberId: '3', wordsLearned: 180, studyHours: 12, streak: 3, score: 65 },
 ];
 
-export const getScoreClassName = (score: number): string => {
+const getScoreClassName = (score: number): string => {
   if (score >= 80) return 'text-success';
   if (score >= 60) return 'text-warning';
   return 'text-error';
 };
 
-export const StatsGrid = () => {
+const StatsGrid = () => {
   const totalWords = DEMO_SUMMARIES.reduce((s, m) => s + m.wordsLearned, 0);
   const avgScore = Math.round(
     DEMO_SUMMARIES.reduce((s, m) => s + m.score, 0) / DEMO_SUMMARIES.length
@@ -70,8 +70,7 @@ export const StatsGrid = () => {
   );
 };
 
-export const MemberRow = ({ member }: { member?: (typeof DEMO_MEMBERS)[number] }) => {
-  if (!member) return null;
+const MemberRow = ({ member }: { member: (typeof DEMO_MEMBERS)[number] }) => {
   const summary = DEMO_SUMMARIES.find((s) => s.memberId === member.id);
   const score = summary?.score ?? 0;
 
