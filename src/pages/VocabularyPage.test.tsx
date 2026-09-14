@@ -126,6 +126,10 @@ describe('VocabularyPage menu', () => {
       fireEvent.change(firstInput, {
         target: { value: selectedTerm?.turkishMeaning },
       });
+      // Ensure the React state update from onChange is committed before
+      // submitting the form — CI runners with automatic batching can lose
+      // the setAnswers update when change + click fire in the same tick.
+      await waitFor(() => expect(firstInput).toHaveValue(selectedTerm?.turkishMeaning));
       fireEvent.click(screen.getByRole('button', { name: 'vocabulary.finishQuiz' }));
 
       await screen.findByText('vocabulary.quizComplete');
