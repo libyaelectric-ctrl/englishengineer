@@ -1,7 +1,7 @@
 import type { RuntimeEnvironment } from '../types.js';
 import { ApiError } from './errors.js';
 
-export interface BillingReturnUrlPolicy {
+interface BillingReturnUrlPolicy {
   environment: RuntimeEnvironment;
   allowedOrigins: readonly string[];
 }

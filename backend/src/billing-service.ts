@@ -53,7 +53,7 @@ const resolveSubscription = (
       : emptySubscription();
   return normalized.stripeCustomerId ? normalized : emptySubscription();
 };
-export interface InvoiceRecord {
+interface InvoiceRecord {
   id: string;
   date: string;
   amount: string;
