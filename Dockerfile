@@ -25,14 +25,13 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Copy built assets
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Create non-root user
+# Create non-root user with write access to nginx runtime dirs
 RUN addgroup -g 1001 -S engvox && \
     adduser -S engvox -u 1001 -G engvox && \
     chown -R engvox:engvox /usr/share/nginx/html && \
     chown -R engvox:engvox /var/cache/nginx && \
     chown -R engvox:engvox /var/log/nginx && \
-    touch /var/run/nginx.pid && \
-    chown -R engvox:engvox /var/run/nginx.pid
+    chown -R engvox:engvox /var/run
 
 USER engvox
 
