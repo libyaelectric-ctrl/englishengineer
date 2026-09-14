@@ -22,6 +22,8 @@ module.exports = {
         'largest-contentful-paint': ['warn', { maxNumericValue: 8000 }],
         'total-blocking-time': ['warn', { maxNumericValue: 1000 }],
         'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
+        'unused-javascript': ['warn', { maxLength: 5 }],
+        'uses-rel-preconnect': ['warn', { maxLength: 5 }],
       },
     },
     upload: {
