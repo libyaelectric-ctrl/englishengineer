@@ -60,12 +60,13 @@ export const inputSanitization = (req: Request, _res: Response, next: NextFuncti
   // Express 5's `req.query` is a getter-only property computed from the URL
   // (no setter), so `req.query = ...` throws. Sanitize its keys in place on
   // the existing object instead of replacing the reference.
-  if (req.query && typeof req.query === 'object') {
-    const sanitizedQuery = sanitizeValue(req.query) as Record<string, unknown>;
-    for (const key of Object.keys(req.query as Record<string, unknown>)) {
-      delete (req.query as Record<string, unknown>)[key];
+  if (req.query && typeof req.query === 'object' && !Array.isArray(req.query)) {
+    const queryObj = req.query as Record<string, unknown>;
+    const sanitizedQuery = sanitizeValue(queryObj) as Record<string, unknown>;
+    for (const key of Object.keys(queryObj)) {
+      delete queryObj[key];
     }
-    Object.assign(req.query as Record<string, unknown>, sanitizedQuery);
+    Object.assign(queryObj, sanitizedQuery);
   }
   if (req.params && typeof req.params === 'object') {
     req.params = sanitizeValue(req.params) as Record<string, string>;

@@ -32,7 +32,9 @@ export const registerExportRoutes = (
     const userId = req.auth?.userId;
     if (!userId) throw new ApiError(401, 'authentication_required', 'Authentication required.');
 
-    const requestedFormat = typeof req.query.format === 'string' ? req.query.format : 'json';
+    const rawFormat = req.query.format;
+    const requestedFormat =
+      typeof rawFormat === 'string' && rawFormat.length > 0 ? rawFormat : 'json';
     if (requestedFormat !== 'json' && requestedFormat !== 'csv') {
       throw new ApiError(400, 'invalid_export_format', 'Export format must be json or csv.');
     }
