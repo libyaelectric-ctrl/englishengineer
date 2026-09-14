@@ -1,51 +1,7 @@
-import {
+import type {
   CareerRole,
   DailyCommunicationTask,
-  MistakeCategory,
 } from '@/shared/types/learning-intelligence.types';
-
-export const CAREER_ROLES: CareerRole[] = [
-  'Electrical Works Chief',
-  'MEP Coordinator',
-  'QA/QC Engineer',
-  'Commissioning Engineer',
-  'Site Engineer',
-  'Procurement Engineer',
-  'HSE Engineer',
-  'Data Center Engineer',
-  'Project Manager',
-];
-
-export const MISTAKE_CATEGORIES: MistakeCategory[] = [
-  'Vocabulary',
-  'Grammar',
-  'Listening',
-  'Writing Structure',
-  'Speaking Response',
-  'CEFR Mismatch',
-];
-
-export const MISTAKE_SUGGESTIONS: Record<MistakeCategory, string> = {
-  Vocabulary: 'Review the term, meaning and one controlled example sentence.',
-  Grammar: 'Check tense consistency, word order and subject-verb agreement.',
-  Listening: 'Replay the key sentence and record the missed information.',
-  'Writing Structure': 'Separate context, issue, impact and required action.',
-  'Speaking Response': 'Build a short response with one clear point per sentence.',
-  'CEFR Mismatch': 'Repeat the task with grammar and vocabulary at your current skill level.',
-  grammar: 'Check tense consistency and subject-verb agreement.',
-  'word choice': 'Replace general words with the exact engineering term.',
-  tone: 'Use a factual request with an owner and date instead of blame.',
-  'unclear sentence': 'Separate cause, impact and required action.',
-  'Turkish thinking pattern': 'Use direct English word order: subject, action, object, condition.',
-  'missing article': 'Check whether a singular countable noun needs a, an or the.',
-  'wrong preposition': 'Record the complete phrase, not the preposition alone.',
-  'weak technical explanation': 'Define the issue, evidence, consequence and next action.',
-  'repeated vocabulary gap': 'Save the missing term to Vocabulary Review with one site example.',
-  clarity: 'Use one idea per sentence and name the responsible party.',
-  preposition: 'Learn the full collocation, for example responsible for or comply with.',
-  article: 'Use the for a known project item and a/an for a first mention.',
-  'repeated phrase issue': 'Save one corrected professional phrase and reuse it in three contexts.',
-};
 
 export const BASE_DAILY_TASKS: DailyCommunicationTask[] = [
   {

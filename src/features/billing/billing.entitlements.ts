@@ -131,22 +131,6 @@ export const canViewAdvancedAnalytics = (subscription: SubscriptionSnapshot): En
 export const canAccessProjectWorkspace = (subscription: SubscriptionSnapshot): EntitlementResult =>
   canAccessFeature(subscription, 'projectWorkspace');
 
-export const canAccessPersistentMemory = (subscription: SubscriptionSnapshot): EntitlementResult =>
-  canAccessFeature(subscription, 'persistentProjectMemory');
-
-export const canAccessCustomScenario = (subscription: SubscriptionSnapshot): EntitlementResult =>
-  canAccessFeature(subscription, 'customScenarioGeneration');
-
-export const canAccessLinkedInOptimization = (
-  subscription: SubscriptionSnapshot
-): EntitlementResult => canAccessFeature(subscription, 'linkedinOptimization');
-
-export const canAccessPersistentAIAgent = (subscription: SubscriptionSnapshot): EntitlementResult =>
-  canAccessFeature(subscription, 'persistentAIAgent');
-
-export const canAccessRealVoiceSpeaking = (subscription: SubscriptionSnapshot): EntitlementResult =>
-  canAccessFeature(subscription, 'realVoiceSpeaking');
-
 const getPlanLevel = (planId: BillingPlanId): number => PLAN_HIERARCHY.indexOf(planId);
 
 export const isDowngrade = (from: BillingPlanId, to: BillingPlanId): boolean =>

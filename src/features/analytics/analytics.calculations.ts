@@ -1,4 +1,4 @@
-import { LearningState, MissionModule, StudySession } from '@/core/learning/learning.types';
+import { LearningState, StudySession } from '@/core/learning/learning.types';
 import { ProgressService } from '@/core/learning/progress.service';
 
 import {
@@ -135,6 +135,3 @@ export const toEloTimeline = (state: LearningState): AnalyticsTimelinePoint[] =>
     value: item.value,
     label: 'ELO',
   }));
-
-export const isAnalyticsSkill = (module: MissionModule): module is AnalyticsSkillName =>
-  ANALYTICS_SKILLS.includes(module as AnalyticsSkillName);
