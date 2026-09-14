@@ -27,8 +27,8 @@ RUN addgroup -g 1001 -S engvox && \
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Allow non-root user to bind port, write pid, and use cache
-RUN mkdir -p /var/run /var/cache/nginx /var/log/nginx && \
-    chown -R engvox:engvox /var/run /var/cache/nginx /var/log/nginx /etc/nginx
+RUN mkdir -p /run /var/cache/nginx /var/log/nginx && \
+    chown -R engvox:engvox /run /var/cache/nginx /var/log/nginx /etc/nginx
 
 # Copy built assets
 COPY --from=builder /app/dist /usr/share/nginx/html
