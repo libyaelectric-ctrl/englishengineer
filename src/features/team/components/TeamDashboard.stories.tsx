@@ -70,7 +70,8 @@ export const StatsGrid = () => {
   );
 };
 
-export const MemberRow = ({ member }: { member: (typeof DEMO_MEMBERS)[number] }) => {
+export const MemberRow = ({ member }: { member?: (typeof DEMO_MEMBERS)[number] }) => {
+  if (!member) return null;
   const summary = DEMO_SUMMARIES.find((s) => s.memberId === member.id);
   const score = summary?.score ?? 0;
 
