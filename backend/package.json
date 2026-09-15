@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@sentry/node": "^10.73.0",
+    "@sentry/node": "^10.74.0",
     "@supabase/supabase-js": "^2.116.0",
     "compression": "^1.8.1",
     "cors": "^2.8.6",
@@ -23,7 +23,7 @@
     "stripe": "^22.6.1",
     "swagger-ui-dist": "^5.32.14",
     "winston": "^3.19.0",
-    "zod": "^4.5.4"
+    "zod": "^4.6.2"
   },
   "devDependencies": {
     "@types/compression": "^1.8.1",
