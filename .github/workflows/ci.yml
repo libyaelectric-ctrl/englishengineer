@@ -84,15 +84,9 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
-      - name: Frontend Unit Tests
-        run: npm test
-      - name: Vitest Peak Memory Measurement
-        run: |
-          echo "### Vitest Peak Memory" >> $GITHUB_STEP_SUMMARY
-          echo "Skipped on pull requests to keep the merge gate within the job timeout; coverage and unit tests still run as blocking checks." >> $GITHUB_STEP_SUMMARY
-      - name: Frontend E2E Tests (Vitest)
-        run: npm run e2e
-      - name: Test Coverage
+      # Unit suite runs ONCE here — with coverage. A separate plain `npm test`
+      # step duplicated the same suite and pushed the job past its timeout.
+      - name: Unit Tests with Coverage
         run: npm run test:coverage
       - name: Verify Release Consistency
         run: node scripts/verify-release.mjs
@@ -115,6 +109,18 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with: { name: coverage-report, path: coverage/, retention-days: 7 }
+
+  e2e-vitest:
+    name: 🎭 Vitest E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Frontend E2E Tests (Vitest)
+        run: npm run e2e
 
   backend:
     name: ⚙️ Backend
@@ -244,6 +250,7 @@ jobs:
           echo "Secret Scan: ${{ needs.secret-scan.result }}"
           echo "Code Quality: ${{ needs.quality.result }}"
           echo "Tests: ${{ needs.test.result }}"
+          echo "Vitest E2E: ${{ needs.e2e-vitest.result }}"
           echo "Backend: ${{ needs.backend.result }}"
           echo "Build: ${{ needs.build.result }}"
           echo "E2E: ${{ needs.e2e.result }}"
