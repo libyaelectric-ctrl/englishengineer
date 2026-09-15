@@ -22,6 +22,36 @@ import { resetStores } from './test-utils/resetStores';
 // ─── Hoisted mock data ────────────────────────────────────────────────────
 // Use vi.hoisted() to ensure mock data is available before vi.mock() calls
 
+// useLearningCockpit must hand back ONE frozen object: a fresh literal per call
+// makes every consumer that lists it as a dependency re-run, and ProfilePage
+// re-renders until the event loop is blocked (the process never times out).
+const { mockLearningCockpit } = vi.hoisted(() => ({
+  mockLearningCockpit: {
+    profile: {
+      skills: {
+        vocabulary: { elo: 800, cefrBand: 'A1' },
+        grammar: { elo: 750, cefrBand: 'A1' },
+        reading: { elo: 700, cefrBand: 'A1' },
+        writing: { elo: 650, cefrBand: 'A1' },
+        speaking: { elo: 600, cefrBand: 'A1' },
+        listening: { elo: 700, cefrBand: 'A1' },
+      },
+    },
+    memory: {
+      total: 0,
+      new: 0,
+      learning: 0,
+      mastered: 0,
+      forgotten: 0,
+      dueToday: 0,
+      weakWords: 0,
+    },
+    missions: [],
+    isLoading: false,
+    learningState: { studySessions: [] },
+  },
+}));
+
 const { mockTerm } = vi.hoisted(() => ({
   mockTerm: {
     id: 'a1-test-001',
@@ -113,30 +143,7 @@ vi.mock('@/features/profile', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/features/profile')>();
   return {
     ...actual,
-    useLearningCockpit: vi.fn(() => ({
-      profile: {
-        skills: {
-          vocabulary: { elo: 800, cefrBand: 'A1' },
-          grammar: { elo: 750, cefrBand: 'A1' },
-          reading: { elo: 700, cefrBand: 'A1' },
-          writing: { elo: 650, cefrBand: 'A1' },
-          speaking: { elo: 600, cefrBand: 'A1' },
-          listening: { elo: 700, cefrBand: 'A1' },
-        },
-      },
-      memory: {
-        total: 0,
-        new: 0,
-        learning: 0,
-        mastered: 0,
-        forgotten: 0,
-        dueToday: 0,
-        weakWords: 0,
-      },
-      missions: [],
-      isLoading: false,
-      learningState: { studySessions: [] },
-    })),
+    useLearningCockpit: vi.fn(() => mockLearningCockpit),
   };
 });
 

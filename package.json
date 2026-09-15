@@ -28,7 +28,7 @@
     "lint": "eslint . --max-warnings 0",
     "depcruise": "depcruise src backend --config .dependency-cruiser.mjs",
     "depcruise:graph": "depcruise src backend --config .dependency-cruiser.mjs --output-type dot | dot -T svg > dependency-graph.svg",
-    "e2e": "vitest run src/e2e --configLoader runner --exclude src/e2e/navigation.e2e.test.tsx --maxWorkers 1 --no-file-parallelism",
+    "e2e": "vitest run src/e2e --configLoader runner --maxWorkers 1 --no-file-parallelism",
     "e2e:browser": "playwright test",
     "backend:install": "npm --prefix backend install --no-audit",
     "backend:test": "npm --prefix backend test",
