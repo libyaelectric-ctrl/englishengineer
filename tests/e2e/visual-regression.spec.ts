@@ -1,12 +1,13 @@
 /**
  * Visual regression tests — screenshot baseline for all main pages.
  *
- * Run: npx playwright test src/e2e/visual-regression.e2e.test.ts
- * Update baselines: npx playwright test --update-snapshots src/e2e/visual-regression.e2e.test.ts
+ * Run: npx playwright test tests/e2e/visual-regression.spec.ts --project=visual-regression
+ * Update baselines: npx playwright test tests/e2e/visual-regression.spec.ts --project=visual-regression --update-snapshots
+ *
+ * URLs are relative so they resolve against Playwright's `baseURL` (the
+ * webServer started by playwright.config.ts).
  */
 import { type Page, expect, test } from '@playwright/test';
-
-const BASE_URL = process.env.BASE_URL ?? 'http://localhost:3000';
 
 /**
  * The app's `auto` theme mode resolves from the wall clock (light between 07:00
@@ -29,14 +30,13 @@ const PUBLIC_PAGES = [
   { name: 'landing', path: '/' },
   { name: 'sign-in', path: '/sign-in' },
   { name: 'sign-up', path: '/sign-up' },
-  { name: 'onboard', path: '/onboard' },
 ];
 
 test.describe('Visual regression — public pages', () => {
   for (const page of PUBLIC_PAGES) {
     test(`${page.name} matches baseline`, async ({ page: p }) => {
       await pinTheme(p);
-      await p.goto(`${BASE_URL}${page.path}`, { waitUntil: 'networkidle' });
+      await p.goto(page.path, { waitUntil: 'networkidle' });
       await expect(p).toHaveScreenshot(`${page.name}.png`, {
         maxDiffPixelRatio: 0.01,
         animations: 'disabled',
@@ -48,48 +48,20 @@ test.describe('Visual regression — public pages', () => {
 test.describe('Visual regression — auth-gated pages (demo mode)', () => {
   test.beforeEach(async ({ page: p }) => {
     await pinTheme(p);
-    // Enter demo mode by calling auth store directly — avoids unreliable carousel
-    await p.goto(`${BASE_URL}/`, { waitUntil: 'networkidle' });
-    await p.evaluate(() => {
-      // @ts-expect-error — accessing Zustand store internals for test setup
-      void window.__ZUSTAND_STORES__?.auth;
-      // Fallback: click the Demo button on sign-in page
-    });
-    // Navigate to sign-in and click demo button
-    await p.goto(`${BASE_URL}/sign-in`, { waitUntil: 'networkidle' });
-    const demoBtn = p.getByRole('button', { name: /demo/i });
-    if (await demoBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await demoBtn.click();
+    await p.goto('/login', { waitUntil: 'networkidle' });
+    // Dismiss the cookie banner so it cannot intercept onboarding clicks.
+    const acceptCookies = p.getByRole('button', { name: /kabul et/i });
+    if (await acceptCookies.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await acceptCookies.click();
     }
-    // If redirected to onboard, complete it via JS
-    await p.waitForTimeout(1000);
-    const url = p.url();
-    if (url.includes('/onboard') || url.includes('/dashboard')) {
-      if (url.includes('/onboard')) {
-        await p.evaluate(() => {
-          // Set onboard completed via localStorage manipulation
-          const keys = Object.keys(localStorage);
-          for (const key of keys) {
-            if (key.includes('auth_user') || key.includes('session_')) {
-              try {
-                const data = JSON.parse(localStorage.getItem(key) || '{}');
-                if (data.user) {
-                  data.user.onboardingCompleted = true;
-                  data.user.engineeringDiscipline = data.user.engineeringDiscipline || 'software';
-                  data.user.interfaceLanguage = data.user.interfaceLanguage || 'en';
-                  localStorage.setItem(key, JSON.stringify(data));
-                }
-              } catch {
-                /* ignore parse errors */
-              }
-            }
-          }
-        });
-        await p.reload({ waitUntil: 'networkidle' });
-      }
-      await p.waitForURL('**/dashboard', { timeout: 15000 });
-      await p.waitForLoadState('networkidle');
-    }
+    // Enter demo mode through the real UI, then complete the onboarding gate.
+    await p.getByRole('button', { name: /demo/i }).click();
+    await expect(p.getByRole('heading', { name: /set up your learning path/i })).toBeVisible();
+    await p.getByRole('button', { name: /architecture design/i }).click();
+    await p.getByRole('button', { name: /english english/i }).click();
+    await p.getByRole('button', { name: /^next$/i }).click();
+    await p.waitForURL('**/dashboard', { timeout: 15000 });
+    await p.waitForLoadState('networkidle');
   });
 
   const AUTHED_PAGES = [
@@ -107,7 +79,7 @@ test.describe('Visual regression — auth-gated pages (demo mode)', () => {
 
   for (const pg of AUTHED_PAGES) {
     test(`${pg.name} matches baseline`, async ({ page: p }) => {
-      await p.goto(`${BASE_URL}${pg.path}`, { waitUntil: 'networkidle' });
+      await p.goto(pg.path, { waitUntil: 'networkidle' });
       await expect(p).toHaveScreenshot(`${pg.name}.png`, {
         maxDiffPixelRatio: 0.02,
         animations: 'disabled',
