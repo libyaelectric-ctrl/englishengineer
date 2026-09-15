@@ -425,14 +425,15 @@ export const registerSpeakingRoutes = (
           throw new ApiError(415, 'unsupported_media_type', 'Unsupported audio content-type.');
         const extension = audioExtensionFor(contentType);
         const requestBody: unknown = request.body;
-        if (!Buffer.isBuffer(requestBody) || requestBody.length === 0)
+        if (!Buffer.isBuffer(requestBody))
           throw new ApiError(400, 'empty_audio', 'No audio data received');
-        if (requestBody.length > MAX_AUDIO_BYTES)
-          throw new ApiError(413, 'audio_too_large', `Audio exceeds ${MAX_AUDIO_BYTES} byte limit`);
-        // Copy into a locally allocated Buffer: the duration parsers below must
-        // operate on a proven Buffer, never on the raw request parameter
-        // (CWE-843 type-confusion barrier).
+        // Copy into a locally allocated Buffer before any further inspection: the
+        // length checks and the duration parsers must operate on a proven Buffer,
+        // never on the raw request parameter (CWE-843 type-confusion barrier).
         const buffer = Buffer.from(requestBody);
+        if (buffer.length === 0) throw new ApiError(400, 'empty_audio', 'No audio data received');
+        if (buffer.length > MAX_AUDIO_BYTES)
+          throw new ApiError(413, 'audio_too_large', `Audio exceeds ${MAX_AUDIO_BYTES} byte limit`);
         if (!hasExpectedAudioSignature(buffer, contentType))
           throw new ApiError(
             415,
