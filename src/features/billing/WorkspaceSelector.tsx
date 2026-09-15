@@ -91,7 +91,7 @@ const CreateWorkspaceForm = ({
       <button
         type="button"
         onClick={onCreate}
-        className="flex-1 rounded-[4px] bg-primary hover:bg-primary/95 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white cursor-pointer shadow-sm"
+        className="flex-1 rounded-[4px] bg-primary hover:bg-primary/95 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground cursor-pointer shadow-sm"
       >
         Create
       </button>

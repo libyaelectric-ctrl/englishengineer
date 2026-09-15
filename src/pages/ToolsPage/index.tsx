@@ -31,7 +31,7 @@ const ToolsPage = () => {
         badgeText={
           activeTab === 'work' ? 'WORK TOOLS' : activeTab === 'quick' ? 'QUICK TOOLS' : 'AI COPILOT'
         }
-        badgeColor="border-cyan-200 bg-cyan-50 text-cyan-700"
+        badgeColor="border-primary/30 bg-primary/10 text-primary"
       />
 
       {activeTab === 'work' && <WorkToolsPage embedded />}

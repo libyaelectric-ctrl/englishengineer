@@ -93,7 +93,7 @@ export const MissionCard = ({ mission, bestScore, currentLevel, onLaunch }: Miss
               className={`h-8 px-3.5 rounded-[4px] font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-colors ${
                 isCompleted
                   ? 'border border-border-soft bg-surface text-foreground hover:bg-primary/5'
-                  : 'bg-primary hover:bg-primary/90 text-white border border-primary'
+                  : 'bg-primary hover:bg-primary/90 text-primary-foreground border border-primary'
               }`}
             >
               {isCompleted ? (

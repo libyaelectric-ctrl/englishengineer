@@ -99,7 +99,7 @@ export const CorrectionCheckpoint = ({
         </Button>
         <Button
           onClick={onSubmit}
-          className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-primary shadow-sm"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-primary shadow-sm"
         >
           Submit Draft
         </Button>

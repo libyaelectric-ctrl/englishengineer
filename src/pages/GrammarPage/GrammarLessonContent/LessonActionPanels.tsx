@@ -119,7 +119,7 @@ export const QuizPanel = ({
                 type="button"
                 disabled={revealed}
                 onClick={() => setQuizAnswers((prev) => ({ ...prev, [qi]: letter }))}
-                className={`break-words rounded-[4px] border p-2 text-left text-[11px] font-semibold transition-colors cursor-pointer ${revealed ? (correct ? 'border-success bg-success/10 text-success' : selected ? 'border-rose-300 bg-rose-50 text-rose-700' : 'border-border-soft bg-surface opacity-60') : selected ? 'border-primary bg-primary text-white' : 'border-border-soft bg-surface text-foreground hover:border-primary/30 hover:bg-primary/5'}`}
+                className={`break-words rounded-[4px] border p-2 text-left text-[11px] font-semibold transition-colors cursor-pointer ${revealed ? (correct ? 'border-success bg-success/10 text-success' : selected ? 'border-rose-300 bg-rose-50 text-rose-700' : 'border-border-soft bg-surface opacity-60') : selected ? 'border-primary bg-primary text-primary-foreground' : 'border-border-soft bg-surface text-foreground hover:border-primary/30 hover:bg-primary/5'}`}
               >
                 <span className="mr-1.5 font-black">{letter}.</span>
                 {choice}

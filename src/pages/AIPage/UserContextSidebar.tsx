@@ -99,7 +99,7 @@ export const UserContextSidebar = ({
             ))}
             <Button
               onClick={() => navigate('/dashboard')}
-              className="w-full h-8 rounded-[4px] bg-primary hover:bg-primary/95 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer inline-flex items-center justify-center"
+              className="w-full h-8 rounded-[4px] bg-primary hover:bg-primary/95 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-sm cursor-pointer inline-flex items-center justify-center"
             >
               Open Dashboard
             </Button>

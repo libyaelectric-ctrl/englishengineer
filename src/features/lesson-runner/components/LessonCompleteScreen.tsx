@@ -43,13 +43,13 @@ export const LessonCompleteScreen = ({
             <Zap className="h-5 w-5 text-yellow-300" />
             <span>+{earnedCp}</span>
           </div>
-          <div className="mt-1 text-xs font-bold uppercase tracking-wider text-slate-400">
+          <div className="mt-1 text-xs font-bold uppercase tracking-wider text-muted-copy">
             {translate('lesson.careerPoints')}
           </div>
         </div>
         <div className="rounded-2xl border border-emerald-500/20 bg-black/40 p-4 text-center">
           <div className="text-2xl font-black text-emerald-400">{accuracy}%</div>
-          <div className="mt-1 text-xs font-bold uppercase tracking-wider text-slate-400">
+          <div className="mt-1 text-xs font-bold uppercase tracking-wider text-muted-copy">
             {translate('lesson.accuracy')}
           </div>
         </div>

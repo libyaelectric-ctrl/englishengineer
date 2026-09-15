@@ -116,7 +116,7 @@ const StartPage = () => {
             </p>
             <Link
               to={AUTH_SIGN_UP_URL}
-              className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-primary-hover active:scale-95 cursor-pointer"
+              className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-sm transition hover:bg-primary-hover active:scale-95 cursor-pointer"
             >
               Ücretsiz başlayın <ArrowRight className="h-4 w-4" />
             </Link>

@@ -141,7 +141,7 @@ export const BetaFeedbackWidget = () => {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="fixed top-16 lg:top-auto bottom-auto lg:bottom-5 right-3 lg:right-5 z-40 flex h-10 w-10 items-center justify-center rounded-[12px] border border-primary bg-primary text-white shadow-[var(--shadow-pop)] transition-all hover:-translate-y-px hover:border-primary-hover hover:bg-primary-hover"
+          className="fixed top-16 lg:top-auto bottom-auto lg:bottom-5 right-3 lg:right-5 z-40 flex h-10 w-10 items-center justify-center rounded-[12px] border border-primary bg-primary text-primary-foreground shadow-[var(--shadow-pop)] transition-all hover:-translate-y-px hover:border-primary-hover hover:bg-primary-hover"
           aria-label="Open closed beta feedback"
           title={LocalizationService.translate('feedback.open', language)}
         >

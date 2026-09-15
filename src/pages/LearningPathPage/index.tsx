@@ -112,7 +112,7 @@ const LearningPathPage = () => {
             onClick={() => setViewMode('railway')}
             className={`flex items-center gap-1.5 rounded-lg px-2.5 sm:px-3 py-2 min-h-11 text-xs font-bold transition-all cursor-pointer ${
               viewMode === 'railway'
-                ? 'bg-primary text-white shadow-sm'
+                ? 'bg-primary text-primary-foreground shadow-sm'
                 : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
             }`}
           >
@@ -128,7 +128,7 @@ const LearningPathPage = () => {
             onClick={() => setViewMode('columns')}
             className={`flex items-center gap-1.5 rounded-lg px-2.5 sm:px-3 py-2 min-h-11 text-xs font-bold transition-all cursor-pointer ${
               viewMode === 'columns'
-                ? 'bg-primary text-white shadow-sm'
+                ? 'bg-primary text-primary-foreground shadow-sm'
                 : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
             }`}
           >

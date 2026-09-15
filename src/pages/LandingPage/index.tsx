@@ -166,7 +166,7 @@ export const LandingPage = () => {
                   <div className="mt-4 flex flex-col items-stretch justify-center gap-2.5 sm:flex-row lg:justify-start">
                     <Link
                       to="/dashboard"
-                      className="group relative overflow-hidden rounded-2xl bg-primary px-5 py-3 text-center text-sm font-black !text-white shadow-sm ring-1 ring-primary/40 transition-transform hover:-translate-y-1"
+                      className="group relative overflow-hidden rounded-2xl bg-primary px-5 py-3 text-center text-sm font-black !text-primary-foreground shadow-sm ring-1 ring-primary/40 transition-transform hover:-translate-y-1"
                     >
                       <span className="relative inline-flex items-center justify-center gap-2">
                         {t.ctaSelectBranch}

@@ -294,7 +294,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
             <Button
               onClick={handlePlayPause}
               disabled={isAudioLoading}
-              className="h-10 w-10 rounded-[4px] p-0 flex items-center justify-center cursor-pointer bg-primary hover:bg-primary/90 border border-primary text-white shadow-sm"
+              className="h-10 w-10 rounded-[4px] p-0 flex items-center justify-center cursor-pointer bg-primary hover:bg-primary/90 border border-primary text-primary-foreground shadow-sm"
               title={isPlaying ? 'Pause' : 'Play'}
               aria-label={isPlaying ? 'Pause' : 'Play'}
             >
@@ -321,7 +321,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
                 onClick={() => handleSpeedChange(speed)}
                 className={`px-2.5 py-1 text-xs rounded-[4px] transition-colors cursor-pointer border ${
                   playbackSpeed === speed
-                    ? 'bg-primary text-white border-primary font-bold'
+                    ? 'bg-primary text-primary-foreground border-primary font-bold'
                     : 'bg-surface border-border-soft text-muted-copy hover:bg-primary/5 hover:text-primary'
                 }`}
               >

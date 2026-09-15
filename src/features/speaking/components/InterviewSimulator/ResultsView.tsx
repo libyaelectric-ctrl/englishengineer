@@ -25,7 +25,7 @@ export const ResultsView = ({
       footer={
         <Button
           onClick={onReset}
-          className="rounded-[4px] cursor-pointer bg-primary hover:bg-primary/90 border border-primary text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 shadow-sm flex items-center gap-1.5"
+          className="rounded-[4px] cursor-pointer bg-primary hover:bg-primary/90 border border-primary text-primary-foreground font-bold uppercase tracking-wider text-[11px] h-10 px-5 shadow-sm flex items-center gap-1.5"
         >
           <RotateCcw className="h-4 w-4" /> New Interview
         </Button>

@@ -195,7 +195,7 @@ export const CurriculumRecommendationBrief = ({
 
           {selectedMeta.route ? (
             <Button
-              className="w-full bg-primary hover:bg-primary/90 border border-primary text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm min-h-9 flex items-center justify-center gap-1.5"
+              className="w-full bg-primary hover:bg-primary/90 border border-primary text-primary-foreground font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm min-h-9 flex items-center justify-center gap-1.5"
               onClick={() => {
                 const targetRoute = selectedMeta.route;
                 if (targetRoute) navigate(targetRoute);

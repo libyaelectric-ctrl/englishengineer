@@ -101,7 +101,7 @@ const LegalPage = ({ document = 'privacy' }: { document?: LegalDocument }) => {
               <button
                 key={docId}
                 onClick={() => setActiveDoc(docId)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-bold capitalize transition-all cursor-pointer ${activeDoc === docId ? 'bg-primary text-white shadow-sm' : 'text-muted-copy hover:text-foreground'}`}
+                className={`rounded-lg px-3 py-1.5 text-xs font-bold capitalize transition-all cursor-pointer ${activeDoc === docId ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-copy hover:text-foreground'}`}
               >
                 {docId === 'privacy' ? 'Gizlilik' : 'Şartlar'}
               </button>

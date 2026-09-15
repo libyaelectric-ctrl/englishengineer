@@ -81,7 +81,7 @@ export const QuizForm = ({
     <form onSubmit={onSubmit} className="mt-4 space-y-2">
       <Button
         type="button"
-        className="w-full rounded-[4px] bg-primary hover:bg-primary/90 text-white font-bold"
+        className="w-full rounded-[4px] bg-primary hover:bg-primary/90 text-primary-foreground font-bold"
         onClick={() => onLearn?.(term)}
       >
         <CheckCircle2 className="h-4 w-4 mr-1.5" /> I Know This

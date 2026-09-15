@@ -164,7 +164,7 @@ export const CurriculumTodayTab = ({ isLoading, missions, learningState }: Props
                       variant={isActive ? 'primary' : 'ghost'}
                       className={`mt-4 w-full min-h-11 inline-flex items-center justify-center rounded-[4px] text-xs font-bold uppercase tracking-wider cursor-pointer shadow-sm gap-1.5 border transition-all ${
                         isActive
-                          ? 'bg-primary hover:bg-primary/90 border-primary text-white'
+                          ? 'bg-primary hover:bg-primary/90 border-primary text-primary-foreground'
                           : 'bg-surface hover:bg-surface-hover border-border-soft text-primary'
                       }`}
                       onClick={() => navigate(mission.route)}

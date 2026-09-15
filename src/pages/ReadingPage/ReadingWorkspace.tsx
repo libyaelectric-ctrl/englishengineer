@@ -378,7 +378,7 @@ What questions do you have about this passage?`,
                               onClick={() => setAnswer(q.id, choiceLetter)}
                               className={`w-full text-left p-3 rounded-[4px] border transition-all text-xs font-bold flex items-center justify-between cursor-pointer ${
                                 isSelected
-                                  ? 'border-primary bg-primary text-white'
+                                  ? 'border-primary bg-primary text-primary-foreground'
                                   : 'border-border-soft bg-surface text-muted-copy hover:border-primary/30 hover:bg-primary/5 hover:text-foreground'
                               }`}
                             >
@@ -457,7 +457,7 @@ What questions do you have about this passage?`,
 
                   <Button
                     onClick={handleSubmit}
-                    className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-primary"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-primary"
                   >
                     Submit Answers
                   </Button>

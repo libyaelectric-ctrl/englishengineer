@@ -81,7 +81,7 @@ export const GrammarHeader = ({
                 onClick={() => setQuery(cefrLevel)}
                 className={`px-3 py-1 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
                   cefrLevel === level
-                    ? 'bg-primary text-white border border-primary'
+                    ? 'bg-primary text-primary-foreground border border-primary'
                     : 'text-muted-copy hover:bg-primary/5 hover:text-primary'
                 }`}
               >

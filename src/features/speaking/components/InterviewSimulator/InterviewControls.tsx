@@ -20,7 +20,7 @@ export const RecordingControls = ({
       variant={isRecording ? 'danger' : 'secondary'}
       onClick={toggleRecording}
       disabled={isScoring || isTimeUp}
-      className={`rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border shadow-sm ${isRecording ? 'bg-rose-600 text-white border-rose-600' : 'border-border-soft text-muted-copy hover:bg-primary/5 hover:text-primary'}`}
+      className={`rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border shadow-sm ${isRecording ? 'bg-rose-600 text-primary-foreground border-rose-600' : 'border-border-soft text-muted-copy hover:bg-primary/5 hover:text-primary'}`}
     >
       {isRecording ? (
         <>
@@ -78,7 +78,7 @@ export const SubmitBar = ({
     <Button
       onClick={submitAnswer}
       disabled={!canSubmit || isScoring}
-      className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer border border-primary shadow-sm"
+      className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer border border-primary shadow-sm"
     >
       {isScoring ? 'Scoring...' : isLastQuestion ? 'Submit & Finish' : 'Submit & Next'}
     </Button>

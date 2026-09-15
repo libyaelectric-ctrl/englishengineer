@@ -314,7 +314,7 @@ export const GrammarEnhancementPanel = ({
               onClick={() => setMode(id)}
               className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-[4px] border px-2 text-[10px] font-bold uppercase tracking-wide transition-colors ${
                 mode === id
-                  ? 'border-primary bg-primary text-white'
+                  ? 'border-primary bg-primary text-primary-foreground'
                   : 'border-border-soft bg-background text-muted-copy hover:border-primary/40 hover:text-primary'
               }`}
             >
@@ -361,7 +361,7 @@ export const GrammarEnhancementPanel = ({
                     onClick={() => setVoiceAccent(accent)}
                     className={`rounded-[4px] border px-3 py-1 text-xs font-bold ${
                       voiceAccent === accent
-                        ? 'border-primary bg-primary text-white'
+                        ? 'border-primary bg-primary text-primary-foreground'
                         : 'border-border-soft bg-surface text-muted-copy'
                     }`}
                   >

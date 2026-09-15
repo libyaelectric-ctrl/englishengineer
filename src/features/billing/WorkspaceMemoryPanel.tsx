@@ -46,7 +46,7 @@ const MemoryEntryItem = ({
           <button
             type="button"
             onClick={onSave}
-            className="flex items-center gap-1 rounded-[4px] bg-primary hover:bg-primary/95 px-2.5 py-1 text-[10px] font-bold text-white cursor-pointer shadow-sm"
+            className="flex items-center gap-1 rounded-[4px] bg-primary hover:bg-primary/95 px-2.5 py-1 text-[10px] font-bold text-primary-foreground cursor-pointer shadow-sm"
           >
             <Check className="h-3 w-3" /> Save
           </button>
@@ -141,7 +141,7 @@ const AddMemoryForm = ({
         type="button"
         id="memory-add-confirm-btn"
         onClick={onAdd}
-        className="flex-1 rounded-[4px] bg-primary hover:bg-primary/95 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white cursor-pointer shadow-sm"
+        className="flex-1 rounded-[4px] bg-primary hover:bg-primary/95 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground cursor-pointer shadow-sm"
       >
         Add to Memory
       </button>
