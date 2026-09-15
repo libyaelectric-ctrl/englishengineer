@@ -1,10 +1,7 @@
 import React, { useMemo, useState } from 'react';
 
 import { useLocalizationStore } from '@/features/localization';
-import {
-  MASCOT_COPY,
-  type MascotStateCopy,
-} from '@/features/localization/translations/mascot.translations';
+import { MASCOT_COPY } from '@/features/localization/translations/mascot.translations';
 
 import { MascotBubble } from './components/MascotBubble';
 import { MascotFigure } from './components/MascotFigure';
@@ -14,16 +11,7 @@ import { useMascotEffects } from './hooks/useMascotEffects';
 import { useMascotHandlers } from './hooks/useMascotHandlers';
 import { useMascotStore } from './mascot.store';
 
-const pickRandom = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
-
-const getDisplayMessage = (m: string | null, s: string, c: MascotStateCopy, idleMsg: string) => {
-  if (m) return m;
-  if (s === 'thinking') return c.thinking;
-  if (s === 'sleeping') return c.sleeping;
-  if (s === 'empty') return c.empty;
-  if (s === 'idle') return idleMsg;
-  return null;
-};
+import { getDisplayMessage, pickRandom } from './engmascot.utils';
 
 const useIsMobile = () => {
   if (typeof window === 'undefined') return false;

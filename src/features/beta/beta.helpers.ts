@@ -1,38 +1,5 @@
 import { ProductAnalyticsEvent, ProductAnalyticsSummary } from './beta.types';
 
-export const BETA_ONBOARDING_OPTIONS = {
-  engineeringDisciplines: [
-    'architecture',
-    'chemical',
-    'civil',
-    'electrical',
-    'electronics',
-    'hse',
-    'industrial',
-    'mechanical',
-    'mechatronics',
-    'software',
-  ],
-  experienceLevels: ['0-2 years', '3-5 years', '6-10 years', '10+ years'],
-  englishLevels: ['A1', 'A2', 'B1-', 'B1', 'B1+', 'B2-', 'B2', 'B2+', 'C1-', 'C1', 'C1+', 'C2'],
-  industries: [
-    'Hospital Projects',
-    'Data Centers',
-    'Commercial Buildings',
-    'Infrastructure',
-    'Oil & Gas',
-    'Industrial Projects',
-  ],
-  dailyGoals: ['10 minutes', '15 minutes', '20 minutes', '30 minutes'],
-  careerGoals: [
-    'Lead meetings confidently',
-    'Write better technical reports',
-    'Handle consultant comments',
-    'Prepare for commissioning discussions',
-    'Improve site communication',
-  ],
-};
-
 const unique = (items: string[]): string[] => Array.from(new Set(items));
 
 export const calculateProductAnalyticsSummary = (

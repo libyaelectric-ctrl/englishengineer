@@ -184,6 +184,62 @@ test('WebM duration: returns null for buffer without Segment', () => {
   assert.equal(parseAudioDuration(buf, 'audio/webm'), null);
 });
 
+test('WebM duration: TimecodeScale data truncated returns null (no RangeError)', () => {
+  // Segment present; TimecodeScale element declares 3 data bytes but only 1 fits
+  const buf = Buffer.from([
+    0x1a,
+    0x45,
+    0xdf,
+    0xa3,
+    0x81,
+    0x2a, // EBML header
+    0x18,
+    0x53,
+    0x80,
+    0x67,
+    0x8a, // Segment, size 10
+    0x2a,
+    0xd7,
+    0xb1,
+    0x83,
+    0x01, // TimecodeScale, size 3, only 1 data byte
+  ]);
+  // Before the bounds fix this read past the buffer end via buffer[...]
+  assert.doesNotThrow(() => parseAudioDuration(buf, 'audio/webm'));
+  assert.equal(parseAudioDuration(buf, 'audio/webm'), null);
+});
+
+test('WebM duration: Duration element data truncated returns null (no RangeError)', () => {
+  // Segment with valid TimecodeScale but Duration declares 8 data bytes, only 2 fit
+  const buf = Buffer.from([
+    0x1a,
+    0x45,
+    0xdf,
+    0xa3,
+    0x81,
+    0x2a, // EBML header
+    0x18,
+    0x53,
+    0x80,
+    0x67,
+    0x8c, // Segment, size 12
+    0x2a,
+    0xd7,
+    0xb1,
+    0x83,
+    0x0f,
+    0x42,
+    0x40, // TimecodeScale = 1000000
+    0x44,
+    0x89,
+    0x88,
+    0x00,
+    0x00, // Duration, size 8, only 2 data bytes
+  ]);
+  assert.doesNotThrow(() => parseAudioDuration(buf, 'audio/webm'));
+  assert.equal(parseAudioDuration(buf, 'audio/webm'), null);
+});
+
 // --- Unsupported type ---
 
 test('returns null for unsupported content type', () => {

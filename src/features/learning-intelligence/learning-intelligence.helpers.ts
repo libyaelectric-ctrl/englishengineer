@@ -55,12 +55,6 @@ export const getPersonalizedTasks = (
     });
 };
 
-export const isTaskCompletedToday = (
-  taskId: string,
-  completedTaskDates: Record<string, string>,
-  today = new Date().toISOString().slice(0, 10)
-): boolean => completedTaskDates[taskId] === today;
-
 const computeModuleAverages = (
   recentSessions: LearningState['studySessions']
 ): { module: string; score: number }[] => {

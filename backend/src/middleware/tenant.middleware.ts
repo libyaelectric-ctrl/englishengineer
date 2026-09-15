@@ -20,11 +20,11 @@ const TENANT_CONFIGS = new Map<string, TenantContext>();
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 let testVerifier: TenantAccessVerifier | null = null;
 
-export const registerTenant = (config: TenantContext): void => {
+const _registerTenant = (config: TenantContext): void => {
   TENANT_CONFIGS.set(config.tenantId, config);
 };
 
-export const getTenantConfig = (tenantId: string): TenantContext | undefined =>
+const _getTenantConfig = (tenantId: string): TenantContext | undefined =>
   TENANT_CONFIGS.get(tenantId);
 
 export const setTenantAccessVerifierForTests = (verifier: TenantAccessVerifier | null): void => {
@@ -154,13 +154,4 @@ export const requireTenantContext = async (
   } catch (error) {
     next(error);
   }
-};
-
-export const enforceTenantIsolation = (req: Request, _res: Response, next: NextFunction): void => {
-  if (!req.tenantId) {
-    next(new ApiError(400, 'tenant_required', 'Tenant context required for this operation.'));
-    return;
-  }
-  if (req.body && typeof req.body === 'object') req.body._tenantId = req.tenantId;
-  next();
 };

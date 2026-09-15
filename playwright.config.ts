@@ -17,8 +17,7 @@ export default defineConfig({
     video: 'retain-on-failure',
   },
   webServer: {
-    command:
-      'npx concurrently -k -s first "npm run dev -- --host 127.0.0.1 --port 4176" "npm --prefix backend run dev"',
+    command: 'npm run dev -- --host 127.0.0.1 --port 4176',
     url: 'http://127.0.0.1:4176',
     reuseExistingServer: true,
     timeout: 120_000,

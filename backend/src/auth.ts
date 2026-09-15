@@ -351,8 +351,10 @@ export const createBackendAuth = (
   };
 
   const getRequestedUserId = (request: Request): string | undefined => {
-    const raw =
-      request.body?.userId ?? request.query?.userId ?? request.headers['x-engineeros-user-id'];
+    const bodyId = request.body?.userId;
+    const queryId = typeof request.query?.userId === 'string' ? request.query.userId : undefined;
+    const headerId = request.headers['x-engineeros-user-id'];
+    const raw = (typeof bodyId === 'string' ? bodyId : undefined) ?? queryId ?? headerId;
     return typeof raw === 'string' && raw.trim() ? raw.trim() : undefined;
   };
 

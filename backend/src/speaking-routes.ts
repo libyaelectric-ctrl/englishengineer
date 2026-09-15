@@ -200,6 +200,8 @@ const parseMp4Duration = (buffer: Buffer): number | null => {
     timescale = buffer.readUInt32BE(mvhdOffset + 12);
     duration = buffer.readUInt32BE(mvhdOffset + 16);
   } else {
+    // Version 1 mvhd reads timescale at +20 and duration at +24..31.
+    if (mvhdOffset + 32 > buffer.length) return null;
     timescale = buffer.readUInt32BE(mvhdOffset + 20);
     duration = Number(buffer.readBigUInt64BE(mvhdOffset + 24));
   }
@@ -264,7 +266,12 @@ const parseWebmDuration = (buffer: Buffer): number | null => {
   const segmentDataEnd = segment.dataOffset + segment.dataSize;
   let timecodeScale = 1000000;
   const tcResult = findEBML(segment.dataOffset, segmentDataEnd, 0x2ad7b1);
-  if (tcResult.found && tcResult.dataSize <= 8) {
+  if (
+    tcResult.found &&
+    tcResult.dataSize > 0 &&
+    tcResult.dataSize <= 8 &&
+    tcResult.dataOffset + tcResult.dataSize <= buffer.length
+  ) {
     let tc = 0;
     for (let i = 0; i < tcResult.dataSize; i++) tc = (tc << 8) | buffer[tcResult.dataOffset + i]!;
     if (tc > 0) timecodeScale = tc;
@@ -273,6 +280,7 @@ const parseWebmDuration = (buffer: Buffer): number | null => {
   if (!durResult.found) return null;
   let dur = 0;
   const bytesToRead = Math.min(durResult.dataSize, 8);
+  if (durResult.dataOffset + bytesToRead > buffer.length) return null;
   for (let i = 0; i < bytesToRead; i++) dur = (dur << 8) | buffer[durResult.dataOffset + i]!;
   return dur / timecodeScale;
 };
@@ -416,9 +424,14 @@ export const registerSpeakingRoutes = (
         if (!contentType)
           throw new ApiError(415, 'unsupported_media_type', 'Unsupported audio content-type.');
         const extension = audioExtensionFor(contentType);
-        const buffer = request.body as Buffer;
-        if (!Buffer.isBuffer(buffer) || buffer.length === 0)
+        const requestBody: unknown = request.body;
+        if (!Buffer.isBuffer(requestBody))
           throw new ApiError(400, 'empty_audio', 'No audio data received');
+        // Copy into a locally allocated Buffer before any further inspection: the
+        // length checks and the duration parsers must operate on a proven Buffer,
+        // never on the raw request parameter (CWE-843 type-confusion barrier).
+        const buffer = Buffer.from(requestBody);
+        if (buffer.length === 0) throw new ApiError(400, 'empty_audio', 'No audio data received');
         if (buffer.length > MAX_AUDIO_BYTES)
           throw new ApiError(413, 'audio_too_large', `Audio exceeds ${MAX_AUDIO_BYTES} byte limit`);
         if (!hasExpectedAudioSignature(buffer, contentType))

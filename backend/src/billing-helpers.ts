@@ -41,14 +41,18 @@ const getRequestUserId = (request: Request): string | null => {
   if (typeof authUserId === 'string' && authUserId.trim()) {
     return authUserId.trim();
   }
-  const claimedUserId = request.body?.userId ?? request.query?.userId;
+  const bodyId = request.body?.userId;
+  const queryId = typeof request.query?.userId === 'string' ? request.query.userId : undefined;
+  const claimedUserId = (typeof bodyId === 'string' ? bodyId : undefined) ?? queryId;
   return typeof claimedUserId === 'string' && claimedUserId.trim() ? claimedUserId.trim() : null;
 };
 
 export const assertUserOwnership = (request: Request): string | null => {
   const userId = getRequestUserId(request);
   if (!userId) return null;
-  const claimedUserId = request.body?.userId ?? request.query?.userId;
+  const bodyId2 = request.body?.userId;
+  const queryId2 = typeof request.query?.userId === 'string' ? request.query.userId : undefined;
+  const claimedUserId = (typeof bodyId2 === 'string' ? bodyId2 : undefined) ?? queryId2;
   if (
     request.auth?.source !== 'dev-bypass' &&
     typeof claimedUserId === 'string' &&
