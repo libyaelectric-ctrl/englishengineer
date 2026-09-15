@@ -6,11 +6,7 @@ interface SidebarHeaderProps {
   onToggle?: () => void;
 }
 
-export const SidebarHeader = ({
-  copy,
-  collapsed = false,
-  onToggle,
-}: SidebarHeaderProps) => {
+export const SidebarHeader = ({ copy, collapsed = false, onToggle }: SidebarHeaderProps) => {
   return (
     <div
       className={cn(

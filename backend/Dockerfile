@@ -13,6 +13,9 @@ RUN npm run build
 
 FROM base AS production
 ENV NODE_ENV=production
+# The image advertises 8080; without this the server would fall back to its
+# 8787 default and nothing would answer on the exposed port.
+ENV PORT=8080
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/src/prompts ./dist/prompts

@@ -24,11 +24,14 @@ const renderWithProviders = (component: React.ReactElement, initialEntries = ['/
     </QueryClientProvider>
   );
 
-// Lazy/Suspense-loaded components resolve slowly under a full multi-file
-// CI run; give async utility assertions more headroom (see the matching
-// configure() call in new-features.e2e.test.tsx).
-configure({ asyncUtilTimeout: 10000 });
-
+// Lazy/Suspense-loaded components resolve slowly under a full multi-file
+
+// CI run; give async utility assertions more headroom (see the matching
+
+// configure() call in new-features.e2e.test.tsx).
+
+configure({ asyncUtilTimeout: 10000 });
+
 describe('Critical flow: Landing → Navigation', () => {
   it('renders landing page with hero and navigation', () => {
     renderWithProviders(<LandingPage />);

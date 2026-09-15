@@ -4,7 +4,10 @@
  * The repository is set at startup via {@link setMetricsRepository}.
  * Falls back to an in-memory implementation when Supabase is not configured.
  */
-import { createMemoryMetricsRepository, type MetricsRepository } from './supabase-metrics-repository.js';
+import {
+  type MetricsRepository,
+  createMemoryMetricsRepository,
+} from './supabase-metrics-repository.js';
 
 // Consumers (performance-monitor, future repositories) describe themselves in
 // terms of the repository contract, so it must stay reachable from here.
@@ -29,10 +32,9 @@ export const recordEndpoint = (
   method: string,
   path: string,
   duration: number,
-  isError: boolean,
+  isError: boolean
 ): void => {
   repo.recordEndpoint(method, path, duration, isError);
 };
 
-export const getEndpointMetrics = (): EndpointMetricResult[] =>
-  repo.getEndpointMetrics();
+export const getEndpointMetrics = (): EndpointMetricResult[] => repo.getEndpointMetrics();

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
 import { eosGlobalPersistConfig } from '@/shared/storage/persist-middleware';
 
 interface AppState {

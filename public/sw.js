@@ -1,12 +1,7 @@
 const CACHE_NAME = 'engvox-v3';
 const OFFLINE_URL = '/offline.html';
 
-const PRECACHE_URLS = [
-  '/offline.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
-];
+const PRECACHE_URLS = ['/offline.html', '/manifest.json', '/icon-192.png', '/icon-512.png'];
 
 const PRIVATE_PATH_PREFIXES = [
   '/api/',
@@ -41,9 +36,7 @@ self.addEventListener('activate', (event) => {
     caches
       .keys()
       .then((names) =>
-        Promise.all(
-          names.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
-        )
+        Promise.all(names.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name)))
       )
       .then(() => self.clients.claim())
   );

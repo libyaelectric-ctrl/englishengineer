@@ -2,9 +2,10 @@ import { Sparkles, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { logger } from '@/shared/logger';
 
 import { Link } from 'react-router-dom';
+
+import { logger } from '@/shared/logger';
 
 const STORAGE_KEY = 'engvox:exit-intent-shown';
 

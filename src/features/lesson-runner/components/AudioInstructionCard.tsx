@@ -29,7 +29,34 @@ export const AudioInstructionCard = ({
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(term.term);
-    utterance.lang = learningLanguage === 'tr' ? 'tr-TR' : learningLanguage === 'de' ? 'de-DE' : learningLanguage === 'fr' ? 'fr-FR' : learningLanguage === 'es' ? 'es-ES' : learningLanguage === 'ar' ? 'ar-SA' : learningLanguage === 'ru' ? 'ru-RU' : learningLanguage === 'zh' ? 'zh-CN' : learningLanguage === 'ja' ? 'ja-JP' : learningLanguage === 'pt' ? 'pt-BR' : learningLanguage === 'it' ? 'it-IT' : learningLanguage === 'vi' ? 'vi-VN' : learningLanguage === 'pl' ? 'pl-PL' : learningLanguage === 'nl' ? 'nl-NL' : 'en-US';
+    utterance.lang =
+      learningLanguage === 'tr'
+        ? 'tr-TR'
+        : learningLanguage === 'de'
+          ? 'de-DE'
+          : learningLanguage === 'fr'
+            ? 'fr-FR'
+            : learningLanguage === 'es'
+              ? 'es-ES'
+              : learningLanguage === 'ar'
+                ? 'ar-SA'
+                : learningLanguage === 'ru'
+                  ? 'ru-RU'
+                  : learningLanguage === 'zh'
+                    ? 'zh-CN'
+                    : learningLanguage === 'ja'
+                      ? 'ja-JP'
+                      : learningLanguage === 'pt'
+                        ? 'pt-BR'
+                        : learningLanguage === 'it'
+                          ? 'it-IT'
+                          : learningLanguage === 'vi'
+                            ? 'vi-VN'
+                            : learningLanguage === 'pl'
+                              ? 'pl-PL'
+                              : learningLanguage === 'nl'
+                                ? 'nl-NL'
+                                : 'en-US';
     utterance.rate = 0.9;
     setPlaying(true);
     utterance.onend = () => setPlaying(false);

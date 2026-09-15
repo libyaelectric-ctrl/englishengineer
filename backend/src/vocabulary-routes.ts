@@ -81,7 +81,9 @@ export const registerVocabularyRoutes = (
     requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
-        response.json(apiSuccess(await getPersistentPerformanceStats(userIdFrom(request), 'vocabulary')));
+        response.json(
+          apiSuccess(await getPersistentPerformanceStats(userIdFrom(request), 'vocabulary'))
+        );
       } catch (error) {
         next(error);
       }

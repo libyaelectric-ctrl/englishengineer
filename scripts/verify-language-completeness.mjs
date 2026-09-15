@@ -20,13 +20,21 @@ const EXPECTED_LANGS = [
   'nl',
 ];
 
-// ─── 1. Check by-lang JSON files ────────────────────────────────
+// ─── 1. Check by-lang JSON files (optional) ─────────────────────
 const byLangDir = path.join(root, 'src/data/translations/by-lang');
-const byLangFiles = (await fs.readdir(byLangDir)).filter((f) => f.endsWith('.json'));
-const byLangLangs = byLangFiles.map((f) => f.replace('.json', ''));
+let byLangLangs = [];
+let missingByLang = [];
+let extraByLang = [];
 
-const missingByLang = EXPECTED_LANGS.filter((lang) => !byLangLangs.includes(lang));
-const extraByLang = byLangLangs.filter((lang) => !EXPECTED_LANGS.includes(lang));
+try {
+  await fs.access(byLangDir);
+  const byLangFiles = (await fs.readdir(byLangDir)).filter((f) => f.endsWith('.json'));
+  byLangLangs = byLangFiles.map((f) => f.replace('.json', ''));
+  missingByLang = EXPECTED_LANGS.filter((lang) => !byLangLangs.includes(lang));
+  extraByLang = byLangLangs.filter((lang) => !EXPECTED_LANGS.includes(lang));
+} catch {
+  console.log('⚠️  by-lang directory not found, skipping by-lang check\n');
+}
 
 // ─── 2. Check translation .ts files ─────────────────────────────
 const translationsDir = path.join(root, 'src/features/localization/translations');
@@ -62,16 +70,18 @@ let hasErrors = false;
 
 console.log('=== Language Completeness Verification ===\n');
 
-// By-lang check
-if (missingByLang.length > 0) {
-  hasErrors = true;
-  console.log(`❌ Missing by-lang JSON files: ${missingByLang.join(', ')}`);
-} else {
-  console.log(`✅ by-lang JSON files: ${byLangLangs.length}/${EXPECTED_LANGS.length} complete`);
-}
+// By-lang check (only if directory exists)
+if (byLangLangs.length > 0) {
+  if (missingByLang.length > 0) {
+    hasErrors = true;
+    console.log(`❌ Missing by-lang JSON files: ${missingByLang.join(', ')}`);
+  } else {
+    console.log(`✅ by-lang JSON files: ${byLangLangs.length}/${EXPECTED_LANGS.length} complete`);
+  }
 
-if (extraByLang.length > 0) {
-  console.log(`⚠️  Extra by-lang files (not in expected list): ${extraByLang.join(', ')}`);
+  if (extraByLang.length > 0) {
+    console.log(`⚠️  Extra by-lang files (not in expected list): ${extraByLang.join(', ')}`);
+  }
 }
 
 // Translation files check

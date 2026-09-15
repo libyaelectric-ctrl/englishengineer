@@ -100,7 +100,11 @@ const LearningPathPage = () => {
         <PageHeader title={translate('learningpath.title')} />
 
         {/* View Mode Toggle Button */}
-        <div role="tablist" aria-label={translate('learningpath.viewMode')} className="flex items-center gap-1 rounded-xl border border-border-soft bg-surface p-1 shadow-sm w-full sm:w-auto justify-center sm:justify-start">
+        <div
+          role="tablist"
+          aria-label={translate('learningpath.viewMode')}
+          className="flex items-center gap-1 rounded-xl border border-border-soft bg-surface p-1 shadow-sm w-full sm:w-auto justify-center sm:justify-start"
+        >
           <button
             type="button"
             role="tab"
@@ -113,7 +117,9 @@ const LearningPathPage = () => {
             }`}
           >
             <Train className="h-4 w-4 shrink-0" />
-            <span><span className="hidden sm:inline">Industrial </span>Rail (A1–C2)</span>
+            <span>
+              <span className="hidden sm:inline">Industrial </span>Rail (A1–C2)
+            </span>
           </button>
           <button
             type="button"
@@ -127,7 +133,9 @@ const LearningPathPage = () => {
             }`}
           >
             <LayoutGrid className="h-4 w-4 shrink-0" />
-            <span><span className="hidden sm:inline">Columns </span>Grid</span>
+            <span>
+              <span className="hidden sm:inline">Columns </span>Grid
+            </span>
           </button>
         </div>
       </div>

@@ -77,8 +77,16 @@ const DocumentUploadCard = ({
         </span>
       </div>
       <ProgressBar
-        value={isFree ? 0 : isUnlimited ? Math.min(100, (uploadedDocsCount / 10) * 100) : Math.min(100, (uploadedDocsCount / numericMax) * 100)}
-        color={isFree ? 'rose' : !isUnlimited && uploadedDocsCount >= numericMax ? 'amber' : 'primary'}
+        value={
+          isFree
+            ? 0
+            : isUnlimited
+              ? Math.min(100, (uploadedDocsCount / 10) * 100)
+              : Math.min(100, (uploadedDocsCount / numericMax) * 100)
+        }
+        color={
+          isFree ? 'rose' : !isUnlimited && uploadedDocsCount >= numericMax ? 'amber' : 'primary'
+        }
       />
       <p className="text-[10px] text-muted-copy">
         {isFree
@@ -146,8 +154,10 @@ export const BillingPlanCards = ({
   const isUnlimitedAttempts = limits.moduleAttemptsPerDay === 'unlimited';
   const isUnlimitedReviews = limits.vocabularyReviewsPerDay === 'unlimited';
   const aiMax = limits.dailyAICoachRequests === 'unlimited' ? 999 : limits.dailyAICoachRequests;
-  const attemptsMax = limits.moduleAttemptsPerDay === 'unlimited' ? 999 : limits.moduleAttemptsPerDay;
-  const reviewsMax = limits.vocabularyReviewsPerDay === 'unlimited' ? 999 : limits.vocabularyReviewsPerDay;
+  const attemptsMax =
+    limits.moduleAttemptsPerDay === 'unlimited' ? 999 : limits.moduleAttemptsPerDay;
+  const reviewsMax =
+    limits.vocabularyReviewsPerDay === 'unlimited' ? 999 : limits.vocabularyReviewsPerDay;
   const isMaxTier = subscription.planId === 'master';
 
   return (
@@ -203,7 +213,13 @@ export const BillingPlanCards = ({
         />
       )}
 
-      <DocumentUploadCard isFree={limits.documentUploadsPerMonth === 0} uploadedDocsCount={uploadedDocsCount} maxDocs={typeof limits.documentUploadsPerMonth === 'number' ? limits.documentUploadsPerMonth : 999} />
+      <DocumentUploadCard
+        isFree={limits.documentUploadsPerMonth === 0}
+        uploadedDocsCount={uploadedDocsCount}
+        maxDocs={
+          typeof limits.documentUploadsPerMonth === 'number' ? limits.documentUploadsPerMonth : 999
+        }
+      />
 
       {isMaxTier && (
         <VoiceMinutesCard planId={subscription.planId} voiceMinutesUsed={voiceMinutesUsed} />

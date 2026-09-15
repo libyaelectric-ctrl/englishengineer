@@ -108,7 +108,7 @@ const COPY: Partial<Record<SupportedInterfaceLanguage, PublicPageCopy>> = {
     disciplines: 'Disciplines',
     languages: 'Langues',
     technicalTerms: 'Termes techniques',
-    freeDescription: "Pratique essentielle du vocabulaire et de la grammaire pour commencer.",
+    freeDescription: 'Pratique essentielle du vocabulaire et de la grammaire pour commencer.',
     tierDescriptions: {
       free: 'Commencez avec les modules de base gratuitement.',
       junior: "Base essentielle pour pratiquer l'anglais technique au quotidien.",

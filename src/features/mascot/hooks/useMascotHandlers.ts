@@ -98,7 +98,7 @@ export const useMascotHandlers = (inline: boolean): UseMascotHandlersReturn => {
     }
     // Confetti inside the mascot figure, falling back to body
     const fxContainer = document.querySelector('.engmascot-fx');
-    spawnConfetti(fxContainer as HTMLDivElement ?? document.body);
+    spawnConfetti((fxContainer as HTMLDivElement) ?? document.body);
   };
 
   return {

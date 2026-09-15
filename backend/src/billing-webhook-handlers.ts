@@ -17,7 +17,7 @@ export interface WebhookObject {
   subscription_details?: { metadata?: Record<string, string> };
 }
 
-export interface BillingCustomerData {
+interface BillingCustomerData {
   userId: string;
   dodoCustomerId?: string | null;
   stripeCustomerId?: string | null;

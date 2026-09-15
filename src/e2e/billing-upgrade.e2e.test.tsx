@@ -1,11 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { configure, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { useAuthStore } from '@/features/auth';
+import { useBillingStore } from '@/features/billing';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 import BillingPage from '@/pages/BillingPage';
@@ -16,6 +17,7 @@ configure({ asyncUtilTimeout: 10000 });
 
 afterEach(() => {
   resetStores();
+  vi.restoreAllMocks();
 });
 
 const createTestQueryClient = () =>
@@ -66,8 +68,11 @@ describe('Billing: Upgrade Plan navigation', () => {
     });
   });
 
-  it('navigates to /pricing when Upgrade Plan is clicked', async () => {
+  it('starts checkout when Upgrade Plan is clicked', async () => {
     seedAuthenticatedUser();
+    const startCheckout = vi
+      .spyOn(useBillingStore.getState(), 'startCheckout')
+      .mockResolvedValue(undefined);
     renderBillingWithRouter();
 
     await waitFor(() => {
@@ -77,9 +82,16 @@ describe('Billing: Upgrade Plan navigation', () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: /upgrade plan/i }));
 
+    // The Upgrade CTA starts the paid checkout directly; it does not navigate to
+    // the pricing page (that is what the separate BillingUpgradeCTA link does).
     await waitFor(() => {
-      expect(screen.getByTestId('pricing-page')).toBeInTheDocument();
+      expect(startCheckout).toHaveBeenCalledWith(
+        'billing-e2e-user',
+        'billing-e2e@example.com',
+        'senior'
+      );
     });
+    expect(screen.queryByTestId('pricing-page')).not.toBeInTheDocument();
   });
 
   it('Upgrade Plan button is not disabled for free users', async () => {
@@ -99,9 +111,11 @@ describe('Billing: Upgrade Plan navigation', () => {
     await waitFor(() => {
       expect(screen.getByText(/Subscription Entitlements/i)).toBeInTheDocument();
     });
-    // Free user should see "Current plan" section with plan details
+    // Free user should see "Current plan" section with plan details. Match the
+    // label exactly: a regex would also match the wrapping element whose text
+    // content includes the plan name, which makes the query ambiguous.
     await waitFor(() => {
-      expect(screen.getByText(/Current plan/i)).toBeInTheDocument();
+      expect(screen.getByText('Current plan')).toBeInTheDocument();
     });
   });
 

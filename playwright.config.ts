@@ -34,7 +34,6 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1440, height: 1000 },
-        storageState: 'playwright/.auth/user.json',
       },
     },
     {
@@ -42,7 +41,6 @@ export default defineConfig({
       dependencies: ['setup-auth'],
       use: {
         ...devices['iPhone 14'],
-        storageState: 'playwright/.auth/user.json',
       },
     },
     {

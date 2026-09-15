@@ -1,7 +1,6 @@
-import { mkdir, readdir, rename, rm } from 'node:fs/promises';
-
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
+import { access, mkdir, readdir, rename, rm } from 'node:fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import type { Plugin } from 'vite';
@@ -38,6 +37,11 @@ function privateSourceMapsPlugin(): Plugin {
     name: 'private-source-maps',
     async closeBundle() {
       const distDir = path.resolve(projectRoot, 'dist');
+      try {
+        await access(distDir);
+      } catch {
+        return; // skip during storybook build (output goes to storybook-static/)
+      }
       const privateDir = path.resolve(projectRoot, '.artifacts/sourcemaps');
       await rm(privateDir, { recursive: true, force: true });
       for (const sourceMap of await findSourceMaps(distDir)) {
@@ -121,8 +125,7 @@ export default defineConfig(() => ({
           const ext = info[info.length - 1];
           if (/\.(png|jpe?g|gif|svg|webp|avif|ico)$/.test(name))
             return `assets/images/[name]-[hash].${ext}`;
-          if (/\.(woff2?|eot|ttf|otf)$/.test(name))
-            return `assets/fonts/[name]-[hash].${ext}`;
+          if (/\.(woff2?|eot|ttf|otf)$/.test(name)) return `assets/fonts/[name]-[hash].${ext}`;
           return `assets/[name]-[hash].${ext}`;
         },
       },

@@ -16,13 +16,13 @@
         value: https://engvox.com
       - key: SUPABASE_URL
         sync: false
-        value: ""
+        value: ''
       - key: SUPABASE_ANON_KEY
         sync: false
-        value: ""
+        value: ''
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
-        value: ""
+        value: ''
       - key: AI_PROVIDER
         sync: false
       - key: AI_MODEL
@@ -39,4 +39,4 @@
         value: engvox-59b85
       - key: FIREBASE_SERVICE_ACCOUNT_KEY
         sync: false
-        value: ""
+        value: ''

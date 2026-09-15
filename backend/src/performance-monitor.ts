@@ -5,7 +5,7 @@
  * api-metrics.ts, which shares the same repository instance).
  * Falls back to an in-memory implementation when Supabase is not configured.
  */
-import { getMetricsRepository, type MetricsRepository } from './api-metrics.js';
+import { getMetricsRepository } from './api-metrics.js';
 
 type PerformanceMetricsResult = {
   uptime: number;
@@ -32,7 +32,7 @@ export const recordRequest = (
   duration: number,
   isError: boolean,
   method?: string,
-  path?: string,
+  path?: string
 ): void => {
   getMetricsRepository().recordRequest(duration, isError, method, path);
 };

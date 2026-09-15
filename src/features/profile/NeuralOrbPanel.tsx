@@ -2,29 +2,232 @@ import { PRODUCT_VERSION } from '@/config/product.config';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 
 import { useCallback, useMemo, useState } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
+
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
-import { DISCIPLINE_META, ENGINEERING_DISCIPLINES, type EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import {
+  DISCIPLINE_META,
+  ENGINEERING_DISCIPLINES,
+  type EngineeringDiscipline,
+} from '@/shared/constants/engineering-disciplines';
 import { cn } from '@/shared/utils/cn';
+
 import { useAuthStore } from '@/features/auth';
 import { AVAILABLE_INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
-type ChoiceButtonProps = { selected: boolean; primary: string; secondary?: string; onClick: () => void; compact?: boolean; };
-const ChoiceButton = ({ selected, primary, secondary, onClick, compact = false }: ChoiceButtonProps) => <button type="button" onClick={onClick} aria-pressed={selected} className={cn('flex w-full items-center justify-between gap-2 rounded-[var(--radius-button)] border text-left transition-all', compact ? 'h-[3.35rem] px-3' : 'h-[4.35rem] px-4', selected ? 'border-primary bg-primary/10 text-foreground ring-2 ring-primary/20' : 'border-border-soft bg-surface text-foreground hover:border-primary/40 hover:bg-surface-hover')}><span className="min-w-0 flex-1"><span className={cn('block truncate font-black leading-tight text-foreground', compact ? 'text-xs' : 'text-sm')}>{primary}</span>{secondary && <span className={cn('mt-0.5 block truncate font-semibold text-muted-copy', compact ? 'text-[10px]' : 'text-xs')}>{secondary}</span>}</span><span className={cn('grid shrink-0 place-items-center rounded-full border', compact ? 'h-5 w-5' : 'h-6 w-6', selected ? 'border-primary bg-primary text-primary-foreground' : 'border-border-soft text-transparent')}><Check className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} /></span></button>;
+type ChoiceButtonProps = {
+  selected: boolean;
+  primary: string;
+  secondary?: string;
+  onClick: () => void;
+  compact?: boolean;
+};
+const ChoiceButton = ({
+  selected,
+  primary,
+  secondary,
+  onClick,
+  compact = false,
+}: ChoiceButtonProps) => (
+  <button
+    type="button"
+    onClick={onClick}
+    aria-pressed={selected}
+    className={cn(
+      'flex w-full items-center justify-between gap-2 rounded-[var(--radius-button)] border text-left transition-all',
+      compact ? 'h-[3.35rem] px-3' : 'h-[4.35rem] px-4',
+      selected
+        ? 'border-primary bg-primary/10 text-foreground ring-2 ring-primary/20'
+        : 'border-border-soft bg-surface text-foreground hover:border-primary/40 hover:bg-surface-hover'
+    )}
+  >
+    <span className="min-w-0 flex-1">
+      <span
+        className={cn(
+          'block truncate font-black leading-tight text-foreground',
+          compact ? 'text-xs' : 'text-sm'
+        )}
+      >
+        {primary}
+      </span>
+      {secondary && (
+        <span
+          className={cn(
+            'mt-0.5 block truncate font-semibold text-muted-copy',
+            compact ? 'text-[10px]' : 'text-xs'
+          )}
+        >
+          {secondary}
+        </span>
+      )}
+    </span>
+    <span
+      className={cn(
+        'grid shrink-0 place-items-center rounded-full border',
+        compact ? 'h-5 w-5' : 'h-6 w-6',
+        selected
+          ? 'border-primary bg-primary text-primary-foreground'
+          : 'border-border-soft text-transparent'
+      )}
+    >
+      <Check className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />
+    </span>
+  </button>
+);
 
 export const NeuralOrbPanel = ({ onComplete }: { onComplete?: () => void } = {}) => {
-  const navigate = useNavigate(); const translate = useLocalizationStore((s) => s.translate); const currentLanguage = useLocalizationStore((s) => s.language); const setLanguage = useLocalizationStore((s) => s.setLanguage); const currentUser = useAuthStore((s) => s.currentUser);
+  const navigate = useNavigate();
+  const translate = useLocalizationStore((s) => s.translate);
+  const currentLanguage = useLocalizationStore((s) => s.language);
+  const setLanguage = useLocalizationStore((s) => s.setLanguage);
+  const currentUser = useAuthStore((s) => s.currentUser);
   const languageOptions = useMemo(() => AVAILABLE_INTERFACE_LANGUAGES, []);
-  const [selectedDiscipline, setSelectedDiscipline] = useState<EngineeringDiscipline | null>(null); const [selectedLanguage, setSelectedLanguage] = useState<SupportedInterfaceLanguage | null>(currentLanguage as SupportedInterfaceLanguage | null);
+  const [selectedDiscipline, setSelectedDiscipline] = useState<EngineeringDiscipline | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<SupportedInterfaceLanguage | null>(
+    currentLanguage as SupportedInterfaceLanguage | null
+  );
   const [isSaving, setIsSaving] = useState(false);
-  const handleSelectLanguage = (id: SupportedInterfaceLanguage) => { setSelectedLanguage(id); setLanguage(id); };
+  const handleSelectLanguage = (id: SupportedInterfaceLanguage) => {
+    setSelectedLanguage(id);
+    setLanguage(id);
+  };
   const canFinish = Boolean(selectedDiscipline && selectedLanguage && currentUser);
-  const handleEnter = useCallback(async () => { if (!selectedDiscipline || !selectedLanguage || !currentUser || isSaving) return; setIsSaving(true); try { LearningProfileRepository.updatePreferences(currentUser.id, { discipline: selectedDiscipline, professionalTrack: selectedDiscipline as never, onboardingCompleted: true, interfaceLanguage: selectedLanguage }); useAuthStore.setState({ currentUser: { ...useAuthStore.getState().currentUser!, engineeringDiscipline: selectedDiscipline } }); useLearningStore.getState().resetAll(); if (onComplete) onComplete(); else navigate('/dashboard', { replace: true }); } finally { setIsSaving(false); } }, [selectedDiscipline, selectedLanguage, currentUser, isSaving, onComplete, navigate]);
-  const disciplineMeta = selectedDiscipline ? DISCIPLINE_META[selectedDiscipline] : null; const languageMeta = selectedLanguage ? languageOptions.find((l) => l.id === selectedLanguage) : null;
-  return <div className="fixed inset-0 z-50 overflow-hidden bg-background text-foreground"><header className="relative z-10 flex h-14 items-center justify-between border-b border-border-soft bg-background/92 px-4 backdrop-blur-xl sm:px-6"><button type="button" onClick={() => navigate('/')} className="inline-flex h-10 items-center gap-2 rounded-[var(--radius-button)] border border-border-soft bg-surface px-3 text-sm font-black text-muted-copy transition hover:bg-surface-hover hover:text-foreground"><ArrowLeft className="h-4 w-4" />{translate('common.back')}</button><div className="flex items-center gap-2"><ThemeToggle /><img src="/brand/logo.svg" alt="EngVox" className="h-8 w-8 rounded-[var(--radius-button)]" /><span className="text-xs font-black text-primary">v{PRODUCT_VERSION}</span></div></header><main className="relative z-10 h-[calc(100dvh-7rem)] overflow-hidden px-4 py-3 sm:px-6"><div className="mx-auto flex h-full max-w-7xl flex-col rounded-[var(--radius-dialog)] border border-border-soft bg-surface p-3 shadow-card sm:p-4"><div className="mb-3 shrink-0 text-center"><p className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">{translate('login.onboarding')}</p><h1 className="mt-1 text-[clamp(1.55rem,2.8vw,2.55rem)] font-black leading-none tracking-tight text-foreground">{translate('onboarding.title')}</h1></div><div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-2"><section className="min-h-0 rounded-[var(--radius-card)] border border-border-soft bg-background p-3"><div className="mb-3 flex items-center justify-between"><h2 className="text-sm font-black text-foreground">{translate('onboarding.selectDiscipline')}</h2><span className="text-xs font-bold text-muted-copy">{disciplineMeta ? translate(disciplineMeta.labelKey) : '—'}</span></div><div className="grid h-[calc(100%-2.1rem)] grid-cols-2 gap-2">{ENGINEERING_DISCIPLINES.map((id) => { const meta = DISCIPLINE_META[id]; return <ChoiceButton key={id} selected={selectedDiscipline === id} primary={translate(meta.labelKey)} secondary={translate(meta.descriptionKey)} onClick={() => setSelectedDiscipline(id)} />; })}</div></section><section className="min-h-0 rounded-[var(--radius-card)] border border-border-soft bg-background p-3"><div className="mb-3 flex items-center justify-between"><h2 className="text-sm font-black text-foreground">{translate('onboarding.selectLanguageTitle')}</h2><span className="text-xs font-bold text-muted-copy">{languageMeta ? languageMeta.nativeLabel : '—'}</span></div><div className="grid h-[calc(100%-2.1rem)] grid-cols-3 gap-2">{languageOptions.map((lang) => <ChoiceButton compact key={lang.id} selected={selectedLanguage === lang.id} primary={`${lang.flag} ${lang.nativeLabel}`} secondary={lang.label} onClick={() => handleSelectLanguage(lang.id)} />)}</div></section></div></div></main><footer className="relative z-10 flex h-14 items-center justify-between border-t border-border-soft bg-background/92 px-4 backdrop-blur-xl sm:px-6"><p className="truncate text-sm font-bold text-muted-copy">{disciplineMeta ? translate(disciplineMeta.labelKey) : translate('onboarding.selectDiscipline')} · {languageMeta ? languageMeta.nativeLabel : translate('onboarding.selectLanguageTitle')}</p><button type="button" onClick={() => void handleEnter()} disabled={!canFinish || isSaving} className={cn('ml-3 inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-[var(--radius-button)] px-5 text-sm font-black transition-all', canFinish ? 'bg-primary text-primary-foreground hover:bg-primary-hover' : 'bg-surface-hover text-muted-copy')}><span>{isSaving ? translate('common.loading') : translate('common.next')}</span>{!isSaving && <ArrowRight className="h-4 w-4" />}</button></footer></div>;
+  const handleEnter = useCallback(async () => {
+    if (!selectedDiscipline || !selectedLanguage || !currentUser || isSaving) return;
+    setIsSaving(true);
+    try {
+      LearningProfileRepository.updatePreferences(currentUser.id, {
+        discipline: selectedDiscipline,
+        professionalTrack: selectedDiscipline as never,
+        onboardingCompleted: true,
+        interfaceLanguage: selectedLanguage,
+      });
+      useAuthStore.setState({
+        currentUser: {
+          ...useAuthStore.getState().currentUser!,
+          engineeringDiscipline: selectedDiscipline,
+        },
+      });
+      useLearningStore.getState().resetAll();
+      if (onComplete) onComplete();
+      else navigate('/dashboard', { replace: true });
+    } finally {
+      setIsSaving(false);
+    }
+  }, [selectedDiscipline, selectedLanguage, currentUser, isSaving, onComplete, navigate]);
+  const disciplineMeta = selectedDiscipline ? DISCIPLINE_META[selectedDiscipline] : null;
+  const languageMeta = selectedLanguage
+    ? languageOptions.find((l) => l.id === selectedLanguage)
+    : null;
+  return (
+    <div className="fixed inset-0 z-50 overflow-hidden bg-background text-foreground">
+      <header className="relative z-10 flex h-14 items-center justify-between border-b border-border-soft bg-background/92 px-4 backdrop-blur-xl sm:px-6">
+        <button
+          type="button"
+          onClick={() => navigate('/')}
+          className="inline-flex h-10 items-center gap-2 rounded-[var(--radius-button)] border border-border-soft bg-surface px-3 text-sm font-black text-muted-copy transition hover:bg-surface-hover hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          {translate('common.back')}
+        </button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <img
+            src="/brand/logo.svg"
+            alt="EngVox"
+            className="h-8 w-8 rounded-[var(--radius-button)]"
+          />
+          <span className="text-xs font-black text-primary">v{PRODUCT_VERSION}</span>
+        </div>
+      </header>
+      <main className="relative z-10 h-[calc(100dvh-7rem)] overflow-hidden px-4 py-3 sm:px-6">
+        <div className="mx-auto flex h-full max-w-7xl flex-col rounded-[var(--radius-dialog)] border border-border-soft bg-surface p-3 shadow-card sm:p-4">
+          <div className="mb-3 shrink-0 text-center">
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">
+              {translate('login.onboarding')}
+            </p>
+            <h1 className="mt-1 text-[clamp(1.55rem,2.8vw,2.55rem)] font-black leading-none tracking-tight text-foreground">
+              {translate('onboarding.title')}
+            </h1>
+          </div>
+          <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-2">
+            <section className="min-h-0 rounded-[var(--radius-card)] border border-border-soft bg-background p-3">
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="text-sm font-black text-foreground">
+                  {translate('onboarding.selectDiscipline')}
+                </h2>
+                <span className="text-xs font-bold text-muted-copy">
+                  {disciplineMeta ? translate(disciplineMeta.labelKey) : '—'}
+                </span>
+              </div>
+              <div className="grid h-[calc(100%-2.1rem)] grid-cols-2 gap-2">
+                {ENGINEERING_DISCIPLINES.map((id) => {
+                  const meta = DISCIPLINE_META[id];
+                  return (
+                    <ChoiceButton
+                      key={id}
+                      selected={selectedDiscipline === id}
+                      primary={translate(meta.labelKey)}
+                      secondary={translate(meta.descriptionKey)}
+                      onClick={() => setSelectedDiscipline(id)}
+                    />
+                  );
+                })}
+              </div>
+            </section>
+            <section className="min-h-0 rounded-[var(--radius-card)] border border-border-soft bg-background p-3">
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="text-sm font-black text-foreground">
+                  {translate('onboarding.selectLanguageTitle')}
+                </h2>
+                <span className="text-xs font-bold text-muted-copy">
+                  {languageMeta ? languageMeta.nativeLabel : '—'}
+                </span>
+              </div>
+              <div className="grid h-[calc(100%-2.1rem)] grid-cols-3 gap-2">
+                {languageOptions.map((lang) => (
+                  <ChoiceButton
+                    compact
+                    key={lang.id}
+                    selected={selectedLanguage === lang.id}
+                    primary={`${lang.flag} ${lang.nativeLabel}`}
+                    secondary={lang.label}
+                    onClick={() => handleSelectLanguage(lang.id)}
+                  />
+                ))}
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+      <footer className="relative z-10 flex h-14 items-center justify-between border-t border-border-soft bg-background/92 px-4 backdrop-blur-xl sm:px-6">
+        <p className="truncate text-sm font-bold text-muted-copy">
+          {disciplineMeta
+            ? translate(disciplineMeta.labelKey)
+            : translate('onboarding.selectDiscipline')}{' '}
+          · {languageMeta ? languageMeta.nativeLabel : translate('onboarding.selectLanguageTitle')}
+        </p>
+        <button
+          type="button"
+          onClick={() => void handleEnter()}
+          disabled={!canFinish || isSaving}
+          className={cn(
+            'ml-3 inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-[var(--radius-button)] px-5 text-sm font-black transition-all',
+            canFinish
+              ? 'bg-primary text-primary-foreground hover:bg-primary-hover'
+              : 'bg-surface-hover text-muted-copy'
+          )}
+        >
+          <span>{isSaving ? translate('common.loading') : translate('common.next')}</span>
+          {!isSaving && <ArrowRight className="h-4 w-4" />}
+        </button>
+      </footer>
+    </div>
+  );
 };
 export default NeuralOrbPanel;

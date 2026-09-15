@@ -65,7 +65,8 @@ const EN: LandingTranslations = {
   disciplinesTitle: 'Pick the engineering world you work in',
   featuresHeaderBadge: 'The learning cockpit',
   featuresTitle: 'Train every skill in one place',
-  featuresSubtitle: 'Reading, writing, speaking, listening, vocabulary, and grammar become part of one focused engineering workflow.',
+  featuresSubtitle:
+    'Reading, writing, speaking, listening, vocabulary, and grammar become part of one focused engineering workflow.',
   featureDescription: 'Field-aware AI practice for real tasks, not generic textbook drills.',
   cockpitLabel: 'Live cockpit',
   cockpitTitle: 'Engineering English OS',
@@ -110,8 +111,10 @@ const TR: LandingTranslations = {
   disciplinesTitle: 'Çalıştığın mühendislik alanını seç',
   featuresHeaderBadge: 'Öğrenme kokpiti',
   featuresTitle: 'Tüm becerileri tek yerde geliştir',
-  featuresSubtitle: 'Okuma, yazma, konuşma, dinleme, kelime ve gramer; mühendislik odaklı tek bir çalışma akışında birleşir.',
-  featureDescription: 'Ders kitabı kalıpları değil, gerçek iş görevleri için alanına uygun AI pratiği.',
+  featuresSubtitle:
+    'Okuma, yazma, konuşma, dinleme, kelime ve gramer; mühendislik odaklı tek bir çalışma akışında birleşir.',
+  featureDescription:
+    'Ders kitabı kalıpları değil, gerçek iş görevleri için alanına uygun AI pratiği.',
   cockpitLabel: 'Canlı kokpit',
   cockpitTitle: 'Mühendislik İngilizcesi OS',
   cockpitStatus: 'AKTİF',
@@ -135,7 +138,10 @@ const TR: LandingTranslations = {
 };
 
 const AR: LandingTranslations = { ...EN, heroBadge: 'مدرّب إنجليزية بالذكاء الاصطناعي للمهندسين' };
-const DE: LandingTranslations = { ...EN, heroBadge: 'KI-Englischcoach für Ingenieurinnen und Ingenieure' };
+const DE: LandingTranslations = {
+  ...EN,
+  heroBadge: 'KI-Englischcoach für Ingenieurinnen und Ingenieure',
+};
 const ES: LandingTranslations = { ...EN, heroBadge: 'Coach de inglés con IA para ingeniería' };
 
 const TRANSLATIONS: Record<string, LandingTranslations> = {

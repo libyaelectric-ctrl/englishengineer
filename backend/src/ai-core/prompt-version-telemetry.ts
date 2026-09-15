@@ -1,6 +1,6 @@
-export type PromptSource = 'file' | 'db' | 'none';
+type PromptSource = 'file' | 'db' | 'none';
 
-export interface PromptVersionUsage {
+interface PromptVersionUsage {
   key: string;
   bundledVersion: string | null;
   servedVersion: string | null;

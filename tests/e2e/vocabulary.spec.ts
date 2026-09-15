@@ -36,7 +36,9 @@ test.describe('Vocabulary search', () => {
     const searchInput = await openSearch(page);
     await searchInput.fill('compile');
     await searchInput.press('Enter');
-    await expect(page.getByText(/search results|no canonical match|results found/i).first()).toBeVisible({
+    await expect(
+      page.getByText(/search results|no canonical match|results found/i).first()
+    ).toBeVisible({
       timeout: 10_000,
     });
   });

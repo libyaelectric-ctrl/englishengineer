@@ -32,7 +32,5 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     });
   }, []);
 
-  return (
-    <QueryProvider>{children}</QueryProvider>
-  );
+  return <QueryProvider>{children}</QueryProvider>;
 };

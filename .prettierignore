@@ -10,3 +10,5 @@ eslint_complexity.json
 eslint_output.json
 lint-output.txt
 *.log
+android/
+ios/

@@ -1,7 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
-import { VocabularyEntry } from '@/shared/types/vocabulary.types';
 import { storage } from '@/shared/storage';
+import { VocabularyEntry } from '@/shared/types/vocabulary.types';
 
 import { loadVocabularyEntries } from '../../data/vocabulary.data';
 import { VocabularyMemoryService, filterMyVocabulary } from './vocabulary.memory';

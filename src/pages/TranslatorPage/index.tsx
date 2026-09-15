@@ -62,7 +62,14 @@ const VIRTUAL_CHAR_BARS: Partial<Record<SupportedLang, string[]>> = {
   ko: ['안녕하세요', '오세요', '감사합니다', '네', '아니오', '프로젝트'],
 };
 
-const LanguageBar = ({ sourceLang, setSourceLang, targetLang, setTargetLang, handleSwapLanguages, translate }: {
+const LanguageBar = ({
+  sourceLang,
+  setSourceLang,
+  targetLang,
+  setTargetLang,
+  handleSwapLanguages,
+  translate,
+}: {
   sourceLang: SupportedLang;
   setSourceLang: React.Dispatch<React.SetStateAction<SupportedLang>>;
   targetLang: SupportedLang;
@@ -73,7 +80,9 @@ const LanguageBar = ({ sourceLang, setSourceLang, targetLang, setTargetLang, han
   <div className="flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 bg-background p-2.5 sm:p-3 rounded-[var(--radius-card)] border border-border-soft text-xs">
     <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
       <Globe2 className="h-4 w-4 text-primary shrink-0" />
-      <span className="font-bold text-muted-copy hidden min-[360px]:inline">{translate('translator.fromLabel')}</span>
+      <span className="font-bold text-muted-copy hidden min-[360px]:inline">
+        {translate('translator.fromLabel')}
+      </span>
       <select
         value={sourceLang}
         onChange={(e) => setSourceLang(e.target.value as SupportedLang)}
@@ -98,7 +107,9 @@ const LanguageBar = ({ sourceLang, setSourceLang, targetLang, setTargetLang, han
     </button>
 
     <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-      <span className="font-bold text-muted-copy hidden min-[360px]:inline">{translate('translator.toLabel')}</span>
+      <span className="font-bold text-muted-copy hidden min-[360px]:inline">
+        {translate('translator.toLabel')}
+      </span>
       <select
         value={targetLang}
         onChange={(e) => setTargetLang(e.target.value as SupportedLang)}

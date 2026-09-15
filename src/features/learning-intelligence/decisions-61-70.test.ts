@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { storage } from '@/shared/storage';
 import {
   SPEAKING_MISSIONS,
   SPEAKING_MVP_MODE,
@@ -8,6 +7,7 @@ import {
   getSpeakingHistoryDetails,
   getSpeakingRoleplayCategory,
 } from '@/shared/services/speaking-test-helpers.service';
+import { storage } from '@/shared/storage';
 import type { SpeakingEvaluationResult } from '@/shared/types/speaking.types';
 
 import {

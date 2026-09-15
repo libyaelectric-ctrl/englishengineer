@@ -15,7 +15,7 @@ updates:
       - dependencies
       - frontend
     commit-message:
-      prefix: "chore(deps)"
+      prefix: 'chore(deps)'
       include: scope
     groups:
       patch-updates:
@@ -59,7 +59,7 @@ updates:
       - dependencies
       - backend
     commit-message:
-      prefix: "chore(deps)"
+      prefix: 'chore(deps)'
       include: scope
     groups:
       backend-patch:
@@ -88,7 +88,7 @@ updates:
       - dependencies
       - ci
     commit-message:
-      prefix: "chore(ci)"
+      prefix: 'chore(ci)'
       include: scope
 
   # ── Security: pip (if any Python scripts) ──
@@ -109,5 +109,5 @@ updates:
       - dependencies
       - docker
     commit-message:
-      prefix: "chore(docker)"
+      prefix: 'chore(docker)'
       include: scope

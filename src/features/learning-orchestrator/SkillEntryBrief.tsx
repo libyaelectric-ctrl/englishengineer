@@ -63,7 +63,9 @@ export const SkillEntryBrief = ({
       .then((next) => {
         if (active) setRecommendation(next);
       })
-      .catch((err) => { logger.e('SkillEntryBrief create recommendation:', err); });
+      .catch((err) => {
+        logger.e('SkillEntryBrief create recommendation:', err);
+      });
     return () => {
       active = false;
     };

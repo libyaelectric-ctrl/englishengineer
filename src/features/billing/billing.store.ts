@@ -107,7 +107,6 @@ export const useBillingStore = create<BillingState & BillingActions>()(
         set({ subscription });
       },
 
-
       fetchInvoices: async (userId) => {
         set({ isLoadingInvoices: true });
         try {

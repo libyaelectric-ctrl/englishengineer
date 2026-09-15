@@ -91,10 +91,17 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           docker build -t engvox-frontend-test .
-          docker run --rm -d --name test-frontend -p 8080:80 engvox-frontend-test
-          sleep 5
-          curl -f http://localhost:8080/ || (docker logs test-frontend && exit 1)
-          docker stop test-frontend
+          # No --rm: when the server dies on boot the container must survive long
+          # enough for `docker logs` to report why.
+          docker run -d --name test-frontend -p 8080:8080 engvox-frontend-test
+          ok=0
+          for _ in $(seq 1 20); do
+            if curl -fsS http://localhost:8080/ >/dev/null; then ok=1; break; fi
+            sleep 1
+          done
+          docker logs test-frontend
+          docker rm -f test-frontend >/dev/null
+          [ "$ok" = "1" ] || exit 1
 
   backend:
     name: Backend Image
@@ -142,7 +149,16 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           docker build -t engvox-backend-test ./backend
-          docker run --rm -d --name test-backend -p 8080:8080 engvox-backend-test
-          sleep 5
-          curl -f http://localhost:8080/api/health || (docker logs test-backend && exit 1)
-          docker stop test-backend
+          # The production image deliberately fails closed without an Upstash
+          # rate-limit store, and CI has no Upstash credentials. Boot it in the
+          # supported `staging` environment instead so the smoke test proves the
+          # built artifact serves without weakening the production guard.
+          docker run -d --name test-backend -p 8080:8080 -e NODE_ENV=staging engvox-backend-test
+          ok=0
+          for _ in $(seq 1 20); do
+            if curl -fsS http://localhost:8080/api/health >/dev/null; then ok=1; break; fi
+            sleep 1
+          done
+          docker logs test-backend
+          docker rm -f test-backend >/dev/null
+          [ "$ok" = "1" ] || exit 1

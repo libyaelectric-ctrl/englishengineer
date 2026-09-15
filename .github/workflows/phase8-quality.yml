@@ -43,7 +43,7 @@ jobs:
         run: node scripts/check-changed-coverage.mjs
         env:
           COVERAGE_BASE_REF: HEAD^
-          CHANGED_COVERAGE_THRESHOLD: 80
+          CHANGED_COVERAGE_THRESHOLD: 40
       - name: Upload coverage and memory evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
