@@ -12,11 +12,10 @@ import { type Page, expect, test } from '@playwright/test';
 import { VOCABULARY_SEED_FIXTURE } from './fixtures/vocabulary.seed';
 
 /**
- * The app's `auto` theme mode resolves from the wall clock (light between 07:00
- * and 19:00), so an unpinned run renders a different theme depending on what
- * time of day CI happens to execute. Every committed baseline was captured in
- * dark, so pin the stored mode before the first navigation — otherwise these
- * tests fail purely because of the time of day.
+ * The app's `auto` theme mode follows the OS `prefers-color-scheme`, and
+ * headless Chromium reports light by default — but every committed baseline was
+ * captured in dark. Pin the stored mode before the first navigation so the
+ * rendered palette matches the baseline regardless of the host/CI setting.
  */
 const BASELINE_THEME = 'dark';
 const pinTheme = (p: Page) =>
