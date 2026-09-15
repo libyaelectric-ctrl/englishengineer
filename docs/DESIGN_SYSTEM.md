@@ -143,7 +143,7 @@ All interactive elements have appropriate ARIA labels:
 
 ### Implementation
 
-Uses CSS custom properties with `data-theme` attribute and class-based toggling. Theme state is managed via Zustand with auto-detection (dark after 6pm, light before 6am):
+Uses CSS custom properties with `data-theme` attribute and class-based toggling. Theme state is owned by `ThemeProvider`: `auto` follows the OS `prefers-color-scheme` (live, via a `matchMedia` listener) and a stored `light`/`dark` override under `engvox-theme-mode` wins over it:
 
 ```tsx
 // Theme is toggled via data-theme attribute on <html>

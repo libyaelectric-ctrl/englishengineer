@@ -16,10 +16,10 @@
  *
  * Run it once BEFORE making a page change and once AFTER — the output
  * paths are the before/after pair to show the user. The optional third
- * argument pins the app's stored theme mode, so a dark capture is deterministic
- * regardless of the wall clock (auto mode resolves to light between 07:00 and
- * 19:00). The resolved `data-theme` is printed so a capture can be proven to
- * be the palette you meant; capture both themes when a change touches theming.
+ * argument pins the app's stored theme mode (auto follows the OS
+ * `prefers-color-scheme`), so a capture is deterministic on any host. The
+ * resolved `data-theme` is printed so a capture can be proven to be the palette
+ * you meant; capture both themes when a change touches theming.
  *
  * Note: `playwright-cli screenshot` produces frozen frames in this
  * environment (every capture is byte-identical), so the helper uses the
@@ -128,8 +128,8 @@ async function capture() {
         viewport: { width: vp.width, height: vp.height },
         colorScheme: themeMode,
       });
-      // The app resolves `auto` from the clock, so pin the stored mode instead of
-      // emulating prefers-color-scheme — otherwise a dark capture silently isn't one.
+      // Pin the stored mode (auto follows the OS preference) so the capture is
+      // deterministic regardless of the host's prefers-color-scheme setting.
       await page.addInitScript(
         ([key, mode]) => {
           try {
