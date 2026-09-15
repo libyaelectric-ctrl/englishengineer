@@ -129,7 +129,7 @@ export function VocabularyHeader({
                   onClick={() => chooseTab(tab)}
                   className={`rounded-[4px] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
                     activeTab === tab
-                      ? 'border border-primary bg-primary text-white'
+                      ? 'border border-primary bg-primary text-primary-foreground'
                       : 'text-muted-copy hover:bg-primary/5 hover:text-primary'
                   }`}
                 >

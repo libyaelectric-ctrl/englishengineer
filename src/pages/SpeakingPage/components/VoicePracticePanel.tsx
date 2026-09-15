@@ -116,7 +116,7 @@ const VoiceControls = ({
       <button
         type="button"
         onClick={onStartRecording}
-        className="flex-1 rounded-[4px] bg-primary hover:bg-primary/90 border border-primary px-4 py-2.5 text-xs font-bold text-white transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider h-10 shadow-sm"
+        className="flex-1 rounded-[4px] bg-primary hover:bg-primary/90 border border-primary px-4 py-2.5 text-xs font-bold text-primary-foreground transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider h-10 shadow-sm"
       >
         <Mic className="h-3.5 w-3.5" />
         Start Voice Capture
@@ -141,7 +141,7 @@ const VoiceControls = ({
           setIsPaused(false);
           pauseRef.current = false;
         }}
-        className="flex-1 rounded-[4px] bg-primary px-4 py-2.5 text-xs font-bold text-white hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider h-10 shadow-sm border border-primary"
+        className="flex-1 rounded-[4px] bg-primary px-4 py-2.5 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider h-10 shadow-sm border border-primary"
       >
         Resume Voice Capture
       </button>

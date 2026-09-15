@@ -149,7 +149,7 @@ export const BillingStatusPanel = ({
               onUpgrade();
             }}
             disabled={isLoading}
-            className="text-xs bg-primary hover:bg-primary/90 border border-primary text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5 min-h-9 px-4"
+            className="text-xs bg-primary hover:bg-primary/90 border border-primary text-primary-foreground font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5 min-h-9 px-4"
           >
             {isLoading ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />

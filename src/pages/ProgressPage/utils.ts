@@ -95,29 +95,29 @@ export const getRank = (elo: number) => {
     return {
       label: 'Grandmaster',
       icon: getRankIcon('grandmaster'),
-      color: 'text-yellow-600 bg-yellow-50 border-yellow-200',
+      color: 'text-yellow-600 bg-yellow-500/10 border-yellow-500/30',
     };
   if (elo >= RANK_THRESHOLDS.DIAMOND)
     return {
       label: 'Diamond',
       icon: getRankIcon('diamond'),
-      color: 'text-cyan-600 bg-cyan-50 border-cyan-200',
+      color: 'text-cyan-600 bg-cyan-500/10 border-cyan-500/30',
     };
   if (elo >= RANK_THRESHOLDS.PLATINUM)
     return {
       label: 'Platinum',
       icon: getRankIcon('platinum'),
-      color: 'text-indigo-600 bg-indigo-50 border-indigo-200',
+      color: 'text-indigo-600 bg-indigo-500/10 border-indigo-500/30',
     };
   if (elo >= RANK_THRESHOLDS.GOLD)
     return {
       label: 'Gold',
       icon: getRankIcon('gold'),
-      color: 'text-amber-600 bg-amber-50 border-amber-200',
+      color: 'text-amber-600 bg-amber-500/10 border-amber-500/30',
     };
   return {
     label: 'Silver',
     icon: getRankIcon('silver'),
-    color: 'text-slate-600 bg-slate-50 border-slate-200',
+    color: 'text-muted-copy bg-surface-hover border-border-soft',
   };
 };

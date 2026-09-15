@@ -55,7 +55,7 @@ const PlanLockBanner = ({
     <Button
       type="button"
       onClick={() => onNavigate('/pricing')}
-      className="h-9 bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer rounded-[4px] px-6 transition-all inline-flex items-center justify-center"
+      className="h-9 bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-sm cursor-pointer rounded-[4px] px-6 transition-all inline-flex items-center justify-center"
     >
       Upgrade to {isProLocked ? 'senior' : 'specialist'} Plan
     </Button>
@@ -74,7 +74,7 @@ const AIEntitlementWarning = ({
     <Button
       type="button"
       onClick={() => onNavigate('/profile')}
-      className="mt-3 h-9 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer inline-flex items-center justify-center px-4"
+      className="mt-3 h-9 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-sm cursor-pointer inline-flex items-center justify-center px-4"
     >
       Upgrade Plan
     </Button>
@@ -189,7 +189,7 @@ const FormActions = ({
     </p>
     <Button
       type="submit"
-      className="h-9 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer flex items-center justify-center gap-2 px-4"
+      className="h-9 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-sm cursor-pointer flex items-center justify-center gap-2 px-4"
       disabled={isLoading || input.trim().length === 0 || !allowed}
     >
       {isLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}

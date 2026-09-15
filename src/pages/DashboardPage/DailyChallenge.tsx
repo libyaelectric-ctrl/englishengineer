@@ -367,7 +367,7 @@ export const DailyChallenge = memo(() => {
           </div>
           <button
             onClick={startChallenge}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary to-blue-600 text-white text-sm font-bold hover:shadow-lg hover:shadow-primary/25 transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary to-blue-600 text-primary-foreground text-sm font-bold hover:shadow-lg hover:shadow-primary/25 transition-all"
           >
             <Zap className="h-4 w-4" />
             Start Challenge

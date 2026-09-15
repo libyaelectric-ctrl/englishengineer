@@ -127,7 +127,7 @@ const PendingBaselineBanner = () => (
       </div>
       <Link
         to="/vocabulary"
-        className="shrink-0 inline-flex items-center gap-1.5 rounded-[var(--radius-card)] bg-primary px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary-hover transition-colors"
+        className="shrink-0 inline-flex items-center gap-1.5 rounded-[var(--radius-card)] bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow-sm hover:bg-primary-hover transition-colors"
       >
         Start Diagnostic
       </Link>
@@ -288,7 +288,7 @@ const QuickWorkoutBanner = () => (
     </div>
     <Link
       to="/speaking"
-      className="shrink-0 rounded-[var(--radius-card)] bg-primary px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary-hover transition-colors cursor-pointer"
+      className="shrink-0 rounded-[var(--radius-card)] bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow-sm hover:bg-primary-hover transition-colors cursor-pointer"
     >
       🚀 Start 3-min Workout
     </Link>

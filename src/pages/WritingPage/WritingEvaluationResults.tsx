@@ -265,14 +265,14 @@ export const WritingEvaluationResults = ({
             </Button>
             <Button
               onClick={handleBackToMissions}
-              className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-wider text-[10px] px-6 h-10 rounded-[4px] cursor-pointer border border-primary shadow-sm"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-wider text-[10px] px-6 h-10 rounded-[4px] cursor-pointer border border-primary shadow-sm"
             >
               Back to Writing list
             </Button>
             {currentMissionIndex < visibleMissions.length - 1 && (
               <Button
                 onClick={() => moveMission(1)}
-                className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-primary shadow-sm flex items-center gap-1"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-primary shadow-sm flex items-center gap-1"
               >
                 Next lesson <ChevronRight className="h-4 w-4" />
               </Button>

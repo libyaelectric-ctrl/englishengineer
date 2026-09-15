@@ -129,7 +129,7 @@ const WordCardFront = ({
                 playSound('ding');
                 onLearn?.(term);
               }}
-              className="w-full rounded-[var(--radius-card)] bg-primary px-3 py-2 text-xs font-bold text-white shadow hover:bg-primary/90 transition-all cursor-pointer"
+              className="w-full rounded-[var(--radius-card)] bg-primary px-3 py-2 text-xs font-bold text-primary-foreground shadow hover:bg-primary/90 transition-all cursor-pointer"
             >
               I Know This
             </button>
@@ -149,7 +149,7 @@ const WordCardFront = ({
       <button
         type="button"
         onClick={onToggleFlip}
-        className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-extrabold text-primary hover:bg-primary hover:text-white transition-all cursor-pointer"
+        className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-extrabold text-primary hover:bg-primary hover:text-primary-foreground transition-all cursor-pointer"
       >
         <RotateCw className="h-3.5 w-3.5" />
         <span>3D Flip (Space)</span>
@@ -248,7 +248,7 @@ export const WordCard = ({
               <button
                 type="button"
                 onClick={() => PronunciationService.speak(term.term)}
-                className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors cursor-pointer"
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
                 title="Listen Pronunciation"
               >
                 <Volume2 className="h-4 w-4" />
@@ -289,7 +289,7 @@ export const WordCard = ({
             <button
               type="button"
               onClick={onFlip}
-              className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-extrabold text-white shadow hover:bg-primary/90 transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-extrabold text-primary-foreground shadow hover:bg-primary/90 transition-all cursor-pointer"
             >
               <RotateCw className="h-3.5 w-3.5" />
               <span>{translate('vocabulary.cardFront')}</span>

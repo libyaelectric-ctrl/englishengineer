@@ -113,7 +113,7 @@ export const SiteDictionaryTab = () => {
             }
             setIsAddingTerm(true);
           }}
-          className="gap-1.5 h-11 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer"
+          className="gap-1.5 h-11 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-sm cursor-pointer"
         >
           <Plus className="h-4 w-4" />
           {!hasProjectAccess && <Lock className="h-3 w-3 text-white/85 shrink-0" />}
@@ -209,7 +209,7 @@ export const SiteDictionaryTab = () => {
             <Button
               type="button"
               onClick={handleAddTerm}
-              className="h-9 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer"
+              className="h-9 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-sm cursor-pointer"
             >
               Add to Scope
             </Button>

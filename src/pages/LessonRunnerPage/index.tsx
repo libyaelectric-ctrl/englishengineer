@@ -222,7 +222,7 @@ const LessonRunnerPage = () => {
 
   if (hearts <= 0) {
     return (
-      <div className="mx-auto mt-12 flex max-w-lg flex-col items-center gap-6 rounded-2xl border border-rose-500/40 bg-rose-950/30 p-8 text-center font-sans shadow-[0_0_35px_rgba(244,63,94,0.25)] backdrop-blur-xl">
+      <div className="mx-auto mt-12 flex max-w-lg flex-col items-center gap-6 rounded-2xl border border-error/40 bg-error/10 p-8 text-center font-sans shadow-card backdrop-blur-xl">
         <ShieldAlert className="h-16 w-16 animate-pulse text-rose-400" />
         <div>
           <h2 className="text-2xl font-black text-rose-100">{translate('lesson.depletedTitle')}</h2>
@@ -231,7 +231,7 @@ const LessonRunnerPage = () => {
         <button
           type="button"
           onClick={() => navigate('/learning-path')}
-          className="flex items-center gap-2 rounded-xl bg-rose-500 px-6 py-3 font-bold text-white shadow-lg transition-all hover:bg-rose-400"
+          className="flex items-center gap-2 rounded-xl bg-error px-6 py-3 font-bold text-primary-foreground shadow-card transition-all hover:bg-error/90"
         >
           <RotateCcw className="h-4 w-4" />
           {translate('lesson.returnToControl')}
@@ -308,8 +308,9 @@ const LessonRunnerPage = () => {
             <span className="font-extrabold text-[var(--foreground)]">{progressPercent}%</span>
           </div>
           <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--surface-hover)]">
+            {' '}
             <div
-              className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.8)] transition-[width] duration-500 ease-out"
+              className="h-full rounded-full bg-gradient-to-r from-success to-primary shadow-card transition-[width] duration-500 ease-out"
               style={{ width: `${progressPercent}%` }}
               role="progressbar"
               aria-valuenow={progressPercent}
@@ -320,14 +321,14 @@ const LessonRunnerPage = () => {
         </div>
 
         {/* System Integrity (Hearts) */}
-        <div className="flex items-center gap-2 rounded-xl border border-cyan-500/30 bg-cyan-950/40 px-3.5 py-1.5 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.2)]">
+        <div className="flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-primary shadow-card">
           <Zap className="h-4 w-4 text-amber-400" />
           <span className="text-xs font-black tabular-nums">{hearts * 20}%</span>
         </div>
       </div>
 
       {/* Simulator Question Container */}
-      <div className="flex w-full flex-col items-center justify-center rounded-2xl border border-[var(--color-border-soft)] bg-[var(--surface)] p-4 sm:p-8 shadow-[0_0_30px_rgba(6,182,212,0.12)] backdrop-blur-xl">
+      <div className="flex w-full flex-col items-center justify-center rounded-2xl border border-border-soft bg-surface p-4 sm:p-8 shadow-card backdrop-blur-xl">
         <div className="w-full flex justify-center">
           {currentQ.type === 'mc' && (
             <MultipleChoiceCard
@@ -371,7 +372,7 @@ const LessonRunnerPage = () => {
               type="button"
               disabled={!selectedAnswer}
               onClick={handleCheckAnswer}
-              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-300 px-8 py-3.5 text-xs font-black uppercase tracking-wider text-slate-950 shadow-[0_0_25px_rgba(6,182,212,0.6)] transition-all hover:scale-102 hover:shadow-[0_0_35px_rgba(6,182,212,0.8)] disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-primary px-8 py-3.5 text-xs font-black uppercase tracking-wider text-primary-foreground shadow-card transition-all hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
             >
               {translate('lesson.verifySubmittal')}
             </button>
@@ -385,14 +386,16 @@ const LessonRunnerPage = () => {
             aria-live="assertive"
             className="mt-6 w-full max-w-xl rounded-xl border p-4 backdrop-blur-md transition-all animate-in fade-in zoom-in-95 duration-200"
             style={{
-              borderColor: isCorrect ? 'rgba(16,185,129,0.5)' : 'rgba(244,63,94,0.5)',
-              backgroundColor: isCorrect ? 'rgba(6,78,59,0.4)' : 'rgba(136,19,55,0.4)',
+              borderColor: isCorrect ? 'var(--color-success)' : 'var(--color-error)',
+              backgroundColor: isCorrect
+                ? 'color-mix(in oklab, var(--color-success) 15%, transparent)'
+                : 'color-mix(in oklab, var(--color-error) 15%, transparent)',
             }}
           >
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <p
-                  className={`text-sm font-black uppercase tracking-wider ${isCorrect ? 'text-emerald-300' : 'text-rose-300'}`}
+                  className={`text-sm font-black uppercase tracking-wider ${isCorrect ? 'text-success' : 'text-error'}`}
                 >
                   {isCorrect
                     ? translate('lesson.correctSubmission')
@@ -416,10 +419,8 @@ const LessonRunnerPage = () => {
               <button
                 type="button"
                 onClick={handleNextQuestion}
-                className={`flex w-full sm:w-auto shrink-0 items-center justify-center gap-2 rounded-xl px-7 py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg transition-all ${
-                  isCorrect
-                    ? 'bg-emerald-500 hover:bg-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.5)]'
-                    : 'bg-rose-500 hover:bg-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.5)]'
+                className={`flex w-full sm:w-auto shrink-0 items-center justify-center gap-2 rounded-xl px-7 py-3 text-xs font-black uppercase tracking-wider text-primary-foreground shadow-card transition-all ${
+                  isCorrect ? 'bg-success hover:bg-success/90' : 'bg-error hover:bg-error/90'
                 }`}
               >
                 {currentIndex + 1 === questions.length

@@ -80,7 +80,7 @@ const ProfileHero = ({
 
       <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-6">
         {/* Avatar */}
-        <div className="h-20 w-20 shrink-0 rounded-full bg-gradient-to-br from-primary to-blue-600 text-white flex items-center justify-center font-black text-2xl shadow-lg shadow-primary/25">
+        <div className="h-20 w-20 shrink-0 rounded-full bg-gradient-to-br from-primary to-blue-600 text-primary-foreground flex items-center justify-center font-black text-2xl shadow-lg shadow-primary/25">
           {currentUser?.displayName ? currentUser.displayName.slice(0, 2).toUpperCase() : 'DE'}
         </div>
 
@@ -278,7 +278,7 @@ const ProfileInfoSection = ({
             <button
               type="submit"
               disabled={isSaving}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[var(--radius-card)] bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[var(--radius-card)] bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 transition-colors disabled:opacity-50"
             >
               <Save className="h-3.5 w-3.5" />
               {isSaving ? 'Saving...' : 'Save'}
@@ -542,7 +542,7 @@ const PreferencesSection = ({
         )}
         <button
           type="submit"
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[var(--radius-card)] bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-colors"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[var(--radius-card)] bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 transition-colors"
         >
           <Save className="h-3.5 w-3.5" />
           Save Preferences

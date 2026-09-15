@@ -124,7 +124,7 @@ const PricingCta = ({
     <button
       type="button"
       onClick={handleClick}
-      className={`${btnClass} ${tier.popular ? 'bg-primary text-white hover:bg-primary/95' : 'border border-border-soft bg-surface text-foreground hover:bg-surface-hover'}`}
+      className={`${btnClass} ${tier.popular ? 'bg-primary text-primary-foreground hover:bg-primary/95' : 'border border-border-soft bg-surface text-foreground hover:bg-surface-hover'}`}
     >
       {onSelect ? `${copy.getStarted} - ${formatPrice(price, currency)}` : copy.choosePlan}
     </button>
@@ -226,7 +226,7 @@ export const PricingCard = ({
   return (
     <article className={cardClasses}>
       {tier.popular && (
-        <span className="absolute -top-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full bg-gradient-to-r from-amber-500 to-primary px-3 py-1 text-[9px] font-bold uppercase tracking-wider text-white shadow-md">
+        <span className="absolute -top-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full bg-gradient-to-r from-amber-500 to-primary px-3 py-1 text-[9px] font-bold uppercase tracking-wider text-primary-foreground shadow-md">
           <Sparkles className="h-3 w-3" />
           {copy.mostPopular}
         </span>

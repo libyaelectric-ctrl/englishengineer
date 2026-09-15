@@ -134,7 +134,7 @@ export function SearchModal({
               />
               <button
                 type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded bg-primary px-2.5 py-1 text-xs font-bold text-white cursor-pointer"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded bg-primary px-2.5 py-1 text-xs font-bold text-primary-foreground cursor-pointer"
               >
                 <Search className="h-3.5 w-3.5" />
               </button>

@@ -88,7 +88,7 @@ const PricingPage = () => {
                 type="button"
                 onClick={() => setIsAnnual(false)}
                 aria-pressed={!isAnnual}
-                className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${!isAnnual ? 'bg-primary text-white shadow-sm' : 'text-muted-copy hover:text-foreground'}`}
+                className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${!isAnnual ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-copy hover:text-foreground'}`}
               >
                 {pricingCopy.monthly}
               </button>
@@ -96,7 +96,7 @@ const PricingPage = () => {
                 type="button"
                 onClick={() => setIsAnnual(true)}
                 aria-pressed={isAnnual}
-                className={`flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${isAnnual ? 'bg-primary text-white shadow-sm' : 'text-muted-copy hover:text-foreground'}`}
+                className={`flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${isAnnual ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-copy hover:text-foreground'}`}
               >
                 <span>{pricingCopy.annual}</span>
                 <span className="rounded bg-emerald-500 px-1 py-0.5 text-[9px] text-white">

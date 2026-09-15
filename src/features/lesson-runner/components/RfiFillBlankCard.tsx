@@ -35,27 +35,27 @@ export const RfiFillBlankCard = ({
   return (
     <div className="flex w-full max-w-xl flex-col items-center gap-6 text-center font-sans">
       <div className="flex flex-col items-center gap-2">
-        <span className="flex items-center gap-1.5 rounded-full bg-cyan-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-cyan-400 border border-cyan-500/20">
+        <span className="flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary border border-primary/20">
           <FileText className="h-3.5 w-3.5" />
           {translate('lesson.card.rfiTitle')}
         </span>
-        <h2 className="text-xl font-bold tracking-tight text-[var(--foreground)] sm:text-2xl">
+        <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
           {translate('lesson.card.rfiHeading')}
         </h2>
       </div>
 
-      <div className="w-full rounded-2xl border border-cyan-500/30 bg-slate-900/90 p-6 text-left shadow-xl backdrop-blur">
-        <div className="mb-3 flex items-center justify-between border-b border-cyan-500/20 pb-2 text-[10px] uppercase tracking-widest text-cyan-400/80 font-mono">
+      <div className="w-full rounded-2xl border border-primary/30 bg-surface p-6 text-left shadow-card backdrop-blur">
+        <div className="mb-3 flex items-center justify-between border-b border-primary/20 pb-2 text-[10px] uppercase tracking-widest text-primary/80 font-mono">
           <span>{translate('lesson.card.rfiSheetId')}</span>
           <span>{translate('lesson.card.rfiSheetField')}</span>
         </div>
-        <p className="text-base leading-relaxed text-slate-200 font-medium">
+        <p className="text-base leading-relaxed text-foreground font-medium">
           {parts.map((part, idx) => {
             if (part.toLowerCase() === term.term.toLowerCase()) {
               return (
                 <span
                   key={idx}
-                  className="inline-block min-w-[5rem] rounded border border-dashed border-cyan-400 bg-cyan-500/20 px-3 py-1 text-center font-extrabold text-cyan-300 shadow-inner"
+                  className="inline-block min-w-[5rem] rounded border border-dashed border-primary bg-primary/20 px-3 py-1 text-center font-extrabold text-primary shadow-inner"
                 >
                   {selected || '________'}
                 </span>
@@ -77,8 +77,8 @@ export const RfiFillBlankCard = ({
               onClick={() => handleSelect(option)}
               className={`flex items-center justify-between rounded-xl border p-4 text-left transition-all ${
                 isSelected
-                  ? 'border-cyan-400 bg-cyan-500/20 text-cyan-200 ring-2 ring-cyan-400/50 font-bold'
-                  : 'border-[var(--color-border-soft)] bg-[var(--surface)] text-[var(--foreground)] hover:border-cyan-400/50 hover:bg-cyan-500/5'
+                  ? 'border-primary bg-primary/20 text-primary ring-2 ring-primary/50 font-bold'
+                  : 'border-border-soft bg-surface text-foreground hover:border-primary/50 hover:bg-primary/5'
               } disabled:cursor-not-allowed`}
             >
               <span className="text-sm font-semibold">{option}</span>

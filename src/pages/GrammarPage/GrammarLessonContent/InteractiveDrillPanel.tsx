@@ -106,7 +106,7 @@ export const InteractiveDrillPanel = ({ selectedRule }: { selectedRule: Rule }) 
               className={cn(
                 'rounded-[4px] border px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer inline-flex items-center gap-1.5',
                 activeDrill === mode
-                  ? 'border-primary bg-primary text-white'
+                  ? 'border-primary bg-primary text-primary-foreground'
                   : 'border-border-soft bg-background text-muted-copy hover:border-primary/40 hover:text-primary'
               )}
             >
@@ -145,7 +145,7 @@ export const InteractiveDrillPanel = ({ selectedRule }: { selectedRule: Rule }) 
             <button
               type="button"
               onClick={checkFillOrCorrection}
-              className="rounded bg-primary px-3 py-1.5 text-xs font-bold text-white hover:bg-primary/90 transition-colors cursor-pointer"
+              className="rounded bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer"
             >
               Check
             </button>
@@ -192,7 +192,7 @@ export const InteractiveDrillPanel = ({ selectedRule }: { selectedRule: Rule }) 
             <button
               type="button"
               onClick={checkFillOrCorrection}
-              className="rounded bg-primary px-3 py-1.5 text-xs font-bold text-white hover:bg-primary/90 transition-colors cursor-pointer"
+              className="rounded bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer"
             >
               Check
             </button>
@@ -225,7 +225,7 @@ export const InteractiveDrillPanel = ({ selectedRule }: { selectedRule: Rule }) 
                 key={`sel-${i}-${token}`}
                 type="button"
                 onClick={() => toggleToken(token, true)}
-                className="rounded border border-primary bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary cursor-pointer hover:bg-primary hover:text-white transition-colors"
+                className="rounded border border-primary bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
               >
                 {token}
               </button>
@@ -247,7 +247,7 @@ export const InteractiveDrillPanel = ({ selectedRule }: { selectedRule: Rule }) 
             <button
               type="button"
               onClick={checkReordering}
-              className="rounded bg-primary px-3 py-1.5 text-xs font-bold text-white hover:bg-primary/90 transition-colors cursor-pointer"
+              className="rounded bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition-colors cursor-pointer"
             >
               Check Order
             </button>

@@ -45,7 +45,7 @@ export const AuthControls = () => {
       </Link>
       <Link
         to={AUTH_SIGN_UP_URL}
-        className="inline-flex items-center gap-1 rounded-lg bg-primary px-2.5 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-primary-hover transition-colors cursor-pointer whitespace-nowrap"
+        className="inline-flex items-center gap-1 rounded-lg bg-primary px-2.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary-hover transition-colors cursor-pointer whitespace-nowrap"
         aria-label={translate('landing.startFree') || 'Start Free'}
       >
         {translate('landing.startFree') || 'Sign Up'}

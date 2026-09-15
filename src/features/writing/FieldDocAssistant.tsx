@@ -142,7 +142,9 @@ export const FieldDocAssistant = () => {
               <div className="flex w-full items-center justify-between">
                 <span
                   className={`p-2 rounded-[var(--radius-card)] ${
-                    isActive ? 'bg-primary text-white' : 'bg-surface-hover text-muted-copy'
+                    isActive
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-surface-hover text-muted-copy'
                   }`}
                 >
                   <Icon className="h-4 w-4" />

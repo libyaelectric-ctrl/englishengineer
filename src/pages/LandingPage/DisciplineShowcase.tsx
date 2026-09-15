@@ -62,7 +62,7 @@ export function DisciplineShowcase({ translate }: { translate: (key: string) => 
         {backgroundIcons.map((Icon, index) => (
           <motion.div
             key={index}
-            className="absolute text-cyan-700/10 dark:text-cyan-100/10"
+            className="absolute text-primary/10"
             style={{ left: `${8 + (index % 4) * 27}%`, top: `${6 + Math.floor(index / 4) * 54}%` }}
             animate={{ y: [0, -12, 0], rotate: [0, 4, 0] }}
             transition={{ duration: 5 + index, repeat: Infinity, ease: 'easeInOut' }}
@@ -86,7 +86,7 @@ export function DisciplineShowcase({ translate }: { translate: (key: string) => 
               <div
                 className={`absolute -inset-0.5 rounded-[1.6rem] bg-gradient-to-br ${accent[id]} opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-45`}
               />
-              <div className="relative min-h-[7.2rem] overflow-hidden rounded-[1.6rem] border border-slate-200 bg-white/90 p-3.5 text-left shadow-sm backdrop-blur-2xl transition-all duration-300 group-hover:-translate-y-1 group-hover:border-cyan-300 group-hover:shadow-xl dark:border-white/12 dark:bg-white/[0.075]">
+              <div className="relative min-h-[7.2rem] overflow-hidden rounded-[1.6rem] border border-border-soft bg-surface/90 p-3.5 text-left shadow-sm backdrop-blur-2xl transition-all duration-300 group-hover:-translate-y-1 group-hover:border-primary/40 group-hover:shadow-pop">
                 <div
                   className={`absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gradient-to-br ${accent[id]} opacity-18 blur-2xl transition-opacity group-hover:opacity-35`}
                 />
@@ -97,16 +97,16 @@ export function DisciplineShowcase({ translate }: { translate: (key: string) => 
                     >
                       <DisciplineIcon className="h-5 w-5" />
                     </div>
-                    <Sparkles className="h-4 w-4 text-cyan-700/55 opacity-0 transition-opacity group-hover:opacity-100 dark:text-cyan-100/60" />
+                    <Sparkles className="h-4 w-4 text-primary/55 opacity-0 transition-opacity group-hover:opacity-100" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-black leading-tight text-slate-950 dark:text-white">
+                    <h3 className="text-sm font-black leading-tight text-foreground">
                       {translate(meta.labelKey)}
                     </h3>
-                    <p className="mt-1 text-[11px] font-bold leading-4 text-slate-600 dark:text-slate-300">
+                    <p className="mt-1 text-[11px] font-bold leading-4 text-muted-copy">
                       {scenario[id]}
                     </p>
-                    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-200 dark:bg-white/10">
+                    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-hover">
                       <div className={`h-full w-4/5 rounded-full bg-gradient-to-r ${accent[id]}`} />
                     </div>
                   </div>
