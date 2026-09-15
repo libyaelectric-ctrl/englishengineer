@@ -9,6 +9,8 @@
  */
 import { type Page, expect, test } from '@playwright/test';
 
+import { VOCABULARY_SEED_FIXTURE } from './fixtures/vocabulary.seed';
+
 /**
  * The app's `auto` theme mode resolves from the wall clock (light between 07:00
  * and 19:00), so an unpinned run renders a different theme depending on what
@@ -25,6 +27,28 @@ const pinTheme = (p: Page) =>
       /* storage unavailable — the app falls back to its own default */
     }
   }, BASELINE_THEME);
+
+/**
+ * The vocabulary page fetches its terms at runtime from
+ * `public/data/vocabulary/*.json`. Those files are gitignored build artifacts
+ * served from storage in production, so a CI checkout has none of them and the
+ * page renders its empty state while a developer machine renders the full card
+ * grid — the same code, two different screenshots. Serve one small committed
+ * fixture instead so the baseline covers the populated layout and renders
+ * identically everywhere. Shard files beyond the first stay empty, since the
+ * loader concatenates every shard of a level.
+ */
+const stubVocabularyData = (p: Page) =>
+  // `*.json` keeps this to the fetched seed files; a broader glob would also
+  // intercept Vite's dev-server request for the `src/data/vocabulary` module.
+  p.route('**/data/vocabulary/*.json', (route) => {
+    const isExtraShard = /\.seed-\d+\.json$/.test(route.request().url());
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(isExtraShard ? [] : VOCABULARY_SEED_FIXTURE),
+    });
+  });
 
 const PUBLIC_PAGES = [
   { name: 'landing', path: '/' },
@@ -48,6 +72,7 @@ test.describe('Visual regression — public pages', () => {
 test.describe('Visual regression — auth-gated pages (demo mode)', () => {
   test.beforeEach(async ({ page: p }) => {
     await pinTheme(p);
+    await stubVocabularyData(p);
     await p.goto('/login', { waitUntil: 'networkidle' });
     // Dismiss the cookie banner so it cannot intercept onboarding clicks.
     const acceptCookies = p.getByRole('button', { name: /kabul et/i });
