@@ -30,7 +30,15 @@ const json = (body: string, status: number): Response =>
 
 const lostAcknowledgement = { status: 503, body: '{"message":"connection reset"}' };
 
-/** What PostgREST answers when a write collides with a row that is already there. */
+/**
+ * What PostgREST answers when a write collides with a row that is already there.
+ *
+ * The constraint names and `details` strings below are the ones Postgres 16 and
+ * PostgREST 12 actually produced for this table, captured from a real stack —
+ * including the expression key of a secondary unique index, which is neither a
+ * bare column name nor named the way a hand-written body would name it.
+ * `scripts/verify-audit-collision-attribution.mjs` re-derives them on every run.
+ */
 const uniqueViolation = (constraint: string, details: string | null): string =>
   JSON.stringify({
     code: '23505',
@@ -38,6 +46,15 @@ const uniqueViolation = (constraint: string, details: string | null): string =>
     details,
     hint: null,
   });
+
+/** Measured: a write whose `user_id` does not exist. Not a unique violation. */
+const foreignKeyViolation = JSON.stringify({
+  code: '23503',
+  details: 'Key (user_id)=(00000000-0000-0000-0000-0000000000ff) is not present in table "users".',
+  hint: null,
+  message:
+    'insert or update on table "audit_logs" violates foreign key constraint "audit_logs_user_id_fkey"',
+});
 
 /** How the retry's collision is attributed, if at all. */
 type Collision = 'own-key' | 'other-key' | 'no-details';
@@ -97,7 +114,10 @@ const createSupabaseStub = () => {
         collision === 'own-key'
           ? ['audit_logs_pkey', `Key (id)=(${storedId}) already exists.`]
           : collision === 'other-key'
-            ? ['audit_logs_user_id_key', 'Key (user_id)=(someone-else) already exists.']
+            ? [
+                'audit_logs_correlation_key',
+                "Key ((details ->> 'correlationKey'::text))=(req_shared) already exists.",
+              ]
             : ['audit_logs_pkey', null];
       return json(uniqueViolation(constraint, details), 409);
     }
@@ -323,9 +343,7 @@ describe('audit log recovery', () => {
     stub.calls.length = 0;
     // A conflict that is not a unique violation must not be read as a landed
     // write: the failure stays fail-closed.
-    stub.scriptWrites([
-      { status: 409, body: '{"message":"conflict: audit storage quota exceeded"}' },
-    ]);
+    stub.scriptWrites([{ status: 409, body: foreignKeyViolation }]);
 
     await assert.rejects(
       () => auditLog({ action: AUDIT_ACTIONS.CHECKOUT_CREATED, userId: 'user-not-landed' }),
@@ -340,7 +358,10 @@ describe('audit log recovery', () => {
     await startAudit(stub);
     stub.calls.length = 0;
     // A unique violation on some other key says nothing about this record, so the
-    // action must not be told its audit record is stored.
+    // action must not be told its audit record is stored. This is the measured
+    // shape of a secondary unique index over an expression: a key the attribution
+    // cannot resolve to a record identity at all (the bare-column case, where the
+    // key resolves but names somebody else, is pinned directly below).
     stub.collideOnRetry('other-key');
 
     await assert.rejects(

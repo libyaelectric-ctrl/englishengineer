@@ -37,6 +37,7 @@
     "build-storybook": "storybook build",
     "verify:release": "node scripts/verify-release.mjs",
     "verify:rls": "node scripts/verify-supabase-rls.mjs",
+    "verify:audit-collision": "node scripts/verify-audit-collision-attribution.mjs",
     "verify:test-exit": "node scripts/run-with-timeout.mjs 90000 run test",
     "verify:build-exit": "node scripts/run-with-timeout.mjs 120000 run build",
     "verify:quality-exit": "node scripts/run-with-timeout.mjs 240000 run quality:gate",
