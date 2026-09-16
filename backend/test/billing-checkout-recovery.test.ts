@@ -30,9 +30,22 @@ describe('billing checkout recovers with the audit store', () => {
       headers: { 'content-type': 'application/json', 'content-range': '0-0/0' },
     });
 
-  /** What PostgREST answers when the record is already stored. */
-  const DUPLICATE_KEY_BODY =
-    '{"message":"duplicate key value violates unique constraint \\"audit_logs_pkey\\"","code":"23505"}';
+  /** What PostgREST answers when the write collides with the record it carries. */
+  const ownRecordCollision = (recordId: string): string =>
+    JSON.stringify({
+      code: '23505',
+      message: 'duplicate key value violates unique constraint "audit_logs_pkey"',
+      details: `Key (id)=(${recordId}) already exists.`,
+      hint: null,
+    });
+
+  const readRecordId = (body: unknown): string => {
+    try {
+      return String((JSON.parse(String(body ?? '{}')) as { id?: string }).id);
+    } catch {
+      return 'unparsed';
+    }
+  };
 
   const createStub = () => {
     const calls: Array<{ method: string; path: string }> = [];
@@ -41,6 +54,7 @@ describe('billing checkout recovers with the audit store', () => {
     let blips = 0;
     let ackLoss = false;
     let ackLossDeliveries = 0;
+    let deliveredRecordId = '';
     const impl = (async (input: string | URL | Request, init?: RequestInit) => {
       const path = new URL(String(input)).pathname;
       const method = (init?.method ?? 'GET').toUpperCase();
@@ -57,9 +71,11 @@ describe('billing checkout recovers with the audit store', () => {
           // The first delivery is persisted and its acknowledgement is lost, so
           // the retry meets the row that delivery already wrote.
           ackLossDeliveries += 1;
-          return ackLossDeliveries === 1
-            ? json('{"message":"connection reset"}', 503)
-            : json(DUPLICATE_KEY_BODY, 409);
+          if (ackLossDeliveries === 1) {
+            deliveredRecordId = readRecordId(init?.body);
+            return json('{"message":"connection reset"}', 503);
+          }
+          return json(ownRecordCollision(deliveredRecordId), 409);
         }
         // A blip is a scripted number of failed write attempts; an outage lasts
         // until the test says the remote is healthy again.

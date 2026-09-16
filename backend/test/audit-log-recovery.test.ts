@@ -1,9 +1,16 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { AUDIT_ACTIONS, auditLog, getAuditLogStatus, initAuditLog } from '../src/audit-log.js';
+import {
+  AUDIT_ACTIONS,
+  type AuditRemoteError,
+  auditLog,
+  getAuditLogStatus,
+  initAuditLog,
+} from '../src/audit-log.js';
 import { ApiError } from '../src/errors.js';
 import winstonLogger from '../src/logger.js';
+import { createSupabaseAuditLogRepository } from '../src/supabase-audit-log-repository.js';
 import type { WorkspaceConfig } from '../types.js';
 
 // Port 9 (discard) on loopback: if the injected fetch were ignored the client
@@ -21,13 +28,19 @@ const json = (body: string, status: number): Response =>
     headers: { 'content-type': 'application/json', 'content-range': '0-0/0' },
   });
 
-/** What PostgREST answers when the record is already stored. */
-const DUPLICATE_KEY_RESPONSE = {
-  status: 409,
-  body: '{"message":"duplicate key value violates unique constraint \\"audit_logs_pkey\\"","code":"23505"}',
-};
-
 const lostAcknowledgement = { status: 503, body: '{"message":"connection reset"}' };
+
+/** What PostgREST answers when a write collides with a row that is already there. */
+const uniqueViolation = (constraint: string, details: string | null): string =>
+  JSON.stringify({
+    code: '23505',
+    message: `duplicate key value violates unique constraint "${constraint}"`,
+    details,
+    hint: null,
+  });
+
+/** How the retry's collision is attributed, if at all. */
+type Collision = 'own-key' | 'other-key' | 'no-details';
 
 const readRecordId = (body: unknown): string => {
   try {
@@ -62,6 +75,8 @@ const createSupabaseStub = () => {
   let writes = 0;
   let writeFailures = 0;
   let healthDelayMs = 0;
+  /** When set, the retry collides with a row that is already there. */
+  let collision: Collision | null = null;
 
   const impl = (async (_input: string | URL | Request, init?: RequestInit) => {
     const method = (init?.method ?? 'GET').toUpperCase();
@@ -72,6 +87,20 @@ const createSupabaseStub = () => {
     }
     writes += 1;
     deliveredIds.push(readRecordId(init?.body));
+    if (collision) {
+      // The first delivery is persisted and its acknowledgement is lost, so the
+      // retry meets a row that is already there.
+      if (deliveredIds.length === 1)
+        return json(lostAcknowledgement.body, lostAcknowledgement.status);
+      const storedId = deliveredIds[0] ?? 'audit_unknown';
+      const [constraint, details] =
+        collision === 'own-key'
+          ? ['audit_logs_pkey', `Key (id)=(${storedId}) already exists.`]
+          : collision === 'other-key'
+            ? ['audit_logs_user_id_key', 'Key (user_id)=(someone-else) already exists.']
+            : ['audit_logs_pkey', null];
+      return json(uniqueViolation(constraint, details), 409);
+    }
     const scripted = scriptedWrites.length > 1 ? scriptedWrites.shift() : scriptedWrites[0];
     if (scripted) return json(scripted.body, scripted.status);
     return down || writes <= writeFailures
@@ -86,6 +115,9 @@ const createSupabaseStub = () => {
     scriptWrites: (responses: Array<{ status: number; body: string }>) => {
       scriptedWrites.length = 0;
       scriptedWrites.push(...responses);
+    },
+    collideOnRetry: (kind: Collision) => {
+      collision = kind;
     },
     setDown: (value: boolean) => {
       down = value;
@@ -262,9 +294,7 @@ describe('audit log recovery', () => {
     const stub = createSupabaseStub();
     await startAudit(stub);
     stub.calls.length = 0;
-    // The store persists the write and then loses the acknowledgement, so the
-    // retry meets the very row this attempt already wrote.
-    stub.scriptWrites([lostAcknowledgement, DUPLICATE_KEY_RESPONSE]);
+    stub.collideOnRetry('own-key');
 
     const records = await captureLogs(() =>
       auditLog({ action: AUDIT_ACTIONS.CHECKOUT_CREATED, userId: 'user-landed' })
@@ -303,5 +333,76 @@ describe('audit log recovery', () => {
     );
     assert.equal(getAuditLogStatus().status, 'failed');
     assert.equal(methodCount(stub.calls, 'POST'), 2);
+  });
+
+  it('refuses when the retry collides with a key other than its own record', async () => {
+    const stub = createSupabaseStub();
+    await startAudit(stub);
+    stub.calls.length = 0;
+    // A unique violation on some other key says nothing about this record, so the
+    // action must not be told its audit record is stored.
+    stub.collideOnRetry('other-key');
+
+    await assert.rejects(
+      () => auditLog({ action: AUDIT_ACTIONS.CHECKOUT_CREATED, userId: 'user-other-key' }),
+      isAuditUnavailable
+    );
+    assert.equal(getAuditLogStatus().status, 'failed');
+    assert.equal(methodCount(stub.calls, 'POST'), 2);
+  });
+
+  it('refuses when a collision names no key it can attribute', async () => {
+    const stub = createSupabaseStub();
+    await startAudit(stub);
+    stub.calls.length = 0;
+    // A duplicate with nothing to attribute it to is not proof that *this* record
+    // landed, so it stays a failure.
+    stub.collideOnRetry('no-details');
+
+    await assert.rejects(
+      () => auditLog({ action: AUDIT_ACTIONS.CHECKOUT_CREATED, userId: 'user-unattributed' }),
+      isAuditUnavailable
+    );
+    assert.equal(getAuditLogStatus().status, 'failed');
+  });
+
+  it('carries the remote code and attributes only its own record as a collision', async () => {
+    const ownId = 'audit_own_record';
+    const respondWith = (body: string) =>
+      (async () =>
+        new Response(body, {
+          status: 409,
+          headers: { 'content-type': 'application/json' },
+        })) as typeof fetch;
+    const insertThrough = async (body: string) => {
+      const repository = createSupabaseAuditLogRepository(
+        {
+          supabaseUrl: SUPABASE_STUB.supabaseUrl,
+          supabaseServiceRoleKey: SUPABASE_STUB.supabaseServiceRoleKey,
+        },
+        respondWith(body)
+      );
+      try {
+        await repository?.insert({ id: ownId, timestamp: new Date().toISOString() });
+        return {};
+      } catch (error) {
+        const remote = error as AuditRemoteError;
+        return { code: remote.code, duplicates: remote.duplicatesRequestedRecord };
+      }
+    };
+
+    const ownKey = await insertThrough(
+      uniqueViolation('audit_logs_pkey', `Key (id)=(${ownId}) already exists.`)
+    );
+    const otherKey = await insertThrough(
+      uniqueViolation('audit_logs_user_id_key', 'Key (user_id)=(someone-else) already exists.')
+    );
+    const unattributed = await insertThrough(uniqueViolation('audit_logs_pkey', null));
+
+    assert.equal(ownKey.code, '23505');
+    assert.equal(ownKey.duplicates, true);
+    assert.equal(otherKey.code, '23505', 'the code is carried whatever the key names');
+    assert.equal(otherKey.duplicates, undefined, 'another key is not this record');
+    assert.equal(unattributed.duplicates, undefined, 'nothing to attribute');
   });
 });
