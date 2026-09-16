@@ -15,20 +15,42 @@ import {
 
 const BILLING_TIMEOUT_MS = 30_000;
 
+/**
+ * Turns a transport failure into the same structured shape the backend's own
+ * failures arrive in.
+ *
+ * An aborted request and an unreachable host are different events with different
+ * remedies, and the browser tells them apart structurally — but as prose-only
+ * `Error`s the two failures customers hit most carried no code at all, so nothing
+ * downstream could act on them. The sentences are unchanged; each now travels with
+ * a code on the same channel as `AppError.apiCode`.
+ */
 const mapRequestError = (error: unknown): Error => {
   if (error instanceof DOMException && error.name === 'AbortError') {
-    return new Error(
-      'Billing backend timed out after 30 seconds. The server may be waking up — please try again.'
-    );
+    return new AppError({
+      code: ErrorCode.NETWORK,
+      apiCode: 'billing_backend_timeout',
+      message:
+        'Billing backend timed out after 30 seconds. The server may be waking up — please try again.',
+    });
   }
 
   if (error instanceof TypeError) {
-    return new Error(
-      'Billing service is currently unreachable. Please check your connection or try again later.'
-    );
+    return new AppError({
+      code: ErrorCode.NETWORK,
+      apiCode: 'billing_backend_unreachable',
+      message:
+        'Billing service is currently unreachable. Please check your connection or try again later.',
+    });
   }
 
-  return error instanceof Error ? error : new Error('Billing backend request failed.');
+  if (error instanceof Error) return error;
+
+  return new AppError({
+    code: ErrorCode.NETWORK,
+    apiCode: 'billing_backend_request_failed',
+    message: 'Billing backend request failed.',
+  });
 };
 
 const fetchWithTimeout = async (endpoint: string, init?: RequestInit): Promise<Response> => {

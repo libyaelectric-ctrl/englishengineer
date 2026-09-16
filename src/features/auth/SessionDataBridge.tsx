@@ -24,8 +24,10 @@ const resetSensitiveMemory = (): void => {
     invoices: [],
     isLoading: false,
     isLoadingInvoices: false,
-    error: null,
   });
+  // The panel's message and the code its copy comes from are written only by the
+  // store, so clearing goes through that writer instead of setting half the pair.
+  useBillingStore.getState().setBillingError(null);
   queryClient.clear();
 };
 const hydrateActiveNamespace = (): void => {
@@ -37,8 +39,8 @@ const hydrateActiveNamespace = (): void => {
   useBillingStore.setState({
     subscription: BillingService.getLocalSubscription(),
     invoices: [],
-    error: null,
   });
+  useBillingStore.getState().setBillingError(null);
 };
 export const SessionDataBridge = () => {
   useEffect(() => {

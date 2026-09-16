@@ -21,19 +21,49 @@ interface BillingActions {
   startTopupCheckout: (userId: string, email: string) => Promise<void>;
   setSubscription: (subscription: SubscriptionSnapshot) => void;
   fetchInvoices: (userId: string) => Promise<void>;
-  /** Lets a caller surface its own precondition failure in the same panel copy. */
+  /**
+   * Lets a caller surface its own precondition failure in the same panel copy.
+   *
+   * `null` clears the failure; because the store owns both fields, that is also how
+   * a sign-out drops a stale code instead of leaving it behind a cleared message.
+   */
   setBillingError: (message: string | null) => void;
 }
 
-const fetchSubscription = async (
-  set: (partial: Partial<BillingState & BillingActions>) => void,
-  userId: string | null,
-  label: string
-) => {
-  set({
+/** The failure the billing panel shows: the sentence, and the code its copy comes from. */
+interface BillingFailure {
+  message: string;
+  code: string | null;
+}
+
+type BillingSet = (partial: Partial<BillingState & BillingActions>) => void;
+
+/** Reads a thrown value into the pair the panel needs, keeping whatever code it carried. */
+const toBillingFailure = (error: unknown, fallbackMessage: string): BillingFailure => ({
+  message: error instanceof Error ? error.message : fallbackMessage,
+  code: error instanceof AppError ? (error.apiCode ?? null) : null,
+});
+
+/**
+ * The only writer of `error` and `errorCode`.
+ *
+ * The panel reads the two together — it picks its copy from the code, not from the
+ * sentence — so writing one without the other lets a later failure be explained by
+ * the previous failure's code. That is what happened: a portal request that failed
+ * while offline was rendered with the audit code left behind by an earlier
+ * checkout attempt. A `null` failure clears both.
+ */
+const setBillingFailure = (
+  set: BillingSet,
+  failure: BillingFailure | null,
+  rest: Partial<BillingState & BillingActions> = {}
+): void => {
+  set({ ...rest, error: failure?.message ?? null, errorCode: failure?.code ?? null });
+};
+
+const fetchSubscription = async (set: BillingSet, userId: string | null, label: string) => {
+  setBillingFailure(set, null, {
     isLoading: true,
-    error: null,
-    errorCode: null,
     providerStatus: BillingService.getProviderStatus(),
   });
   try {
@@ -62,15 +92,11 @@ export const useBillingStore = create<BillingState & BillingActions>()(
       refreshBilling: async (userId) => fetchSubscription(set, userId, 'Billing refresh'),
 
       startCheckout: async (userId, email, planId, billingInterval = 'month') => {
-        set({ isCheckoutLoading: true, error: null, errorCode: null });
+        setBillingFailure(set, null, { isCheckoutLoading: true });
         try {
           await BillingService.startCheckout(userId, email, planId, billingInterval);
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Checkout session failed.';
-          set({
-            error: message,
-            errorCode: error instanceof AppError ? (error.apiCode ?? null) : null,
-          });
+          setBillingFailure(set, toBillingFailure(error, 'Checkout session failed.'));
           throw error;
         } finally {
           // A successful checkout navigates away, but if the redirect never
@@ -81,13 +107,11 @@ export const useBillingStore = create<BillingState & BillingActions>()(
       },
 
       openCustomerPortal: async (userId) => {
-        set({ isCheckoutLoading: true, error: null });
+        setBillingFailure(set, null, { isCheckoutLoading: true });
         try {
           await BillingService.openCustomerPortal(userId);
         } catch (error) {
-          const message =
-            error instanceof Error ? error.message : 'Customer portal session failed.';
-          set({ error: message });
+          setBillingFailure(set, toBillingFailure(error, 'Customer portal session failed.'));
           throw error;
         } finally {
           set({ isCheckoutLoading: false });
@@ -95,22 +119,19 @@ export const useBillingStore = create<BillingState & BillingActions>()(
       },
 
       startTopupCheckout: async (userId, email) => {
-        set({ isCheckoutLoading: true, error: null, errorCode: null });
+        setBillingFailure(set, null, { isCheckoutLoading: true });
         try {
           await BillingService.startTopupCheckout(userId, email);
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Top-up checkout failed.';
-          set({
-            error: message,
-            errorCode: error instanceof AppError ? (error.apiCode ?? null) : null,
-          });
+          setBillingFailure(set, toBillingFailure(error, 'Top-up checkout failed.'));
           throw error;
         } finally {
           set({ isCheckoutLoading: false });
         }
       },
 
-      setBillingError: (message) => set({ error: message, errorCode: null }),
+      setBillingError: (message) =>
+        setBillingFailure(set, message ? { message, code: null } : null),
 
       setSubscription: (subscription) => {
         BillingService.persistSubscription(subscription);

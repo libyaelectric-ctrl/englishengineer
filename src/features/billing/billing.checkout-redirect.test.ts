@@ -63,7 +63,8 @@ describe('billing checkout redirect safety', () => {
 describe('billing checkout loading flag', () => {
   afterEach(() => {
     mocks.createCheckoutSession.mockReset();
-    useBillingStore.setState({ isCheckoutLoading: false, error: null });
+    useBillingStore.setState({ isCheckoutLoading: false });
+    useBillingStore.getState().setBillingError(null);
   });
 
   it('clears the flag after a failed checkout so the Upgrade button cannot stay stuck', async () => {
