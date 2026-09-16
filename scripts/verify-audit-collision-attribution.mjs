@@ -337,11 +337,39 @@ const main = async () => {
     'postgres:16-alpine',
   ]);
 
-  const pgReady = await waitFor(
-    'postgres',
-    () => docker(['exec', PG_CONTAINER, 'pg_isready', '-U', 'postgres']).status === 0
-  );
+  // The image's entrypoint boots a temporary server to run its init scripts and
+  // then shuts it down, so any readiness probe — `pg_isready` included — can
+  // succeed against a server that is already going away. Waiting on that one made
+  // CI fail the first migration with "the database system is shutting down", so
+  // wait for the *final* server instead: the init phase finishing, followed by a
+  // server announcing it accepts connections, confirmed by a real query.
+  const pgReady = await waitFor('postgres', () => {
+    const logs = docker(['logs', PG_CONTAINER]);
+    const output = `${logs.stdout ?? ''}${logs.stderr ?? ''}`;
+    const initFinished = output.indexOf('PostgreSQL init process complete');
+    if (initFinished === -1) return false;
+    return output.slice(initFinished).includes('database system is ready to accept connections');
+  });
   if (!pgReady) return;
+
+  const pgAnswering = await waitFor(
+    'postgres query',
+    () =>
+      docker([
+        'exec',
+        PG_CONTAINER,
+        'psql',
+        '-U',
+        'postgres',
+        '-d',
+        'postgres',
+        '-t',
+        '-A',
+        '-c',
+        'select 1',
+      ]).status === 0
+  );
+  if (!pgAnswering) return;
 
   applyMigrations();
   measureUniqueKeys();
