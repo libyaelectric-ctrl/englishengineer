@@ -17,8 +17,9 @@ describe('Billing Integration', () => {
     useBillingStore.setState({
       subscription: undefined,
       isLoading: false,
-      error: null,
     });
+    // Reset through the store's own writer so the code and the message stay paired.
+    useBillingStore.getState().setBillingError(null);
   });
 
   it('initializes with free plan by default', () => {
@@ -53,10 +54,11 @@ describe('Billing Integration', () => {
   });
 
   it('can set and clear error', () => {
-    useBillingStore.setState({ error: 'Payment failed' });
+    useBillingStore.getState().setBillingError('Payment failed');
     expect(useBillingStore.getState().error).toBe('Payment failed');
 
-    useBillingStore.setState({ error: null });
+    useBillingStore.getState().setBillingError(null);
     expect(useBillingStore.getState().error).toBeNull();
+    expect(useBillingStore.getState().errorCode).toBeNull();
   });
 });
