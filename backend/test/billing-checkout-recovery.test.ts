@@ -32,6 +32,8 @@ describe('billing checkout recovers with the audit store', () => {
   const createStub = () => {
     const calls: Array<{ method: string; path: string }> = [];
     let auditWrites = 0;
+    let auditDown = false;
+    let blips = 0;
     const impl = (async (input: string | URL | Request, init?: RequestInit) => {
       const path = new URL(String(input)).pathname;
       const method = (init?.method ?? 'GET').toUpperCase();
@@ -39,8 +41,14 @@ describe('billing checkout recovers with the audit store', () => {
       if (path.endsWith('/audit_logs')) {
         if (method !== 'POST') return json('[]', 200);
         auditWrites += 1;
-        // One transient audit write failure, then the remote is healthy.
-        return auditWrites === 1 ? json('{"message":"connection reset"}', 503) : json('[]', 201);
+        // A blip is a scripted number of failed write attempts; an outage lasts
+        // until the test says the remote is healthy again.
+        if (auditDown) return json('{"message":"connection reset"}', 503);
+        if (blips > 0) {
+          blips -= 1;
+          return json('{"message":"connection reset"}', 503);
+        }
+        return json('[]', 201);
       }
       if (path.endsWith('/checkouts')) return json(`{"checkout_url":"${CHECKOUT_URL}"}`, 200);
       return json('[]', 200);
@@ -49,6 +57,12 @@ describe('billing checkout recovers with the audit store', () => {
       impl,
       calls,
       auditWrites: () => auditWrites,
+      failNextWrites: (count: number) => {
+        blips = count;
+      },
+      setDown: (value: boolean) => {
+        auditDown = value;
+      },
       dodoCalls: () => calls.filter((call) => call.path.endsWith('/checkouts')).length,
     };
   };
@@ -106,17 +120,32 @@ describe('billing checkout recovers with the audit store', () => {
         });
 
       await waitForReadyAudit();
+      const callsBeforeCheckout = stub.calls.length;
 
-      // First attempt: the audit write hits a transient error, so checkout
-      // fails closed and no payment session is created.
+      // One transient write failure: the request is retried against the same
+      // client, so the customer never sees the error at all.
+      stub.failNextWrites(1);
+      const blipped = await sendCheckout();
+      assert.equal(blipped.status, 200, JSON.stringify({ audit: getAuditLogStatus() }));
+      assert.equal(stub.dodoCalls(), 1, 'the payment session was created');
+      assert.equal(
+        stub.calls.slice(callsBeforeCheckout).filter((call) => call.method === 'GET').length,
+        0,
+        'the write was retried instead of the client being rebuilt'
+      );
+
+      // A real outage: every write fails, so checkout fails closed and no
+      // payment session is created.
+      stub.setDown(true);
       const failed = await sendCheckout();
       const failedBody = (await failed.json()) as { error?: { code?: string } };
       assert.equal(failed.status, 503);
       assert.equal(failedBody.error?.code, 'audit_log_unavailable');
-      assert.equal(stub.dodoCalls(), 0, 'no payment session was created');
+      assert.equal(stub.dodoCalls(), 1, 'no second payment session was created');
 
-      // Second attempt: the audit store answers again, so the same request goes
-      // through instead of repeating the same 503 forever.
+      // The store answers again, so the same request goes through instead of
+      // repeating the same 503 forever.
+      stub.setDown(false);
       const recovered = await sendCheckout();
       const recoveredBody = (await recovered.json()) as { data?: { url?: string } };
       assert.equal(
@@ -125,7 +154,7 @@ describe('billing checkout recovers with the audit store', () => {
         JSON.stringify({ body: recoveredBody, audit: getAuditLogStatus() })
       );
       assert.equal(recoveredBody.data?.url, CHECKOUT_URL);
-      assert.equal(stub.dodoCalls(), 1);
+      assert.equal(stub.dodoCalls(), 2);
       assert.equal(getAuditLogStatus().status, 'ready');
     } finally {
       server.close();
