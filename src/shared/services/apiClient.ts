@@ -2,7 +2,11 @@ import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
 
 import { showToast } from '@/shared/components/Toast';
-import { logger } from '@/shared/logger';
+import {
+  RETRYABLE_STATUSES,
+  classifyHttpStatus,
+  parseApiErrorResponse,
+} from '@/shared/services/api-error';
 import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
 
 // ---------------------------------------------------------------------------
@@ -71,22 +75,6 @@ function toAppError(error: unknown, url: string): AppError {
   });
 }
 
-/** Parse error body into human-readable message */
-async function parseErrorBody(response: Response): Promise<string> {
-  try {
-    const data = (await response.json()) as Record<string, unknown>;
-    if (typeof data.error === 'string') return data.error;
-    if (typeof data.error === 'object' && data.error !== null) {
-      const e = data.error as Record<string, unknown>;
-      if (typeof e.message === 'string') return e.message;
-    }
-    if (typeof data.message === 'string') return data.message;
-  } catch (err) {
-    logger.e('[API] Failed to parse error body as JSON:', err);
-  }
-  return `API ${response.status}: ${response.statusText}`;
-}
-
 /** Sleep with jitter for exponential backoff */
 function sleep(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms + Math.random() * 100));
@@ -120,22 +108,23 @@ async function apiFetch<T>(
     });
 
     if (!response.ok) {
-      const message = await parseErrorBody(response);
-      const code =
-        response.status === 401 || response.status === 403 ? ErrorCode.AUTH : ErrorCode.NETWORK;
+      const { message, apiCode } = await parseApiErrorResponse(response);
+      const code = classifyHttpStatus(response.status);
 
       // 401/403 must be visible to the user — a silently-failing auth error
       // looks like "my progress isn't saving" with zero diagnostic signal.
       const severity: AppError['severity'] =
-        response.status >= 500 || response.status === 401 || response.status === 403
-          ? 'error'
-          : 'warning';
+        response.status >= 500 || code === ErrorCode.AUTH ? 'error' : 'warning';
 
       throw new AppError({
         code,
+        // The backend already said what failed; carrying it is what lets callers
+        // stop matching the sentence below.
+        apiCode,
+        httpStatus: response.status,
         message,
         severity,
-        metadata: { status: response.status, url },
+        metadata: { url },
       });
     }
 
@@ -159,6 +148,13 @@ async function apiFetch<T>(
 // Retry wrapper
 // ---------------------------------------------------------------------------
 
+/**
+ * Retry by what the server actually answered, not by the coarse class: a 404 or
+ * a 409 must not be attempted again, and a 503 or a timeout must.
+ */
+const isRetryable = (error: AppError): boolean =>
+  error.httpStatus === undefined ? true : RETRYABLE_STATUSES.has(error.httpStatus);
+
 async function withRetry<T>(fn: () => Promise<T>, maxRetries: number): Promise<T> {
   let lastError: AppError | undefined;
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
@@ -166,10 +162,7 @@ async function withRetry<T>(fn: () => Promise<T>, maxRetries: number): Promise<T
       return await fn();
     } catch (error) {
       lastError = error instanceof AppError ? error : toAppError(error, '');
-      // Don't retry auth or validation errors
-      if (lastError.code === ErrorCode.AUTH || lastError.code === ErrorCode.VALIDATION) {
-        throw lastError;
-      }
+      if (!isRetryable(lastError)) throw lastError;
       if (attempt < maxRetries) {
         await sleep(1000 * 2 ** attempt); // 1s, 2s, 4s...
       }

@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
+import { AppError } from '@/core/errors/app-error';
+
 import { logger } from '@/shared/logger';
 
 import { BillingService } from './billing.service';
@@ -31,6 +33,7 @@ const fetchSubscription = async (
   set({
     isLoading: true,
     error: null,
+    errorCode: null,
     providerStatus: BillingService.getProviderStatus(),
   });
   try {
@@ -51,6 +54,7 @@ export const useBillingStore = create<BillingState & BillingActions>()(
       isLoading: false,
       isCheckoutLoading: false,
       error: null,
+      errorCode: null,
       invoices: [],
       isLoadingInvoices: false,
 
@@ -58,12 +62,15 @@ export const useBillingStore = create<BillingState & BillingActions>()(
       refreshBilling: async (userId) => fetchSubscription(set, userId, 'Billing refresh'),
 
       startCheckout: async (userId, email, planId, billingInterval = 'month') => {
-        set({ isCheckoutLoading: true, error: null });
+        set({ isCheckoutLoading: true, error: null, errorCode: null });
         try {
           await BillingService.startCheckout(userId, email, planId, billingInterval);
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Checkout session failed.';
-          set({ error: message });
+          set({
+            error: message,
+            errorCode: error instanceof AppError ? (error.apiCode ?? null) : null,
+          });
           throw error;
         } finally {
           // A successful checkout navigates away, but if the redirect never
@@ -88,19 +95,22 @@ export const useBillingStore = create<BillingState & BillingActions>()(
       },
 
       startTopupCheckout: async (userId, email) => {
-        set({ isCheckoutLoading: true, error: null });
+        set({ isCheckoutLoading: true, error: null, errorCode: null });
         try {
           await BillingService.startTopupCheckout(userId, email);
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Top-up checkout failed.';
-          set({ error: message });
+          set({
+            error: message,
+            errorCode: error instanceof AppError ? (error.apiCode ?? null) : null,
+          });
           throw error;
         } finally {
           set({ isCheckoutLoading: false });
         }
       },
 
-      setBillingError: (message) => set({ error: message }),
+      setBillingError: (message) => set({ error: message, errorCode: null }),
 
       setSubscription: (subscription) => {
         BillingService.persistSubscription(subscription);

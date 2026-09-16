@@ -7,11 +7,8 @@ import { Link, isRouteErrorResponse, useRouteError } from 'react-router-dom';
 import { Button } from '@/shared/components/Button';
 import { logBoundaryError } from '@/shared/errors/boundaryLogging';
 import { logger } from '@/shared/logger';
+import { isChunkLoadFailure } from '@/shared/utils/chunk-load-error';
 
-const CHUNK_ERROR_MESSAGES = [
-  'Failed to fetch dynamically imported module',
-  'Importing a module script failed',
-];
 const MAX_RELOAD_ATTEMPTS = 3;
 const RELOAD_KEY = 'engvox_chunk_reload_attempts';
 
@@ -25,7 +22,7 @@ export const RouteErrorPage = () => {
       ? error.message
       : 'The requested page could not be loaded.';
 
-  const isChunkError = CHUNK_ERROR_MESSAGES.some((msg) => message.includes(msg));
+  const isChunkError = isChunkLoadFailure(error);
 
   // Report genuine runtime failures (not 4xx/5xx route responses) through the
   // shared boundary logging core. Chunk-load errors are handled by the auto

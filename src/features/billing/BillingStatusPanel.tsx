@@ -20,29 +20,26 @@ const messageStyles: Record<BillingStatusTone, string> = {
 };
 
 /**
- * Maps internal backend wording onto copy a customer can act on.
+ * Maps the backend's own error codes onto copy a customer can act on.
  *
- * This must never return null. Dropping the message entirely is what made a
- * failed checkout look like a dead button: the request failed, the panel
- * rendered nothing, and the user had no way to tell what went wrong.
+ * Keyed by code, not by wording: the backend sends `error.code`, and matching its
+ * sentences instead meant a copy change on the server silently changed what the
+ * customer read here — or stopped matching altogether.
+ *
+ * This must never return nothing. Dropping the message entirely is what made a
+ * failed checkout look like a dead button: the request failed, the panel rendered
+ * nothing, and the user had no way to tell what went wrong. An unrecognised code
+ * falls through to the backend's own message.
  */
-const KNOWN_INTERNAL_ERRORS: Array<{ pattern: RegExp; message: string }> = [
-  {
-    pattern: /audit.?logging|audit_log_unavailable/i,
-    message:
-      'Billing could not be started because the service is temporarily unavailable. Please try again in a few minutes.',
-  },
-  {
-    pattern: /idempotency/i,
-    message:
-      'A previous billing attempt is still being processed. Please wait a moment and try again.',
-  },
-];
-
-const friendlyError = (raw: string): string => {
-  const known = KNOWN_INTERNAL_ERRORS.find((entry) => entry.pattern.test(raw));
-  return known ? known.message : raw;
+const KNOWN_INTERNAL_ERRORS: Record<string, string> = {
+  audit_log_unavailable:
+    'Billing could not be started because the service is temporarily unavailable. Please try again in a few minutes.',
+  idempotency_store_unavailable:
+    'A previous billing attempt is still being processed. Please wait a moment and try again.',
 };
+
+const friendlyError = (code: string | null | undefined, raw: string): string =>
+  (code ? KNOWN_INTERNAL_ERRORS[code] : undefined) ?? raw;
 
 interface BillingStatusPanelProps {
   subscription: SubscriptionSnapshot;
@@ -51,6 +48,8 @@ interface BillingStatusPanelProps {
   onUpgrade: () => void;
   onOpenPortal: () => void;
   error?: string | null;
+  /** The backend's own error code behind `error`, when it sent one. */
+  errorCode?: string | null;
 }
 
 export const BillingStatusPanel = ({
@@ -60,6 +59,7 @@ export const BillingStatusPanel = ({
   onUpgrade,
   onOpenPortal,
   error,
+  errorCode = null,
 }: BillingStatusPanelProps) => {
   const presentation = getBillingStatusPresentation(subscription, providerStatus);
   // The paid 'junior' plan (status active/trialing) is paid access; only the
@@ -69,7 +69,7 @@ export const BillingStatusPanel = ({
     (subscription.status === 'active' || subscription.status === 'trialing');
   const canOpenPortal = providerStatus.isConfigured && Boolean(subscription.stripeCustomerId);
 
-  const displayError = error ? friendlyError(error) : null;
+  const displayError = error ? friendlyError(errorCode, error) : null;
 
   return (
     <div className="space-y-4 font-sans text-foreground" data-testid="billing-status-panel">

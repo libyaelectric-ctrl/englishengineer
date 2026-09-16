@@ -1,7 +1,7 @@
 import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
 
-import { logger } from '@/shared/logger';
+import { classifyHttpStatus, parseApiErrorResponse } from '@/shared/services/api-error';
 import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
 import { unwrapApiSuccess } from '@/shared/types/api-response';
 
@@ -12,11 +12,6 @@ import {
   InvoiceRecord,
   SubscriptionSnapshot,
 } from './billing.types';
-
-interface BillingBackendErrorResponse {
-  error?: string | { code?: string; message?: string };
-  message?: string;
-}
 
 const BILLING_TIMEOUT_MS = 30_000;
 
@@ -52,16 +47,19 @@ const fetchWithTimeout = async (endpoint: string, init?: RequestInit): Promise<R
   }
 };
 
-const parseErrorMessage = async (response: Response): Promise<string> => {
-  try {
-    const data = (await response.json()) as BillingBackendErrorResponse;
-    if (typeof data.error === 'string') return data.error;
-    if (data.error?.message) return data.error.message;
-    return data.message || `Billing backend returned ${response.status}.`;
-  } catch (e) {
-    logger.w('[BILLING] Failed to parse error response', e);
-    return `Billing backend returned ${response.status}.`;
-  }
+/**
+ * Keeps what the billing backend already told us: its own error code, the HTTP
+ * status, and the message. Re-deriving any of them from the others is what made
+ * the panel match backend wording to choose its copy.
+ */
+const billingErrorFrom = async (response: Response): Promise<AppError> => {
+  const { message, apiCode } = await parseApiErrorResponse(response);
+  return new AppError({
+    code: classifyHttpStatus(response.status),
+    apiCode,
+    httpStatus: response.status,
+    message,
+  });
 };
 
 const buildBillingEndpoint = (billingApiUrl: string, route: string) =>
@@ -82,12 +80,7 @@ const postJson = async <TResponse, TBody extends object>(
     body: JSON.stringify(body),
   });
 
-  if (!response.ok) {
-    throw new AppError({
-      code: ErrorCode.NETWORK,
-      message: await parseErrorMessage(response),
-    });
-  }
+  if (!response.ok) throw await billingErrorFrom(response);
 
   return unwrapApiSuccess<TResponse>(await response.json());
 };
@@ -97,12 +90,7 @@ const getJson = async <TResponse>(endpoint: string, userId?: string): Promise<TR
     headers: await getBackendAuthHeaders(userId),
   });
 
-  if (!response.ok) {
-    throw new AppError({
-      code: ErrorCode.NETWORK,
-      message: await parseErrorMessage(response),
-    });
-  }
+  if (!response.ok) throw await billingErrorFrom(response);
 
   return unwrapApiSuccess<TResponse>(await response.json());
 };
