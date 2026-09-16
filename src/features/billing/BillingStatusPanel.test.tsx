@@ -127,7 +127,12 @@ describe('BillingStatusPanel', () => {
   it('chooses its copy from the error code, not from the words in the message', () => {
     // The same sentence the backend sends for `audit_log_unavailable`, under a
     // different code: matching the wording here is what this panel used to do.
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     renderError('Required audit logging is unavailable.', 'billing_provider_unconfigured');
+    // A code the map does not classify is the one case it cannot vouch for, so the
+    // customer surface reports it in development instead of falling back quietly.
+    expect(warn.mock.calls.flat().join(' ')).toContain('billing_provider_unconfigured');
+    warn.mockRestore();
 
     const alert = screen.getByRole('alert');
     expect(alert).toBeVisible();
