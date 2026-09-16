@@ -184,21 +184,47 @@ Tailwind class. Reach for one of these instead of `text-white`, `bg-black`, or a
 
 ### Enforcing the palette
 
-Raw palette utilities (`slate`, `gray`, `zinc`, `neutral`, `stone`, `cyan`, `white`, `black`) and
-hardcoded hex colours are rejected inside `src/` by the local ESLint rule `local/no-raw-palette`
-(`eslint-rules/no-raw-palette.js`), which `npm run lint` and CI's Code Quality job both run. A new
-surface therefore cannot quietly re-introduce a second palette authority.
+The local ESLint rule `local/no-raw-palette` (`eslint-rules/no-raw-palette.js`) is run by
+`npm run lint` and by CI's Code Quality job. It rejects, inside `src/`:
 
-Where a raw class is genuinely correct — a per-discipline identity gradient, say — exempt that line
-and state why:
+- raw **neutral / achromatic** utilities — `slate`, `gray`, `zinc`, `neutral`, `stone` — plus
+  `cyan`, `white` and `black`, across the colour utilities (`bg`, `text`, `border`, `ring`,
+  `divide`, `from`, `to`, `via`, `fill`, `stroke`, `placeholder`, `decoration`, `outline`,
+  `accent`, `caret`, `shadow`); and
+- hardcoded colour literals in those utilities, whether written as hex (`bg-[#d9d9e3]`) or as a
+  colour function (`bg-[rgba(0,0,0,.5)]`).
+
+### What the rule does not cover
+
+Stated plainly, so the guarantee is not overstated:
+
+1. **Chromatic accent families.** `emerald`, `amber`, `green`, `red`, `blue`, `teal`, `violet`,
+   `orange`, `sky` and friends are out of scope. They do have semantic equivalents (`success`,
+   `warning`, `error`, `primary`), and the codebase still paints roughly 200 raw usages of them,
+   so policing them today would need a mass migration first.
+2. **Inline styles** — `style={{ color: '#fff' }}` is not a class.
+3. **Runtime-composed class names** — `'bg-' + shade` cannot be seen statically.
+
+### Exemptions
+
+Where a raw class is genuinely correct — a per-discipline identity gradient, say — annotate that
+line and state why:
 
 ```ts
 // src/features/learning-path/discipline-palette.ts
 { id: 'verfahrenstechnik', gradient: 'from-amber-700/90 to-stone-800' }, // palette-exempt: discipline identity gradient
 ```
 
-The directive is per line and must carry a reason; a reason-less `palette-exempt` is itself an
-error, so an exemption can never be silent. There is no file-level switch.
+- The comment must sit on **the same line as the class**. A comment on a neighbouring line exempts
+  nothing, so an exemption can never cover a line it was not written for.
+- The reason must be at least 12 characters. A missing or too-short reason is reported and does
+  **not** suppress the violation.
+- A directive that exempts nothing is reported as unused, so an exemption cannot rot into a silent
+  no-op after the class it annotated has been migrated.
+- There is no file-level switch, by design.
+
+Behaviour is pinned by `eslint-rules/no-raw-palette.test.js` (run by `npm test`), including the
+per-line scope, the reason rules and the boundaries listed above.
 
 ### Border Radius Tokens
 
