@@ -223,8 +223,23 @@ line and state why:
   no-op after the class it annotated has been migrated.
 - There is no file-level switch, by design.
 
+Every class is reported on **its own source line**, whether it sits in a template literal or in a
+string literal — including a JSX `className="…"` whose text spans several lines. That is what makes
+the first rule above actionable.
+
+One consequence worth knowing: if a class sits in the _middle_ of a string attribute that spans
+lines, the line it is on is inside the string, so there is nowhere on that line to put a directive.
+Such a class has to be migrated (or the class list rewritten onto one line / into a template
+literal) rather than exempted. A class on the last line of such an attribute can be annotated
+normally, after the closing quote.
+
+A class written with escapes (`bg-slate-9\u00300`) is still detected: when the source text contains
+a backslash, the resolved value is scanned too — on the class's own line while the line counts still
+align, and otherwise anywhere in the resolved value. That fallback can only add findings, never hide
+one.
+
 Behaviour is pinned by `eslint-rules/no-raw-palette.test.js` (run by `npm test`), including the
-per-line scope, the reason rules and the boundaries listed above.
+per-line scope, the reason rules, the escaped-class fallback and the boundaries listed above.
 
 ### Border Radius Tokens
 
