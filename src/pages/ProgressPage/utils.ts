@@ -8,7 +8,7 @@ export const SKILLS = [
     id: 'vocabulary',
     label: 'Vocabulary',
     icon: BookMarked,
-    color: 'from-blue-500 to-cyan-400',
+    color: 'from-blue-500 to-cyan-400', // palette-exempt: decorative topic accent gradient
     bgLight: 'bg-blue-50',
     textDark: 'text-blue-700',
   },
@@ -101,7 +101,7 @@ export const getRank = (elo: number) => {
     return {
       label: 'Diamond',
       icon: getRankIcon('diamond'),
-      color: 'text-cyan-600 bg-cyan-500/10 border-cyan-500/30',
+      color: 'text-primary bg-primary/10 border-primary/30',
     };
   if (elo >= RANK_THRESHOLDS.PLATINUM)
     return {

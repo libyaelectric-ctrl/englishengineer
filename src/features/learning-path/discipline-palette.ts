@@ -21,52 +21,52 @@ export const DISCIPLINE_PALETTES: Record<EngineeringDiscipline, DisciplinePalett
   architecture: {
     primary: '#B45309', // burnt amber (concrete & timber)
     secondary: '#57534E', // stone gray
-    gradient: 'from-amber-700/90 to-stone-800',
+    gradient: 'from-amber-700/90 to-stone-800', // palette-exempt: discipline identity gradient (amber→stone)
   },
   chemical: {
     primary: '#0F766E', // teal (process piping)
     secondary: '#334155', // slate
-    gradient: 'from-teal-700 to-slate-800',
+    gradient: 'from-teal-700 to-slate-800', // palette-exempt: discipline identity gradient (teal→slate)
   },
   civil: {
     primary: '#C2410C', // safety orange (hard hats / barriers)
     secondary: '#44403C', // asphalt
-    gradient: 'from-orange-700 to-stone-900',
+    gradient: 'from-orange-700 to-stone-900', // palette-exempt: discipline identity gradient (orange→stone)
   },
   electrical: {
     primary: '#CA8A04', // warning amber (LV/HV signage)
     secondary: '#1C1917', // near black
-    gradient: 'from-amber-600 to-zinc-900',
+    gradient: 'from-amber-600 to-zinc-900', // palette-exempt: discipline identity gradient (amber→zinc)
   },
   electronics: {
     primary: '#7C3AED', // circuit violet (PCB silkscreen)
     secondary: '#0F172A', // deep navy
-    gradient: 'from-violet-700 to-slate-900',
+    gradient: 'from-violet-700 to-slate-900', // palette-exempt: discipline identity gradient (violet→slate)
   },
   hse: {
     primary: '#047857', // emerald (safety / egress)
     secondary: '#F8FAFC', // white
-    gradient: 'from-emerald-700 to-slate-800',
+    gradient: 'from-emerald-700 to-slate-800', // palette-exempt: discipline identity gradient (emerald→slate)
   },
   industrial: {
     primary: '#B91C1C', // machinery red
     secondary: '#475569', // machine steel
-    gradient: 'from-red-700 to-slate-800',
+    gradient: 'from-red-700 to-slate-800', // palette-exempt: discipline identity gradient (red→slate)
   },
   mechanical: {
     primary: '#2563EB', // workshop steel blue
     secondary: '#64748B', // chrome gray
-    gradient: 'from-blue-700 to-slate-800',
+    gradient: 'from-blue-700 to-slate-800', // palette-exempt: discipline identity gradient (blue→slate)
   },
   mechatronics: {
     primary: '#0891B2', // cyan (control signals)
     secondary: '#0F172A', // deep navy
-    gradient: 'from-cyan-700 to-slate-900',
+    gradient: 'from-cyan-700 to-slate-900', // palette-exempt: discipline identity gradient (cyan→slate)
   },
   software: {
     primary: '#16A34A', // terminal green on dark
     secondary: '#1E293B', // dark terminal
-    gradient: 'from-green-700 to-slate-950',
+    gradient: 'from-green-700 to-slate-950', // palette-exempt: discipline identity gradient (green→slate)
   },
 };
 

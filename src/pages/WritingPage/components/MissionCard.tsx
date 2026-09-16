@@ -99,7 +99,7 @@ export const MissionCard = ({ mission, bestScore, currentLevel, onLaunch }: Miss
               {isCompleted ? (
                 <RefreshCw className="h-3 w-3" />
               ) : (
-                <Play className="h-3 w-3 fill-white" />
+                <Play className="h-3 w-3 fill-on-solid" />
               )}
               <span>{isCompleted ? 'Retry' : 'Begin'}</span>
             </Button>

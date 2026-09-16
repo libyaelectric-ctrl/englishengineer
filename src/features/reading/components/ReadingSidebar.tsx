@@ -33,7 +33,7 @@ export function ReadingSidebar() {
         value: `${remaining} remaining`,
         color: remaining > 0 ? 'text-amber-500' : 'text-green-500',
       },
-      { label: 'Vocab Clicked', value: `${uniqueVocab} terms`, color: 'text-cyan-500' },
+      { label: 'Vocab Clicked', value: `${uniqueVocab} terms`, color: 'text-primary' },
     ],
     progressBars: [
       { label: copy.progress, value: done, max: total, showPercent: true, color: 'primary' },

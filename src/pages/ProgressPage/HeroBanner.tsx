@@ -37,7 +37,7 @@ export const HeroBanner = ({
       <div className="relative z-10 flex flex-col md:flex-row items-center gap-5">
         <div className="relative flex-shrink-0">
           <svg className="w-32 h-32 -rotate-90">
-            <circle cx="64" cy="64" r="56" className="stroke-[#d9d9e3] fill-none" strokeWidth="5" />
+            <circle cx="64" cy="64" r="56" className="stroke-track fill-none" strokeWidth="5" />
             <motion.circle
               cx="64"
               cy="64"

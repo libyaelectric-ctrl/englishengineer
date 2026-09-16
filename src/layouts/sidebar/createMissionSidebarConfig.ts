@@ -42,7 +42,7 @@ export function createMissionSidebarConfig({
         value: `${remaining} missions`,
         color: remaining > 0 ? 'text-amber-500' : 'text-green-500',
       },
-      { label: secondStatLabel, value: secondStatValue, color: 'text-cyan-500' },
+      { label: secondStatLabel, value: secondStatValue, color: 'text-primary' },
     ],
     progressBars: [
       { label: copy.progress, value: done, max: total, showPercent: true, color: 'primary' },

@@ -38,7 +38,7 @@ export const LessonCompleteScreen = ({
       </div>
 
       <div className="grid w-full max-w-sm grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-amber-500/20 bg-black/40 p-4 text-center">
+        <div className="rounded-2xl border border-amber-500/20 bg-scrim/40 p-4 text-center">
           <div className="flex items-center justify-center gap-1.5 text-2xl font-black text-yellow-300">
             <Zap className="h-5 w-5 text-yellow-300" />
             <span>+{earnedCp}</span>
@@ -47,7 +47,7 @@ export const LessonCompleteScreen = ({
             {translate('lesson.careerPoints')}
           </div>
         </div>
-        <div className="rounded-2xl border border-emerald-500/20 bg-black/40 p-4 text-center">
+        <div className="rounded-2xl border border-emerald-500/20 bg-scrim/40 p-4 text-center">
           <div className="text-2xl font-black text-emerald-400">{accuracy}%</div>
           <div className="mt-1 text-xs font-bold uppercase tracking-wider text-muted-copy">
             {translate('lesson.accuracy')}
@@ -59,7 +59,7 @@ export const LessonCompleteScreen = ({
         <button
           type="button"
           onClick={onContinue}
-          className="w-full rounded-xl bg-emerald-500 py-3.5 font-extrabold text-slate-950 shadow-lg shadow-emerald-950/50 transition-all hover:bg-emerald-400 active:scale-95"
+          className="w-full rounded-xl bg-emerald-500 py-3.5 font-extrabold text-on-bright shadow-lg shadow-emerald-950/50 transition-all hover:bg-emerald-400 active:scale-95"
         >
           {translate('lesson.nextTask')}
         </button>

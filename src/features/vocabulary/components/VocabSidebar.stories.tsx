@@ -130,7 +130,7 @@ const VocabSidebarDemo = ({ mastered }: { mastered: number }) => {
           </div>
           <div className="mt-1 h-2 w-full rounded-full bg-border-soft">
             <div
-              className="h-full rounded-full bg-cyan-500 transition-all"
+              className="h-full rounded-full bg-cyan-500 transition-all" // palette-exempt: story fixture whose pixels are pinned by the committed Chromatic baseline; converting it is a separate visual change that needs a baseline accept
               style={{ width: `${(learning / total) * 100}%` }}
             />
           </div>

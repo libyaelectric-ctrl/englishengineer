@@ -104,7 +104,7 @@ export const HighSpeedRailwayPath = React.memo(
               {/* ── Stage Band Header ── */}
               <div className="flex items-center gap-3 rounded-2xl border border-border-soft bg-surface px-5 py-3 shadow-sm mb-4">
                 <span
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xs font-black text-white shadow"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xs font-black text-on-solid shadow"
                   style={{ background: palette.primary }}
                 >
                   {stage.cefrLevel}
@@ -198,7 +198,7 @@ export const HighSpeedRailwayPath = React.memo(
                             className="mb-1 flex flex-col items-center"
                           >
                             <div
-                              className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-black text-white shadow-lg"
+                              className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-black text-on-solid shadow-lg"
                               style={{ background: palette.primary }}
                             >
                               <Train className="h-3 w-3 animate-pulse" />
@@ -335,7 +335,7 @@ export const HighSpeedRailwayPath = React.memo(
         {/* ── Apex Terminal ── */}
         <div className="mt-6 rounded-2xl border-2 border-primary/40 bg-surface/80 p-6 text-center shadow-xl">
           <div
-            className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-lg"
+            className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl text-on-solid shadow-lg"
             style={{ background: palette.primary }}
           >
             <Train className="h-7 w-7" />

@@ -101,7 +101,7 @@ export const CurriculumTodayTab = ({ isLoading, missions, learningState }: Props
                 <span>{translate('curriculum.missionProgress')}</span>
                 <span>{displayProgressPercent}%</span>
               </div>
-              <div className="w-full bg-[#d9d9e3] h-2.5 border border-border-soft mt-2 relative overflow-hidden rounded-[0px]">
+              <div className="w-full bg-track h-2.5 border border-border-soft mt-2 relative overflow-hidden rounded-[0px]">
                 <div
                   className="bg-primary h-full transition-all duration-500 rounded-[0px]"
                   style={{ width: `${displayProgressPercent}%` }}

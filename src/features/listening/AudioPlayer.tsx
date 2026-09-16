@@ -252,7 +252,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
               max={totalDurationSeconds}
               value={currentTimeSeconds}
               onChange={handleSeek}
-              className="w-full h-1 bg-[#d9d9e3] rounded-[0px] appearance-none cursor-pointer
+              className="w-full h-1 bg-track rounded-[0px] appearance-none cursor-pointer
                 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3
                 [&::-webkit-slider-thumb]:rounded-[2px] [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer"
               disabled={isAudioLoading}

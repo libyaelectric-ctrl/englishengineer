@@ -209,7 +209,7 @@ const PhraseCard = ({
     hoverEffect
   >
     <div className="flex items-center justify-between border-b border-border-soft pb-2">
-      <span className="font-mono text-[10px] uppercase tracking-widest text-cyan-500 font-bold bg-cyan-500/5 px-2 py-0.5 rounded">
+      <span className="font-mono text-[10px] uppercase tracking-widest text-primary font-bold bg-primary/5 px-2 py-0.5 rounded">
         {item.category.toUpperCase()}
       </span>
       <div className="flex items-center gap-2">

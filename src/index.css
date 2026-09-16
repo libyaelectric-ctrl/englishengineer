@@ -26,6 +26,16 @@
   --color-engineer-800: #e2e8f0;
   --color-engineer-700: #64748b;
   --color-engineer-cyan: #2563eb;
+  /* Ink on a saturated fill (buttons, gradient chips): the only role that was
+     still spelled `text-white`, and the reason the palette rule needs a token
+     instead of a raw class. */
+  --color-on-solid: #ffffff;
+  /* Ink on a bright/pastel fill, where white would not read. */
+  --color-on-bright: #020617;
+  /* Modal/drawer backdrop. */
+  --color-scrim: #000000;
+  /* Neutral progress/rail fill behind a coloured indicator. */
+  --color-track: #d9d9e3;
   --surface: #ffffff;
   --radius-button: 10px;
   --radius-input: 10px;
@@ -60,6 +70,10 @@
   --color-engineer-800: #111827;
   --color-engineer-700: rgba(255, 255, 255, 0.08);
   --color-engineer-cyan: #3b82f6;
+  --color-on-solid: #ffffff;
+  --color-on-bright: #020617;
+  --color-scrim: #000000;
+  --color-track: #d9d9e3;
   --color-sidebar-bg: rgba(17, 24, 39, 0.94);
   --color-sidebar-border: rgba(255, 255, 255, 0.08);
   --color-sidebar-inner-border: rgba(255, 255, 255, 0.06);
@@ -92,6 +106,10 @@
   --color-engineer-800: var(--color-engineer-800);
   --color-engineer-700: var(--color-engineer-700);
   --color-engineer-cyan: var(--color-engineer-cyan);
+  --color-on-solid: var(--color-on-solid);
+  --color-on-bright: var(--color-on-bright);
+  --color-scrim: var(--color-scrim);
+  --color-track: var(--color-track);
   --color-sidebar-bg: var(--color-sidebar-bg);
   --color-sidebar-border: var(--color-sidebar-border);
   --color-sidebar-inner-border: var(--color-sidebar-inner-border);

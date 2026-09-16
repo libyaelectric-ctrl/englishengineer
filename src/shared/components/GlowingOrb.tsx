@@ -91,7 +91,7 @@ export const GlowingOrb = ({ className = '', size = 'md' }: GlowingOrbProps) => 
     <div
       ref={containerRef}
       aria-hidden="true"
-      className={`${SIZE_MAP[size]} relative rounded-full orb-container bg-slate-900/30 backdrop-blur-sm border border-white/5 ${className}`}
+      className={`${SIZE_MAP[size]} relative rounded-full orb-container bg-scrim/30 backdrop-blur-sm border border-on-solid/5 ${className}`}
     />
   );
 };

@@ -383,7 +383,9 @@ What questions do you have about this passage?`,
                               }`}
                             >
                               <span>{choice}</span>
-                              {isSelected && <Check className="h-4 w-4 text-white shrink-0 ml-2" />}
+                              {isSelected && (
+                                <Check className="h-4 w-4 text-on-solid shrink-0 ml-2" />
+                              )}
                             </button>
                           );
                         })}

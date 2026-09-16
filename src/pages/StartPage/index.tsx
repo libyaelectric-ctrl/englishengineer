@@ -19,7 +19,7 @@ const ONBOARDING_STEPS = [
     title: 'Alanını seç',
     description:
       'İnşaat, makine, elektrik, yazılım ve diğer mühendislik alanlarına göre içerik al.',
-    color: 'from-blue-500 to-cyan-400',
+    color: 'from-blue-500 to-cyan-400', // palette-exempt: decorative topic accent gradient
   },
   {
     step: 2,
@@ -88,7 +88,7 @@ const StartPage = () => {
                   <div
                     className={`grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br ${step.color} shadow-sm`}
                   >
-                    <Icon className="h-5 w-5 text-white" />
+                    <Icon className="h-5 w-5 text-on-solid" />
                   </div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                     Adım {step.step}

@@ -79,7 +79,7 @@ export const GrammarLessonMap = ({
         <div className="flex items-center gap-3">
           {/* Progress bar */}
           <div className="hidden sm:flex flex-col items-end gap-0.5">
-            <div className="h-1.5 w-28 overflow-hidden rounded-full bg-[#d9d9e3]">
+            <div className="h-1.5 w-28 overflow-hidden rounded-full bg-track">
               <div
                 className="h-full bg-success transition-all duration-500"
                 style={{ width: `${masteredPct}%` }}
@@ -117,7 +117,7 @@ export const GrammarLessonMap = ({
                       </span>
                     </div>
                     {/* Group progress bar */}
-                    <div className="h-1 w-full overflow-hidden rounded-full bg-[#d9d9e3]">
+                    <div className="h-1 w-full overflow-hidden rounded-full bg-track">
                       <div
                         className="h-full bg-primary transition-all duration-300"
                         style={{ width: `${groupPct}%` }}

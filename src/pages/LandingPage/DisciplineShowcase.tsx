@@ -22,11 +22,11 @@ const accent: Record<EngineeringDiscipline, string> = {
   architecture: 'from-amber-300 to-orange-500',
   chemical: 'from-emerald-300 to-teal-500',
   civil: 'from-yellow-300 to-orange-500',
-  electrical: 'from-cyan-300 to-blue-500',
+  electrical: 'from-cyan-300 to-blue-500', // palette-exempt: decorative discipline accent gradient
   electronics: 'from-indigo-300 to-violet-500',
   hse: 'from-green-300 to-emerald-500',
-  industrial: 'from-slate-300 to-slate-500',
-  mechanical: 'from-zinc-300 to-cyan-500',
+  industrial: 'from-slate-300 to-slate-500', // palette-exempt: decorative discipline accent gradient
+  mechanical: 'from-zinc-300 to-cyan-500', // palette-exempt: decorative discipline accent gradient
   mechatronics: 'from-fuchsia-300 to-purple-500',
   software: 'from-sky-300 to-indigo-500',
 };
@@ -93,7 +93,7 @@ export function DisciplineShowcase({ translate }: { translate: (key: string) => 
                 <div className="relative flex h-full flex-col justify-between gap-3">
                   <div className="flex items-start justify-between gap-2">
                     <div
-                      className={`grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br ${accent[id]} text-slate-950 shadow-lg`}
+                      className={`grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br ${accent[id]} text-on-bright shadow-lg`}
                     >
                       <DisciplineIcon className="h-5 w-5" />
                     </div>

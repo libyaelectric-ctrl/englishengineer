@@ -170,6 +170,36 @@ All colors are defined as CSS custom properties in `index.css` and mapped to Tai
 | `success`       | `#16a34a` | `#22c55e`               |
 | `error`         | `#dc2626` | `#ef4444`               |
 
+### Role tokens
+
+A few roles have no surface or accent equivalent, so they get their own token rather than a raw
+Tailwind class. Reach for one of these instead of `text-white`, `bg-black`, or a hardcoded hex:
+
+| Token       | Value     | Use for                                                 |
+| ----------- | --------- | ------------------------------------------------------- |
+| `on-solid`  | `#ffffff` | ink or decoration on a saturated fill (buttons, chips)  |
+| `on-bright` | `#020617` | ink on a bright/pastel fill, where white would not read |
+| `scrim`     | `#000000` | modal, drawer and overlay backdrops                     |
+| `track`     | `#d9d9e3` | the neutral rail behind a coloured indicator            |
+
+### Enforcing the palette
+
+Raw palette utilities (`slate`, `gray`, `zinc`, `neutral`, `stone`, `cyan`, `white`, `black`) and
+hardcoded hex colours are rejected inside `src/` by the local ESLint rule `local/no-raw-palette`
+(`eslint-rules/no-raw-palette.js`), which `npm run lint` and CI's Code Quality job both run. A new
+surface therefore cannot quietly re-introduce a second palette authority.
+
+Where a raw class is genuinely correct — a per-discipline identity gradient, say — exempt that line
+and state why:
+
+```ts
+// src/features/learning-path/discipline-palette.ts
+{ id: 'verfahrenstechnik', gradient: 'from-amber-700/90 to-stone-800' }, // palette-exempt: discipline identity gradient
+```
+
+The directive is per line and must carry a reason; a reason-less `palette-exempt` is itself an
+error, so an exemption can never be silent. There is no file-level switch.
+
 ### Border Radius Tokens
 
 Defined as CSS custom properties and mapped to Tailwind:

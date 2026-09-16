@@ -99,8 +99,8 @@ export const HeroScene = ({ className = '' }: HeroSceneProps) => {
             }}
           >
             <div className="absolute inset-10 rounded-[38%] border border-fuchsia-200/20" />
-            <div className="absolute inset-20 rounded-[34%] border border-white/15" />
-            <div className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-white/90 shadow-[0_0_80px_rgba(255,255,255,0.55)]" />
+            <div className="absolute inset-20 rounded-[34%] border border-on-solid/15" />
+            <div className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-on-solid/90 shadow-[0_0_80px_rgba(255,255,255,0.55)]" />
           </div>
           <div className="absolute -left-32 top-1/4 h-80 w-80 rounded-full bg-primary/25 blur-3xl" />
           <div className="absolute -right-32 top-10 h-[26rem] w-[26rem] rounded-full bg-fuchsia-500/18 blur-3xl" />

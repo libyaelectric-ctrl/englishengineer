@@ -619,7 +619,7 @@ const SecuritySection = ({
           <button
             onClick={clearLocalData}
             disabled={clearConfirmation !== 'CLEAR'}
-            className="px-4 py-2 rounded-[var(--radius-card)] bg-rose-600 text-white text-xs font-bold hover:bg-rose-500 transition-colors disabled:opacity-50"
+            className="px-4 py-2 rounded-[var(--radius-card)] bg-rose-600 text-on-solid text-xs font-bold hover:bg-rose-500 transition-colors disabled:opacity-50"
           >
             Confirm Delete
           </button>
