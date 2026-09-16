@@ -15,7 +15,7 @@ export default defineConfig({
     hookTimeout: 30_000,
     teardownTimeout: 30_000,
     isolate: true,
-    include: ['src/**/*.test.{ts,tsx}', 'src/**/*.spec.{ts,tsx}'],
+    include: ['src/**/*.test.{ts,tsx}', 'src/**/*.spec.{ts,tsx}', 'eslint-rules/**/*.test.js'],
     exclude: [
       'node_modules/**',
       'dist/**',
