@@ -36,7 +36,7 @@ import { Navbar } from './Navbar';
 const HeroScene = lazy(() => import('./HeroScene'));
 
 const FEATURES = [
-  { icon: BookOpen, key: 'vocabulary', accent: 'from-sky-400 to-cyan-300' },
+  { icon: BookOpen, key: 'vocabulary', accent: 'from-sky-400 to-cyan-300' }, // palette-exempt: decorative feature-tile accent gradient
   { icon: BookOpen, key: 'reading', accent: 'from-violet-400 to-fuchsia-300' },
   { icon: PenTool, key: 'writing', accent: 'from-amber-300 to-orange-400' },
   { icon: Volume2, key: 'speaking', accent: 'from-emerald-300 to-teal-400' },
@@ -312,7 +312,7 @@ export const LandingPage = () => {
                     >
                       <div className="relative flex items-start gap-3">
                         <div
-                          className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${accent} text-[#06101f] shadow-xl`}
+                          className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${accent} text-on-bright shadow-xl`}
                         >
                           <Icon className="h-5 w-5" />
                         </div>

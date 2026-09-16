@@ -200,7 +200,7 @@ export const CurriculumFullTab = ({
               {/* Lessons list with connector line */}
               <div className="relative mt-5 pl-7 space-y-4">
                 {/* Vertical Connector Line */}
-                <div className="absolute left-2 top-3 bottom-3 w-[1px] bg-[#d9d9e3]" />
+                <div className="absolute left-2 top-3 bottom-3 w-[1px] bg-track" />
 
                 {mod.lessons.map((lesson) => {
                   const isCompleted = lesson.num < currentLessonNumber;

@@ -4,6 +4,8 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
+import noRawPalette from './eslint-rules/no-raw-palette.js';
+
 export default tseslint.config(
   {
     ignores: [
@@ -67,6 +69,15 @@ export default tseslint.config(
       'no-undef': 'off',
       'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
     },
+  },
+  // Frontend surfaces paint from the semantic colour tokens. A raw palette
+  // class (slate/cyan/white/…) or a hardcoded hex re-creates a second palette
+  // authority, so the theme can no longer change in one place. Deliberate
+  // exceptions are per line and must carry a reason: `// palette-exempt: <why>`.
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    plugins: { local: { rules: { 'no-raw-palette': noRawPalette } } },
+    rules: { 'local/no-raw-palette': 'error' },
   },
   {
     extends: [js.configs.recommended],

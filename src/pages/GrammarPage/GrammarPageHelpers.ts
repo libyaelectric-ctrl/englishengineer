@@ -29,7 +29,7 @@ export const MODULE_LABELS: Record<string, string> = {
 };
 
 export const STATUS_STYLES: Record<LessonStatus, string> = {
-  New: 'border-[#d9d9e3] bg-surface-hover text-muted-copy',
+  New: 'border-track bg-surface-hover text-muted-copy',
   Practicing: 'border-primary/25 bg-primary/5 text-primary',
   'Needs Reading/Writing': 'border-warning/30 bg-warning/5 text-warning',
   Mastered: 'border-success/30 bg-success/5 text-success',

@@ -124,7 +124,7 @@ export function ExitIntentModal() {
             initial={prefersReduced ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={prefersReduced ? undefined : { opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 bg-scrim/50 backdrop-blur-sm"
             onClick={close}
           />
 

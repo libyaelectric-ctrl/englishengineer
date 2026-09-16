@@ -46,7 +46,7 @@ const CommandPaletteDemo = ({ searchQuery }: { searchQuery?: string }) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]">
-      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+      <div className="fixed inset-0 bg-scrim/40 backdrop-blur-sm" />
       <div className="relative w-full max-w-xl overflow-hidden rounded-[var(--radius-card)] border border-border-soft bg-surface shadow-2xl">
         <div className="flex items-center border-b border-border-soft px-4">
           <svg

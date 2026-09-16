@@ -71,7 +71,7 @@ export const ScoreFeedbackOverlay = React.memo(
     if (!result) return null;
 
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 p-4 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-scrim/10 p-4 backdrop-blur-sm">
         <div
           ref={dialogRef}
           role="dialog"

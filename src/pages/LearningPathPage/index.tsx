@@ -142,23 +142,23 @@ const LearningPathPage = () => {
 
       {/* Discipline hero */}
       <section
-        className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${palette.gradient} p-6 text-white shadow-xl`}
+        className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${palette.gradient} p-6 text-on-solid shadow-xl`}
       >
         <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-white/80">
+            <p className="text-xs font-semibold uppercase tracking-widest text-on-solid/80">
               {translate('learningpath.subtitle')}
             </p>
             <h2 className="mt-2 text-2xl sm:text-3xl font-black">
               {translate(disciplineMeta.labelKey)}
             </h2>
-            <p className="mt-1 text-sm text-white/85">
+            <p className="mt-1 text-sm text-on-solid/85">
               {translate(`learningpath.currentBand`)} ·{' '}
               <span className="font-bold">{bandTitle(currentBand)}</span> ·{' '}
-              <span className="text-white/80">{disciplineMeta.wordCount} Specialized Terms</span>
+              <span className="text-on-solid/80">{disciplineMeta.wordCount} Specialized Terms</span>
             </p>
           </div>
-          <div className="flex items-center gap-3 sm:gap-5 rounded-2xl bg-black/25 px-3.5 py-2.5 sm:px-5 sm:py-3.5 backdrop-blur-md border border-white/15 shadow-lg">
+          <div className="flex items-center gap-3 sm:gap-5 rounded-2xl bg-scrim/25 px-3.5 py-2.5 sm:px-5 sm:py-3.5 backdrop-blur-md border border-on-solid/15 shadow-lg">
             <div className="relative flex flex-col items-center">
               {xpGain && (
                 <span
@@ -172,23 +172,23 @@ const LearningPathPage = () => {
               <span className="mt-0.5 text-lg font-extrabold leading-none tabular-nums">
                 {animatedXp}
               </span>
-              <span className="text-[10px] uppercase text-white/70">
+              <span className="text-[10px] uppercase text-on-solid/70">
                 {translate('learningpath.careerPoints')}
               </span>
             </div>
-            <div className="h-8 w-px bg-white/20" />
+            <div className="h-8 w-px bg-on-solid/20" />
             <div className="flex flex-col items-center">
               <Flame className="h-5 w-5 text-orange-300" />
               <span className="mt-0.5 text-lg font-extrabold leading-none">{streak}</span>
-              <span className="text-[10px] uppercase text-white/70">
+              <span className="text-[10px] uppercase text-on-solid/70">
                 {translate('learningpath.shiftDays')}
               </span>
             </div>
-            <div className="h-8 w-px bg-white/20" />
+            <div className="h-8 w-px bg-on-solid/20" />
             <div className="flex flex-col items-center">
               <Heart className="h-5 w-5 text-rose-300" />
               <span className="mt-0.5 text-lg font-extrabold leading-none">{hearts * 20}%</span>
-              <span className="text-[10px] uppercase text-white/70">
+              <span className="text-[10px] uppercase text-on-solid/70">
                 {translate('learningpath.systemIntegrity')}
               </span>
             </div>

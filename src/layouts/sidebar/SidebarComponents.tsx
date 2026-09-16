@@ -62,7 +62,7 @@ export function Item({
         <span
           className={cn(
             'text-[10px] font-semibold px-1.5 py-0.5 rounded',
-            active ? 'bg-white/20' : 'bg-surface-hover'
+            active ? 'bg-on-solid/20' : 'bg-surface-hover'
           )}
         >
           {badge}

@@ -38,7 +38,7 @@ const LockedView = () => {
       </div>
       <Button
         onClick={() => navigate('/pricing')}
-        className="bg-warning hover:bg-warning/90 text-white font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-warning shadow-sm"
+        className="bg-warning hover:bg-warning/90 text-on-solid font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-warning shadow-sm"
       >
         Upgrade to Max Plan
       </Button>
@@ -76,7 +76,7 @@ const VoiceWorkspace = ({
       <div className="flex flex-col items-center gap-2 relative z-10">
         <Volume2 className="h-8 w-8 text-primary animate-pulse" />
         <p className="text-xs font-bold text-foreground">Audio response successfully captured</p>
-        <span className="text-[10px] text-muted-copy font-bold uppercase tracking-wider bg-[#d9d9e3]/30 px-2 py-0.5 rounded-[4px]">
+        <span className="text-[10px] text-muted-copy font-bold uppercase tracking-wider bg-track/30 px-2 py-0.5 rounded-[4px]">
           VOCAL-ACQUISITION: COMPLETE
         </span>
       </div>
@@ -129,7 +129,7 @@ const VoiceControls = ({
           setIsPaused(true);
           pauseRef.current = true;
         }}
-        className="flex-1 rounded-[4px] bg-amber-500 px-4 py-2.5 text-xs font-bold text-white hover:bg-amber-600 transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider h-10 shadow-sm border border-amber-500"
+        className="flex-1 rounded-[4px] bg-amber-500 px-4 py-2.5 text-xs font-bold text-on-solid hover:bg-amber-600 transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider h-10 shadow-sm border border-amber-500"
       >
         Pause Voice Capture
       </button>
@@ -150,7 +150,7 @@ const VoiceControls = ({
       <button
         type="button"
         onClick={onSubmitRoleplay}
-        className="flex-1 rounded-[4px] bg-success px-4 py-2.5 text-xs font-bold text-white hover:bg-success/90 transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider h-10 shadow-sm border border-success"
+        className="flex-1 rounded-[4px] bg-success px-4 py-2.5 text-xs font-bold text-on-solid hover:bg-success/90 transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider h-10 shadow-sm border border-success"
       >
         Process Recording
       </button>

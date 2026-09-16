@@ -107,7 +107,7 @@ export function VocabSidebar() {
     totalItems: summary.total,
     stats: [
       { label: copy.vocabNew, value: summary.newWords, color: 'text-blue-500' },
-      { label: copy.vocabLearned, value: learned, color: 'text-cyan-500' },
+      { label: copy.vocabLearned, value: learned, color: 'text-primary' },
       { label: copy.vocabMastered, value: summary.mastered, color: 'text-green-500' },
       { label: copy.vocabStruggling, value: struggling, color: 'text-red-500' },
       { label: copy.dueToday, value: summary.dueToday, color: 'text-purple-500' },

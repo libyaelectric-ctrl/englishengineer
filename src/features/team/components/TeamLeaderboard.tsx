@@ -13,7 +13,7 @@ interface TeamLeaderboardProps {
 
 const MEDAL_COLORS = [
   'text-amber-500 bg-amber-500/10 border-amber-500/30', // gold
-  'text-slate-400 bg-slate-400/10 border-slate-400/30', // silver
+  'text-muted-copy bg-muted-copy/10 border-muted-copy/30', // silver
   'text-orange-600 bg-orange-600/10 border-orange-600/30', // bronze
 ];
 
@@ -109,7 +109,7 @@ export const TeamLeaderboard = ({ members, summaries }: TeamLeaderboardProps) =>
                   idx === 0
                     ? 'text-amber-500'
                     : idx === 1
-                      ? 'text-slate-400'
+                      ? 'text-muted-copy'
                       : idx === 2
                         ? 'text-orange-600'
                         : 'text-muted-copy'

@@ -192,7 +192,7 @@ export const CommandPalette = () => {
             animate={{ opacity: 1 }}
             exit={prefersReduced ? undefined : { opacity: 0 }}
             transition={{ duration: prefersReduced ? 0 : 0.12 }}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 bg-scrim/40 backdrop-blur-sm"
             onClick={close}
           />
 

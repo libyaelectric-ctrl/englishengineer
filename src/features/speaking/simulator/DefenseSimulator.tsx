@@ -212,7 +212,7 @@ export const DefenseSimulator = () => {
                 type="button"
                 onClick={handleStartRecording}
                 aria-label="Start recording audio defense answer"
-                className="flex items-center gap-2 rounded-[var(--radius-card)] bg-red-600 hover:bg-red-500 text-white px-6 py-3 text-xs font-extrabold transition-all shadow-md cursor-pointer"
+                className="flex items-center gap-2 rounded-[var(--radius-card)] bg-red-600 hover:bg-red-500 text-on-solid px-6 py-3 text-xs font-extrabold transition-all shadow-md cursor-pointer"
               >
                 <Mic className="h-4 w-4 animate-pulse" />
                 <span>Start Audio Defense Answer</span>
@@ -222,7 +222,7 @@ export const DefenseSimulator = () => {
                 type="button"
                 onClick={handleStopRecording}
                 aria-label="Stop recording and evaluate response"
-                className="flex items-center gap-2 rounded-[var(--radius-card)] bg-zinc-800 hover:bg-zinc-700 text-white px-6 py-3 text-xs font-extrabold transition-all cursor-pointer"
+                className="flex items-center gap-2 rounded-[var(--radius-card)] bg-surface-solid hover:bg-surface-hover text-on-solid px-6 py-3 text-xs font-extrabold transition-all cursor-pointer"
               >
                 <Mic className="h-4 w-4 text-red-500 animate-ping" />
                 <span>Stop & Evaluate Response</span>

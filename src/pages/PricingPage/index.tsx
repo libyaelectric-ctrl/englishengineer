@@ -99,7 +99,7 @@ const PricingPage = () => {
                 className={`flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${isAnnual ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-copy hover:text-foreground'}`}
               >
                 <span>{pricingCopy.annual}</span>
-                <span className="rounded bg-emerald-500 px-1 py-0.5 text-[9px] text-white">
+                <span className="rounded bg-emerald-500 px-1 py-0.5 text-[9px] text-on-solid">
                   {pricingCopy.save20}
                 </span>
               </button>

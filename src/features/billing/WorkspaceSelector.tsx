@@ -189,7 +189,7 @@ const WorkspaceDropdown = ({
     <div
       role="listbox"
       aria-label="Project Workspaces"
-      className="absolute left-0 top-full z-50 mt-1.5 w-64 rounded-[4px] border border-border-soft bg-surface shadow-xl shadow-black/10 overflow-hidden"
+      className="absolute left-0 top-full z-50 mt-1.5 w-64 rounded-[4px] border border-border-soft bg-surface shadow-xl shadow-scrim/10 overflow-hidden"
     >
       <div className="border-b border-border-soft px-3 py-2 flex items-center justify-between">
         <p className="text-[10px] font-bold text-primary uppercase tracking-wider">

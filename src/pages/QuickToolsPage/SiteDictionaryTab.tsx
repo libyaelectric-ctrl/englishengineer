@@ -116,7 +116,7 @@ export const SiteDictionaryTab = () => {
           className="gap-1.5 h-11 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-sm cursor-pointer"
         >
           <Plus className="h-4 w-4" />
-          {!hasProjectAccess && <Lock className="h-3 w-3 text-white/85 shrink-0" />}
+          {!hasProjectAccess && <Lock className="h-3 w-3 text-on-solid/85 shrink-0" />}
           Add Term
         </Button>
       </div>
