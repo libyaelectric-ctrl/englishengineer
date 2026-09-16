@@ -25,19 +25,21 @@ const isAuditUnavailable = (error: unknown): boolean =>
   error instanceof ApiError && error.status === 503 && error.code === 'audit_log_unavailable';
 
 /**
- * A Supabase stand-in: records the methods it was asked for, can be taken
- * offline, and can fail a scripted number of *write attempts* (a retry counts
- * as its own attempt, which is what makes the retry observable).
+ * A Supabase stand-in: records the methods it was asked for, can be taken down
+ * (unreachable for a probe and for a write alike, which is what a real outage
+ * looks like), can fail a scripted number of *write attempts* (a retry counts as
+ * its own attempt, which is what makes the retry observable), and can hold a
+ * health check open.
  *
- * An offline store answers 401 — a rejected service key, i.e. the probe fails
- * immediately. It deliberately does not answer 503: supabase-js retries a 503
- * four times with backoff, so a 503 health check costs seven seconds and would
- * dominate this suite without testing anything extra.
+ * A down store answers 401 to a probe — a rejected service key, i.e. the probe
+ * fails immediately. It deliberately does not answer 503 there: supabase-js
+ * retries a 503 four times with backoff, so a 503 health check costs seven
+ * seconds and would dominate this suite without testing anything extra.
  */
 const createSupabaseStub = () => {
   const calls: string[] = [];
+  let down = false;
   let writes = 0;
-  let healthOk = true;
   let writeFailures = 0;
   let healthDelayMs = 0;
 
@@ -46,18 +48,19 @@ const createSupabaseStub = () => {
     calls.push(method);
     if (method !== 'POST') {
       if (healthDelayMs > 0) await new Promise((resolve) => setTimeout(resolve, healthDelayMs));
-      return healthOk ? json('[]', 200) : json('{"message":"invalid api key"}', 401);
+      return down ? json('{"message":"invalid api key"}', 401) : json('[]', 200);
     }
     writes += 1;
-    return writes <= writeFailures ? json('{"message":"connection reset"}', 503) : json('[]', 201);
+    return down || writes <= writeFailures
+      ? json('{"message":"connection reset"}', 503)
+      : json('[]', 201);
   }) as typeof fetch;
 
   return {
     impl,
     calls,
-    writes: () => writes,
-    setHealthy: (value: boolean) => {
-      healthOk = value;
+    setDown: (value: boolean) => {
+      down = value;
     },
     failFirstWrites: (count: number) => {
       writeFailures = count;
@@ -136,36 +139,46 @@ describe('audit log recovery', () => {
     assert.equal(getAuditLogStatus().status, 'ready');
   });
 
-  it('shares one rebuild between callers that arrive while it is in flight', async () => {
+  it('recovers on the very next request once the store answers again', async () => {
     const stub = createSupabaseStub();
-    stub.setHealthy(false);
+    stub.setDown(true);
     await assert.rejects(() => startAudit(stub));
+    stub.calls.length = 0;
+
+    // The store is still down, so the action fails closed.
+    await assert.rejects(
+      () => auditLog({ action: AUDIT_ACTIONS.CHECKOUT_CREATED, userId: 'user-window' }),
+      isAuditUnavailable
+    );
     assert.equal(getAuditLogStatus().status, 'failed');
 
-    stub.setHealthy(true);
-    // Hold the rebuild open so both callers are in it at the same time.
+    // The store answers again. The next request is not made to wait out a
+    // cooldown, and its own write — not a health check — is the proof.
+    stub.setDown(false);
+    stub.calls.length = 0;
+    await auditLog({ action: AUDIT_ACTIONS.CHECKOUT_CREATED, userId: 'user-window' });
+
+    assert.equal(getAuditLogStatus().status, 'ready');
+    assert.deepEqual(stub.calls, ['POST'], 'the write itself verified the store');
+  });
+
+  it('shares one check between callers that arrive while an attempt is in flight', async () => {
+    const stub = createSupabaseStub();
+    // Hold the attempt open so both callers are inside it at the same time.
     stub.slowHealthCheckBy(40);
     stub.calls.length = 0;
 
-    const results = await Promise.allSettled([
-      auditLog({ action: AUDIT_ACTIONS.CHECKOUT_CREATED, userId: 'user-a' }),
-      auditLog({ action: AUDIT_ACTIONS.CHECKOUT_CREATED, userId: 'user-b' }),
-    ]);
+    await Promise.all([startAudit(stub), startAudit(stub)]);
 
-    assert.deepEqual(
-      results.map((result) => result.status),
-      ['fulfilled', 'fulfilled'],
-      'a caller arriving during recovery is not rejected'
-    );
-    assert.equal(methodCount(stub.calls, 'GET'), 1, 'one shared rebuild');
-    assert.equal(methodCount(stub.calls, 'POST'), 2, 'both callers reached the store');
+    assert.equal(methodCount(stub.calls, 'GET'), 1, 'one shared check');
+    assert.equal(getAuditLogStatus().status, 'ready');
   });
 
   it('logs the failure it recovered from', async () => {
     const stub = createSupabaseStub();
-    stub.setHealthy(false);
+    stub.setDown(true);
     await assert.rejects(() => startAudit(stub));
-    stub.setHealthy(true);
+    stub.setDown(false);
 
     const records = await captureLogs(() =>
       auditLog({ action: AUDIT_ACTIONS.CHECKOUT_CREATED, userId: 'user-log' })
@@ -198,19 +211,22 @@ describe('audit log recovery', () => {
     assert.equal(methodCount(stub.calls, 'POST'), 6, 'two attempts per audited action');
   });
 
-  // Keep this one last: a failed rebuild arms the recovery cooldown, which
-  // would suppress the rebuild that the tests above need to observe.
-  it('fails closed when the store is unreachable at initialization', async () => {
+  it('fails closed and spends no health check while the store is unreachable', async () => {
     const stub = createSupabaseStub();
-    stub.setHealthy(false);
+    stub.setDown(true);
     await assert.rejects(() => startAudit(stub));
     assert.equal(getAuditLogStatus().status, 'failed');
+    stub.calls.length = 0;
 
-    await assert.rejects(
-      () => auditLog({ action: AUDIT_ACTIONS.CHECKOUT_CREATED, userId: 'user-nostore' }),
-      isAuditUnavailable
-    );
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      await assert.rejects(
+        () => auditLog({ action: AUDIT_ACTIONS.CHECKOUT_CREATED, userId: 'user-nostore' }),
+        isAuditUnavailable
+      );
+    }
 
-    assert.ok(methodCount(stub.calls, 'GET') >= 1, 'the rebuild was attempted');
+    assert.equal(getAuditLogStatus().status, 'failed');
+    assert.equal(methodCount(stub.calls, 'GET'), 0, 'no health check while the store is down');
+    assert.equal(methodCount(stub.calls, 'POST'), 6, 'one bounded write attempt per action');
   });
 });

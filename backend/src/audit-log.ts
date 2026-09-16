@@ -44,32 +44,13 @@ interface AuditInitConfig {
   };
 }
 
-/**
- * How long a *failed* re-initialization waits before it is tried again.
- *
- * Without recovery, a single transient remote error wedges the state at
- * `failed` for the lifetime of the process: every audited request is then
- * rejected from the guard below without ever reaching the remote again, so a
- * customer-visible flow such as billing checkout stays broken until a restart
- * even though the audit store is healthy again. The cooldown keeps a real
- * outage to one re-initialization attempt per window instead of one per
- * request.
- *
- * Only failures arm it and a success clears it, so a later, unrelated failure
- * is never throttled by an older incident, and callers that arrive together
- * share the attempt already in flight instead of being rejected by it.
- */
-const AUDIT_RECOVERY_COOLDOWN_MS = 5_000;
-
 const logs: AuditLogEntry[] = [];
 let supabaseRepository: AuditRepository | null = null;
 let auditState: AuditState = { status: 'uninitialized', required: false };
 let auditInitConfig: AuditInitConfig | null = null;
 let auditInitFetch: typeof fetch = fetch;
-/** The initialization in flight, shared by every caller that joins it. */
+/** The initialization attempt in flight, shared by every caller that joins it. */
 let initInFlight: Promise<void> | null = null;
-/** When the last re-initialization failed, so an outage is probed once per window. */
-let lastFailedRebuildAt = 0;
 
 export const getAuditLogStatus = (): Readonly<AuditState> => ({ ...auditState });
 export const isAuditLogReady = (): boolean =>
@@ -83,10 +64,16 @@ const markAuditFailure = (error: unknown): void => {
   };
 };
 
-const runInitAuditLog = async (config: AuditInitConfig, fetchImpl: typeof fetch): Promise<void> => {
+const runInitAuditLog = async (
+  config: AuditInitConfig,
+  fetchImpl: typeof fetch,
+  verify: boolean
+): Promise<void> => {
   const ws = config?.workspace;
   const required = config.environment === 'production';
-  auditState = { status: 'initializing', required };
+  // A recovery attempt keeps the cause of the failure it is answering, so the
+  // write that proves the store is back can report what was recovered from.
+  auditState = { ...auditState, status: 'initializing', required };
   supabaseRepository = null;
 
   if (!ws?.configured || !ws?.supabaseUrl || !ws?.supabaseServiceRoleKey) {
@@ -103,9 +90,14 @@ const runInitAuditLog = async (config: AuditInitConfig, fetchImpl: typeof fetch)
     const { createSupabaseAuditLogRepository } = await import('./supabase-audit-log-repository.js');
     const repository = createSupabaseAuditLogRepository(ws, fetchImpl);
     if (!repository) throw new Error('Remote audit repository configuration is invalid.');
-    await repository.healthCheck();
+    // A verified attempt proves the store answers before the client is trusted.
+    // An unverified one installs the client and leaves the proof to the caller's
+    // own write, which is the round trip the action has to make anyway.
+    if (verify) {
+      await repository.healthCheck();
+      auditState = { status: 'ready', required };
+    }
     supabaseRepository = repository;
-    auditState = { status: 'ready', required };
   } catch (error) {
     markAuditFailure(error);
     logger.error('Failed to initialize remote audit repository', {}, error as Error);
@@ -114,26 +106,47 @@ const runInitAuditLog = async (config: AuditInitConfig, fetchImpl: typeof fetch)
 };
 
 /**
+ * The single attempt slot.
+ *
+ * One attempt runs at a time: a caller that arrives while one is running joins
+ * it and receives its result instead of tearing the client down and building a
+ * second one. `verify` decides whether the attempt proves the store is
+ * answering before the client is trusted — a boot initialization does, a
+ * recovery install does not (see `recoverAuditLog`).
+ */
+const startInitAttempt = (
+  config: AuditInitConfig,
+  fetchImpl: typeof fetch,
+  verify: boolean
+): Promise<void> => {
+  if (!initInFlight) {
+    initInFlight = runInitAuditLog(config, fetchImpl, verify).finally(() => {
+      initInFlight = null;
+    });
+  }
+  return initInFlight;
+};
+
+/**
  * Initializes (or re-initializes) the audit log.
  *
- * One owner: a boot initialization and a recovery rebuild that overlap are the
- * same work, so the second caller joins the attempt in flight and receives its
- * result instead of tearing the repository down and building a second client.
+ * This does two things on purpose, and both of them happen on every call:
+ * - it records the configuration, so a later failure can re-initialize without a
+ *   restart, including when this call only waits for an attempt already running;
+ * - it owns an attempt: either it starts one, or it joins the one in flight.
+ *
+ * A caller whose configuration differs from the attempt in flight therefore has
+ * its configuration recorded for the next attempt, while the result it receives
+ * belongs to the attempt it joined.
  */
 export const initAuditLog = (
   config: AuditInitConfig,
   fetchImpl: typeof fetch = fetch
 ): Promise<void> => {
-  // Remembered so a later failure can re-initialize without a restart.
   auditInitConfig = config;
   auditInitFetch = fetchImpl;
 
-  if (!initInFlight) {
-    initInFlight = runInitAuditLog(config, fetchImpl).finally(() => {
-      initInFlight = null;
-    });
-  }
-  return initInFlight;
+  return startInitAttempt(config, fetchImpl, true);
 };
 
 const createAuditRecord = (entry: Omit<AuditLogEntry, 'id' | 'timestamp'>): AuditLogEntry => {
@@ -151,34 +164,26 @@ const createAuditRecord = (entry: Omit<AuditLogEntry, 'id' | 'timestamp'>): Audi
  * Turns the failed state back into a usable one, without weakening the rule
  * that an audited action fails closed while the store really is unavailable.
  *
- * The two failure origins need different answers. A failure with a live client
- * was a write failure and the client is still good, so the caller's own write —
- * which retries once — is the cheapest probe; rebuilding the client would only
- * discard it and spend a health check. A failure with no client means
- * initialization never completed, so that is re-run, at most once per cooldown.
+ * Both failure origins are settled by the caller's own write, which is the one
+ * remote call the action has to make anyway.
+ *
+ * A failure with a live client was a write failure, and the client is still
+ * good, so there is nothing to rebuild. A failure with no client means
+ * initialization never completed, so a client is built and installed *without* a
+ * health check: checking first would spend an extra round trip and, worse, would
+ * refuse a request against a store that has started answering again. A burst of
+ * callers shares that one install, and the write attempts that follow belong to
+ * each caller, so the remote cost stays bounded by the retry instead of growing
+ * with the number of callers.
  */
 const recoverAuditLog = async (): Promise<boolean> => {
   if (!auditInitConfig) return false;
-  // Captured before a successful re-initialization clears it: the log line
-  // below is the only record of what this recovery recovered from.
-  const previousError = auditState.lastError;
-
   if (supabaseRepository) return true;
 
-  if (Date.now() - lastFailedRebuildAt < AUDIT_RECOVERY_COOLDOWN_MS) return false;
-
   try {
-    await initAuditLog(auditInitConfig, auditInitFetch);
+    await startInitAttempt(auditInitConfig, auditInitFetch, false);
   } catch {
-    lastFailedRebuildAt = Date.now();
     return false;
-  }
-
-  lastFailedRebuildAt = 0;
-  // A request that joined an initialization still running has nothing to
-  // recover from, so no cause means no recovery happened.
-  if (previousError !== undefined) {
-    logger.warn('Audit logging recovered after a failure', { previousError });
   }
   return true;
 };
@@ -209,12 +214,19 @@ const persistAuditRecord = async (record: AuditLogEntry): Promise<void> => {
 
   try {
     await insertAuditRecord(repository, record);
+    // The write is what proves the store is answering, so this is where a
+    // recovery is recorded — and only when there was a failure to recover from,
+    // which keeps it to one record per outage instead of one per request.
+    const recoveredFrom = auditState.lastError;
     auditState = {
       ...auditState,
       status: 'ready',
       lastError: undefined,
       lastSuccessfulWrite: new Date().toISOString(),
     };
+    if (recoveredFrom !== undefined) {
+      logger.warn('Audit logging recovered after a failure', { previousError: recoveredFrom });
+    }
   } catch (error) {
     markAuditFailure(error);
     logger.error('Remote audit write failed', { auditId: record.id }, error as Error);
@@ -242,7 +254,16 @@ export const getAuditLogs = async (filters: AuditLogFilters = {}): Promise<Audit
   if (auditState.required && !supabaseRepository && !(await recoverAuditLog())) {
     throw new ApiError(503, 'audit_log_unavailable', 'Required audit logging is unavailable.');
   }
-  if (supabaseRepository) return supabaseRepository.query(filters);
+  if (supabaseRepository) {
+    try {
+      return await supabaseRepository.query(filters);
+    } catch (error) {
+      // A store that cannot be read is unavailable, not an internal fault: fail
+      // closed with the same code the write path uses instead of leaking a 500.
+      markAuditFailure(error);
+      throw new ApiError(503, 'audit_log_unavailable', 'Required audit logging is unavailable.');
+    }
+  }
 
   let filtered = [...logs];
   if (filters.userId) filtered = filtered.filter((log) => log.userId === filters.userId);
