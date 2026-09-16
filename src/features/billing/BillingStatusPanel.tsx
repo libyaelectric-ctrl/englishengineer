@@ -4,6 +4,7 @@ import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 
 import { isFreeTier } from './billing.entitlements';
+import { billingFailureCopy } from './billing.failure-copy';
 import { getBillingStatusPresentation } from './billing.helpers';
 import type {
   BillingProviderStatus,
@@ -18,28 +19,6 @@ const messageStyles: Record<BillingStatusTone, string> = {
   warning: 'border-warning/20 bg-warning/5 text-warning',
   danger: 'border-red-500/20 bg-red-500/10 text-red-400',
 };
-
-/**
- * Maps the backend's own error codes onto copy a customer can act on.
- *
- * Keyed by code, not by wording: the backend sends `error.code`, and matching its
- * sentences instead meant a copy change on the server silently changed what the
- * customer read here — or stopped matching altogether.
- *
- * This must never return nothing. Dropping the message entirely is what made a
- * failed checkout look like a dead button: the request failed, the panel rendered
- * nothing, and the user had no way to tell what went wrong. An unrecognised code
- * falls through to the backend's own message.
- */
-const KNOWN_INTERNAL_ERRORS: Record<string, string> = {
-  audit_log_unavailable:
-    'Billing could not be started because the service is temporarily unavailable. Please try again in a few minutes.',
-  idempotency_store_unavailable:
-    'A previous billing attempt is still being processed. Please wait a moment and try again.',
-};
-
-const friendlyError = (code: string | null | undefined, raw: string): string =>
-  (code ? KNOWN_INTERNAL_ERRORS[code] : undefined) ?? raw;
 
 interface BillingStatusPanelProps {
   subscription: SubscriptionSnapshot;
@@ -69,7 +48,9 @@ export const BillingStatusPanel = ({
     (subscription.status === 'active' || subscription.status === 'trialing');
   const canOpenPortal = providerStatus.isConfigured && Boolean(subscription.stripeCustomerId);
 
-  const displayError = error ? friendlyError(errorCode, error) : null;
+  // The wording lives in one place, shared with the profile alert, so the same
+  // failure cannot read differently on the two surfaces that render it.
+  const displayError = error ? billingFailureCopy(errorCode, error) : null;
 
   return (
     <div className="space-y-4 font-sans text-foreground" data-testid="billing-status-panel">
