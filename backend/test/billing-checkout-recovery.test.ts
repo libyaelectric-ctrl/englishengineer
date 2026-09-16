@@ -15,9 +15,10 @@ import { createBackendConfig } from '../src/config.js';
  * never come true: one transient remote error wedged the state at `failed`, and
  * every later checkout answered the same 503 until the process restarted.
  *
- * This lives in its own file because the recovery attempt is throttled by a
- * module-level cooldown: a fresh module state is what lets the second request
- * below actually observe the recovery path.
+ * It is kept in its own file so the module state the checks below observe is
+ * created by this file's own app only: the audit log keeps its client and status
+ * in module scope, and another suite that had already initialized it would make
+ * the cold-start case below unreachable.
  */
 describe('billing checkout recovers with the audit store', () => {
   const CHECKOUT_PATH = '/api/v1/billing/create-checkout-session';
@@ -29,11 +30,17 @@ describe('billing checkout recovers with the audit store', () => {
       headers: { 'content-type': 'application/json', 'content-range': '0-0/0' },
     });
 
+  /** What PostgREST answers when the record is already stored. */
+  const DUPLICATE_KEY_BODY =
+    '{"message":"duplicate key value violates unique constraint \\"audit_logs_pkey\\"","code":"23505"}';
+
   const createStub = () => {
     const calls: Array<{ method: string; path: string }> = [];
     let auditWrites = 0;
     let auditDown = false;
     let blips = 0;
+    let ackLoss = false;
+    let ackLossDeliveries = 0;
     const impl = (async (input: string | URL | Request, init?: RequestInit) => {
       const path = new URL(String(input)).pathname;
       const method = (init?.method ?? 'GET').toUpperCase();
@@ -46,6 +53,14 @@ describe('billing checkout recovers with the audit store', () => {
           return auditDown ? json('{"message":"invalid api key"}', 401) : json('[]', 200);
         }
         auditWrites += 1;
+        if (ackLoss) {
+          // The first delivery is persisted and its acknowledgement is lost, so
+          // the retry meets the row that delivery already wrote.
+          ackLossDeliveries += 1;
+          return ackLossDeliveries === 1
+            ? json('{"message":"connection reset"}', 503)
+            : json(DUPLICATE_KEY_BODY, 409);
+        }
         // A blip is a scripted number of failed write attempts; an outage lasts
         // until the test says the remote is healthy again.
         if (auditDown) return json('{"message":"connection reset"}', 503);
@@ -67,6 +82,10 @@ describe('billing checkout recovers with the audit store', () => {
       },
       setDown: (value: boolean) => {
         auditDown = value;
+      },
+      loseAcknowledgement: () => {
+        ackLossDeliveries = 0;
+        ackLoss = true;
       },
       dodoCalls: () => calls.filter((call) => call.path.endsWith('/checkouts')).length,
     };
@@ -173,6 +192,29 @@ describe('billing checkout recovers with the audit store', () => {
       );
       assert.equal(recoveredBody.data?.url, CHECKOUT_URL);
       assert.equal(stub.dodoCalls(), 2);
+      assert.equal(getAuditLogStatus().status, 'ready');
+    } finally {
+      stop();
+    }
+  });
+
+  it('lets the customer upgrade when the audit acknowledgement is lost', async () => {
+    const stub = createStub();
+    const { sendCheckout, stop } = await startApp(stub);
+
+    try {
+      await waitForAuditStatus('ready');
+      // The audit write lands and its acknowledgement is lost. Before the retry
+      // recognised the collision the customer was refused with the failure
+      // sentence while their audit record was already stored.
+      stub.loseAcknowledgement();
+
+      const response = await sendCheckout('user-lost-ack');
+      const body = (await response.json()) as { data?: { url?: string } };
+      assert.equal(response.status, 200, JSON.stringify({ body, audit: getAuditLogStatus() }));
+      assert.equal(body.data?.url, CHECKOUT_URL);
+      assert.equal(stub.dodoCalls(), 1, 'the payment session was created once');
+      assert.equal(stub.auditWrites(), 2, 'the lost acknowledgement, not the record, was retried');
       assert.equal(getAuditLogStatus().status, 'ready');
     } finally {
       stop();

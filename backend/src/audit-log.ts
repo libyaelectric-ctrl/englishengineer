@@ -175,6 +175,17 @@ const createAuditRecord = (entry: Omit<AuditLogEntry, 'id' | 'timestamp'>): Audi
  * callers shares that one install, and the write attempts that follow belong to
  * each caller, so the remote cost stays bounded by the retry instead of growing
  * with the number of callers.
+ *
+ * The boundary this deliberately does not cross: a failure with a live client is
+ * never answered by rebuilding the client. A rebuild is built from the
+ * configuration this module was handed at boot, so a *rejected credential* — a
+ * rotated service key, a revoked grant — would be rebuilt into the same
+ * rejection, while spending a client construction on every request. That class of
+ * fault therefore stays fail-closed with the same 503 until the process restarts
+ * with working configuration, exactly like the store outage, and it is not
+ * silently recovered from: `getAuditLogStatus()` reports the state, `/api/diagnostics`
+ * surfaces it, and the write is still attempted on every request, so the moment
+ * the store answers again the action proceeds on its own.
  */
 const recoverAuditLog = async (): Promise<boolean> => {
   if (!auditInitConfig) return false;
@@ -189,18 +200,56 @@ const recoverAuditLog = async (): Promise<boolean> => {
 };
 
 /**
- * One retry against the same client: a blip on the wire is far more likely than
- * a broken store, and a rebuild costs a health check on top of the write.
+ * A record that is already stored, reported as the primary-key violation for
+ * `audit_logs_pkey` (`23505`) — the one failure that means the write *landed*.
+ *
+ * The match is deliberately narrow: a unique-violation signature, never the bare
+ * word "conflict". An error this does not recognise keeps failing closed, which
+ * is why a future rewording of the remote message degrades into a refusal rather
+ * than into a false success.
+ */
+const DUPLICATE_RECORD_PATTERN = /duplicate key|unique constraint|already exists/i;
+
+const isDuplicateRecord = (error: unknown): boolean => {
+  if (typeof error !== 'object' || error === null) return false;
+  const { code, cause, message } = error as { code?: unknown; cause?: unknown; message?: unknown };
+  if (code === '23505' || (cause as { code?: unknown } | undefined)?.code === '23505') return true;
+  return DUPLICATE_RECORD_PATTERN.test(String(message ?? ''));
+};
+
+/**
+ * At most two deliveries of the same record against the same client: a blip on
+ * the wire is far more likely than a broken store, and a rebuild costs a health
+ * check on top of the write.
+ *
+ * A delivery that collides with the record this attempt already stored — the
+ * first delivery landed and only its acknowledgement was lost — is the record
+ * having landed, so the audited action proceeds. Treating it as a failure would
+ * refuse a payment whose audit record is already in the store, and the caller's
+ * retry would then write the same action a second time.
  */
 const insertAuditRecord = async (
   repository: AuditRepository,
   record: AuditLogEntry
 ): Promise<void> => {
-  try {
-    await repository.insert(record);
-  } catch {
-    await repository.insert(record);
+  let lastError: unknown;
+  for (let delivery = 0; delivery < 2; delivery += 1) {
+    try {
+      await repository.insert(record);
+      return;
+    } catch (error) {
+      if (isDuplicateRecord(error)) {
+        // The record is stored and only its acknowledgement was lost. The action
+        // succeeds, so this is the only place that can report it.
+        logger.warn('Audit record was already stored when its retry arrived', {
+          auditId: record.id,
+        });
+        return;
+      }
+      lastError = error;
+    }
   }
+  throw lastError;
 };
 
 const persistAuditRecord = async (record: AuditLogEntry): Promise<void> => {

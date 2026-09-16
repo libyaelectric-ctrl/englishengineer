@@ -21,6 +21,22 @@ const json = (body: string, status: number): Response =>
     headers: { 'content-type': 'application/json', 'content-range': '0-0/0' },
   });
 
+/** What PostgREST answers when the record is already stored. */
+const DUPLICATE_KEY_RESPONSE = {
+  status: 409,
+  body: '{"message":"duplicate key value violates unique constraint \\"audit_logs_pkey\\"","code":"23505"}',
+};
+
+const lostAcknowledgement = { status: 503, body: '{"message":"connection reset"}' };
+
+const readRecordId = (body: unknown): string => {
+  try {
+    return String((JSON.parse(String(body ?? '{}')) as { id?: string }).id);
+  } catch {
+    return 'unparsed';
+  }
+};
+
 const isAuditUnavailable = (error: unknown): boolean =>
   error instanceof ApiError && error.status === 503 && error.code === 'audit_log_unavailable';
 
@@ -38,6 +54,10 @@ const isAuditUnavailable = (error: unknown): boolean =>
  */
 const createSupabaseStub = () => {
   const calls: string[] = [];
+  /** The record id of every write the store was asked to deliver. */
+  const deliveredIds: string[] = [];
+  /** Scripted write responses, consumed in order; the last one repeats. */
+  const scriptedWrites: Array<{ status: number; body: string }> = [];
   let down = false;
   let writes = 0;
   let writeFailures = 0;
@@ -51,6 +71,9 @@ const createSupabaseStub = () => {
       return down ? json('{"message":"invalid api key"}', 401) : json('[]', 200);
     }
     writes += 1;
+    deliveredIds.push(readRecordId(init?.body));
+    const scripted = scriptedWrites.length > 1 ? scriptedWrites.shift() : scriptedWrites[0];
+    if (scripted) return json(scripted.body, scripted.status);
     return down || writes <= writeFailures
       ? json('{"message":"connection reset"}', 503)
       : json('[]', 201);
@@ -59,6 +82,11 @@ const createSupabaseStub = () => {
   return {
     impl,
     calls,
+    deliveredIds,
+    scriptWrites: (responses: Array<{ status: number; body: string }>) => {
+      scriptedWrites.length = 0;
+      scriptedWrites.push(...responses);
+    },
     setDown: (value: boolean) => {
       down = value;
     },
@@ -228,5 +256,52 @@ describe('audit log recovery', () => {
     assert.equal(getAuditLogStatus().status, 'failed');
     assert.equal(methodCount(stub.calls, 'GET'), 0, 'no health check while the store is down');
     assert.equal(methodCount(stub.calls, 'POST'), 6, 'one bounded write attempt per action');
+  });
+
+  it('treats a retry that collides with its own record as that record having landed', async () => {
+    const stub = createSupabaseStub();
+    await startAudit(stub);
+    stub.calls.length = 0;
+    // The store persists the write and then loses the acknowledgement, so the
+    // retry meets the very row this attempt already wrote.
+    stub.scriptWrites([lostAcknowledgement, DUPLICATE_KEY_RESPONSE]);
+
+    const records = await captureLogs(() =>
+      auditLog({ action: AUDIT_ACTIONS.CHECKOUT_CREATED, userId: 'user-landed' })
+    );
+
+    assert.equal(getAuditLogStatus().status, 'ready');
+    assert.equal(methodCount(stub.calls, 'POST'), 2, 'the write was retried once');
+    assert.equal(
+      new Set(stub.deliveredIds).size,
+      1,
+      'the same record was delivered twice, not two records'
+    );
+    assert.ok(
+      records.some(
+        (record) => record.message === 'Audit record was already stored when its retry arrived'
+      ),
+      `expected a lost-acknowledgement record, saw ${JSON.stringify(
+        records.map((record) => record.message)
+      )}`
+    );
+  });
+
+  it('refuses when the retry fails for a reason other than its own record', async () => {
+    const stub = createSupabaseStub();
+    await startAudit(stub);
+    stub.calls.length = 0;
+    // A conflict that is not a unique violation must not be read as a landed
+    // write: the failure stays fail-closed.
+    stub.scriptWrites([
+      { status: 409, body: '{"message":"conflict: audit storage quota exceeded"}' },
+    ]);
+
+    await assert.rejects(
+      () => auditLog({ action: AUDIT_ACTIONS.CHECKOUT_CREATED, userId: 'user-not-landed' }),
+      isAuditUnavailable
+    );
+    assert.equal(getAuditLogStatus().status, 'failed');
+    assert.equal(methodCount(stub.calls, 'POST'), 2);
   });
 });
