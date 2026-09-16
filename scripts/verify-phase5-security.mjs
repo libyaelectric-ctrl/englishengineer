@@ -72,7 +72,7 @@ assert.match(tenant, /user_id/);
 assert.match(speaking, /audio_signature_mismatch/);
 assert.match(speaking, /audio_storage_unavailable/);
 assert.match(audit, /export const auditLog = async/);
-assert.match(audit, /await supabaseRepository\.insert\(record\)/);
+assert.match(audit, /await repository\.insert\(record\)/);
 assert.match(audit, /audit_log_unavailable/);
 assert.match(audit, /healthCheck/);
 assert.ok(
