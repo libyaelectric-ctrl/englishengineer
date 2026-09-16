@@ -30,26 +30,26 @@ describe('billing checkout recovers with the audit store', () => {
     });
 
   const createStub = () => {
-    const calls: string[] = [];
+    const calls: Array<{ method: string; path: string }> = [];
     let auditWrites = 0;
     const impl = (async (input: string | URL | Request, init?: RequestInit) => {
-      const url = String(input);
+      const path = new URL(String(input)).pathname;
       const method = (init?.method ?? 'GET').toUpperCase();
-      calls.push(`${method} ${url}`);
-      if (url.includes('audit_logs')) {
+      calls.push({ method, path });
+      if (path.endsWith('/audit_logs')) {
         if (method !== 'POST') return json('[]', 200);
         auditWrites += 1;
         // One transient audit write failure, then the remote is healthy.
         return auditWrites === 1 ? json('{"message":"connection reset"}', 503) : json('[]', 201);
       }
-      if (url.includes('/checkouts')) return json(`{"checkout_url":"${CHECKOUT_URL}"}`, 200);
+      if (path.endsWith('/checkouts')) return json(`{"checkout_url":"${CHECKOUT_URL}"}`, 200);
       return json('[]', 200);
     }) as typeof fetch;
     return {
       impl,
       calls,
       auditWrites: () => auditWrites,
-      dodoCalls: () => calls.filter((call) => call.includes('/checkouts')).length,
+      dodoCalls: () => calls.filter((call) => call.path.endsWith('/checkouts')).length,
     };
   };
 
@@ -118,16 +118,13 @@ describe('billing checkout recovers with the audit store', () => {
       // Second attempt: the audit store answers again, so the same request goes
       // through instead of repeating the same 503 forever.
       const recovered = await sendCheckout();
-      const recoveredBody = (await recovered.json()) as unknown;
+      const recoveredBody = (await recovered.json()) as { data?: { url?: string } };
       assert.equal(
         recovered.status,
         200,
         JSON.stringify({ body: recoveredBody, audit: getAuditLogStatus() })
       );
-      assert.ok(
-        JSON.stringify(recoveredBody).includes(CHECKOUT_URL),
-        `expected a checkout URL, got ${JSON.stringify(recoveredBody)}`
-      );
+      assert.equal(recoveredBody.data?.url, CHECKOUT_URL);
       assert.equal(stub.dodoCalls(), 1);
       assert.equal(getAuditLogStatus().status, 'ready');
     } finally {
