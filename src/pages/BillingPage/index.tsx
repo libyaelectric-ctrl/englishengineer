@@ -24,6 +24,7 @@ export const BillingPage = () => {
     isLoading: isBillingLoading,
     isCheckoutLoading,
     error: billingError,
+    errorCode: billingErrorCode,
     refreshBilling,
     startCheckout,
     openCustomerPortal,
@@ -100,6 +101,7 @@ export const BillingPage = () => {
               onUpgrade={handleUpgrade}
               onOpenPortal={handleManageSubscription}
               error={billingError}
+              errorCode={billingErrorCode}
             />
           </SectionCard>
           <SectionCard

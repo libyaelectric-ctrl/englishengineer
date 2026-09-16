@@ -133,6 +133,13 @@ export interface BillingState {
   /** True only while a checkout/portal redirect is being requested. */
   isCheckoutLoading: boolean;
   error: string | null;
+  /**
+   * The backend's own error code behind `error`, when it sent one.
+   *
+   * The panel picks its copy from this; matching the message text instead is what
+   * made customer-facing wording depend on backend prose.
+   */
+  errorCode: string | null;
   invoices: InvoiceRecord[];
   isLoadingInvoices: boolean;
 }

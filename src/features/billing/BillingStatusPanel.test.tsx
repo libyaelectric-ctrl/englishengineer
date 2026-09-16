@@ -100,7 +100,7 @@ describe('BillingStatusPanel', () => {
     expect(screen.getByText('Backend configured')).toBeVisible();
   });
 
-  it('shows an actionable message for an internal audit-logging failure instead of silence', () => {
+  const renderError = (error: string, errorCode: string | null) =>
     render(
       <BrowserRouter>
         <BillingStatusPanel
@@ -109,15 +109,38 @@ describe('BillingStatusPanel', () => {
           isLoading={false}
           onUpgrade={vi.fn()}
           onOpenPortal={vi.fn()}
-          error="Required audit logging is unavailable."
+          error={error}
+          errorCode={errorCode}
         />
       </BrowserRouter>
     );
+
+  it('shows an actionable message for an internal audit-logging failure instead of silence', () => {
+    renderError('Required audit logging is unavailable.', 'audit_log_unavailable');
 
     const alert = screen.getByRole('alert');
     expect(alert).toBeVisible();
     expect(alert).toHaveTextContent(/billing could not be started/i);
     expect(alert).not.toHaveTextContent(/audit logging is unavailable/i);
+  });
+
+  it('chooses its copy from the error code, not from the words in the message', () => {
+    // The same sentence the backend sends for `audit_log_unavailable`, under a
+    // different code: matching the wording here is what this panel used to do.
+    renderError('Required audit logging is unavailable.', 'billing_provider_unconfigured');
+
+    const alert = screen.getByRole('alert');
+    expect(alert).toBeVisible();
+    expect(alert).toHaveTextContent('Required audit logging is unavailable.');
+    expect(alert).not.toHaveTextContent(/billing could not be started/i);
+  });
+
+  it('falls back to the backend message when no code came with the error', () => {
+    renderError('Subscription status is temporarily unavailable.', null);
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'Subscription status is temporarily unavailable.'
+    );
   });
 
   it('names the in-flight checkout state on the Upgrade button', () => {
