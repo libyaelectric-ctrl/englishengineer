@@ -44,13 +44,14 @@ import { SKILLS, getCEFRBand } from './utils';
 const ProgressPage = () => {
   const { currentUser } = useAuthStore();
   const { profile, missions } = useLearningCockpit(currentUser?.id);
-  const lStore = useLearningStore((s) => ({
-    vocabularyPool: s.vocabularyPool || [],
-    grammarPool: s.grammarPool || [],
-    speakingPool: s.speakingPool || [],
-    xp: s.xp,
-    streak: s.streak,
-  }));
+  // Select the one number this page needs. Zustand v5 reads the store through
+  // `useSyncExternalStore`, whose snapshot must be referentially stable: a
+  // selector that builds an object (or an array) per call looks like a changed
+  // snapshot on every check, so React re-renders until it throws "Maximum update
+  // depth exceeded". A primitive cannot have that problem.
+  const knowledgePoolSize = useLearningStore(
+    (s) => s.vocabularyPool.length + s.grammarPool.length + (s.speakingPool?.length ?? 0)
+  );
   const [eloScores] = useState<Record<string, number>>(() => {
     const scores: Record<string, number> = {};
     SKILLS.forEach((s) => {
@@ -133,9 +134,7 @@ const ProgressPage = () => {
         }
         peakElo={Math.max(...Object.values(eloScores))}
         sessionsCount={missions.length}
-        knowledgePoolSize={
-          lStore.vocabularyPool.length + lStore.grammarPool.length + lStore.speakingPool.length
-        }
+        knowledgePoolSize={knowledgePoolSize}
         grammarMastered={GrammarProgressService.getSummary().strong}
         grammarErrors={0}
         advancedRules={0}
