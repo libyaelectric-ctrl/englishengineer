@@ -17,7 +17,8 @@
  *
  * ## What this rule deliberately does NOT police
  *
- * Stated plainly, because overstating the boundary is worse than a narrow rule:
+ * Stated plainly, because overstating the boundary is worse than a narrow rule.
+ * In particular: **this rule is not a ban on the whole Tailwind palette.**
  *
  * 1. **Chromatic accent families.** `emerald`, `amber`, `green`, `red`, `blue`,
  *    `teal`, `violet`, `orange`, `sky`, `indigo`, `pink`, `purple`, `rose`,
@@ -33,6 +34,24 @@
  *    literals are inspected.
  * 4. **CSS.** `src/index.css` is where the tokens are *defined*; hex values
  *    there are the palette, not a bypass of it.
+ *
+ * ## Where a class is reported
+ *
+ * Every class is reported on **its own source line**, for both shapes:
+ *
+ * - a template literal is split on its raw text, and
+ * - a plain string literal — including a JSX `className="…"` spanning several
+ *   lines — is split the same way when its raw text contains a real line break.
+ *
+ * An escape like `\n` inside a single-line string does not create a source line
+ * and so does not split anything. A class written with escapes (say
+ * `bg-slate-9\u00300`) is still detected: when the source text contains a
+ * backslash, the resolved value is scanned too — on the class's own line while
+ * the line counts still align, and otherwise anywhere in the resolved value.
+ * That fallback can only add findings, never remove one. It is triggered by a
+ * backslash rather than by "source differs from resolved", because a template's
+ * resolved value normalises CRLF to LF and would otherwise re-report every
+ * class in a CRLF file a second time on the literal's first line.
  *
  * ## Exceptions
  *
@@ -103,7 +122,7 @@ const rule = {
     type: 'problem',
     docs: {
       description:
-        'Disallow raw Tailwind palette classes and colour literals; use the semantic colour tokens instead',
+        'Disallow raw neutral/achromatic palette classes (slate, gray, zinc, neutral, stone, cyan, white, black) and colour literals; chromatic accent families are out of scope — see docs/DESIGN_SYSTEM.md',
     },
     messages: {
       raw: 'Raw palette class "{{token}}" bypasses the colour tokens. Use the semantic token for this role (see docs/DESIGN_SYSTEM.md); for a genuine identity gradient annotate this exact line with a trailing "// palette-exempt: <reason>".',
@@ -127,9 +146,7 @@ const rule = {
       directives.set(line, { valid: reason.length >= MIN_REASON, used: false, comment });
     }
 
-    /**
-     * Report-level dedupe: one message per (line, token).
-     */
+    /** Report-level dedupe: one message per (line, token). */
     const seen = new Set();
 
     /**
@@ -164,26 +181,64 @@ const rule = {
       }
     };
 
+    /**
+     * Both literal shapes are handled identically so that "reported on its own
+     * source line" means the same thing for `className="…"` and for
+     * `` className={`…`} ``. `source` must be the literal's text *without* its
+     * delimiters — a `Literal`'s `raw` carries its quotes, a `TemplateElement`'s
+     * does not, and comparing delimited text against the value would make every
+     * string look escaped.
+     */
+    const scanLiteral = (node, source, cooked) => {
+      const { line: base, column } = node.loc.start;
+      if (!source.includes('\n')) {
+        // One source line: `\n` inside the text is an escape, not a line break,
+        // so it stays attributed here and the resolved value is the right thing
+        // to match against (it resolves any escapes).
+        scan(cooked, base, column);
+        return;
+      }
+      const sourceLines = source.split('\n');
+      sourceLines.forEach((text, index) => {
+        scan(text, base + index, index === 0 ? column : 0);
+      });
+      // A backslash escapes something, so the source text is not the class it
+      // spells (`bg-slate-9\u00300`) and no source line matches it. Scan the
+      // resolved value line by line as well, which keeps the class on its own
+      // line. Triggering on a backslash rather than on `cooked !== source`
+      // matters: a template's resolved value normalises CRLF to LF, so the two
+      // differ for every CRLF file, and the fallback would then re-report every
+      // class a second time on the literal's first line.
+      if (source.includes('\\')) {
+        const cookedLines = cooked.split('\n');
+        if (cookedLines.length === sourceLines.length) {
+          cookedLines.forEach((text, index) => {
+            scan(text, base + index, index === 0 ? column : 0);
+          });
+        } else {
+          // Escapes expanded into extra lines, so line alignment is gone: fall
+          // back to finding the class anywhere in the resolved value.
+          scan(cooked, base, column);
+        }
+      }
+    };
+
+    /** A string literal's text with its surrounding quotes removed. */
+    const quotedContent = (raw) =>
+      typeof raw === 'string' && raw.length >= 2 && /^['"]/.test(raw) ? raw.slice(1, -1) : raw;
+
     return {
       Literal(node) {
-        // A plain string cannot span source lines, so every match belongs to the
-        // literal's own line (escapes like `\n` do not create source lines).
-        scan(node.value, node.loc.start.line, node.loc.start.column);
+        if (typeof node.value !== 'string') return;
+        scanLiteral(
+          node,
+          quotedContent(typeof node.raw === 'string' ? node.raw : '') ?? '',
+          node.value
+        );
       },
       TemplateElement(node) {
         const raw = node.value?.raw ?? '';
-        const base = node.loc.start.line;
-        if (!raw.includes('\n')) {
-          // Single-line element: the cooked value is the same shape as the raw
-          // one and resolves any escapes.
-          scan(node.value?.cooked ?? raw, base, node.loc.start.column);
-          return;
-        }
-        // Multi-line element: split the raw text so each source line is scanned
-        // (and reported) on its own.
-        raw.split('\n').forEach((text, index) => {
-          scan(text, base + index, index === 0 ? node.loc.start.column : 0);
-        });
+        scanLiteral(node, raw, node.value?.cooked ?? raw);
       },
       'Program:exit'() {
         for (const directive of directives.values()) {

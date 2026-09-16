@@ -1,24 +1,41 @@
 /**
  * Tests for `local/no-raw-palette`.
  *
- * Two of these pin defects found by auditing the first version of the rule:
+ * These pin defects found by auditing the rule, each of which was live at some
+ * point in its history:
  *
- *  - "does not bleed onto the next line": an exemption used to be honoured for
- *    both the reported line *and* the line above it, so a justified comment on
- *    one line silently laundered a raw class on the following line.
- *  - "flags a colour function": only `[#rrggbb]` was matched, so
- *    `bg-[rgba(0,0,0,.5)]` slipped through.
+ *  - the exemption used to be honoured for the reported line *and* the line
+ *    above it, so a justified comment silently laundered a raw class on the
+ *    following line ("does not bleed onto the next line");
+ *  - `TemplateElement.range` starts at the backtick, so offset arithmetic over
+ *    the cooked value reported a multi-line template one character early;
+ *  - only `[#rrggbb]` was matched, so `bg-[rgba(0,0,0,.5)]` slipped through;
+ *  - a *string* literal spanning lines (a JSX `className="…"`) was reported on
+ *    its first line, so the class's own line could not be annotated;
+ *  - a class written with escapes inside a multi-line template was not detected
+ *    at all, because the raw text was scanned without resolving escapes.
  *
  * The valid cases at the end deliberately assert that the rule stays quiet where
  * it does not claim coverage (accent families, inline styles, runtime-composed
  * names), so the boundary in the rule's docs cannot drift from its behaviour.
  */
+import tsParser from '@typescript-eslint/parser';
 import { RuleTester } from 'eslint';
 
 import rule from './no-raw-palette.js';
 
+/**
+ * The repository's own parser: a multi-line *string* attribute only exists in
+ * JSX (`className="…"` spanning lines), so the suite has to be able to parse
+ * it, exactly as `npm run lint` does.
+ */
 const ruleTester = new RuleTester({
-  languageOptions: { ecmaVersion: 2022, sourceType: 'module' },
+  languageOptions: {
+    parser: tsParser,
+    ecmaVersion: 2022,
+    sourceType: 'module',
+    parserOptions: { ecmaFeatures: { jsx: true } },
+  },
 });
 
 ruleTester.run('no-raw-palette', rule, {
@@ -35,6 +52,15 @@ ruleTester.run('no-raw-palette', rule, {
     // literal spans several lines.
     {
       code: 'const a = `bg-primary/10\nbg-slate-900`; // palette-exempt: discipline identity gradient',
+    },
+
+    // Same, for a multi-line JSX string attribute: the class is on the last
+    // line and so is the directive. Before the fix this was reported twice —
+    // raw on the attribute's first line, the directive unused on the class's
+    // line — leaving no way to annotate it at all.
+    {
+      filename: 'probe.tsx',
+      code: 'export const A = () => (\n  <div\n    className="text-foreground\n      bg-slate-900" // palette-exempt: a real display surface\n  />\n);',
     },
 
     // Arbitrary values that are not colours.
@@ -81,7 +107,7 @@ ruleTester.run('no-raw-palette', rule, {
       errors: [{ messageId: 'raw', line: 1, data: { token: 'bg-[#d9d9e3]' } }],
     },
     {
-      // Colour function — the second defect this suite pins.
+      // Colour function.
       code: "const a = 'bg-[rgba(0,0,0,0.5)]';",
       errors: [{ messageId: 'raw', line: 1, data: { token: 'bg-[rgba(0,0,0,0.5)]' } }],
     },
@@ -100,13 +126,31 @@ ruleTester.run('no-raw-palette', rule, {
     },
     {
       // Exact line scope inside a multi-line literal: the directive is on line
-      // one and the offending class on line two of the same literal, so the old
-      // "line or the line above" lookup would have exempted it. It must not.
+      // one and the offending class on line two, so it is not exempt.
       code: '/* palette-exempt: discipline identity gradient */ const a = `bg-primary/10\nbg-slate-900`;',
       errors: [
         { messageId: 'unused', line: 1 },
         { messageId: 'raw', line: 2, data: { token: 'bg-slate-900' } },
       ],
+    },
+    {
+      // A JSX attribute string spanning lines reports the class on its own line,
+      // not on the attribute's first line, so the diagnosis points at the class.
+      filename: 'probe.tsx',
+      code: 'export const A = () => (\n  <div\n    className="text-foreground\n      bg-slate-900"\n  />\n);',
+      errors: [{ messageId: 'raw', line: 4, data: { token: 'bg-slate-900' } }],
+    },
+    {
+      // An escape-encoded class inside a multi-line template is still detected
+      // (resolved-value fallback), on its own line. Before the fix this reported
+      // nothing at all.
+      code: 'const a = `bg-primary/10\nbg-slate-9\\u00300`;',
+      errors: [{ messageId: 'raw', line: 2, data: { token: 'bg-slate-900' } }],
+    },
+    {
+      // Escape-encoded class on a single line: also detected.
+      code: 'const a = `bg-slate-9\\u00300`;',
+      errors: [{ messageId: 'raw', line: 1, data: { token: 'bg-slate-900' } }],
     },
     {
       // A reason that is too short does not buy silence, and is itself reported.
