@@ -28,6 +28,21 @@ interface AuditRepository {
   healthCheck(): Promise<void>;
 }
 
+/**
+ * What a repository failure carries besides its message.
+ *
+ * The caller must never infer "the write landed" from a composed sentence: the
+ * repository says so structurally. `duplicatesRequestedRecord` is set only when a
+ * unique violation names the identity of the very record the insert was given — a
+ * collision on any other key, or an error that carries no code at all, leaves it
+ * unset and the audited action keeps failing closed.
+ */
+export interface AuditRemoteError extends Error {
+  /** The PostgREST/Postgres code, e.g. `23505` for a unique violation. */
+  code?: string;
+  duplicatesRequestedRecord?: true;
+}
+
 interface AuditState {
   status: 'uninitialized' | 'initializing' | 'ready' | 'disabled' | 'failed';
   required: boolean;
@@ -200,22 +215,15 @@ const recoverAuditLog = async (): Promise<boolean> => {
 };
 
 /**
- * A record that is already stored, reported as the primary-key violation for
- * `audit_logs_pkey` (`23505`) — the one failure that means the write *landed*.
+ * The one failure that means the write *landed*: the collision is with the record
+ * this attempt itself wrote, which the repository reports structurally.
  *
- * The match is deliberately narrow: a unique-violation signature, never the bare
- * word "conflict". An error this does not recognise keeps failing closed, which
- * is why a future rewording of the remote message degrades into a refusal rather
- * than into a false success.
+ * This is deliberately narrower than "some duplicate happened": a unique
+ * violation on an unrelated key would otherwise be swallowed as a stored audit
+ * record, which is the one thing an audited action must never be told falsely.
  */
-const DUPLICATE_RECORD_PATTERN = /duplicate key|unique constraint|already exists/i;
-
-const isDuplicateRecord = (error: unknown): boolean => {
-  if (typeof error !== 'object' || error === null) return false;
-  const { code, cause, message } = error as { code?: unknown; cause?: unknown; message?: unknown };
-  if (code === '23505' || (cause as { code?: unknown } | undefined)?.code === '23505') return true;
-  return DUPLICATE_RECORD_PATTERN.test(String(message ?? ''));
-};
+const isOwnRecordCollision = (error: unknown): boolean =>
+  (error as AuditRemoteError | null)?.duplicatesRequestedRecord === true;
 
 /**
  * At most two deliveries of the same record against the same client: a blip on
@@ -238,7 +246,7 @@ const insertAuditRecord = async (
       await repository.insert(record);
       return;
     } catch (error) {
-      if (isDuplicateRecord(error)) {
+      if (isOwnRecordCollision(error)) {
         // The record is stored and only its acknowledgement was lost. The action
         // succeeds, so this is the only place that can report it.
         logger.warn('Audit record was already stored when its retry arrived', {
