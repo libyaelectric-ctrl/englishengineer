@@ -17,6 +17,7 @@ import { setAuthTokenGetter } from '@/shared/services/auth-backend/backend-auth.
 import { useAuthStore } from '@/features/auth';
 
 import { AIPage } from '@/pages/AIPage';
+import BillingPage from '@/pages/BillingPage';
 import PricingPage from '@/pages/PricingPage';
 import { useProfilePage } from '@/pages/ProfilePage/useProfilePage';
 
@@ -151,6 +152,10 @@ const renderPanelFromStore = (): void => {
 };
 
 beforeEach(() => {
+  // Neither the user nor the failure may be inherited from the test that ran before this
+  // one. The store is module-level, so a failure left behind by an earlier test would be
+  // rendered by the next test's surface as if the backend had just sent it.
+  useBillingStore.getState().setBillingError(null);
   useAuthStore
     .getState()
     .loginAsLocal({ email: 'engineer@example.com', displayName: 'Test Engineer' });
@@ -158,6 +163,8 @@ beforeEach(() => {
 
 afterEach(() => {
   setAuthTokenGetter(null);
+  vi.unstubAllGlobals();
+  useBillingStore.getState().setBillingError(null);
 });
 
 describe('the same billing failure on both surfaces', () => {
@@ -205,6 +212,103 @@ describe('the same billing failure on both surfaces', () => {
 
     expect(useBillingStore.getState().error).toBe(RAW_BACKEND_SENTENCE);
     expect(profile.result.current.error).toBe(AUDIT_COPY);
+  });
+});
+
+/**
+ * The subscription-management path. Two surfaces own it: the profile hook's own portal
+ * action, and the billing page, which is where the control is actually rendered today
+ * (`BillingStatusPanel`'s "Manage Subscription") and which wires the handler itself.
+ * A portal request that fails has to be answered like any other billing failure.
+ */
+const portalFromBillingPage = async (): Promise<string> => {
+  const page = render(<BillingPage />, { wrapper });
+
+  // The page refreshes billing on mount and that refresh owns `providerStatus`. The portal
+  // control is only offered once a provider and a customer are on file, so the store is put
+  // into the state a paying customer's account would be in, after the refresh has settled.
+  await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
+  useBillingStore.setState({
+    providerStatus: {
+      mode: 'backend',
+      isConfigured: true,
+      label: 'Stripe',
+      detail: 'Test provider',
+    },
+    subscription: { ...useBillingStore.getState().subscription, stripeCustomerId: 'cus_test' },
+  });
+
+  fireEvent.click(await screen.findByRole('button', { name: /manage subscription/i }));
+
+  const alert = await waitFor(() => {
+    const found = within(page.container).queryByRole('alert');
+    if (!found) throw new Error('billing page showed no failure');
+    return found;
+  });
+  const text = alert.textContent ?? '';
+  page.unmount();
+  return text;
+};
+
+describe('the subscription-management path', () => {
+  it("resolves the portal failure the profile hook hits, not the store's raw sentence", async () => {
+    const profile = renderProfile();
+    stubAuditFailure();
+
+    await act(async () => {
+      await profile.result.current.handleManageSubscription();
+    });
+
+    // The store keeps the failed request exactly as it arrived…
+    expect(useBillingStore.getState().error).toBe(RAW_BACKEND_SENTENCE);
+    expect(useBillingStore.getState().errorCode).toBe('audit_log_unavailable');
+
+    // …and the action a profile surface renders resolves it, like the checkout action does.
+    expect(profile.result.current.error).toBe(AUDIT_COPY);
+    expect(profile.result.current.error).not.toContain(RAW_BACKEND_SENTENCE);
+  });
+
+  it('answers the portal failure with billing copy on the page that renders the control', async () => {
+    stubAuditFailure();
+
+    expect(await portalFromBillingPage()).toBe(AUDIT_COPY);
+    expect(document.body.textContent).not.toContain(RAW_BACKEND_SENTENCE);
+  });
+});
+
+/**
+ * The two refusals the profile hook writes itself. They are the page's own sentences, not
+ * failures the backend sent, and they never pass through the resolver — which is exactly why
+ * they are pinned: routing those branches through `resolveBillingError` would still show the
+ * customer *something*, and the something would be the wrong sentence.
+ */
+describe("the profile page's own demo-mode refusals", () => {
+  const DEMO_UPGRADE = 'Demo mode: Billing is available after connecting Supabase and Stripe.';
+  const DEMO_PORTAL =
+    'Demo mode: Subscription management available after connecting Supabase + Stripe.';
+
+  it('keeps the upgrade refusal specific instead of the generic billing copy', async () => {
+    useAuthStore.getState().enterDemoUser();
+    const profile = renderProfile();
+
+    await act(async () => {
+      await profile.result.current.handleUpgrade();
+    });
+
+    expect(profile.result.current.error).toBe(DEMO_UPGRADE);
+    expect(profile.result.current.error).not.toBe(AUDIT_COPY);
+  });
+
+  it('keeps the portal refusal specific instead of the generic billing copy', async () => {
+    useAuthStore.getState().enterDemoUser();
+    const profile = renderProfile();
+
+    await act(async () => {
+      await profile.result.current.handleManageSubscription();
+    });
+
+    expect(profile.result.current.error).toBe(DEMO_PORTAL);
+    expect(profile.result.current.error).not.toBe(AUDIT_COPY);
   });
 });
 
@@ -300,6 +404,15 @@ describe('the checkout failure a customer meets on the upgrade page', () => {
   );
 });
 
+/**
+ * The line the purchase control owns: `ProviderStatusPanel` renders the top-up failure as
+ * `Error: …` beside the buy button. Asserting on that line, rather than on the page's whole
+ * text, is what makes the claim about the control instead of about the document.
+ */
+const purchaseErrorLine = (root: HTMLElement): string | null =>
+  [...root.querySelectorAll('p')].find((p) => p.textContent?.startsWith('Error: '))?.textContent ??
+  null;
+
 describe('the credit purchase on the AI page', () => {
   it('answers a billing failure with billing copy, not the backend sentence', async () => {
     // The page runs the top-up itself through its own hook, and renders the failure in
@@ -312,8 +425,14 @@ describe('the credit purchase on the AI page', () => {
     fireEvent.click(await screen.findByRole('button', { name: /buy 50 ai credits/i }));
 
     await waitFor(() => {
-      expect(page.container.textContent).toContain(AUDIT_COPY);
+      expect(purchaseErrorLine(page.container)).toBe(`Error: ${AUDIT_COPY}`);
     });
-    expect(page.container.textContent).not.toContain(RAW_BACKEND_SENTENCE);
+
+    // The store still holds the failed request itself; the surface is what curates it.
+    expect(useBillingStore.getState().error).toBe(RAW_BACKEND_SENTENCE);
+
+    // The copy is not merely somewhere in the page: it is the purchase control's own line.
+    expect(purchaseErrorLine(page.container)).toBe(`Error: ${AUDIT_COPY}`);
+    expect(document.body.textContent).not.toContain(RAW_BACKEND_SENTENCE);
   });
 });
