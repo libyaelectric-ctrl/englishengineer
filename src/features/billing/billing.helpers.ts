@@ -137,6 +137,17 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
   },
 };
 
+/**
+ * The plan a plan id means, wherever a plan object is needed. The plan id crosses two
+ * boundaries that validate nothing — the backend's `/subscription-status` payload and the
+ * local cache — and the backend's canonical ids include `team`, which has no catalogue
+ * entry here yet. Resolving through one function is what keeps an id this catalogue does
+ * not know from crashing the billing page while the profile page prints "Free" for the
+ * same customer.
+ */
+export const resolvePlan = (planId: string): BillingPlan =>
+  BILLING_PLANS[planId as BillingPlanId] ?? BILLING_PLANS.free;
+
 export const createFreeSubscription = (): SubscriptionSnapshot => ({
   planId: 'free',
   status: 'none',
@@ -211,7 +222,7 @@ export const getBillingStatusPresentation = (
     };
   }
 
-  const plan = BILLING_PLANS[subscription.planId];
+  const plan = resolvePlan(subscription.planId);
   const periodValue = formatRenewalDate(subscription.currentPeriodEnd);
 
   if (isCancellationPending(subscription)) {

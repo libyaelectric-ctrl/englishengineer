@@ -122,7 +122,7 @@ export const BillingPage = () => {
                 uploadedDocsCount={0}
                 voiceMinutesUsed={0}
               />
-              <BillingUpgradeCTA planId={subscription.planId} />
+              <BillingUpgradeCTA subscription={subscription} />
             </div>
           </SectionCard>
           <SectionCard title="Transaction History" subtitle="Invoices and receipts" icon={Download}>

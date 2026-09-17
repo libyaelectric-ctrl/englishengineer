@@ -3,7 +3,7 @@ import { Crown, ExternalLink, Loader2 } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 
-import { hasActivePaidAccess } from './billing.entitlements';
+import { canOpenCustomerPortal, hasActivePaidAccess } from './billing.entitlements';
 import { billingFailureCopy } from './billing.failure-copy';
 import { getBillingStatusPresentation } from './billing.helpers';
 import type {
@@ -45,7 +45,9 @@ export const BillingStatusPanel = ({
   // is offered the upgrade. The rule lives in `billing.entitlements` so the profile page
   // cannot answer the same question differently.
   const paidAccessIsActive = hasActivePaidAccess(subscription);
-  const canOpenPortal = providerStatus.isConfigured && Boolean(subscription.stripeCustomerId);
+  // Portal eligibility is the profile page's question too, answered in `billing.entitlements`
+  // so the two controls cannot disagree about when a session can be opened.
+  const canOpenPortal = canOpenCustomerPortal(subscription, providerStatus);
 
   // The wording lives in one place, shared with the profile alert, so the same
   // failure cannot read differently on the two surfaces that render it.

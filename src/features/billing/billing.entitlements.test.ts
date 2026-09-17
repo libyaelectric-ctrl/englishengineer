@@ -5,6 +5,7 @@ import {
   canAccessFeature,
   canAccessProjectWorkspace,
   canCreateMission,
+  canOpenCustomerPortal,
   canUseAICoach,
   canViewAdvancedAnalytics,
   getDowngradeImpact,
@@ -13,7 +14,7 @@ import {
   hasActivePaidAccess,
   isSubscriptionActive,
 } from './billing.entitlements';
-import { createFreeSubscription } from './billing.helpers';
+import { BILLING_PLANS, createFreeSubscription, resolvePlan } from './billing.helpers';
 import { SubscriptionSnapshot } from './billing.types';
 
 const proSubscription: SubscriptionSnapshot = {
@@ -62,6 +63,42 @@ describe('billing entitlements', () => {
       expect(hasActivePaidAccess({ ...proSubscription, planId: 'junior', status: 'none' })).toBe(
         false
       );
+    });
+  });
+
+  describe('resolvePlan', () => {
+    it('answers with the catalogue entry for every id the catalogue knows', () => {
+      for (const planId of ['free', 'junior', 'senior', 'specialist', 'master'] as const) {
+        expect(resolvePlan(planId)).toBe(BILLING_PLANS[planId]);
+      }
+    });
+
+    it('resolves an id outside the catalogue instead of handing back undefined', () => {
+      // `team` is a canonical plan id on the backend, which has no entry here, and nothing
+      // validates the plan id on its way in — so every lookup has to resolve to a plan.
+      for (const unknownId of ['team', 'orbit', '']) {
+        expect(resolvePlan(unknownId)).toBe(BILLING_PLANS.free);
+      }
+    });
+  });
+
+  describe('canOpenCustomerPortal', () => {
+    const configured = { isConfigured: true };
+    const unconfigured = { isConfigured: false };
+
+    it('is true only when the provider is configured and a customer is linked', () => {
+      expect(canOpenCustomerPortal(proSubscription, configured)).toBe(true);
+    });
+
+    it('is false without a linked customer, configured or not', () => {
+      const noCustomer = { ...proSubscription, stripeCustomerId: null };
+      expect(canOpenCustomerPortal(noCustomer, configured)).toBe(false);
+      expect(canOpenCustomerPortal(noCustomer, unconfigured)).toBe(false);
+    });
+
+    it('is false when the provider is not configured, however the account looks', () => {
+      expect(canOpenCustomerPortal(proSubscription, unconfigured)).toBe(false);
+      expect(canOpenCustomerPortal(createFreeSubscription(), unconfigured)).toBe(false);
     });
   });
 
