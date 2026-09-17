@@ -91,6 +91,24 @@ export const isFreeTier = (subscription: SubscriptionSnapshot): boolean =>
   subscription.planId === 'free' ||
   (subscription.planId === 'junior' && subscription.status === 'none');
 
+/**
+ * A paid plan whose access is actually in force. A paid plan that lapsed — canceled, past
+ * due, unpaid, incomplete — is not paid access, so the customer keeps the route back to
+ * upgrading. Every surface that offers or withholds an upgrade asks this one question;
+ * answering it twice is how the profile page ended up hiding the control from exactly the
+ * churned customers the billing page still offered it to.
+ */
+export const hasActivePaidAccess = (subscription: SubscriptionSnapshot): boolean =>
+  !isFreeTier(subscription) &&
+  (subscription.status === 'active' || subscription.status === 'trialing');
+
+/**
+ * The plan the app's own "Upgrade Plan" control starts a checkout for, wherever that
+ * control is rendered. One value on purpose: two identically-labelled buttons that buy
+ * different plans is a defect no surface can see from the outside.
+ */
+export const DEFAULT_UPGRADE_PLAN_ID: Exclude<BillingPlanId, 'free'> = 'senior';
+
 export type FreeTierPreviewScope = 'firstGrammarModule' | 'firstVocabularyBatch';
 
 export interface FreeTierPreview {

@@ -43,7 +43,7 @@ import { ThemeToggle } from '@/shared/components/ThemeToggle';
 
 import { BILLING_PLANS } from '@/features/billing';
 import type { BillingPlanId, SubscriptionSnapshot } from '@/features/billing';
-import { isFreeTier } from '@/features/billing/billing.entitlements';
+import { hasActivePaidAccess } from '@/features/billing/billing.entitlements';
 import { LearningProfileEngine, SKILL_NAMES } from '@/features/profile';
 import {
   COMMUNICATION_GOALS,
@@ -199,7 +199,13 @@ const ProfileInfoSection = ({
     },
     { label: 'Discipline', value: profile.discipline || 'Not Selected', icon: Layers },
     { label: 'Member Since', value: 'July 2026', icon: Calendar },
-    { label: 'Plan', value: subscription.planId === 'senior' ? 'Pro' : 'Free', icon: ShieldCheck },
+    {
+      // One owner for the plan's name, shared with the hero badge and the Subscription
+      // card, so the three plan labels on this page cannot disagree.
+      label: 'Plan',
+      value: BILLING_PLANS[subscription.planId as BillingPlanId]?.name ?? 'Free',
+      icon: ShieldCheck,
+    },
   ];
 
   return (
@@ -323,9 +329,10 @@ const SubscriptionSection = ({
   onManageSubscription: () => void;
 }) => {
   const planName = BILLING_PLANS[subscription.planId]?.name ?? 'Free';
-  // The same two conditions the billing panel applies, from the same owners: whether an
-  // upgrade is still on offer, and whether a portal session can be opened at all.
-  const canUpgrade = isFreeTier(subscription);
+  // The same two conditions the billing panel applies, from the same owners: whether paid
+  // access is actually in force (a lapsed paid plan still deserves the upgrade control),
+  // and whether a portal session can be opened at all.
+  const canUpgrade = !hasActivePaidAccess(subscription);
   const canOpenPortal = providerStatus.isConfigured && Boolean(subscription.stripeCustomerId);
 
   return (
@@ -334,9 +341,6 @@ const SubscriptionSection = ({
         <div className="min-w-0">
           <p className="text-[10px] font-bold text-muted-copy uppercase">Current plan</p>
           <p className="mt-0.5 text-sm font-bold text-foreground">{planName}</p>
-          <p className="mt-1 text-xs text-muted-copy">
-            Invoices, quota limits and receipts are on the billing page.
-          </p>
         </div>
         <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
           {canUpgrade && (

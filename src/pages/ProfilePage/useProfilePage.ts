@@ -9,7 +9,7 @@ import { storage } from '@/shared/storage';
 import { useAIStore } from '@/features/ai';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
-import { useBillingStore } from '@/features/billing';
+import { DEFAULT_UPGRADE_PLAN_ID, useBillingStore } from '@/features/billing';
 import { billingFailureCopy, resolveBillingError } from '@/features/billing/billing.failure-copy';
 import { useLearningIntelligenceStore } from '@/features/learning-intelligence';
 import { useLearningCockpit } from '@/features/profile';
@@ -120,9 +120,11 @@ export const useProfilePage = () => {
     try {
       setError(null);
       ProductAnalyticsService.track('checkout_started', '/profile', {
-        metadata: { plan: 'junior', source: 'user' },
+        metadata: { plan: DEFAULT_UPGRADE_PLAN_ID, source: 'user' },
       });
-      await startCheckout(currentUser.id, currentUser.email, 'junior');
+      // The same plan the billing page's identically-labelled control buys. Selling a
+      // different one here made one label mean two products.
+      await startCheckout(currentUser.id, currentUser.email, DEFAULT_UPGRADE_PLAN_ID);
     } catch (e: unknown) {
       setError(resolveBillingError(e));
     }

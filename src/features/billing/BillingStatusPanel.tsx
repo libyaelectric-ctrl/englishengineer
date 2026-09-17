@@ -3,7 +3,7 @@ import { Crown, ExternalLink, Loader2 } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 
-import { isFreeTier } from './billing.entitlements';
+import { hasActivePaidAccess } from './billing.entitlements';
 import { billingFailureCopy } from './billing.failure-copy';
 import { getBillingStatusPresentation } from './billing.helpers';
 import type {
@@ -41,11 +41,10 @@ export const BillingStatusPanel = ({
   errorCode = null,
 }: BillingStatusPanelProps) => {
   const presentation = getBillingStatusPresentation(subscription, providerStatus);
-  // The paid 'junior' plan (status active/trialing) is paid access; only the
-  // free tier should trigger the "Upgrade Plan" CTA.
-  const paidAccessIsActive =
-    !isFreeTier(subscription) &&
-    (subscription.status === 'active' || subscription.status === 'trialing');
+  // Only a customer without paid access in force — free tier, or a paid plan that lapsed —
+  // is offered the upgrade. The rule lives in `billing.entitlements` so the profile page
+  // cannot answer the same question differently.
+  const paidAccessIsActive = hasActivePaidAccess(subscription);
   const canOpenPortal = providerStatus.isConfigured && Boolean(subscription.stripeCustomerId);
 
   // The wording lives in one place, shared with the profile alert, so the same
