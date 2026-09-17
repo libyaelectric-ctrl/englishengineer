@@ -14,7 +14,10 @@ import {
   BookOpen,
   Briefcase,
   Calendar,
+  CreditCard,
+  Crown,
   Download,
+  ExternalLink,
   Flame,
   Layers,
   Mail,
@@ -39,7 +42,8 @@ import { SectionCard } from '@/shared/components/SectionCard';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
 
 import { BILLING_PLANS } from '@/features/billing';
-import type { BillingPlanId } from '@/features/billing';
+import type { BillingPlanId, SubscriptionSnapshot } from '@/features/billing';
+import { isFreeTier } from '@/features/billing/billing.entitlements';
 import { LearningProfileEngine, SKILL_NAMES } from '@/features/profile';
 import {
   COMMUNICATION_GOALS,
@@ -294,6 +298,69 @@ const ProfileInfoSection = ({
           </div>
         </form>
       )}
+    </SectionCard>
+  );
+};
+
+// ─── Subscription Section ─────────────────────────────────────
+// The two controls the hook already owned but nothing rendered. They live here rather
+// than only on `/billing` because this page is where the plan is shown (the hero badge and
+// the Plan row) and where an account holder looks for it. The copy is not re-authored: a
+// failure goes into the page's single alert, resolved by the same module `/billing` uses,
+// and the two buttons carry the same labels as the billing panel's — so the surfaces
+// cannot drift into two different sentences for one failure.
+const SubscriptionSection = ({
+  subscription,
+  providerStatus,
+  isCheckoutLoading,
+  onUpgrade,
+  onManageSubscription,
+}: {
+  subscription: SubscriptionSnapshot;
+  providerStatus: { isConfigured: boolean };
+  isCheckoutLoading: boolean;
+  onUpgrade: () => void;
+  onManageSubscription: () => void;
+}) => {
+  const planName = BILLING_PLANS[subscription.planId]?.name ?? 'Free';
+  // The same two conditions the billing panel applies, from the same owners: whether an
+  // upgrade is still on offer, and whether a portal session can be opened at all.
+  const canUpgrade = isFreeTier(subscription);
+  const canOpenPortal = providerStatus.isConfigured && Boolean(subscription.stripeCustomerId);
+
+  return (
+    <SectionCard title="Subscription" icon={CreditCard}>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <p className="text-[10px] font-bold text-muted-copy uppercase">Current plan</p>
+          <p className="mt-0.5 text-sm font-bold text-foreground">{planName}</p>
+          <p className="mt-1 text-xs text-muted-copy">
+            Invoices, quota limits and receipts are on the billing page.
+          </p>
+        </div>
+        <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+          {canUpgrade && (
+            <button
+              type="button"
+              onClick={onUpgrade}
+              disabled={isCheckoutLoading}
+              className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-[var(--radius-card)] border border-primary bg-primary px-4 text-xs font-bold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Crown className="h-3.5 w-3.5" aria-hidden="true" />
+              Upgrade Plan
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onManageSubscription}
+            disabled={isCheckoutLoading || !canOpenPortal}
+            className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-[var(--radius-card)] border border-border-soft bg-surface px-4 text-xs font-bold uppercase tracking-wider text-primary transition-colors hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+            Manage Subscription
+          </button>
+        </div>
+      </div>
     </SectionCard>
   );
 };
@@ -650,11 +717,15 @@ const ProfilePage = () => {
   const {
     currentUser,
     subscription,
+    providerStatus,
     profile,
     memory,
     message,
     error,
     billingError,
+    isCheckoutLoading,
+    handleUpgrade,
+    handleManageSubscription,
     isEditMode,
     isSaving,
     editFirstName,
@@ -724,6 +795,15 @@ const ProfilePage = () => {
         setIsEditMode={setIsEditMode}
         enterEditMode={enterEditMode}
         handleSaveProfile={handleSaveProfile}
+      />
+
+      {/* Subscription */}
+      <SubscriptionSection
+        subscription={subscription}
+        providerStatus={providerStatus}
+        isCheckoutLoading={isCheckoutLoading}
+        onUpgrade={handleUpgrade}
+        onManageSubscription={handleManageSubscription}
       />
 
       {/* Skills */}
