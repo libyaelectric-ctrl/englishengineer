@@ -136,8 +136,10 @@ describe('BillingStatusPanel', () => {
 
     const alert = screen.getByRole('alert');
     expect(alert).toBeVisible();
-    expect(alert).toHaveTextContent('Required audit logging is unavailable.');
-    expect(alert).not.toHaveTextContent(/billing could not be started/i);
+    // The wording comes from the code: an unclassified code gets the generic billing
+    // copy, never the backend's sentence, even when that sentence looks familiar.
+    expect(alert).toHaveTextContent(/billing could not be started/i);
+    expect(alert).not.toHaveTextContent('Required audit logging is unavailable.');
   });
 
   it('falls back to the backend message when no code came with the error', () => {

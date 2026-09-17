@@ -49,10 +49,25 @@ describe('billingFailureCopy', () => {
     );
   });
 
-  it('passes a message through untouched when the code is unrecognised or absent', () => {
-    expect(billingFailureCopy('brand_new_code', RAW_AUDIT)).toBe(RAW_AUDIT);
+  it('passes the message through when the failure arrived without a code', () => {
     expect(billingFailureCopy(null, RAW_AUDIT)).toBe(RAW_AUDIT);
     expect(billingFailureCopy(undefined, RAW_AUDIT)).toBe(RAW_AUDIT);
+  });
+
+  it('never shows the backend sentence for a code it cannot classify', () => {
+    // Measured on the real app: a billing POST with a malformed body is answered 400
+    // `entity.parse.failed` / "Unexpected end of JSON input" — a runtime-synthesised code
+    // the contract cannot list ahead of time.
+    expect(billingFailureCopy('entity.parse.failed', 'Unexpected end of JSON input')).toBe(
+      AUDIT_COPY
+    );
+    expect(billingFailureCopy('brand_new_code', RAW_AUDIT)).toBe(AUDIT_COPY);
+    // A code the backend emits but the contract files under `other-routes` is just as
+    // unknown here, so a wrong label changes the wording decision, not what a customer
+    // reads.
+    expect(billingFailureCopy('probe_mislabelled_code', 'Probe: an internal sentence.')).toBe(
+      AUDIT_COPY
+    );
   });
 
   it('adds no wording for the transport failures, whose sentences are already customer-facing', () => {
@@ -69,7 +84,7 @@ describe('billingFailureCopy', () => {
   it('warns in development for a code outside the contract, and stays quiet for classified ones', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
-      expect(billingFailureCopy('code_nobody_classified', 'Raw sentence.')).toBe('Raw sentence.');
+      expect(billingFailureCopy('code_nobody_classified', 'Raw sentence.')).toBe(AUDIT_COPY);
       const said = warn.mock.calls.flat().join(' ');
       expect(said).toContain('code_nobody_classified');
       expect(said).toContain('billing.failure-copy.ts');

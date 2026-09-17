@@ -23,6 +23,10 @@ const AUDIT_COPY =
   'Billing could not be started because the service is temporarily unavailable. Please try again in a few minutes.';
 const RAW_BACKEND_SENTENCE = 'Required audit logging is unavailable.';
 
+/** Measured on the real app (malformed billing body): 400 `entity.parse.failed`. */
+const OUT_OF_CONTRACT_CODE = 'entity.parse.failed';
+const OUT_OF_CONTRACT_SENTENCE = 'Unexpected end of JSON input';
+
 const jsonResponse = (status: number, body: unknown): Response =>
   new Response(JSON.stringify(body), {
     status,
@@ -52,6 +56,27 @@ const seedAuditFailure = async (): Promise<void> => {
     useBillingStore.getState().startCheckout('user-1', 'engineer@example.com', 'senior')
   ).rejects.toThrow(/audit logging is unavailable/i);
   expect(useBillingStore.getState().error).toBe(RAW_BACKEND_SENTENCE);
+};
+
+/** Fails a real checkout with a code that is not in the contract at all. */
+const seedOutOfContractFailure = async (): Promise<void> => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () =>
+      jsonResponse(400, {
+        ok: false,
+        error: { code: OUT_OF_CONTRACT_CODE, message: OUT_OF_CONTRACT_SENTENCE },
+      })
+    )
+  );
+  setAuthTokenGetter(async () => 'test-id-token');
+  useBillingStore.getState().setBillingError(null);
+
+  await expect(
+    useBillingStore.getState().startCheckout('user-1', 'engineer@example.com', 'senior')
+  ).rejects.toThrow(/Unexpected end of JSON input/);
+  expect(useBillingStore.getState().error).toBe(OUT_OF_CONTRACT_SENTENCE);
+  expect(useBillingStore.getState().errorCode).toBe(OUT_OF_CONTRACT_CODE);
 };
 
 const queryClient = new QueryClient();
@@ -109,6 +134,20 @@ describe('the same billing failure on both surfaces', () => {
     expect(profile.result.current.billingError).toBe(AUDIT_COPY);
     expect(rendered.textContent).toBe(profile.result.current.billingError);
     expect(rendered.textContent).not.toContain(RAW_BACKEND_SENTENCE);
+  });
+
+  it('answers an out-of-contract code with billing copy on both surfaces', async () => {
+    const profile = renderProfile();
+
+    await act(async () => {
+      await seedOutOfContractFailure();
+    });
+
+    renderPanelFromStore();
+
+    expect(screen.getByText(AUDIT_COPY).textContent).toBe(AUDIT_COPY);
+    expect(profile.result.current.billingError).toBe(AUDIT_COPY);
+    expect(screen.queryByText(OUT_OF_CONTRACT_SENTENCE)).toBeNull();
   });
 
   it("resolves the failure the profile page's own upgrade hits, not just the store's", async () => {

@@ -6,10 +6,15 @@ import type { BillingSurfaceErrorCode } from './billing.error-codes';
  * The one place a billing failure becomes a sentence a customer should read.
  *
  * Both surfaces that render a billing failure — the billing panel and the profile
- * alert — resolve through this, so the same failure reads the same everywhere and the
- * backend's own wording never reaches a paying user. Before, the panel had this map
- * and the profile page printed the failure raw, so one failure produced two sentences
- * depending on which page the customer happened to be on.
+ * alert — resolve through this, so the same failure reads the same everywhere and no
+ * code outside the contract can reach a paying user as the backend's own sentence.
+ * Before, the panel had this map and the profile page printed the failure raw, so one
+ * failure produced two sentences depending on which page the customer happened to be on.
+ *
+ * A classified code that keeps its backend sentence is a recorded decision, not an
+ * oversight: `BACKEND_SENTENCE_CODES` names the reason for each one, and some of those
+ * sentences name a provider or a component ("Dodo Payments request failed (502).").
+ * Rewriting them is a copy decision for a change of its own, not this resolver's.
  *
  * Keyed by code, not by wording: the backend sends `error.code`, and matching its
  * sentences instead meant a copy change on the server silently changed what the
@@ -21,8 +26,14 @@ import type { BillingSurfaceErrorCode } from './billing.error-codes';
  * code the billing surface can receive is either rewritten here or given a named reason
  * to keep the backend's sentence. A code the contract does not know at all — one the
  * backend synthesises at runtime, such as a `http-errors` `type` on a malformed body,
- * or a code from a newer backend — cannot be classified ahead of time; the resolver
- * warns about it in development rather than letting it pass unnoticed.
+ * or a code from a newer backend — cannot be classified ahead of time. It resolves to
+ * the generic billing copy below, never to the backend's own sentence, and the resolver
+ * warns about it in development so the contract can still grow.
+ *
+ * That fallback is what keeps a wrong contract label from reaching a customer: a code
+ * the backend emits but the contract files under `other-routes` is simply unknown here,
+ * so the customer reads billing copy either way. The label decides which sentence the
+ * customer gets only for codes this client can actually classify.
  *
  * This must never return nothing when it has copy for the code. Dropping the message
  * entirely is what made a failed checkout look like a dead button: the request failed,
@@ -39,10 +50,19 @@ export type BillingTransportCode =
 /** Every code a billing surface can be asked to explain. */
 export type BillingFailureCode = BillingSurfaceErrorCode | BillingTransportCode;
 
+/**
+ * What a customer reads when the failure cannot be tied to copy of its own.
+ *
+ * It reuses the existing wording for an unavailable billing service rather than adding
+ * new copy, and it is the reason an unmapped or out-of-contract code cannot reach a
+ * paying user as the backend's own sentence.
+ */
+const BILLING_UNAVAILABLE_COPY =
+  'Billing could not be started because the service is temporarily unavailable. Please try again in a few minutes.';
+
 /** Codes whose backend sentence a customer should not read; the map replaces it. */
 const BILLING_FAILURE_COPY = {
-  audit_log_unavailable:
-    'Billing could not be started because the service is temporarily unavailable. Please try again in a few minutes.',
+  audit_log_unavailable: BILLING_UNAVAILABLE_COPY,
   idempotency_store_unavailable:
     'A previous billing attempt is still being processed. Please wait a moment and try again.',
   origin_not_allowed:
@@ -110,7 +130,7 @@ const BACKEND_SENTENCE_CODES: Record<
 const warnUnclassified = (errorCode: string): void => {
   if (!import.meta.env.DEV) return;
   logger.w(
-    `Unclassified billing failure code "${errorCode}" reached a customer surface: the backend's own sentence is being shown. Add it to BILLING_FAILURE_COPY or BACKEND_SENTENCE_CODES in billing.failure-copy.ts.`
+    `Unclassified billing failure code "${errorCode}" reached a customer surface: the generic billing copy is being shown instead of the backend's sentence. Add it to BILLING_FAILURE_COPY or BACKEND_SENTENCE_CODES in billing.failure-copy.ts to decide its wording.`
   );
 };
 
@@ -124,7 +144,13 @@ export const billingFailureCopy = (
   const copy = (BILLING_FAILURE_COPY as Record<string, string | undefined>)[errorCode];
   if (copy) return copy;
 
-  if (!(errorCode in BACKEND_SENTENCE_CODES)) warnUnclassified(errorCode);
+  // A code the contract classifies keeps the sentence the backend wrote for it.
+  if (errorCode in BACKEND_SENTENCE_CODES) return message;
 
-  return message;
+  // Everything else is out of contract — a runtime-synthesised code, a code from a newer
+  // backend, or one the contract files under another surface. The customer gets billing
+  // copy, and development keeps the warning as the signal that the contract has to grow.
+  warnUnclassified(errorCode);
+
+  return BILLING_UNAVAILABLE_COPY;
 };
