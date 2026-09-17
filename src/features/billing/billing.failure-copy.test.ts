@@ -2,7 +2,14 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
-import { billingFailureCopy } from './billing.failure-copy';
+import { AppError } from '@/core/errors/app-error';
+import { ErrorCode } from '@/core/errors/error-codes';
+
+import {
+  CLIENT_SENTENCE_CODE,
+  billingFailureCopy,
+  resolveBillingError,
+} from './billing.failure-copy';
 
 const AUDIT_COPY =
   'Billing could not be started because the service is temporarily unavailable. Please try again in a few minutes.';
@@ -49,9 +56,36 @@ describe('billingFailureCopy', () => {
     );
   });
 
-  it('passes the message through when the failure arrived without a code', () => {
-    expect(billingFailureCopy(null, RAW_AUDIT)).toBe(RAW_AUDIT);
-    expect(billingFailureCopy(undefined, RAW_AUDIT)).toBe(RAW_AUDIT);
+  it('answers a failure without a code with billing copy, not with its sentence', () => {
+    // Measured on the real app: a 200 that is not the versioned envelope, a 200 or a 502
+    // HTML body and a code-less error envelope all reach a surface with no code, and
+    // each used to print its own sentence.
+    expect(
+      billingFailureCopy(null, 'Backend response does not match the versioned success envelope.')
+    ).toBe(AUDIT_COPY);
+    expect(billingFailureCopy(undefined, "Unexpected token '<' is not valid JSON")).toBe(
+      AUDIT_COPY
+    );
+    expect(billingFailureCopy(null, 'API 502: ')).toBe(AUDIT_COPY);
+    expect(billingFailureCopy(null, RAW_AUDIT)).toBe(AUDIT_COPY);
+  });
+
+  it('keeps a sentence the client itself wrote, under the code for that channel', () => {
+    const demo = 'Demo profiles cannot make purchases. Create an account to subscribe.';
+    expect(billingFailureCopy(CLIENT_SENTENCE_CODE, demo)).toBe(demo);
+  });
+
+  it('resolves a thrown failure from the error, so no surface re-derives the rule', () => {
+    const coded = new AppError({
+      code: ErrorCode.NETWORK,
+      apiCode: 'audit_log_unavailable',
+      message: RAW_AUDIT,
+    });
+    expect(resolveBillingError(coded)).toBe(AUDIT_COPY);
+    // A thrower that carries no code — a plain Error, or anything that is not an Error.
+    expect(resolveBillingError(new Error('API 502: '))).toBe(AUDIT_COPY);
+    expect(resolveBillingError('not an error')).toBe(AUDIT_COPY);
+    expect(resolveBillingError(coded)).not.toBe(RAW_AUDIT);
   });
 
   it('never shows the backend sentence for a code it cannot classify', () => {
@@ -93,8 +127,13 @@ describe('billingFailureCopy', () => {
       billingFailureCopy('audit_log_unavailable', 'Raw sentence.');
       billingFailureCopy('invalid_request', 'Full name is required.');
       billingFailureCopy('billing_backend_timeout', 'Timed out.');
-      billingFailureCopy(null, 'Raw sentence.');
+      billingFailureCopy(CLIENT_SENTENCE_CODE, 'Demo profiles cannot make purchases.');
       expect(warn).not.toHaveBeenCalled();
+
+      // A missing code is the case that used to pass through in silence.
+      warn.mockClear();
+      expect(billingFailureCopy(null, 'API 502: ')).toBe(AUDIT_COPY);
+      expect(warn.mock.calls.flat().join(' ')).toContain('without a code');
     } finally {
       warn.mockRestore();
     }

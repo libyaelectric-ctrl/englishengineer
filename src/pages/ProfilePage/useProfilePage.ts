@@ -4,15 +4,13 @@ import { useCallback, useEffect, useReducer, useState } from 'react';
 
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { AppError } from '@/core/errors/app-error';
-
 import { storage } from '@/shared/storage';
 
 import { useAIStore } from '@/features/ai';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
-import { billingFailureCopy } from '@/features/billing/billing.failure-copy';
+import { billingFailureCopy, resolveBillingError } from '@/features/billing/billing.failure-copy';
 import { useLearningIntelligenceStore } from '@/features/learning-intelligence';
 import { useLearningCockpit } from '@/features/profile';
 import { useSpeakingStore } from '@/features/speaking';
@@ -112,17 +110,6 @@ export const useProfilePage = () => {
     }
   }, [currentUser?.id, location.search, refreshBilling]);
 
-  /**
-   * The profile page renders billing failures too, so it resolves them through the
-   * same mapping the billing panel uses — otherwise a failure that started here would
-   * print the backend's own sentence while the billing page showed a customer one.
-   */
-  const resolveBillingFailure = (error: unknown, fallback: string): string =>
-    billingFailureCopy(
-      error instanceof AppError ? error.apiCode : null,
-      error instanceof Error ? error.message : fallback
-    );
-
   const handleUpgrade = async () => {
     if (!currentUser) return;
     if (currentUser.id.startsWith('demo_engineer_')) {
@@ -136,7 +123,7 @@ export const useProfilePage = () => {
       });
       await startCheckout(currentUser.id, currentUser.email, 'junior');
     } catch (e: unknown) {
-      setError(resolveBillingFailure(e, 'Billing is not available in demo mode.'));
+      setError(resolveBillingError(e));
     }
   };
 
@@ -150,7 +137,7 @@ export const useProfilePage = () => {
       setError(null);
       await openCustomerPortal(currentUser.id);
     } catch (e: unknown) {
-      setError(resolveBillingFailure(e, 'Billing portal is not available in demo mode.'));
+      setError(resolveBillingError(e));
     }
   };
 

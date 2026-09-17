@@ -22,6 +22,7 @@ import {
   canUseAICoach,
   useBillingStore,
 } from '@/features/billing';
+import { resolveBillingError } from '@/features/billing/billing.failure-copy';
 import { useWorkspaceStore } from '@/features/billing/workspace.store';
 import { useLearningIntelligenceStore } from '@/features/learning-intelligence';
 
@@ -130,7 +131,9 @@ export function useAIPage() {
     try {
       await startTopupCheckout(currentUser.id, currentUser.email);
     } catch (err) {
-      setBuyError(err instanceof Error ? err.message : 'Top-up purchase failed.');
+      // A top-up is a billing failure like any other: it resolves through the same
+      // mapping, so the credit purchase cannot print the backend's own sentence.
+      setBuyError(resolveBillingError(err));
       setIsBuyingCredits(false);
     }
   };
