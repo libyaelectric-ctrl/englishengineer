@@ -30,6 +30,7 @@ export const useProfilePage = () => {
     subscription,
     providerStatus,
     isLoading: isBillingLoading,
+    isCheckoutLoading,
     error: billingError,
     errorCode: billingErrorCode,
     initializeBilling,
@@ -208,6 +209,9 @@ export const useProfilePage = () => {
     subscription,
     providerStatus,
     isBillingLoading,
+    // Guard for the two controls below: a checkout and a portal request both take
+    // seconds, and a second click during one would start a second session.
+    isCheckoutLoading,
     // Already resolved: this is the sentence a customer should read, not the store's
     // raw failure, and it is the same one the billing panel shows for it.
     billingError: billingError ? billingFailureCopy(billingErrorCode, billingError) : null,

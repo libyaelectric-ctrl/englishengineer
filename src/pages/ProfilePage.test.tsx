@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -18,7 +18,11 @@ const renderWithProviders = (ui: React.ReactNode) =>
 const mockState = {
   activeSection: 'overview',
   currentUser: { id: 'user-1', displayName: 'Ali', email: 'ali@test.com' },
-  subscription: { planId: 'junior' },
+  subscription: { planId: 'junior', status: 'none', stripeCustomerId: 'cus_test' },
+  providerStatus: { mode: 'backend', isConfigured: true, label: 'Stripe', detail: '' },
+  isCheckoutLoading: false,
+  handleUpgrade: vi.fn(),
+  handleManageSubscription: vi.fn(),
   profile: { professionId: 'software-engineer' },
   memory: { total: 100, mastered: 50, dueToday: 10, weakWords: 5 },
   learningState: { achievements: [] },
@@ -99,5 +103,15 @@ describe('ProfilePage', () => {
     expect(screen.getByText(/Profile Information/i)).toBeTruthy();
     expect(screen.getByText(/Skills & Progress/i)).toBeTruthy();
     expect(screen.getByText(/Achievements/i)).toBeTruthy();
+  });
+
+  it('wires both subscription controls to the hook handlers', () => {
+    renderWithProviders(<ProfilePage />);
+
+    fireEvent.click(screen.getByRole('button', { name: /upgrade plan/i }));
+    fireEvent.click(screen.getByRole('button', { name: /manage subscription/i }));
+
+    expect(mockState.handleUpgrade).toHaveBeenCalledTimes(1);
+    expect(mockState.handleManageSubscription).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,13 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import {
-  act,
-  fireEvent,
-  render,
-  renderHook,
-  screen,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -19,7 +11,7 @@ import { useAuthStore } from '@/features/auth';
 import { AIPage } from '@/pages/AIPage';
 import BillingPage from '@/pages/BillingPage';
 import PricingPage from '@/pages/PricingPage';
-import { useProfilePage } from '@/pages/ProfilePage/useProfilePage';
+import ProfilePage from '@/pages/ProfilePage';
 
 import { BillingStatusPanel } from './BillingStatusPanel';
 import { CLIENT_SENTENCE_CODE } from './billing.failure-copy';
@@ -27,12 +19,47 @@ import { useBillingStore } from './billing.store';
 
 /**
  * Every surface a customer can meet a billing failure on, whatever page it belongs to:
- * the billing panel, the profile page's own upgrade and portal actions, the pricing page,
+ * the billing panel, the profile page's own upgrade and portal controls, the pricing page,
  * the AI page's credit purchase, and the store's channel for a sentence a client writes
  * itself. Each is driven through its real code against a failure that really happened (a
  * 503 from the checkout endpoint), because the one thing that has to hold everywhere is
  * that the customer reads curated copy and never the backend's own sentence.
+ *
+ * The profile surface is carried by the page itself, not by its hook: a hook's return value
+ * is what the page renders, not what the customer reads.
  */
+
+/**
+ * `useLearningCockpit` must hand back ONE frozen object: a fresh literal per call makes every
+ * consumer that lists it as a dependency re-run, and the profile page then re-renders until
+ * the event loop blocks. Everything else in the module stays real.
+ */
+const { mockLearningCockpit } = vi.hoisted(() => ({
+  mockLearningCockpit: {
+    profile: {
+      skills: {
+        vocabulary: { elo: 800, cefrBand: 'A1' },
+        grammar: { elo: 750, cefrBand: 'A1' },
+        reading: { elo: 700, cefrBand: 'A1' },
+        writing: { elo: 650, cefrBand: 'A1' },
+        speaking: { elo: 600, cefrBand: 'A1' },
+        listening: { elo: 700, cefrBand: 'A1' },
+      },
+    },
+    memory: { total: 0, new: 0, learning: 0, mastered: 0, forgotten: 0, dueToday: 0, weakWords: 0 },
+    missions: [],
+    isLoading: false,
+    learningState: { studySessions: [] },
+  },
+}));
+
+vi.mock('@/features/profile', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/features/profile')>();
+  return {
+    ...actual,
+    useLearningCockpit: vi.fn(() => mockLearningCockpit),
+  };
+});
 
 const AUDIT_COPY =
   'Billing could not be started because the service is temporarily unavailable. Please try again in a few minutes.';
@@ -127,17 +154,42 @@ const CODE_LESS_ENVELOPES: { shape: string; raw: string; make: () => Response }[
 
 const queryClient = new QueryClient();
 
+/**
+ * Captured at module load, before any test can write to them. The profile page's controls are
+ * driven by these two, so a test that configures a provider and a customer has to hand the
+ * store back exactly what it found.
+ */
+const PRISTINE_SUBSCRIPTION = useBillingStore.getState().subscription;
+const PRISTINE_PROVIDER_STATUS = useBillingStore.getState().providerStatus;
+
 const wrapper = ({ children }: { children: React.ReactNode }) => (
   <QueryClientProvider client={queryClient}>
     <MemoryRouter>{children}</MemoryRouter>
   </QueryClientProvider>
 );
 
-const renderProfile = () => renderHook(() => useProfilePage(), { wrapper });
+/**
+ * The profile page, not its hook. Its controls and its alert are the surface a customer
+ * meets, so they are what these tests drive and read.
+ */
+const renderProfilePage = () => render(<ProfilePage />, { wrapper });
 
-const renderPanelFromStore = (): void => {
+/**
+ * The profile page's single alert: the element that shows a resolved billing failure (and
+ * whatever else the page has to say). Requiring it to be unique keeps the assertion about
+ * that element instead of about "somewhere in the page".
+ */
+const profileAlert = (root: HTMLElement): HTMLElement => {
+  const alerts = [...root.querySelectorAll<HTMLElement>('[role="status"]')];
+  if (alerts.length !== 1) {
+    throw new Error(`the profile page rendered ${alerts.length} status regions, expected 1`);
+  }
+  return alerts[0];
+};
+
+const renderPanelFromStore = (): HTMLElement => {
   const { subscription, providerStatus, error, errorCode } = useBillingStore.getState();
-  render(
+  const { container } = render(
     <BillingStatusPanel
       subscription={subscription}
       providerStatus={providerStatus}
@@ -149,6 +201,7 @@ const renderPanelFromStore = (): void => {
     />,
     { wrapper }
   );
+  return container;
 };
 
 beforeEach(() => {
@@ -165,11 +218,18 @@ afterEach(() => {
   setAuthTokenGetter(null);
   vi.unstubAllGlobals();
   useBillingStore.getState().setBillingError(null);
+  // The portal cases have to put the account into the state a paying customer's is in, so
+  // those writes are undone here: otherwise what the next test renders depends on the order
+  // this file's tests happen to run in.
+  useBillingStore.setState({
+    subscription: PRISTINE_SUBSCRIPTION,
+    providerStatus: PRISTINE_PROVIDER_STATUS,
+  });
 });
 
 describe('the same billing failure on both surfaces', () => {
   it('resolves the store failure to one sentence, with no raw backend wording on either', async () => {
-    const profile = renderProfile();
+    const page = renderProfilePage();
 
     // Seeded after mounting: the profile page refreshes billing on mount, which is a
     // different moment from the failure arriving.
@@ -177,41 +237,40 @@ describe('the same billing failure on both surfaces', () => {
       await seedAuditFailure();
     });
 
-    renderPanelFromStore();
+    const panel = renderPanelFromStore();
 
-    // The billing surface renders the curated sentence…
-    const rendered = screen.getByText(AUDIT_COPY);
-
-    // …and the profile surface resolves to exactly the same one, not the backend's.
-    expect(profile.result.current.billingError).toBe(AUDIT_COPY);
-    expect(rendered.textContent).toBe(profile.result.current.billingError);
-    expect(rendered.textContent).not.toContain(RAW_BACKEND_SENTENCE);
+    // Both surfaces are on screen at once, so each is read through its own container.
+    expect(profileAlert(page.container)).toHaveTextContent(AUDIT_COPY);
+    expect(within(panel).getByRole('alert')).toHaveTextContent(AUDIT_COPY);
+    expect(page.container.textContent).not.toContain(RAW_BACKEND_SENTENCE);
+    expect(panel.textContent).not.toContain(RAW_BACKEND_SENTENCE);
   });
 
   it('answers an out-of-contract code with billing copy on both surfaces', async () => {
-    const profile = renderProfile();
+    const page = renderProfilePage();
 
     await act(async () => {
       await seedOutOfContractFailure();
     });
 
-    renderPanelFromStore();
+    const panel = renderPanelFromStore();
 
-    expect(screen.getByText(AUDIT_COPY).textContent).toBe(AUDIT_COPY);
-    expect(profile.result.current.billingError).toBe(AUDIT_COPY);
-    expect(screen.queryByText(OUT_OF_CONTRACT_SENTENCE)).toBeNull();
+    expect(profileAlert(page.container)).toHaveTextContent(AUDIT_COPY);
+    expect(within(panel).getByRole('alert')).toHaveTextContent(AUDIT_COPY);
+    expect(page.container.textContent).not.toContain(OUT_OF_CONTRACT_SENTENCE);
   });
 
-  it("resolves the failure the profile page's own upgrade hits, not just the store's", async () => {
-    const profile = renderProfile();
+  it("resolves the failure the profile page's own upgrade control hits", async () => {
+    const page = renderProfilePage();
     stubAuditFailure();
 
-    await act(async () => {
-      await profile.result.current.handleUpgrade();
-    });
+    fireEvent.click(within(page.container).getByRole('button', { name: /upgrade plan/i }));
 
+    await waitFor(() => expect(profileAlert(page.container)).toHaveTextContent(AUDIT_COPY));
+
+    // The store still holds exactly what the backend sent; the page is what curates it.
     expect(useBillingStore.getState().error).toBe(RAW_BACKEND_SENTENCE);
-    expect(profile.result.current.error).toBe(AUDIT_COPY);
+    expect(page.container.textContent).not.toContain(RAW_BACKEND_SENTENCE);
   });
 });
 
@@ -221,13 +280,16 @@ describe('the same billing failure on both surfaces', () => {
  * (`BillingStatusPanel`'s "Manage Subscription") and which wires the handler itself.
  * A portal request that fails has to be answered like any other billing failure.
  */
-const portalFromBillingPage = async (): Promise<string> => {
-  const page = render(<BillingPage />, { wrapper });
-
-  // The page refreshes billing on mount and that refresh owns `providerStatus`. The portal
-  // control is only offered once a provider and a customer are on file, so the store is put
-  // into the state a paying customer's account would be in, after the refresh has settled.
+/**
+ * Puts the account into the state a paying customer's is in. Both pages that offer the
+ * portal control gate it on a configured provider and a customer on file, so without this
+ * the control is rendered disabled and the failure under test cannot be reached.
+ */
+const configurePortal = async (): Promise<void> => {
+  // The page refreshes billing on mount and that refresh owns `providerStatus`, so the
+  // writes below have to land after it has settled or they are the ones that get replaced.
   await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
+  await act(async () => undefined);
   useBillingStore.setState({
     providerStatus: {
       mode: 'backend',
@@ -237,6 +299,12 @@ const portalFromBillingPage = async (): Promise<string> => {
     },
     subscription: { ...useBillingStore.getState().subscription, stripeCustomerId: 'cus_test' },
   });
+};
+
+const portalFromBillingPage = async (): Promise<string> => {
+  const page = render(<BillingPage />, { wrapper });
+
+  await configurePortal();
 
   fireEvent.click(await screen.findByRole('button', { name: /manage subscription/i }));
 
@@ -251,24 +319,24 @@ const portalFromBillingPage = async (): Promise<string> => {
 };
 
 describe('the subscription-management path', () => {
-  it("resolves the portal failure the profile hook hits, not the store's raw sentence", async () => {
-    const profile = renderProfile();
+  it("resolves the portal failure the profile page's own control hits", async () => {
     stubAuditFailure();
+    const page = renderProfilePage();
+    await configurePortal();
 
-    await act(async () => {
-      await profile.result.current.handleManageSubscription();
-    });
+    const manage = within(page.container).getByRole('button', { name: /manage subscription/i });
+    expect(manage).toBeEnabled();
+    fireEvent.click(manage);
+
+    await waitFor(() => expect(profileAlert(page.container)).toHaveTextContent(AUDIT_COPY));
 
     // The store keeps the failed request exactly as it arrived…
     expect(useBillingStore.getState().error).toBe(RAW_BACKEND_SENTENCE);
     expect(useBillingStore.getState().errorCode).toBe('audit_log_unavailable');
-
-    // …and the action a profile surface renders resolves it, like the checkout action does.
-    expect(profile.result.current.error).toBe(AUDIT_COPY);
-    expect(profile.result.current.error).not.toContain(RAW_BACKEND_SENTENCE);
+    expect(page.container.textContent).not.toContain(RAW_BACKEND_SENTENCE);
   });
 
-  it('answers the portal failure with billing copy on the page that renders the control', async () => {
+  it('answers the portal failure with billing copy on the billing page too', async () => {
     stubAuditFailure();
 
     expect(await portalFromBillingPage()).toBe(AUDIT_COPY);
@@ -289,26 +357,27 @@ describe("the profile page's own demo-mode refusals", () => {
 
   it('keeps the upgrade refusal specific instead of the generic billing copy', async () => {
     useAuthStore.getState().enterDemoUser();
-    const profile = renderProfile();
+    const page = renderProfilePage();
 
-    await act(async () => {
-      await profile.result.current.handleUpgrade();
-    });
+    fireEvent.click(within(page.container).getByRole('button', { name: /upgrade plan/i }));
 
-    expect(profile.result.current.error).toBe(DEMO_UPGRADE);
-    expect(profile.result.current.error).not.toBe(AUDIT_COPY);
+    await waitFor(() => expect(profileAlert(page.container)).toHaveTextContent(DEMO_UPGRADE));
+    expect(profileAlert(page.container).textContent).not.toBe(AUDIT_COPY);
   });
 
   it('keeps the portal refusal specific instead of the generic billing copy', async () => {
+    // The refusal happens before any request, but the page still refreshes billing on mount
+    // and that refresh owns `providerStatus`; an unsettled one would keep the control
+    // disabled, so it is answered here rather than left to the network.
+    stubAuditFailure();
     useAuthStore.getState().enterDemoUser();
-    const profile = renderProfile();
+    const page = renderProfilePage();
+    await configurePortal();
 
-    await act(async () => {
-      await profile.result.current.handleManageSubscription();
-    });
+    fireEvent.click(within(page.container).getByRole('button', { name: /manage subscription/i }));
 
-    expect(profile.result.current.error).toBe(DEMO_PORTAL);
-    expect(profile.result.current.error).not.toBe(AUDIT_COPY);
+    await waitFor(() => expect(profileAlert(page.container)).toHaveTextContent(DEMO_PORTAL));
+    expect(profileAlert(page.container).textContent).not.toBe(AUDIT_COPY);
   });
 });
 
@@ -384,7 +453,7 @@ describe('the checkout failure a customer meets on the upgrade page', () => {
         'fetch',
         vi.fn(async () => make())
       );
-      const profile = renderProfile();
+      const page = renderProfilePage();
       useBillingStore.getState().setBillingError(null);
 
       await act(async () => {
@@ -394,10 +463,10 @@ describe('the checkout failure a customer meets on the upgrade page', () => {
           .catch(() => undefined);
       });
 
-      renderPanelFromStore();
+      const panel = renderPanelFromStore();
 
-      expect(screen.getAllByRole('alert').map((alert) => alert.textContent)).toEqual([AUDIT_COPY]);
-      expect(profile.result.current.billingError).toBe(AUDIT_COPY);
+      expect(within(panel).getByRole('alert')).toHaveTextContent(AUDIT_COPY);
+      expect(profileAlert(page.container)).toHaveTextContent(AUDIT_COPY);
       expect(await upgradeFromPricingPage()).toBe(AUDIT_COPY);
       expect(document.body.textContent).not.toContain(raw);
     }
