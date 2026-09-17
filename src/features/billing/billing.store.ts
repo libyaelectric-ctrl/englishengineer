@@ -5,6 +5,7 @@ import { AppError } from '@/core/errors/app-error';
 
 import { logger } from '@/shared/logger';
 
+import { CLIENT_SENTENCE_CODE } from './billing.failure-copy';
 import { BillingService } from './billing.service';
 import { BillingPlanId, BillingState, SubscriptionSnapshot } from './billing.types';
 
@@ -23,6 +24,11 @@ interface BillingActions {
   fetchInvoices: (userId: string) => Promise<void>;
   /**
    * Lets a caller surface its own precondition failure in the same panel copy.
+   *
+   * The sentence is the client's own (sign in first, demo profiles cannot buy, no
+   * email on file), so it travels with `CLIENT_SENTENCE_CODE`: a sentence that keeps
+   * its wording has to be classified like any other, or the resolver would be unable
+   * to tell it apart from a failure that simply lost its code.
    *
    * `null` clears the failure; because the store owns both fields, that is also how
    * a sign-out drops a stale code instead of leaving it behind a cleared message.
@@ -131,7 +137,7 @@ export const useBillingStore = create<BillingState & BillingActions>()(
       },
 
       setBillingError: (message) =>
-        setBillingFailure(set, message ? { message, code: null } : null),
+        setBillingFailure(set, message ? { message, code: CLIENT_SENTENCE_CODE } : null),
 
       setSubscription: (subscription) => {
         BillingService.persistSubscription(subscription);

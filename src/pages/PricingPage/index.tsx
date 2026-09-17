@@ -14,6 +14,7 @@ import { PRICING_TIERS } from '@/shared/data/pricing.data';
 import { ProductAnalyticsService } from '@/features/analytics';
 import { useAuthStore } from '@/features/auth';
 import { AUTH_SIGN_IN_URL } from '@/features/auth/firebase.config';
+import { resolveBillingError } from '@/features/billing/billing.failure-copy';
 import { useBillingStore } from '@/features/billing/billing.store';
 import type { BillingPlanId } from '@/features/billing/billing.types';
 import { CurrencyConfig } from '@/features/billing/currency.config';
@@ -58,7 +59,10 @@ const PricingPage = () => {
         isAnnual ? 'year' : 'month'
       );
     } catch (err: unknown) {
-      setCheckoutError(err instanceof Error ? err.message : 'Checkout failed.');
+      // The sentence comes from the failure's code, not from its wording — the pricing
+      // page is the surface the customer starts a checkout on, so it resolves through
+      // the same mapping the billing panel does.
+      setCheckoutError(resolveBillingError(err));
     }
   };
 

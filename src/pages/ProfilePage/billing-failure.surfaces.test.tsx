@@ -1,5 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { act, render, renderHook, screen } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  renderHook,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -8,7 +16,10 @@ import { setAuthTokenGetter } from '@/shared/services/auth-backend/backend-auth.
 
 import { useAuthStore } from '@/features/auth';
 import { BillingStatusPanel } from '@/features/billing/BillingStatusPanel';
+import { CLIENT_SENTENCE_CODE } from '@/features/billing/billing.failure-copy';
 import { useBillingStore } from '@/features/billing/billing.store';
+
+import PricingPage from '@/pages/PricingPage';
 
 import { useProfilePage } from './useProfilePage';
 
@@ -78,6 +89,37 @@ const seedOutOfContractFailure = async (): Promise<void> => {
   expect(useBillingStore.getState().error).toBe(OUT_OF_CONTRACT_SENTENCE);
   expect(useBillingStore.getState().errorCode).toBe(OUT_OF_CONTRACT_CODE);
 };
+
+const htmlResponse = (status: number, body: string): Response =>
+  new Response(body, { status, headers: { 'content-type': 'text/html' } });
+
+/**
+ * The shapes the audit measured on the real app, each of which reaches the store with
+ * no code at all: a response that never carried one, and a body that cannot be read as
+ * the error envelope. Every one of them used to print its own sentence.
+ */
+const CODE_LESS_ENVELOPES: { shape: string; raw: string; make: () => Response }[] = [
+  {
+    shape: '200 that is not the versioned success envelope',
+    raw: 'Backend response does not match the versioned success envelope.',
+    make: () => jsonResponse(200, { hello: 'world' }),
+  },
+  {
+    shape: '200 with an HTML body',
+    raw: "Unexpected token '<'",
+    make: () => htmlResponse(200, '<!DOCTYPE html><html><body>Not found</body></html>'),
+  },
+  {
+    shape: '502 with a gateway HTML body',
+    raw: 'API 502:',
+    make: () => htmlResponse(502, '<html><body>502 Bad Gateway</body></html>'),
+  },
+  {
+    shape: '503 envelope with no error code',
+    raw: 'Audit store offline.',
+    make: () => jsonResponse(503, { ok: false, error: { message: 'Audit store offline.' } }),
+  },
+];
 
 const queryClient = new QueryClient();
 
@@ -161,4 +203,86 @@ describe('the same billing failure on both surfaces', () => {
     expect(useBillingStore.getState().error).toBe(RAW_BACKEND_SENTENCE);
     expect(profile.result.current.error).toBe(AUDIT_COPY);
   });
+});
+
+/**
+ * The page a customer actually starts a checkout on. It runs the checkout itself, so it
+ * sees the same failure the panel does and has to resolve it the same way. Rendered and
+ * driven for real: the page fetches, the store throws, the page's own catch decides what
+ * the customer reads.
+ */
+const upgradeFromPricingPage = async (): Promise<string> => {
+  const page = render(<PricingPage />, { wrapper });
+
+  const cta = await waitFor(() => {
+    const buttons = [...page.container.querySelectorAll('button')] as HTMLButtonElement[];
+    const paid = buttons.find((button) => /19[.,]99/.test(button.textContent ?? ''));
+    if (!paid) throw new Error('paid plan CTA not found');
+    return paid;
+  });
+
+  fireEvent.click(cta);
+
+  const alert = await waitFor(() => {
+    const found = within(page.container).queryByRole('alert');
+    if (!found) throw new Error('pricing page showed no failure');
+    return found;
+  });
+  const text = alert.textContent ?? '';
+  page.unmount();
+  return text;
+};
+
+describe('a sentence a surface writes itself', () => {
+  it('keeps its wording, because it travels classified under the client channel', () => {
+    // The panel's own preconditions (sign in first, demo profiles cannot buy, no email
+    // on file) are the client's sentences. They survive only because they are classified
+    // under `CLIENT_SENTENCE_CODE`; without a code they would be indistinguishable from a
+    // failure that lost one, and the customer would read "service is unavailable" instead.
+    const demo = 'Demo profiles cannot make purchases. Create an account to subscribe.';
+    useBillingStore.getState().setBillingError(demo);
+
+    expect(useBillingStore.getState().errorCode).toBe(CLIENT_SENTENCE_CODE);
+
+    renderPanelFromStore();
+
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveTextContent(demo);
+    expect(alert).not.toHaveTextContent(/billing could not be started/i);
+  });
+});
+
+describe('the checkout failure a customer meets on the upgrade page', () => {
+  it('answers the audit-logging outage with billing copy, not the backend sentence', async () => {
+    stubAuditFailure();
+
+    expect(await upgradeFromPricingPage()).toBe(AUDIT_COPY);
+    expect(document.body.textContent).not.toContain(RAW_BACKEND_SENTENCE);
+  });
+
+  it.each(CODE_LESS_ENVELOPES)(
+    'answers a $shape failure with billing copy on every surface',
+    async ({ raw, make }) => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async () => make())
+      );
+      const profile = renderProfile();
+      useBillingStore.getState().setBillingError(null);
+
+      await act(async () => {
+        await useBillingStore
+          .getState()
+          .startCheckout('user-1', 'engineer@example.com', 'senior')
+          .catch(() => undefined);
+      });
+
+      renderPanelFromStore();
+
+      expect(screen.getAllByRole('alert').map((alert) => alert.textContent)).toEqual([AUDIT_COPY]);
+      expect(profile.result.current.billingError).toBe(AUDIT_COPY);
+      expect(await upgradeFromPricingPage()).toBe(AUDIT_COPY);
+      expect(document.body.textContent).not.toContain(raw);
+    }
+  );
 });

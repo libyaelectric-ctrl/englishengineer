@@ -142,11 +142,16 @@ describe('BillingStatusPanel', () => {
     expect(alert).not.toHaveTextContent('Required audit logging is unavailable.');
   });
 
-  it('falls back to the backend message when no code came with the error', () => {
-    renderError('Subscription status is temporarily unavailable.', null);
+  it('answers a failure that came without a code with billing copy, not its sentence', () => {
+    // Measured on the real app: a response that never carried a code, and a body that
+    // cannot be read as the error envelope, both arrive here as code-less failures.
+    // Their sentences are internal English, so the customer gets billing copy instead.
+    renderError('Backend response does not match the versioned success envelope.', null);
 
-    expect(screen.getByRole('alert')).toHaveTextContent(
-      'Subscription status is temporarily unavailable.'
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveTextContent(/billing could not be started/i);
+    expect(alert).not.toHaveTextContent(
+      'Backend response does not match the versioned success envelope.'
     );
   });
 
