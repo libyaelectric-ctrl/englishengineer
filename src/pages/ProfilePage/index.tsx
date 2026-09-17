@@ -41,9 +41,12 @@ import { ProgressBar } from '@/shared/components/ProgressBar';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
 
-import { BILLING_PLANS } from '@/features/billing';
-import type { BillingPlanId, SubscriptionSnapshot } from '@/features/billing';
-import { hasActivePaidAccess } from '@/features/billing/billing.entitlements';
+import type { SubscriptionSnapshot } from '@/features/billing';
+import {
+  canOpenCustomerPortal,
+  hasActivePaidAccess,
+} from '@/features/billing/billing.entitlements';
+import { resolvePlan } from '@/features/billing/billing.helpers';
 import { LearningProfileEngine, SKILL_NAMES } from '@/features/profile';
 import {
   COMMUNICATION_GOALS,
@@ -74,9 +77,10 @@ const ProfileHero = ({
   xp: number;
   hearts: number;
 }) => {
-  const planId = subscription.planId as BillingPlanId;
-  const planName = BILLING_PLANS[planId]?.name ?? 'Free';
-  const isFree = planId === 'free' || (planId === 'junior' && subscription.status === 'none');
+  const planName = resolvePlan(subscription.planId).name;
+  const isFree =
+    subscription.planId === 'free' ||
+    (subscription.planId === 'junior' && subscription.status === 'none');
 
   return (
     <header className="relative overflow-hidden rounded-[var(--radius-card)] border border-border-soft bg-surface p-6 sm:p-8">
@@ -203,7 +207,7 @@ const ProfileInfoSection = ({
       // One owner for the plan's name, shared with the hero badge and the Subscription
       // card, so the three plan labels on this page cannot disagree.
       label: 'Plan',
-      value: BILLING_PLANS[subscription.planId as BillingPlanId]?.name ?? 'Free',
+      value: resolvePlan(subscription.planId).name,
       icon: ShieldCheck,
     },
   ];
@@ -328,12 +332,12 @@ const SubscriptionSection = ({
   onUpgrade: () => void;
   onManageSubscription: () => void;
 }) => {
-  const planName = BILLING_PLANS[subscription.planId]?.name ?? 'Free';
+  const planName = resolvePlan(subscription.planId).name;
   // The same two conditions the billing panel applies, from the same owners: whether paid
   // access is actually in force (a lapsed paid plan still deserves the upgrade control),
   // and whether a portal session can be opened at all.
   const canUpgrade = !hasActivePaidAccess(subscription);
-  const canOpenPortal = providerStatus.isConfigured && Boolean(subscription.stripeCustomerId);
+  const canOpenPortal = canOpenCustomerPortal(subscription, providerStatus);
 
   return (
     <SectionCard title="Subscription" icon={CreditCard}>

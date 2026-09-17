@@ -16,6 +16,7 @@ import ProfilePage from '@/pages/ProfilePage';
 import { BillingStatusPanel } from './BillingStatusPanel';
 import { DEFAULT_UPGRADE_PLAN_ID } from './billing.entitlements';
 import { CLIENT_SENTENCE_CODE } from './billing.failure-copy';
+import { BILLING_PLANS } from './billing.helpers';
 import { BillingService } from './billing.service';
 import { useBillingStore } from './billing.store';
 
@@ -546,6 +547,91 @@ describe('the upgrade control on every surface', () => {
       expect(fromBilling).toBe(DEFAULT_UPGRADE_PLAN_ID);
     } finally {
       spy.mockRestore();
+    }
+  });
+
+  it('gives every upgrade control on the billing page one wording', async () => {
+    const billing = render(<BillingPage />, { wrapper });
+    await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
+    await act(async () => undefined);
+    await lapsePaidPlan('canceled');
+
+    const controls = [...billing.container.querySelectorAll('button, a')]
+      .map((el) => (el.textContent ?? '').trim().replace(/\s+/g, ' '))
+      .filter((label) => /upgrade/i.test(label));
+
+    // Measured on this page before the change: the panel offered this customer "Upgrade Plan"
+    // while the CTA directly beneath it, asking its own question, said "Change / Upgrade Plan".
+    expect(controls.length).toBeGreaterThan(0);
+    expect(new Set(controls)).toEqual(new Set(['Upgrade Plan']));
+  });
+
+  it('shows one plan name on both surfaces for an id the catalogue does not know', async () => {
+    const page = renderProfilePage();
+    await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
+    await act(async () => undefined);
+
+    // `team` is a canonical plan id on the backend and has no entry in this catalogue; the
+    // payload that carries a plan id is not validated on its way in.
+    useBillingStore.setState({
+      subscription: { ...useBillingStore.getState().subscription, planId: 'team' as never },
+    });
+    await act(async () => undefined);
+
+    const planNamesIn = (root: HTMLElement): string => {
+      const names = new Set(Object.values(BILLING_PLANS).map((plan) => plan.name));
+      const found = [...root.querySelectorAll('*')]
+        .filter((el) => el.children.length === 0)
+        .map((el) => (el.textContent ?? '').trim())
+        .filter((text) => names.has(text));
+      return [...new Set(found)].join('|');
+    };
+
+    // Neither surface may crash, and neither may invent a second name for the same id.
+    expect(planNamesIn(renderPanelFromStore())).toBe(BILLING_PLANS.free.name);
+    expect(planNamesIn(page.container)).toBe(BILLING_PLANS.free.name);
+  });
+
+  it('offers the portal on both surfaces under exactly the same conditions', async () => {
+    const cases = [
+      { label: 'configured with a linked customer', isConfigured: true, customerId: 'cus_1' },
+      { label: 'configured without a customer', isConfigured: true, customerId: null },
+      { label: 'unconfigured with a linked customer', isConfigured: false, customerId: 'cus_1' },
+      { label: 'unconfigured without a customer', isConfigured: false, customerId: null },
+    ];
+
+    for (const testCase of cases) {
+      const page = renderProfilePage();
+      await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
+      await act(async () => undefined);
+
+      useBillingStore.setState({
+        subscription: {
+          ...useBillingStore.getState().subscription,
+          planId: 'senior',
+          status: 'active',
+          stripeCustomerId: testCase.customerId,
+        },
+        providerStatus: {
+          ...useBillingStore.getState().providerStatus,
+          isConfigured: testCase.isConfigured,
+        },
+      });
+      await act(async () => undefined);
+
+      // Both controls are disabled by the same rule, so neither can be re-split on its own.
+      const profileDisabled = within(page.container)
+        .getByRole('button', { name: /manage subscription/i })
+        .hasAttribute('disabled');
+      const panelDisabled = within(renderPanelFromStore())
+        .getByRole('button', { name: /manage subscription/i })
+        .hasAttribute('disabled');
+
+      expect({ case: testCase.label, disabled: profileDisabled }).toEqual({
+        case: testCase.label,
+        disabled: panelDisabled,
+      });
+      page.unmount();
     }
   });
 });

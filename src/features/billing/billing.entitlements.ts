@@ -1,4 +1,4 @@
-import { BILLING_PLANS } from './billing.helpers';
+import { BILLING_PLANS, resolvePlan } from './billing.helpers';
 import {
   BillingFeature,
   BillingPlanId,
@@ -25,7 +25,7 @@ export const canAccessFeature = (
   feature: BillingFeature
 ): EntitlementResult => {
   const active = isSubscriptionActive(subscription);
-  const plan = BILLING_PLANS[subscription.planId];
+  const plan = resolvePlan(subscription.planId);
 
   // Inactive/canceled/past-due subscriptions degrade to the free tier: free
   // features must never disappear entirely just because a paid plan lapsed.
@@ -101,6 +101,16 @@ export const isFreeTier = (subscription: SubscriptionSnapshot): boolean =>
 export const hasActivePaidAccess = (subscription: SubscriptionSnapshot): boolean =>
   !isFreeTier(subscription) &&
   (subscription.status === 'active' || subscription.status === 'trialing');
+
+/**
+ * Whether a portal session can be opened for this customer at all: the provider has to be
+ * configured and the customer has to have a provider customer linked. Both surfaces that
+ * render the control ask this one question, in this one place.
+ */
+export const canOpenCustomerPortal = (
+  subscription: SubscriptionSnapshot,
+  providerStatus: { isConfigured: boolean }
+): boolean => providerStatus.isConfigured && Boolean(subscription.stripeCustomerId);
 
 /**
  * The plan the app's own "Upgrade Plan" control starts a checkout for, wherever that
@@ -223,6 +233,6 @@ export const getPlanLimitLabel = (
   subscription: SubscriptionSnapshot,
   limit: 'dailyAICoachRequests' | 'moduleAttemptsPerDay' | 'vocabularyReviewsPerDay'
 ): string => {
-  const value = BILLING_PLANS[subscription.planId].limits[limit];
+  const value = resolvePlan(subscription.planId).limits[limit];
   return value === 'unlimited' ? 'Unlimited' : String(value);
 };

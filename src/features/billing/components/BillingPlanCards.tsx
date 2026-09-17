@@ -2,8 +2,8 @@ import { Mic } from 'lucide-react';
 
 import { ProgressBar } from '@/shared/components/ProgressBar';
 
-import { BILLING_PLANS } from '@/features/billing';
 import type { SubscriptionSnapshot } from '@/features/billing';
+import { resolvePlan } from '@/features/billing/billing.helpers';
 
 interface BillingPlanCardsProps {
   subscription: SubscriptionSnapshot;
@@ -148,7 +148,7 @@ export const BillingPlanCards = ({
   uploadedDocsCount,
   voiceMinutesUsed,
 }: BillingPlanCardsProps) => {
-  const plan = BILLING_PLANS[subscription.planId];
+  const plan = resolvePlan(subscription.planId);
   const { limits } = plan;
   const isUnlimitedAI = limits.dailyAICoachRequests === 'unlimited';
   const isUnlimitedAttempts = limits.moduleAttemptsPerDay === 'unlimited';
