@@ -49,8 +49,12 @@ export const MascotSettings = ({ open, minimized, onClose }: MascotSettingsProps
         </button>
       </div>
 
-      <label className="flex items-center gap-2 cursor-pointer text-foreground">
+      <label
+        htmlFor="mascot-sound-enabled"
+        className="flex items-center gap-2 cursor-pointer text-foreground"
+      >
         <input
+          id="mascot-sound-enabled"
           type="checkbox"
           checked={soundEnabled}
           onChange={(e) => setSoundEnabled(e.target.checked)}
@@ -58,8 +62,12 @@ export const MascotSettings = ({ open, minimized, onClose }: MascotSettingsProps
         <span>Sound Effects</span>
       </label>
 
-      <label className="flex items-center gap-2 cursor-pointer text-foreground">
+      <label
+        htmlFor="mascot-toast-enabled"
+        className="flex items-center gap-2 cursor-pointer text-foreground"
+      >
         <input
+          id="mascot-toast-enabled"
           type="checkbox"
           checked={toastEnabled}
           onChange={(e) => setToastEnabled(e.target.checked)}
@@ -67,8 +75,16 @@ export const MascotSettings = ({ open, minimized, onClose }: MascotSettingsProps
         <span>Toasts</span>
       </label>
 
-      <label className="flex items-center gap-2 cursor-pointer text-foreground">
-        <input type="checkbox" checked={contrastMode} onChange={toggleContrastMode} />
+      <label
+        htmlFor="mascot-contrast-mode"
+        className="flex items-center gap-2 cursor-pointer text-foreground"
+      >
+        <input
+          id="mascot-contrast-mode"
+          type="checkbox"
+          checked={contrastMode}
+          onChange={toggleContrastMode}
+        />
         <span>High Contrast</span>
       </label>
 

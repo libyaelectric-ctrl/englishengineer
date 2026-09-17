@@ -175,7 +175,7 @@ describe('VocabularyPage menu', () => {
     const addForm = screen.getByRole('form', {
       name: 'Add to My Vocabulary',
     });
-    fireEvent.change(within(addForm).getByLabelText('Turkish meaning'), {
+    fireEvent.change(within(addForm).getByLabelText(/meaning$/i), {
       target: { value: `ak\u0131 d\u00fczenleyici` },
     });
     fireEvent.change(within(addForm).getByLabelText('Example'), {

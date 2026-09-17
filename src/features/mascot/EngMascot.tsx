@@ -1,17 +1,17 @@
 import React, { useMemo, useState } from 'react';
 
+import { MASCOT_COPY } from '@/shared/localization/translations/mascot.translations';
+
 import { useLocalizationStore } from '@/features/localization';
-import { MASCOT_COPY } from '@/features/localization/translations/mascot.translations';
 
 import { MascotBubble } from './components/MascotBubble';
 import { MascotFigure } from './components/MascotFigure';
 import { MascotSettings } from './components/MascotSettings';
 import './engmascot.css';
+import { getDisplayMessage, pickRandom } from './engmascot.utils';
 import { useMascotEffects } from './hooks/useMascotEffects';
 import { useMascotHandlers } from './hooks/useMascotHandlers';
 import { useMascotStore } from './mascot.store';
-
-import { getDisplayMessage, pickRandom } from './engmascot.utils';
 
 const useIsMobile = () => {
   if (typeof window === 'undefined') return false;

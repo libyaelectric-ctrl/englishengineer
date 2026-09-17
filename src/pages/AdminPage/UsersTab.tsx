@@ -58,8 +58,12 @@ export const UsersTab = ({ users, onPromote, isLoading }: UsersTabProps) => {
       {/* Filters bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-4">
         <div className="relative flex-1">
+          <label htmlFor="admin-user-search" className="sr-only">
+            Search users by name, email, or discipline
+          </label>
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-copy" />
           <input
+            id="admin-user-search"
             type="text"
             placeholder="Search by name, email, or discipline..."
             value={search}

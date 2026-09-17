@@ -12,9 +12,10 @@ import { useEffect, useRef } from 'react';
 
 import { useLearningStore } from '@/core/learning';
 
+import { MASCOT_COPY } from '@/shared/localization/translations/mascot.translations';
+
 import { useLearningIntelligenceStore } from '@/features/learning-intelligence';
 import { useLocalizationStore } from '@/features/localization';
-import { MASCOT_COPY } from '@/features/localization/translations/mascot.translations';
 
 import { useMascotStore } from './mascot.store';
 

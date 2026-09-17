@@ -67,14 +67,17 @@ const NotFoundPage = () => {
       {/* Search suggestion */}
       <form onSubmit={handleSearch} className="mt-8 w-full max-w-sm">
         <div className="flex items-center gap-2 rounded-[var(--radius-card)] border border-border-soft bg-surface px-4 py-2">
+          <label htmlFor="notfound-search" className="sr-only">
+            Search for a page
+          </label>
           <Search className="h-4 w-4 shrink-0 text-muted-copy" />
           <input
+            id="notfound-search"
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Where are you trying to go?"
             className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-copy"
-            aria-label="Search for a page"
           />
           <Button type="submit" size="sm" variant="ghost" className="min-h-8">
             Go

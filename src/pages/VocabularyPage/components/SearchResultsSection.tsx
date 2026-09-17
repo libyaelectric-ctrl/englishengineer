@@ -111,20 +111,21 @@ export function SearchResultsSection({
             onSubmit={onAddCustomWord}
             className="grid gap-4 md:grid-cols-2"
           >
-            <label className="text-sm font-semibold">
+            <label htmlFor="vocab-term" className="text-sm font-semibold">
               English term
               <input
+                id="vocab-term"
                 required
                 value={customDraft.term}
                 onChange={(event) => onSetCustomDraft({ ...customDraft, term: event.target.value })}
                 className="mt-1 min-h-11 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
               />
             </label>
-            <label className="text-sm font-semibold">
+            <label htmlFor="vocab-meaning" className="text-sm font-semibold">
               {langLabel} meaning
               <input
+                id="vocab-meaning"
                 required
-                aria-label="Turkish meaning"
                 value={customDraft.turkishMeaning}
                 onChange={(event) =>
                   onSetCustomDraft({
@@ -135,9 +136,10 @@ export function SearchResultsSection({
                 className="mt-1 min-h-11 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
               />
             </label>
-            <label className="text-sm font-semibold">
+            <label htmlFor="vocab-example" className="text-sm font-semibold">
               Example
               <input
+                id="vocab-example"
                 required
                 value={customDraft.exampleSentence}
                 onChange={(event) =>
@@ -150,9 +152,10 @@ export function SearchResultsSection({
               />
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label className="text-sm font-semibold">
+              <label htmlFor="vocab-cefr" className="text-sm font-semibold">
                 CEFR
                 <select
+                  id="vocab-cefr"
                   value={customDraft.cefrLevel}
                   onChange={(event) =>
                     onSetCustomDraft({
@@ -167,9 +170,10 @@ export function SearchResultsSection({
                   ))}
                 </select>
               </label>
-              <label className="text-sm font-semibold">
+              <label htmlFor="vocab-domain" className="text-sm font-semibold">
                 Domain
                 <input
+                  id="vocab-domain"
                   required
                   value={customDraft.domain}
                   onChange={(event) =>

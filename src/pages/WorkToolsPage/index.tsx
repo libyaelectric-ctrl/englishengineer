@@ -431,14 +431,17 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
             </button>
           ))}
         </div>
-        <label className="flex min-h-11 items-center gap-2 rounded-[4px] border border-border-soft bg-background px-3 focus-within:border-primary md:w-72 shadow-sm font-sans">
+        <label
+          htmlFor="worktools-search"
+          className="flex min-h-11 items-center gap-2 rounded-[4px] border border-border-soft bg-background px-3 focus-within:border-primary md:w-72 shadow-sm font-sans"
+        >
           <Search className="h-4 w-4 text-muted-copy" />
           <span className="sr-only">Search work tools</span>
           <input
+            id="worktools-search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search tools"
-            aria-label="Search work tools"
             className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-copy font-semibold"
           />
         </label>

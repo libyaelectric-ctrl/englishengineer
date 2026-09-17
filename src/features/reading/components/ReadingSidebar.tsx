@@ -2,8 +2,9 @@ import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 import { useShallow } from 'zustand/shallow';
 
+import { SIDEBAR_SKILL_COPY } from '@/shared/localization/translations/rightsidebar.translations';
+
 import { useLocalizationStore } from '@/features/localization';
-import { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
 import { useReadingStore } from '@/features/reading';
 
 export function ReadingSidebar() {

@@ -4,12 +4,12 @@ import { Plus, RefreshCw } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
+import { interpolate } from '@/shared/localization/interpolate';
+import { SIDEBAR_SKILL_COPY } from '@/shared/localization/translations/rightsidebar.translations';
 import { STORAGE_CHANGE_EVENT } from '@/shared/storage';
 
 import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import { useLocalizationStore } from '@/features/localization';
-import { interpolate } from '@/features/localization/interpolate';
-import { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
 import {
   VocabularyMenuService,
   type VocabularyMenuState,

@@ -120,11 +120,15 @@ export function WorkspaceView({
               />
             ))}
 
-            <label className="block text-sm font-bold text-foreground uppercase tracking-wider">
+            <label
+              htmlFor="listening-keywords"
+              className="block text-sm font-bold text-foreground uppercase tracking-wider"
+            >
               <span className="flex items-center gap-2">
                 <KeyRound className="h-4 w-4 text-primary" /> Key words you identified
               </span>
               <input
+                id="listening-keywords"
                 value={userKeywords}
                 onChange={(event) => setUserKeywords(event.target.value)}
                 placeholder="Separate key words with commas"

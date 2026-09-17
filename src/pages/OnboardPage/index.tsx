@@ -197,9 +197,11 @@ const OnboardPage = () => {
               const meta = DISCIPLINE_META[id];
               const Icon = getDisciplineIcon(id);
               const isSelected = selectedDiscipline === id;
+              const inputId = `onboard-discipline-${id}`;
               return (
                 <label
                   key={id}
+                  htmlFor={inputId}
                   className={cn(
                     'relative flex cursor-pointer items-start gap-3 rounded-card border p-3.5 text-left transition-colors',
                     isSelected
@@ -208,6 +210,7 @@ const OnboardPage = () => {
                   )}
                 >
                   <input
+                    id={inputId}
                     type="radio"
                     name="discipline"
                     value={id}
@@ -250,9 +253,11 @@ const OnboardPage = () => {
           >
             {AVAILABLE_INTERFACE_LANGUAGES.map((lang) => {
               const isSelected = selectedLanguage === lang.id;
+              const inputId = `onboard-lang-${lang.id}`;
               return (
                 <label
                   key={lang.id}
+                  htmlFor={inputId}
                   className={cn(
                     'relative flex cursor-pointer items-center gap-2 rounded-button border px-3 py-2 text-sm transition-colors',
                     isSelected
@@ -261,6 +266,7 @@ const OnboardPage = () => {
                   )}
                 >
                   <input
+                    id={inputId}
                     type="radio"
                     name="interface-language"
                     value={lang.id}

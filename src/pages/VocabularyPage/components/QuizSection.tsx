@@ -196,7 +196,11 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
                   {repairVocabularyText(word.term)}
                 </p>
                 <p className="mt-1 text-sm text-muted-copy">Type {langLabel} meaning...</p>
+                <label htmlFor={`learned-quiz-${word.id}`} className="sr-only">
+                  Type {langLabel} meaning for {repairVocabularyText(word.term)}
+                </label>
                 <input
+                  aria-label={`Type ${langLabel} meaning for ${repairVocabularyText(word.term)}`}
                   ref={(element) => {
                     inputRefs.current[index] = element;
                   }}

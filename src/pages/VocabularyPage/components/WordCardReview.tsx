@@ -91,9 +91,10 @@ export const QuizForm = ({
           or Test Meaning
         </span>
       </div>
-      <label className="block text-xs font-bold text-foreground">
+      <label className="block text-xs font-bold text-foreground" htmlFor={`word-review-${term.id}`}>
         {langLabel} meaning
         <input
+          id={`word-review-${term.id}`}
           value={answer}
           disabled={quizResult !== null}
           onChange={(event) => onAnswerChange(event.target.value)}

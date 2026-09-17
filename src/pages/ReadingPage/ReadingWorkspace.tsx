@@ -322,7 +322,11 @@ What questions do you have about this passage?`,
                 )}
               </div>
               <div className="flex gap-2">
+                <label htmlFor="reading-chat-input" className="sr-only">
+                  Ask a question about the text
+                </label>
                 <input
+                  id="reading-chat-input"
                   type="text"
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
@@ -417,9 +421,10 @@ What questions do you have about this passage?`,
 
                     {(q.type === 'short_answer' || q.type === 'keyword_answer') && (
                       <div className="pt-1">
-                        <label className="block">
+                        <label className="block" htmlFor={`answer-${q.id}`}>
                           <span className="sr-only">{q.questionText}</span>
                           <input
+                            id={`answer-${q.id}`}
                             type="text"
                             value={answers[q.id] || ''}
                             onChange={(e) => setAnswer(q.id, e.target.value)}
@@ -429,6 +434,7 @@ What questions do you have about this passage?`,
                                 : 'Draft technical explanation...'
                             }
                             className="w-full rounded-[4px] border border-border-soft bg-surface p-3 text-xs text-foreground placeholder-muted-copy focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10 font-bold"
+                            aria-label={q.questionText}
                           />
                         </label>
                         {q.type === 'short_answer' && (

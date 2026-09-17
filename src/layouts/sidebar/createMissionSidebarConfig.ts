@@ -1,4 +1,4 @@
-import type { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
+import type { SIDEBAR_SKILL_COPY } from '@/shared/localization/translations/rightsidebar.translations';
 
 import type { SidebarConfig } from './sidebar.config';
 

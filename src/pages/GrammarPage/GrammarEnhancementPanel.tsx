@@ -368,9 +368,13 @@ export const GrammarEnhancementPanel = ({
                     {accent}
                   </button>
                 ))}
-                <label className="flex items-center gap-2 text-xs font-bold text-muted-copy">
+                <label
+                  htmlFor="grammar-speech-rate"
+                  className="flex items-center gap-2 text-xs font-bold text-muted-copy"
+                >
                   {speechRate.toFixed(2)}x
                   <input
+                    id="grammar-speech-rate"
                     type="range"
                     min="0.75"
                     max="1.25"
@@ -474,9 +478,11 @@ export const GrammarEnhancementPanel = ({
                 {rules.slice(0, 24).map((rule) => (
                   <label
                     key={rule.id}
+                    htmlFor={`grammar-queue-${rule.id}`}
                     className="flex items-center gap-2 rounded-[4px] border border-border-soft bg-surface px-2 py-1 text-[11px]"
                   >
                     <input
+                      id={`grammar-queue-${rule.id}`}
                       type="checkbox"
                       checked={customQueue.includes(rule.id)}
                       onChange={() => toggleQueue(rule.id)}
@@ -509,7 +515,11 @@ export const GrammarEnhancementPanel = ({
               <PanelBottom className="h-4 w-4 text-primary" />
               <p className="text-xs font-black uppercase tracking-wide">Mobile Search Sheet</p>
             </div>
+            <label htmlFor="grammar-mobile-search" className="sr-only">
+              Search grammar rules
+            </label>
             <input
+              id="grammar-mobile-search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               className="mt-3 min-h-10 w-full rounded-[4px] border border-border-soft bg-surface px-3 text-sm outline-none focus:border-primary"

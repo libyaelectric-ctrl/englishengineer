@@ -210,7 +210,11 @@ Tell me what you want to write or paste a sentence you want to improve!`,
             )}
           </div>
           <div className="mt-2 flex gap-2">
+            <label htmlFor="writing-chat-input" className="sr-only">
+              Ask for feedback or outline ideas
+            </label>
             <input
+              id="writing-chat-input"
               type="text"
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}

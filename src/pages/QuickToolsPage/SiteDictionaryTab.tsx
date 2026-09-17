@@ -88,10 +88,14 @@ export const SiteDictionaryTab = () => {
   return (
     <div className="space-y-5">
       <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-        <label className="flex-1 flex min-h-11 items-center gap-2 rounded-[4px] border border-border-soft bg-surface px-4 focus-within:border-primary shadow-sm">
+        <label
+          htmlFor="quicktools-search"
+          className="flex-1 flex min-h-11 items-center gap-2 rounded-[4px] border border-border-soft bg-surface px-4 focus-within:border-primary shadow-sm"
+        >
           <Search className="h-4 w-4 text-muted-copy" />
           <span className="sr-only">Search site dictionary</span>
           <input
+            id="quicktools-search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             onBlur={() => rememberSearch(query)}
@@ -137,59 +141,87 @@ export const SiteDictionaryTab = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <input
-              type="text"
-              placeholder="Term (e.g. Grounding grid)"
-              value={newTerm}
-              onChange={(e) => setNewTerm(e.target.value)}
-              className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
-            />
-            <input
-              type="text"
-              placeholder="Turkish Meaning (e.g. Topraklama ağı)"
-              value={newMeaning}
-              onChange={(e) => setNewMeaning(e.target.value)}
-              className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
-            />
-            <input
-              type="text"
-              placeholder="Category (e.g. electrical, civil)"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
-            />
+            <label htmlFor="quicktools-term" className="flex flex-col gap-1">
+              <span className="sr-only">Term</span>
+              <input
+                id="quicktools-term"
+                type="text"
+                placeholder="Term (e.g. Grounding grid)"
+                value={newTerm}
+                onChange={(e) => setNewTerm(e.target.value)}
+                className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
+              />
+            </label>
+            <label htmlFor="quicktools-meaning" className="flex flex-col gap-1">
+              <span className="sr-only">Turkish Meaning</span>
+              <input
+                id="quicktools-meaning"
+                type="text"
+                placeholder="Turkish Meaning (e.g. Topraklama ağı)"
+                value={newMeaning}
+                onChange={(e) => setNewMeaning(e.target.value)}
+                className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
+              />
+            </label>
+            <label htmlFor="quicktools-category" className="flex flex-col gap-1">
+              <span className="sr-only">Category</span>
+              <input
+                id="quicktools-category"
+                type="text"
+                placeholder="Category (e.g. electrical, civil)"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
+              />
+            </label>
           </div>
 
           <div className="space-y-3">
-            <textarea
-              placeholder="Technical Explanation"
-              value={newExplanation}
-              onChange={(e) => setNewExplanation(e.target.value)}
-              rows={2}
-              className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
-            />
-            <input
-              type="text"
-              placeholder="Site Example (e.g. The grounding grid installation passed inspection.)"
-              value={newExample}
-              onChange={(e) => setNewExample(e.target.value)}
-              className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
-            />
+            <label htmlFor="quicktools-explanation" className="flex flex-col gap-1">
+              <span className="sr-only">Technical Explanation</span>
+              <textarea
+                id="quicktools-explanation"
+                placeholder="Technical Explanation"
+                value={newExplanation}
+                onChange={(e) => setNewExplanation(e.target.value)}
+                rows={2}
+                className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
+              />
+            </label>
+            <label htmlFor="quicktools-example" className="flex flex-col gap-1">
+              <span className="sr-only">Site Example</span>
+              <input
+                id="quicktools-example"
+                type="text"
+                placeholder="Site Example (e.g. The grounding grid installation passed inspection.)"
+                value={newExample}
+                onChange={(e) => setNewExample(e.target.value)}
+                className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
+              />
+            </label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <input
-                type="text"
-                placeholder="Common Wrong Usage (e.g. ground grid)"
-                value={newWrongUsage}
-                onChange={(e) => setNewWrongUsage(e.target.value)}
-                className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
-              />
-              <input
-                type="text"
-                placeholder="Related Terms (comma-separated)"
-                value={newRelated}
-                onChange={(e) => setNewRelated(e.target.value)}
-                className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
-              />
+              <label htmlFor="quicktools-wrong" className="flex flex-col gap-1">
+                <span className="sr-only">Common Wrong Usage</span>
+                <input
+                  id="quicktools-wrong"
+                  type="text"
+                  placeholder="Common Wrong Usage (e.g. ground grid)"
+                  value={newWrongUsage}
+                  onChange={(e) => setNewWrongUsage(e.target.value)}
+                  className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
+                />
+              </label>
+              <label htmlFor="quicktools-related" className="flex flex-col gap-1">
+                <span className="sr-only">Related Terms</span>
+                <input
+                  id="quicktools-related"
+                  type="text"
+                  placeholder="Related Terms (comma-separated)"
+                  value={newRelated}
+                  onChange={(e) => setNewRelated(e.target.value)}
+                  className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
+                />
+              </label>
             </div>
           </div>
 

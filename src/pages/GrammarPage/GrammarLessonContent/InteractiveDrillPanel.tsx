@@ -133,7 +133,11 @@ export const InteractiveDrillPanel = ({ selectedRule }: { selectedRule: Rule }) 
             </p>
           )}
           <div className="flex items-center gap-2">
+            <label htmlFor="grammar-drill-answer" className="sr-only">
+              Type your answer
+            </label>
             <input
+              id="grammar-drill-answer"
               value={userAnswer}
               onChange={(e) => {
                 setUserAnswer(e.target.value);
@@ -180,7 +184,11 @@ export const InteractiveDrillPanel = ({ selectedRule }: { selectedRule: Rule }) 
             {selectedRule.badExampleTurkishExplanation || selectedRule.commonMistakes}
           </p>
           <div className="flex items-center gap-2">
+            <label htmlFor="grammar-correction-answer" className="sr-only">
+              Write the corrected sentence
+            </label>
             <input
+              id="grammar-correction-answer"
               value={userAnswer}
               onChange={(e) => {
                 setUserAnswer(e.target.value);

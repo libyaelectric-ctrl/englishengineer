@@ -221,6 +221,7 @@ const SourceInputPanel = (props: {
           onChange={(e) => setInputText(e.target.value)}
           placeholder={translate('translator.sourcePlaceholder')}
           className="w-full rounded-[var(--radius-card)] border border-border-soft bg-background p-4 text-xs text-foreground font-medium focus:border-primary outline-none transition-all leading-relaxed font-sans"
+          aria-label={translate('translator.sourceText')}
         />
         {quickCharsBar}
       </div>
@@ -514,8 +515,12 @@ export const TranslatorPage = () => {
             </span>
           </div>
 
-          <label className="flex items-center gap-2 text-xs font-bold text-muted-copy cursor-pointer hover:text-foreground transition-colors select-none">
+          <label
+            htmlFor="translator-live-translate"
+            className="flex items-center gap-2 text-xs font-bold text-muted-copy cursor-pointer hover:text-foreground transition-colors select-none"
+          >
             <input
+              id="translator-live-translate"
               type="checkbox"
               checked={liveTranslateEnabled}
               onChange={(e) => setLiveTranslateEnabled(e.target.checked)}

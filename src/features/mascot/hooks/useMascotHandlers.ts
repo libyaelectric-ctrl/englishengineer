@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 
+import { MASCOT_COPY } from '@/shared/localization/translations/mascot.translations';
+
 import { useLocalizationStore } from '@/features/localization';
-import { MASCOT_COPY } from '@/features/localization/translations/mascot.translations';
 
 import { volumeToNumber } from '../mascot.config';
 import { useMascotStore } from '../mascot.store';

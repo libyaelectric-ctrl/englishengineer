@@ -250,17 +250,25 @@ const ProfileInfoSection = ({
       ) : (
         <form onSubmit={handleSaveProfile} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="block space-y-1.5 text-xs font-bold text-foreground">
+            <label
+              htmlFor="edit-first-name"
+              className="block space-y-1.5 text-xs font-bold text-foreground"
+            >
               First Name
               <input
+                id="edit-first-name"
                 value={editFirstName}
                 onChange={(e) => setEditFirstName(e.target.value)}
                 className="w-full rounded-[var(--radius-card)] border border-border-soft bg-surface px-3 py-2 text-sm text-foreground outline-none focus:border-primary transition-colors"
               />
             </label>
-            <label className="block space-y-1.5 text-xs font-bold text-foreground">
+            <label
+              htmlFor="edit-last-name"
+              className="block space-y-1.5 text-xs font-bold text-foreground"
+            >
               Last Name
               <input
+                id="edit-last-name"
                 value={editLastName}
                 onChange={(e) => setEditLastName(e.target.value)}
                 className="w-full rounded-[var(--radius-card)] border border-border-soft bg-surface px-3 py-2 text-sm text-foreground outline-none focus:border-primary transition-colors"
@@ -477,6 +485,7 @@ const PreferencesSection = ({
             return (
               <label
                 key={goal.id}
+                htmlFor={`pref-goal-${goal.id}`}
                 className={`flex items-center gap-2 px-3 py-2 rounded-[var(--radius-card)] border text-xs font-bold cursor-pointer transition-all ${
                   isChecked
                     ? 'border-primary/40 bg-primary/10 text-foreground'
@@ -484,6 +493,7 @@ const PreferencesSection = ({
                 }`}
               >
                 <input
+                  id={`pref-goal-${goal.id}`}
                   type="checkbox"
                   checked={isChecked}
                   onChange={() =>

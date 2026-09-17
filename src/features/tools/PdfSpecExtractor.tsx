@@ -112,6 +112,7 @@ export const PdfSpecExtractor = () => {
           accept=".pdf,.txt,.docx"
           onChange={handleSimulatedUpload}
           className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+          aria-label="Upload PDF, TXT, or DOCX specification file"
         />
         <div className="p-3 rounded-full bg-primary/10 text-primary">
           <UploadCloud className="h-6 w-6" />

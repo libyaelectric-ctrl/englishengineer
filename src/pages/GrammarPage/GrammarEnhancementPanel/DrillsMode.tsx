@@ -184,7 +184,11 @@ export const DrillsMode = ({
               </p>
               <p className="mt-2 text-xs font-bold">{fillDrill.sentence}</p>
               <div className="mt-3 flex gap-2">
+                <label htmlFor="drill-typed-answer" className="sr-only">
+                  Type the missing word
+                </label>
                 <input
+                  id="drill-typed-answer"
                   value={typedAnswer}
                   onChange={(event) => setTypedAnswer(event.target.value)}
                   className="min-h-9 flex-1 rounded-[4px] border border-border-soft bg-surface px-3 text-xs outline-none focus:border-primary"

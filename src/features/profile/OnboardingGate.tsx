@@ -2,10 +2,10 @@
 
 import { useLocation } from 'react-router-dom';
 
+import { AUTH_SIGN_IN_URL, AUTH_SIGN_UP_URL } from '@/shared/constants/auth-urls';
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
 
 import { useAuthStore } from '@/features/auth';
-import { AUTH_SIGN_IN_URL, AUTH_SIGN_UP_URL } from '@/features/auth/firebase.config';
 import { INTERFACE_LANGUAGES } from '@/features/localization';
 
 import { NeuralOrbPanel } from './NeuralOrbPanel';

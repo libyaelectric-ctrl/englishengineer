@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 import { showToast } from '@/shared/components/Toast';
-
-import type { MascotStateCopy } from '@/features/localization/translations/mascot.translations';
+import type { MascotStateCopy } from '@/shared/localization/translations/mascot.translations';
 
 import { SLEEP_AFTER_MS, stateToastMap, volumeToNumber } from '../mascot.config';
 import { MascotState, useMascotStore } from '../mascot.store';

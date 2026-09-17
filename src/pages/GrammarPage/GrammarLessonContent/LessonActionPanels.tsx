@@ -60,9 +60,10 @@ export const ChatPanel = ({
       )}
     </div>
     <div className="mt-3 flex gap-2">
-      <label className="flex-1">
+      <label htmlFor="grammar-chat-input" className="flex-1">
         <span className="sr-only">Chat with AI Grammar Teacher</span>
         <input
+          id="grammar-chat-input"
           type="text"
           value={chatInput}
           onChange={(e) => setChatInput(e.target.value)}

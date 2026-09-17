@@ -22,12 +22,15 @@ export function QuestionField({
         <div className="mt-3 space-y-2">
           {question.choices?.map((choice, choiceIndex) => {
             const value = String.fromCharCode(65 + choiceIndex);
+            const inputId = `${question.id}-choice-${choiceIndex}`;
             return (
               <label
                 key={choice}
+                htmlFor={inputId}
                 className="flex cursor-pointer gap-2.5 rounded-[4px] border border-border-soft bg-surface p-3 text-sm text-foreground hover:bg-primary/5 hover:border-primary/30 transition-colors"
               >
                 <input
+                  id={inputId}
                   type="radio"
                   name={question.id}
                   value={value}
@@ -43,10 +46,12 @@ export function QuestionField({
     }
 
     if (question.type === 'true_false') {
+      const selectId = `${question.id}-tf-select`;
       return (
-        <label className="block mt-3">
+        <label htmlFor={selectId} className="block mt-3">
           <span className="sr-only">True or false answer</span>
           <select
+            id={selectId}
             value={answer}
             onChange={(event) => onAnswer(question.id, event.target.value)}
             className="w-full rounded-[4px] border border-border-soft bg-surface p-3 text-sm focus:border-primary focus:outline-none"
@@ -59,10 +64,12 @@ export function QuestionField({
       );
     }
 
+    const inputId = `${question.id}-short-answer`;
     return (
-      <label className="block mt-3">
+      <label htmlFor={inputId} className="block mt-3">
         <span className="sr-only">Short answer</span>
         <input
+          id={inputId}
           value={answer}
           onChange={(event) => onAnswer(question.id, event.target.value)}
           placeholder="Complete the missing technical phrase"

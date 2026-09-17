@@ -23,7 +23,7 @@ const DIST_DIR = resolve(process.cwd(), 'dist');
 const BUNDLE_LIMITS = {
   // Total JS bundle
   assets: {
-    totalJs: 100000, // 100MB total JS (translation corpora + vocab seeds are large)
+    totalJs: 100000, // 100MB total JS
     totalCss: 500, // 500KB total CSS
     maxChunk: 10000, // 10MB per chunk (lazy data chunks)
     maxAsset: 1000, // 1MB per non-JS/CSS asset
@@ -36,6 +36,8 @@ const BUNDLE_LIMITS = {
   },
   // Chunks to exclude from size checks (data-heavy lazy chunks)
   excludedChunks: ['translation-corpus-', 'vocab-seed-'],
+  // Asset paths to exclude from maxAsset check (static JSON data files served separately, not in JS bundle)
+  excludedAssetPaths: ['/data/translations/', '/data/vocabulary/'],
 };
 
 const WARN_THRESHOLD = 0.8; // 80% of limit = warning
@@ -242,8 +244,16 @@ async function checkBundleSize() {
 
   // Check large assets
   const assetLimit = BUNDLE_LIMITS.assets.maxAsset;
+  const excludedAssetPaths = BUNDLE_LIMITS.excludedAssetPaths || [];
   for (const file of assetFiles) {
     const sizeKB = await getFileSizeKB(file);
+    // Skip excluded asset paths (static data files served separately)
+    const relativePath = file.replace(DIST_DIR, '').replace(/\\/g, '/');
+    if (excludedAssetPaths.some((pattern) => relativePath.includes(pattern))) {
+      if (VERBOSE)
+        console.log(`⏭️  Skipping excluded asset: ${relativePath} (${formatSize(sizeKB)})`);
+      continue;
+    }
     if (sizeKB > assetLimit) {
       results.passed = false;
       results.checks.push({

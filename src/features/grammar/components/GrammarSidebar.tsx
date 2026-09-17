@@ -5,12 +5,13 @@ import { useShallow } from 'zustand/shallow';
 
 import { useLearningStore } from '@/core/learning';
 
+import { interpolate } from '@/shared/localization/interpolate';
+import { SIDEBAR_SKILL_COPY } from '@/shared/localization/translations/rightsidebar.translations';
+
 import { GrammarProgressService } from '@/features/grammar/grammar.progress';
 import { useGrammarStore } from '@/features/grammar/grammar.store';
 import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import { useLocalizationStore } from '@/features/localization';
-import { interpolate } from '@/features/localization/interpolate';
-import { SIDEBAR_SKILL_COPY } from '@/features/localization/translations/rightsidebar.translations';
 
 const log = (_page: string, _action: string, _details: string) => {};
 

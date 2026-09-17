@@ -256,6 +256,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
                 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3
                 [&::-webkit-slider-thumb]:rounded-[2px] [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer"
               disabled={isAudioLoading}
+              aria-label="Audio playback progress"
             />
             <div className="flex justify-between mt-1 font-bold">
               <span className="text-xs text-muted-copy">
