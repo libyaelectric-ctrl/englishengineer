@@ -15,19 +15,22 @@ import { MemoryRouter } from 'react-router-dom';
 import { setAuthTokenGetter } from '@/shared/services/auth-backend/backend-auth.service';
 
 import { useAuthStore } from '@/features/auth';
-import { BillingStatusPanel } from '@/features/billing/BillingStatusPanel';
-import { CLIENT_SENTENCE_CODE } from '@/features/billing/billing.failure-copy';
-import { useBillingStore } from '@/features/billing/billing.store';
 
+import { AIPage } from '@/pages/AIPage';
 import PricingPage from '@/pages/PricingPage';
+import { useProfilePage } from '@/pages/ProfilePage/useProfilePage';
 
-import { useProfilePage } from './useProfilePage';
+import { BillingStatusPanel } from './BillingStatusPanel';
+import { CLIENT_SENTENCE_CODE } from './billing.failure-copy';
+import { useBillingStore } from './billing.store';
 
 /**
- * The two surfaces that render a billing failure must agree on it, and neither may
- * print the backend's own sentence. Both are driven through their real code — the
- * profile page through its own hook, the billing page through its panel — against a
- * failure that really happened (a 503 from the checkout endpoint).
+ * Every surface a customer can meet a billing failure on, whatever page it belongs to:
+ * the billing panel, the profile page's own upgrade and portal actions, the pricing page,
+ * the AI page's credit purchase, and the store's channel for a sentence a client writes
+ * itself. Each is driven through its real code against a failure that really happened (a
+ * 503 from the checkout endpoint), because the one thing that has to hold everywhere is
+ * that the customer reads curated copy and never the backend's own sentence.
  */
 
 const AUDIT_COPY =
@@ -250,6 +253,16 @@ describe('a sentence a surface writes itself', () => {
     expect(alert).toHaveTextContent(demo);
     expect(alert).not.toHaveTextContent(/billing could not be started/i);
   });
+
+  it("keeps the pricing page's own demo-mode refusal specific", async () => {
+    // This refusal is copy the page authors, not a failure the backend sent, and it
+    // never passes through the resolver. It is pinned here as a recorded decision: the
+    // branch could be routed through `resolveBillingError` and still show *something*,
+    // which is exactly why the difference has to be visible in a test.
+    useAuthStore.getState().enterDemoUser();
+
+    expect(await upgradeFromPricingPage()).toBe('Demo profiles cannot make purchases.');
+  });
 });
 
 describe('the checkout failure a customer meets on the upgrade page', () => {
@@ -285,4 +298,22 @@ describe('the checkout failure a customer meets on the upgrade page', () => {
       expect(document.body.textContent).not.toContain(raw);
     }
   );
+});
+
+describe('the credit purchase on the AI page', () => {
+  it('answers a billing failure with billing copy, not the backend sentence', async () => {
+    // The page runs the top-up itself through its own hook, and renders the failure in
+    // the provider panel it passes to `ProviderStatusPanel` — the same catch that used to
+    // print `err.message` raw.
+    stubAuditFailure();
+
+    const page = render(<AIPage />, { wrapper });
+
+    fireEvent.click(await screen.findByRole('button', { name: /buy 50 ai credits/i }));
+
+    await waitFor(() => {
+      expect(page.container.textContent).toContain(AUDIT_COPY);
+    });
+    expect(page.container.textContent).not.toContain(RAW_BACKEND_SENTENCE);
+  });
 });
