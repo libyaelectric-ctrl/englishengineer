@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { billingFailureCopy } from './billing.failure-copy';
 
@@ -8,6 +8,10 @@ const AUDIT_COPY =
   'Billing could not be started because the service is temporarily unavailable. Please try again in a few minutes.';
 const IDEMPOTENCY_COPY =
   'A previous billing attempt is still being processed. Please wait a moment and try again.';
+const ROUTE_NOT_FOUND_COPY =
+  'This billing action is not available right now. Please refresh the page and try again.';
+const ORIGIN_NOT_ALLOWED_COPY =
+  'Billing could not be started from this address. Please open the app on its usual domain and try again.';
 
 const RAW_AUDIT = 'Required audit logging is unavailable.';
 const RAW_IDEMPOTENCY = 'Idempotency store unreachable.';
@@ -38,6 +42,13 @@ describe('billingFailureCopy', () => {
     );
   });
 
+  it('explains the two app-level refusals a billing request can be answered with', () => {
+    expect(billingFailureCopy('route_not_found', 'Route not found.')).toBe(ROUTE_NOT_FOUND_COPY);
+    expect(billingFailureCopy('origin_not_allowed', 'Origin not allowed by CORS.')).toBe(
+      ORIGIN_NOT_ALLOWED_COPY
+    );
+  });
+
   it('passes a message through untouched when the code is unrecognised or absent', () => {
     expect(billingFailureCopy('brand_new_code', RAW_AUDIT)).toBe(RAW_AUDIT);
     expect(billingFailureCopy(null, RAW_AUDIT)).toBe(RAW_AUDIT);
@@ -53,6 +64,25 @@ describe('billingFailureCopy', () => {
 
   it('never returns nothing, so a failure cannot render as silence', () => {
     expect(billingFailureCopy('audit_log_unavailable', '')).toBe(AUDIT_COPY);
+  });
+
+  it('warns in development for a code outside the contract, and stays quiet for classified ones', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      expect(billingFailureCopy('code_nobody_classified', 'Raw sentence.')).toBe('Raw sentence.');
+      const said = warn.mock.calls.flat().join(' ');
+      expect(said).toContain('code_nobody_classified');
+      expect(said).toContain('billing.failure-copy.ts');
+
+      warn.mockClear();
+      billingFailureCopy('audit_log_unavailable', 'Raw sentence.');
+      billingFailureCopy('invalid_request', 'Full name is required.');
+      billingFailureCopy('billing_backend_timeout', 'Timed out.');
+      billingFailureCopy(null, 'Raw sentence.');
+      expect(warn).not.toHaveBeenCalled();
+    } finally {
+      warn.mockRestore();
+    }
   });
 
   it('keeps the wording in exactly one file, so no surface can re-inline its own', () => {

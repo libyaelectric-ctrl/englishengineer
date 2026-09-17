@@ -12,10 +12,10 @@ export default {
     {
       name: 'no-ui-imports-from-backend',
       comment:
-        'Frontend UI code (src/) must not import from backend (backend/). These are separate deployment targets.',
+        'Frontend UI code (src/) must not import from backend (backend/). These are separate deployment targets. The one exception is the type-only error-code contract (backend/src/contracts/), which is erased at build time; ESLint additionally rejects a value import from it.',
       severity: 'error',
       from: { path: '^src/' },
-      to: { path: '^backend/' },
+      to: { path: '^backend/', pathNot: '^backend/src/contracts/' },
     },
     {
       name: 'no-backend-imports-from-ui',

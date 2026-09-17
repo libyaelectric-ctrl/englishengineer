@@ -29,7 +29,6 @@ export default tseslint.config(
       '.playwright-cli',
       '.playwright-cli/**',
       'src/core/architecture.test.ts',
-      'backend/src/errors.ts',
       '.record.cjs',
       '*.debug.cjs',
       '.freebuff/**',
@@ -78,6 +77,29 @@ export default tseslint.config(
     files: ['src/**/*.{ts,tsx}'],
     plugins: { local: { rules: { 'no-raw-palette': noRawPalette } } },
     rules: { 'local/no-raw-palette': 'error' },
+  },
+  // The frontend's only permitted reference to the backend is the type-only error-code
+  // contract seam (`src/features/billing/billing.error-codes.ts`). `allowTypeImports`
+  // keeps that reference erased at build time; a value import would make the two
+  // deployments depend on each other, which is what the boundary exists to prevent.
+  // `.dependency-cruiser.mjs` narrows the same boundary to the contracts path.
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/backend/**'],
+              allowTypeImports: true,
+              message:
+                'src/ may import only types from backend/ (the error-code contract), never values.',
+            },
+          ],
+        },
+      ],
+    },
   },
   {
     extends: [js.configs.recommended],

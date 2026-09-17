@@ -1,11 +1,17 @@
 import type { ApiErrorResponse } from '../types.js';
+import type { BackendErrorCode } from './contracts/error-codes.js';
 
 export class ApiError extends Error {
   status: number;
-  code: string;
+  code: BackendErrorCode;
   details?: unknown;
 
-  constructor(status: number, code: string, message: string, details?: unknown) {
+  /**
+   * `code` is the contract in `contracts/error-codes.ts`: a code that is not declared
+   * there does not compile, so the set of codes the client may have to classify cannot
+   * grow behind its back.
+   */
+  constructor(status: number, code: BackendErrorCode, message: string, details?: unknown) {
     super(message);
     this.name = 'ApiError';
     this.status = status;

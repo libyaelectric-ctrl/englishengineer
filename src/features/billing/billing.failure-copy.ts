@@ -1,5 +1,7 @@
 import { logger } from '@/shared/logger';
 
+import type { BillingSurfaceErrorCode } from './billing.error-codes';
+
 /**
  * The one place a billing failure becomes a sentence a customer should read.
  *
@@ -13,28 +15,43 @@ import { logger } from '@/shared/logger';
  * sentences instead meant a copy change on the server silently changed what the
  * customer read here — or stopped matching altogether.
  *
- * Every code the billing surface can emit is classified here, in one of two records:
- * `BILLING_FAILURE_COPY` rewrites the backend's wording, and `BACKEND_SENTENCE_CODES`
- * names why a code may keep it. A code in neither is the failure this module exists to
- * prevent — the customer reads the server's own sentence — so the resolver warns about
- * it in development, and `billing.failure-copy.coverage.test.ts` derives the codes the
- * billing route can really emit and fails when one of them is unclassified. The check
- * reads literals out of the backend's billing modules and the client's transport codes;
- * codes the error mapper synthesises at runtime (an `http-errors` `type` on a malformed
- * body, `request_error`) are not literals and are covered only by the dev warning.
+ * Classification is exhaustive by construction. `BillingFailureCode` below is derived
+ * from the backend's own contract (`backend/src/contracts/error-codes.ts`), so the
+ * `Record<Exclude<...>>` on `BACKEND_SENTENCE_CODES` fails the typecheck until every
+ * code the billing surface can receive is either rewritten here or given a named reason
+ * to keep the backend's sentence. A code the contract does not know at all — one the
+ * backend synthesises at runtime, such as a `http-errors` `type` on a malformed body,
+ * or a code from a newer backend — cannot be classified ahead of time; the resolver
+ * warns about it in development rather than letting it pass unnoticed.
  *
- * This must never return nothing. Dropping the message entirely is what made a failed
- * checkout look like a dead button: the request failed, nothing rendered, and the user
- * had no way to tell what went wrong.
+ * This must never return nothing when it has copy for the code. Dropping the message
+ * entirely is what made a failed checkout look like a dead button: the request failed,
+ * nothing rendered, and the user had no way to tell what went wrong.
  */
 
+/**
+ * Codes this client writes itself, for failures that never reach the backend. They carry
+ * the backend's shape but not its contract, so they are declared here.
+ */
+export type BillingTransportCode =
+  'billing_backend_request_failed' | 'billing_backend_timeout' | 'billing_backend_unreachable';
+
+/** Every code a billing surface can be asked to explain. */
+export type BillingFailureCode = BillingSurfaceErrorCode | BillingTransportCode;
+
 /** Codes whose backend sentence a customer should not read; the map replaces it. */
-export const BILLING_FAILURE_COPY: Record<string, string> = {
+const BILLING_FAILURE_COPY = {
   audit_log_unavailable:
     'Billing could not be started because the service is temporarily unavailable. Please try again in a few minutes.',
   idempotency_store_unavailable:
     'A previous billing attempt is still being processed. Please wait a moment and try again.',
-};
+  origin_not_allowed:
+    'Billing could not be started from this address. Please open the app on its usual domain and try again.',
+  route_not_found:
+    'This billing action is not available right now. Please refresh the page and try again.',
+} as const satisfies Partial<Record<BillingFailureCode, string>>;
+
+type RewrittenCode = keyof typeof BILLING_FAILURE_COPY;
 
 /**
  * Why a code may skip the rewrite. A closed list, so classifying a code is a choice
@@ -45,13 +62,20 @@ export type BackendSentenceReason =
   | 'customer-facing-sentence'
   /** The sentence names a provider, a token or an internal mechanism. */
   | 'names-provider-or-component'
-  /** Only the webhook endpoint emits it, and the browser never calls that endpoint. */
-  | 'webhook-only'
   /** The sentence is written on the client, in `stripe.provider.ts`, not by the backend. */
   | 'transport';
 
-/** Every remaining code the billing surface can emit, and why it keeps its sentence. */
-export const BACKEND_SENTENCE_CODES: Record<string, BackendSentenceReason> = {
+/**
+ * Every remaining code, and why it keeps its sentence.
+ *
+ * `Exclude` is the enforcement: adding a code to the backend contract, or to
+ * `BillingTransportCode`, does not compile until it is classified — here or in
+ * `BILLING_FAILURE_COPY`. Nothing walks the backend's source to discover codes.
+ */
+const BACKEND_SENTENCE_CODES: Record<
+  Exclude<BillingFailureCode, RewrittenCode>,
+  BackendSentenceReason
+> = {
   BILLING_STATUS_UNAVAILABLE: 'customer-facing-sentence',
   FORBIDDEN_DEMO_ACTION: 'customer-facing-sentence',
   INVALID_PLAN: 'customer-facing-sentence',
@@ -78,10 +102,6 @@ export const BACKEND_SENTENCE_CODES: Record<string, BackendSentenceReason> = {
   internal_service_identity_unavailable: 'names-provider-or-component',
   stripe_invalid_response: 'names-provider-or-component',
 
-  dodo_webhook_not_configured: 'webhook-only',
-  invalid_webhook_signature: 'webhook-only',
-  stripe_webhook_not_configured: 'webhook-only',
-
   billing_backend_request_failed: 'transport',
   billing_backend_timeout: 'transport',
   billing_backend_unreachable: 'transport',
@@ -101,10 +121,10 @@ export const billingFailureCopy = (
 ): string => {
   if (!errorCode) return message;
 
-  const copy = BILLING_FAILURE_COPY[errorCode];
+  const copy = (BILLING_FAILURE_COPY as Record<string, string | undefined>)[errorCode];
   if (copy) return copy;
 
-  if (!BACKEND_SENTENCE_CODES[errorCode]) warnUnclassified(errorCode);
+  if (!(errorCode in BACKEND_SENTENCE_CODES)) warnUnclassified(errorCode);
 
   return message;
 };
