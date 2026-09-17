@@ -14,7 +14,9 @@ import PricingPage from '@/pages/PricingPage';
 import ProfilePage from '@/pages/ProfilePage';
 
 import { BillingStatusPanel } from './BillingStatusPanel';
+import { DEFAULT_UPGRADE_PLAN_ID } from './billing.entitlements';
 import { CLIENT_SENTENCE_CODE } from './billing.failure-copy';
+import { BillingService } from './billing.service';
 import { useBillingStore } from './billing.store';
 
 /**
@@ -27,6 +29,11 @@ import { useBillingStore } from './billing.store';
  *
  * The profile surface is carried by the page itself, not by its hook: a hook's return value
  * is what the page renders, not what the customer reads.
+ *
+ * Both real surfaces are rendered from one store state here, so this is also where the
+ * upgrade control's own product decision is pinned: two identically-labelled controls have
+ * to start the same plan, and a lapsed paid plan has to be offered the same control on
+ * both. Neither is visible from inside one surface alone.
  */
 
 /**
@@ -154,14 +161,6 @@ const CODE_LESS_ENVELOPES: { shape: string; raw: string; make: () => Response }[
 
 const queryClient = new QueryClient();
 
-/**
- * Captured at module load, before any test can write to them. The profile page's controls are
- * driven by these two, so a test that configures a provider and a customer has to hand the
- * store back exactly what it found.
- */
-const PRISTINE_SUBSCRIPTION = useBillingStore.getState().subscription;
-const PRISTINE_PROVIDER_STATUS = useBillingStore.getState().providerStatus;
-
 const wrapper = ({ children }: { children: React.ReactNode }) => (
   <QueryClientProvider client={queryClient}>
     <MemoryRouter>{children}</MemoryRouter>
@@ -218,13 +217,6 @@ afterEach(() => {
   setAuthTokenGetter(null);
   vi.unstubAllGlobals();
   useBillingStore.getState().setBillingError(null);
-  // The portal cases have to put the account into the state a paying customer's is in, so
-  // those writes are undone here: otherwise what the next test renders depends on the order
-  // this file's tests happen to run in.
-  useBillingStore.setState({
-    subscription: PRISTINE_SUBSCRIPTION,
-    providerStatus: PRISTINE_PROVIDER_STATUS,
-  });
 });
 
 describe('the same billing failure on both surfaces', () => {
@@ -503,5 +495,57 @@ describe('the credit purchase on the AI page', () => {
     // The copy is not merely somewhere in the page: it is the purchase control's own line.
     expect(purchaseErrorLine(page.container)).toBe(`Error: ${AUDIT_COPY}`);
     expect(document.body.textContent).not.toContain(RAW_BACKEND_SENTENCE);
+  });
+});
+
+describe('the upgrade control on every surface', () => {
+  const lapsePaidPlan = async (status: string): Promise<void> => {
+    useBillingStore.setState({
+      subscription: {
+        ...useBillingStore.getState().subscription,
+        planId: 'senior',
+        status: status as never,
+      },
+    });
+    await act(async () => undefined);
+  };
+
+  it('is still offered to a paid plan that lapsed', async () => {
+    const page = renderProfilePage();
+    await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
+    await act(async () => undefined);
+
+    await lapsePaidPlan('past_due');
+
+    // The billing page offers this customer an upgrade; the profile page used to answer the
+    // same question with a different rule and hide the control from them entirely.
+    expect(within(page.container).getByRole('button', { name: /upgrade plan/i })).toBeEnabled();
+  });
+
+  it('starts the same plan the billing page starts', async () => {
+    const spy = vi.spyOn(BillingService, 'startCheckout').mockResolvedValue(undefined);
+    try {
+      const profile = renderProfilePage();
+      await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
+      await act(async () => undefined);
+      fireEvent.click(within(profile.container).getByRole('button', { name: /upgrade plan/i }));
+      await waitFor(() => expect(spy).toHaveBeenCalled());
+      const fromProfile = spy.mock.calls.at(-1)?.[2];
+      profile.unmount();
+
+      const billing = render(<BillingPage />, { wrapper });
+      await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
+      await act(async () => undefined);
+      const panel = within(billing.container).getByTestId('billing-status-panel');
+      fireEvent.click(within(panel).getByRole('button', { name: /upgrade plan/i }));
+      await waitFor(() => expect(spy).toHaveBeenCalledTimes(2));
+      const fromBilling = spy.mock.calls.at(-1)?.[2];
+      billing.unmount();
+
+      expect(fromProfile).toBe(DEFAULT_UPGRADE_PLAN_ID);
+      expect(fromBilling).toBe(DEFAULT_UPGRADE_PLAN_ID);
+    } finally {
+      spy.mockRestore();
+    }
   });
 });

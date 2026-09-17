@@ -12,6 +12,8 @@ export {
   canUseAICoach,
   canViewAdvancedAnalytics,
   getFreeTierPreview,
+  hasActivePaidAccess,
+  DEFAULT_UPGRADE_PLAN_ID,
 } from './billing.entitlements';
 
 export { EntitlementGate } from './EntitlementGate';

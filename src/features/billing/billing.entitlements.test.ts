@@ -10,6 +10,7 @@ import {
   getDowngradeImpact,
   getFreeTierPreview,
   getPlanLimitLabel,
+  hasActivePaidAccess,
   isSubscriptionActive,
 } from './billing.entitlements';
 import { createFreeSubscription } from './billing.helpers';
@@ -33,6 +34,35 @@ const withPlan = (planId: SubscriptionSnapshot['planId']): SubscriptionSnapshot 
 describe('billing entitlements', () => {
   it('treats free subscription as active fallback', () => {
     expect(isSubscriptionActive(createFreeSubscription())).toBe(true);
+  });
+
+  describe('hasActivePaidAccess', () => {
+    const withStatus = (status: SubscriptionSnapshot['status']): SubscriptionSnapshot => ({
+      ...proSubscription,
+      status,
+    });
+
+    it('is true while a paid plan is active or trialing', () => {
+      for (const status of ['active', 'trialing'] as const) {
+        expect(hasActivePaidAccess(withStatus(status))).toBe(true);
+      }
+    });
+
+    it('is false for a paid plan that lapsed, so the customer keeps a route back', () => {
+      // The states a churned customer sits in. Answering this question differently on the
+      // billing page and the profile page is what hid the upgrade control from exactly
+      // these customers on one of the two surfaces.
+      for (const status of ['canceled', 'past_due', 'unpaid', 'incomplete'] as const) {
+        expect(hasActivePaidAccess(withStatus(status))).toBe(false);
+      }
+    });
+
+    it('is false for both free-tier shapes', () => {
+      expect(hasActivePaidAccess(createFreeSubscription())).toBe(false);
+      expect(hasActivePaidAccess({ ...proSubscription, planId: 'junior', status: 'none' })).toBe(
+        false
+      );
+    });
   });
 
   describe('free-tier preview limits (Grammar first module, Vocabulary first page)', () => {

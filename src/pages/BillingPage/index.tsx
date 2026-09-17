@@ -9,7 +9,7 @@ import { logger } from '@/shared/logger';
 
 import { useAIStore } from '@/features/ai';
 import { useAuthStore } from '@/features/auth';
-import { useBillingStore } from '@/features/billing';
+import { DEFAULT_UPGRADE_PLAN_ID, useBillingStore } from '@/features/billing';
 import type { InvoiceRecord } from '@/features/billing';
 import { BillingStatusPanel } from '@/features/billing/BillingStatusPanel';
 import { BillingPlanCards } from '@/features/billing/components/BillingPlanCards';
@@ -62,7 +62,7 @@ export const BillingPage = () => {
       return;
     }
     try {
-      await startCheckout(currentUser.id, currentUser.email, 'senior');
+      await startCheckout(currentUser.id, currentUser.email, DEFAULT_UPGRADE_PLAN_ID);
     } catch (err) {
       logger.e('Checkout failed:', err);
     }
