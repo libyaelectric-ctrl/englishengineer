@@ -3,6 +3,7 @@ import { devtools } from 'zustand/middleware';
 
 import { AppError } from '@/core/errors/app-error';
 
+import { SessionEvents } from '@/shared/events/session.events';
 import { logger } from '@/shared/logger';
 
 import { CLIENT_SENTENCE_CODE } from './billing.failure-copy';
@@ -158,3 +159,23 @@ export const useBillingStore = create<BillingState & BillingActions>()(
     { name: 'BillingStore' }
   )
 );
+
+SessionEvents.subscribe((phase) => {
+  if (phase === 'cleared') {
+    useBillingStore.setState({
+      subscription: BillingService.getLocalSubscription(),
+      invoices: [],
+      isLoading: false,
+      isLoadingInvoices: false,
+      error: null,
+      errorCode: null,
+    });
+  } else if (phase === 'activated') {
+    useBillingStore.setState({
+      subscription: BillingService.getLocalSubscription(),
+      invoices: [],
+      error: null,
+      errorCode: null,
+    });
+  }
+});

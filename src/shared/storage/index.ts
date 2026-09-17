@@ -3,6 +3,7 @@ import { logger } from '@/shared/logger';
 export const STORAGE_CHANGE_EVENT = 'EngVox:storage-change';
 export const SESSION_NAMESPACE_EVENT = 'EngVox:session-namespace';
 export type ClientSessionKind = 'firebase' | 'local' | 'demo';
+export type SessionPhase = 'cleared' | 'activated';
 export interface ClientSession {
   userId: string;
   kind: ClientSessionKind;

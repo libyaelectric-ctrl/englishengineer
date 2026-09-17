@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 
 import { IdService } from '@/core/ids/id.service';
 
+import { SessionEvents } from '@/shared/events/session.events';
 import { eosPersistConfig } from '@/shared/storage/persist-middleware';
 import type { AICoachSession } from '@/shared/types/ai.types';
 
@@ -138,3 +139,11 @@ export const useWorkspaceStore = create<WorkspaceStoreState>()(
     };
   }, eosPersistConfig(STORAGE_KEY))
 );
+
+SessionEvents.subscribe((phase) => {
+  if (phase === 'cleared') {
+    const workspace = createDefaultWorkspace();
+    useWorkspaceStore.setState({ workspaces: [workspace], activeWorkspaceId: workspace.id });
+    useAIStore.getState().setSessions([]);
+  }
+});

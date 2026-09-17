@@ -5,12 +5,12 @@ import { useEffect, useRef } from 'react';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 import { logger } from '@/shared/logger';
 import { setAuthTokenGetter } from '@/shared/services/auth-backend/backend-auth.service';
+import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
 import { storage } from '@/shared/storage';
 import type { UserProfile } from '@/shared/types/auth.types';
 import type { CareerTrackId, InterfaceLanguage } from '@/shared/types/domain.types';
 
 import { type SupportedInterfaceLanguage, useLocalizationStore } from '@/features/localization';
-import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 import { consumePendingOnboard } from '@/pages/OnboardPage';
 

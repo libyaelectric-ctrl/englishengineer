@@ -4,50 +4,36 @@ import { useEffect } from 'react';
 
 import { useLearningStore } from '@/core/learning';
 
+import { SessionEvents } from '@/shared/events/session.events';
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { SESSION_NAMESPACE_EVENT, storage } from '@/shared/storage';
 import { useLearningIntelligenceStore } from '@/shared/stores/learning-intelligence.store';
 
 import { useAIStore } from '@/features/ai';
-import { createFreeSubscription } from '@/features/billing/billing.helpers';
-import { BillingService } from '@/features/billing/billing.service';
-import { useBillingStore } from '@/features/billing/billing.store';
-import { useWorkspaceStore } from '@/features/billing/workspace.store';
 
 const resetSensitiveMemory = (): void => {
   useLearningStore.getState().resetAll();
   useAIStore.getState().resetCoach();
-  useWorkspaceStore.getState().resetWorkspaces();
   useLearningIntelligenceStore.setState(LearningIntelligenceService.load());
-  useBillingStore.setState({
-    subscription: createFreeSubscription(),
-    invoices: [],
-    isLoading: false,
-    isLoadingInvoices: false,
-  });
-  // The panel's message and the code its copy comes from are written only by the
-  // store, so clearing goes through that writer instead of setting half the pair.
-  useBillingStore.getState().setBillingError(null);
   queryClient.clear();
 };
 const hydrateActiveNamespace = (): void => {
   if (!storage.getSession()) return;
   void useLearningStore.persist.rehydrate();
   void useAIStore.persist.rehydrate();
-  void useWorkspaceStore.persist.rehydrate();
   useLearningIntelligenceStore.setState(LearningIntelligenceService.load());
-  useBillingStore.setState({
-    subscription: BillingService.getLocalSubscription(),
-    invoices: [],
-  });
-  useBillingStore.getState().setBillingError(null);
 };
 export const SessionDataBridge = () => {
   useEffect(() => {
     const onNamespace = (event: Event): void => {
       const detail = (event as CustomEvent<{ phase: 'cleared' | 'activated' }>).detail;
-      if (detail.phase === 'cleared') resetSensitiveMemory();
-      else hydrateActiveNamespace();
+      if (detail.phase === 'cleared') {
+        SessionEvents.emit('cleared');
+        resetSensitiveMemory();
+      } else {
+        SessionEvents.emit('activated');
+        hydrateActiveNamespace();
+      }
     };
     window.addEventListener(SESSION_NAMESPACE_EVENT, onNamespace);
     queryClient.clear();
