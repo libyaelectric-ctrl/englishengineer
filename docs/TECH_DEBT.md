@@ -287,6 +287,15 @@ become invisible instead of actionable.
 then tail the log. Implemented on 2026-08-29.
 **Found during:** 2026-08-29 commit run.
 
+### TD-022: Unused-export residual (382) — ✅ Accepted ⚠️
+
+**File:** repo-wide (barrel `index.ts` re-exports + domain type modules)
+**Issue:** After the 2026-09-18 module-graph export sweep (-529 dead lines, commit deee4f76), knip still reports ~382 unused exports/types. The residual is not removable dead code: it is (a) barrel re-export lines whose consumers live in `tests/**` or `vi.mock()` paths knip's default graph does not traverse, (b) symbols referenced only by other exports in the same file (union members, const tables), and (c) intentional named+default React component pairings.
+**Impact:** None on runtime; noise in knip's exports report only.
+**Effort:** N/A — accepted by decision.
+**Action:** The CI gate (`check:dead-code`) enforces `files` + `dependencies` only (both 0 findings). A second automated sweep was evaluated and rejected on risk/benefit; re-evaluate only if barrel consolidation happens. Safety layers used by the sweep (import-chain resolver incl. tests + in-file reference gate) are documented for reuse.
+**Found during:** 2026-09-18 dead-code export hunt.
+
 ## Tracking
 
 | ID     | Priority | Status      | Assigned | Due Date   |
@@ -312,14 +321,15 @@ then tail the log. Implemented on 2026-08-29.
 | TD-018 | Medium   | Resolved    | TBD      | TBD        |
 | TD-019 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
 | TD-020 | Medium   | Resolved    | TBD      | TBD        |
+| TD-022 | Low      | ✅ Accepted | TBD      | 2026-09-18 |
 
 ## Stats
 
-- **Total Items:** 21
-- **Resolved:** 19 (95%)
+- **Total Items:** 22
+- **Resolved:** 19 (91%)
 - **Partially Resolved:** 1 (5%)
-- **Open:** 2 (10%)
+- **Open:** 2 (9%)
 
 ## Last Updated
 
-- **Date:** 2026-08-29
+- **Date:** 2026-09-18
