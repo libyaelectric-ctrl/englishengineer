@@ -20,7 +20,45 @@ jobs:
         run: npm i -g vercel@latest
 
       - name: Deploy to Production
-        run: vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+        id: deploy
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }} 2>&1 \
+            | tee "$RUNNER_TEMP/vercel-deploy.log"
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # The CLI prints the deployment URL on success and an inspect URL on failure, but it
+      # never prints the build log — which is where the reason for a red deploy actually
+      # lives. Print it here, so a failed deploy states its own cause in this run instead of
+      # sending everyone to the dashboard with nothing but a deployment id.
+      - name: Print the Vercel build log when the deploy fails
+        if: steps.deploy.outcome == 'failure'
+        run: |
+          echo "::group::vercel deploy output"
+          cat "$RUNNER_TEMP/vercel-deploy.log" || true
+          echo "::endgroup::"
+
+          # `vercel inspect <url|id>` wants the deployment id or its *.vercel.app URL, so
+          # take the id out of the inspect URL the CLI printed first, then the deployment URL.
+          INSPECT_REF=$(grep -oE 'https://vercel\.com/[^ ]+/[A-Za-z0-9]+' "$RUNNER_TEMP/vercel-deploy.log" | tail -1 | sed 's#.*/##')
+          DEPLOYMENT_URL=$(grep -oE 'https://[a-z0-9-]+\.vercel\.app' "$RUNNER_TEMP/vercel-deploy.log" | tail -1)
+          echo "deployment id:  ${INSPECT_REF:-unknown}"
+          echo "deployment url: ${DEPLOYMENT_URL:-unknown}"
+
+          TARGET="${INSPECT_REF:-$DEPLOYMENT_URL}"
+          if [ -n "$TARGET" ]; then
+            echo "::group::vercel inspect ${TARGET} --logs"
+            npx --yes vercel@latest inspect "$TARGET" --logs \
+              --token=${{ secrets.VERCEL_TOKEN }} || echo "inspect could not read the build log"
+            echo "::endgroup::"
+          fi
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Fail when the deploy failed
+        if: steps.deploy.outcome == 'failure'
+        run: exit 1
