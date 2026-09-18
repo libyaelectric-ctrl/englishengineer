@@ -56,6 +56,7 @@
     "a11y:audit": "node scripts/a11y-audit.mjs",
     "content:validate": "node scripts/verify-release.mjs",
     "check:dead-code": "knip --no-progress",
+    "check:freebuff-refs": "node scripts/check-freebuff-refs.mjs",
     "check-languages": "node scripts/verify-language-completeness.mjs"
   },
   "engines": {
