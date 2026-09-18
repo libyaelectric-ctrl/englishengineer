@@ -296,39 +296,50 @@ then tail the log. Implemented on 2026-08-29.
 **Action:** The CI gate (`check:dead-code`) enforces `files` + `dependencies` only (both 0 findings). A second automated sweep was evaluated and rejected on risk/benefit; re-evaluate only if barrel consolidation happens. Safety layers used by the sweep (import-chain resolver incl. tests + in-file reference gate) are documented for reuse.
 **Found during:** 2026-09-18 dead-code export hunt.
 
+### TD-023: Every production deploy fails with "Resource provisioning failed"
+
+**File:** `.github/workflows/vercel-deploy.yml` (symptom site), cause is the Vercel account
+**Issue:** All 15+ `Deploy to Vercel` runs since 2026-09-17 end after ~5 min at `Building…`; the Vercel API reports `BUILD_FAILED: Resource provisioning failed` for every deployment, git- or CLI-triggered, preview or production, and even for `--prebuilt` static uploads that never need a build machine. Diagnosis on `chore/vercel-api-diagnose` ruled out resourceConfig/region/project flags. The team billing dump shows the actual cause: `plan: "hobby"` with `planIteration: "plus"`, an **expired Stripe subscription** (`expiredSubscriptions` holds the active-looking `orbSubscriptionId`), and **`entitlements: {}`** — the account lost its provisioning entitlements (billing `syncedAt` is 2026-07-09, long stale).
+**Impact:** engvox.com is frozen on a ~2-day-old build despite main being green; no repo change can fix it.
+**Effort:** N/A — outside the repo.
+**Action:** Account owner (catexozcan@gmail.com) must open vercel.com → engineer-os → Settings → Billing and resolve the lapsed subscription/payment (update card or confirm Hobby downgrade). Once `entitlements` is non-empty re-run the failing workflow; `scripts/vercel-prebuilt.mjs` (added same day) is a ready `--prebuilt` fallback for future build-box outages. Also re-audit the now-redundant `ci/vercel-deploy-logs` + `chore/vercel-api-diagnose` branches afterwards.
+**Found during:** 2026-09-18 full-repo re-audit.
+
 ## Tracking
 
-| ID     | Priority | Status      | Assigned | Due Date   |
-| ------ | -------- | ----------- | -------- | ---------- |
-| TD-001 | High     | ✅ Resolved | TBD      | TBD        |
-| TD-002 | High     | ✅ Resolved | TBD      | TBD        |
-| TD-003 | High     | ✅ Resolved | TBD      | TBD        |
-| TD-004 | Medium   | ✅ Resolved | TBD      | TBD        |
-| TD-005 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
-| TD-006 | Medium   | 🟡 Partial  | TBD      | TBD        |
-| TD-007 | Medium   | ✅ Resolved | TBD      | TBD        |
-| TD-008 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
-| TD-009 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
-| TD-010 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
-| TD-011 | Low      | ✅ Resolved | TBD      | TBD        |
-| TD-012 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
-| TD-013 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
-| TD-014 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
-| TD-015 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
-| TD-016 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
-| TD-017 | Low      | ✅ Resolved | TBD      | TBD        |
-| TD-021 | Low      | Open        | TBD      | TBD        |
-| TD-018 | Medium   | Resolved    | TBD      | TBD        |
-| TD-019 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
-| TD-020 | Medium   | Resolved    | TBD      | TBD        |
-| TD-022 | Low      | ✅ Accepted | TBD      | 2026-09-18 |
+| ID     | Priority | Status      | Assigned      | Due Date   |
+| ------ | -------- | ----------- | ------------- | ---------- |
+| TD-001 | High     | ✅ Resolved | TBD           | TBD        |
+| TD-002 | High     | ✅ Resolved | TBD           | TBD        |
+| TD-003 | High     | ✅ Resolved | TBD           | TBD        |
+| TD-004 | Medium   | ✅ Resolved | TBD           | TBD        |
+| TD-005 | Medium   | ✅ Resolved | TBD           | 2026-08-29 |
+| TD-006 | Medium   | 🟡 Partial  | TBD           | TBD        |
+| TD-007 | Medium   | ✅ Resolved | TBD           | TBD        |
+| TD-008 | Medium   | ✅ Resolved | TBD           | 2026-08-29 |
+| TD-009 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
+| TD-010 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
+| TD-011 | Low      | ✅ Resolved | TBD           | TBD        |
+| TD-012 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
+| TD-013 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
+| TD-014 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
+| TD-015 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
+| TD-016 | Medium   | ✅ Resolved | TBD           | 2026-08-29 |
+| TD-017 | Low      | ✅ Resolved | TBD           | TBD        |
+| TD-021 | Low      | Open        | TBD           | TBD        |
+| TD-018 | Medium   | Resolved    | TBD           | TBD        |
+| TD-019 | Medium   | ✅ Resolved | TBD           | 2026-08-29 |
+| TD-020 | Medium   | Resolved    | TBD           | TBD        |
+| TD-022 | Low      | ✅ Accepted | TBD           | 2026-09-18 |
+| TD-023 | High     | 🔴 Blocked  | account owner | 2026-09-25 |
 
 ## Stats
 
-- **Total Items:** 22
-- **Resolved:** 19 (91%)
-- **Partially Resolved:** 1 (5%)
+- **Total Items:** 23
+- **Resolved:** 19 (83%)
+- **Partially Resolved:** 1 (4%)
 - **Open:** 2 (9%)
+- **Blocked (external):** 1 (4%)
 
 ## Last Updated
 
