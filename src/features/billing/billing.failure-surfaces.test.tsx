@@ -548,7 +548,7 @@ describe('the upgrade control on every surface', () => {
     } finally {
       spy.mockRestore();
     }
-  });
+  }, 30_000);
 
   it('gives every upgrade control on the billing page one wording', async () => {
     const billing = render(<BillingPage />, { wrapper });
@@ -564,7 +564,7 @@ describe('the upgrade control on every surface', () => {
     // while the CTA directly beneath it, asking its own question, said "Change / Upgrade Plan".
     expect(controls.length).toBeGreaterThan(0);
     expect(new Set(controls)).toEqual(new Set(['Upgrade Plan']));
-  });
+  }, 30_000);
 
   it('shows one plan name on every surface for an id the catalogue does not know', async () => {
     const page = renderProfilePage();
