@@ -287,23 +287,17 @@ become invisible instead of actionable.
 then tail the log. Implemented on 2026-08-29.
 **Found during:** 2026-08-29 commit run.
 
-### TD-022: Unused-export residual (382) — ✅ Accepted ⚠️
-
-**File:** repo-wide (barrel `index.ts` re-exports + domain type modules)
-**Issue:** After the 2026-09-18 module-graph export sweep (-529 dead lines, commit deee4f76), knip still reports ~382 unused exports/types. The residual is not removable dead code: it is (a) barrel re-export lines whose consumers live in `tests/**` or `vi.mock()` paths knip's default graph does not traverse, (b) symbols referenced only by other exports in the same file (union members, const tables), and (c) intentional named+default React component pairings.
-**Impact:** None on runtime; noise in knip's exports report only.
-**Effort:** N/A — accepted by decision.
-**Action:** The CI gate (`check:dead-code`) enforces `files` + `dependencies` only (both 0 findings). A second automated sweep was evaluated and rejected on risk/benefit; re-evaluate only if barrel consolidation happens. Safety layers used by the sweep (import-chain resolver incl. tests + in-file reference gate) are documented for reuse.
-**Found during:** 2026-09-18 dead-code export hunt.
-
 ### TD-023: Every production deploy fails with "Resource provisioning failed"
 
-**File:** `.github/workflows/vercel-deploy.yml` (symptom site), cause is the Vercel account
-**Issue:** All 15+ `Deploy to Vercel` runs since 2026-09-17 end after ~5 min at `Building…`; the Vercel API reports `BUILD_FAILED: Resource provisioning failed` for every deployment, git- or CLI-triggered, preview or production, and even for `--prebuilt` static uploads that never need a build machine. Diagnosis with a throwaway Vercel-API probe workflow (deleted with its branch on 2026-09-18; the findings it produced are recorded here) ruled out resourceConfig/region/project flags. The team billing dump shows the actual cause: `plan: "hobby"` with `planIteration: "plus"`, an **expired Stripe subscription** (`expiredSubscriptions` holds the active-looking `orbSubscriptionId`), and **`entitlements: {}`** — the account lost its provisioning entitlements (billing `syncedAt` is 2026-07-09, long stale).
-**Impact:** engvox.com is frozen on a ~2-day-old build despite main being green; no repo change can fix it.
-**Effort:** N/A — outside the repo.
-**Action:** Account owner (catexozcan@gmail.com) must open vercel.com → engineer-os → Settings → Billing and resolve the lapsed subscription/payment (update card or confirm Hobby downgrade). Once `entitlements` is non-empty re-run the failing workflow; `scripts/vercel-prebuilt.mjs` (added same day) is a ready `--prebuilt` fallback for future build-box outages. Housekeeping done 2026-09-18: the two diagnostic branches are gone — `ci/vercel-deploy-logs` had already landed as the build-log step in `.github/workflows/vercel-deploy.yml` (PR #218), and `chore/vercel-api-diagnose` was never meant for main, so its findings live only in this entry.
-**Found during:** 2026-09-18 full-repo re-audit.
+**File:** `.github/workflows/vercel-deploy.yml` (symptom site), cause is the Vercel **team** config
+**Issue:** Since 2026-09-17 every deployment on the team fails during provisioning — builds (git/CLI), previews, `--prebuilt` uploads **and build-free `vercel redeploy` of old READY artifacts** alike, so no repo-side change can produce a deployment. Diagnosis (2026-09-18, via the owner's CLI token plus the Vercel-API probe workflow whose branch was deleted the same day): the team is on `plan: "hobby"` after a deliberately-cancelled Plus/Pro subscription (`expiredSubscriptions`), but the **team-level** `resourceConfig` still carries `buildMachine.default: "standard"` from the Pro era. Hobby cannot provision the standard pool, and the value is unfixable by the owner: PATCHing it returns `pro_plan_required`, and project-level `buildMachineSelection: "fixed"` likewise silently survives resets. Vercel's Pro-to-Hobby downgrade is the upstream bug — there is no payment due; the entitlement state was never cleaned up.
+**Impact:** engvox.com frozen on the 2026-09-13 build while main stays green (101 commits since then).
+**Effort:** N/A — upstream fix required; owner action outside the repo.
+**Action:** Send the prepared ticket to Vercel support (verbatim below). Fallback if support SLA burns us: create a fresh Hobby **personal** context project and move the `engvox.com` domain there (new project gets a clean `basic`-pool team config; CI secret + project-link update only).
+**Ticket (paste into vercel.com/support):**
+
+> Team `engineer-os` is on the Hobby plan after our Pro (planIteration "plus") subscription expired/was cancelled intentionally — no payment is due. Since then **every** new deployment fails instantly with `BUILD_FAILED: Resource provisioning failed`, including `--prebuilt` static uploads and `redeploy` of previously-READY artifacts (e.g. dpl_F8f6iCB5n6H4y5SEBmHGeDT7Kysi, eng-vox project prj_sgbF8SlLw8pANE1BXQ9wBxMx8sYr; also affects our second project, so it is team-wide). The team's `resourceConfig` still reads `buildMachine: {"default": "standard"}` (the Pro build pool), and we cannot reset it: PATCH `/v9/teams/team_fqlw3Z1XiyBE5gxdVV12WDaM` → `400 pro_plan_required`. Project-level `resourceConfig` similarly keeps `buildMachineSelection: "fixed"` even after PATCH. Please reset the team's build-machine config to the free/Hobby pool so deployments can provision again.
+> **Found during:** 2026-09-18 full-repo re-audit.
 
 ## Tracking
 
@@ -330,16 +324,15 @@ then tail the log. Implemented on 2026-08-29.
 | TD-018 | Medium   | Resolved    | TBD           | TBD        |
 | TD-019 | Medium   | ✅ Resolved | TBD           | 2026-08-29 |
 | TD-020 | Medium   | Resolved    | TBD           | TBD        |
-| TD-022 | Low      | ✅ Accepted | TBD           | 2026-09-18 |
 | TD-023 | High     | 🔴 Blocked  | account owner | 2026-09-25 |
 
 ## Stats
 
-- **Total Items:** 23
-- **Resolved:** 19 (83%)
-- **Partially Resolved:** 1 (4%)
-- **Open:** 2 (9%)
-- **Blocked (external):** 1 (4%)
+- **Total Items:** 22
+- **Resolved:** 19 (86%)
+- **Partially Resolved:** 1 (5%)
+- **Open:** 1 (5%)
+- **Blocked (external):** 1 (5%)
 
 ## Last Updated
 
