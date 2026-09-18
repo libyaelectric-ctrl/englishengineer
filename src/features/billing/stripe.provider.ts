@@ -120,6 +120,12 @@ const getJson = async <TResponse>(endpoint: string, userId?: string): Promise<TR
 export class StripeBillingProvider {
   constructor(private readonly billingApiUrl: string) {}
 
+  /**
+   * The backend's own snapshot. Nothing on this side validates the payload, and its plan id
+   * is the incoming id type — the backend's canonical set includes ids this app has no
+   * catalogue entry for — so callers read it through `resolvePlan` rather than assuming a
+   * catalogue entry exists.
+   */
   getSubscriptionStatus(userId: string): Promise<SubscriptionSnapshot> {
     return getJson<SubscriptionSnapshot>(
       buildBillingEndpoint(this.billingApiUrl, 'subscription-status'),

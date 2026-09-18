@@ -31,9 +31,11 @@ export const BillingUpgradeCTA = ({ subscription }: BillingUpgradeCTAProps) => (
         </li>
       ))}
     </ul>
-    {/* The id arrives from a payload nothing validates, so it can hold an id this type does
-        not admit — the backend's canonical `team`, for one — which is what this guard is for. */}
-    {(subscription.planId as string) !== 'team' && (
+    {/* `team` is a plan the backend can report and this app does not sell, so the CTA that
+        points at /pricing stays hidden for it. What a `team` subscriber should be offered is
+        an open product decision; this guard only withholds the control that does not apply.
+        It needs no assertion: the snapshot's plan id is the incoming id type. */}
+    {subscription.planId !== 'team' && (
       <Link
         to="/pricing"
         className="w-full mt-2 h-9 inline-flex items-center justify-center rounded-[4px] bg-primary hover:bg-primary/90 border border-primary text-xs font-bold uppercase tracking-wider text-primary-foreground transition-colors text-center cursor-pointer shadow-sm"

@@ -101,6 +101,11 @@ export const BillingService = {
   getProviderStatus(): BillingProviderStatus {
     return getBillingProviderStatus();
   },
+  /**
+   * The snapshot a previous session cached. Its plan id is whatever was written there, so it
+   * is the incoming id type: this boundary keeps the id as it is and callers resolve it
+   * through `resolvePlan`, which is what an id the catalogue does not know relies on.
+   */
   getLocalSubscription(): SubscriptionSnapshot {
     return storage.get<SubscriptionSnapshot>(STORAGE_KEY) || createFreeSubscription();
   },

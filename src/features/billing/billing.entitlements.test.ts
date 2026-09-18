@@ -80,6 +80,14 @@ describe('billing entitlements', () => {
         expect(resolvePlan(unknownId)).toBe(BILLING_PLANS.free);
       }
     });
+
+    it('answers inherited object keys with the fallback, not with Object.prototype', () => {
+      // The catalogue is an object literal, so a raw lookup answers `__proto__`, `toString`
+      // and friends from the prototype chain; those came back as if they were plans.
+      for (const inherited of ['__proto__', 'toString', 'constructor', 'hasOwnProperty']) {
+        expect(resolvePlan(inherited)).toBe(BILLING_PLANS.free);
+      }
+    });
   });
 
   describe('canOpenCustomerPortal', () => {
