@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
 
@@ -15,6 +15,33 @@ vi.mock('@/features/vocabulary/services/translation/vocabulary-translation.hook'
   useTermMeaningResolver: () => (_term: string, source: { turkishMeaning?: string }) =>
     source.turkishMeaning ?? _term,
 }));
+
+/**
+ * Query cost is what makes this file slow, so the helpers below are deliberate.
+ *
+ * This page renders ~3.3k nodes (48 word cards, ~390 buttons, 48 labelled inputs).
+ * Testing Library's text, label and role-with-name queries walk that whole DOM and compute
+ * accessible names, which costs 40-600 ms per call here, and `findBy*` re-runs its query on
+ * every poll — so a single `await screen.findByLabelText(...)` was measured at 5-20 s. On CI
+ * (3-4x slower than a dev machine) that pushed the three heaviest tests past their 30 s and
+ * 60 s caps and failed the Tests job.
+ *
+ * So: wait on a cheap attribute selector first (a `querySelector`, sub-millisecond however
+ * many times it polls), then run the semantic query once, scoped with `within()` to the
+ * smallest container that holds the element.
+ */
+const requireElement = <T,>(element: T | null, description: string): T => {
+  if (!element) throw new Error(`${description} is not in the document`);
+  return element;
+};
+
+const searchTrigger = () =>
+  document.querySelector<HTMLButtonElement>('button[title="Search vocabulary"]');
+const searchInput = () =>
+  document.querySelector<HTMLInputElement>('input[aria-label="Search vocabulary"]');
+const quizInputs = () => document.querySelectorAll<HTMLInputElement>('input[id^="learned-quiz-"]');
+const addToMyVocabularyForm = () =>
+  document.querySelector<HTMLFormElement>('form[aria-label="Add to My Vocabulary"]');
 
 describe('VocabularyPage menu', () => {
   beforeAll(async () => {
@@ -41,7 +68,9 @@ describe('VocabularyPage menu', () => {
         <VocabularyPage />
       </MemoryRouter>
     );
-    await screen.findAllByText('height');
+    // Wait on the card's test id rather than on its text: `data-testid` is a plain
+    // attribute selector, so polling it costs nothing.
+    await screen.findAllByTestId('vocabulary-word-card');
   };
 
   const startWordSet = async () => {
@@ -51,9 +80,10 @@ describe('VocabularyPage menu', () => {
   };
 
   const openSearchModal = async () => {
-    const searchButton = screen.getByRole('button', { name: /search/i });
-    fireEvent.click(searchButton);
-    await screen.findByLabelText('Search vocabulary');
+    fireEvent.click(requireElement(searchTrigger(), 'the search trigger'));
+    await waitFor(() => expect(searchInput()).not.toBeNull());
+
+    return requireElement(searchInput(), 'the search input');
   };
 
   it('opens on New tab with cards visible', async () => {
@@ -117,7 +147,10 @@ describe('VocabularyPage menu', () => {
       fireEvent.click(screen.getByRole('tab', { name: 'vocabulary.tabLearned' }));
 
       fireEvent.click(screen.getByRole('button', { name: 'vocabulary.startQuiz' }));
-      const firstInput = await screen.findByLabelText(/vocabulary\.question 1 \/ 10/);
+      // Wait for the quiz inputs by id (cheap), then ask the labelled question once —
+      // the label text is what "Question 1 / 10" means here.
+      await waitFor(() => expect(quizInputs().length).toBeGreaterThan(0));
+      const firstInput = screen.getByLabelText(/vocabulary\.question 1 \/ 10/) as HTMLInputElement;
       const question = firstInput.parentElement;
       const termLabel = question?.querySelector('p')?.textContent;
       const selectedTerm = terms.find((term) => term.term === termLabel);
@@ -153,8 +186,7 @@ describe('VocabularyPage menu', () => {
 
   it('searches vocabulary via modal and finds results', async () => {
     await renderLoadedPage();
-    await openSearchModal();
-    const input = screen.getByLabelText('Search vocabulary');
+    const input = await openSearchModal();
 
     fireEvent.change(input, { target: { value: `y\u00fckseklik` } });
     fireEvent.keyDown(input, { key: 'Enter' });
@@ -163,18 +195,25 @@ describe('VocabularyPage menu', () => {
 
   it('adds an unknown term only to My Vocabulary', async () => {
     await renderLoadedPage();
-    await openSearchModal();
-    const input = screen.getByLabelText('Search vocabulary');
+    const input = await openSearchModal();
     fireEvent.change(input, {
       target: { value: 'fluxuator' },
     });
     fireEvent.keyDown(input, { key: 'Enter' });
-    fireEvent.click(
-      await screen.findByRole('button', { name: /add to my vocabulary/i }, { timeout: 25_000 })
-    );
-    const addForm = screen.getByRole('form', {
-      name: 'Add to My Vocabulary',
+
+    // The control lives in the results section, which mounts asynchronously; wait for it
+    // by its text (cheap over button subtrees) instead of polling a role query.
+    const addButton = await waitFor(() => {
+      const button = [...document.querySelectorAll('button')].find((element) =>
+        /add to my vocabulary/i.test(element.textContent ?? '')
+      );
+      if (!button) throw new Error('the "Add to My Vocabulary" control is not rendered yet');
+      return button;
     });
+    fireEvent.click(addButton);
+
+    await waitFor(() => expect(addToMyVocabularyForm()).not.toBeNull());
+    const addForm = requireElement(addToMyVocabularyForm(), 'the Add to My Vocabulary form');
     fireEvent.change(within(addForm).getByLabelText(/meaning$/i), {
       target: { value: `ak\u0131 d\u00fczenleyici` },
     });
