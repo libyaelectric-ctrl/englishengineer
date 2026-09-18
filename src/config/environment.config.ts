@@ -56,8 +56,9 @@ export const isConfiguredPublicUrl = (value: string | undefined): boolean => {
       hostname.startsWith('your-') ||
       hostname.includes('placeholder')
     );
-  } catch (e) {
-    logger.w('[ENV] isPlaceholderDomain failed', e);
+  } catch {
+    // A malformed env value is an ordinary input for this validator, not an
+    // exceptional one: returning false quietly keeps a dev boot log-readable.
     return false;
   }
 };

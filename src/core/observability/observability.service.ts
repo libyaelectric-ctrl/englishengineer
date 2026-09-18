@@ -60,8 +60,12 @@ const initSentry = () => {
   const dsn = env?.VITE_SENTRY_DSN;
   const sampleRate = normalizeSampleRate(env?.VITE_ERROR_MONITORING_SAMPLE_RATE);
 
-  if (!dsn) {
-    logger.d('[Observability] Sentry DSN not configured, skipping initialization.');
+  if (!dsn || !/^https:\/\/[^/]+\/\d+$/.test(dsn.trim())) {
+    if (dsn) {
+      logger.w('[Observability] VITE_SENTRY_DSN is set but malformed; skipping Sentry init.');
+    } else {
+      logger.d('[Observability] Sentry DSN not configured, skipping initialization.');
+    }
     return;
   }
 

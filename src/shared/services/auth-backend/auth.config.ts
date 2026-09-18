@@ -1,5 +1,3 @@
-import { logger } from '@/shared/logger';
-
 export interface SupabaseReadyConfig {
   url: string | null;
   anonKey: string | null;
@@ -27,8 +25,9 @@ const isSupabaseUrlValid = (url: string | null): boolean => {
   try {
     const parsed = new URL(url);
     return parsed.hostname.endsWith('.supabase.co') || parsed.hostname === 'localhost';
-  } catch (e) {
-    logger.w('[AUTH] Supabase URL validation failed', e);
+  } catch {
+    // Invalid URL shapes are routine env noise (e.g. a bare host without
+    // scheme); the caller treats false as "not configured".
     return false;
   }
 };
@@ -41,8 +40,9 @@ const isSupabaseKeyValid = (key: string | null): boolean => {
   try {
     const payload = JSON.parse(atob(parts[1]));
     return Boolean(payload.aud || payload.sub || payload.role);
-  } catch (e) {
-    logger.w('[AUTH] Supabase key validation failed', e);
+  } catch {
+    // A key that starts with `eyJ` but fails JWT-shaped parsing is routine
+    // env noise; callers already treat false as "supabase not configured".
     return false;
   }
 };
