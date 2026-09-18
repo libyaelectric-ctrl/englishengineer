@@ -22,6 +22,7 @@ const commands = [
   { label: 'npm run backend:test', npmArgs: ['run', 'backend:test'] },
   { label: 'npm run verify:release', npmArgs: ['run', 'verify:release'] },
   { label: 'npm run verify:rls', npmArgs: ['run', 'verify:rls'] },
+  { label: 'npm run check:freebuff-refs', npmArgs: ['run', 'check:freebuff-refs'] },
 ];
 
 const isWindows = process.platform === 'win32';
