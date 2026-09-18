@@ -12,8 +12,6 @@ export const MASTERY_QUIZ_MIN_WORDS = 100;
 export const READING_WRITING_UNLOCK_THRESHOLD = 200;
 export const QUIZ_THRESHOLD = 4;
 
-export const getTodayKey = (): string => new Date().toISOString().split('T')[0];
-
 export const VocabularyProgressService = {
   addWord(wordId: string): WordProgress {
     return {

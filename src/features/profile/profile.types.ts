@@ -1,27 +1,11 @@
 export {
   SKILL_NAMES,
   type SkillName,
-  type SkillElo,
   type LearningGoal,
   type ProfessionRoleId,
-  type IndustryId,
-  type CommunicationGoal,
-  type SelfReportedCefr,
   type InterfaceLanguage,
-  type ExperienceLevel,
-  type CareerTrackId,
-  type ElectricalSubdomain,
-  type CefrBand,
-  type SkillTrend,
-  type PromotionState,
   type SkillProfile,
   type UserLearningProfile,
-  type MissionType,
-  type MissionDifficulty,
   type DailyMission,
-  type AdaptivePaceInput,
-  type AdaptivePaceDecision,
   type ProfileBadge,
 } from '@/shared/types/domain.types';
-
-export { type VocabularyMemorySummary } from '@/shared/types/vocabulary.types';

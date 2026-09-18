@@ -15,7 +15,6 @@ import { DEFAULT_MISSIONS } from './learning.missions.data';
 import type { LearningState } from './learning.types';
 
 export { INITIAL_ELO } from '@/shared/constants/elo.constants';
-export const STORAGE_KEY = 'learning_state';
 export const MAX_HISTORY_SIZE = 500;
 export const SECONDS_PER_MINUTE = 60;
 

@@ -1,16 +1,5 @@
 export const API_CONTRACT_VERSION = '2026-09-07.v1' as const;
 
-export interface ApiSuccessResponse<T> {
-  ok: true;
-  data: T;
-  meta: { contractVersion: typeof API_CONTRACT_VERSION };
-}
-
-export interface ApiFailureResponse {
-  ok: false;
-  error: { code: string; message: string; details?: unknown };
-}
-
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
 

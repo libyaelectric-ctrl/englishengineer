@@ -93,11 +93,6 @@ const parseAcceptLanguage = (header: string | undefined): string => {
   return preferred?.startsWith('tr') ? 'tr' : 'en';
 };
 
-export interface I18nContext {
-  lang: string;
-  t: (key: string) => string;
-}
-
 export const createI18nMiddleware = () => {
   return (req: Request, _res: Response, next: NextFunction): void => {
     const lang = parseAcceptLanguage(req.headers['accept-language'] as string);

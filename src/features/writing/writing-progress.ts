@@ -1,5 +1,3 @@
-export type WritingStatus = 'draft' | 'submitted' | 'graded';
-
 const WORD_TARGETS: Record<string, number> = {
   A1: 100,
   A2: 150,

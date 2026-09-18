@@ -1,32 +1,4 @@
-import type {
-  LearningGoal,
-  ProfessionRoleId,
-  UserLearningProfile,
-} from '@/shared/types/domain.types';
-
-export const LEARNING_GOALS: Array<{
-  id: LearningGoal;
-  label: string;
-  preferredDomains: string[];
-}> = [
-  { id: 'daily', label: 'Daily', preferredDomains: ['general-english'] },
-  {
-    id: 'work',
-    label: 'Work',
-    preferredDomains: ['professional-communication'],
-  },
-  {
-    id: 'engineering',
-    label: 'Engineering',
-    preferredDomains: ['construction-site', 'electrical', 'mechanical'],
-  },
-  { id: 'travel', label: 'Travel', preferredDomains: ['travel'] },
-  {
-    id: 'management',
-    label: 'Management',
-    preferredDomains: ['project-management', 'professional-communication'],
-  },
-];
+import type { ProfessionRoleId, UserLearningProfile } from '@/shared/types/domain.types';
 
 export const PROFESSIONS: Array<{
   id: ProfessionRoleId;

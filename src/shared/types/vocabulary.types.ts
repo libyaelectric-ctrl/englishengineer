@@ -135,10 +135,6 @@ export interface ExternalVocabularyResult {
   cached: boolean;
 }
 
-export type ExternalLookupState =
-  | { status: 'idle' | 'not-configured' | 'unavailable' }
-  | { status: 'success'; result: ExternalVocabularyResult };
-
 export interface VocabularyReviewState {
   wordId: string;
   interval: number;

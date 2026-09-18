@@ -6,15 +6,6 @@ const STORAGE_KEY_RECENT = 'command-palette:recent';
 const STORAGE_KEY_FREQ = 'command-palette:frequency';
 const MAX_RECENT = 5;
 
-export interface CommandItem {
-  id: string;
-  label: string;
-  href: string;
-  icon: string;
-  category: string;
-  keywords?: string[];
-}
-
 export function useCommandPalette() {
   const [isOpen, setIsOpen] = useState(false);
 

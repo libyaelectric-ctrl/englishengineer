@@ -52,27 +52,6 @@ export const generateForgettingCurve = (
   return { wordId, stability, curve, currentRetention };
 };
 
-export const generateMultiWordCurves = (
-  words: Array<{
-    wordId: string;
-    correctReviews: number;
-    wrongReviews: number;
-    easeFactor: number;
-    daysSinceLastReview: number;
-  }>,
-  daysToPlot = 30
-): ForgettingCurveData[] =>
-  words.map((word) =>
-    generateForgettingCurve(
-      word.wordId,
-      word.correctReviews,
-      word.wrongReviews,
-      word.easeFactor,
-      word.daysSinceLastReview,
-      daysToPlot
-    )
-  );
-
 export const getRetentionColor = (retention: number): string => {
   if (retention >= 80) return '#22c55e';
   if (retention >= 50) return '#eab308';

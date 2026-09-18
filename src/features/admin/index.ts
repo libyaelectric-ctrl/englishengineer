@@ -1,10 +1,3 @@
-export {
-  type AdminUserRecord,
-  type AdminSystemLog,
-  type AdminStats,
-  type AdminState,
-} from './admin.types';
-
-export { AdminService } from './admin.service';
+export { type AdminUserRecord, type AdminSystemLog, type AdminStats } from './admin.types';
 
 export { useAdminStore } from './admin.store';

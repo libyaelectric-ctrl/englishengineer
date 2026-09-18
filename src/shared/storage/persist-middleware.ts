@@ -48,16 +48,3 @@ export const eosGlobalPersistConfig = <S>(
   storage: createGlobalPersistStorage<Partial<S>>(),
   ...(partialize ? { partialize } : {}),
 });
-export const eosPersistPartial = <S extends Record<string, unknown>>(
-  storageKey: string,
-  keysToPersist: (keyof S)[]
-): Omit<PersistOptions<S, Partial<S>>, 'name'> & { name: string } => ({
-  name: storageKey,
-  storage: createScopedPersistStorage<Partial<S>>(),
-  skipHydration: true,
-  partialize: (state) => {
-    const partial: Record<string, unknown> = {};
-    for (const key of keysToPersist) if (key in state) partial[key as string] = state[key];
-    return partial as Partial<S>;
-  },
-});

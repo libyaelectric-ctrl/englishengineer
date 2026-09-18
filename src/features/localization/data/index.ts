@@ -89,13 +89,6 @@ export function getUiTranslationsSync(
 }
 
 /**
- * Check if a language chunk is already loaded in memory.
- */
-export function isLanguageLoaded(language: SupportedInterfaceLanguage): boolean {
-  return cache.has(language);
-}
-
-/**
  * Preload a language chunk without waiting for it.
  */
 export function preloadLanguage(language: SupportedInterfaceLanguage): void {

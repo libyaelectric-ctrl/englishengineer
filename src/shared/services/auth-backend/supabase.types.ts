@@ -1,5 +1,3 @@
-import type { UserProfile } from '@/shared/types/auth.types';
-
 export type JsonPrimitive = string | number | boolean | null;
 export type JsonValue = JsonPrimitive | JsonObject | JsonValue[];
 
@@ -49,29 +47,3 @@ export interface EngVoxDatabase {
     CompositeTypes: Record<string, never>;
   };
 }
-
-export const mapProfileToSupabaseRow = (profile: UserProfile): SupabaseProfileRow => ({
-  id: profile.id,
-  email: profile.email,
-  display_name: profile.displayName,
-  role: profile.role,
-  engineering_discipline: profile.engineeringDiscipline,
-  target_level: profile.targetLevel,
-  location: profile.location,
-  avatar_initials: profile.avatarInitials,
-  created_at: profile.createdAt,
-  updated_at: profile.updatedAt,
-});
-
-export const mapSupabaseRowToProfile = (row: SupabaseProfileRow): UserProfile => ({
-  id: row.id,
-  displayName: row.display_name,
-  email: row.email,
-  role: row.role,
-  engineeringDiscipline: row.engineering_discipline,
-  targetLevel: row.target_level,
-  location: row.location,
-  avatarInitials: row.avatar_initials,
-  createdAt: row.created_at,
-  updatedAt: row.updated_at,
-});

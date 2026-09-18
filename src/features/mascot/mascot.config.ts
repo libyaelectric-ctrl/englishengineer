@@ -11,18 +11,6 @@ export const stateToastMap: Record<string, { icon: string; type: 'info' | 'succe
   streakDanger: { icon: '⚠️', type: 'error' },
 };
 
-export const MascotStateColors: Record<string, string> = {
-  idle: '#6366f1',
-  thinking: '#f59e0b',
-  celebrate: '#22c55e',
-  levelUp: '#8b5cf6',
-  streak: '#ef4444',
-  sleeping: '#94a3b8',
-  concerned: '#f97316',
-  streakDanger: '#ef4444',
-  empty: '#64748b',
-};
-
 export const volumeToNumber = (volume: 'off' | 'low' | 'high'): number => {
   switch (volume) {
     case 'off':

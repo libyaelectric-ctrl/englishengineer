@@ -117,56 +117,6 @@ export async function addOfflineAction(
   }
 }
 
-export async function getOfflineActions(): Promise<OfflineAction[]> {
-  if (!isIDBSupported()) return [];
-  try {
-    const db = await openDB();
-    return new Promise((resolve) => {
-      const tx = db.transaction(STORE_ACTIONS, 'readonly');
-      const store = tx.objectStore(STORE_ACTIONS);
-      const request = store.getAll();
-
-      request.onsuccess = () => resolve(request.result || []);
-      request.onerror = () => resolve([]);
-    });
-  } catch (e) {
-    logger.w('[IDB] Failed to get offline actions', e);
-    return [];
-  }
-}
-
-export async function removeOfflineAction(id: string): Promise<void> {
-  if (!isIDBSupported()) return;
-  try {
-    const db = await openDB();
-    return new Promise((resolve) => {
-      const tx = db.transaction(STORE_ACTIONS, 'readwrite');
-      const store = tx.objectStore(STORE_ACTIONS);
-      store.delete(id);
-      tx.oncomplete = () => resolve();
-      tx.onerror = () => resolve();
-    });
-  } catch (e) {
-    logger.w('[IDB] Failed to remove offline action', e);
-  }
-}
-
-export async function clearOfflineActions(): Promise<void> {
-  if (!isIDBSupported()) return;
-  try {
-    const db = await openDB();
-    return new Promise((resolve) => {
-      const tx = db.transaction(STORE_ACTIONS, 'readwrite');
-      const store = tx.objectStore(STORE_ACTIONS);
-      store.clear();
-      tx.oncomplete = () => resolve();
-      tx.onerror = () => resolve();
-    });
-  } catch (e) {
-    logger.w('[IDB] Failed to clear offline actions', e);
-  }
-}
-
 export async function getOfflineActionCount(): Promise<number> {
   if (!isIDBSupported()) return 0;
   try {
