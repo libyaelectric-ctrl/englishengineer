@@ -109,3 +109,5 @@ PRC_Kademe_8_Live_Service_Evidence_Report.md
 .artifacts/
 .cache/
 licenses.csv
+# GitHub Pages staging dir (scripts/gh-pages-prepare.mjs)
+page-site/
