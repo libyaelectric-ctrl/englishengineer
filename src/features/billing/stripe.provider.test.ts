@@ -75,4 +75,37 @@ describe('StripeBillingProvider', () => {
       })
     ).rejects.toThrow(/sign in with your account before upgrading to pro/i);
   });
+
+  it('keeps a plan id outside the catalogue exactly as the backend sent it', async () => {
+    // Nothing validates this payload, and `team` is a canonical plan id on the backend with
+    // no catalogue entry here. What such an id means is decided by the catalogue owner
+    // (`resolvePlan`), so this boundary hands it over unchanged; normalising or rejecting it
+    // here would change what that customer is told by accident instead of by decision.
+    getBackendAuthHeaders.mockResolvedValue({ Authorization: 'Bearer supabase-access-token' });
+
+    const payload = {
+      planId: 'team',
+      status: 'active',
+      currentPeriodEnd: null,
+      cancelAtPeriodEnd: false,
+      stripeCustomerId: 'cus_team',
+      stripeSubscriptionId: 'sub_team',
+      updatedAt: '2026-09-17T00:00:00.000Z',
+    };
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: true,
+        data: payload,
+        meta: { contractVersion: '2026-09-07.v1' },
+      }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const provider = new StripeBillingProvider('https://billing.EngVox.test');
+    const subscription = await provider.getSubscriptionStatus('user_123');
+
+    expect(subscription.planId).toBe('team');
+    expect(subscription).toEqual(payload);
+  });
 });

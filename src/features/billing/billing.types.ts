@@ -1,4 +1,20 @@
+/**
+ * A plan id the catalog has an entry for. Only an id in this set can be turned into a
+ * `BillingPlan`; anything else has to go through `resolvePlan`, which falls back.
+ */
 export type BillingPlanId = 'free' | 'junior' | 'senior' | 'specialist' | 'master';
+
+/**
+ * A plan id as a boundary hands it over, before the catalog has seen it.
+ *
+ * Neither place a subscription arrives from validates its plan id: the billing backend's
+ * `subscription-status` payload, and the snapshot a previous session wrote to storage. The
+ * backend's canonical set includes ids this catalog has no entry for (`team` today), so an
+ * incoming id is a plain string here — and `resolvePlan`, in the module that owns the
+ * catalog, is what decides which plan it means. Typing it as `BillingPlanId` instead is
+ * what forced callers into `as string` / `as BillingPlanId` assertions.
+ */
+export type IncomingPlanId = string;
 
 export type SubscriptionStatus =
   | 'none'
@@ -60,7 +76,7 @@ export interface BillingPlan {
 }
 
 export interface SubscriptionSnapshot {
-  planId: BillingPlanId;
+  planId: IncomingPlanId;
   status: SubscriptionStatus;
   currentPeriodEnd: string | null;
   cancelAtPeriodEnd: boolean;
@@ -100,7 +116,7 @@ export interface BillingProviderStatus {
 export type BillingStatusTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 
 export interface BillingStatusPresentation {
-  planId: BillingPlanId;
+  planId: IncomingPlanId;
   planLabel: string;
   statusLabel: string;
   statusTone: BillingStatusTone;

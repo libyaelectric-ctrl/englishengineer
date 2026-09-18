@@ -566,7 +566,7 @@ describe('the upgrade control on every surface', () => {
     expect(new Set(controls)).toEqual(new Set(['Upgrade Plan']));
   });
 
-  it('shows one plan name on both surfaces for an id the catalogue does not know', async () => {
+  it('shows one plan name on every surface for an id the catalogue does not know', async () => {
     const page = renderProfilePage();
     await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
     await act(async () => undefined);
@@ -574,7 +574,7 @@ describe('the upgrade control on every surface', () => {
     // `team` is a canonical plan id on the backend and has no entry in this catalogue; the
     // payload that carries a plan id is not validated on its way in.
     useBillingStore.setState({
-      subscription: { ...useBillingStore.getState().subscription, planId: 'team' as never },
+      subscription: { ...useBillingStore.getState().subscription, planId: 'team' },
     });
     await act(async () => undefined);
 
@@ -587,9 +587,20 @@ describe('the upgrade control on every surface', () => {
       return [...new Set(found)].join('|');
     };
 
-    // Neither surface may crash, and neither may invent a second name for the same id.
+    // No surface may crash, and none may invent a second name for the same id. The upgrade
+    // page is included because it is the surface that used to throw on `plan.name` and
+    // `plan.limits` instead of rendering.
+    const billing = render(<BillingPage />, { wrapper });
+    await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
+    await act(async () => undefined);
+    useBillingStore.setState({
+      subscription: { ...useBillingStore.getState().subscription, planId: 'team' },
+    });
+    await act(async () => undefined);
+
     expect(planNamesIn(renderPanelFromStore())).toBe(BILLING_PLANS.free.name);
     expect(planNamesIn(page.container)).toBe(BILLING_PLANS.free.name);
+    expect(planNamesIn(billing.container)).toBe(BILLING_PLANS.free.name);
   });
 
   it('offers the portal on both surfaces under exactly the same conditions', async () => {

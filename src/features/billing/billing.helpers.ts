@@ -6,6 +6,7 @@ import {
   BillingPlanId,
   BillingProviderStatus,
   BillingStatusPresentation,
+  IncomingPlanId,
   SubscriptionSnapshot,
 } from './billing.types';
 
@@ -138,15 +139,31 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
 };
 
 /**
- * The plan a plan id means, wherever a plan object is needed. The plan id crosses two
- * boundaries that validate nothing — the backend's `/subscription-status` payload and the
- * local cache — and the backend's canonical ids include `team`, which has no catalogue
- * entry here yet. Resolving through one function is what keeps an id this catalogue does
- * not know from crashing the billing page while the profile page prints "Free" for the
- * same customer.
+ * Whether the catalogue has an entry for this id — the question the type cannot answer,
+ * because a plan id arrives from a boundary that validates nothing and is therefore typed
+ * as a string. Guarding on the catalogue's own keys is what lets `resolvePlan` narrow
+ * without an assertion at the lookup.
  */
-export const resolvePlan = (planId: string): BillingPlan =>
-  BILLING_PLANS[planId as BillingPlanId] ?? BILLING_PLANS.free;
+const isCatalogPlanId = (planId: IncomingPlanId): planId is BillingPlanId =>
+  Object.prototype.hasOwnProperty.call(BILLING_PLANS, planId);
+
+/**
+ * The plan a plan id means, wherever a plan object is needed.
+ *
+ * The id crosses two boundaries that validate nothing — the backend's `/subscription-status`
+ * payload and the snapshot a previous session cached — and the backend's canonical set
+ * includes ids this catalogue has no entry for (`team` today). That is why the parameter is
+ * the incoming id type rather than a catalogue id, and why this function is the only place
+ * allowed to turn one into a `BillingPlan`: an id the catalogue does not know resolves to
+ * the free plan, which is what keeps it from crashing the billing page while the profile
+ * page prints "Free" for the same customer.
+ *
+ * `hasOwnProperty` rather than `BILLING_PLANS[id]`: inherited keys such as `__proto__` or
+ * `toString` are not catalogue entries, and a raw lookup answered those from the prototype
+ * chain as if they were plans.
+ */
+export const resolvePlan = (planId: IncomingPlanId): BillingPlan =>
+  isCatalogPlanId(planId) ? BILLING_PLANS[planId] : BILLING_PLANS.free;
 
 export const createFreeSubscription = (): SubscriptionSnapshot => ({
   planId: 'free',
