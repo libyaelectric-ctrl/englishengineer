@@ -182,7 +182,12 @@ describe('VocabularyPage menu', () => {
     } finally {
       randomSpy.mockRestore();
     }
-  }, 30_000);
+    // Starting the quiz re-renders this page (48 cards plus the quiz section) several
+    // times over, and CI's coverage job instruments every line it runs: measured 4.1 s
+    // here under --coverage against 25.4 s in that job, so the cap has to clear CI's ~6x
+    // instrumentation factor. The query cost that used to dominate this file is gone;
+    // what is left is jsdom re-rendering word cards.
+  }, 90_000);
 
   it('searches vocabulary via modal and finds results', async () => {
     await renderLoadedPage();
