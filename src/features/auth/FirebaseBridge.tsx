@@ -2,17 +2,11 @@ import { updateProfile } from 'firebase/auth';
 
 import { useEffect, useRef } from 'react';
 
-import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 import { logger } from '@/shared/logger';
 import { setAuthTokenGetter } from '@/shared/services/auth-backend/backend-auth.service';
 import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
 import { storage } from '@/shared/storage';
 import type { UserProfile } from '@/shared/types/auth.types';
-import type { CareerTrackId, InterfaceLanguage } from '@/shared/types/domain.types';
-
-import { type SupportedInterfaceLanguage, useLocalizationStore } from '@/features/localization';
-
-import { consumePendingOnboard } from '@/pages/OnboardPage';
 
 import { useFirebaseAuth } from './FirebaseAuth';
 import { useAuthStore } from './auth.store';
@@ -65,20 +59,8 @@ export const FirebaseBridge = () => {
       storage.globalRemove('auth_session_v2');
       const profile = await buildProfile(user);
       if (cancelled) return;
-      const pending = consumePendingOnboard();
-      if (pending) {
-        useLocalizationStore.getState().setLanguage(pending.language as SupportedInterfaceLanguage);
-        LearningProfileRepository.updatePreferences(user.uid, {
-          discipline: pending.discipline as EngineeringDiscipline,
-          professionalTrack: pending.discipline as CareerTrackId,
-          interfaceLanguage: pending.language as InterfaceLanguage,
-          onboardingCompleted: true,
-        });
-        profile.engineeringDiscipline = pending.discipline;
-      } else {
-        const existing = LearningProfileRepository.getProfile(user.uid);
-        if (existing.discipline) profile.engineeringDiscipline = existing.discipline;
-      }
+      const existing = LearningProfileRepository.getProfile(user.uid);
+      if (existing.discipline) profile.engineeringDiscipline = existing.discipline;
       useAuthStore.setState({
         currentUser: profile,
         isAuthenticated: true,

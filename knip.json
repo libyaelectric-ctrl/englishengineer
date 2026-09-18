@@ -6,7 +6,7 @@
       "ignoreDependencies": ["@playwright/cli", "lint-staged", "three", "@types/three"]
     },
     "backend": {
-      "ignoreDependencies": ["swagger-ui-dist", "tsx"]
+      "ignoreDependencies": ["swagger-ui-dist"]
     }
   },
   "ignore": ["src/core/index.ts", "src/shared/components/GlowingOrb*"],

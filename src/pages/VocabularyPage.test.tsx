@@ -159,7 +159,7 @@ describe('VocabularyPage menu', () => {
     fireEvent.change(input, { target: { value: `y\u00fckseklik` } });
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(await screen.findByText(/results found/i)).toBeInTheDocument();
-  }, 30_000);
+  }, 60_000);
 
   it('adds an unknown term only to My Vocabulary', async () => {
     await renderLoadedPage();

@@ -64,7 +64,7 @@ ruleTester.run('no-raw-palette', rule, {
     },
 
     // Arbitrary values that are not colours.
-    { code: "const a = 'w-[300px] h-[calc(100%-1rem)] bg-[url(/x.png)]';" },
+    { code: "const a = 'w-[300px] h-[calc(100%-1rem)] bg-[length:200px_100px]';" },
 
     // Non-palette utilities.
     { code: "const a = 'bg-primary/10 shadow-lg divide-border-soft';" },
