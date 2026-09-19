@@ -264,9 +264,11 @@ const scanInteractive = () => {
         continue;
       }
       // Deliberately NOT focusing the element to reveal it: focusing a control can
-      // open a panel (the mascot's backdrop is a full-viewport button), which then
-      // covers the page and turns one interaction into hundreds of false "covered"
-      // results. Off-canvas is recorded by axis instead.
+      // open a panel whose backdrop is a full-viewport button, which then covers the
+      // page and turns one interaction into hundreds of false "covered" results. (The
+      // mascot's panel is what taught this, and the mascot is removed now - the trap is
+      // any overlay that opens on focus, so the rule stays.) Off-canvas is recorded by
+      // axis instead.
       //
       // Off-screen horizontally means a closed drawer/panel (opened by its own
       // control) rather than a page that cannot be scrolled; only the vertical axis
