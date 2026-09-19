@@ -10,7 +10,12 @@ import { useGlobalShortcuts } from '@/shared/hooks/useGlobalShortcuts';
 import { useKeyboardNavigation } from '@/shared/hooks/useKeyboardNavigation';
 import { usePageTracking } from '@/shared/hooks/usePageTracking';
 
-import { useMascotEvents } from '@/features/mascot';
+// Imported from the module rather than the barrel: a static import of `@/features/mascot`
+// next to the lazy one below keeps the whole feature in the entry chunk, and the build says
+// so - `[INEFFECTIVE_DYNAMIC_IMPORT] src/features/mascot/index.ts is dynamically imported by
+// AppShell.tsx but also statically imported by it, dynamic import will not move module into
+// another chunk`. With the barrel import gone the mascot ships as its own `mascot-*.js`.
+import { useMascotEvents } from '@/features/mascot/useMascotEvents';
 
 const Sidebar = lazy(() => import('./Sidebar').then((m) => ({ default: m.Sidebar })));
 const RightSidebar = lazy(() =>

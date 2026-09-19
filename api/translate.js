@@ -47,15 +47,32 @@ export default async function handler(req, res) {
       .json({ error: `text must be a string up to ${MAX_TEXT_LENGTH} characters.` });
   }
 
+  // Google's endpoint rate-limits datacenter IPs (a serverless origin gets 429/200-with-HTML
+  // while the same request from a browser succeeds), so a single upstream made this route a
+  // guaranteed 500 in production. MyMemory answers the same question and is queried second.
+  const googleUrl = `https://translate.googleapis.com/translate_a/t?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&q=${encodeURIComponent(text)}`;
+
   try {
-    const googleUrl = `https://translate.googleapis.com/translate_a/t?client=gtx&sl=${encodeURIComponent(sl)}&tl=${encodeURIComponent(tl)}&q=${encodeURIComponent(text)}`;
     const response = await fetch(googleUrl);
     if (response.ok) {
-      const data = await response.json();
-      return res.status(200).json(data);
+      return res.status(200).json(await response.json());
     }
-    return res.status(500).json({ error: 'Translation service returned an error.' });
   } catch {
-    return res.status(500).json({ error: 'Translation service is temporarily unavailable.' });
+    // Fall through to the second provider rather than reporting a transport error.
+  }
+
+  try {
+    const myMemoryUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${encodeURIComponent(sl)}|${encodeURIComponent(tl)}`;
+    const response = await fetch(myMemoryUrl);
+    if (response.ok) {
+      const data = await response.json();
+      const translatedText = data?.responseData?.translatedText;
+      if (typeof translatedText === 'string' && translatedText.length > 0) {
+        return res.status(200).json({ translatedText });
+      }
+    }
+    return res.status(502).json({ error: 'Translation service returned an error.' });
+  } catch {
+    return res.status(502).json({ error: 'Translation service is temporarily unavailable.' });
   }
 }

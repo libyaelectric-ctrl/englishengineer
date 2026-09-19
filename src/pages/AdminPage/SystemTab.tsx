@@ -29,7 +29,7 @@ export const SystemTab = ({ systemLogs, isLoading }: SystemTabProps) => {
         const headers = await getBackendAuthHeaders();
         const baseUrl =
           import.meta.env.VITE_BILLING_API_URL || import.meta.env.VITE_BACKEND_URL || '';
-        const res = await fetch(`${baseUrl.replace(/\/$/, '')}/api/ai/analytics/admin`, {
+        const res = await fetch(`${baseUrl.replace(/\/$/, '')}/api/v1/ai/analytics/admin`, {
           headers,
         });
         if (res.ok) setAiAnalytics(await res.json());

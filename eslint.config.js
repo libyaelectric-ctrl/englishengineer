@@ -32,6 +32,8 @@ export default tseslint.config(
       '.record.cjs',
       '*.debug.cjs',
       '.freebuff/**',
+      'page-site',
+      'page-site/**',
     ],
   },
   {
@@ -109,6 +111,7 @@ export default tseslint.config(
       sourceType: 'module',
       globals: {
         ...globals.node,
+        ...globals.browser,
         self: 'readonly',
         caches: 'readonly',
         __ENV: 'readonly',

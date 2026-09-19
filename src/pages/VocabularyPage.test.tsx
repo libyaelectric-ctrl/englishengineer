@@ -1,6 +1,8 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { useState } from 'react';
+
 import { MemoryRouter } from 'react-router-dom';
 
 import { storage } from '@/shared/storage';
@@ -29,6 +31,10 @@ vi.mock('@/features/vocabulary/services/translation/vocabulary-translation.hook'
  * So: wait on a cheap attribute selector first (a `querySelector`, sub-millisecond however
  * many times it polls), then run the semantic query once, scoped with `within()` to the
  * smallest container that holds the element.
+ *
+ * The quiz test below needs a second kind of patience: typing into a controlled field is
+ * only done once React has turned the change event into state, so it retries the event
+ * instead of trusting a single `fireEvent.change` (see `fillControlledField`).
  */
 const requireElement = <T,>(element: T | null, description: string): T => {
   if (!element) throw new Error(`${description} is not in the document`);
@@ -42,6 +48,42 @@ const searchInput = () =>
 const quizInputs = () => document.querySelectorAll<HTMLInputElement>('input[id^="learned-quiz-"]');
 const addToMyVocabularyForm = () =>
   document.querySelector<HTMLFormElement>('form[aria-label="Add to My Vocabulary"]');
+
+/**
+ * Type an answer into one of the quiz fields and wait until the answer has really reached
+ * React's state.
+ *
+ * A single `fireEvent.change` plus a value assertion is not enough. React compares a change
+ * against the value it last rendered, so when the field and that value already agree — or
+ * when the commit for the change lands later than the assertion — React puts the field back
+ * to the committed (still empty) answer. A one-shot assertion then waits out its whole
+ * budget for something that has already happened and been undone. That is the signature CI
+ * reported for this file (`Received: ""`) on runs that pass locally, and it is the same
+ * class of runner-speed race the store assertions below handle with their own budget
+ * (TD-018).
+ *
+ * So: re-fire the change until the field keeps the answer, and compare the value directly —
+ * a matcher inside the poll would also serialise the whole 3.3k-node document into its
+ * failure message on every attempt, which a CI runner cannot afford. The field is looked up
+ * again on each attempt so a remount cannot leave a stale node behind.
+ */
+const fillControlledField = async (fieldId: string, answer: string) => {
+  await waitFor(
+    () => {
+      const field = requireElement(
+        document.getElementById(fieldId) as HTMLInputElement | null,
+        `the controlled field #${fieldId}`
+      );
+      fireEvent.change(field, { target: { value: answer } });
+      if (field.value !== answer) {
+        throw new Error(`the controlled field #${fieldId} did not keep ${JSON.stringify(answer)}`);
+      }
+    },
+    // CI's coverage job instruments every line, and this page re-renders ~3.3k nodes per
+    // commit; the 1 s default is below the jitter that introduces (TD-018).
+    { timeout: 15_000 }
+  );
+};
 
 describe('VocabularyPage menu', () => {
   beforeAll(async () => {
@@ -127,6 +169,38 @@ describe('VocabularyPage menu', () => {
     expect(screen.getByRole('button', { name: 'vocabulary.startQuiz' })).toBeEnabled();
   }, 10_000);
 
+  it('retries a dropped change event until the answer reaches state', async () => {
+    // Guards the helper the quiz test below relies on, with a field that swallows its first
+    // change event. React restores a controlled field to the answer it last rendered
+    // whenever a change does not end up in state, so the assertion below only sees the
+    // answer if the helper keeps typing instead of reporting it once.
+    const swallowed = { first: true };
+    const ProbeField = () => {
+      const [answer, setAnswer] = useState('');
+      return (
+        <>
+          <input
+            id="probe-answer"
+            value={answer}
+            onChange={(event) => {
+              if (swallowed.first) {
+                swallowed.first = false;
+                return;
+              }
+              setAnswer(event.target.value);
+            }}
+          />
+          <output id="probe-answer-state">{answer}</output>
+        </>
+      );
+    };
+    render(<ProbeField />);
+
+    await fillControlledField('probe-answer', 'height');
+
+    expect(document.getElementById('probe-answer-state')?.textContent).toBe('height');
+  }, 10_000);
+
   it('moves quiz answers through the learned pools in one completed quiz', async () => {
     // selectRandomQuizItems() uses Math.random() to pick which terms appear
     // in the quiz. Left unseeded, this test picks a different "Question 1"
@@ -148,21 +222,18 @@ describe('VocabularyPage menu', () => {
 
       fireEvent.click(screen.getByRole('button', { name: 'vocabulary.startQuiz' }));
       // Wait for the quiz inputs by id (cheap), then ask the labelled question once —
-      // the label text is what "Question 1 / 10" means here.
-      await waitFor(() => expect(quizInputs().length).toBeGreaterThan(0));
+      // the label text is what "Question 1 / 10" means here. Starting the quiz awaits ten
+      // term lookups, so allow the runner more than the 1 s default to mount them.
+      await waitFor(() => expect(quizInputs().length).toBeGreaterThan(0), { timeout: 15_000 });
       const firstInput = screen.getByLabelText(/vocabulary\.question 1 \/ 10/) as HTMLInputElement;
       const question = firstInput.parentElement;
       const termLabel = question?.querySelector('p')?.textContent;
-      const selectedTerm = terms.find((term) => term.term === termLabel);
-      expect(selectedTerm).toBeDefined();
+      const selectedTerm = requireElement(
+        terms.find((term) => term.term === termLabel),
+        `the A1 term named ${termLabel}`
+      );
 
-      fireEvent.change(firstInput, {
-        target: { value: selectedTerm?.turkishMeaning },
-      });
-      // Ensure the React state update from onChange is committed before
-      // submitting the form — CI runners with automatic batching can lose
-      // the setAnswers update when change + click fire in the same tick.
-      await waitFor(() => expect(firstInput).toHaveValue(selectedTerm?.turkishMeaning));
+      await fillControlledField(firstInput.id, selectedTerm.turkishMeaning);
       fireEvent.click(screen.getByRole('button', { name: 'vocabulary.finishQuiz' }));
 
       await screen.findByText('vocabulary.quizComplete');

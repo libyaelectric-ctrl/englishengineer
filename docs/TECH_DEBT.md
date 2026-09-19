@@ -287,53 +287,135 @@ become invisible instead of actionable.
 then tail the log. Implemented on 2026-08-29.
 **Found during:** 2026-08-29 commit run.
 
-### TD-023: Every production deploy fails with "Resource provisioning failed"
+### TD-023: Every production deploy fails with "Resource provisioning failed" ✅
 
 **File:** `.github/workflows/vercel-deploy.yml` (symptom site), cause is the Vercel **team** config
 **Issue:** Since 2026-09-17 every deployment on the team fails during provisioning — builds (git/CLI), previews, `--prebuilt` uploads **and build-free `vercel redeploy` of old READY artifacts** alike, so no repo-side change can produce a deployment. Diagnosis (2026-09-18, via the owner's CLI token plus the Vercel-API probe workflow whose branch was deleted the same day): the team is on `plan: "hobby"` after a deliberately-cancelled Plus/Pro subscription (`expiredSubscriptions`), but the **team-level** `resourceConfig` still carries `buildMachine.default: "standard"` from the Pro era. Hobby cannot provision the standard pool, and the value is unfixable by the owner: PATCHing it returns `pro_plan_required`, and project-level `buildMachineSelection: "fixed"` likewise silently survives resets. Vercel's Pro-to-Hobby downgrade is the upstream bug — there is no payment due; the entitlement state was never cleaned up.
-**Impact:** engvox.com frozen on the 2026-09-13 build while main stays green (101 commits since then).
+**Impact:** engvox.com was frozen on the 2026-09-13 build while main stayed green (101 commits since then).
 **Effort:** N/A — upstream fix required; owner action outside the repo.
-**Action:** Send the prepared ticket to Vercel support (verbatim below). Fallback if support SLA burns us: create a fresh Hobby **personal** context project and move the `engvox.com` domain there (new project gets a clean `basic`-pool team config; CI secret + project-link update only).
-**Ticket (paste into vercel.com/support):**
+**Resolved 2026-09-19:** Provisioning works again with no repo-side change. A branch preview built from source and reached READY (`dpl_GUxVgmMh6Bm484aXMcbkw1LD24nB`), and a CLI production deploy of `fix/production-audit-remediation` built on Vercel (`Build Completed in /vercel/output [35s]`) and went READY in 2m as `dpl_F4jY9ZTz1ukAG2iufxccVCKbZgQD`, aliased to `engvox.com` + `www.engvox.com`. The live bundle carries the new chunks, so the alias serves the new build and not a cached one. What changed in the team's `resourceConfig` was not re-measured (the PATCH still returned `pro_plan_required` when the ticket was written), so the open question is only whether the entitlement state stays clean — the deploy workflow is the thing to watch, and the fallback below remains the plan if it regresses.
+**Action (if it regresses):** Re-check the ticket with Vercel support. Fallback: create a fresh Hobby **personal** context project and move the `engvox.com` domain there (new project gets a clean `basic`-pool team config; CI secret + project-link update only).
+**Ticket sent to vercel.com/support (kept for the record):**
 
 > Team `engineer-os` is on the Hobby plan after our Pro (planIteration "plus") subscription expired/was cancelled intentionally — no payment is due. Since then **every** new deployment fails instantly with `BUILD_FAILED: Resource provisioning failed`, including `--prebuilt` static uploads and `redeploy` of previously-READY artifacts (e.g. dpl_F8f6iCB5n6H4y5SEBmHGeDT7Kysi, eng-vox project prj_sgbF8SlLw8pANE1BXQ9wBxMx8sYr; also affects our second project, so it is team-wide). The team's `resourceConfig` still reads `buildMachine: {"default": "standard"}` (the Pro build pool), and we cannot reset it: PATCH `/v9/teams/team_fqlw3Z1XiyBE5gxdVV12WDaM` → `400 pro_plan_required`. Project-level `resourceConfig` similarly keeps `buildMachineSelection: "fixed"` even after PATCH. Please reset the team's build-machine config to the free/Hobby pool so deployments can provision again.
 > **Found during:** 2026-09-18 full-repo re-audit.
 
+### TD-024: Production `VITE_AI_PROXY_URL` points at a namespace the backend does not serve
+
+**File:** Vercel project env (symptom site: `src/shared/services/ai-proxy.config.ts`)
+**Issue:** The production deployment was built with `VITE_AI_PROXY_URL=https://englishengineer-backend.onrender.com/api/ai`, read straight out of the deployed bundle. The backend registers every route through the v1 adapter (`backend/src/app.ts:452` mounts `/api/v1`, the AI routes are registered at `app.ts:629`), so `/api/ai/*` does not exist. Live proof: `GET /api/v1/ai/analytics` → 401 (route exists, auth required) while `GET /api/ai/analytics` → 404 `route_not_found`. The client asks for `/api/ai/coach`, `/api/ai/analytics`, … so every AI call failed and fell back to the mock provider, and the admin surfaces built on the same string (`/api/admin/stats`, `/api/admin/audit-logs`, `/api/ai/analytics/admin`) returned 404 as well.
+**Impact:** AI coach, writing review, assessment feedback, role-play and AI analytics silently degraded in production; the admin dashboard never showed system stats or audit logs.
+**Effort:** 0.2 days (repo side, done); owner action for the env value.
+**Action:** `ai-proxy.config.ts` now normalises a legacy `/api/ai` base to `/api/v1/ai` and logs a warning, and the two admin fetches were corrected to `/api/v1/...`. **Owner:** set `VITE_AI_PROXY_URL=https://englishengineer-backend.onrender.com/api/v1/ai` in the Vercel project so the warning stops firing.
+**Found during:** 2026-09-19 full-repo + live-surface audit (wrote it up while production was frozen on the 2026-09-13 build).
+
+### TD-025: The onboarding wizard's panes overlapped below `lg`, so taps picked the wrong option
+
+**File:** `src/features/profile/NeuralOrbPanel.tsx`
+**Issue:** Each pane forced its tile grid to `h-[calc(100%-2.1rem)]` while the panel itself was a fixed `100dvh-7rem` box whose two sections split the leftover height. Below `lg` the sections stack, so each got roughly half of that height while its grid still declared the full pane height: the discipline grid's last rows spilled out of their section and the language section, later in DOM order and opaque, painted over them. Measured at the Freebuff Preview tab's own 439x672 viewport by asking `document.elementFromPoint` at each tile's centre: "Endüstri Mühendisliği" resolved to the Arabic language button, "Makine Mühendisliği" to Dutch, "Mekatronik / Robotik" to English and "Yazılım Mühendisliği" to **German**. Picking Software Engineering therefore switched the interface language to German and left the discipline unset (with the `İleri` button disabled). At 390x844 those tiles were unreachable, `elementFromPoint` returning null. Desktop (1280x800) was unaffected, which is why it survived review.
+**Impact:** On any phone-sized viewport the onboarding gate could not be completed as intended: four of ten disciplines were untappable and the app language changed on the taps. It also poisoned DOM-driven preview and verification work: the click coordinates were correct, the element under them was not, which read as a tooling fault until it was measured here.
+**Effort:** 0.3 days (found while root-causing a mis-targeted preview click).
+**Action:** The shell is now a flex column whose `main` is the single scroll region (header and footer pinned with `shrink-0`), and both grids are content-sized with `content-between`, which keeps the old airy desktop rhythm without a fixed height, so no pane can paint over its sibling and every choice stays reachable and hit-testable. Guard: `node scripts/check-onboarding-layout.mjs [url] [viewports] [discipline]` hit-tests all 25 choices at their own centres and asserts that picking a discipline never moves the language selection; it fails on the pre-fix layout at 390x844 and 439x672, and passes after the fix at 390x844, 439x672 and 1280x800.
+**Found during:** 2026-09-19 preview investigation (symptom first seen as a preview click that landed on a language button).
+
+### TD-026: Below `lg` the onboarding wizard stacked both lists into one long page
+
+**File:** `src/features/profile/NeuralOrbPanel.tsx`
+**Issue:** With both panes stacked, the wizard rendered ten disciplines and fifteen languages as a single scrolling column. Measured with the extended wizard guard: at 390x844 the pane needed 119px of scroll and at the Freebuff Preview tab's own 439x672 viewport 291px, with only 21 of 25 choices on screen — the language list (a required field) began below the fold, behind a list the user had already answered. The compact 2-column tiles also cut names off (`Elektrik Mühendisliği`, `Mekatronik Mühendisliği` rendered as ellipses at 390px).
+**Impact:** On a phone the second required choice stayed invisible until the user scrolled past the first, and the clipped labels made similar disciplines hard to tell apart. Desktop (1280x800) was unaffected.
+**Effort:** 0.4 days.
+**Action:** Below `lg` the two lists are now staged into two steps (`Adım 1 / 2` eyebrow, segmented step chips, compact two-column grids, `onboarding.continue` on step 1 and `onboarding.finish` on step 2), while `lg` and up keeps the two-pane layout and its single CTA unchanged. Compact tiles wrap their name to two lines instead of ellipsising it, and `useMediaQuery` (new, tested) drives the switch so the DOM itself changes rather than hiding halves with CSS. Guard: `node scripts/check-onboarding-layout.mjs` now walks the steps, hit-tests every choice, and reports scroll/clipping metrics; after the change 390x844 needs 0px of scroll on both steps and 439x672 needs 0px on step 1 and 89px on step 2, with 0 clipped labels and 0px horizontal overflow.
+**Found during:** 2026-09-19 mobile usability pass on the preview worktree.
+
+### TD-027: The grammar drill's action bar covers the entire mobile bottom navigation
+
+**File:** `src/pages/GrammarPage/GrammarEnhancementPanel.tsx:635` (bar) vs `src/layouts/MobileBottomNavigation.tsx:20` (nav)
+**Issue:** Both layers pin to the bottom of the viewport below their breakpoints — the drill bar is `fixed inset-x-0 bottom-0 z-40 … md:hidden` and the bottom navigation is `fixed inset-x-0 bottom-0 z-30 … lg:hidden` — so at 390–767px wide they occupy the same strip and the z-40 bar wins. Measured on `/grammar` at 390x844: all **five** navigation links (`Ana Sayfa`, `Öğrenme`, `Öğrenme Yolu`, `Araçlar`, `Profil`, all at y=815) resolve through `document.elementFromPoint` to the bar's `Correct` / `Review` buttons, and Playwright's own actionability check refuses to click every one of them ("intercepts pointer events").
+**Impact:** During a grammar lesson on a phone the whole bottom navigation is dead, and a tap where a nav item appears to be silently records the current rule as _Correct_ or _Review_ (`recordUsage(true|false)`) — a mis-tap corrupts learning progress rather than doing nothing.
+**Effort:** 0.2 days.
+**Action:** The bar now _declares_ that it occupies the bottom strip and the navigation yields to it. `src/shared/stores/bottom-action-bar.store.ts` (new) holds a counter plus `useBottomActionBar(active)`; `GrammarEnhancementPanel` claims the strip while its own breakpoint (`BOTTOM_ACTION_BAR_QUERY = '(max-width: 767px)'`, kept beside the store so the claim and the `md:hidden` class cannot drift) matches, and `MobileBottomNavigation` returns `null` while any bar is claimed — so the two layers never share the strip. The nav returns as soon as the bar leaves, and between `md` and `lg` (bar hidden, nav visible) nothing changes.
+**Guard:** `node scripts/check-grammar-drill-nav.mjs [url] [viewports]` (defaults `390x844,800x900`). It asserts the bar is on screen below `md` and that its own Correct/Review/Mic buttons stay hit-testable (the fix must not "win" by hiding the bar), and that any rendered nav link resolves to itself under both `document.elementFromPoint` and Playwright's own actionability check. Against the pre-fix tree it fails with exactly the measurement above — `overlap 56px` and 5/5 links resolving to `Correct`/`Review`, with Playwright refusing all five; after the fix it passes at both widths. Also covered by `src/layouts/MobileBottomNavigation.test.tsx` (5 links alone; 0 links while a bar is claimed; returns when it leaves; counter balanced with two bars).
+**Found during:** 2026-09-19 generalised hit-target sweep (`node scripts/check-hit-targets.mjs`).
+
+### TD-028: The vocabulary header clips 102px of itself, so a control sits off-screen on phones
+
+**File:** `src/pages/VocabularyPage` header toolbar, masked by `src/index.css:138` (`html { overflow-x: hidden }`)
+**Issue:** At 390x844 the page's scroll region (`main.custom-scrollbar.relative`) hides 102px of its own horizontal content, and the `Kelime Ara` search control measures `x=465` in a 390px-wide viewport — permanently outside the visible area. Because `html` sets `overflow-x: hidden`, `document.scrollingElement.scrollWidth − clientWidth` still reports **0**, so page-level overflow checks (including the first version of the sweep) cannot see it; only a per-element `scrollWidth > clientWidth` check does.
+**Impact:** On a phone the vocabulary search entry point cannot be reached at all, and the hidden overflow never surfaces as a scrollbar or an error. Desktop is unaffected (the row fits).
+**Effort:** 0.2 days.
+**Action (proposed):** Let the header row wrap or scroll (`flex-wrap` / `overflow-x-auto`) instead of clipping, and add the `clippedX` detector to the sweep so the class is measurable.
+**Found during:** 2026-09-19 generalised hit-target sweep (the first run reported "0px horizontal overflow", which was wrong because of the hidden overflow).
+
+### TD-029: `Escape` opens the mobile drawer instead of closing the topmost layer
+
+**File:** `src/layouts/AppShell.tsx:41` — `useKeyboardNavigation({ key: 'Escape', onKeyPress: () => toggleSidebar() })`
+**Issue:** `Escape` is bound to _toggle_ the sidebar, so pressing it on a phone opens the drawer (and its `button.fixed.inset-0.z-30 … aria-label="Close"` scrim) rather than dismissing whatever is open. Reproduced with a Playwright probe on `/vocabulary` at 390x844: no fixed full-viewport layer exists on load or after scrolling every control into view, and pressing `Escape` once creates one. When a modal is open the same key both closes the modal and opens the drawer.
+**Impact:** Breaks the platform-wide expectation that `Escape` dismisses the topmost layer (WCAG 2.1.2 territory for keyboard users), and it misled the new sweep: its first housekeeping step pressed `Escape` between stages, which opened the drawer and made every element behind the scrim read as "covered" — 371 phantom findings before the cause was found.
+**Effort:** 0.2 days.
+**Action (proposed):** Let the _open_ layer handle `Escape` (close it, then stop propagation), and keep `toggleSidebar` on its own accelerator; the sweep should dismiss layers through their close control, which it now does.
+**Found during:** 2026-09-19 generalised hit-target sweep (its own false-positive flood).
+
+### TD-030: Floating launchers sit on top of app controls (beta widget, mascot)
+
+**File:** `src/features/beta/BetaFeedbackWidget.tsx:144`, `src/features/mascot/EngMascot.tsx`, `src/features/mascot/components/MascotBubble.tsx:17`
+**Issue:** Two fixed overlays float over content without reserving space. The beta launcher is `fixed top-16 right-3 z-40 h-10 w-10` below `lg` (and `lg:bottom-5 lg:right-5` above it); at 390x844 its box is `(341,60)–(379,98)` and the vocabulary filter tab row sits at y=86, so the `Hakim` tab's centre and the `Kelime Ara` button resolve to it there. At 1280x800 the mascot's bubble and mini toolbar cover the right rail: the sidebar's `İşlemler` and the vocabulary panel's `0 kelimeyi tekrarla` / `Özel kelime ekle` / `0 tekrar kuralını çalış` resolve to `div.engmascot-bubble` / `div.flex.items-end` at x≈1153, and the beta launcher at (1240,760) resolves to the mascot avatar. Additionally 10 mascot `mini-btn` controls per page are clipped by their own `overflow: hidden` container at 1280x800 (24 clipped hits across the sweep).
+**Impact:** Controls under a floating widget ignore taps (the tap opens the widget instead), the two launchers fight over the same corner at desktop width, and the mascot's own toolbar is partly cut off. Users on phones cannot reach the affected controls at all.
+**Effort:** 0.3 days.
+**Action (proposed):** Give the launchers reserved, non-overlapping corners (and an offset when both are present), raise the mascot's mini toolbar out of its clipped box, and cover the corner zones with the sweep.
+**Found during:** 2026-09-19 generalised hit-target sweep.
+
+### TD-031: Vocabulary flashcard blocks its own controls (needs a focused investigation)
+
+**File:** `src/pages/VocabularyPage/components/WordCard.tsx:206` (`h-[430px] min-h-[430px] overflow-hidden`), `:213` and `:240` (3D faces), `components/WordCardDetails.tsx:32`
+**Issue:** On `/vocabulary` at 390x844, controls inside the card fail both checks: the geometric sweep reports the front face's `Check Answer` covered by the back face's `form.mt-4`, `button.flex.h-7.w-7` covered by the back face's `h3.text-xl` ("height"), and the flip button (`aria-label="Kartın Ön Yüzü"`) covered by another button's `svg` icon; Playwright's actionability check agrees and refuses the trial click on `Check Answer`, the flip buttons and one unlabelled button (that one intercepted by the sticky page header at `div.sticky top-0 z-30`). At rest the faces themselves are fine — sampling a 5x5 grid inside the card resolves 25/25 points to the visible front face — so the trigger is the stack of fixed 430px height, `overflow: hidden`, `preserve-3d` faces, the face's inner `overflow-y-auto` region and the sticky header, not one obvious culprit.
+**Impact:** Taps aimed at the flashcard's answer/flip controls can land on the hidden face's element instead, which is the same class of failure as TD-025 (wrong element under a correct coordinate). The measurement is not yet conclusive enough to name the fix, which is why this entry is open rather than resolved.
+**Effort:** 0.5 days (investigation first: `pointer-events`/`backface-visibility` discipline per face, and confirming whether Chromium's hit-testing under `preserve-3d` is part of it).
+**Action (proposed):** Make the inactive face `pointer-events: none` (and/or `inert`), keep the card's click-to-flip area behind its controls, then re-run the sweep plus a face-aware guard.
+**Found during:** 2026-09-19 generalised hit-target sweep (this entry is deliberately unresolved: the evidence is real, the mechanism is not proven).
+
 ## Tracking
 
-| ID     | Priority | Status      | Assigned      | Due Date   |
-| ------ | -------- | ----------- | ------------- | ---------- |
-| TD-001 | High     | ✅ Resolved | TBD           | TBD        |
-| TD-002 | High     | ✅ Resolved | TBD           | TBD        |
-| TD-003 | High     | ✅ Resolved | TBD           | TBD        |
-| TD-004 | Medium   | ✅ Resolved | TBD           | TBD        |
-| TD-005 | Medium   | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-006 | Medium   | 🟡 Partial  | TBD           | TBD        |
-| TD-007 | Medium   | ✅ Resolved | TBD           | TBD        |
-| TD-008 | Medium   | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-009 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-010 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-011 | Low      | ✅ Resolved | TBD           | TBD        |
-| TD-012 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-013 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-014 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-015 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-016 | Medium   | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-017 | Low      | ✅ Resolved | TBD           | TBD        |
-| TD-021 | Low      | Open        | TBD           | TBD        |
-| TD-018 | Medium   | Resolved    | TBD           | TBD        |
-| TD-019 | Medium   | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-020 | Medium   | Resolved    | TBD           | TBD        |
-| TD-023 | High     | 🔴 Blocked  | account owner | 2026-09-25 |
+| ID     | Priority | Status      | Assigned | Due Date   |
+| ------ | -------- | ----------- | -------- | ---------- |
+| TD-001 | High     | ✅ Resolved | TBD      | TBD        |
+| TD-002 | High     | ✅ Resolved | TBD      | TBD        |
+| TD-003 | High     | ✅ Resolved | TBD      | TBD        |
+| TD-004 | Medium   | ✅ Resolved | TBD      | TBD        |
+| TD-005 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-006 | Medium   | 🟡 Partial  | TBD      | TBD        |
+| TD-007 | Medium   | ✅ Resolved | TBD      | TBD        |
+| TD-008 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-009 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-010 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-011 | Low      | ✅ Resolved | TBD      | TBD        |
+| TD-012 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-013 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-014 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-015 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-016 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-017 | Low      | ✅ Resolved | TBD      | TBD        |
+| TD-021 | Low      | Open        | TBD      | TBD        |
+| TD-018 | Medium   | Resolved    | TBD      | TBD        |
+| TD-019 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-020 | Medium   | Resolved    | TBD      | TBD        |
+| TD-023 | High     | ✅ Resolved | TBD      | 2026-09-19 |
+| TD-024 | High     | ✅ Resolved | TBD      | 2026-09-19 |
+| TD-025 | High     | ✅ Resolved | TBD      | 2026-09-19 |
+| TD-026 | High     | ✅ Resolved | TBD      | 2026-09-19 |
+| TD-027 | High     | ✅ Resolved | TBD      | 2026-09-19 |
+| TD-028 | Medium   | Open        | TBD      | TBD        |
+| TD-029 | Medium   | Open        | TBD      | TBD        |
+| TD-030 | Low      | Open        | TBD      | TBD        |
+| TD-031 | Medium   | Open        | TBD      | TBD        |
 
 ## Stats
 
-- **Total Items:** 22
-- **Resolved:** 19 (86%)
-- **Partially Resolved:** 1 (5%)
-- **Open:** 1 (5%)
-- **Blocked (external):** 1 (5%)
+- **Total Items:** 30
+- **Resolved:** 24 (80%)
+- **Partially Resolved:** 1 (3%)
+- **Open:** 5 (17%)
+- **Blocked (external):** 0 (0%)
 
 ## Last Updated
 
-- **Date:** 2026-09-18
+- **Date:** 2026-09-19

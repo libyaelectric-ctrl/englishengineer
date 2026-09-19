@@ -23,7 +23,6 @@ const isCacheableStaticAsset = (request, url) =>
   ['style', 'script', 'font', 'image'].includes(request.destination) &&
   (url.pathname.startsWith('/assets/') ||
     url.pathname.startsWith('/mascot/') ||
-    url.pathname.startsWith('/icons/') ||
     url.pathname === '/favicon.ico');
 
 self.addEventListener('install', (event) => {

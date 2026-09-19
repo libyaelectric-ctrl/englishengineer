@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
@@ -12,6 +12,28 @@ import { LearningProfileRepository } from '@/features/profile/profile.repository
 import { OnboardingGate } from './OnboardingGate';
 
 const Guarded = () => <div data-testid="guarded-content">GUARDED CONTENT</div>;
+
+/**
+ * jsdom's matchMedia stub matches nothing, so the wizard's narrow (staged) layout
+ * is what these tests render by default: one list per step, `onboarding.continue`
+ * on step 1 and `onboarding.finish` on step 2. `stubWideViewport` switches the
+ * component to the two-pane layout the desktop app uses.
+ */
+const stubWideViewport = () => {
+  vi.stubGlobal(
+    'matchMedia',
+    vi.fn((query: string) => ({
+      matches: query.includes('1024px'),
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }))
+  );
+};
 
 const renderGate = (initialPath: string) =>
   render(
@@ -89,13 +111,13 @@ describe('OnboardingGate', () => {
     await waitFor(() => {
       expect(screen.getByTestId('guarded-content')).toBeInTheDocument();
     });
-    expect(screen.queryByRole('button', { name: /common\.next/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /onboarding\.continue/ })).not.toBeInTheDocument();
   });
 
-  it('shows the centered selection panel when onboarding is incomplete', async () => {
+  it('shows the selection wizard when onboarding is incomplete', async () => {
     renderGate('/dashboard');
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /common\.next/ })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /onboarding\.continue/ })).toBeInTheDocument();
     });
     expect(screen.getByRole('button', { name: /architecture/i })).toBeInTheDocument();
     expect(screen.queryByTestId('guarded-content')).not.toBeInTheDocument();
@@ -104,33 +126,67 @@ describe('OnboardingGate', () => {
   it('gates every app route, not just the dashboard', async () => {
     renderGate('/vocabulary');
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /common\.next/ })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /onboarding\.continue/ })).toBeInTheDocument();
     });
     expect(screen.queryByTestId('guarded-content')).not.toBeInTheDocument();
   });
 
-  it('unlocks the app on the same mounted gate once the panel is completed (no stale cache)', async () => {
+  it('stages the two lists below the wide breakpoint, then unlocks on the same mounted gate', async () => {
     const user = userEvent.setup();
     renderGate('/dashboard');
 
-    // Click Architecture discipline button
+    // Step 1 — discipline only; the language list must not be rendered yet, or the
+    // narrow layout is back to the single long page TD-026 removed.
     const disciplineBtn = await screen.findByRole('button', { name: /architecture/i });
+    expect(screen.queryByRole('button', { name: /türkçe/i })).not.toBeInTheDocument();
     await user.click(disciplineBtn);
 
-    // Click a language option (the mock only provides 'tr', English is
-    // excluded from the panel's own options by design)
+    const continueBtn = await screen.findByRole('button', { name: /onboarding\.continue/ });
+    expect(continueBtn).not.toBeDisabled();
+    await user.click(continueBtn);
+
+    // Step 2 — language, then finish.
     const languageBtn = await screen.findByRole('button', { name: /türkçe/i });
+    expect(screen.queryByRole('button', { name: /architecture/i })).not.toBeInTheDocument();
     await user.click(languageBtn);
 
-    // Click Next — it should be enabled now
+    const finishBtn = await screen.findByRole('button', { name: /onboarding\.finish/ });
+    expect(finishBtn).not.toBeDisabled();
+    await user.click(finishBtn);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('guarded-content')).toBeInTheDocument();
+    });
+    expect(screen.queryByRole('button', { name: /onboarding\.finish/ })).not.toBeInTheDocument();
+  });
+
+  it('lets the completed step chip walk back to the discipline list', async () => {
+    const user = userEvent.setup();
+    renderGate('/dashboard');
+
+    await user.click(await screen.findByRole('button', { name: /architecture/i }));
+    await user.click(await screen.findByRole('button', { name: /onboarding\.continue/ }));
+    expect(await screen.findByRole('button', { name: /türkçe/i })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /onboarding\.yourDiscipline/ }));
+    expect(await screen.findByRole('button', { name: /architecture/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /türkçe/i })).not.toBeInTheDocument();
+  });
+
+  it('keeps the two-pane layout (both lists, one CTA) on wide viewports', async () => {
+    stubWideViewport();
+    const user = userEvent.setup();
+    renderGate('/dashboard');
+
+    await user.click(await screen.findByRole('button', { name: /architecture/i }));
+    await user.click(await screen.findByRole('button', { name: /türkçe/i }));
+
     const nextBtn = await screen.findByRole('button', { name: /common\.next/ });
     expect(nextBtn).not.toBeDisabled();
     await user.click(nextBtn);
 
-    // Wait for guarded content to appear
     await waitFor(() => {
       expect(screen.getByTestId('guarded-content')).toBeInTheDocument();
     });
-    expect(screen.queryByRole('button', { name: /common\.next/ })).not.toBeInTheDocument();
   });
 });

@@ -1,14 +1,16 @@
 // Assembles a Vercel Build Output API (v3) directory from the Vite `dist/`
 // build so a production deploy can be uploaded with `vercel deploy --prebuilt`.
 //
-// Why this exists: when the project's remote build machines fail to provision
-// ("BUILD_FAILED: Resource provisioning failed", Sept 2026), a plain static
-// upload still works because it never needs a build box. The routing rules
-// (redirects/rewrites/headers) are copied from vercel.json so a single source
-// of truth stays in the repo file — this script only reformats them for the
-// build output spec (each entry needs a literal `route` key, and rewrites
-// additionally need `statusCode`/`has` passthrough, which is already correct
-// for the spec shape we emit).
+// Why this exists: the project's remote build machines fail to provision
+// ("BUILD_FAILED: Resource provisioning failed", Sept 2026). A static upload was
+// the hoped-for workaround because it never needs a build box — but TD-023 records
+// that `--prebuilt` uploads and `redeploy` of READY artifacts fail on the same
+// team-level config, so this script is a ready path for the day provisioning is
+// restored, not a working bypass. The routing rules (redirects/rewrites/headers)
+// are copied from vercel.json so a single source of truth stays in the repo file —
+// this script only reformats them for the build output spec (each entry needs a
+// literal `route` key, and rewrites additionally need `statusCode`/`has`
+// passthrough, which is already correct for the spec shape we emit).
 import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';

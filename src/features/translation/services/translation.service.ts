@@ -2,11 +2,9 @@ import { logger } from '@/shared/logger';
 
 import { LocalTranslationEngine } from './local-translation.engine';
 import {
-  FTAPI_URL,
   GOOGLE_GTX_BASE,
   GOOGLE_GTX_URLS,
   LIBRETRANSLATE_ENDPOINTS,
-  LINGVA_ENDPOINTS,
   MYMEMORY_URL,
   REQUEST_TIMEOUTS,
 } from './translation.config';
@@ -34,7 +32,7 @@ export interface TranslationResult {
   sourceLang: string;
   targetLang: string;
   detectedLang?: string;
-  serviceUsed: 'google_gtx' | 'lingva' | 'ftapi' | 'libretranslate' | 'mymemory' | 'fallback';
+  serviceUsed: 'google_gtx' | 'libretranslate' | 'mymemory' | 'fallback';
   wordAnalysis?: WordAnalysis;
 }
 
@@ -271,74 +269,6 @@ export class TranslationService {
     return null;
   }
 
-  private async tryLingva(
-    trimmed: string,
-    text: string,
-    sourceLang: string,
-    targetLang: string
-  ): Promise<TranslationResult | null> {
-    const lingvaEndpoints = LINGVA_ENDPOINTS.map(
-      (base) => `${base}/${sourceLang}/${targetLang}/${encodeURIComponent(trimmed)}`
-    );
-
-    for (const url of lingvaEndpoints) {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUTS.FALLBACK);
-        const response = await fetch(url, { signal: controller.signal });
-        clearTimeout(timeoutId);
-        if (response.ok) {
-          const data = await response.json();
-          if (data?.translation && data.translation.toLowerCase() !== trimmed.toLowerCase()) {
-            return {
-              originalText: text,
-              translatedText: data.translation,
-              sourceLang,
-              targetLang,
-              serviceUsed: 'lingva',
-              wordAnalysis: analyzeSingleWord(trimmed, data.translation),
-            };
-          }
-        }
-      } catch (err: unknown) {
-        logger.w('[TranslationService] Lingva proxy failed', err);
-      }
-    }
-    return null;
-  }
-
-  private async tryFtApi(
-    trimmed: string,
-    text: string,
-    sourceLang: string,
-    targetLang: string
-  ): Promise<TranslationResult | null> {
-    try {
-      const url = `${FTAPI_URL}?sl=${sourceLang}&tl=${targetLang}&text=${encodeURIComponent(trimmed)}`;
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUTS.FALLBACK);
-      const response = await fetch(url, { signal: controller.signal });
-      clearTimeout(timeoutId);
-      if (response.ok) {
-        const data = await response.json();
-        const translatedText = data?.['destination-text'] || '';
-        if (translatedText && translatedText.toLowerCase() !== trimmed.toLowerCase()) {
-          return {
-            originalText: text,
-            translatedText,
-            sourceLang,
-            targetLang,
-            serviceUsed: 'ftapi',
-            wordAnalysis: analyzeSingleWord(trimmed, translatedText),
-          };
-        }
-      }
-    } catch (err: unknown) {
-      logger.w('[TranslationService] FtApi failed', err);
-    }
-    return null;
-  }
-
   private async postToEndpoint(
     endpoint: string,
     trimmed: string,
@@ -458,19 +388,11 @@ export class TranslationService {
     const myMemoryResult = await this.tryMyMemory(trimmed, text, effectiveSource, effectiveTarget);
     if (myMemoryResult) return myMemoryResult;
 
-    // 3. Lingva Open-Source Proxy Network
-    const lingvaResult = await this.tryLingva(trimmed, text, effectiveSource, effectiveTarget);
-    if (lingvaResult) return lingvaResult;
-
-    // 4. Free Translation API Proxy
-    const ftResult = await this.tryFtApi(trimmed, text, effectiveSource, effectiveTarget);
-    if (ftResult) return ftResult;
-
-    // 5. LibreTranslate / Argos Uptime Endpoints
+    // 3. LibreTranslate (self-hosted via VITE_LIBRETRANSLATE_URL, else the public instance)
     const endpointResult = await this.tryEndpoints(trimmed, text, effectiveSource, effectiveTarget);
     if (endpointResult) return endpointResult;
 
-    // 6. Offline / Local Dictionary Fallback
+    // 4. Offline / Local Dictionary Fallback
     return TranslationService.offlineFallback(trimmed, text, effectiveSource, effectiveTarget);
   }
 }

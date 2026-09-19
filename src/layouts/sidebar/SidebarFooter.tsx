@@ -107,7 +107,7 @@ export const SidebarFooter = ({
           Terms
         </a>
         <span className="mx-1">|</span>
-        <a href="/contact" className="hover:text-foreground transition-colors">
+        <a href="mailto:support@engvox.com" className="hover:text-foreground transition-colors">
           Contact
         </a>
       </div>

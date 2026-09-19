@@ -1,5 +1,11 @@
 node_modules
-backend
+backend/node_modules
+backend/dist
+backend/coverage
+backend/test
+backend/tests
+backend/logs
+backend/uploads
 .git
 .github
 *.md

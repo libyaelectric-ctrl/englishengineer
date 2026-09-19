@@ -33,8 +33,14 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      # android/variables.gradle compiles against SDK 36, so the platform and its
+      # build-tools have to be requested explicitly - the action's default is
+      # platform-tools only, which leaves the Gradle build to fail later for a
+      # reason that has nothing to do with the app code.
       - name: Setup Android SDK
         uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4
+        with:
+          packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
       - name: Initialize Capacitor
         run: |
           npx cap add android || true
