@@ -287,14 +287,15 @@ become invisible instead of actionable.
 then tail the log. Implemented on 2026-08-29.
 **Found during:** 2026-08-29 commit run.
 
-### TD-023: Every production deploy fails with "Resource provisioning failed"
+### TD-023: Every production deploy fails with "Resource provisioning failed" ✅
 
 **File:** `.github/workflows/vercel-deploy.yml` (symptom site), cause is the Vercel **team** config
 **Issue:** Since 2026-09-17 every deployment on the team fails during provisioning — builds (git/CLI), previews, `--prebuilt` uploads **and build-free `vercel redeploy` of old READY artifacts** alike, so no repo-side change can produce a deployment. Diagnosis (2026-09-18, via the owner's CLI token plus the Vercel-API probe workflow whose branch was deleted the same day): the team is on `plan: "hobby"` after a deliberately-cancelled Plus/Pro subscription (`expiredSubscriptions`), but the **team-level** `resourceConfig` still carries `buildMachine.default: "standard"` from the Pro era. Hobby cannot provision the standard pool, and the value is unfixable by the owner: PATCHing it returns `pro_plan_required`, and project-level `buildMachineSelection: "fixed"` likewise silently survives resets. Vercel's Pro-to-Hobby downgrade is the upstream bug — there is no payment due; the entitlement state was never cleaned up.
-**Impact:** engvox.com frozen on the 2026-09-13 build while main stays green (101 commits since then).
+**Impact:** engvox.com was frozen on the 2026-09-13 build while main stayed green (101 commits since then).
 **Effort:** N/A — upstream fix required; owner action outside the repo.
-**Action:** Send the prepared ticket to Vercel support (verbatim below). Fallback if support SLA burns us: create a fresh Hobby **personal** context project and move the `engvox.com` domain there (new project gets a clean `basic`-pool team config; CI secret + project-link update only).
-**Ticket (paste into vercel.com/support):**
+**Resolved 2026-09-19:** Provisioning works again with no repo-side change. A branch preview built from source and reached READY (`dpl_GUxVgmMh6Bm484aXMcbkw1LD24nB`), and a CLI production deploy of `fix/production-audit-remediation` built on Vercel (`Build Completed in /vercel/output [35s]`) and went READY in 2m as `dpl_F4jY9ZTz1ukAG2iufxccVCKbZgQD`, aliased to `engvox.com` + `www.engvox.com`. The live bundle carries the new chunks, so the alias serves the new build and not a cached one. What changed in the team's `resourceConfig` was not re-measured (the PATCH still returned `pro_plan_required` when the ticket was written), so the open question is only whether the entitlement state stays clean — the deploy workflow is the thing to watch, and the fallback below remains the plan if it regresses.
+**Action (if it regresses):** Re-check the ticket with Vercel support. Fallback: create a fresh Hobby **personal** context project and move the `engvox.com` domain there (new project gets a clean `basic`-pool team config; CI secret + project-link update only).
+**Ticket sent to vercel.com/support (kept for the record):**
 
 > Team `engineer-os` is on the Hobby plan after our Pro (planIteration "plus") subscription expired/was cancelled intentionally — no payment is due. Since then **every** new deployment fails instantly with `BUILD_FAILED: Resource provisioning failed`, including `--prebuilt` static uploads and `redeploy` of previously-READY artifacts (e.g. dpl_F8f6iCB5n6H4y5SEBmHGeDT7Kysi, eng-vox project prj_sgbF8SlLw8pANE1BXQ9wBxMx8sYr; also affects our second project, so it is team-wide). The team's `resourceConfig` still reads `buildMachine: {"default": "standard"}` (the Pro build pool), and we cannot reset it: PATCH `/v9/teams/team_fqlw3Z1XiyBE5gxdVV12WDaM` → `400 pro_plan_required`. Project-level `resourceConfig` similarly keeps `buildMachineSelection: "fixed"` even after PATCH. Please reset the team's build-machine config to the free/Hobby pool so deployments can provision again.
 > **Found during:** 2026-09-18 full-repo re-audit.
@@ -374,46 +375,46 @@ then tail the log. Implemented on 2026-08-29.
 
 ## Tracking
 
-| ID     | Priority | Status      | Assigned      | Due Date   |
-| ------ | -------- | ----------- | ------------- | ---------- |
-| TD-001 | High     | ✅ Resolved | TBD           | TBD        |
-| TD-002 | High     | ✅ Resolved | TBD           | TBD        |
-| TD-003 | High     | ✅ Resolved | TBD           | TBD        |
-| TD-004 | Medium   | ✅ Resolved | TBD           | TBD        |
-| TD-005 | Medium   | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-006 | Medium   | 🟡 Partial  | TBD           | TBD        |
-| TD-007 | Medium   | ✅ Resolved | TBD           | TBD        |
-| TD-008 | Medium   | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-009 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-010 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-011 | Low      | ✅ Resolved | TBD           | TBD        |
-| TD-012 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-013 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-014 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-015 | Low      | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-016 | Medium   | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-017 | Low      | ✅ Resolved | TBD           | TBD        |
-| TD-021 | Low      | Open        | TBD           | TBD        |
-| TD-018 | Medium   | Resolved    | TBD           | TBD        |
-| TD-019 | Medium   | ✅ Resolved | TBD           | 2026-08-29 |
-| TD-020 | Medium   | Resolved    | TBD           | TBD        |
-| TD-023 | High     | 🔴 Blocked  | account owner | 2026-09-25 |
-| TD-024 | High     | ✅ Resolved | TBD           | 2026-09-19 |
-| TD-025 | High     | ✅ Resolved | TBD           | 2026-09-19 |
-| TD-026 | High     | ✅ Resolved | TBD           | 2026-09-19 |
-| TD-027 | High     | ✅ Resolved | TBD           | 2026-09-19 |
-| TD-028 | Medium   | Open        | TBD           | TBD        |
-| TD-029 | Medium   | Open        | TBD           | TBD        |
-| TD-030 | Low      | Open        | TBD           | TBD        |
-| TD-031 | Medium   | Open        | TBD           | TBD        |
+| ID     | Priority | Status      | Assigned | Due Date   |
+| ------ | -------- | ----------- | -------- | ---------- |
+| TD-001 | High     | ✅ Resolved | TBD      | TBD        |
+| TD-002 | High     | ✅ Resolved | TBD      | TBD        |
+| TD-003 | High     | ✅ Resolved | TBD      | TBD        |
+| TD-004 | Medium   | ✅ Resolved | TBD      | TBD        |
+| TD-005 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-006 | Medium   | 🟡 Partial  | TBD      | TBD        |
+| TD-007 | Medium   | ✅ Resolved | TBD      | TBD        |
+| TD-008 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-009 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-010 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-011 | Low      | ✅ Resolved | TBD      | TBD        |
+| TD-012 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-013 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-014 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-015 | Low      | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-016 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-017 | Low      | ✅ Resolved | TBD      | TBD        |
+| TD-021 | Low      | Open        | TBD      | TBD        |
+| TD-018 | Medium   | Resolved    | TBD      | TBD        |
+| TD-019 | Medium   | ✅ Resolved | TBD      | 2026-08-29 |
+| TD-020 | Medium   | Resolved    | TBD      | TBD        |
+| TD-023 | High     | ✅ Resolved | TBD      | 2026-09-19 |
+| TD-024 | High     | ✅ Resolved | TBD      | 2026-09-19 |
+| TD-025 | High     | ✅ Resolved | TBD      | 2026-09-19 |
+| TD-026 | High     | ✅ Resolved | TBD      | 2026-09-19 |
+| TD-027 | High     | ✅ Resolved | TBD      | 2026-09-19 |
+| TD-028 | Medium   | Open        | TBD      | TBD        |
+| TD-029 | Medium   | Open        | TBD      | TBD        |
+| TD-030 | Low      | Open        | TBD      | TBD        |
+| TD-031 | Medium   | Open        | TBD      | TBD        |
 
 ## Stats
 
 - **Total Items:** 30
-- **Resolved:** 23 (77%)
+- **Resolved:** 24 (80%)
 - **Partially Resolved:** 1 (3%)
 - **Open:** 5 (17%)
-- **Blocked (external):** 1 (3%)
+- **Blocked (external):** 0 (0%)
 
 ## Last Updated
 
