@@ -1,14 +1,15 @@
 import { logger } from '@/shared/logger';
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
+import { fetchSeedJson } from '@/shared/utils/data-source';
 import { getCachedSeed, setCachedSeed } from '@/shared/utils/indexed-db';
 
 import type { CefrLevel } from '@/features/level-system';
 
 /**
  * Runtime-fetch vocabulary loader. Each level's seed data is served as
- * static JSON from public/data/vocabulary/ and fetched on demand; large
- * levels are split into shards that download in parallel. Results are
- * merged in order and cached in IndexedDB for offline access.
+ * static JSON from the Storage CDN (`VITE_DATA_CDN_URL`) and fetched on
+ * demand; large levels are split into shards that download in parallel.
+ * Results are merged in order and cached in IndexedDB for offline access.
  */
 const LEVEL_SHARDS: Partial<Record<CefrLevel, number>> = { B1: 4 };
 
@@ -20,23 +21,16 @@ export const loadVocabularyByLevel = async (level: CefrLevel): Promise<Vocabular
   }
 
   try {
-    const dataBase = (import.meta.env.VITE_DATA_CDN_URL ?? '').replace(/\/+$/, '');
     const slug = level.toLowerCase();
     const shardCount = LEVEL_SHARDS[level] ?? 1;
-    const shardUrls = Array.from({ length: shardCount }, (_, shard) =>
+    const shardPaths = Array.from({ length: shardCount }, (_, shard) =>
       shard === 0
-        ? `${dataBase}/data/vocabulary/${slug}.seed.json`
-        : `${dataBase}/data/vocabulary/${slug}.seed-${shard}.json`
+        ? `/data/vocabulary/${slug}.seed.json`
+        : `/data/vocabulary/${slug}.seed-${shard}.json`
     );
 
     const parts = await Promise.all(
-      shardUrls.map(async (url) => {
-        const res = await fetch(url);
-        if (!res.ok) {
-          throw new Error(`Failed to load vocabulary shard ${url}: ${res.status}`);
-        }
-        return (await res.json()) as VocabularyTerm[];
-      })
+      shardPaths.map((path) => fetchSeedJson<VocabularyTerm[]>(path, `${level} vocabulary`))
     );
     const terms = parts.flat();
 

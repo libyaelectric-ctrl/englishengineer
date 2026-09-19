@@ -1,12 +1,13 @@
 /**
  * Lazy-loaded vocabulary translation layer.
  *
- * Each supported language is served as a static JSON file from
- * public/data/translations/. The app fetches the corpus for the user's
- * selected learning language at runtime and caches it in IndexedDB for
+ * Each supported language is served as a static JSON file from the Storage CDN
+ * (`/data/translations/<lang>.json` on `VITE_DATA_CDN_URL`). The app fetches the corpus
+ * for the user's selected learning language at runtime and caches it in IndexedDB for
  * offline access.
  */
 import { logger } from '@/shared/logger';
+import { fetchSeedJson } from '@/shared/utils/data-source';
 import { getCachedSeed, setCachedSeed } from '@/shared/utils/indexed-db';
 
 export interface TermTranslation {
@@ -45,15 +46,12 @@ export const loadLanguageCorpus = (language: string): Promise<LanguageMap> => {
         return cached;
       }
 
-      // Fetch from static assets (or the configured data CDN)
-      const dataBase = (import.meta.env.VITE_DATA_CDN_URL ?? '').replace(/\/+$/, '');
-      const res = await fetch(`${dataBase}/data/translations/${language}.json`);
-      if (!res.ok) {
-        langCache.set(language, emptyMap);
-        return emptyMap;
-      }
-
-      const map: LanguageMap = await res.json();
+      // Fetch from the Storage CDN (see `data-source`) — a non-JSON answer is an
+      // error, not an empty corpus, so it is logged below instead of cached.
+      const map = await fetchSeedJson<LanguageMap>(
+        `/data/translations/${language}.json`,
+        `translation corpus for "${language}"`
+      );
       langCache.set(language, map);
 
       // Cache in IndexedDB for offline access

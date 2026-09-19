@@ -194,9 +194,12 @@ globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise
       } as unknown as Response;
     } catch (fsError) {
       // The seed files may be absent from a CI checkout (they moved to
-      // Supabase Storage) - fall back to the Storage CDN origin.
+      // Supabase Storage) - fall back to the Storage CDN origin. A loader that
+      // already asked the CDN passes an absolute URL, which must not be prefixed
+      // twice.
       try {
-        const cdnResponse = await originalFetch(`${DATA_CDN_BASE}${urlStr}`);
+        const cdnUrl = /^https?:\/\//.test(urlStr) ? urlStr : `${DATA_CDN_BASE}${urlStr}`;
+        const cdnResponse = await originalFetch(cdnUrl);
         if (!cdnResponse.ok) throw new Error(`CDN ${cdnResponse.status}`, { cause: fsError });
         const content = await cdnResponse.text();
         return {

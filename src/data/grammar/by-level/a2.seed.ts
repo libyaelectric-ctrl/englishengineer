@@ -1,13 +1,5 @@
-import { AppError, ErrorCode } from '@/core/errors';
-
 import type { GrammarRule } from '@/shared/types/grammar.types';
+import { fetchSeedJson } from '@/shared/utils/data-source';
 
-export const loadA2GrammarRules = async (): Promise<GrammarRule[]> => {
-  const res = await fetch('/data/grammar/a2.seed.json');
-  if (!res.ok)
-    throw new AppError({
-      code: ErrorCode.NETWORK,
-      message: `Failed to load A2 grammar: ${res.status}`,
-    });
-  return res.json() as Promise<GrammarRule[]>;
-};
+export const loadA2GrammarRules = (): Promise<GrammarRule[]> =>
+  fetchSeedJson<GrammarRule[]>('/data/grammar/a2.seed.json', 'A2 grammar');
