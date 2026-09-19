@@ -10,13 +10,6 @@ import { useGlobalShortcuts } from '@/shared/hooks/useGlobalShortcuts';
 import { useKeyboardNavigation } from '@/shared/hooks/useKeyboardNavigation';
 import { usePageTracking } from '@/shared/hooks/usePageTracking';
 
-// Imported from the module rather than the barrel: a static import of `@/features/mascot`
-// next to the lazy one below keeps the whole feature in the entry chunk, and the build says
-// so - `[INEFFECTIVE_DYNAMIC_IMPORT] src/features/mascot/index.ts is dynamically imported by
-// AppShell.tsx but also statically imported by it, dynamic import will not move module into
-// another chunk`. With the barrel import gone the mascot ships as its own `mascot-*.js`.
-import { useMascotEvents } from '@/features/mascot/useMascotEvents';
-
 const Sidebar = lazy(() => import('./Sidebar').then((m) => ({ default: m.Sidebar })));
 const RightSidebar = lazy(() =>
   import('./RightSidebar').then((m) => ({ default: m.RightSidebar }))
@@ -30,7 +23,6 @@ const BetaAnalyticsTracker = lazy(() =>
 const BetaFeedbackWidget = lazy(() =>
   import('@/features/beta').then((m) => ({ default: m.BetaFeedbackWidget }))
 );
-const EngMascot = lazy(() => import('@/features/mascot').then((m) => ({ default: m.EngMascot })));
 const CommandPalette = lazy(() => import('@/shared/components/CommandPalette'));
 const KeyboardShortcutsPanel = lazy(() => import('@/shared/components/KeyboardShortcutsPanel'));
 
@@ -41,7 +33,6 @@ export const AppShell: FC = () => {
   useKeyboardNavigation({ key: 'Escape', onKeyPress: () => toggleSidebar() });
   useGlobalShortcuts();
   usePageTracking();
-  useMascotEvents();
 
   useEffect(() => {
     const el = mainRef.current;
@@ -104,9 +95,6 @@ export const AppShell: FC = () => {
         </main>
         <Suspense fallback={null}>
           <BetaFeedbackWidget />
-        </Suspense>
-        <Suspense fallback={null}>
-          <EngMascot />
         </Suspense>
         <Suspense fallback={null}>
           <MobileBottomNavigation />

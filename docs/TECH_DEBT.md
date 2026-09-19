@@ -355,13 +355,13 @@ then tail the log. Implemented on 2026-08-29.
 **Action (proposed):** Let the _open_ layer handle `Escape` (close it, then stop propagation), and keep `toggleSidebar` on its own accelerator; the sweep should dismiss layers through their close control, which it now does.
 **Found during:** 2026-09-19 generalised hit-target sweep (its own false-positive flood).
 
-### TD-030: Floating launchers sit on top of app controls (beta widget, mascot)
+### TD-030: The beta launcher floats over app controls (the mascot half is gone)
 
-**File:** `src/features/beta/BetaFeedbackWidget.tsx:144`, `src/features/mascot/EngMascot.tsx`, `src/features/mascot/components/MascotBubble.tsx:17`
-**Issue:** Two fixed overlays float over content without reserving space. The beta launcher is `fixed top-16 right-3 z-40 h-10 w-10` below `lg` (and `lg:bottom-5 lg:right-5` above it); at 390x844 its box is `(341,60)–(379,98)` and the vocabulary filter tab row sits at y=86, so the `Hakim` tab's centre and the `Kelime Ara` button resolve to it there. At 1280x800 the mascot's bubble and mini toolbar cover the right rail: the sidebar's `İşlemler` and the vocabulary panel's `0 kelimeyi tekrarla` / `Özel kelime ekle` / `0 tekrar kuralını çalış` resolve to `div.engmascot-bubble` / `div.flex.items-end` at x≈1153, and the beta launcher at (1240,760) resolves to the mascot avatar. Additionally 10 mascot `mini-btn` controls per page are clipped by their own `overflow: hidden` container at 1280x800 (24 clipped hits across the sweep).
-**Impact:** Controls under a floating widget ignore taps (the tap opens the widget instead), the two launchers fight over the same corner at desktop width, and the mascot's own toolbar is partly cut off. Users on phones cannot reach the affected controls at all.
+**File:** `src/features/beta/BetaFeedbackWidget.tsx` (launcher)
+**Issue:** A fixed overlay floats over content without reserving space. The beta launcher is `fixed top-16 right-3 z-40 h-10 w-10` below `lg` (and `lg:bottom-5 lg:right-5` above it); at 390x844 its box is `(341,60)–(379,98)` and the vocabulary filter tab row sits at y=86, so the `Hakim` tab's centre and the `Kelime Ara` button resolve to it there. The original entry described a second overlay, the mascot: at 1280x800 its bubble and mini toolbar covered the right rail (the sidebar's `İşlemler` and the vocabulary panel's `0 kelimeyi tekrarla` / `Özel kelime ekle` / `0 tekrar kuralını çalış` resolved to `div.engmascot-bubble` / `div.flex.items-end` at x≈1153, and the beta launcher at (1240,760) resolved to the mascot avatar), and 10 mascot `mini-btn` controls per page were clipped by their own `overflow: hidden` container (24 clipped hits across the sweep).
+**Impact:** Controls under the launcher ignore taps — the tap opens the widget instead — so on a phone the affected controls cannot be reached at all. The mascot's overlap and its clipped toolbar went away with the feature: `src/features/mascot/**`, its translation file, its feature flag and its public-asset handling were removed on 2026-09-19, which also removed the two-launchers-fighting-over-one-corner case at desktop width.
 **Effort:** 0.3 days.
-**Action (proposed):** Give the launchers reserved, non-overlapping corners (and an offset when both are present), raise the mascot's mini toolbar out of its clipped box, and cover the corner zones with the sweep.
+**Action (proposed):** Give the launcher a reserved corner that the content below it accounts for (or collapse it behind the shell's own controls), and cover that corner zone with the sweep.
 **Found during:** 2026-09-19 generalised hit-target sweep.
 
 ### TD-031: Vocabulary flashcard blocks its own controls (needs a focused investigation)
