@@ -30,7 +30,24 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
+      # The public build inputs the Vercel project already carries. Without them a
+      # Pages build has no data CDN prefix, so the seed loaders fall back to the
+      # site's own /data/* paths, which no clean checkout contains (public/data is
+      # gitignored) - the learning content would render empty. Values are public by
+      # design (they ship in the client bundle), and the repository already carries
+      # the same defaults in src/test/setup.ts and billing.helpers.ts.
+      - name: Build
+        run: npm run build
+        env:
+          # VITE_APP_VERSION is deliberately absent: the app falls back to PRODUCT_VERSION
+          # (package.json), whereas a git ref would display "main" as the version.
+          VITE_ENVIRONMENT_MODE: production
+          VITE_SITE_URL: https://engvox.com
+          VITE_DATA_CDN_URL: ${{ vars.VITE_DATA_CDN_URL || 'https://wxabrwzitwsjtpmlvvqe.supabase.co/storage/v1/object/public/app-data' }}
+          VITE_BILLING_API_URL: ${{ vars.VITE_BILLING_API_URL || 'https://englishengineer-backend.onrender.com' }}
+          VITE_AI_PROVIDER: backend
+          VITE_AI_PROXY_URL: ${{ vars.VITE_AI_PROXY_URL || 'https://englishengineer-backend.onrender.com/api/v1/ai' }}
+          VITE_AUTH_PROVIDER: firebase
       - run: node scripts/gh-pages-prepare.mjs
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:

@@ -71,7 +71,7 @@
 
   "rewrites": [
     {
-      "source": "/((?!assets/).*)",
+      "source": "/((?!assets/|api/|data/|fonts/|brand/|audio/|mascot/).*)",
       "destination": "/index.html"
     }
   ],
@@ -98,12 +98,6 @@
     {
       "source": "/assets/(.*)",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
-    },
-    {
-      "source": "/mascot/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }
-      ]
     },
     {
       "source": "/index.html",
