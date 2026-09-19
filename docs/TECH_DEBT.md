@@ -373,6 +373,16 @@ then tail the log. Implemented on 2026-08-29.
 **Action (proposed):** Make the inactive face `pointer-events: none` (and/or `inert`), keep the card's click-to-flip area behind its controls, then re-run the sweep plus a face-aware guard.
 **Found during:** 2026-09-19 generalised hit-target sweep (this entry is deliberately unresolved: the evidence is real, the mechanism is not proven).
 
+### TD-032: The billing suite waited on the store's `isLoading` with `waitFor`'s default 1s budget
+
+**File:** `src/features/billing/billing.failure-surfaces.test.tsx` (8 sites, each `await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false)); await act(async () => undefined);`)
+**Issue:** Those waits were deadlines, not synchronisation. The flag is raised by the store's mount refresh (`fetchSubscription`, `billing.store.ts:71`) and lowered when the backend answers, so every one of them gambled that the request would finish inside `waitFor`'s 1 s default — and the file's `beforeEach` never stubbed `fetch` at all, so the refresh left the process and, in CI, went to the production billing backend. Measured with a 1500 ms `…/billing/subscription-status` response: `isLoading` stays `true` for 1568 ms, and 5 of the 6 host tests fail in isolation with `expected true to be false`. That is CI's exact signature (`gives every upgrade control on the billing page one wording`, 1087 ms; and `is still offered to a paid plan that lapsed`).
+**Impact:** Every merge in this session depended on the network answering within a second: the same job was red on the first attempt and green after `gh run rerun --failed`, three separate times, blocking PR #229, `main` and PR #230 in turn. No product code was involved.
+**Effort:** 0.1 days.
+**Action:** The wait hands the work over instead of guessing at it. `trackStoreRefreshes()` records the promises `initializeBilling` / `refreshBilling` return — the flag's only two producers in the app — and `settleBillingRefresh()` awaits them inside `act` with no polling and no timer, then asserts the flag is down, so a still-raised flag fails with a reason rather than a timeout. `beforeEach` now stubs `fetch` with the same audit-outage answer the tests seed, keeping the refresh on the microtask queue; re-issuing a refresh to have something to await was rejected because `fetchSubscription` clears `error`/`errorCode` on entry and would wipe the failure just seeded. `afterEach` drops promises a test never settled.
+**Guard:** A/B on identical harnesses (one 1500 ms `subscription-status` responder, pre-fix file vs fixed file): pre-fix fails 5/6 host tests in isolation with `expected true to be false`; fixed passes 6/6 and its slowest case runs 1579 ms, i.e. it genuinely waits for the response. `npm run test:coverage` — the command CI runs — was executed 5 times: 181 files / 1169 tests, exit 0 every time (75–81 s).
+**Found during:** 2026-09-19 CI triage while merging PR #229 and PR #230.
+
 ## Tracking
 
 | ID     | Priority | Status      | Assigned | Due Date   |
@@ -407,13 +417,14 @@ then tail the log. Implemented on 2026-08-29.
 | TD-029 | Medium   | Open        | TBD      | TBD        |
 | TD-030 | Low      | Open        | TBD      | TBD        |
 | TD-031 | Medium   | Open        | TBD      | TBD        |
+| TD-032 | Medium   | ✅ Resolved | TBD      | 2026-09-19 |
 
 ## Stats
 
-- **Total Items:** 30
-- **Resolved:** 24 (80%)
+- **Total Items:** 31
+- **Resolved:** 25 (81%)
 - **Partially Resolved:** 1 (3%)
-- **Open:** 5 (17%)
+- **Open:** 5 (16%)
 - **Blocked (external):** 0 (0%)
 
 ## Last Updated
