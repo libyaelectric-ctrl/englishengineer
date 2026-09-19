@@ -28,12 +28,6 @@ export const FEATURE_FLAGS = {
     enabledByDefault: true,
     rolloutPercentage: 100,
   },
-  mascotEngagement: {
-    key: 'mascotEngagement',
-    description: 'EngVox mascot reactions on learning events',
-    enabledByDefault: true,
-    rolloutPercentage: 100,
-  },
   teamBeta: {
     key: 'teamBeta',
     description: 'Team pages in the router (legacy VITE_FEATURE_FLAG_TEAM_BETA)',

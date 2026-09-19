@@ -21,9 +21,7 @@ const isPrivateRequest = (url) =>
 const isCacheableStaticAsset = (request, url) =>
   url.origin === self.location.origin &&
   ['style', 'script', 'font', 'image'].includes(request.destination) &&
-  (url.pathname.startsWith('/assets/') ||
-    url.pathname.startsWith('/mascot/') ||
-    url.pathname === '/favicon.ico');
+  (url.pathname.startsWith('/assets/') || url.pathname === '/favicon.ico');
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS)));

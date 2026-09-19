@@ -45,17 +45,6 @@ vi.mock('@/config/navigation.config', () => ({
   NAV_ITEMS: [],
 }));
 
-vi.mock('@/features/mascot', () => ({
-  EngMascot: () => null,
-}));
-
-// AppShell imports the hook from its own module rather than the barrel, so the mascot
-// component can stay in a lazy chunk. Mocking only the barrel would let the real hook
-// run against the store mocks below.
-vi.mock('@/features/mascot/useMascotEvents', () => ({
-  useMascotEvents: vi.fn(),
-}));
-
 vi.mock('@/core/learning', () => ({
   useLearningStore: vi.fn(() => ({ xp: 0, streak: 0, level: 1, studySessions: [] })),
 }));

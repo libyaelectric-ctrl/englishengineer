@@ -30,7 +30,8 @@ export const QuickAITab = ({ initialDraft, status, onStatusChange }: QuickAITabP
     };
   }, []);
 
-  // Sync draft input when initialDraft prop changes (e.g. from Mascot Quick AI button)
+  // Sync the draft input when the `initialDraft` prop changes (a caller passing in a
+  // prefilled prompt, e.g. from a deep link).
   useEffect(() => {
     if (initialDraft) {
       setInput(initialDraft);
