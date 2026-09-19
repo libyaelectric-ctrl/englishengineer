@@ -245,8 +245,11 @@ const scanInteractive = () => {
     seen.add(key);
 
     // Bring the element into view the way a user or a driving agent would have to
-    // before judging it: an element below the fold is not yet a bug.
-    node.scrollIntoView({ block: 'center', inline: 'nearest' });
+    // before judging it: an element below the fold is not yet a bug. `behavior:
+    // 'instant'` is required — the app sets `scroll-behavior: smooth` on `html`
+    // (src/index.css:135), and hit-testing mid-animation reports the element's
+    // in-flight position, which shows up as phantom "covered" results.
+    node.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
     let rect = node.getBoundingClientRect();
     let centre = { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
     const inViewport = () =>
@@ -313,8 +316,26 @@ const scanInteractive = () => {
 
   window.scrollTo(startScroll.x, startScroll.y);
 
+  // `document.scrollingElement` cannot report horizontal overflow here: `html` has
+  // `overflow-x: hidden` (src/index.css:138), which swallows the overflow and makes
+  // the whole-page metric read 0 while a control sits off-screen. So look for
+  // elements that clip their own content horizontally instead.
+  const clippedX = [...document.querySelectorAll('*')]
+    .filter((element) => {
+      const style = getComputedStyle(element);
+      if (style.overflowX !== 'hidden' && style.overflowX !== 'clip') return false;
+      if (element.clientWidth < 60 || element.clientHeight < 24) return false;
+      return element.scrollWidth > element.clientWidth + 4;
+    })
+    .slice(0, 6)
+    .map((element) => ({
+      selector: describe(element),
+      hiddenPx: element.scrollWidth - element.clientWidth,
+    }));
+
   return {
     route: location.pathname,
+    clippedX,
     interactive: nodes.length,
     horizontalOverflow: Math.max(
       0,
@@ -339,8 +360,14 @@ const listTabs = () => {
 
 /**
  * Closes a full-viewport fixed layer (drawer/modal scrim) by clicking it, the same
- * gesture its handler expects. Without this, one stray scrim makes every element
- * behind it read as "covered" and the sweep reports hundreds of false overlaps.
+ * gesture its own handler expects. Without this, one stray scrim makes every
+ * element behind it read as "covered" and the sweep reports hundreds of false
+ * overlaps.
+ *
+ * It deliberately does NOT press Escape: `AppShell` binds Escape to
+ * `toggleSidebar` (src/layouts/AppShell.tsx:41), so Escape *opens* the mobile
+ * drawer and its `aria-label="Close"` scrim — the opposite of dismissing a layer
+ * (docs/TECH_DEBT.md, TD-029).
  */
 const closeOverlays = () => {
   for (const node of document.querySelectorAll('button, [role="presentation"], div')) {
@@ -427,12 +454,11 @@ const completeOnboarding = async (page) => {
 
 /** Drops transient overlays (menus, drawer scrims) so a scan sees the resting page. */
 const settle = async (page) => {
-  await page.keyboard.press('Escape').catch(() => {});
-  await page.waitForTimeout(150);
-  const closed = await page.evaluate(closeOverlays).catch(() => false);
-  if (closed) await page.waitForTimeout(350);
-  await page.keyboard.press('Escape').catch(() => {});
-  await page.waitForTimeout(150);
+  for (let pass = 0; pass < 2; pass += 1) {
+    const closed = await page.evaluate(closeOverlays).catch(() => false);
+    if (!closed) break;
+    await page.waitForTimeout(350);
+  }
 };
 
 const scanRoute = async (page, viewport, route) => {
@@ -520,6 +546,7 @@ const run = async () => {
             (sum, finding) => sum + finding.report.offCanvas.length,
             0
           );
+          const clippedX = findings.flatMap((finding) => finding.report.clippedX ?? []);
           console.log(
             `[hit-targets] ${viewport.label} ${route}: ` +
               `${routeCovered} covered, ${routeUnreachable} unreachable, ` +
@@ -528,6 +555,14 @@ const run = async () => {
               `${overflowMax}px horizontal overflow` +
               (findings.length > 1 ? ` (${findings.length} stages)` : '')
           );
+          for (const entry of clippedX.slice(0, 3)) {
+            const signature = `CLIPPED-X|${entry.selector}`;
+            if (printed.has(signature)) continue;
+            printed.add(signature);
+            console.error(
+              `[hit-targets]   CLIPPED-X ${entry.selector} hides ${entry.hiddenPx}px of its own content`
+            );
+          }
           for (const finding of findings) {
             // Dedupe by kind + element signature: the same covered button on every
             // tab panel is one finding, not five.
