@@ -233,7 +233,6 @@ const scanInteractive = () => {
   const clipped = [];
   const unreachable = [];
   const offCanvas = [];
-  const focusRevealed = [];
   const offscreenByDesign = [];
   const startScroll = {
     x: window.scrollX,
@@ -261,20 +260,11 @@ const scanInteractive = () => {
         offscreenByDesign.push({ broken: describe(node) });
         continue;
       }
-      // Off-canvas on focus (collapsed drawers) reveals itself when focused —
-      let revealed;
-      try {
-        node.focus({ preventScroll: true });
-        rect = node.getBoundingClientRect();
-        centre = { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
-        revealed = inViewport();
-      } catch {
-        revealed = false;
-      }
-      if (revealed) {
-        focusRevealed.push({ broken: describe(node) });
-        continue;
-      }
+      // Deliberately NOT focusing the element to reveal it: focusing a control can
+      // open a panel (the mascot's backdrop is a full-viewport button), which then
+      // covers the page and turns one interaction into hundreds of false "covered"
+      // results. Off-canvas is recorded by axis instead.
+      //
       // Off-screen horizontally means a closed drawer/panel (opened by its own
       // control) rather than a page that cannot be scrolled; only the vertical axis
       // describes content the user cannot reach.
@@ -335,7 +325,6 @@ const scanInteractive = () => {
     offCanvas,
     scrim,
     clipped,
-    focusRevealed,
     offscreenByDesign,
   };
 };
@@ -523,10 +512,6 @@ const run = async () => {
           unreachable += routeUnreachable;
           clipped += routeClipped;
           const overflowMax = Math.max(0, ...findings.map((f) => f.report.horizontalOverflow));
-          const focusRevealed = findings.reduce(
-            (sum, finding) => sum + finding.report.focusRevealed.length,
-            0
-          );
           const offscreen = findings.reduce(
             (sum, finding) => sum + finding.report.offscreenByDesign.length,
             0
@@ -538,8 +523,8 @@ const run = async () => {
           console.log(
             `[hit-targets] ${viewport.label} ${route}: ` +
               `${routeCovered} covered, ${routeUnreachable} unreachable, ` +
-              `${routeClipped} clipped, ${focusRevealed} focus-revealed, ` +
-              `${offscreen} off-canvas-by-design, ${offCanvas} in closed drawers, ` +
+              `${routeClipped} clipped, ${offscreen} off-canvas-by-design, ` +
+              `${offCanvas} in closed drawers, ` +
               `${overflowMax}px horizontal overflow` +
               (findings.length > 1 ? ` (${findings.length} stages)` : '')
           );
