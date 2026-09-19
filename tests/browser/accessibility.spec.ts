@@ -75,20 +75,19 @@ test.describe('Keyboard Navigation', () => {
   test('Escape key closes modal/overlay elements', async ({ page }) => {
     await page.goto('/');
 
-    // Open a modal if present
-    const modalTrigger = page.locator('[data-testid*="mascot"], [aria-label*="mascot"]').first();
-    if (await modalTrigger.isVisible()) {
-      await modalTrigger.click();
-      await page.waitForTimeout(300);
+    // The landing navbar's language listbox is a real overlay on the public page: it takes
+    // focus when it opens and closes on Escape. This used to reach for the mascot launcher,
+    // which is gone - and which never rendered on `/` anyway (it lived in the dashboard
+    // shell), so the old body was skipped silently and asserted nothing.
+    const trigger = page.locator('button[aria-haspopup="listbox"]').first();
+    await trigger.click();
 
-      // Press Escape
-      await page.keyboard.press('Escape');
+    const listbox = page.getByRole('listbox');
+    await expect(listbox).toBeVisible();
 
-      // Modal should be closed
-      const modal = page.locator('[role="dialog"]');
-      const isVisible = await modal.isVisible().catch(() => false);
-      expect(isVisible).toBe(false);
-    }
+    await page.keyboard.press('Escape');
+
+    await expect(listbox).toBeHidden();
   });
 });
 
