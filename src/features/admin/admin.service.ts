@@ -122,7 +122,7 @@ export const AdminService = {
       if (!base) return EMPTY_STATS;
 
       const authHeaders = await getBackendAuthHeaders();
-      const response = await fetch(`${base}/api/admin/stats`, {
+      const response = await fetch(`${base}/api/v1/admin/stats`, {
         method: 'GET',
         headers: authHeaders,
       });
@@ -172,7 +172,7 @@ export const AdminService = {
       if (!base) return [];
 
       const authHeaders = await getBackendAuthHeaders();
-      const response = await fetch(`${base}/api/admin/audit-logs?limit=${limit}`, {
+      const response = await fetch(`${base}/api/v1/admin/audit-logs?limit=${limit}`, {
         method: 'GET',
         headers: authHeaders,
       });
