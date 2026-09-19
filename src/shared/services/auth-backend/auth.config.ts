@@ -48,13 +48,18 @@ const isSupabaseKeyValid = (key: string | null): boolean => {
 };
 
 export const AUTH_CONFIG: {
-  requestedProvider: 'local' | 'supabase';
+  requestedProvider: 'local' | 'supabase' | 'firebase';
   supabase: SupabaseReadyConfig;
   isSupabaseReady: boolean;
   isProduction: boolean;
   localAuthAllowed: boolean;
 } = {
-  requestedProvider: env?.VITE_AUTH_PROVIDER === 'supabase' ? 'supabase' : 'local',
+  requestedProvider:
+    env?.VITE_AUTH_PROVIDER === 'supabase'
+      ? 'supabase'
+      : env?.VITE_AUTH_PROVIDER === 'firebase'
+        ? 'firebase'
+        : 'local',
   supabase: {
     url: env?.VITE_SUPABASE_URL || null,
     anonKey: env?.VITE_SUPABASE_ANON_KEY || null,
@@ -62,8 +67,11 @@ export const AUTH_CONFIG: {
     urlValid: isSupabaseUrlValid(env?.VITE_SUPABASE_URL ?? null),
     keyValid: isSupabaseKeyValid(env?.VITE_SUPABASE_ANON_KEY ?? null),
   },
+  // Readiness is a property of Supabase's own credentials, not of which provider signs
+  // users in: production signs in with Firebase and still has to read and write the
+  // Supabase-backed tables (team, admin, knowledge pool). Gating this on
+  // `VITE_AUTH_PROVIDER === 'supabase'` silently disabled all of those code paths.
   isSupabaseReady: Boolean(
-    env?.VITE_AUTH_PROVIDER === 'supabase' &&
     isSupabaseUrlValid(env?.VITE_SUPABASE_URL ?? null) &&
     isSupabaseKeyValid(env?.VITE_SUPABASE_ANON_KEY ?? null)
   ),
