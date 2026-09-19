@@ -25,6 +25,8 @@ import {
   User,
 } from 'lucide-react';
 
+import { isFeatureEnabled } from '@/shared/feature-flags/featureFlags';
+
 // Internal - used by NAV_ITEMS and tested in navigation.config.test.ts
 export const SKILL_NAV_ITEMS = [
   { label: 'Vocabulary', href: '/vocabulary', icon: BookMarked, feature: 'vocabulary' },
@@ -61,5 +63,7 @@ export const NAV_ITEMS = [
   { label: 'Skills', href: null, icon: Layers3, children: SKILL_NAV_ITEMS },
   { label: 'Tools', href: null, icon: BriefcaseBusiness, children: TOOLS_NAV_ITEMS },
   { label: 'Profile', href: '/profile', icon: User },
-  { label: 'Team', href: '/team', icon: User, comingSoon: false },
+  // `/team` redirects to the dashboard while `teamBeta` is off (router.tsx), so the
+  // entry has to say "soon" instead of dropping the user on another page.
+  { label: 'Team', href: '/team', icon: User, comingSoon: !isFeatureEnabled('teamBeta') },
 ] as const;
