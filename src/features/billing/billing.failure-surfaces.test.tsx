@@ -160,6 +160,53 @@ const CODE_LESS_ENVELOPES: { shape: string; raw: string; make: () => Response }[
   },
 ];
 
+/**
+ * The promises the refreshes a mounted page started returned.
+ *
+ * `isLoading` has exactly one producer in the app: the store's `initializeBilling` and
+ * `refreshBilling`, both of which go through `fetchSubscription` (`billing.store.ts`).
+ * Recording those two actions' promises therefore records every request that can raise the
+ * flag. Re-issuing a refresh to have something to await instead would be wrong —
+ * `fetchSubscription` clears `error`/`errorCode` on entry, so it would wipe the failure a
+ * test had just seeded.
+ */
+const inFlightRefreshes: Promise<unknown>[] = [];
+
+const trackStoreRefreshes = (): void => {
+  const track =
+    <A extends unknown[]>(action: (...args: A) => Promise<void>) =>
+    (...args: A): Promise<void> => {
+      const promise = action(...args);
+      // A rejected refresh is still a settled one: fold it, so awaiting never throws here.
+      inFlightRefreshes.push(promise.catch(() => undefined));
+      return promise;
+    };
+
+  const { initializeBilling, refreshBilling } = useBillingStore.getState();
+  useBillingStore.setState({
+    initializeBilling: track(initializeBilling),
+    refreshBilling: track(refreshBilling),
+  });
+};
+
+trackStoreRefreshes();
+
+/**
+ * Waits until the billing refresh a mounted page started has settled: no polling, no timer.
+ *
+ * The refresh is a mount side effect, so a test cannot hold the promise the page holds — the
+ * store hands it over instead (see `trackStoreRefreshes`). Awaiting it inside `act` also
+ * flushes the re-render it caused. The check afterwards is a hard assertion rather than a
+ * deadline: if the flag is still up then some other path raised it, and the test should say so
+ * rather than wait and hope.
+ */
+const settleBillingRefresh = async (): Promise<void> => {
+  await act(async () => {
+    await Promise.all(inFlightRefreshes.splice(0));
+  });
+  expect(useBillingStore.getState().isLoading).toBe(false);
+};
+
 const queryClient = new QueryClient();
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -205,6 +252,12 @@ const renderPanelFromStore = (): HTMLElement => {
 };
 
 beforeEach(() => {
+  // Every page under test refreshes billing on mount, and that request must never leave this
+  // process: `fetchSubscription` falls back to the local subscription when it fails, so the
+  // backend's audit-outage answer (`stubAuditFailure`) leaves the store exactly where these
+  // tests expect it — while making the refresh settle on the microtask queue instead of on
+  // Render's response time. A test that seeds its own failure re-stubs `fetch` identically.
+  stubAuditFailure();
   // Neither the user nor the failure may be inherited from the test that ran before this
   // one. The store is module-level, so a failure left behind by an earlier test would be
   // rendered by the next test's surface as if the backend had just sent it.
@@ -215,6 +268,9 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  // A refresh this test never settled (a stub that never answers) must not be handed to the
+  // next one, where awaiting it would hang instead of failing.
+  inFlightRefreshes.length = 0;
   setAuthTokenGetter(null);
   vi.unstubAllGlobals();
   useBillingStore.getState().setBillingError(null);
@@ -281,8 +337,7 @@ describe('the same billing failure on both surfaces', () => {
 const configurePortal = async (): Promise<void> => {
   // The page refreshes billing on mount and that refresh owns `providerStatus`, so the
   // writes below have to land after it has settled or they are the ones that get replaced.
-  await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
-  await act(async () => undefined);
+  await settleBillingRefresh();
   useBillingStore.setState({
     providerStatus: {
       mode: 'backend',
@@ -513,8 +568,7 @@ describe('the upgrade control on every surface', () => {
 
   it('is still offered to a paid plan that lapsed', async () => {
     const page = renderProfilePage();
-    await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
-    await act(async () => undefined);
+    await settleBillingRefresh();
 
     await lapsePaidPlan('past_due');
 
@@ -527,16 +581,14 @@ describe('the upgrade control on every surface', () => {
     const spy = vi.spyOn(BillingService, 'startCheckout').mockResolvedValue(undefined);
     try {
       const profile = renderProfilePage();
-      await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
-      await act(async () => undefined);
+      await settleBillingRefresh();
       fireEvent.click(within(profile.container).getByRole('button', { name: /upgrade plan/i }));
       await waitFor(() => expect(spy).toHaveBeenCalled());
       const fromProfile = spy.mock.calls.at(-1)?.[2];
       profile.unmount();
 
       const billing = render(<BillingPage />, { wrapper });
-      await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
-      await act(async () => undefined);
+      await settleBillingRefresh();
       const panel = within(billing.container).getByTestId('billing-status-panel');
       fireEvent.click(within(panel).getByRole('button', { name: /upgrade plan/i }));
       await waitFor(() => expect(spy).toHaveBeenCalledTimes(2));
@@ -552,8 +604,7 @@ describe('the upgrade control on every surface', () => {
 
   it('gives every upgrade control on the billing page one wording', async () => {
     const billing = render(<BillingPage />, { wrapper });
-    await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
-    await act(async () => undefined);
+    await settleBillingRefresh();
     await lapsePaidPlan('canceled');
 
     const controls = [...billing.container.querySelectorAll('button, a')]
@@ -568,8 +619,7 @@ describe('the upgrade control on every surface', () => {
 
   it('shows one plan name on every surface for an id the catalogue does not know', async () => {
     const page = renderProfilePage();
-    await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
-    await act(async () => undefined);
+    await settleBillingRefresh();
 
     // `team` is a canonical plan id on the backend and has no entry in this catalogue; the
     // payload that carries a plan id is not validated on its way in.
@@ -591,8 +641,7 @@ describe('the upgrade control on every surface', () => {
     // page is included because it is the surface that used to throw on `plan.name` and
     // `plan.limits` instead of rendering.
     const billing = render(<BillingPage />, { wrapper });
-    await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
-    await act(async () => undefined);
+    await settleBillingRefresh();
     useBillingStore.setState({
       subscription: { ...useBillingStore.getState().subscription, planId: 'team' },
     });
@@ -613,8 +662,7 @@ describe('the upgrade control on every surface', () => {
 
     for (const testCase of cases) {
       const page = renderProfilePage();
-      await waitFor(() => expect(useBillingStore.getState().isLoading).toBe(false));
-      await act(async () => undefined);
+      await settleBillingRefresh();
 
       useBillingStore.setState({
         subscription: {
