@@ -28,3 +28,25 @@ The numerical ceiling is a regression guard, not a claim that the remaining
 suppressions are resolved. High-impact render functions remain scheduled for
 component extraction during the visual phase, where screenshot and browser gates
 can be applied without bypassing the required UI workflow.
+
+## Dead code — measured, not yet enforced (2026-09-19)
+
+`knip.json` checks `files,dependencies` only, so "no dead code" has so far meant
+"no unreachable file and no unused dependency". The wider check is a different
+number, and worth recording before someone quotes the narrow one:
+
+```bash
+npx knip --include files,exports,types,duplicates
+```
+
+- **153 unused exports.** The large majority are barrel re-exports (`src/**/index.ts`)
+  and constants that only tests or newer code paths consume, so the count is a
+  measurement of surface area, not of 153 deletions. Clearing it is a lint-rule
+  change plus a reviewed sweep, and it should not be done as a drive-by cleanup:
+  a barrel export is what an unmigrated consumer imports.
+- Turning `exports` on in `knip.json` without that sweep would make the check red on
+  day one, which is how a useful gate gets ignored (see TD-023's "check that cries
+  wolf" note in `scripts/check-freebuff-refs.mjs`).
+
+Next step, when it is scheduled: add `exports` to `include`, delete in batches of
+one feature, and let each batch's own tests be the proof.

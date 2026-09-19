@@ -299,6 +299,15 @@ then tail the log. Implemented on 2026-08-29.
 > Team `engineer-os` is on the Hobby plan after our Pro (planIteration "plus") subscription expired/was cancelled intentionally — no payment is due. Since then **every** new deployment fails instantly with `BUILD_FAILED: Resource provisioning failed`, including `--prebuilt` static uploads and `redeploy` of previously-READY artifacts (e.g. dpl_F8f6iCB5n6H4y5SEBmHGeDT7Kysi, eng-vox project prj_sgbF8SlLw8pANE1BXQ9wBxMx8sYr; also affects our second project, so it is team-wide). The team's `resourceConfig` still reads `buildMachine: {"default": "standard"}` (the Pro build pool), and we cannot reset it: PATCH `/v9/teams/team_fqlw3Z1XiyBE5gxdVV12WDaM` → `400 pro_plan_required`. Project-level `resourceConfig` similarly keeps `buildMachineSelection: "fixed"` even after PATCH. Please reset the team's build-machine config to the free/Hobby pool so deployments can provision again.
 > **Found during:** 2026-09-18 full-repo re-audit.
 
+### TD-024: Production `VITE_AI_PROXY_URL` points at a namespace the backend does not serve
+
+**File:** Vercel project env (symptom site: `src/shared/services/ai-proxy.config.ts`)
+**Issue:** The production deployment was built with `VITE_AI_PROXY_URL=https://englishengineer-backend.onrender.com/api/ai`, read straight out of the deployed bundle. The backend registers every route through the v1 adapter (`backend/src/app.ts:452` mounts `/api/v1`, the AI routes are registered at `app.ts:629`), so `/api/ai/*` does not exist. Live proof: `GET /api/v1/ai/analytics` → 401 (route exists, auth required) while `GET /api/ai/analytics` → 404 `route_not_found`. The client asks for `/api/ai/coach`, `/api/ai/analytics`, … so every AI call failed and fell back to the mock provider, and the admin surfaces built on the same string (`/api/admin/stats`, `/api/admin/audit-logs`, `/api/ai/analytics/admin`) returned 404 as well.
+**Impact:** AI coach, writing review, assessment feedback, role-play and AI analytics silently degraded in production; the admin dashboard never showed system stats or audit logs.
+**Effort:** 0.2 days (repo side, done); owner action for the env value.
+**Action:** `ai-proxy.config.ts` now normalises a legacy `/api/ai` base to `/api/v1/ai` and logs a warning, and the two admin fetches were corrected to `/api/v1/...`. **Owner:** set `VITE_AI_PROXY_URL=https://englishengineer-backend.onrender.com/api/v1/ai` in the Vercel project so the warning stops firing.
+**Found during:** 2026-09-19 full-repo + live-surface audit (wrote it up while production was frozen on the 2026-09-13 build).
+
 ## Tracking
 
 | ID     | Priority | Status      | Assigned      | Due Date   |
@@ -325,15 +334,16 @@ then tail the log. Implemented on 2026-08-29.
 | TD-019 | Medium   | ✅ Resolved | TBD           | 2026-08-29 |
 | TD-020 | Medium   | Resolved    | TBD           | TBD        |
 | TD-023 | High     | 🔴 Blocked  | account owner | 2026-09-25 |
+| TD-024 | High     | ✅ Resolved | TBD           | 2026-09-19 |
 
 ## Stats
 
-- **Total Items:** 22
-- **Resolved:** 19 (86%)
-- **Partially Resolved:** 1 (5%)
-- **Open:** 1 (5%)
-- **Blocked (external):** 1 (5%)
+- **Total Items:** 23
+- **Resolved:** 20 (87%)
+- **Partially Resolved:** 1 (4%)
+- **Open:** 1 (4%)
+- **Blocked (external):** 1 (4%)
 
 ## Last Updated
 
-- **Date:** 2026-09-18
+- **Date:** 2026-09-19
