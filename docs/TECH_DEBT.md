@@ -308,6 +308,15 @@ then tail the log. Implemented on 2026-08-29.
 **Action:** `ai-proxy.config.ts` now normalises a legacy `/api/ai` base to `/api/v1/ai` and logs a warning, and the two admin fetches were corrected to `/api/v1/...`. **Owner:** set `VITE_AI_PROXY_URL=https://englishengineer-backend.onrender.com/api/v1/ai` in the Vercel project so the warning stops firing.
 **Found during:** 2026-09-19 full-repo + live-surface audit (wrote it up while production was frozen on the 2026-09-13 build).
 
+### TD-025: The onboarding wizard's panes overlapped below `lg`, so taps picked the wrong option
+
+**File:** `src/features/profile/NeuralOrbPanel.tsx`
+**Issue:** Each pane forced its tile grid to `h-[calc(100%-2.1rem)]` while the panel itself was a fixed `100dvh-7rem` box whose two sections split the leftover height. Below `lg` the sections stack, so each got roughly half of that height while its grid still declared the full pane height: the discipline grid's last rows spilled out of their section and the language section, later in DOM order and opaque, painted over them. Measured at the Freebuff Preview tab's own 439x672 viewport by asking `document.elementFromPoint` at each tile's centre: "Endüstri Mühendisliği" resolved to the Arabic language button, "Makine Mühendisliği" to Dutch, "Mekatronik / Robotik" to English and "Yazılım Mühendisliği" to **German**. Picking Software Engineering therefore switched the interface language to German and left the discipline unset (with the `İleri` button disabled). At 390x844 those tiles were unreachable, `elementFromPoint` returning null. Desktop (1280x800) was unaffected, which is why it survived review.
+**Impact:** On any phone-sized viewport the onboarding gate could not be completed as intended: four of ten disciplines were untappable and the app language changed on the taps. It also poisoned DOM-driven preview and verification work: the click coordinates were correct, the element under them was not, which read as a tooling fault until it was measured here.
+**Effort:** 0.3 days (found while root-causing a mis-targeted preview click).
+**Action:** The shell is now a flex column whose `main` is the single scroll region (header and footer pinned with `shrink-0`), and both grids are content-sized with `content-between`, which keeps the old airy desktop rhythm without a fixed height, so no pane can paint over its sibling and every choice stays reachable and hit-testable. Guard: `node scripts/check-onboarding-layout.mjs [url] [viewports] [discipline]` hit-tests all 25 choices at their own centres and asserts that picking a discipline never moves the language selection; it fails on the pre-fix layout at 390x844 and 439x672, and passes after the fix at 390x844, 439x672 and 1280x800.
+**Found during:** 2026-09-19 preview investigation (symptom first seen as a preview click that landed on a language button).
+
 ## Tracking
 
 | ID     | Priority | Status      | Assigned      | Due Date   |
@@ -335,11 +344,12 @@ then tail the log. Implemented on 2026-08-29.
 | TD-020 | Medium   | Resolved    | TBD           | TBD        |
 | TD-023 | High     | 🔴 Blocked  | account owner | 2026-09-25 |
 | TD-024 | High     | ✅ Resolved | TBD           | 2026-09-19 |
+| TD-025 | High     | ✅ Resolved | TBD           | 2026-09-19 |
 
 ## Stats
 
-- **Total Items:** 23
-- **Resolved:** 20 (87%)
+- **Total Items:** 24
+- **Resolved:** 21 (88%)
 - **Partially Resolved:** 1 (4%)
 - **Open:** 1 (4%)
 - **Blocked (external):** 1 (4%)
