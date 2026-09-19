@@ -2,6 +2,7 @@ import { BookOpen, BriefcaseBusiness, Home, Map, User } from 'lucide-react';
 
 import { NavLink } from 'react-router-dom';
 
+import { useHasBottomActionBar } from '@/shared/stores/bottom-action-bar.store';
 import { cn } from '@/shared/utils/cn';
 
 import { NAVIGATION_TRANSLATIONS, useLocalizationStore } from '@/features/localization';
@@ -17,6 +18,12 @@ const ITEMS = [
 export const MobileBottomNavigation = () => {
   const language = useLocalizationStore((state) => state.language);
   const translations = NAVIGATION_TRANSLATIONS[language];
+  // A page's own bottom action bar pins to the same strip at the same breakpoint
+  // (`md:hidden`), so the two would overlap and one of them would swallow the
+  // other's taps. The bar claims the strip; the nav yields to it.
+  const hasBottomActionBar = useHasBottomActionBar();
+
+  if (hasBottomActionBar) return null;
 
   return (
     <nav

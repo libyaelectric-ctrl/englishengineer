@@ -19,7 +19,12 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
+import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 import { logger } from '@/shared/logger';
+import {
+  BOTTOM_ACTION_BAR_QUERY,
+  useBottomActionBar,
+} from '@/shared/stores/bottom-action-bar.store';
 import { addOfflineAction, getOfflineActionCount } from '@/shared/utils/indexed-db';
 
 import {
@@ -162,6 +167,12 @@ export const GrammarEnhancementPanel = ({
     typeof navigator === 'undefined' ? true : navigator.onLine
   );
   const [touchStart, setTouchStart] = useState<number | null>(null);
+
+  // The bar below is `md:hidden`; tell the shell to keep the mobile navigation out
+  // of the bottom strip for exactly as long as the bar is actually on screen
+  // (docs/TECH_DEBT.md, TD-027).
+  const isDrillBarVisible = useMediaQuery(BOTTOM_ACTION_BAR_QUERY);
+  useBottomActionBar(isDrillBarVisible);
 
   const bridge = useMemo(
     () => GrammarVocabularyBridge.extractVocabularyFromRule(selectedRule).slice(0, 12),
@@ -637,7 +648,10 @@ export const GrammarEnhancementPanel = ({
         </PanelShell>
       )}
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border-soft bg-background/95 p-2 shadow-xl backdrop-blur md:hidden">
+      <div
+        data-testid="grammar-drill-bar"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-border-soft bg-background/95 p-2 shadow-xl backdrop-blur md:hidden"
+      >
         <div className="mx-auto flex max-w-md gap-2">
           <Button onClick={() => recordUsage(true)} className="min-h-11 flex-1 rounded-[4px]">
             <Check className="h-3.5 w-3.5" /> Correct
