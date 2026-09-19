@@ -291,9 +291,14 @@ const checkViewport = async (browser, viewport, seenLabels) => {
       // actionability check aborts when another element covers the target, so
       // that refusal is a failure to record rather than an error to crash on.
       if (!disciplinePicked) {
+        // Plain case-insensitive substring, never a pattern built from the argv
+        // value: a `new RegExp(discipline)` here is a regex-injection finding
+        // (CodeQL `js/regex-injection`, high) and it also made `.` and `*` in an
+        // argument behave as wildcards rather than as characters.
+        const wanted = discipline.toLowerCase();
         const target =
           report.find((tile) => tile.index === disciplineIndex) ??
-          report.find((tile) => new RegExp(discipline, 'i').test(tile.label));
+          report.find((tile) => tile.label.toLowerCase().includes(wanted));
         if (target) {
           const languageBefore = report
             .filter((tile) => tile.index >= DISCIPLINES.length && tile.pressed)
