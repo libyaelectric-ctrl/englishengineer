@@ -38,7 +38,7 @@ jobs:
       # platform-tools only, which leaves the Gradle build to fail later for a
       # reason that has nothing to do with the app code.
       - name: Setup Android SDK
-        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4
         with:
           packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
       - name: Initialize Capacitor
