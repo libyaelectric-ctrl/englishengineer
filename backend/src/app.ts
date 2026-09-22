@@ -26,7 +26,7 @@ import { createBillingService, createStripeClient } from './billing-service.js';
 import type { BillingServiceConfig } from './billing-service.js';
 import { getPoolConfig, getPoolMetrics, startPoolHealthCheck } from './cache/connection-pool.js';
 import { initRedisCache } from './cache/redis-cache.service.js';
-import { supabaseProjectRef, toPublicHealth } from './config.js';
+import { toPublicHealth } from './config.js';
 import { ApiError, toErrorResponse } from './errors.js';
 import { registerExportRoutes } from './export-routes.js';
 import { registerGrammarRoutes } from './grammar-routes.js';
@@ -48,6 +48,7 @@ import type { UpstashRateLimitStore } from './rate-limit.js';
 import { registerReadingRoutes } from './reading-routes.js';
 import type { RouteRegistrar } from './route-registrar.js';
 import { registerSpeakingRoutes } from './speaking-routes.js';
+import { collectStoreChecks, hasStoreOutage } from './store-health.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
 import { createSubscriptionRepository } from './subscription-repository.js';
 import { createMetricsRepository } from './supabase-metrics-repository.js';
@@ -86,127 +87,6 @@ const SECURITY_HEADERS = {
   hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
   referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
   crossOriginEmbedderPolicy: false,
-};
-
-/**
- * The table this probe reads. It has to be a table a migration actually creates, and one
- * the runtime depends on, so that "the store answered" means "the store this service uses
- * answered". `subscription_status` is both: it is written on every checkout and webhook, and
- * the billing repository reads it by `user_id`.
- */
-const SUPABASE_PROBE_TABLE = 'subscription_status';
-
-/**
- * The URL and key the probe should use, in preference order.
- *
- * Workspace is where the runtime's data goes; the billing config carries the same key. Both
- * are preferred over the auth client, which is anon-keyed and cannot select from the tables
- * this service writes (RLS revokes them from every browser role).
- */
-const supabaseProbeTarget = (
-  config: BackendConfig
-): { url: string | null; key: string | null } => ({
-  url: config.workspace?.supabaseUrl ?? config.stripe?.supabaseUrl ?? null,
-  key: config.workspace?.supabaseServiceRoleKey ?? config.stripe?.supabaseServiceRoleKey ?? null,
-});
-
-/**
- * Probes the Supabase store in a way that is capable of failing.
- *
- * Two things used to make this check report `reachable: true` for a store that was refusing
- * every query, and both are corrected here:
- *
- *   1. It read `from('subscriptions')` — a table no migration creates. The real billing
- *      table is `subscription_status`, so PostgREST answered 404 to every probe.
- *   2. **supabase-js does not reject on an HTTP failure.** It *resolves* with
- *      `{ data: null, error }`, so awaiting the promise and never reading `error` turned a
- *      404 (or a 401, or a `42P01`) into a healthy report. That is the same silent-success
- *      shape that hid the billing outage — a boolean nobody could contradict.
- *
- * The probe therefore runs against the credentials the runtime actually writes with (the
- * service-role key, not the anon key, because `subscription_status` is revoked from every
- * browser role by RLS), inspects `error`, and treats a timeout as a failure. `reachable` is
- * false — and `/api/diagnostics` degrades to 503 — whenever the store errors, hangs, or
- * cannot be reached. `fetch` and the timeout are injected so a test can drive the probe —
- * including the timeout path — without touching the network or waiting five seconds.
- */
-export const checkSupabaseHealth = async (
-  config: BackendConfig,
-  checks: Record<string, unknown>,
-  health: { status: string; ok: boolean },
-  fetchImpl: typeof fetch = fetch,
-  timeoutMs = 5000
-) => {
-  const { url, key } = supabaseProbeTarget(config);
-  const projectRef = supabaseProjectRef(config);
-
-  // The ref is reported on every path: a store that answers is not the same as the store
-  // this service is *supposed* to answer from.
-  const unreachable = (error: string) => {
-    checks.supabase = { configured: true, reachable: false, projectRef, error };
-    health.status = 'degraded';
-    health.ok = false;
-  };
-
-  if (!url || !key) {
-    unreachable('Supabase is configured without a URL and service-role key to probe.');
-    return;
-  }
-
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  try {
-    const { createClient } = await import('@supabase/supabase-js');
-    const client = createClient(url, key, {
-      auth: { persistSession: false, autoRefreshToken: false },
-      global: { fetch: fetchImpl },
-    });
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      timer = setTimeout(
-        () => reject(new Error(`Supabase health check timed out after ${timeoutMs}ms`)),
-        timeoutMs
-      );
-    });
-    const probe = client.from(SUPABASE_PROBE_TABLE).select('user_id').limit(1);
-    // `error` is the whole point: a resolved promise here is not a working store.
-    const { error } = await Promise.race([probe, timeoutPromise]);
-    if (error) throw new Error(`${SUPABASE_PROBE_TABLE}: ${error.message}`);
-    checks.supabase = { configured: true, reachable: true, projectRef };
-  } catch (err: unknown) {
-    unreachable(err instanceof Error ? err.message : String(err));
-  } finally {
-    if (timer) clearTimeout(timer);
-  }
-};
-
-const checkUpstashHealth = async (
-  config: BackendConfig,
-  checks: Record<string, unknown>,
-  health: { status: string; ok: boolean }
-) => {
-  if (config.rateLimit?.storeMode !== 'upstash' || !config.rateLimit?.upstashUrl) return;
-  const TIMEOUT_MS = 5000;
-  try {
-    const timeoutPromise: Promise<Response> = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS)
-    );
-    const pingPromise = fetch(`${config.rateLimit.upstashUrl}/ping`, {
-      headers: { Authorization: `Bearer ${config.rateLimit.upstashToken}` },
-    });
-    const pingRes = (await Promise.race([pingPromise, timeoutPromise])) as globalThis.Response;
-    checks.rateLimit = { configured: true, reachable: pingRes.ok };
-    if (!pingRes.ok) {
-      health.status = 'degraded';
-      health.ok = false;
-    }
-  } catch (err: unknown) {
-    checks.rateLimit = {
-      configured: true,
-      reachable: false,
-      error: err instanceof Error ? err.message : String(err),
-    };
-    health.status = 'degraded';
-    health.ok = false;
-  }
 };
 
 interface CreateAppOpts {
@@ -585,10 +465,16 @@ const registerRoutes = (
   };
   const diagnosticsHandler = async (_request: Request, response: Response) => {
     const startTime = Date.now();
-    const health = toPublicHealth(config);
-    const checks: Record<string, unknown> = { ...health.checks };
-    if (config.supabase?.configured) await checkSupabaseHealth(config, checks, health, fetchImpl);
-    await checkUpstashHealth(config, checks, health);
+    // Same producer as `/api/health`, then the probe — so both endpoints describe the same
+    // stores with the same keys, and `reachable` can only come from an actual probe.
+    const base = toPublicHealth(config);
+    const storeChecks = await collectStoreChecks(config, { probe: true, fetchImpl });
+    const health = { ...base };
+    const checks: Record<string, unknown> = { ...base.checks, ...storeChecks };
+    if (hasStoreOutage(storeChecks)) {
+      health.status = 'degraded';
+      health.ok = false;
+    }
     const audit = getAuditLogStatus();
     checks.audit = audit;
     if (audit.required && audit.status !== 'ready') {

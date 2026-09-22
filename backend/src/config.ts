@@ -12,6 +12,7 @@ import {
   resolveWorkspace,
 } from './config-builders.js';
 import { hasText, toPositiveInteger } from './config-helpers.js';
+import { rateLimitStoreCheck, supabaseStoreCheck } from './store-health.js';
 
 type Env = Record<string, string | undefined>;
 
@@ -59,22 +60,16 @@ interface HealthCheck {
    * secret-derived field here: the value itself never leaves the process.
    */
   webhookConfigured?: boolean;
-  reachable?: boolean;
+  /**
+   * `null` means this endpoint did not probe the store — the liveness endpoint never pays
+   * for a round trip, and says so instead of implying a healthy store. Only a probe writes
+   * `true` or `false`; see `store-health.ts` for the single implementation both endpoints
+   * report from.
+   */
+  reachable?: boolean | null;
   error?: string;
   firebaseProjectId?: string | null;
-  /**
-   * Which Supabase project this process resolves to.
-   *
-   * `configured` and `reachable` answer "is there a database and does it answer"
-   * — never "which one". That gap had a cost: this deployment had two Supabase
-   * projects with the same tables, so a migration applied to the one the
-   * dashboard opens by default reported success while the running backend kept
-   * failing against the other, and nothing outside the process could tell the
-   * two apart. A project ref is public (it is in the frontend's own bundle and
-   * in every dashboard URL), so it can be reported like `firebaseProjectId`
-   * already is, and it makes the comparison one request instead of a guess.
-   * Null when nothing is configured or the URL is not a hosted project URL.
-   */
+  /** Which Supabase project this process resolves to (`store-health.ts`). */
   projectRef?: string | null;
 }
 
@@ -93,22 +88,6 @@ interface PublicHealth {
   };
   mockMode: boolean;
 }
-
-/**
- * The project ref behind the Supabase URL this process uses.
- *
- * The audit and billing stores are resolved from `workspace`, the auth client
- * from `auth`; both come from the same `SUPABASE_URL`, and the workspace one is
- * preferred because it is where the data actually goes. Anything that is not a
- * hosted project URL — a self-hosted PostgREST, a custom domain — has no ref to
- * name and reports null rather than a guess.
- */
-export const supabaseProjectRef = (config: BackendConfig): string | null => {
-  const raw = config.workspace?.supabaseUrl ?? config.auth?.supabaseUrl;
-  if (!raw) return null;
-  const match = /^https?:\/\/([a-z0-9]{20})\.supabase\.(?:co|in)/i.exec(raw.trim());
-  return match ? match[1] : null;
-};
 
 export const toPublicHealth = (config: BackendConfig): PublicHealth => {
   // firebaseProjectId is not a secret — it's already public in the
@@ -142,8 +121,10 @@ export const toPublicHealth = (config: BackendConfig): PublicHealth => {
             ? false
             : hasText(config.stripe.webhookSecret),
     },
-    supabase: { configured: config.supabase.configured, projectRef: supabaseProjectRef(config) },
-    rateLimit: { configured: config.rateLimit.storeMode === 'upstash' },
+    // Both store checks come from the module `/api/diagnostics` also reports from, so the
+    // two endpoints cannot describe different databases or different configurations.
+    supabase: supabaseStoreCheck(config),
+    rateLimit: rateLimitStoreCheck(config),
     auth: {
       configured: firebaseConfigured || supabaseAuthConfigured,
       firebaseProjectId: config.auth?.firebaseProjectId || null,
