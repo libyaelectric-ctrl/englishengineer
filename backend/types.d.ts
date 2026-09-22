@@ -132,7 +132,7 @@ export interface BackendConfig {
   billing: BillingConfig;
   dodo: DodoConfig;
   stripe: StripeConfig;
-  supabase: { configured: boolean };
+  supabase: { configured: boolean; expectedProjectRef: string | null };
   vocabulary: VocabularyConfig;
   workspace: WorkspaceConfig;
   rateLimit: RateLimitConfig;

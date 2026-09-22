@@ -159,9 +159,40 @@ export const resolveBilling = (env: Env): BillingConfig => {
   return { provider: requested as BillingProviderName };
 };
 
+/**
+ * The Dodo webhook signing secret, under the name the deployment actually set.
+ *
+ * `DODO_PAYMENTS_WEBHOOK_KEY` is the name this file documents and the only one the runbook
+ * lists, but the Stripe integration a few lines below reads `STRIPE_WEBHOOK_SECRET`. A
+ * service configured by analogy therefore ends up holding `DODO_PAYMENTS_WEBHOOK_SECRET`,
+ * which this builder read as null — and null is not a startup error. It is a 503 on every
+ * webhook delivery (`processWebhook` in `dodo-billing-provider.ts`), which means the provider
+ * charges the customer and no plan is ever granted. Nothing in the obvious places says so:
+ * checkout starts, the API key and product ids are set, `/api/health` reported billing as
+ * configured, and the customer simply stayed on Free.
+ *
+ * So the alias is read, and reading it is announced — the warning is the difference between a
+ * silent misconfiguration and a rename the operator can act on. `DODO_PAYMENTS_WEBHOOK_KEY`
+ * still wins whenever it is set, so the fix is still to use the documented name.
+ */
+const DODO_WEBHOOK_SECRET_ALIAS = 'DODO_PAYMENTS_WEBHOOK_SECRET';
+
+const resolveDodoWebhookSecret = (env: Env): string | null => {
+  const documented = stripWhitespace(env.DODO_PAYMENTS_WEBHOOK_KEY);
+  if (documented) return documented;
+
+  const alias = stripWhitespace(env[DODO_WEBHOOK_SECRET_ALIAS]);
+  if (!alias) return null;
+
+  logger.warn(
+    `${DODO_WEBHOOK_SECRET_ALIAS} is being used as the Dodo webhook signing secret because DODO_PAYMENTS_WEBHOOK_KEY is not set. Rename it: DODO_PAYMENTS_WEBHOOK_KEY is the documented name, and the Stripe integration's STRIPE_WEBHOOK_SECRET is what makes the other one look correct.`
+  );
+  return alias;
+};
+
 export const resolveDodo = (env: Env): DodoConfig => {
   const apiKey = stripWhitespace(env.DODO_PAYMENTS_API_KEY);
-  const webhookSecret = stripWhitespace(env.DODO_PAYMENTS_WEBHOOK_KEY);
+  const webhookSecret = resolveDodoWebhookSecret(env);
   const environment = env.DODO_PAYMENTS_ENVIRONMENT === 'test' ? 'test' : 'live';
   const baseUrl =
     environment === 'test' ? 'https://test.dodopayments.com' : 'https://live.dodopayments.com';
@@ -284,8 +315,13 @@ export const resolveVocabulary = (env: Env): VocabularyConfig => ({
   rateLimitMax: toPositiveInteger(env.VOCABULARY_LOOKUP_RATE_LIMIT_MAX, 60),
 });
 
-export const resolveSupabase = (env: Env): { configured: boolean } => ({
+export const resolveSupabase = (
+  env: Env
+): { configured: boolean; expectedProjectRef: string | null } => ({
   configured: [env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY].every(hasText),
+  // The project this deployment *must* be on. Pinning it is what turns "we are pointed at a
+  // database" into "we are pointed at the right database" — see the boot guard in app.ts.
+  expectedProjectRef: trimEnv(env.EXPECTED_SUPABASE_PROJECT_REF)?.toLowerCase() ?? null,
 });
 
 export const resolveWorkspace = (env: Env): WorkspaceConfig => {

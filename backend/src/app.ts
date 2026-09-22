@@ -48,7 +48,7 @@ import type { UpstashRateLimitStore } from './rate-limit.js';
 import { registerReadingRoutes } from './reading-routes.js';
 import type { RouteRegistrar } from './route-registrar.js';
 import { registerSpeakingRoutes } from './speaking-routes.js';
-import { collectStoreChecks, hasStoreOutage } from './store-health.js';
+import { collectStoreChecks, hasStoreOutage, projectRefPin } from './store-health.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
 import { createSubscriptionRepository } from './subscription-repository.js';
 import { createMetricsRepository } from './supabase-metrics-repository.js';
@@ -98,6 +98,50 @@ interface CreateAppOpts {
   rateLimitStore?: UpstashRateLimitStore | null;
 }
 
+/**
+ * Refuses to start when this process resolves to a Supabase project other than the pinned one.
+ *
+ * `supabase.configured` only ever meant "a URL and a service key are present", so a backend
+ * pointed at the wrong project — the second project a hosting integration creates by itself is
+ * the usual way — started happily, answered every health check and failed every write. That is
+ * the state that made the 2026-09-19 incident unattributable: a migration applied to the
+ * dashboard's default project reported success while the running backend kept failing against
+ * another one, and only the row counts could tell the two databases apart.
+ *
+ * The pin is opt-in: an unset `EXPECTED_SUPABASE_PROJECT_REF` warns in production and starts
+ * anyway, because a guard that cannot be left off would just be another way for a deployment
+ * to go down. Outside production a mismatch warns too — a staging copy pointed at the other
+ * project is a legitimate thing to want.
+ */
+const guardSupabaseProjectPin = (config: BackendConfig): void => {
+  const pin = projectRefPin(config);
+
+  if (pin.matches === false) {
+    const detail =
+      `EXPECTED_SUPABASE_PROJECT_REF is "${pin.expected}" but SUPABASE_URL resolves to ` +
+      `${pin.actual ? `"${pin.actual}"` : 'a URL with no project ref'}.`;
+    if (config.environment === 'production' && process.env.NODE_ENV !== 'test') {
+      throw new Error(
+        `${detail} Refusing to start: this process would read and write the other project's ` +
+          'tables, where the data and the migration history are not the ones anyone maintains. ' +
+          'Point SUPABASE_URL at the pinned project, or update EXPECTED_SUPABASE_PROJECT_REF ' +
+          'if moving to this project was intentional.'
+      );
+    }
+    logger.warn(`${detail} Not production, so the service will start anyway.`);
+    return;
+  }
+
+  if (!pin.expected && config.environment === 'production') {
+    logger.warn(
+      'EXPECTED_SUPABASE_PROJECT_REF is not set, so this backend cannot tell the intended ' +
+        'Supabase project from another one holding the same tables. Set it to the project ref ' +
+        'inside SUPABASE_URL to make a misdirected migration fail at boot instead of silently. ' +
+        `Currently resolved: ${pin.actual ?? 'unrecognised'}.`
+    );
+  }
+};
+
 const setupMiddleware = (app: Express, config: BackendConfig) => {
   if (!config.appOrigin) {
     if (config.environment === 'production') {
@@ -122,6 +166,9 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
       'FIREBASE_PROJECT_ID is not set. Firebase-authenticated requests will fail in this environment.'
     );
   }
+
+  // Same class of fault as the Firebase check above, one layer down: the store identity.
+  guardSupabaseProjectPin(config);
 
   app.disable('x-powered-by');
   app.use(

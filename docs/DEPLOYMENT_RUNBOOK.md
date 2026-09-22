@@ -57,22 +57,153 @@ curl -H "Authorization: Bearer $METRICS_TOKEN" \
 
 ### Environment Variables
 
-Render dashboard → Environment:
+**`render.yaml` is the list.** `npm run verify:render-env` fails the build when the blueprint
+and `backend/src` disagree — a variable the code reads that the blueprint omits, and a
+variable the blueprint declares that nothing reads — and it refuses a literal value for
+anything named KEY/TOKEN/SECRET/PASSWORD/DSN, because those are `sync: false` and their value
+belongs in the Render dashboard rather than in git.
+
+The deployed service was configured by hand, so it is not necessarily the blueprint's output.
+What the blueprint covers, and what each omission costs:
 
 - `NODE_ENV=production`
+- `APP_ORIGIN`, `CORS_ALLOWED_ORIGINS` (the origins the browser is allowed to call from)
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY` (server-only; tenant authorization, audit, export and audio storage)
-- `SUPABASE_JWT_SECRET`, `SUPABASE_JWT_ISSUER`, `SUPABASE_JWT_AUDIENCE` (set all three when local Supabase JWT verification is enabled)
-- `METRICS_TOKEN` (required; protects both metrics and private diagnostics with Bearer auth)
-- `ENGINEEROS_INTERNAL_API_SECRET` + `ENGINEEROS_INTERNAL_SERVICE_ID` (set together for fixed internal service identity)
-- `ENGINEEROS_INTERNAL_SERVICE_EMAIL` and `ENGINEEROS_INTERNAL_SERVICE_ROLE` (optional service metadata)
+- `EXPECTED_SUPABASE_PROJECT_REF` (the project ref inside `SUPABASE_URL`. With it, a process pointed at a different project refuses to start; without it, production logs a warning on every boot and a misdirected migration only ever appears as "writes fail" behind a green `/api/health`. See the section below)
+- `SUPABASE_ANON_KEY` (read alongside the service key for local Supabase JWT verification)
+- `METRICS_TOKEN` (required; `/api/metrics` and `/api/diagnostics` answer 401 without it, and diagnostics is the only view of the audit store's real state)
+- `FIREBASE_PROJECT_ID` (non-secret; ID tokens are verified against Google's public JWKS, so no service-account key is needed — and nothing reads one)
 - `SPEAKING_AUDIO_BUCKET` (private Supabase Storage bucket; defaults to `speaking-audio`)
+- `BILLING_PROVIDER=dodo` (the code default is `stripe`, which this deployment does not sell: `/api/webhooks/dodo` would answer 404 while the live service serves it)
+- `BILLING_REPOSITORY=supabase` (`memory` loses every paid subscription on restart)
 - `DODO_PAYMENTS_API_KEY`
-- `DODO_PAYMENTS_WEBHOOK_SECRET`
-- `RATE_LIMIT_STORE=upstash`
-- `UPSTASH_REDIS_REST_URL`
-- `UPSTASH_REDIS_REST_TOKEN`
-- `AI_LEDGER_FILE` (optional) — AI kullanım ledger'ının NDJSON dosya yolu; ayarlanmazsa ve Supabase yapılandırılmamışsa in-memory ledger kullanılır (kalıcılık yok)
+- `DODO_PAYMENTS_WEBHOOK_KEY` (the name the code reads, `config-builders.ts:164`; a service configured with `…_WEBHOOK_SECRET` instead leaves `webhookSecret` null, and `processWebhook` refuses every delivery with 503 `dodo_webhook_not_configured` — `dodo-billing-provider.ts:440`. It fails closed, so nothing is granted on a forged signature, but a real payment then never activates its plan: the customer is charged at checkout and stays on Free)
+- `DODO_PRODUCT_JUNIOR_MONTHLY` … `DODO_PRODUCT_TEAM_ANNUAL` and `DODO_PRODUCT_TOPUP` (eleven ids: five plans × monthly/annual, plus the credit top-up; a missing one is a 503 on that plan's checkout and nothing else notices)
+- `DODO_PAYMENTS_ENVIRONMENT=live` (`test` points checkout at `test.dodopayments.com` while the live key stays in place, and the two only fail at the provider with a 401 nobody reads)
+- `RATE_LIMIT_STORE=upstash` + `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` (in production the store defaults to `upstash` and `validateRateLimitStore` throws when it is unconfigured, so a service missing these never finishes starting — this is not a degraded mode)
+- `AI_PROVIDER` and the key for that provider (`GEMINI_API_KEY` / `OPENAI_API_KEY` / `ANTHROPIC_API_KEY`; `AI_PROVIDER` defaults to `mock`, which answers with canned text and makes `/api/health` report `mockMode: true`)
+- `SENTRY_DSN` (optional; without it `initSentryIfConfigured` is a no-op)
+
+Deliberately absent, with the reason — the same text `npm run verify:render-env` prints:
+`SUPABASE_JWT_*` (only for local Supabase JWT verification, which this service does not use),
+`ENGINEEROS_INTERNAL_*` (internal service authentication is off), `STRIPE_*` (the inactive
+provider), `ALLOW_*` (development escape hatches — setting one here switches a production
+safety check off), and the tuning variables whose code default is the intended value —
+`AI_LEDGER_FILE` among them: AI kullanım ledger'ının NDJSON dosya yolu; ayarlanmazsa ve
+Supabase yapılandırılmamışsa in-memory ledger kullanılır (kalıcılık yok).
+
+## Which Supabase project is production
+
+`SUPABASE_URL` on the backend and `VITE_DATA_CDN_URL` on the frontend are the two places that
+name the project, and they are the only authoritative answer. As of 2026-09-22 the backend's
+value is:
+
+|            | project                                                   | why                                                                                                                                                       |
+| ---------- | --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| production | **`yljpagmnjhclieqjthdx`** (`supabase-aureolin-mountain`) | the account that owns it can administer it                                                                                                                |
+| former     | `wxabrwzitwsjtpmlvvqe`                                    | holds the pre-move copy of the data and the content bucket; nobody could reach its account, so it could be paused or deleted by a third party at any time |
+
+`/api/health` and `/api/diagnostics` both report `checks.supabase.projectRef` (the resolved
+project) and `checks.supabase.expectedProjectRef` (the pinned one) from the same
+`backend/src/store-health.ts`, so the two endpoints cannot name different databases — with
+`reachable: null` on the liveness path meaning "not probed" rather than "healthy".
+
+Set `EXPECTED_SUPABASE_PROJECT_REF` to **`yljpagmnjhclieqjthdx`**. With it, a backend whose
+`SUPABASE_URL` points somewhere else **refuses to start** (`backend/src/app.ts`, next to the
+`FIREBASE_PROJECT_ID` guard) instead of reading and writing another project's tables — the exact
+shape of the 2026-09-19 incident, where a migration applied to the dashboard's default project
+reported success while the running backend kept failing against a different one. Outside
+production a mismatch is a warning, and an unset pin never blocks a boot.
+
+The move carried the schema (every file in `supabase/migrations`, applied in filename order),
+the 107 rows that existed (46 `audit_logs`, 45 `stripe_processed_events`, 16
+`subscription_status`) and the `app-data` bucket (31 objects, 82 MB). It deliberately did **not**
+carry `user_progress_snapshots` (60 rows): its `user_id` is a uuid with a foreign key into
+`auth.users`, so those rows belong to the pre-Firebase identity model and no live code can read
+or write them — the app signs users in with Firebase, whose ids are not uuids. They remain in the
+former project.
+
+**Both projects carry the same schema, which is the trap this section exists for.** Applying a
+migration to the wrong one answers `Success. No rows returned` and changes nothing about the
+running service. Before applying anything, ask the database which one it is — the backend answers
+with `checks.supabase.projectRef` on `/api/health`, and `npm run apply:schema-identity` prints the
+project name and the row count of every table it tracks before it writes.
+
+## Database Migrations (Supabase)
+
+**No deploy step applies `supabase/migrations`.** Neither Vercel, Render, nor any workflow in
+`.github/workflows/` runs them against the project database — this repository keeps them as
+reviewed SQL, and an operator applies them. A migration that has not been applied by hand is a
+migration that does not exist at runtime, however green the branch is.
+
+### Apply
+
+The identity columns have a command of their own, which reports what it found, converts only
+what is wrong, and re-reads the database to prove it:
+
+```bash
+# A token needs no database password and no Docker: it goes through Supabase's own API.
+export SUPABASE_ACCESS_TOKEN=sbp_…          # Account → Access Tokens; full access, all projects
+export SUPABASE_PROJECT_REF=<project-ref>   # or let SUPABASE_URL / VITE_DATA_CDN_URL supply it
+npm run apply:schema-identity -- --check    # report only; changes nothing; non-zero if wrong
+npm run apply:schema-identity               # convert in one transaction, then verify
+```
+
+Without a token it falls back to a connection string — `POSTGRES_URL_NON_POOLING`, then
+`SUPABASE_DB_URL`, then `DATABASE_URL`, then `POSTGRES_URL` — and needs `psql` or Docker. It
+prefers the **direct** connection string (port 5432) over the pooler. Its conversion is the same
+`drop constraint` + `alter column … type text using …::text` that `202609190001` and
+`202609210000` perform, so applying either one is enough; both are idempotent and neither loses
+a row.
+
+**Read the first lines of its output before trusting the rest.** It prints the project ref and
+name and the row count of every table it tracks, because the wrong database is easy to reach and
+hard to notice: a second Supabase project with the same schema (a Vercel integration creates one)
+accepts every statement, answers `Success. No rows returned`, changes nothing, and leaves
+checkout broken. Empty counts on tables that should hold data mean the command is pointed at the
+wrong project — fix that before applying anything.
+
+The set applies to an empty project end to end as of 2026-09-22; three files had to be corrected
+first, and each one had been failing on every fresh environment without anyone noticing:
+`add_performance_indexes.sql` indexed `audit_logs(created_at)` (the column is `timestamp`),
+`202607100003_rls_tightening.sql` dropped a policy on `public.workspaces` before any migration
+created that table, and the same file declared owner-select policies on the two billing tables
+whose `user_id` becomes `text` — a comparison that cannot be made once the identity conversion has
+run, and which `202609210000` removes anyway.
+
+Every other migration still goes by hand:
+
+1. Supabase dashboard → SQL Editor (production project), then run the new files from
+   `supabase/migrations/` in filename order. Only the files not yet applied; each is written to
+   be idempotent, but order is what makes a `create table` and the `alter table` that corrects it
+   land in the right sequence.
+2. Verify the column types the runtime actually writes. Every one of these must be `text`:
+
+   ```sql
+   select table_name, column_name, data_type, is_nullable
+   from information_schema.columns
+   where table_schema = 'public'
+     and ((table_name = 'audit_logs'               and column_name = 'user_id')
+       or (table_name = 'subscription_status'      and column_name = 'user_id')
+       or (table_name = 'billing_customers'        and column_name = 'user_id')
+       or (table_name = 'ai_credit_consumptions'   and column_name = 'user_id'));
+   ```
+
+   These columns carry the Firebase uid (`payload.sub`, an opaque string). A `uuid` column, or a
+   foreign key into `auth.users`, rejects it at the first write and fails the audited action
+   closed — which reaches the customer as billing being unavailable, not as a schema error.
+
+3. Confirm the same statically before pushing: `npm run verify:schema-identity` reads the
+   migrations and fails on a `uuid` identity column. CI runs it in the Code Quality job.
+
+### Why the column type reaches the customer
+
+`audit_logs` sits in front of checkout: `backend/src/audit-log.ts` fails an audited action closed
+when the store cannot be written, returning 503 `audit_log_unavailable`. That is correct, and it
+means a wrong column type in the audit store is indistinguishable, from the customer's side, from
+a billing outage. `/api/health` still answers 200, the pricing page still renders, and the
+provider keys can all be right.
 
 ## Post-Deploy Checklist
 
@@ -81,6 +212,8 @@ Render dashboard → Environment:
 - [ ] Authenticated diagnostics returns 200 and reports audit status `ready`
 - [ ] Metrics rejects missing/query tokens and accepts the Bearer token
 - [ ] Production speaking upload rejects local storage fallback
+- [ ] Starting a checkout reaches the provider's hosted page (the audit store is in front of
+      checkout, so this is the only check that proves the identity columns are correct)
 - [ ] Login page loads
 - [ ] Google OAuth redirects correctly
 - [ ] API endpoints respond
@@ -157,3 +290,40 @@ Plan bazlı günlük (free: 3/gün) veya aylık (ücretli) AI limitleri `backend
 1. Verify Supabase project status
 2. Check env vars are set correctly
 3. Verify redirect URLs in Supabase dashboard
+
+### "Billing could not be started because the service is temporarily unavailable. Please try again in a few minutes."
+
+This sentence is generic on purpose: `src/features/billing/billing.failure-copy.ts` renders it for a
+failure it cannot tie to copy of its own — including `audit_log_unavailable`, which is the one that
+reaches customers while everything else looks healthy. "Try again in a few minutes" is therefore
+not always true, and it is never the whole story. Find the code rather than retrying.
+
+1. **Get the backend's error code.** Look in the browser's network tab for the failing billing
+   request (create-checkout / customer-portal / top-up) and read `error.code` in the response body.
+   The frontend receives it as `apiCode`; the sentence alone does not identify the cause.
+   - `audit_log_unavailable` → the audit store refused the write, and the audited action failed
+     closed in front of checkout. Go to step 2.
+   - `idempotency_store_unavailable` → the Redis/Upstash rate-limit or idempotency store is down.
+     Check `RATE_LIMIT_STORE`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`.
+   - `STRIPE_NOT_CONFIGURED` / `dodo_not_configured` / `STRIPE_PRICE_NOT_CONFIGURED` → provider
+     keys or price ids are missing. Check `DODO_PAYMENTS_API_KEY` and the plan price ids.
+   - no code at all → the failure never reached the backend's error envelope; check
+     `VITE_BILLING_API_URL` and the client console, which logs the unclassified failure in
+     development builds only.
+2. **Confirm the audit store** (this is the failure that hides behind a green `/api/health`):
+
+   ```bash
+   curl -H "Authorization: Bearer $METRICS_TOKEN" \
+     https://englishengineer-backend.onrender.com/api/diagnostics
+   ```
+
+   `audit.status` must be `ready`. `degraded` or `unavailable` with a `22P02` in the Render logs is
+   the identity mismatch below, not an outage.
+
+3. **Check the identity columns** — run the `select` from [Database Migrations](#database-migrations-supabase).
+   A `uuid` `user_id` in `audit_logs`, `subscription_status`, `billing_customers` or
+   `ai_credit_consumptions` means a migration was never applied; apply it, then re-run step 2. The
+   audit store recovers on its own on the next request, so a redeploy is not required.
+4. **Only then** treat it as a real outage: if diagnostics reports `audit.status: ready`, the
+   columns are `text` and the code is `audit_log_unavailable`, the store itself is unreachable —
+   check Supabase status and `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` on Render.

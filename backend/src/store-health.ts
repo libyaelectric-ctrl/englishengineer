@@ -22,12 +22,26 @@ import { logger } from './logger.js';
 
 /** The subset of the backend config these checks read. Structural, so config.ts can import this. */
 export interface StoreConfigView {
-  supabase?: { configured?: boolean } | undefined;
+  supabase?: { configured?: boolean; expectedProjectRef?: string | null } | undefined;
   workspace?: { supabaseUrl?: string | null; supabaseServiceRoleKey?: string | null } | undefined;
   stripe?: { supabaseUrl?: string | null; supabaseServiceRoleKey?: string | null } | undefined;
   auth?: { supabaseUrl?: string | null } | undefined;
   rateLimit?:
     { storeMode?: string; upstashUrl?: string | null; upstashToken?: string | null } | undefined;
+}
+
+/**
+ * The verdict of comparing the project this process resolved with the one the deployment says
+ * it must be on.
+ *
+ * `matches: null` means nothing is pinned, so no comparison happened — the same convention as
+ * `reachable: null`, and for the same reason: a value that was never computed must not read
+ * as a passing one.
+ */
+export interface ProjectRefPin {
+  expected: string | null;
+  actual: string | null;
+  matches: boolean | null;
 }
 
 export interface SupabaseStoreCheck {
@@ -44,6 +58,16 @@ export interface SupabaseStoreCheck {
    * already is. Null when nothing is configured or the URL is not a hosted project URL.
    */
   projectRef: string | null;
+  /**
+   * The project ref this deployment pinned in `EXPECTED_SUPABASE_PROJECT_REF`, if any.
+   *
+   * Without a pin, "is there a database and does it answer" is the only question either
+   * endpoint can answer, and a service pointed at the wrong project with the same tables
+   * answers exactly like a correct one. The pin makes the intended project a fact the
+   * service can check itself, so a misdirected migration is a startup error instead of a
+   * silently divided brain.
+   */
+  expectedProjectRef: string | null;
   /** `null` until a probe runs — the liveness endpoint deliberately never pays for one. */
   reachable: boolean | null;
   error?: string;
@@ -95,9 +119,20 @@ export const supabaseProbeTarget = (
  * The cheap half of the Supabase check: what this process is pointed at, no I/O.
  * This is the object `/api/health` embeds, so a liveness ping costs no database round trip.
  */
+/**
+ * Compares the resolved project with the pinned one. Pure, so boot can use the verdict and a
+ * test can drive both halves without a network.
+ */
+export const projectRefPin = (config: StoreConfigView): ProjectRefPin => {
+  const expected = config.supabase?.expectedProjectRef?.trim().toLowerCase() || null;
+  const actual = supabaseProjectRef(config);
+  return { expected, actual, matches: expected ? actual === expected : null };
+};
+
 export const supabaseStoreCheck = (config: StoreConfigView): SupabaseStoreCheck => ({
   configured: config.supabase?.configured === true,
   projectRef: supabaseProjectRef(config),
+  expectedProjectRef: projectRefPin(config).expected,
   reachable: null,
 });
 

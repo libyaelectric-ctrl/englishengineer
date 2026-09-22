@@ -1,4 +1,24 @@
-﻿services:
+# Render blueprint for the backend service.
+#
+# This file had drifted from the service it describes. The active billing provider, the
+# rate-limit store and the Dodo webhook signing secret were all missing, so a service
+# provisioned from this file alone came up with the provider the code falls back to
+# (`stripe`, which this deployment does not sell), no rate-limit store — which in production
+# is a startup failure, not a warning — and a webhook path that refuses every delivery with
+# 503 `dodo_webhook_not_configured`, i.e. a customer who is charged and stays on Free.
+#
+# `npm run verify:render-env` now fails the build when `backend/src` reads a variable that is
+# neither declared here nor listed with a reason in `scripts/check-render-env.mjs`, and when
+# this file declares something nothing reads. Two kinds of entry:
+#
+#   value: …     — not a secret and identical in every environment, so it belongs in git.
+#   sync: false  — a secret or an account-specific id. The value lives in the Render
+#                  dashboard and never in this file; the guard refuses a literal value for
+#                  anything named KEY/TOKEN/SECRET/PASSWORD/DSN.
+#
+# Secrets are grouped below by what breaks without them, because "the service is up" is not
+# the same as "checkout works": see `docs/DEPLOYMENT_RUNBOOK.md` for the triage.
+services:
   - type: web
     name: englishengineer-backend
     runtime: docker
@@ -6,37 +26,135 @@
     dockerfilePath: ./Dockerfile
     healthCheckPath: /api/health
     envVars:
+      # --- Runtime ---------------------------------------------------------------
       - key: NODE_ENV
         value: production
       - key: PORT
         value: '8080'
-      - key: SPEAKING_AUDIO_BUCKET
-        value: speaking-audio
       - key: APP_ORIGIN
         value: https://engvox.com
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://engvox.com,https://www.engvox.com
+      - key: SPEAKING_AUDIO_BUCKET
+        value: speaking-audio
+      # Not a secret: ID tokens are verified against Google's public JWKS
+      # (`backend/src/auth.ts`), so this project needs no service-account key. Nothing in
+      # `backend/src` reads one, which is why none is declared here.
+      - key: FIREBASE_PROJECT_ID
+        value: engvox-59b85
+
+      # --- Database (Supabase; authentication is Firebase) ------------------------
       - key: SUPABASE_URL
         sync: false
-        value: ''
       - key: SUPABASE_ANON_KEY
         sync: false
-        value: ''
+      # Server-only. Backs tenant authorization, the audit store, export and private audio
+      # storage; `/api/health` reports `checks.supabase.configured`.
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
-        value: ''
+      # The project the running backend *must* be on, e.g. `wxabrwzitwsjtpmlvvqe`. Set it to
+      # the ref inside SUPABASE_URL. With it, a process pointed at a different project (the
+      # second project a hosting integration creates by itself is the usual way) refuses to
+      # start instead of serving from tables nobody maintains; without it, a misdirected
+      # migration only ever shows up as "writes fail" against a healthy-looking health check.
+      # Optional, but production warns on every boot while it is unset.
+      - key: EXPECTED_SUPABASE_PROJECT_REF
+        sync: false
+      # Required in production: `/api/metrics` and `/api/diagnostics` answer 401 without it,
+      # and diagnostics is the only place that shows the audit store's real state.
+      - key: METRICS_TOKEN
+        sync: false
+
+      # --- Rate limiting ---------------------------------------------------------
+      # `resolveRateLimit` defaults the store to `upstash` in production and then throws if
+      # it is not configured, so a service provisioned without these two does not start at
+      # all. Omitting them from this file was the loudest of the drift.
+      - key: RATE_LIMIT_STORE
+        value: upstash
+      - key: UPSTASH_REDIS_REST_URL
+        sync: false
+      - key: UPSTASH_REDIS_REST_TOKEN
+        sync: false
+
+      # --- Billing (Dodo Payments) -----------------------------------------------
+      # `BILLING_PROVIDER` defaults to `stripe` in code, so leaving it out is how a fresh
+      # service ends up serving `/api/webhooks/dodo` as 404 while the live one reports
+      # `billingProvider: "dodo"`. Declared so the two cannot disagree.
+      - key: BILLING_PROVIDER
+        value: dodo
+      # `supabase` rather than the memory repository: the memory one loses every paid
+      # subscription on restart. `resolveStripe` still infers this, but only when Supabase
+      # is configured at all.
+      - key: BILLING_REPOSITORY
+        value: supabase
+      - key: DODO_PAYMENTS_API_KEY
+        sync: false
+      # The name the code reads (`config-builders.ts`). `DODO_PAYMENTS_WEBHOOK_SECRET` is
+      # accepted as a migration alias with a startup warning, but it is a warning on a
+      # running service: a deployment holding the Stripe-style name refuses every webhook
+      # delivery with 503 while checkout keeps working.
+      - key: DODO_PAYMENTS_WEBHOOK_KEY
+        sync: false
+      # Pinned on purpose. `live` is also the default, but a stray `test` here points
+      # checkout at `test.dodopayments.com` while the live key stays in place, and the two
+      # only fail at the provider with a 401 nobody reads.
+      - key: DODO_PAYMENTS_ENVIRONMENT
+        value: live
+      # A product id for every plan and interval the pricing page can sell, plus the credit
+      # top-up. A missing one is a 503 on that plan's checkout (or on top-ups), so the names
+      # are here to be filled rather than remembered.
+      - key: DODO_PRODUCT_JUNIOR_MONTHLY
+        sync: false
+      - key: DODO_PRODUCT_JUNIOR_ANNUAL
+        sync: false
+      - key: DODO_PRODUCT_SENIOR_MONTHLY
+        sync: false
+      - key: DODO_PRODUCT_SENIOR_ANNUAL
+        sync: false
+      - key: DODO_PRODUCT_SPECIALIST_MONTHLY
+        sync: false
+      - key: DODO_PRODUCT_SPECIALIST_ANNUAL
+        sync: false
+      - key: DODO_PRODUCT_MASTER_MONTHLY
+        sync: false
+      - key: DODO_PRODUCT_MASTER_ANNUAL
+        sync: false
+      - key: DODO_PRODUCT_TEAM_MONTHLY
+        sync: false
+      - key: DODO_PRODUCT_TEAM_ANNUAL
+        sync: false
+      - key: DODO_PRODUCT_TOPUP
+        sync: false
+
+      # --- AI ---------------------------------------------------------------------
+      # `AI_PROVIDER` defaults to `mock`, which answers with canned text and makes
+      # `/api/health` report `mockMode: true`. It is a dashboard value because which
+      # provider to run is an operations decision, not a fact about the deployment; the two
+      # keys for the providers it is not running stay optional.
       - key: AI_PROVIDER
         sync: false
       - key: AI_MODEL
         sync: false
-      - key: OPENAI_API_KEY
-        sync: false
       - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
         sync: false
       - key: ANTHROPIC_API_KEY
         sync: false
-      - key: CORS_ALLOWED_ORIGINS
-        value: https://engvox.com,https://www.engvox.com
-      - key: FIREBASE_PROJECT_ID
-        value: engvox-59b85
-      - key: FIREBASE_SERVICE_ACCOUNT_KEY
+
+      # --- Observability ----------------------------------------------------------
+      # Optional: without a DSN, `initSentryIfConfigured` is a no-op and the service runs.
+      - key: SENTRY_DSN
         sync: false
-        value: ''
+
+      # Deliberately absent, with the reason — `npm run verify:render-env` prints the same
+      # list and fails if a variable the backend reads appears in neither place:
+      #   RENDER_EXTERNAL_URL     Render injects it; the keepalive self-ping reads it first.
+      #   SUPABASE_JWT_*          Only for local Supabase JWT verification, which this
+      #                           service does not use (authentication is Firebase).
+      #   ENGINEEROS_INTERNAL_*   Only when internal service authentication is enabled.
+      #   STRIPE_*                The inactive provider.
+      #   ALLOW_*                 Escape hatches for local development; setting one here
+      #                           would switch off a production safety check.
+      #   tuning variables        AI_TIMEOUT_MS, RATE_LIMIT_MAX, VOCABULARY_*, the event
+      #                           caches — the code defaults are the intended values.

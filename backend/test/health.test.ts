@@ -35,7 +35,7 @@ describe('health endpoint', () => {
   });
 
   it('returns degraded when Supabase not configured', () => {
-    const testConfig = { ...config, supabase: { configured: false } };
+    const testConfig = { ...config, supabase: { configured: false, expectedProjectRef: null } };
     const health = toPublicHealth(testConfig);
     assert.equal(health.ok, false);
     assert.equal(health.status, 'degraded');
@@ -51,7 +51,7 @@ describe('health endpoint', () => {
       billing: { configured: true, webhookConfigured: false },
       // `reachable: null` is the liveness endpoint saying "not probed", not "healthy" —
       // diagnostics fills the same key in from the same module.
-      supabase: { configured: true, projectRef: null, reachable: null },
+      supabase: { configured: true, projectRef: null, expectedProjectRef: null, reachable: null },
       rateLimit: { configured: true, reachable: null },
       auth: { configured: true, firebaseProjectId: 'demo-project' },
     });

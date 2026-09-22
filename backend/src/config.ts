@@ -71,6 +71,8 @@ interface HealthCheck {
   firebaseProjectId?: string | null;
   /** Which Supabase project this process resolves to (`store-health.ts`). */
   projectRef?: string | null;
+  /** The project this deployment pinned, if any (`store-health.ts`). */
+  expectedProjectRef?: string | null;
 }
 
 interface PublicHealth {

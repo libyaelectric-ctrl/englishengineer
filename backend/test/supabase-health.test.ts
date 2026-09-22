@@ -8,6 +8,7 @@ import {
   hasStoreOutage,
   probeRateLimitStore,
   probeSupabaseStore,
+  projectRefPin,
   supabaseStoreCheck,
 } from '../src/store-health.js';
 import type { StoreConfigView } from '../src/store-health.js';
@@ -173,12 +174,28 @@ describe('diagnostics Supabase probe', () => {
 });
 
 describe('both endpoints report the same stores', () => {
+  it('reports the pinned project alongside the resolved one, on the cheap path too', async () => {
+    const pinned = {
+      ...config,
+      supabase: { configured: true, expectedProjectRef: PROJECT_REF.toUpperCase() },
+    } as unknown as StoreConfigView;
+
+    assert.equal(supabaseStoreCheck(pinned).expectedProjectRef, PROJECT_REF);
+    assert.deepEqual(projectRefPin(pinned), {
+      expected: PROJECT_REF,
+      actual: PROJECT_REF,
+      matches: true,
+    });
+    assert.deepEqual(projectRefPin(config).matches, null, 'no pin means no verdict');
+  });
+
   it('names the store cheaply, so liveness never pays for a round trip', async () => {
     const identity = supabaseStoreCheck(config);
 
     assert.deepEqual(identity, {
       configured: true,
       projectRef: PROJECT_REF,
+      expectedProjectRef: null,
       reachable: null,
     });
     // A liveness-shaped check can never degrade a report: only a probe ran and failed counts.
