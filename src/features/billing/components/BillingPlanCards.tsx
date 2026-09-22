@@ -10,8 +10,8 @@ interface BillingPlanCardsProps {
   todaysCoachSessions: number;
   todaysAttempts: number;
   todaysReviews: number;
-  uploadedDocsCount: number;
-  voiceMinutesUsed: number;
+  uploadedDocsCount: number | null;
+  voiceMinutesUsed: number | null;
 }
 
 interface UsageCardProps {
@@ -29,7 +29,10 @@ const UsageCard = ({ label, display, value, max, color, helpText }: UsageCardPro
       <span className="font-bold text-foreground">{label}</span>
       <span className="font-bold text-foreground">{display}</span>
     </div>
-    <ProgressBar value={Math.min(100, (value / max) * 100)} color={color} />
+    <ProgressBar
+      value={max > 0 ? Math.max(0, Math.min(100, (value / max) * 100)) : 0}
+      color={color}
+    />
     <p className="text-[10px] text-muted-copy">{helpText}</p>
   </div>
 );
@@ -59,9 +62,18 @@ const DocumentUploadCard = ({
   maxDocs,
 }: {
   isFree: boolean;
-  uploadedDocsCount: number;
+  uploadedDocsCount: number | null;
   maxDocs: number;
 }) => {
+  if (uploadedDocsCount === null)
+    return (
+      <div className="space-y-1.5 text-sm">
+        <p className="font-bold">Monthly Document Uploads</p>
+        <p className="text-muted-copy">
+          {isFree ? 'Not included in this plan' : 'Usage unavailable'}
+        </p>
+      </div>
+    );
   const isUnlimited = maxDocs >= 999;
   const numericMax = isUnlimited ? 0 : maxDocs;
   return (
@@ -104,38 +116,44 @@ const VoiceMinutesCard = ({
   voiceMinutesUsed,
 }: {
   planId: string;
-  voiceMinutesUsed: number;
-}) => (
-  <div className="col-span-full space-y-1.5 mt-1">
-    <div className="flex justify-between text-xs">
-      <span className="font-bold text-foreground flex items-center gap-1.5">
-        <Mic className="h-3.5 w-3.5 text-primary" aria-hidden="true" /> Monthly Voice Minutes
-      </span>
-      <span className="font-bold text-foreground">
-        {planId === 'master' ? `${voiceMinutesUsed} / 300 min` : 'Unlimited'}
-      </span>
+  voiceMinutesUsed: number | null;
+}) =>
+  voiceMinutesUsed === null ? (
+    <div className="col-span-full space-y-1.5 text-sm">
+      <p className="font-bold">Monthly Voice Minutes</p>
+      <p className="text-muted-copy">Usage unavailable</p>
     </div>
-    <ProgressBar
-      value={planId === 'master' ? Math.min(100, (voiceMinutesUsed / 300) * 100) : 100}
-      color={
-        planId !== 'master'
-          ? 'cyan'
-          : voiceMinutesUsed >= 270
-            ? 'rose'
-            : voiceMinutesUsed >= 210
-              ? 'amber'
-              : 'cyan'
-      }
-    />
-    <p className="text-[10px] text-muted-copy">
-      {planId === 'master'
-        ? voiceMinutesUsed >= 300
-          ? '⚠️ Monthly voice minute quota reached. Upgrade to Private for unlimited minutes.'
-          : `✓ ${300 - voiceMinutesUsed} voice minutes remaining this month. Usage resets on the 1st.`
-        : '✓ Unlimited voice minutes included in your plan.'}
-    </p>
-  </div>
-);
+  ) : (
+    <div className="col-span-full space-y-1.5 mt-1">
+      <div className="flex justify-between text-xs">
+        <span className="font-bold text-foreground flex items-center gap-1.5">
+          <Mic className="h-3.5 w-3.5 text-primary" aria-hidden="true" /> Monthly Voice Minutes
+        </span>
+        <span className="font-bold text-foreground">
+          {planId === 'master' ? `${voiceMinutesUsed} / 300 min` : 'Unlimited'}
+        </span>
+      </div>
+      <ProgressBar
+        value={planId === 'master' ? Math.min(100, (voiceMinutesUsed / 300) * 100) : 100}
+        color={
+          planId !== 'master'
+            ? 'cyan'
+            : voiceMinutesUsed >= 270
+              ? 'rose'
+              : voiceMinutesUsed >= 210
+                ? 'amber'
+                : 'cyan'
+        }
+      />
+      <p className="text-[10px] text-muted-copy">
+        {planId === 'master'
+          ? voiceMinutesUsed >= 300
+            ? 'Monthly voice minute quota reached.'
+            : `✓ ${300 - voiceMinutesUsed} voice minutes remaining this month. Usage resets on the 1st.`
+          : '✓ Unlimited voice minutes included in your plan.'}
+      </p>
+    </div>
+  );
 
 const formatLimit = (value: number | 'unlimited'): string =>
   value === 'unlimited' ? 'Unlimited' : String(value);

@@ -1,5 +1,9 @@
 import type { BillingProviderName } from '../types.js';
-import type { BillingRepository, WebhookObject } from './billing-webhook-handlers.js';
+import type {
+  BillingRepository,
+  WebhookCommit,
+  WebhookObject,
+} from './billing-webhook-handlers.js';
 import {
   handleCheckoutCompleted,
   handlePaymentFailed,
@@ -27,6 +31,20 @@ export interface BillingPortalBody {
   returnUrl: string;
 }
 
+export interface InvoiceRecord {
+  id: string;
+  date: string;
+  amount: string;
+  status: string;
+  invoicePdf: string | null;
+}
+
+export const formatMinorAmount = (amount: number, currency: string): string => {
+  const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency });
+  const digits = formatter.resolvedOptions().maximumFractionDigits;
+  return formatter.format(amount / 10 ** (digits ?? 2));
+};
+
 export interface WebhookProcessingResult {
   received: boolean;
   duplicate: boolean;
@@ -53,6 +71,7 @@ export interface BillingProvider {
   createCheckoutSession(userId: string, body: BillingCheckoutBody): Promise<{ url: string }>;
   createTopupCheckoutSession(userId: string, body: BillingTopupBody): Promise<{ url: string }>;
   createPortalSession(customerId: string, body: BillingPortalBody): Promise<{ url: string }>;
+  listInvoices?(customerId: string): Promise<InvoiceRecord[]>;
   processWebhook(
     rawBody: Buffer,
     headers: Record<string, string | string[] | undefined>,
@@ -97,6 +116,42 @@ export const processNormalizedWebhookEvent = async (
   repository: BillingRepository,
   event: NormalizedWebhookEvent
 ): Promise<WebhookProcessingResult> => {
+  if (repository.commitWebhook) {
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      const change: WebhookCommit = {
+        eventId: event.id,
+        eventType: event.type,
+        userId: null,
+        expected: null,
+        subscription: null,
+        customer: null,
+      };
+      // Stage handler writes; the adapter commits state and event identity together.
+      await dispatchWebhookEvent(
+        {
+          ...repository,
+          getSubscriptionStatus: async (userId) => {
+            change.userId = userId;
+            change.expected = await repository.getSubscriptionStatus(userId);
+            return change.expected;
+          },
+          upsertSubscriptionStatus: async (userId, subscription) => {
+            change.userId = userId;
+            change.subscription = subscription;
+          },
+          upsertBillingCustomer: async (customer) => {
+            change.customer = customer;
+          },
+        },
+        event.type,
+        event.data
+      );
+      const result = await repository.commitWebhook(change);
+      if (result !== 'conflict')
+        return { received: true, duplicate: result === 'duplicate', eventId: event.id };
+    }
+    throw new Error('Billing state changed concurrently; retry webhook delivery.');
+  }
   if (await repository.hasStripeEventBeenProcessed(event.id)) {
     return { received: true, duplicate: true, eventId: event.id };
   }

@@ -1,5 +1,4 @@
 import { PricingCard } from '@/components/ui/PricingCard';
-import { Globe } from 'lucide-react';
 import { motion } from 'motion/react';
 
 import { useEffect, useState } from 'react';
@@ -17,7 +16,6 @@ import { AUTH_SIGN_IN_URL } from '@/features/auth/firebase.config';
 import { resolveBillingError } from '@/features/billing/billing.failure-copy';
 import { useBillingStore } from '@/features/billing/billing.store';
 import type { BillingPlanId } from '@/features/billing/billing.types';
-import { CurrencyConfig } from '@/features/billing/currency.config';
 import { useLocalizationStore } from '@/features/localization';
 
 import { Footer } from '@/pages/LandingPage/Footer';
@@ -30,7 +28,6 @@ const PricingPage = () => {
   const pricingCopy = getPricingCopy(language);
   const currentUser = useAuthStore((state) => state.currentUser);
   const [isAnnual, setIsAnnual] = useState(false);
-  const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   useEffect(() => {
     ProductAnalyticsService.track('screen_viewed', 'pricing');
@@ -67,19 +64,19 @@ const PricingPage = () => {
   };
 
   return (
-    <main className="relative h-dvh overflow-hidden bg-background pt-14 text-foreground">
+    <main className="relative min-h-dvh bg-background pt-14 text-foreground">
       <PageMetadata
         title="Pricing Plans — EngVox"
         description="Choose the plan that fits your engineering communication goals."
       />
       <Navbar />
-      <section className="relative mx-auto flex h-[calc(100dvh-7.5rem)] max-w-7xl flex-col px-4 py-3 md:px-6">
+      <section className="relative mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 md:px-6">
         <div className="mb-3 grid shrink-0 items-end gap-3 lg:grid-cols-[1fr_auto]">
           <div>
             <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
               EngVox Pricing
             </span>
-            <h1 className="mt-2 text-[clamp(1.75rem,3.2vw,3rem)] font-black leading-none tracking-tight text-foreground">
+            <h1 className="mt-2 text-3xl font-black leading-tight text-foreground lg:text-4xl">
               {pricingCopy.title}
             </h1>
             <p className="mt-1 max-w-3xl text-sm font-medium leading-5 text-muted-copy">
@@ -103,26 +100,9 @@ const PricingPage = () => {
                 className={`flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${isAnnual ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-copy hover:text-foreground'}`}
               >
                 <span>{pricingCopy.annual}</span>
-                <span className="rounded bg-emerald-500 px-1 py-0.5 text-[9px] text-on-solid">
-                  {pricingCopy.save20}
-                </span>
               </button>
             </div>
-            <div className="flex items-center gap-1.5 rounded-xl border border-border-soft bg-surface px-3 py-1.5">
-              <Globe className="h-4 w-4 text-primary" />
-              <select
-                value={selectedCurrency}
-                onChange={(e) => setSelectedCurrency(e.target.value)}
-                aria-label="Select currency"
-                className="bg-transparent text-xs font-bold text-foreground outline-none cursor-pointer"
-              >
-                {CurrencyConfig.CURRENCIES.map((c) => (
-                  <option key={c.code} value={c.code} className="bg-surface text-foreground">
-                    {c.flag} {c.code}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <span className="px-3 text-sm font-bold text-muted-copy">USD</span>
           </div>
         </div>
         {checkoutError && (
@@ -133,11 +113,11 @@ const PricingPage = () => {
             {checkoutError}
           </p>
         )}
-        <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-5">
           {PRICING_TIERS.map((tier, idx) => (
             <motion.div
               key={tier.id}
-              className="min-h-0"
+              className="min-w-0"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.28, delay: idx * 0.035 }}
@@ -145,7 +125,7 @@ const PricingPage = () => {
               <PricingCard
                 tier={tier}
                 isAnnual={isAnnual}
-                currency={selectedCurrency}
+                currency="USD"
                 isCurrentPlan={subscription?.planId === tier.id}
                 isLoading={isCheckoutLoading}
                 variant="pricing"
@@ -156,7 +136,7 @@ const PricingPage = () => {
         </div>
       </section>
       <ExitIntentModal />
-      <Footer className="fixed bottom-0 inset-x-0 z-40" />
+      <Footer />
     </main>
   );
 };

@@ -57,7 +57,11 @@ export { getPlanLimits };
 const resolvePlanId = (subscription: SubscriptionSnapshot | null, configured: boolean): PlanId => {
   if (!configured || !subscription) return 'free';
   const status = subscription.status;
-  if (status !== 'active' && status !== 'trialing') return 'free';
+  const inGrace =
+    status === 'past_due' &&
+    !!subscription.gracePeriodEndsAt &&
+    Date.parse(subscription.gracePeriodEndsAt) > Date.now();
+  if (status !== 'active' && status !== 'trialing' && !inGrace) return 'free';
   return normalizePlanId(subscription.planId);
 };
 

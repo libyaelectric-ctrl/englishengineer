@@ -9,7 +9,10 @@ import {
 export const isSubscriptionActive = (subscription: SubscriptionSnapshot): boolean =>
   subscription.planId === 'free' ||
   subscription.status === 'active' ||
-  subscription.status === 'trialing';
+  subscription.status === 'trialing' ||
+  (subscription.status === 'past_due' &&
+    !!subscription.gracePeriodEndsAt &&
+    Date.parse(subscription.gracePeriodEndsAt) > Date.now());
 
 const PLAN_HIERARCHY: BillingPlanId[] = ['free', 'junior', 'senior', 'specialist', 'master'];
 
@@ -99,8 +102,7 @@ export const isFreeTier = (subscription: SubscriptionSnapshot): boolean =>
  * churned customers the billing page still offered it to.
  */
 export const hasActivePaidAccess = (subscription: SubscriptionSnapshot): boolean =>
-  !isFreeTier(subscription) &&
-  (subscription.status === 'active' || subscription.status === 'trialing');
+  !isFreeTier(subscription) && isSubscriptionActive(subscription);
 
 /**
  * Whether a portal session can be opened for this customer at all: the provider has to be

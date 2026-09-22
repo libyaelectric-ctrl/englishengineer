@@ -12,6 +12,7 @@ import Stripe from 'stripe';
 
 import { requireText } from './billing-helpers.js';
 import { normalizePlanId } from './billing-plan-migration.js';
+import { BILLING_PRICE_CATALOG } from './billing-price-catalog.js';
 import {
   BillingCheckoutBody,
   BillingPortalBody,
@@ -19,6 +20,7 @@ import {
   BillingTopupBody,
   NormalizedWebhookEvent,
   WebhookProcessingResult,
+  formatMinorAmount,
   processNormalizedWebhookEvent,
 } from './billing-provider.js';
 import type { BillingRepository } from './billing-webhook-handlers.js';
@@ -34,28 +36,33 @@ export interface StripeProviderConfig {
 
 interface PlanMeta {
   unitAmount: number;
+  annualAmount?: number;
   nickname: string;
   productName: string;
 }
 
 const PLAN_META: Record<string, PlanMeta> = {
   junior: {
-    unitAmount: 2900,
+    unitAmount: BILLING_PRICE_CATALOG.junior.month,
+    annualAmount: BILLING_PRICE_CATALOG.junior.year,
     nickname: 'Junior Monthly',
     productName: 'EngVox Junior',
   },
   senior: {
-    unitAmount: 5900,
+    unitAmount: BILLING_PRICE_CATALOG.senior.month,
+    annualAmount: BILLING_PRICE_CATALOG.senior.year,
     nickname: 'Senior Monthly',
     productName: 'EngVox Senior',
   },
   specialist: {
-    unitAmount: 7900,
+    unitAmount: BILLING_PRICE_CATALOG.specialist.month,
+    annualAmount: BILLING_PRICE_CATALOG.specialist.year,
     nickname: 'Specialist Monthly',
     productName: 'EngVox Specialist',
   },
   master: {
-    unitAmount: 9900,
+    unitAmount: BILLING_PRICE_CATALOG.master.month,
+    annualAmount: BILLING_PRICE_CATALOG.master.year,
     nickname: 'Master Monthly',
     productName: 'EngVox Master',
   },
@@ -86,6 +93,13 @@ const resolveOrProvisionPriceId = async (
   if (configKey && config[configKey]) {
     return config[configKey] as string;
   }
+  if (config.environment === 'production' || process.env.NODE_ENV === 'production') {
+    throw new ApiError(
+      503,
+      'STRIPE_PRICE_NOT_CONFIGURED',
+      'A verified price is required for checkout.'
+    );
+  }
 
   const meta = PLAN_META[planId];
   if (!meta) {
@@ -100,9 +114,9 @@ const resolveOrProvisionPriceId = async (
     })
   );
 
-  const annualAmount = Math.round(meta.unitAmount * 12 * 0.8);
+  const annualAmount = meta.annualAmount ?? Math.round(meta.unitAmount * 12 * 0.8);
   const intervalAmount = billingInterval === 'year' ? annualAmount : meta.unitAmount;
-  const intervalNickname = billingInterval === 'year' ? `${planId} annual 20% off` : meta.nickname;
+  const intervalNickname = billingInterval === 'year' ? `${planId} annual` : meta.nickname;
   const found = existingPrices.data.find(
     (p) =>
       p.nickname === intervalNickname &&
@@ -307,6 +321,18 @@ export const createStripeBillingProvider = ({
         return_url: body.returnUrl,
       });
       return { url: session.url };
+    },
+
+    async listInvoices(customerId) {
+      ensureConfigured();
+      const invoices = await stripeClient.invoices.list({ customer: customerId, limit: 20 });
+      return invoices.data.map((invoice) => ({
+        id: invoice.id,
+        date: new Date(invoice.created * 1000).toISOString(),
+        amount: formatMinorAmount(invoice.amount_paid, invoice.currency),
+        status: invoice.status ?? 'unknown',
+        invoicePdf: invoice.invoice_pdf ?? null,
+      }));
     },
 
     async processWebhook(rawBody, headers, onEventDetected): Promise<WebhookProcessingResult> {

@@ -134,11 +134,12 @@ const EmailPasswordForm = ({
   busy: boolean;
   onBusyChange: (busy: boolean) => void;
 }) => {
-  const { signInWithEmail, signUpWithEmail } = useFirebaseAuth();
+  const { signInWithEmail, signUpWithEmail, resetPassword } = useFirebaseAuth();
   const formId = useId();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [resetMessage, setResetMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -234,6 +235,39 @@ const EmailPasswordForm = ({
           {error}
         </p>
       )}
+      {mode === 'sign-in' && (
+        <div>
+          <button
+            type="button"
+            disabled={busy}
+            className="min-h-11 text-sm font-bold text-primary underline underline-offset-4"
+            onClick={async () => {
+              setError(null);
+              setResetMessage(null);
+              if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+                setError('Önce e-posta adresinizi girin.');
+                return;
+              }
+              onBusyChange(true);
+              try {
+                await resetPassword(email);
+                setResetMessage('Şifre yenileme bağlantısı için e-posta kutunuzu kontrol edin.');
+              } catch {
+                setError('Şifre yenileme e-postası gönderilemedi. Lütfen tekrar deneyin.');
+              } finally {
+                onBusyChange(false);
+              }
+            }}
+          >
+            Şifremi unuttum
+          </button>
+          {resetMessage && (
+            <p role="status" className="text-sm text-success">
+              {resetMessage}
+            </p>
+          )}
+        </div>
+      )}
       <button
         type="submit"
         disabled={busy}
@@ -309,7 +343,7 @@ const AuthPage = ({ mode }: AuthPageProps) => {
       </header>
 
       <main className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-10 px-4 py-10 sm:px-6 sm:py-14 lg:min-h-[calc(100dvh-4rem)] lg:grid-cols-[minmax(0,1fr)_minmax(22rem,28rem)] lg:gap-16 lg:py-16">
-        <section className="max-w-xl">
+        <section className="order-2 hidden max-w-xl lg:order-1 lg:block">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-black text-primary">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
             Mühendislik İngilizcesi için çalışma alanın
@@ -338,7 +372,7 @@ const AuthPage = ({ mode }: AuthPageProps) => {
           </ul>
         </section>
 
-        <section aria-labelledby="auth-title" className="w-full">
+        <section aria-labelledby="auth-title" className="order-1 w-full lg:order-2">
           <div className="rounded-[var(--radius-dialog)] border border-border-soft bg-surface p-5 shadow-dialog sm:p-7">
             <div className="mb-6">
               <p className="text-xs font-black uppercase tracking-[0.16em] text-primary">

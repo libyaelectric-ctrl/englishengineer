@@ -6,6 +6,7 @@ import { AppError } from '@/core/errors/app-error';
 import { SessionEvents } from '@/shared/events/session.events';
 import { logger } from '@/shared/logger';
 
+import { resolveBillingError } from './billing.failure-copy';
 import { CLIENT_SENTENCE_CODE } from './billing.failure-copy';
 import { BillingService } from './billing.service';
 import { BillingPlanId, BillingState, SubscriptionSnapshot } from './billing.types';
@@ -68,24 +69,44 @@ const setBillingFailure = (
   set({ ...rest, error: failure?.message ?? null, errorCode: failure?.code ?? null });
 };
 
+let syncGeneration = 0;
+let invoiceGeneration = 0;
 const fetchSubscription = async (set: BillingSet, userId: string | null, label: string) => {
+  const generation = ++syncGeneration;
   setBillingFailure(set, null, {
     isLoading: true,
+    syncError: null,
     providerStatus: BillingService.getProviderStatus(),
   });
   try {
     const subscription = await BillingService.refreshSubscription(userId);
-    set({ subscription, isLoading: false });
+    if (generation !== syncGeneration) return;
+    set({
+      subscription,
+      isLoading: false,
+      initializedUserId: userId,
+      lastSyncedAt: new Date().toISOString(),
+    });
   } catch (err) {
     logger.e(`${label} failed, using local:`, err);
+    if (generation !== syncGeneration) return;
     const localSubscription = BillingService.getLocalSubscription();
-    set({ subscription: localSubscription, isLoading: false });
+    set({
+      subscription: localSubscription,
+      isLoading: false,
+      initializedUserId: userId,
+      syncError: resolveBillingError(err),
+    });
   }
 };
 
 export const useBillingStore = create<BillingState & BillingActions>()(
   devtools(
     (set) => ({
+      initializedUserId: null,
+      syncError: null,
+      invoiceError: null,
+      lastSyncedAt: null,
       subscription: BillingService.getLocalSubscription(),
       providerStatus: BillingService.getProviderStatus(),
       isLoading: false,
@@ -146,13 +167,15 @@ export const useBillingStore = create<BillingState & BillingActions>()(
       },
 
       fetchInvoices: async (userId) => {
-        set({ isLoadingInvoices: true });
+        const generation = ++invoiceGeneration;
+        set({ isLoadingInvoices: true, invoiceError: null });
         try {
           const invoices = await BillingService.fetchInvoices(userId);
-          set({ invoices, isLoadingInvoices: false });
+          if (generation === invoiceGeneration) set({ invoices, isLoadingInvoices: false });
         } catch (err) {
           logger.e('[BILLING] Failed to fetch invoices:', err);
-          set({ invoices: [], isLoadingInvoices: false });
+          if (generation === invoiceGeneration)
+            set({ isLoadingInvoices: false, invoiceError: resolveBillingError(err) });
         }
       },
     }),
@@ -161,6 +184,15 @@ export const useBillingStore = create<BillingState & BillingActions>()(
 );
 
 SessionEvents.subscribe((phase) => {
+  syncGeneration += 1;
+  invoiceGeneration += 1;
+  useBillingStore.setState({
+    initializedUserId: null,
+    syncError: null,
+    invoiceError: null,
+    lastSyncedAt: null,
+    isCheckoutLoading: false,
+  });
   if (phase === 'cleared') {
     useBillingStore.setState({
       subscription: BillingService.getLocalSubscription(),

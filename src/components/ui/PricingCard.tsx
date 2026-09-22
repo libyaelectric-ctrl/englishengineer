@@ -38,8 +38,8 @@ const FeatureList = ({
           <span
             className={
               compact
-                ? 'truncate text-[11px] font-semibold text-foreground'
-                : 'text-xs font-medium text-foreground'
+                ? 'text-sm font-semibold leading-6 text-foreground'
+                : 'text-sm font-medium leading-6 text-foreground'
             }
           >
             {featureLabels[feature.name] ?? feature.name}
@@ -78,7 +78,7 @@ const PricingCta = ({
     if (tier.comingSoon || isLoading) return;
     onSelect?.(tier.id);
   };
-  const btnClass = `${compact ? 'py-2 text-[10px]' : 'py-2.5 text-xs'} w-full rounded-[var(--radius-card)] px-3 font-bold uppercase tracking-wider transition-all shadow-sm`;
+  const btnClass = `${compact ? 'py-3 text-xs' : 'py-3 text-sm'} min-h-11 w-full rounded-[var(--radius-card)] px-3 font-bold transition-colors shadow-sm`;
   if (isTeam)
     return (
       <button
@@ -150,7 +150,7 @@ const getFeatureLabels = (
 
 const getCardClasses = (compact: boolean, popular: boolean): string => {
   const base =
-    'relative flex h-full flex-col justify-between rounded-[1.25rem] p-3 bg-surface transition-all duration-300 shadow-sm';
+    'relative flex h-full flex-col rounded-[var(--radius-card)] p-4 bg-surface transition-colors duration-200 shadow-sm';
   const desktop =
     'relative flex h-full min-h-[520px] flex-col justify-between rounded-[var(--radius-card)] p-5 bg-surface transition-all duration-300 shadow-sm';
   const border = popular ? 'border-2 border-primary shadow-lg' : 'border border-border-soft';
@@ -198,11 +198,16 @@ const PriceDisplay = ({
         >
           {isTeam ? '$$$$' : formatPrice(price, currency)}
         </span>
-        <span className="text-[11px] text-muted-copy">{copy.perMonth}</span>
+        <span className="text-xs text-muted-copy">
+          {isAnnual && price > 0 ? copy.perMonthAnnual : copy.perMonth}
+        </span>
       </div>
     </div>
   );
 };
+
+const getCheckoutPrice = (tier: PricingTier, isAnnual: boolean): number =>
+  isAnnual ? (tier.annualTotal ?? Math.round(tier.annualPrice * 1200) / 100) : tier.monthlyPrice;
 
 export const PricingCard = ({
   tier,
@@ -231,8 +236,8 @@ export const PricingCard = ({
           {copy.mostPopular}
         </span>
       )}
-      <div className="relative z-10 flex h-full flex-col justify-between">
-        <div className="min-h-0">
+      <div className="relative z-10 flex flex-1 flex-col gap-4">
+        <div>
           <div className={compact ? 'mb-2 min-h-[38px]' : 'mb-3 min-h-[52px]'}>
             <h3
               className={
@@ -259,7 +264,7 @@ export const PricingCard = ({
           <p
             className={
               compact
-                ? 'line-clamp-2 min-h-[36px] text-[11px] leading-5 text-muted-copy'
+                ? 'min-h-[40px] text-sm leading-6 text-muted-copy'
                 : 'min-h-[48px] text-xs leading-relaxed text-muted-copy'
             }
           >
@@ -270,7 +275,7 @@ export const PricingCard = ({
         <div
           className={
             compact
-              ? 'mt-2 border-t border-border-soft pt-2'
+              ? 'mt-auto border-t border-border-soft pt-3'
               : 'mt-4 border-t border-border-soft pt-3'
           }
         >
@@ -281,10 +286,15 @@ export const PricingCard = ({
             isLoading={isLoading}
             onSelect={onSelect}
             copy={copy}
-            price={price}
+            price={getCheckoutPrice(tier, isAnnual)}
             currency={currency}
             compact={compact}
           />
+          {isAnnual && price > 0 && !isTeam && (
+            <p className="mt-2 text-center text-xs text-muted-copy">
+              {copy.annual}: {formatPrice(getCheckoutPrice(tier, isAnnual), currency)} USD
+            </p>
+          )}
         </div>
       </div>
     </article>

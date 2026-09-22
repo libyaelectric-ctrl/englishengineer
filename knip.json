@@ -3,13 +3,13 @@
   "workspaces": {
     ".": {
       "entry": ["api/translate.js"],
-      "ignoreDependencies": ["@playwright/cli", "lint-staged", "three", "@types/three"]
+      "ignoreDependencies": ["@playwright/cli", "lint-staged"]
     },
     "backend": {
       "ignoreDependencies": ["swagger-ui-dist"]
     }
   },
-  "ignore": ["src/core/index.ts", "src/shared/components/GlowingOrb*"],
+  "ignore": ["src/core/index.ts"],
   "include": ["files", "dependencies"],
   "ignoreFiles": [
     "scripts/**",

@@ -57,6 +57,10 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: withSuspense(Landing) },
       { path: '/pricing', element: withSuspense(Pricing) },
+      {
+        path: '/billing/return',
+        element: withSuspense(lazy(() => import('@/pages/BillingReturnPage'))),
+      },
       { path: '/business', element: withSuspense(Business) },
       { path: '/start', element: withSuspense(Start) },
       { path: '/demo', element: <Navigate to="/start" replace /> },

@@ -84,6 +84,7 @@ export interface SubscriptionSnapshot {
   stripeSubscriptionId: string | null;
   updatedAt: string;
   topupCredits?: number;
+  gracePeriodEndsAt?: string | null;
   /** Billing provider the snapshot came from ('stripe' | 'dodo'). */
   source?: string;
 }
@@ -143,6 +144,10 @@ export interface InvoiceRecord {
 }
 
 export interface BillingState {
+  initializedUserId: string | null;
+  syncError: string | null;
+  invoiceError: string | null;
+  lastSyncedAt: string | null;
   subscription: SubscriptionSnapshot;
   providerStatus: BillingProviderStatus;
   isLoading: boolean;

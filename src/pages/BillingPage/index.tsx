@@ -1,6 +1,8 @@
 import { Download, RefreshCw, ShieldCheck, Wallet } from 'lucide-react';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+import { useSearchParams } from 'react-router-dom';
 
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
@@ -15,6 +17,7 @@ import { BillingStatusPanel } from '@/features/billing/BillingStatusPanel';
 import { BillingPlanCards } from '@/features/billing/components/BillingPlanCards';
 import { BillingUpgradeCTA } from '@/features/billing/components/BillingUpgradeCTA';
 import { useLearningCockpit } from '@/features/profile';
+import { useVocabularyStore } from '@/features/vocabulary';
 
 export const BillingPage = () => {
   const { currentUser } = useAuthStore();
@@ -32,8 +35,38 @@ export const BillingPage = () => {
     invoices,
     isLoadingInvoices,
     fetchInvoices,
+    syncError,
+    invoiceError,
+    lastSyncedAt,
   } = useBillingStore();
-  const { memory, learningState } = useLearningCockpit(currentUser?.id);
+  const [searchParams] = useSearchParams();
+  const paymentReturned =
+    searchParams.get('billing') === 'success' || searchParams.get('topup') === 'success';
+  const [checkingPayment, setCheckingPayment] = useState(false);
+  useEffect(() => {
+    if (!paymentReturned || !currentUser?.id) return;
+    let disposed = false;
+    let timer: ReturnType<typeof setTimeout>;
+    let attempts = 0;
+    const check = async () => {
+      setCheckingPayment(true);
+      await refreshBilling(currentUser.id);
+      attempts += 1;
+      if (disposed) return;
+      if (attempts < 6) timer = setTimeout(() => void check(), 5000);
+      else {
+        setCheckingPayment(false);
+        void fetchInvoices(currentUser.id);
+      }
+    };
+    void check();
+    return () => {
+      disposed = true;
+      clearTimeout(timer);
+    };
+  }, [paymentReturned, currentUser?.id, refreshBilling, fetchInvoices]);
+  const { learningState } = useLearningCockpit(currentUser?.id);
+  const reviewHistory = useVocabularyStore((state) => state.history);
   const { sessions } = useAIStore();
   const todaysCoachSessions = sessions.filter(
     (s) => new Date(s.timestamp).toDateString() === new Date().toDateString()
@@ -87,8 +120,25 @@ export const BillingPage = () => {
           </button>
         }
       />
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
+      {syncError && (
+        <p role="alert" className="text-sm text-danger">
+          {syncError}
+        </p>
+      )}
+      {paymentReturned && (
+        <p role="status" className="text-sm text-muted-copy">
+          {checkingPayment
+            ? 'Checking payment confirmation...'
+            : 'Status refreshed. Payments may take a few minutes to appear. Use Sync to check again.'}
+        </p>
+      )}
+      {lastSyncedAt && (
+        <p className="text-xs text-muted-copy">
+          Last synced: {new Date(lastSyncedAt).toLocaleTimeString()}
+        </p>
+      )}
+      <div className="grid min-w-0 grid-cols-1 gap-6">
+        <div className="min-w-0 space-y-6">
           <SectionCard
             title="Subscription Entitlements"
             subtitle="Current status and quick upgrade controls"
@@ -118,14 +168,30 @@ export const BillingPage = () => {
                     (s) => new Date(s.timestamp).toDateString() === new Date().toDateString()
                   ).length
                 }
-                todaysReviews={memory.dueToday}
-                uploadedDocsCount={0}
-                voiceMinutesUsed={0}
+                todaysReviews={
+                  reviewHistory.filter(
+                    (item) => new Date(item.timestamp).toDateString() === new Date().toDateString()
+                  ).length
+                }
+                uploadedDocsCount={null}
+                voiceMinutesUsed={null}
               />
               <BillingUpgradeCTA subscription={subscription} />
             </div>
           </SectionCard>
           <SectionCard title="Transaction History" subtitle="Invoices and receipts" icon={Download}>
+            {invoiceError && (
+              <div role="alert" className="mb-3 text-sm text-danger">
+                {invoiceError}
+                <button
+                  type="button"
+                  className="ml-3 min-h-11 underline"
+                  onClick={() => currentUser?.id && fetchInvoices(currentUser.id)}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
             <div className="overflow-x-auto rounded-[var(--radius-card)] border border-border-soft bg-surface shadow-sm">
               <table className="w-full border-collapse text-left">
                 <thead>
@@ -157,7 +223,9 @@ export const BillingPage = () => {
                   ) : (invoices ?? []).length === 0 ? (
                     <tr>
                       <td colSpan={5} className="px-4 py-8 text-center text-xs text-muted-copy">
-                        No transactions yet.
+                        {invoiceError
+                          ? 'Invoice history could not be loaded.'
+                          : 'No transactions yet.'}
                       </td>
                     </tr>
                   ) : (

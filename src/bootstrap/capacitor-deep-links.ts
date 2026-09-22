@@ -25,6 +25,11 @@ export async function registerCapacitorDeepLinks(): Promise<void> {
   const navigate = ({ url }: { url: string }) => {
     const internalPath = toInternalDeepLinkPath(url);
     if (!internalPath) return;
+    if (internalPath.startsWith('/billing')) {
+      void import('@capacitor/browser')
+        .then(({ Browser }) => Browser.close())
+        .catch((error) => logger.e('[DEEP_LINK] Browser close failed', error));
+    }
     window.history.pushState({}, '', internalPath);
     window.dispatchEvent(new PopStateEvent('popstate'));
   };

@@ -1,6 +1,6 @@
 import { PRODUCT_VERSION } from '@/config/product.config';
 
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { useCallback, useEffect, useReducer } from 'react';
 
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
@@ -71,26 +71,9 @@ export const useProfilePage = () => {
     .history.filter(
       (h) => new Date(h.timestamp).toDateString() === new Date().toDateString()
     ).length;
-  const [uploadedDocsCount] = useState<number>(() => {
-    const val = localStorage.getItem('uploaded_docs_count');
-    return val ? parseInt(val, 10) : 0;
-  });
-  const speakingHistory = useSpeakingStore((s) => s.history);
-  const voiceMinutesUsed = (() => {
-    const now = new Date();
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    const totalSeconds = speakingHistory
-      .filter((e) => new Date(e.timestamp) >= monthStart)
-      .reduce(
-        (sum, e) =>
-          sum +
-          (e.evaluation?.wordsPerMinute
-            ? Math.round((e.evaluation.wordCount / Math.max(e.evaluation.wordsPerMinute, 1)) * 60)
-            : 0),
-        0
-      );
-    return Math.round(totalSeconds / 60);
-  })();
+  // No authoritative metering endpoint exists for these quotas yet.
+  const uploadedDocsCount = null;
+  const voiceMinutesUsed = null;
 
   // Sub-hooks
   const edit = useProfileEdit(profile, setMessage, setError);
