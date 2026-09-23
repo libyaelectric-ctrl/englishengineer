@@ -78,6 +78,9 @@ const BILLING_UNAVAILABLE_COPY =
 
 /** Codes whose backend sentence a customer should not read; the map replaces it. */
 const BILLING_FAILURE_COPY = {
+  BILLING_INVOICES_UNAVAILABLE: 'Invoice history is temporarily unavailable. Please try again.',
+  STRIPE_PRICE_NOT_CONFIGURED:
+    'This plan is temporarily unavailable for purchase. Please contact support.',
   audit_log_unavailable: BILLING_UNAVAILABLE_COPY,
   idempotency_store_unavailable:
     'A previous billing attempt is still being processed. Please wait a moment and try again.',

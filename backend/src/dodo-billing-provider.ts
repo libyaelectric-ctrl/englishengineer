@@ -8,6 +8,7 @@ import {
   BillingTopupBody,
   NormalizedWebhookEvent,
   WebhookProcessingResult,
+  formatMinorAmount,
   processNormalizedWebhookEvent,
 } from './billing-provider.js';
 import type { BillingRepository } from './billing-webhook-handlers.js';
@@ -272,6 +273,7 @@ const postJson = async (
   }
   const response = await fetchImpl(url.toString(), {
     method: 'POST',
+    signal: AbortSignal.timeout(15000),
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${apiKey}`,
@@ -392,6 +394,45 @@ export const createDodoBillingProvider = ({
         throw new ApiError(502, 'dodo_invalid_response', 'Dodo did not return a portal URL.');
       }
       return { url };
+    },
+
+    async listInvoices(customerId) {
+      ensureConfigured();
+      const url = new URL('/payments', config.baseUrl!);
+      url.searchParams.set('customer_id', customerId);
+      url.searchParams.set('page_size', '20');
+      const response = await fetchImpl(url.toString(), {
+        headers: { Authorization: `Bearer ${config.apiKey}` },
+        signal: AbortSignal.timeout(15000),
+      });
+      if (!response.ok) throw new ApiError(502, 'dodo_api_error', 'Invoice retrieval failed.');
+      const payload: unknown = await response.json();
+      if (!isRecord(payload) || !Array.isArray(payload.items))
+        throw new ApiError(502, 'dodo_invalid_response', 'Invalid invoice response.');
+      return payload.items
+        .filter(isRecord)
+        .filter(
+          (payment) => isRecord(payment.customer) && payment.customer.customer_id === customerId
+        )
+        .map((payment) => {
+          if (
+            typeof payment.payment_id !== 'string' ||
+            typeof payment.created_at !== 'string' ||
+            typeof payment.total_amount !== 'number' ||
+            typeof payment.currency !== 'string'
+          )
+            throw new ApiError(502, 'dodo_invalid_response', 'Incomplete invoice response.');
+          return {
+            id: payment.payment_id,
+            date: payment.created_at,
+            amount: formatMinorAmount(payment.total_amount, payment.currency),
+            status: payment.status === 'succeeded' ? 'paid' : String(payment.status ?? 'unknown'),
+            invoicePdf:
+              typeof payment.invoice_url === 'string' && payment.invoice_url.startsWith('https://')
+                ? payment.invoice_url
+                : null,
+          };
+        });
     },
 
     async processWebhook(rawBody, headers, onEventDetected): Promise<WebhookProcessingResult> {

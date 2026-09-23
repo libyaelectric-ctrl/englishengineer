@@ -24,6 +24,8 @@ export const ERROR_CODE_CONTRACT = {
   auth_provider_unavailable: 'billing-surface',
   authentication_required: 'billing-surface',
   BILLING_STATUS_UNAVAILABLE: 'billing-surface',
+  BILLING_INVOICES_UNAVAILABLE: 'billing-surface',
+  STRIPE_PRICE_NOT_CONFIGURED: 'billing-surface',
   billing_customer_not_found: 'billing-surface',
   billing_user_mismatch: 'billing-surface',
   csrf_token_invalid: 'billing-surface',

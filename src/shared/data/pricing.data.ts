@@ -1,5 +1,7 @@
 import { CurrencyConfig } from '@/features/billing/currency.config';
 
+import BILLING_PRICE_CATALOG from './billing-price-catalog.json';
+
 export interface PricingTierFeature {
   name: string;
   included: boolean;
@@ -55,9 +57,9 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'junior',
     name: 'Junior',
-    monthlyPrice: 19.99,
-    annualPrice: 16.67,
-    annualTotal: 199.99,
+    monthlyPrice: BILLING_PRICE_CATALOG.junior.month / 100,
+    annualPrice: Math.round(BILLING_PRICE_CATALOG.junior.year / 12) / 100,
+    annualTotal: BILLING_PRICE_CATALOG.junior.year / 100,
     originalMonthlyPrice: 29.99,
     originalAnnualPrice: 25.0,
     description: 'Essential learning core for daily engineering English practice.',
@@ -89,9 +91,9 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'senior',
     name: 'Senior',
-    monthlyPrice: 39.99,
-    annualPrice: 33.33,
-    annualTotal: 399.99,
+    monthlyPrice: BILLING_PRICE_CATALOG.senior.month / 100,
+    annualPrice: Math.round(BILLING_PRICE_CATALOG.senior.year / 12) / 100,
+    annualTotal: BILLING_PRICE_CATALOG.senior.year / 100,
     originalMonthlyPrice: 59.99,
     originalAnnualPrice: 50.0,
     description: 'Expand your skills with reading, writing, and translation.',
@@ -119,9 +121,9 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'specialist',
     name: 'Specialist',
-    monthlyPrice: 49.99,
-    annualPrice: 41.67,
-    annualTotal: 499.99,
+    monthlyPrice: BILLING_PRICE_CATALOG.specialist.month / 100,
+    annualPrice: Math.round(BILLING_PRICE_CATALOG.specialist.year / 12) / 100,
+    annualTotal: BILLING_PRICE_CATALOG.specialist.year / 100,
     originalMonthlyPrice: 79.99,
     originalAnnualPrice: 66.67,
     description: 'Add speaking and listening to complete your communication skills.',
@@ -149,9 +151,9 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'master',
     name: 'Master',
-    monthlyPrice: 59.99,
-    annualPrice: 50.0,
-    annualTotal: 599.99,
+    monthlyPrice: BILLING_PRICE_CATALOG.master.month / 100,
+    annualPrice: Math.round(BILLING_PRICE_CATALOG.master.year / 12) / 100,
+    annualTotal: BILLING_PRICE_CATALOG.master.year / 100,
     originalMonthlyPrice: 99.99,
     originalAnnualPrice: 83.33,
     description: 'Full access: all modules including AI Copilot and tools.',

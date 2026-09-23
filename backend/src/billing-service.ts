@@ -7,6 +7,7 @@ import { normalizePlanId } from './billing-plan-migration.js';
 import {
   BillingProvider,
   BillingProviderName,
+  InvoiceRecord,
   WebhookProcessingResult,
 } from './billing-provider.js';
 import { validateBillingReturnUrl } from './billing-return-url.js';
@@ -40,26 +41,11 @@ interface TopupCheckoutSessionBody {
 }
 const isValidUserId = (value: unknown): value is string =>
   typeof value === 'string' && value.trim().length > 0 && !value.startsWith('demo_engineer_');
-const resolveSubscription = (
-  sub: SubscriptionSnapshot | null,
-  configured: boolean,
-  hasProvider: boolean
-): SubscriptionSnapshot => {
+const resolveSubscription = (sub: SubscriptionSnapshot | null): SubscriptionSnapshot => {
   if (!sub) return emptySubscription();
   const normalized = { ...sub, planId: normalizePlanId(sub.planId) };
-  if (!configured || !hasProvider)
-    return normalized.planId !== 'free' && normalized.status !== 'none'
-      ? normalized
-      : emptySubscription();
-  return normalized.stripeCustomerId ? normalized : emptySubscription();
+  return normalized;
 };
-interface InvoiceRecord {
-  id: string;
-  date: string;
-  amount: string;
-  status: string;
-  invoicePdf: string | null;
-}
 export interface BillingService {
   readonly provider: BillingProvider | null;
   createCheckoutSession(userId: string, body: CheckoutSessionBody): Promise<{ url: string }>;
@@ -189,27 +175,22 @@ export const createBillingService = ({
           'Billing status is temporarily unavailable.'
         );
       }
-      return resolveSubscription(sub, activeProvider?.configured === true, !!activeProvider);
+      return resolveSubscription(sub);
     },
     async listInvoices(userId) {
       assertBillingUser(userId);
       const sub = await repository.getSubscriptionStatus(userId);
-      if (!sub?.stripeCustomerId || !stripeClient) return [];
+      if (!sub?.stripeCustomerId) return [];
       ensureConfigured();
       try {
-        const invoices = await stripeClient.invoices.list({
-          customer: sub.stripeCustomerId,
-          limit: 20,
-        });
-        return invoices.data.map((inv) => ({
-          id: inv.id ?? 'unknown',
-          date: inv.created ? new Date(inv.created * 1000).toISOString() : '',
-          amount: inv.amount_paid != null ? `$${(inv.amount_paid / 100).toFixed(2)}` : '$0.00',
-          status: inv.status ?? 'unknown',
-          invoicePdf: inv.invoice_pdf ?? null,
-        }));
+        if (!activeProvider?.listInvoices) throw new Error('Provider does not support invoices.');
+        return await activeProvider.listInvoices(sub.stripeCustomerId);
       } catch {
-        return [];
+        throw new ApiError(
+          502,
+          'BILLING_INVOICES_UNAVAILABLE',
+          'Invoices are temporarily unavailable.'
+        );
       }
     },
     async processWebhook(rawBody, headers, onEventDetected) {

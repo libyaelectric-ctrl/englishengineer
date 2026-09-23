@@ -35,7 +35,7 @@ describe('health endpoint', () => {
   });
 
   it('returns degraded when Supabase not configured', () => {
-    const testConfig = { ...config, supabase: { configured: false } };
+    const testConfig = { ...config, supabase: { configured: false, expectedProjectRef: null } };
     const health = toPublicHealth(testConfig);
     assert.equal(health.ok, false);
     assert.equal(health.status, 'degraded');
@@ -45,9 +45,14 @@ describe('health endpoint', () => {
     const health = toPublicHealth(config);
     assert.deepEqual(health.checks, {
       ai: { configured: true },
-      billing: { configured: true },
-      supabase: { configured: true },
-      rateLimit: { configured: true },
+      // webhookConfigured is false because this fixture's Stripe config carries no
+      // webhook secret — the same state that let production take a payment without ever
+      // granting the plan.
+      billing: { configured: true, webhookConfigured: false },
+      // `reachable: null` is the liveness endpoint saying "not probed", not "healthy" —
+      // diagnostics fills the same key in from the same module.
+      supabase: { configured: true, projectRef: null, expectedProjectRef: null, reachable: null },
+      rateLimit: { configured: true, reachable: null },
       auth: { configured: true, firebaseProjectId: 'demo-project' },
     });
   });
@@ -60,6 +65,23 @@ describe('health endpoint', () => {
   it('reports the configured firebase project id (not a secret, matches frontend .env)', () => {
     const health = toPublicHealth(config);
     assert.equal(health.checks.auth.firebaseProjectId, 'demo-project');
+  });
+
+  it('names the Supabase project it is on, so a fix applied elsewhere is visible', () => {
+    const testConfig = {
+      ...config,
+      workspace: { configured: true, supabaseUrl: 'https://wxabrwzitwsjtpmlvvqe.supabase.co' },
+    } as unknown as BackendConfig;
+    assert.equal(toPublicHealth(testConfig).checks.supabase.projectRef, 'wxabrwzitwsjtpmlvvqe');
+  });
+
+  it('reports no project ref for a URL that has none, rather than guessing', () => {
+    const testConfig = {
+      ...config,
+      auth: { ...config.auth, supabaseUrl: 'https://postgrest.internal.example.com' },
+      workspace: { configured: true, supabaseUrl: 'https://postgrest.internal.example.com' },
+    } as unknown as BackendConfig;
+    assert.equal(toPublicHealth(testConfig).checks.supabase.projectRef, null);
   });
 
   it('reports auth as unconfigured with a null project id when nothing is set', () => {
