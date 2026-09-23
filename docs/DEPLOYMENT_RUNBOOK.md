@@ -39,9 +39,76 @@ Required:
 
 ## Backend Deploy (Render)
 
-### Otomatik Deploy
+### Which path deploys
 
-Push to `main` triggers automatic deployment via GitHub integration.
+**The pipeline deploys `main`; Render's webhook is a redundant first mover.**
+`.github/workflows/render-deploy.yml` runs on every push to `main` and calls
+`npm run render:deploy` (`scripts/render-deploy.mjs`), which resolves the pushed commit, reuses
+a deploy of that commit when the webhook already started one, triggers
+`POST /services/{id}/deploys` with an explicit `commitId` when nothing is arriving, waits for a
+terminal status (`live` is the only success), and finally asks the live instance whether it is
+healthy and whether its Supabase project matches the one it is pinned to.
+
+Why the pipeline and not just the webhook: **Render never reconciles a lost push.** The
+GitHub App delivers a `push` event; when a delivery is dropped, nothing polls the branch, so the
+service keeps serving the previous commit while `main` moves on — and no failed deploy, no
+event, nothing in the dashboard says so. The service's own deploy history:
+
+| when (UTC)         | `main`   | Render                                                               |
+| ------------------ | -------- | -------------------------------------------------------------------- |
+| 2026-09-18 10:15   | 2def6f9f | deployed (`new_commit`) — the last automatic deploy                  |
+| 2026-09-18 → 09-23 | 8 merges | **nothing**, not even a failed deploy or an event                    |
+| 2026-09-23 07:37   | 346d9020 | deployed (`new_commit`) — deliveries working again                   |
+| 2026-09-23 09:29   | b2f5f755 | **nothing**; deployed only by hand through the API five hours later |
+
+Those eight were harmless by luck (none touched `backend/`). The frontend never had this
+problem because the pipeline deploys it (`.github/workflows/vercel-deploy.yml`); the backend
+now has the same property.
+
+The webhook stays on (`autoDeploy: yes`, `autoDeployTrigger: commit`, branch `main`, no build
+filter) because when it works it starts the deploy seconds after the push. The command then
+finds that deploy and waits on it rather than starting a second one, so one push produces one
+deploy and one restart of production regardless of who got there first.
+
+The command audits the service before it touches it — repo, branch and `autoDeploy` — because
+those are the settings whose silent drift re-creates the failure above. It needs one credential,
+`RENDER_API_KEY` (Render dashboard → Account Settings → API Keys); the workflow reads it from the
+repository secret of the same name, and the service is found through the `RENDER_SERVICE_ID`
+repository variable or by name when that is unset.
+
+```bash
+export RENDER_API_KEY=rnd_…
+npm run render:deploy -- --commit <sha>              # deploy that commit and wait until it is live
+npm run render:deploy -- --commit <sha> --dry-run    # report only; never POSTs
+npm run render:deploy -- --commit <sha> --force      # deploy even if this commit already has one
+```
+
+If Render's clone does not have the commit yet (a lost webhook is also a lost fetch, so
+`commitId` answers 404), the command deploys the head of `main` instead and then checks that the
+deploy it created names the commit it was asked for — a branch that has moved on fails the run
+instead of silently shipping a different commit.
+
+### "main moved but production did not"
+
+1. Ask what is live:
+
+   ```bash
+   export RENDER_API_KEY=rnd_…
+   npm run render:deploy -- --commit "$(git rev-parse origin/main)" --dry-run
+   ```
+
+   `is already live` means nothing is wrong. `would be triggered` means `main` is ahead of the
+   running backend — continue.
+2. Confirm nothing arrived: Render dashboard → the service → **Events**. An empty feed around
+   the push time is a dropped delivery, not a failed build.
+3. Deploy it: re-run the failed `Deploy to Render` workflow, or
+   `npm run render:deploy -- --commit <sha>` from a checkout. The previous version keeps serving
+   until the new deploy goes live, so a failed attempt is not an outage.
+4. If it keeps happening, check the connection rather than the code: GitHub → **Settings →
+   Applications → Render** (is the installation still authorized, and does it still have access
+   to this repository?) and Render → the service → **Settings → Build & Deploy** (Auto-Deploy
+   `Yes`, branch `main`, the right repository). Re-authorizing the GitHub App is a dashboard
+   action; the pipeline deploy above works even while it is broken, which is the point.
 
 ### Health Check
 
@@ -207,6 +274,8 @@ provider keys can all be right.
 
 ## Post-Deploy Checklist
 
+- [ ] The `Deploy to Render` workflow is green for `main` HEAD — it only goes green once that
+      commit is the one serving traffic, so this replaces "did the webhook fire?"
 - [ ] Frontend loads (https://eng-vox.vercel.app)
 - [ ] Public backend liveness returns only `status: ok`
 - [ ] Authenticated diagnostics returns 200 and reports audit status `ready`
