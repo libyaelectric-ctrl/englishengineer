@@ -12,6 +12,7 @@ import {
   resolveWorkspace,
 } from './config-builders.js';
 import { hasText, toPositiveInteger } from './config-helpers.js';
+import { rateLimitStoreCheck, supabaseStoreCheck } from './store-health.js';
 
 type Env = Record<string, string | undefined>;
 
@@ -49,9 +50,29 @@ export const createBackendConfig = (environment: Env = process.env): BackendConf
 
 interface HealthCheck {
   configured: boolean;
-  reachable?: boolean;
+  /**
+   * Whether this service's inbound webhook path can accept a delivery at all.
+   *
+   * `configured` answers a different question — can the service be called out to — and the
+   * two came apart in production: billing reported `configured: true` while every Dodo
+   * webhook delivery was refused with 503 `dodo_webhook_not_configured`, so the provider
+   * charged the customer and the plan never activated. A boolean only, like every other
+   * secret-derived field here: the value itself never leaves the process.
+   */
+  webhookConfigured?: boolean;
+  /**
+   * `null` means this endpoint did not probe the store — the liveness endpoint never pays
+   * for a round trip, and says so instead of implying a healthy store. Only a probe writes
+   * `true` or `false`; see `store-health.ts` for the single implementation both endpoints
+   * report from.
+   */
+  reachable?: boolean | null;
   error?: string;
   firebaseProjectId?: string | null;
+  /** Which Supabase project this process resolves to (`store-health.ts`). */
+  projectRef?: string | null;
+  /** The project this deployment pinned, if any (`store-health.ts`). */
+  expectedProjectRef?: string | null;
 }
 
 interface PublicHealth {
@@ -91,9 +112,21 @@ export const toPublicHealth = (config: BackendConfig): PublicHealth => {
           : config.billing.provider === 'paddle'
             ? false
             : config.stripe.configured,
+      // Reported separately from `configured` on purpose: a provider whose webhook signing
+      // secret is missing can still start a checkout, and that is exactly the state that
+      // takes a customer's money without granting the plan. Callers that only look at
+      // `configured` would call that healthy.
+      webhookConfigured:
+        config.billing.provider === 'dodo'
+          ? hasText(config.dodo.webhookSecret)
+          : config.billing.provider === 'paddle'
+            ? false
+            : hasText(config.stripe.webhookSecret),
     },
-    supabase: { configured: config.supabase.configured },
-    rateLimit: { configured: config.rateLimit.storeMode === 'upstash' },
+    // Both store checks come from the module `/api/diagnostics` also reports from, so the
+    // two endpoints cannot describe different databases or different configurations.
+    supabase: supabaseStoreCheck(config),
+    rateLimit: rateLimitStoreCheck(config),
     auth: {
       configured: firebaseConfigured || supabaseAuthConfigured,
       firebaseProjectId: config.auth?.firebaseProjectId || null,

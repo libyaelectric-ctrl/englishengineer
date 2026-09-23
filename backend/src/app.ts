@@ -48,6 +48,7 @@ import type { UpstashRateLimitStore } from './rate-limit.js';
 import { registerReadingRoutes } from './reading-routes.js';
 import type { RouteRegistrar } from './route-registrar.js';
 import { registerSpeakingRoutes } from './speaking-routes.js';
+import { collectStoreChecks, hasStoreOutage, projectRefPin } from './store-health.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
 import { createSubscriptionRepository } from './subscription-repository.js';
 import { createMetricsRepository } from './supabase-metrics-repository.js';
@@ -88,63 +89,6 @@ const SECURITY_HEADERS = {
   crossOriginEmbedderPolicy: false,
 };
 
-const checkSupabaseHealth = async (
-  config: BackendConfig,
-  checks: Record<string, unknown>,
-  health: { status: string; ok: boolean }
-) => {
-  const TIMEOUT_MS = 5000;
-  try {
-    const { createClient } = await import('@supabase/supabase-js');
-    const supabase = createClient(config.auth.supabaseUrl!, config.auth.supabaseAnonKey!);
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS)
-    );
-    const pingPromise = supabase.from('subscriptions').select('id').limit(1);
-    await Promise.race([pingPromise, timeoutPromise]);
-    checks.supabase = { configured: true, reachable: true };
-  } catch (err: unknown) {
-    checks.supabase = {
-      configured: true,
-      reachable: false,
-      error: err instanceof Error ? err.message : String(err),
-    };
-    health.status = 'degraded';
-    health.ok = false;
-  }
-};
-
-const checkUpstashHealth = async (
-  config: BackendConfig,
-  checks: Record<string, unknown>,
-  health: { status: string; ok: boolean }
-) => {
-  if (config.rateLimit?.storeMode !== 'upstash' || !config.rateLimit?.upstashUrl) return;
-  const TIMEOUT_MS = 5000;
-  try {
-    const timeoutPromise: Promise<Response> = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS)
-    );
-    const pingPromise = fetch(`${config.rateLimit.upstashUrl}/ping`, {
-      headers: { Authorization: `Bearer ${config.rateLimit.upstashToken}` },
-    });
-    const pingRes = (await Promise.race([pingPromise, timeoutPromise])) as globalThis.Response;
-    checks.rateLimit = { configured: true, reachable: pingRes.ok };
-    if (!pingRes.ok) {
-      health.status = 'degraded';
-      health.ok = false;
-    }
-  } catch (err: unknown) {
-    checks.rateLimit = {
-      configured: true,
-      reachable: false,
-      error: err instanceof Error ? err.message : String(err),
-    };
-    health.status = 'degraded';
-    health.ok = false;
-  }
-};
-
 interface CreateAppOpts {
   config?: BackendConfig;
   fetchImpl?: typeof fetch;
@@ -153,6 +97,50 @@ interface CreateAppOpts {
   workspaceRepository?: WorkspaceRepository | null;
   rateLimitStore?: UpstashRateLimitStore | null;
 }
+
+/**
+ * Refuses to start when this process resolves to a Supabase project other than the pinned one.
+ *
+ * `supabase.configured` only ever meant "a URL and a service key are present", so a backend
+ * pointed at the wrong project — the second project a hosting integration creates by itself is
+ * the usual way — started happily, answered every health check and failed every write. That is
+ * the state that made the 2026-09-19 incident unattributable: a migration applied to the
+ * dashboard's default project reported success while the running backend kept failing against
+ * another one, and only the row counts could tell the two databases apart.
+ *
+ * The pin is opt-in: an unset `EXPECTED_SUPABASE_PROJECT_REF` warns in production and starts
+ * anyway, because a guard that cannot be left off would just be another way for a deployment
+ * to go down. Outside production a mismatch warns too — a staging copy pointed at the other
+ * project is a legitimate thing to want.
+ */
+const guardSupabaseProjectPin = (config: BackendConfig): void => {
+  const pin = projectRefPin(config);
+
+  if (pin.matches === false) {
+    const detail =
+      `EXPECTED_SUPABASE_PROJECT_REF is "${pin.expected}" but SUPABASE_URL resolves to ` +
+      `${pin.actual ? `"${pin.actual}"` : 'a URL with no project ref'}.`;
+    if (config.environment === 'production' && process.env.NODE_ENV !== 'test') {
+      throw new Error(
+        `${detail} Refusing to start: this process would read and write the other project's ` +
+          'tables, where the data and the migration history are not the ones anyone maintains. ' +
+          'Point SUPABASE_URL at the pinned project, or update EXPECTED_SUPABASE_PROJECT_REF ' +
+          'if moving to this project was intentional.'
+      );
+    }
+    logger.warn(`${detail} Not production, so the service will start anyway.`);
+    return;
+  }
+
+  if (!pin.expected && config.environment === 'production') {
+    logger.warn(
+      'EXPECTED_SUPABASE_PROJECT_REF is not set, so this backend cannot tell the intended ' +
+        'Supabase project from another one holding the same tables. Set it to the project ref ' +
+        'inside SUPABASE_URL to make a misdirected migration fail at boot instead of silently. ' +
+        `Currently resolved: ${pin.actual ?? 'unrecognised'}.`
+    );
+  }
+};
 
 const setupMiddleware = (app: Express, config: BackendConfig) => {
   if (!config.appOrigin) {
@@ -178,6 +166,9 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
       'FIREBASE_PROJECT_ID is not set. Firebase-authenticated requests will fail in this environment.'
     );
   }
+
+  // Same class of fault as the Firebase check above, one layer down: the store identity.
+  guardSupabaseProjectPin(config);
 
   app.disable('x-powered-by');
   app.use(
@@ -521,10 +512,16 @@ const registerRoutes = (
   };
   const diagnosticsHandler = async (_request: Request, response: Response) => {
     const startTime = Date.now();
-    const health = toPublicHealth(config);
-    const checks: Record<string, unknown> = { ...health.checks };
-    if (config.supabase?.configured) await checkSupabaseHealth(config, checks, health);
-    await checkUpstashHealth(config, checks, health);
+    // Same producer as `/api/health`, then the probe — so both endpoints describe the same
+    // stores with the same keys, and `reachable` can only come from an actual probe.
+    const base = toPublicHealth(config);
+    const storeChecks = await collectStoreChecks(config, { probe: true, fetchImpl });
+    const health = { ...base };
+    const checks: Record<string, unknown> = { ...base.checks, ...storeChecks };
+    if (hasStoreOutage(storeChecks)) {
+      health.status = 'degraded';
+      health.ok = false;
+    }
     const audit = getAuditLogStatus();
     checks.audit = audit;
     if (audit.required && audit.status !== 'ready') {

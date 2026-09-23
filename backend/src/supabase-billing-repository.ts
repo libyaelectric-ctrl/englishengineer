@@ -24,6 +24,7 @@ interface SubscriptionRow {
   updated_at: string;
   source: string;
   topup_credits?: number;
+  grace_period_ends_at?: string | null;
 }
 const mapSubscriptionRow = (row: SubscriptionRow | null): SubscriptionSnapshot | null =>
   row
@@ -37,6 +38,7 @@ const mapSubscriptionRow = (row: SubscriptionRow | null): SubscriptionSnapshot |
         updatedAt: row.updated_at,
         source: row.source,
         topupCredits: row.topup_credits || 0,
+        gracePeriodEndsAt: row.grace_period_ends_at ?? null,
       }
     : null;
 const mapSubscriptionSnapshot = (userId: string, snapshot: SubscriptionSnapshot) => ({
@@ -50,6 +52,7 @@ const mapSubscriptionSnapshot = (userId: string, snapshot: SubscriptionSnapshot)
   updated_at: snapshot.updatedAt,
   source: snapshot.source,
   topup_credits: snapshot.topupCredits ?? 0,
+  grace_period_ends_at: snapshot.gracePeriodEndsAt ?? null,
 });
 const handleDbError = (error: {
   message?: string;
@@ -103,6 +106,24 @@ export const createSupabaseBillingRepository = (
   });
   return {
     mode: 'supabase',
+    async commitWebhook(change) {
+      const { data, error } = await supabase.rpc('commit_billing_webhook', {
+        p_event_id: change.eventId,
+        p_event_type: change.eventType,
+        p_user_id: change.userId,
+        p_expected_updated_at: change.expected?.updatedAt ?? null,
+        p_expected_credits: change.expected?.topupCredits ?? null,
+        p_snapshot:
+          change.userId && change.subscription
+            ? mapSubscriptionSnapshot(change.userId, change.subscription)
+            : null,
+        p_customer: change.customer,
+      });
+      if (error) throw handleDbError(error);
+      if (data !== 'applied' && data !== 'duplicate' && data !== 'conflict')
+        throw new Error('Invalid atomic billing commit result.');
+      return data;
+    },
     async getSubscriptionStatus(userId) {
       const { data, error } = await supabase
         .from('subscription_status')

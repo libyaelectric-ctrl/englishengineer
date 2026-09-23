@@ -1,4 +1,5 @@
 import type { SubscriptionSnapshot } from './billing-helpers.js';
+import type { BillingRepository } from './billing-webhook-handlers.js';
 import { createSupabaseBillingRepository } from './supabase-billing-repository.js';
 
 export interface TopupConsumptionResult {
@@ -7,6 +8,7 @@ export interface TopupConsumptionResult {
   remainingCredits: number;
 }
 export interface SubscriptionRepository {
+  commitWebhook?: BillingRepository['commitWebhook'];
   mode: string;
   getSubscriptionStatus(userId: string): Promise<SubscriptionSnapshot | null>;
   upsertSubscriptionStatus(userId: string, snapshot: SubscriptionSnapshot): Promise<void>;
@@ -58,6 +60,22 @@ export const createMemorySubscriptionRepository = ({
   };
   return {
     mode: 'memory',
+    async commitWebhook(change) {
+      pruneEvents(events, now(), eventTtlMs, eventCacheMax);
+      if (events.has(change.eventId)) return 'duplicate';
+      const current = change.userId ? (subscriptions.get(change.userId) ?? null) : null;
+      if (
+        current?.updatedAt !== change.expected?.updatedAt ||
+        current?.topupCredits !== change.expected?.topupCredits
+      )
+        return 'conflict';
+      if (change.userId && change.subscription)
+        subscriptions.set(change.userId, change.subscription);
+      events.set(change.eventId, now());
+      pruneSubscriptions();
+      pruneEvents(events, now(), eventTtlMs, eventCacheMax);
+      return 'applied';
+    },
     async getSubscriptionStatus(userId) {
       return subscriptions.get(userId) ?? null;
     },

@@ -23,6 +23,13 @@
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
         value: ''
+      # The project the running backend must be on. Set it to the ref inside SUPABASE_URL.
+      # A mismatch refuses to start in production, so a migration applied to the wrong project
+      # — or a hosting integration that provisions a second one — shows up at boot instead of
+      # as "writes fail" behind a healthy-looking /api/health. Optional, but production warns
+      # on every boot while it is unset.
+      - key: EXPECTED_SUPABASE_PROJECT_REF
+        sync: false
       - key: AI_PROVIDER
         sync: false
       - key: AI_MODEL

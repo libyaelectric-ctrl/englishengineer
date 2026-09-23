@@ -24,7 +24,17 @@ interface BillingCustomerData {
   billingEmail?: string | null;
 }
 
+export interface WebhookCommit {
+  eventId: string;
+  eventType: string;
+  userId: string | null;
+  expected: SubscriptionSnapshot | null;
+  subscription: SubscriptionSnapshot | null;
+  customer: BillingCustomerData | null;
+}
+
 export interface BillingRepository {
+  commitWebhook?(change: WebhookCommit): Promise<'applied' | 'duplicate' | 'conflict'>;
   getSubscriptionStatus(userId: string): Promise<SubscriptionSnapshot | null>;
   upsertSubscriptionStatus(userId: string, snapshot: SubscriptionSnapshot): Promise<void>;
   upsertBillingCustomer(data: BillingCustomerData): Promise<void>;
@@ -51,6 +61,7 @@ const buildCheckoutUpdate = (current: SubscriptionSnapshot, object: WebhookObjec
     ) as number;
     return {
       topupCredits: (current.topupCredits || 0) + credits,
+      stripeCustomerId: object.customer || current.stripeCustomerId,
     };
   }
   return {
@@ -81,6 +92,7 @@ const buildSubscriptionUpdate = (
   stripeSubscriptionId: object.id || current.stripeSubscriptionId,
   updatedAt: new Date().toISOString(),
   source: 'dodo_webhook',
+  gracePeriodEndsAt: object.status === 'past_due' ? (current.gracePeriodEndsAt ?? null) : null,
 });
 
 const parsePeriodEnd = (object: WebhookObject): string | null => {
@@ -158,7 +170,7 @@ export const handlePaymentFailed = async (
     await repository.upsertSubscriptionStatus(userId, {
       ...current,
       status: 'past_due',
-      gracePeriodEndsAt: null,
+      gracePeriodEndsAt: current.gracePeriodEndsAt,
       updatedAt: new Date().toISOString(),
       source: 'dodo_webhook',
     });
