@@ -1,0 +1,60 @@
+name: Deploy to Render
+
+# The backend used to be deployed by one thing only: Render's GitHub App webhook. When a
+# delivery is dropped, Render never reconciles — nothing polls the branch — so the service
+# keeps serving the previous commit while `main` moves on, and the only symptom is a bug that
+# "was already fixed". Render's own deploy history from this repository shows the hole:
+#
+#   2026-09-18T10:15:56Z  2def6f9f  new_commit  ← last automatic deploy
+#   …                     eight merges land on `main` in the next five days, no deploy,
+#                         no failed deploy, nothing in the events feed
+#   2026-09-23T07:37:28Z  346d9020  new_commit  ← deliveries arrive again
+#   2026-09-23T09:29:00Z  b2f5f755  (PR #240) … nothing, ever
+#
+# The frontend does not depend on a webhook — `.github/workflows/vercel-deploy.yml` deploys it
+# from here on every push to `main` — and that asymmetry is the whole reason the backend
+# drifted. This job closes it: the pipeline deploys the exact commit that landed on `main`,
+# and `scripts/render-deploy.mjs` reuses a deploy the webhook already started, so the webhook
+# and this job together produce one deploy instead of two restarts of production.
+#
+# There is deliberately no `pull_request` trigger: a pull request has no commit on `main` yet,
+# so there is nothing for production to match. The deploy follows the merge.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit to deploy (default: the current main HEAD)'
+        required: false
+        type: string
+
+# Serialize deploys of `main` and never cancel one in flight: a cancelled deploy leaves the
+# service on whatever version was serving before it.
+concurrency:
+  group: render-deploy-main
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  deploy:
+    name: 🚢 Render Backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: 22 }
+
+      # No `npm ci`: the deploy command imports nothing but `node:child_process`, so the job
+      # spends its time waiting for Render rather than installing dependencies.
+      - name: Deploy the commit and wait until it is live
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_SERVICE_ID: ${{ vars.RENDER_SERVICE_ID }}
+          EXPECTED_COMMIT: ${{ github.event.inputs.commit || github.sha }}
+        run: node scripts/render-deploy.mjs --commit "$EXPECTED_COMMIT" --wait 900
