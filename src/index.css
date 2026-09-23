@@ -478,9 +478,9 @@ button:hover ~ .yibo-hide-ctrl,
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
-  .text-[9px],
-  .text-[10px],
-  .text-[11px] {
+  .text-\[9px\],
+  .text-\[10px\],
+  .text-\[11px\] {
     line-height: 1.4;
   }
   .pb-mobile-nav {

@@ -8,6 +8,7 @@ import { useLearningStore } from '@/core/learning';
 
 import { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 import { filterMissionsByDiscipline } from '@/shared/constants/mission-discipline-map';
+import { logger } from '@/shared/logger';
 import { GrammarTransferService } from '@/shared/services/grammar-transfer.service';
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { storage } from '@/shared/storage';
@@ -27,6 +28,20 @@ import { WRITING_MISSIONS } from './writing.data';
 import { WritingEvaluator } from './writing.evaluator';
 
 const STORAGE_KEY = 'EngVox_writing_state';
+
+/**
+ * Grammar-evidence writes `submitSubmission` started and deliberately did not await.
+ *
+ * The local grade must not wait for the write (see the note above `WritingService`), so the
+ * promise is dropped at the call site -- and dropping it leaves nobody holding the work. Two
+ * real consequences follow: a failure surfaces as an unhandled rejection rather than as a
+ * warning, and a test that finishes first tears its environment down while
+ * `grammar.repository`'s dynamic `import('@/data/grammar')` is still in flight, which vitest
+ * reports as an EnvironmentTeardownError and fails the whole run over (that is how this was
+ * found). Keeping the promise here makes the work observable so `settlePendingEvidence()` can
+ * wait for it instead of racing it.
+ */
+const pendingEvidenceWrites: Promise<unknown>[] = [];
 
 const DEFAULT_STATE: WritingState = {
   completedMissions: {},
@@ -171,7 +186,13 @@ export const WritingService = {
       );
     }
 
-    void GrammarTransferService.recordWritingEvidence(mission, evaluation);
+    // Fire-and-forget by design, but tracked: see `pendingEvidenceWrites`. A rejection is
+    // reported rather than left to become an unhandled rejection at process level.
+    pendingEvidenceWrites.push(
+      GrammarTransferService.recordWritingEvidence(mission, evaluation).catch((error) => {
+        logger.w('[Writing] Failed to record grammar transfer evidence', error);
+      })
+    );
 
     return evaluation;
   },
@@ -219,5 +240,20 @@ export const WritingService = {
    */
   resetWritingState(): void {
     this.saveState(DEFAULT_STATE);
+  },
+
+  /**
+   * Waits for the grammar-evidence writes `submitSubmission` started and did not await.
+   *
+   * Only a test needs this -- the app never does, since the whole point of the write is that
+   * the local grade does not wait for it. A test needs it because `grammar.repository` imports
+   * the grammar corpus dynamically: ending the file while that import is in flight tears the
+   * module registry down under it and vitest fails the run with an EnvironmentTeardownError.
+   * The loop also covers a write started by a submission that landed while this was awaiting.
+   */
+  async settlePendingEvidence(): Promise<void> {
+    while (pendingEvidenceWrites.length > 0) {
+      await Promise.all(pendingEvidenceWrites.splice(0));
+    }
   },
 };

@@ -242,7 +242,16 @@ class SupabaseTeamProvider implements TeamProvider {
       .limit(1)
       .maybeSingle();
 
-    if (memError || !membership) {
+    // A store failure is not an authorization fact. Reporting the two as one sentence told an
+    // invited colleague they "do not belong to an organization" whenever the membership query
+    // itself failed, which sends them to ask their admin for access they already have.
+    if (memError) {
+      throw new AppError({
+        code: ErrorCode.NETWORK,
+        message: `Team membership could not be read: ${memError.message}`,
+      });
+    }
+    if (!membership) {
       throw new AppError({
         code: ErrorCode.AUTH,
         message: 'You do not belong to an organization and cannot invite members.',
@@ -251,7 +260,18 @@ class SupabaseTeamProvider implements TeamProvider {
 
     const orgId = membership.organization_id;
 
-    const userSession = (await supabase.auth.getUser()).data.user;
+    // `getUser()` returns `{ data: { user }, error }` and never rejects on a store failure, so
+    // reading only `data.user` turned "the identity store did not answer" into "Not
+    // authenticated". The two need different sentences: one is the user's problem, the other
+    // is ours to fix.
+    const { data: session, error: sessionError } = await supabase.auth.getUser();
+    if (sessionError) {
+      throw new AppError({
+        code: ErrorCode.NETWORK,
+        message: `Your session could not be verified: ${sessionError.message}`,
+      });
+    }
+    const userSession = session.user;
     if (!userSession)
       throw new AppError({
         code: ErrorCode.AUTH,

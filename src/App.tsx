@@ -8,8 +8,10 @@ import { RouterProvider } from 'react-router-dom';
 
 import CookieConsentBanner from '@/shared/components/CookieConsentBanner';
 import { ToastContainer } from '@/shared/components/Toast';
+import { useAnalyticsConsent } from '@/shared/hooks/useAnalyticsConsent';
 import { useCapacitorBackButton } from '@/shared/hooks/useCapacitorBackButton';
 import { useDirection } from '@/shared/hooks/useDirection';
+import { isNativePlatform } from '@/shared/utils/capacitor';
 
 import { FirebaseAuthProvider } from '@/features/auth/FirebaseAuth';
 import { FirebaseBridge } from '@/features/auth/FirebaseBridge';
@@ -20,6 +22,7 @@ const BillingSync = lazy(() =>
   import('@/features/billing/BillingSync').then((module) => ({ default: module.BillingSync }))
 );
 const AppContent = () => {
+  const analyticsAccepted = useAnalyticsConsent();
   useDirection();
   useCapacitorBackButton();
   return (
@@ -35,7 +38,7 @@ const AppContent = () => {
           <CookieConsentBanner />
         </FirebaseAuthProvider>
         <ToastContainer />
-        <Analytics />
+        {analyticsAccepted && !isNativePlatform() && <Analytics />}
       </AppProvider>
     </ThemeProvider>
   );

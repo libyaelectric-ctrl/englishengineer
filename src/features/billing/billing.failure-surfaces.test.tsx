@@ -357,7 +357,9 @@ const portalFromBillingPage = async (): Promise<string> => {
   fireEvent.click(await screen.findByRole('button', { name: /manage subscription/i }));
 
   const alert = await waitFor(() => {
-    const found = within(page.container).queryByRole('alert');
+    const found = within(within(page.container).getByTestId('billing-status-panel')).queryByRole(
+      'alert'
+    );
     if (!found) throw new Error('billing page showed no failure');
     return found;
   });

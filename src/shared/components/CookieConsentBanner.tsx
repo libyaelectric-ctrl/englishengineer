@@ -48,16 +48,19 @@ const CookieConsentBanner = () => {
     return () => window.clearTimeout(t);
   }, []);
 
-  const handleAccept = async () => {
+  const handleAccept = () => {
     setCookieConsent('accepted');
     setVisible(false);
-    const { reloadApp } = await import('@/shared/utils/capacitor');
-    await reloadApp();
+    window.dispatchEvent(new Event('engvox:cookie-consent'));
+    void import('@/core/observability/observability.service')
+      .then(({ ObservabilityService }) => ObservabilityService.init())
+      .catch((error) => logger.e('Observability initialization failed', error));
   };
 
   const handleReject = () => {
     setCookieConsent('rejected');
     setVisible(false);
+    window.dispatchEvent(new Event('engvox:cookie-consent'));
   };
 
   if (!visible) return null;

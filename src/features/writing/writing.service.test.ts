@@ -1,10 +1,21 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { GrammarTransferService } from '@/shared/services/grammar-transfer.service';
 
 import { WritingService } from './writing.service';
 
 describe('WritingService', () => {
   beforeEach(() => {
     WritingService.resetWritingState();
+  });
+
+  // A submission starts a grammar-evidence write without awaiting it, and that write
+  // dynamically imports the grammar corpus. Finishing the file while the import is still in
+  // flight tears the module registry down under it, and vitest fails the whole run with an
+  // EnvironmentTeardownError -- so the test settles the work it started instead of racing the
+  // teardown. The mocked rejection is expected here: the corpus is not fetchable from a test.
+  afterEach(async () => {
+    await WritingService.settlePendingEvidence();
   });
 
   it('returns default state on fresh start', () => {
@@ -54,6 +65,42 @@ describe('WritingService', () => {
 
       const state = WritingService.getState();
       expect(state.history[0].evaluation.feedback).toBe(evaluation.feedback);
+    });
+
+    it('keeps the grammar-evidence write settleable instead of abandoning it', async () => {
+      const mission = WritingService.getMissions()[0];
+      let releaseEvidence: () => void = () => undefined;
+      const evidenceWrite = new Promise<string[]>((resolve) => {
+        releaseEvidence = () => resolve([]);
+      });
+      const spy = vi
+        .spyOn(GrammarTransferService, 'recordWritingEvidence')
+        .mockReturnValue(evidenceWrite);
+
+      WritingService.submitSubmission({
+        missionId: mission.id,
+        finalDraft: 'The site engineer inspected the foundation before pouring concrete.',
+        timeSpentMinutes: 5,
+        autoFixesUsed: 0,
+      });
+
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      // The write is still open, so settling must still be waiting -- if the promise had been
+      // dropped at the call site, this would have resolved immediately and the import would be
+      // free to outlive the test.
+      let settled = false;
+      const settling = WritingService.settlePendingEvidence().then(() => {
+        settled = true;
+      });
+      await Promise.resolve();
+      expect(settled).toBe(false);
+
+      releaseEvidence();
+      await settling;
+      expect(settled).toBe(true);
+
+      spy.mockRestore();
     });
 
     it('does nothing when backend feedback is undefined or empty', () => {

@@ -25,10 +25,9 @@ export async function openExternalUrl(url: string): Promise<void> {
     try {
       const { Browser } = await import('@capacitor/browser');
       await Browser.open({ url, toolbarColor: '#1a1a2e' });
-    } catch {
-      // Fallback if plugin fails
-      logger.e('Capacitor Browser.open failed, falling back to window.open');
-      window.open(url, '_blank', 'noopener,noreferrer');
+    } catch (error) {
+      logger.e('Capacitor Browser.open failed');
+      throw error;
     }
   } else {
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -85,9 +84,9 @@ export async function reloadApp(): Promise<void> {
  * handle the route (full reload, landing flash, lost in-memory state).
  */
 export function navigateTo(path: string): void {
-  const target = path.startsWith('#') ? path : `#${path}`;
-  if (window.location.hash === target) return;
-  window.location.hash = target;
+  const target = path.startsWith('#') ? path.slice(1) : path;
+  window.history.pushState({}, '', target);
+  window.dispatchEvent(new PopStateEvent('popstate'));
 }
 
 /**
@@ -165,29 +164,24 @@ export async function downloadFile(
       const base64 =
         typeof content === 'string'
           ? btoa(unescape(encodeURIComponent(text)))
-          : await new Promise<string>((resolve) => {
+          : await new Promise<string>((resolve, reject) => {
               const reader = new FileReader();
               reader.onload = () => resolve((reader.result as string).split(',')[1] ?? '');
+              reader.onerror = () => reject(reader.error ?? new Error('File could not be read.'));
               reader.readAsDataURL(blob);
             });
 
-      await Filesystem.writeFile({
+      const saved = await Filesystem.writeFile({
         path: filename,
         data: base64,
         directory: Directory.Cache,
       });
-    } catch {
-      logger.e('Capacitor download failed, falling back to <a download>');
-      // Last resort: try standard <a download>
-      const blob = typeof content === 'string' ? new Blob([content], { type: mimeType }) : content;
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      const { Share } = await import('@capacitor/share');
+      await Share.share({ files: [saved.uri], title: filename });
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return;
+      logger.e('Native file sharing failed');
+      throw error;
     }
   } else {
     const blob = typeof content === 'string' ? new Blob([content], { type: mimeType }) : content;

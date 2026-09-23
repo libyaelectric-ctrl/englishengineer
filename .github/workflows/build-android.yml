@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
     steps:
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -21,17 +23,22 @@ jobs:
         run: npm ci
 
       - name: Build frontend
-        run: npx vite build
+        run: npm run build:mobile
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
           VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
           VITE_BILLING_API_URL: ${{ secrets.VITE_BILLING_API_URL }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_DATA_CDN_URL: ${{ vars.VITE_DATA_CDN_URL }}
+          VITE_APP_ORIGIN: ${{ vars.VITE_APP_ORIGIN }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
 
-      - name: Setup Java 17
+      - name: Setup Java 21
         uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       # android/variables.gradle compiles against SDK 36, so the platform and its
       # build-tools have to be requested explicitly - the action's default is
@@ -43,7 +50,6 @@ jobs:
           packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
       - name: Initialize Capacitor
         run: |
-          npx cap add android || true
           npx cap sync android
 
       # Decode keystore from base64 secret (if configured)

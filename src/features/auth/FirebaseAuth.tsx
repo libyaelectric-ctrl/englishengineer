@@ -24,6 +24,7 @@ import {
   getAuth,
   getRedirectResult,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithCredential,
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -51,6 +52,7 @@ const getFirebaseAuth = (): Auth | null => {
 };
 
 export interface FirebaseAuthContextValue {
+  resetPassword: (email: string) => Promise<void>;
   isLoaded: boolean;
   isSignedIn: boolean;
   user: User | null;
@@ -121,6 +123,10 @@ export const FirebaseAuthProvider = ({ children }: { children: ReactNode }) => {
 
   const value = useMemo<FirebaseAuthContextValue>(
     () => ({
+      resetPassword: async (email) => {
+        if (!auth) throw new Error('Firebase is not configured.');
+        await sendPasswordResetEmail(auth, email.trim());
+      },
       isLoaded,
       isSignedIn: Boolean(user),
       user,
@@ -186,6 +192,9 @@ export const useFirebaseAuth = (): FirebaseAuthContextValue => {
     // Provider not mounted (unit tests, misconfigured boot): behave like a
     // loaded-but-signed-out session so guards fall back to demo/local auth.
     return {
+      resetPassword: async () => {
+        throw new Error('Firebase Auth provider is not mounted.');
+      },
       isLoaded: true,
       isSignedIn: false,
       user: null,

@@ -18,6 +18,7 @@ import { Button } from '@/shared/components/Button';
 import { PageContainer } from '@/shared/components/PageContainer';
 
 import { useAdminStore } from '@/features/admin';
+import { useAuthStore } from '@/features/auth';
 import { AUTH_SIGN_IN_URL } from '@/features/auth/firebase.config';
 
 import { BillingTab } from './BillingTab';
@@ -65,7 +66,10 @@ export const AdminPage = () => {
     return () => clearInterval(id);
   }, [autoRefresh, refreshAll]);
 
-  const handleLogout = () => navigate(AUTH_SIGN_IN_URL);
+  const handleLogout = async () => {
+    await useAuthStore.getState().logout();
+    navigate(AUTH_SIGN_IN_URL, { replace: true });
+  };
   const isRefreshing = isLoadingUsers || isLoadingStats || isLoadingLogs;
 
   return (
@@ -85,10 +89,7 @@ export const AdminPage = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={async () => {
-                  const { navigateTo } = await import('@/shared/utils/capacitor');
-                  navigateTo('/dashboard');
-                }}
+                onClick={() => navigate('/dashboard')}
                 className="text-xs"
               >
                 â† Dashboard

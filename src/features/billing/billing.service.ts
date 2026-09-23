@@ -23,8 +23,15 @@ const getProvider = (): StripeBillingProvider | null => {
   const url = getBillingApiUrl();
   return url ? new StripeBillingProvider(url) : null;
 };
-const returnUrl = (path: string): string =>
-  typeof window === 'undefined' ? path : `${window.location.origin}${path}`;
+const returnUrl = (path: string): string => {
+  if (typeof window === 'undefined') return path;
+  if (!isNativePlatform()) return `${window.location.origin}${path}`;
+  const url = new URL('/billing/return', import.meta.env.VITE_APP_ORIGIN || 'https://engvox.com');
+  const query = new URL(path, url.origin).searchParams;
+  query.forEach((value, key) => url.searchParams.set(key, value));
+  url.searchParams.set('native', '1');
+  return url.toString();
+};
 const ALLOWED_HOSTS = [
   'checkout.stripe.com',
   'billing.stripe.com',
@@ -63,7 +70,7 @@ const safeRedirect = async (url: unknown): Promise<void> => {
 
   const hostIsTrusted =
     ALLOWED_HOSTS.includes(parsed.hostname) || parsed.hostname.endsWith('.dodopayments.com');
-  if (!hostIsTrusted) {
+  if (!hostIsTrusted || parsed.protocol !== 'https:' || parsed.username || parsed.password) {
     logger.w('[BILLING] Blocked untrusted checkout host:', parsed.hostname);
     throw new AppError({
       code: ErrorCode.NETWORK,
@@ -116,14 +123,11 @@ export const BillingService = {
     if (!userId) return createFreeSubscription();
     const provider = getProvider();
     if (!provider) return this.getLocalSubscription();
-    try {
-      const subscription = await provider.getSubscriptionStatus(userId);
-      save(subscription);
-      return subscription;
-    } catch (error) {
-      logger.w('[BILLING] Provider refresh failed; using current user cache.', error);
-      return this.getLocalSubscription();
-    }
+    const session = storage.getSession();
+    const subscription = await provider.getSubscriptionStatus(userId);
+    const current = storage.getSession();
+    if (session?.userId === current?.userId && session?.kind === current?.kind) save(subscription);
+    return subscription;
   },
   async startCheckout(
     userId: string,
@@ -160,11 +164,6 @@ export const BillingService = {
   async fetchInvoices(userId: string): Promise<InvoiceRecord[]> {
     const provider = getProvider();
     if (!provider) return [];
-    try {
-      return await provider.getInvoices(userId);
-    } catch (err) {
-      logger.e('[BILLING] Failed to fetch invoices:', err);
-      return [];
-    }
+    return provider.getInvoices(userId);
   },
 };
