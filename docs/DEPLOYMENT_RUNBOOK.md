@@ -62,6 +62,7 @@ Render dashboard → Environment:
 - `NODE_ENV=production`
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY` (server-only; tenant authorization, audit, export and audio storage)
+- `EXPECTED_SUPABASE_PROJECT_REF` (the project the running backend must be on; in production a mismatch refuses to start, an unset pin only warns)
 - `SUPABASE_JWT_SECRET`, `SUPABASE_JWT_ISSUER`, `SUPABASE_JWT_AUDIENCE` (set all three when local Supabase JWT verification is enabled)
 - `METRICS_TOKEN` (required; protects both metrics and private diagnostics with Bearer auth)
 - `ENGINEEROS_INTERNAL_API_SECRET` + `ENGINEEROS_INTERNAL_SERVICE_ID` (set together for fixed internal service identity)
@@ -73,6 +74,19 @@ Render dashboard → Environment:
 - `UPSTASH_REDIS_REST_URL`
 - `UPSTASH_REDIS_REST_TOKEN`
 - `AI_LEDGER_FILE` (optional) — AI kullanım ledger'ının NDJSON dosya yolu; ayarlanmazsa ve Supabase yapılandırılmamışsa in-memory ledger kullanılır (kalıcılık yok)
+
+### Which database is this process on?
+
+`/api/health` and `/api/diagnostics` both report `checks.supabase.projectRef` (resolved from
+`SUPABASE_URL`) beside `checks.supabase.expectedProjectRef` (from
+`EXPECTED_SUPABASE_PROJECT_REF`). Comparing the two is how you tell a deployment's database
+apart from outside the process. Liveness costs no database round trip — it reports
+`reachable: null` and only names the project; the probing endpoint is `/api/diagnostics`.
+
+```bash
+curl -s https://englishengineer-backend.onrender.com/api/health | jq .checks.supabase
+# { "configured": true, "projectRef": "…", "expectedProjectRef": "…", "reachable": null }
+```
 
 ## Post-Deploy Checklist
 
