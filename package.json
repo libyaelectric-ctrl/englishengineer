@@ -38,6 +38,7 @@
     "verify:release": "node scripts/verify-release.mjs",
     "verify:rls": "node scripts/verify-supabase-rls.mjs",
     "render:deploy": "node scripts/render-deploy.mjs",
+    "render:check": "node scripts/render-deploy.mjs --check",
     "verify:audit-collision": "node scripts/verify-audit-collision-attribution.mjs",
     "verify:test-exit": "node scripts/run-with-timeout.mjs 90000 run test",
     "verify:build-exit": "node scripts/run-with-timeout.mjs 120000 run build",

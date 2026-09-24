@@ -54,10 +54,42 @@ jobs:
             echo "::warning::Backend response time is slow (${DURATION_MS}ms)"
           fi
 
+  # The uptime check above answers "is production up?". This one answers the question that
+  # stayed unanswered for five hours on 2026-09-23: "is production running what `main` says?"
+  # A service that is healthy and five commits behind passes every check above, and the only
+  # visible symptom is a bug that was already fixed. Render's push webhook is the delivery that
+  # goes missing without a trace, so the deploy also runs from the pipeline; this is the timer
+  # that notices when neither path landed the commit.
+  deploy-drift:
+    name: Production Runs main
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Never cancel a check in flight: it is a read-only assertion, and a cancelled run is
+    # indistinguishable from one that never happened.
+    concurrency:
+      group: deploy-drift
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: 22 }
+
+      # No `npm ci`: `scripts/render-deploy.mjs` runs on plain Node and imports nothing.
+      - name: Assert production is running the commit main points at
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_SERVICE_ID: ${{ vars.RENDER_SERVICE_ID }}
+          # Reads the head of `main` from the API (the checkout is only as fresh as the trigger)
+          # and is worth the low rate limit only because the token makes it authenticated.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # `--wait 600` is the patience budget for a merge that is still building; a commit that
+        # was pushed longer ago than that fails immediately rather than waiting out the clock.
+        run: node scripts/render-deploy.mjs --check --wait 600 --interval 15
+
   # Notify on failure (requires SLACK_WEBHOOK secret)
   notify:
     name: Notify on Failure
-    needs: health-check
+    needs: [health-check, deploy-drift]
     if: failure()
     runs-on: ubuntu-latest
     timeout-minutes: 5
