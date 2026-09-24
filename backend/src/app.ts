@@ -17,6 +17,7 @@ import type Stripe from 'stripe';
 import type { BackendConfig } from '../types.js';
 import { registerAdminRoutes } from './admin-routes.js';
 import { createAIService, registerAIRoutes } from './ai.js';
+import { allowedWebOrigins } from './allowed-web-origins.js';
 import { recordEndpoint, setMetricsRepository } from './api-metrics.js';
 import { getAuditLogStatus, initAuditLog } from './audit-log.js';
 import { createBackendAuth } from './auth.js';
@@ -189,28 +190,7 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
   ];
   app.use(helmet(SECURITY_HEADERS as Parameters<typeof helmet>[0]));
 
-  const hardcodedProductionOrigins =
-    config.environment === 'production'
-      ? ['https://engvox.com', 'https://www.engvox.com', 'capacitor://localhost']
-      : [];
-  const configuredOrigins = [
-    config.appOrigin,
-    ...(config.corsAllowedOrigins || []),
-    ...hardcodedProductionOrigins,
-  ].filter(Boolean) as string[];
-
-  const withWwwVariants = configuredOrigins.flatMap((origin) => {
-    try {
-      const url = new URL(origin);
-      const alt = url.hostname.startsWith('www.')
-        ? `${url.protocol}//${url.hostname.slice(4)}${url.port ? `:${url.port}` : ''}`
-        : `${url.protocol}//www.${url.hostname}${url.port ? `:${url.port}` : ''}`;
-      return [origin, alt];
-    } catch {
-      return [origin];
-    }
-  });
-  const allowedOrigins = [...new Set(withWwwVariants)].filter(Boolean) as string[];
+  const allowedOrigins = allowedWebOrigins(config);
 
   if (config.environment === 'production') {
     app.use((req: Request, res: Response, next: NextFunction) => {
@@ -674,7 +654,7 @@ const registerRoutes = (
         environment: config.environment,
         // StripeConfig has no origin list of its own; the app's allowed web
         // origins are what a billing return URL may point back to.
-        allowedReturnOrigins: config.corsAllowedOrigins,
+        allowedReturnOrigins: allowedWebOrigins(config),
       } as BillingServiceConfig,
       stripeClient: stripeClient as Stripe,
       repository:
