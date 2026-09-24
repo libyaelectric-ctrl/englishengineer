@@ -13,7 +13,7 @@ test('checkout accepts the configured app and www alias but rejects foreign retu
     APP_ORIGIN: 'https://engvox.com',
     ENGINEEROS_INTERNAL_API_SECRET: 'origin-test-secret',
     ENGINEEROS_INTERNAL_SERVICE_ID: 'origin-test-user',
-    STRIPE_SECRET_KEY: 'sk_test_origin',
+    STRIPE_SECRET_KEY: 'origin-fixture-not-a-real-key',
     STRIPE_PRICE_JUNIOR_MONTHLY: 'price_origin',
     RATE_LIMIT_STORE: 'memory',
   });
