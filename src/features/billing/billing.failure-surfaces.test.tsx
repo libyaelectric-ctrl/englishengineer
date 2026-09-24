@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { setAuthTokenGetter } from '@/shared/services/auth-backend/backend-auth.service';
 
@@ -14,7 +14,6 @@ import PricingPage from '@/pages/PricingPage';
 import ProfilePage from '@/pages/ProfilePage';
 
 import { BillingStatusPanel } from './BillingStatusPanel';
-import { DEFAULT_UPGRADE_PLAN_ID } from './billing.entitlements';
 import { CLIENT_SENTENCE_CODE } from './billing.failure-copy';
 import { BILLING_PLANS } from './billing.helpers';
 import { BillingService } from './billing.service';
@@ -215,6 +214,19 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
   </QueryClientProvider>
 );
 
+const renderUpgradeRoutes = (initialPath: '/profile' | '/billing') =>
+  render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={[initialPath]}>
+        <Routes>
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/billing" element={<BillingPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>
+  );
+
 /**
  * The profile page, not its hook. Its controls and its alert are the surface a customer
  * meets, so they are what these tests drive and read.
@@ -309,17 +321,16 @@ describe('the same billing failure on both surfaces', () => {
     expect(page.container.textContent).not.toContain(OUT_OF_CONTRACT_SENTENCE);
   });
 
-  it("resolves the failure the profile page's own upgrade control hits", async () => {
+  it("does not start checkout from Profile's generic upgrade button before a plan is selected", async () => {
+    const spy = vi.spyOn(BillingService, 'startCheckout').mockResolvedValue(undefined);
     const page = renderProfilePage();
-    stubAuditFailure();
 
     fireEvent.click(within(page.container).getByRole('button', { name: /upgrade plan/i }));
 
-    await waitFor(() => expect(profileAlert(page.container)).toHaveTextContent(AUDIT_COPY));
-
-    // The store still holds exactly what the backend sent; the page is what curates it.
-    expect(useBillingStore.getState().error).toBe(RAW_BACKEND_SENTENCE);
-    expect(page.container.textContent).not.toContain(RAW_BACKEND_SENTENCE);
+    await waitFor(() => expect(spy).not.toHaveBeenCalled());
+    expect(useBillingStore.getState().isCheckoutLoading).toBe(false);
+    page.unmount();
+    spy.mockRestore();
   });
 });
 
@@ -401,19 +412,8 @@ describe('the subscription-management path', () => {
  * customer *something*, and the something would be the wrong sentence.
  */
 describe("the profile page's own demo-mode refusals", () => {
-  const DEMO_UPGRADE = 'Demo mode: Billing is available after connecting Supabase and Stripe.';
   const DEMO_PORTAL =
     'Demo mode: Subscription management available after connecting Supabase + Stripe.';
-
-  it('keeps the upgrade refusal specific instead of the generic billing copy', async () => {
-    useAuthStore.getState().enterDemoUser();
-    const page = renderProfilePage();
-
-    fireEvent.click(within(page.container).getByRole('button', { name: /upgrade plan/i }));
-
-    await waitFor(() => expect(profileAlert(page.container)).toHaveTextContent(DEMO_UPGRADE));
-    expect(profileAlert(page.container).textContent).not.toBe(AUDIT_COPY);
-  });
 
   it('keeps the portal refusal specific instead of the generic billing copy', async () => {
     // The refusal happens before any request, but the page still refreshes billing on mount
@@ -477,14 +477,22 @@ describe('a sentence a surface writes itself', () => {
     expect(alert).not.toHaveTextContent(/billing could not be started/i);
   });
 
-  it("keeps the pricing page's own demo-mode refusal specific", async () => {
-    // This refusal is copy the page authors, not a failure the backend sent, and it
-    // never passes through the resolver. It is pinned here as a recorded decision: the
-    // branch could be routed through `resolveBillingError` and still show *something*,
-    // which is exactly why the difference has to be visible in a test.
+  it("keeps the pricing page's demo checkout refusal specific", async () => {
     useAuthStore.getState().enterDemoUser();
+    const spy = vi.spyOn(BillingService, 'startCheckout').mockResolvedValue(undefined);
+    const page = render(<PricingPage />, { wrapper });
 
-    expect(await upgradeFromPricingPage()).toBe('Demo profiles cannot make purchases.');
+    const specialist = screen.getByRole('heading', { name: 'Specialist' }).closest('article');
+    fireEvent.click(within(specialist as HTMLElement).getByRole('button'));
+
+    await waitFor(() =>
+      expect(within(page.container).getByRole('alert')).toHaveTextContent(
+        'Demo profiles cannot make purchases.'
+      )
+    );
+    expect(spy).not.toHaveBeenCalled();
+    page.unmount();
+    spy.mockRestore();
   });
 });
 
@@ -579,26 +587,23 @@ describe('the upgrade control on every surface', () => {
     expect(within(page.container).getByRole('button', { name: /upgrade plan/i })).toBeEnabled();
   });
 
-  it('starts the same plan the billing page starts', async () => {
+  it('routes Profile and Billing upgrade controls to plan selection without starting checkout', async () => {
     const spy = vi.spyOn(BillingService, 'startCheckout').mockResolvedValue(undefined);
     try {
-      const profile = renderProfilePage();
+      const profile = renderUpgradeRoutes('/profile');
       await settleBillingRefresh();
       fireEvent.click(within(profile.container).getByRole('button', { name: /upgrade plan/i }));
-      await waitFor(() => expect(spy).toHaveBeenCalled());
-      const fromProfile = spy.mock.calls.at(-1)?.[2];
+      await waitFor(() => expect(screen.getByRole('heading', { name: 'Pricing' })).toBeVisible());
+      expect(spy).not.toHaveBeenCalled();
       profile.unmount();
 
-      const billing = render(<BillingPage />, { wrapper });
+      const billing = renderUpgradeRoutes('/billing');
       await settleBillingRefresh();
       const panel = within(billing.container).getByTestId('billing-status-panel');
       fireEvent.click(within(panel).getByRole('button', { name: /upgrade plan/i }));
-      await waitFor(() => expect(spy).toHaveBeenCalledTimes(2));
-      const fromBilling = spy.mock.calls.at(-1)?.[2];
+      await waitFor(() => expect(screen.getByRole('heading', { name: 'Pricing' })).toBeVisible());
+      expect(spy).not.toHaveBeenCalled();
       billing.unmount();
-
-      expect(fromProfile).toBe(DEFAULT_UPGRADE_PLAN_ID);
-      expect(fromBilling).toBe(DEFAULT_UPGRADE_PLAN_ID);
     } finally {
       spy.mockRestore();
     }

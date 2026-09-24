@@ -9,7 +9,7 @@ import { storage } from '@/shared/storage';
 import { useAIStore } from '@/features/ai';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
-import { DEFAULT_UPGRADE_PLAN_ID, useBillingStore } from '@/features/billing';
+import { useBillingStore } from '@/features/billing';
 import { billingFailureCopy, resolveBillingError } from '@/features/billing/billing.failure-copy';
 import { useLearningIntelligenceStore } from '@/features/learning-intelligence';
 import { useLearningCockpit } from '@/features/profile';
@@ -35,7 +35,6 @@ export const useProfilePage = () => {
     errorCode: billingErrorCode,
     initializeBilling,
     refreshBilling,
-    startCheckout,
     openCustomerPortal,
   } = useBillingStore();
 
@@ -94,23 +93,8 @@ export const useProfilePage = () => {
     }
   }, [currentUser?.id, location.search, refreshBilling]);
 
-  const handleUpgrade = async () => {
-    if (!currentUser) return;
-    if (currentUser.id.startsWith('demo_engineer_')) {
-      setError('Demo mode: Billing is available after connecting Supabase and Stripe.');
-      return;
-    }
-    try {
-      setError(null);
-      ProductAnalyticsService.track('checkout_started', '/profile', {
-        metadata: { plan: DEFAULT_UPGRADE_PLAN_ID, source: 'user' },
-      });
-      // The same plan the billing page's identically-labelled control buys. Selling a
-      // different one here made one label mean two products.
-      await startCheckout(currentUser.id, currentUser.email, DEFAULT_UPGRADE_PLAN_ID);
-    } catch (e: unknown) {
-      setError(resolveBillingError(e));
-    }
+  const handleUpgrade = () => {
+    navigate('/pricing', { state: { from: location } });
   };
 
   const handleManageSubscription = async () => {

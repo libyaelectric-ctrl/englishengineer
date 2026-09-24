@@ -2,7 +2,7 @@ import { Download, RefreshCw, ShieldCheck, Wallet } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PageContainer } from '@/shared/components/PageContainer';
 import { PageHeader } from '@/shared/components/PageHeader';
@@ -11,7 +11,7 @@ import { logger } from '@/shared/logger';
 
 import { useAIStore } from '@/features/ai';
 import { useAuthStore } from '@/features/auth';
-import { DEFAULT_UPGRADE_PLAN_ID, useBillingStore } from '@/features/billing';
+import { useBillingStore } from '@/features/billing';
 import type { InvoiceRecord } from '@/features/billing';
 import { BillingStatusPanel } from '@/features/billing/BillingStatusPanel';
 import { BillingPlanCards } from '@/features/billing/components/BillingPlanCards';
@@ -20,6 +20,7 @@ import { useLearningCockpit } from '@/features/profile';
 import { useVocabularyStore } from '@/features/vocabulary';
 
 export const BillingPage = () => {
+  const navigate = useNavigate();
   const { currentUser } = useAuthStore();
   const {
     subscription,
@@ -29,9 +30,7 @@ export const BillingPage = () => {
     error: billingError,
     errorCode: billingErrorCode,
     refreshBilling,
-    startCheckout,
     openCustomerPortal,
-    setBillingError,
     invoices,
     isLoadingInvoices,
     fetchInvoices,
@@ -77,29 +76,7 @@ export const BillingPage = () => {
       fetchInvoices?.(currentUser.id)?.catch((err) => logger.e('Invoices fetch failed:', err));
     }
   }, [currentUser?.id, refreshBilling, fetchInvoices]);
-  const handleUpgrade = async () => {
-    if (!currentUser?.id) {
-      setBillingError('Please sign in before starting a subscription.');
-      return;
-    }
-    // Mirrors the Pricing page: a demo profile cannot buy anything, and telling
-    // it to "sign in" only sends the user in a circle.
-    if (currentUser.id.startsWith('demo_engineer_')) {
-      setBillingError('Demo profiles cannot make purchases. Create an account to subscribe.');
-      return;
-    }
-    if (!currentUser.email) {
-      setBillingError(
-        'Your account has no email address on file, so checkout cannot be started. Please sign in again.'
-      );
-      return;
-    }
-    try {
-      await startCheckout(currentUser.id, currentUser.email, DEFAULT_UPGRADE_PLAN_ID);
-    } catch (err) {
-      logger.e('Checkout failed:', err);
-    }
-  };
+  const handleUpgrade = () => navigate('/pricing');
   const handleManageSubscription = () => {
     if (!currentUser?.id) return;
     openCustomerPortal(currentUser.id).catch((err) => logger.e('Portal failed:', err));

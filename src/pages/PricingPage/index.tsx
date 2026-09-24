@@ -13,6 +13,7 @@ import { PRICING_TIERS } from '@/shared/data/pricing.data';
 import { ProductAnalyticsService } from '@/features/analytics';
 import { useAuthStore } from '@/features/auth';
 import { AUTH_SIGN_IN_URL } from '@/features/auth/firebase.config';
+import { hasActivePaidAccess, isFreeTier } from '@/features/billing/billing.entitlements';
 import { resolveBillingError } from '@/features/billing/billing.failure-copy';
 import { useBillingStore } from '@/features/billing/billing.store';
 import type { BillingPlanId } from '@/features/billing/billing.types';
@@ -34,9 +35,19 @@ const PricingPage = () => {
     ProductAnalyticsService.trackOnce('paywall_viewed', 'pricing');
   }, []);
   const { isCheckoutLoading, startCheckout, subscription } = useBillingStore();
+  const activePaidPlanIndex =
+    subscription && hasActivePaidAccess(subscription)
+      ? PRICING_TIERS.findIndex((tier) => tier.id === subscription.planId)
+      : -1;
+  const availableTiers =
+    activePaidPlanIndex > 0 ? PRICING_TIERS.slice(activePaidPlanIndex) : PRICING_TIERS;
+
   const handleSelectPlan = async (tierId: string) => {
+    const selectedTier = availableTiers.find((tier) => tier.id === tierId);
+    if (!selectedTier) return;
+
     setCheckoutError(null);
-    if (tierId === 'free') {
+    if (selectedTier.id === 'free') {
       navigate('/dashboard');
       return;
     }
@@ -52,7 +63,7 @@ const PricingPage = () => {
       await startCheckout(
         currentUser.id,
         currentUser.email,
-        tierId as BillingPlanId,
+        selectedTier.id as BillingPlanId,
         isAnnual ? 'year' : 'month'
       );
     } catch (err: unknown) {
@@ -113,8 +124,8 @@ const PricingPage = () => {
             {checkoutError}
           </p>
         )}
-        <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-5">
-          {PRICING_TIERS.map((tier, idx) => (
+        <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-[repeat(auto-fit,minmax(220px,1fr))]">
+          {availableTiers.map((tier, idx) => (
             <motion.div
               key={tier.id}
               className="min-w-0"
@@ -126,7 +137,11 @@ const PricingPage = () => {
                 tier={tier}
                 isAnnual={isAnnual}
                 currency="USD"
-                isCurrentPlan={subscription?.planId === tier.id}
+                isCurrentPlan={Boolean(
+                  subscription &&
+                  ((subscription.planId === tier.id && hasActivePaidAccess(subscription)) ||
+                    (tier.id === 'free' && isFreeTier(subscription)))
+                )}
                 isLoading={isCheckoutLoading}
                 variant="pricing"
                 onSelect={handleSelectPlan}
