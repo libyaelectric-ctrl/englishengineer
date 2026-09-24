@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -48,18 +48,19 @@ describe('PricingPage', () => {
   });
 
   const mockAuth = (currentUser: unknown) => {
-    vi.mocked(useAuthStore).mockReturnValue({
-      currentUser,
-      initialize: vi.fn(),
-    } as unknown as ReturnType<typeof useAuthStore>);
+    const state = { currentUser, initialize: vi.fn() };
+    vi.mocked(useAuthStore).mockImplementation(((selector?: (value: typeof state) => unknown) =>
+      selector ? selector(state) : state) as typeof useAuthStore);
   };
 
   const mockBilling = (subscription: { planId: string; status: string }) => {
+    const startCheckout = vi.fn().mockResolvedValue(undefined);
     vi.mocked(useBillingStore).mockReturnValue({
-      isLoading: false,
-      startCheckout: vi.fn(),
+      isCheckoutLoading: false,
+      startCheckout,
       subscription,
     } as unknown as ReturnType<typeof useBillingStore>);
+    return startCheckout;
   };
 
   it('renders every tier in the pricing model', () => {
@@ -108,7 +109,7 @@ describe('PricingPage', () => {
     expect(screen.queryByText(/Coming Soon|pricing.comingSoon/i)).not.toBeInTheDocument();
   });
 
-  it('shows current plan indicator for active subscription', () => {
+  it('shows the active paid plan and all higher options without offering downgrades', () => {
     mockAuth({ id: 'user-123', email: 'engineer@example.com' });
     mockBilling({ planId: 'senior', status: 'active' });
 
@@ -118,7 +119,97 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/Current plan|pricing.currentPlan/i)).toBeInTheDocument();
+    const senior = screen.getByRole('heading', { name: 'Senior' }).closest('article');
+    expect(within(senior as HTMLElement).getByText(/current plan/i)).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Free' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Junior' })).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Specialist' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Master' })).toBeInTheDocument();
+  });
+
+  it('shows all paid plans as eligible choices for a free-tier subscription', () => {
+    mockAuth({ id: 'user-123', email: 'engineer@example.com' });
+    mockBilling({ planId: 'junior', status: 'none' });
+
+    render(
+      <MemoryRouter>
+        <PricingPage />
+      </MemoryRouter>
+    );
+
+    for (const tier of PRICING_TIERS.filter((item) => item.id !== 'free')) {
+      expect(screen.getByRole('heading', { name: tier.name })).toBeInTheDocument();
+    }
+  });
+
+  it('marks the free option as current for a free-tier subscription', () => {
+    mockAuth({ id: 'user-123', email: 'engineer@example.com' });
+    mockBilling({ planId: 'junior', status: 'none' });
+
+    render(
+      <MemoryRouter>
+        <PricingPage />
+      </MemoryRouter>
+    );
+
+    const free = screen.getByRole('heading', { name: 'Free' }).closest('article');
+    expect(within(free as HTMLElement).getByText(/current plan/i)).toBeInTheDocument();
+
+    const junior = screen.getByRole('heading', { name: 'Junior' }).closest('article');
+    expect(within(junior as HTMLElement).getByRole('button')).toBeInTheDocument();
+  });
+
+  it('sends the exact selected package to checkout instead of choosing a default upgrade', () => {
+    mockAuth({ id: 'user-123', email: 'engineer@example.com' });
+    const startCheckout = mockBilling({ planId: 'junior', status: 'active' });
+
+    render(
+      <MemoryRouter>
+        <PricingPage />
+      </MemoryRouter>
+    );
+
+    for (const tier of PRICING_TIERS.filter((item) => item.id !== 'free')) {
+      const card = screen.getByRole('heading', { name: tier.name }).closest('article');
+      expect(card).not.toBeNull();
+      if (tier.id === 'junior') {
+        expect(within(card as HTMLElement).getByText(/current plan/i)).toBeInTheDocument();
+      } else {
+        expect(within(card as HTMLElement).getByRole('button')).toBeEnabled();
+      }
+    }
+
+    const specialist = screen.getByRole('heading', { name: 'Specialist' }).closest('article');
+    fireEvent.click(within(specialist as HTMLElement).getByRole('button'));
+
+    expect(startCheckout).toHaveBeenCalledWith(
+      'user-123',
+      'engineer@example.com',
+      'specialist',
+      'month'
+    );
+  });
+
+  it('preserves the selected annual billing interval in checkout', () => {
+    mockAuth({ id: 'user-123', email: 'engineer@example.com' });
+    const startCheckout = mockBilling({ planId: 'senior', status: 'active' });
+
+    render(
+      <MemoryRouter>
+        <PricingPage />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Annual' }));
+    const master = screen.getByRole('heading', { name: 'Master' }).closest('article');
+    fireEvent.click(within(master as HTMLElement).getByRole('button'));
+
+    expect(startCheckout).toHaveBeenCalledWith(
+      'user-123',
+      'engineer@example.com',
+      'master',
+      'year'
+    );
   });
 
   it('displays the current monthly price on each paid tier', () => {

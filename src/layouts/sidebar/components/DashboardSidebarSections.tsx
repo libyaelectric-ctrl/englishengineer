@@ -29,8 +29,10 @@ export const PlanSection = ({ copy, isFree, navigate }: PlanSectionProps) => {
             Unlock unlimited lessons, AI coaching, and advanced analytics.
           </p>
         </div>
+        {/* The upgrade intent lands on the plan chooser, not on billing: a customer who
+            clicks this has not picked a package yet, and billing cannot sell one directly. */}
         <button
-          onClick={() => navigate('/billing')}
+          onClick={() => navigate('/pricing')}
           className="flex-shrink-0 px-3 py-1.5 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:bg-primary-hover transition-colors"
         >
           {copy.upgrade}

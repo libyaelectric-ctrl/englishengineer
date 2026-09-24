@@ -1,15 +1,17 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { configure, render, screen, waitFor } from '@testing-library/react';
+import { configure, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { useAuthStore } from '@/features/auth';
-import { useBillingStore } from '@/features/billing';
+import { BillingService, useBillingStore } from '@/features/billing';
+import type { SubscriptionSnapshot } from '@/features/billing';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 import BillingPage from '@/pages/BillingPage';
+import PricingPage from '@/pages/PricingPage';
 
 import { resetStores } from './test-utils/resetStores';
 
@@ -51,7 +53,7 @@ const renderBillingWithRouter = (initialEntries = ['/billing']) => {
       <MemoryRouter initialEntries={initialEntries}>
         <Routes>
           <Route path="/billing" element={<BillingPage />} />
-          <Route path="/pricing" element={<div data-testid="pricing-page">Pricing Page</div>} />
+          <Route path="/pricing" element={<PricingPage />} />
         </Routes>
       </MemoryRouter>
     </QueryClientProvider>
@@ -68,11 +70,9 @@ describe('Billing: Upgrade Plan navigation', () => {
     });
   });
 
-  it('starts checkout when Upgrade Plan is clicked', async () => {
+  it('opens the plan list from Upgrade Plan instead of buying an implicit default', async () => {
     seedAuthenticatedUser();
-    const startCheckout = vi
-      .spyOn(useBillingStore.getState(), 'startCheckout')
-      .mockResolvedValue(undefined);
+    const startCheckout = vi.spyOn(useBillingStore.getState(), 'startCheckout');
     renderBillingWithRouter();
 
     await waitFor(() => {
@@ -82,16 +82,76 @@ describe('Billing: Upgrade Plan navigation', () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: /upgrade plan/i }));
 
-    // The Upgrade CTA starts the paid checkout directly; it does not navigate to
-    // the pricing page (that is what the separate BillingUpgradeCTA link does).
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: 'Pricing' })).toBeInTheDocument();
+    });
+    expect(startCheckout).not.toHaveBeenCalled();
+
+    const specialistCard = screen.getByRole('heading', { name: 'Specialist' }).closest('article');
+    await user.click(within(specialistCard as HTMLElement).getByRole('button'));
+
     await waitFor(() => {
       expect(startCheckout).toHaveBeenCalledWith(
         'billing-e2e-user',
         'billing-e2e@example.com',
-        'senior'
+        'specialist',
+        'month'
       );
     });
-    expect(screen.queryByTestId('pricing-page')).not.toBeInTheDocument();
+  });
+
+  it('returns from checkout with the selected plan active in billing status', async () => {
+    seedAuthenticatedUser();
+    const freeSubscription: SubscriptionSnapshot = {
+      planId: 'free',
+      status: 'none',
+      currentPeriodEnd: null,
+      cancelAtPeriodEnd: false,
+      stripeCustomerId: null,
+      stripeSubscriptionId: null,
+      updatedAt: '2026-01-01T00:00:00.000Z',
+    };
+    const specialistSubscription: SubscriptionSnapshot = {
+      planId: 'specialist',
+      status: 'active',
+      currentPeriodEnd: '2027-04-24T00:00:00.000Z',
+      cancelAtPeriodEnd: false,
+      stripeCustomerId: 'cus_billing_e2e',
+      stripeSubscriptionId: 'sub_billing_e2e',
+      updatedAt: '2026-04-24T00:00:00.000Z',
+      source: 'stripe',
+    };
+    const refreshSubscription = vi
+      .spyOn(BillingService, 'refreshSubscription')
+      .mockResolvedValue(freeSubscription);
+    vi.spyOn(BillingService, 'fetchInvoices').mockResolvedValue([]);
+    const startCheckout = vi.spyOn(BillingService, 'startCheckout').mockResolvedValue();
+    const user = userEvent.setup();
+    const checkoutPage = renderBillingWithRouter();
+
+    await user.click(await screen.findByRole('button', { name: /upgrade plan/i }));
+    await user.click(await screen.findByRole('button', { name: 'Annual' }));
+    const specialistCard = screen.getByRole('heading', { name: 'Specialist' }).closest('article');
+    await user.click(within(specialistCard as HTMLElement).getByRole('button'));
+
+    await waitFor(() => {
+      expect(startCheckout).toHaveBeenCalledWith(
+        'billing-e2e-user',
+        'billing-e2e@example.com',
+        'specialist',
+        'year'
+      );
+    });
+
+    checkoutPage.unmount();
+    refreshSubscription.mockResolvedValue(specialistSubscription);
+    renderBillingWithRouter(['/billing?billing=success']);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /specialist active/i })).toBeInTheDocument();
+      expect(screen.getByText(/specialist entitlements active/i)).toBeInTheDocument();
+      expect(refreshSubscription).toHaveBeenCalledWith('billing-e2e-user');
+    });
   });
 
   it('Upgrade Plan button is not disabled for free users', async () => {
