@@ -1,0 +1,2 @@
+# Synthetic Stripe fixture from the checkout origin regression test; not a credential.
+a27e47d78af71a0675bab0f7cbf40973cc6c3f62:backend/test/billing-origin-policy.test.ts:docs-clerk-example:16
