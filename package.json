@@ -65,7 +65,7 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "@capacitor-firebase/authentication": "^8.5.1",
+    "@capacitor-firebase/authentication": "^8.5.2",
     "@capacitor/android": "^8.5.2",
     "@capacitor/app": "^8.1.1",
     "@capacitor/browser": "^8.0.4",
@@ -79,7 +79,7 @@
     "@sentry/react": "^10.74.0",
     "@supabase/supabase-js": "^2.116.0",
     "@tanstack/react-query": "^5.102.8",
-    "@testing-library/dom": "^10.4.1",
+    "@testing-library/dom": "^10.4.2",
     "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "firebase": "^12.19.0",
@@ -87,17 +87,17 @@
     "motion": "^13.2.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "react-error-boundary": "^6.1.5",
-    "react-router-dom": "^7.18.3",
+    "react-error-boundary": "^6.1.6",
+    "react-router-dom": "^7.18.4",
     "tailwind-merge": "^3.6.0",
     "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@commitlint/cli": "^21.2.2",
+    "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.2",
     "@eslint/js": "^10.0.1",
-    "@playwright/cli": "^0.1.19",
+    "@playwright/cli": "^0.1.21",
     "@playwright/test": "^1.63.0",
     "@storybook/addon-a11y": "^10.6.0",
     "@storybook/addon-themes": "^10.6.0",
@@ -111,9 +111,9 @@
     "@types/node": "^26.5.0",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.2.7",
-    "@typescript-eslint/parser": "^8.70.0",
+    "@typescript-eslint/parser": "^8.70.1",
     "@vitejs/plugin-react": "^6.1.1",
-    "@vitest/coverage-v8": "^5.0.0",
+    "@vitest/coverage-v8": "^5.0.1",
     "canvas": "^3.2.3",
     "concurrently": "^10.0.5",
     "cross-env": "^10.1.0",
@@ -128,13 +128,13 @@
     "license-checker-rseidelsohn": "^5.0.1",
     "lint-staged": "^17.5.0",
     "playwright": "^1.63.0",
-    "prettier": "^3.9.6",
+    "prettier": "^3.9.8",
     "storybook": "^10.6.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.70.0",
+    "typescript-eslint": "^8.70.1",
     "vite": "^8.3.0",
-    "vitest": "^5.0.0"
+    "vitest": "^5.0.1"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
