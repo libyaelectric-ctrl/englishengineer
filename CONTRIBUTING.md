@@ -21,6 +21,29 @@ welcomes code, docs, translations, and feature requests.
    npm run dev
    ```
 
+### Install scripts (`allowScripts`)
+
+npm will not run a dependency's install script until this project has recorded a decision about
+it, and those decisions live in the `allowScripts` field of `package.json` — one in the root, one
+in `backend/`. An unreviewed script is **skipped with a warning**, and a warning is easy to miss:
+that is how an approved package quietly stops running the step a build relies on after a version
+bump.
+
+```bash
+npm approve-scripts --allow-scripts-pending   # list what has no decision yet
+npm approve-scripts <pkg>                     # allow it
+npm deny-scripts <pkg>                        # refuse it
+```
+
+Approvals are pinned to the version that was reviewed, so upgrading that dependency puts it back
+in the queue for a fresh look. After a dependency upgrade, run the two commands above and commit
+the updated `allowScripts` — the warning in the build log is that prompt.
+
+Denied here, and why: `@scarf/scarf` (pulled in by `swagger-ui-dist`) reports each install to a
+third party, which is telemetry this project does not opt into; and `protobufjs`,
+`@firebase/util` and `canvas` need nothing at install time — the canvas suite mocks it instead
+(`src/test/setup.ts`).
+
 ## Making a change
 
 1. Create a feature branch from `main`:

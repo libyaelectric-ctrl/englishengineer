@@ -70,6 +70,16 @@ jobs:
         run: npm run lint
       - name: Architecture Check
         run: npx depcruise src backend/src --config .dependency-cruiser.mjs
+      # Static, ~1s, and it does not need a database: the migrations declare which type each
+      # written identity column has, and a `uuid` one only fails at the first write — where the
+      # audit store is fail-closed and the customer reads it as billing being unavailable.
+      - name: Identity Columns Match the Runtime Identity Model
+        run: npm run verify:schema-identity
+      # The blueprint is the only description of the deployed service that lives in the repo,
+      # and it had drifted: the billing provider, the rate-limit store and the Dodo webhook
+      # secret were absent, and a variable nothing reads was present. Static, ~1s.
+      - name: Render Blueprint Covers the Backend's Environment
+        run: npm run verify:render-env
       - name: Dead Code Detection
         run: npm run check:dead-code
 

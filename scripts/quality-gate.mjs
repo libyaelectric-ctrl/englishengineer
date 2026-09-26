@@ -22,6 +22,8 @@ const commands = [
   { label: 'npm run backend:test', npmArgs: ['run', 'backend:test'] },
   { label: 'npm run verify:release', npmArgs: ['run', 'verify:release'] },
   { label: 'npm run verify:rls', npmArgs: ['run', 'verify:rls'] },
+  { label: 'npm run verify:schema-identity', npmArgs: ['run', 'verify:schema-identity'] },
+  { label: 'npm run verify:render-env', npmArgs: ['run', 'verify:render-env'] },
   { label: 'npm run check:freebuff-refs', npmArgs: ['run', 'check:freebuff-refs'] },
 ];
 

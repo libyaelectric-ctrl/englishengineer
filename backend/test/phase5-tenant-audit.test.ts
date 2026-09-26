@@ -92,11 +92,12 @@ describe('Phase 5 tenant authorization', () => {
 describe('Phase 5 audit readiness', () => {
   test('marks production unhealthy and blocks audited actions without remote storage', async () => {
     await assert.rejects(() => initAuditLog({ environment: 'production', workspace: {} }));
-    assert.deepEqual(getAuditLogStatus(), {
-      status: 'failed',
-      required: true,
-      lastError: 'Remote audit storage is not configured.',
-    });
+    const status = getAuditLogStatus();
+    assert.equal(status.status, 'failed');
+    assert.equal(status.required, true);
+    assert.equal(status.lastError, 'Remote audit storage is not configured.');
+    assert.equal(status.lastFailure?.message, 'Remote audit storage is not configured.');
+    assert.ok(!Number.isNaN(Date.parse(String(status.lastFailure?.at))));
     assert.equal(isAuditLogReady(), false);
     await assert.rejects(
       () => auditLog({ action: 'test_action', userId, severity: 'info' }),
