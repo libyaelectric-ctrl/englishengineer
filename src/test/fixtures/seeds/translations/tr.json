@@ -1,0 +1,42 @@
+{
+  "14001": {
+    "meaning": "ISO 14001 standardı",
+    "definition": "\"ISO 14001 standardı\" anlamına gelen bir terim.",
+    "example": "14001 rutin kontrol sırasında incelendi."
+  },
+  "45001": {
+    "meaning": "ISO 45001 standardı",
+    "definition": "\"ISO 45001 standardı\" anlamına gelen bir terim.",
+    "example": "45001'in gerekli spesifikasyonu karşıladığından emin olun."
+  },
+  "helmet": {
+    "meaning": "başlık, baret",
+    "definition": "Bir kask, şantiyede çalışanın başını korur.",
+    "example": "Çalışma alanına girmeden önce daima kaskınızı takın."
+  },
+  "panel": {
+    "meaning": "elektrik panosu",
+    "definition": "Bir panoda anahtarlar ve elektrikli kontrol ekipmanları bulunur.",
+    "example": "İncelemeye başlamadan önce panel kapağını kontrol ettiniz mi?"
+  },
+  "switch": {
+    "meaning": "anahtar, şalter",
+    "definition": "Bir anahtar, elektrikli ekipmanı açar veya kapatır.",
+    "example": "Herhangi bir bakım çalışması yapmadan önce ana şalterin kapalı olduğundan emin olun."
+  },
+  "drawing": {
+    "meaning": "teknik çizim",
+    "definition": "Bir çizim, mühendislik çalışmasının boyutlarını ve konumunu gösterir.",
+    "example": "Çizim daha önce incelenmiş olsaydı, bu hata önlenebilirdi."
+  },
+  "inspect": {
+    "meaning": "kontrol etmek",
+    "definition": "Denetlemek, işi veya ekipmanı dikkatlice kontrol etmek anlamına gelir.",
+    "example": "Lütfen bu sabah elektrik panosunu ayrıntılı bir şekilde inceleyin."
+  },
+  "cable tray": {
+    "meaning": "kablo tavası",
+    "definition": "Kablo kanalı, elektrik kablolarını duvarlar, tavanlar ve zeminler boyunca yönlendirmek, desteklemek ve korumak için kullanılan metal veya plastik bir destek sistemidir.",
+    "example": "Bir sonraki aşamaya geçmeden önce kablo kanalı montajını doğrulayın."
+  }
+}
