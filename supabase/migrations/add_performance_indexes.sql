@@ -10,9 +10,10 @@ CREATE INDEX IF NOT EXISTS idx_subscription_status_user_status
 ON public.subscription_status(user_id, status)
 WHERE status = 'active';
 
--- Audit logs by user and time
+-- Audit logs by user and time (the column is `timestamp`; this file said `created_at`,
+-- which does not exist, so the whole migration failed on every environment that ran it)
 CREATE INDEX IF NOT EXISTS idx_audit_logs_user_time
-ON public.audit_logs(user_id, created_at DESC);
+ON public.audit_logs(user_id, timestamp DESC);
 
 -- Workspaces by user
 CREATE INDEX IF NOT EXISTS idx_workspaces_user
@@ -26,7 +27,7 @@ ON public.ai_sessions(user_id, created_at DESC);
 
 -- Audit logs by action type
 CREATE INDEX IF NOT EXISTS idx_audit_logs_action
-ON public.audit_logs(action, created_at DESC);
+ON public.audit_logs(action, timestamp DESC);
 
 -- Subscription status by plan (partial index)
 CREATE INDEX IF NOT EXISTS idx_subscription_status_plan

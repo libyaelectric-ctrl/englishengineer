@@ -76,15 +76,14 @@ create policy "ai_sessions_select_own" on public.ai_sessions for select using (u
 create policy "ai_sessions_insert_own" on public.ai_sessions for insert with check (user_id = auth.uid());
 create policy "ai_sessions_delete_own" on public.ai_sessions for delete using (user_id = auth.uid());
 
-drop policy if exists "billing customers are owned by user" on public.billing_customers;
-create policy "billing_select_own" on public.billing_customers for select using (user_id = auth.uid());
-
-drop policy if exists "subscription status is owned by user" on public.subscription_status;
-create policy "subscription_select_own" on public.subscription_status for select using (user_id = auth.uid());
+-- The two billing tables deliberately have no owner-select policy here. Their `user_id` is a
+-- Firebase uid, not `auth.uid()`, so `user_id = auth.uid()` cannot even be compared once the
+-- identity conversion has run — and `202609210000` drops those policies anyway, because
+-- billing is backend-only and reads happen with the service role. Declaring them here made
+-- this file un-runnable on a database that had already been converted.
 
 drop policy if exists "Service role can manage audit logs" on public.audit_logs;
 create policy "audit_logs_service_insert" on public.audit_logs for insert with check (public.is_service_role());
 create policy "audit_logs_admin_select" on public.audit_logs for select using (public.is_admin() or public.is_service_role());
 create policy "audit_logs_service_select" on public.audit_logs for select using (public.is_service_role());
 
-drop policy if exists "Service role can manage workspaces" on public.workspaces;

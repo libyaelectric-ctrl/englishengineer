@@ -209,6 +209,8 @@ describe('audit log recovery', () => {
     );
     assert.equal(getAuditLogStatus().status, 'failed');
     assert.deepEqual(stub.calls, ['POST', 'POST']);
+    const failureMessage = getAuditLogStatus().lastError;
+    assert.ok(failureMessage, 'the failure recorded its message');
 
     // The next audited action recovers by writing again: the client is still
     // good, so no health check and no new client are spent on the way.
@@ -217,6 +219,19 @@ describe('audit log recovery', () => {
 
     assert.deepEqual(stub.calls, ['POST']);
     assert.equal(getAuditLogStatus().status, 'ready');
+
+    // The recovery clears the pending error but not the record of what failed.
+    // A fault that only some writes hit — an identity column that rejects the
+    // Firebase uid while anonymous writes keep succeeding — leaves `status`
+    // green and `lastError` empty, so `lastFailure` is the only thing left
+    // saying that anything went wrong at all.
+    const after = getAuditLogStatus();
+    assert.equal(after.lastError, undefined, 'the recovery cleared the pending error');
+    assert.equal(after.lastFailure?.message, failureMessage);
+    assert.ok(
+      !Number.isNaN(Date.parse(String(after.lastFailure?.at))),
+      'the failure is timestamped when it happened'
+    );
   });
 
   it('recovers on the very next request once the store answers again', async () => {

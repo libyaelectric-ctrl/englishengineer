@@ -43,7 +43,10 @@ const translations: Record<string, TranslationDict> = {
     route_not_found: 'Route not found.',
     internal_error: 'The backend could not complete the request.',
     stripe_webhook_not_configured: 'Stripe webhook verification is not configured.',
-    invalid_webhook_signature: 'Stripe webhook signature verification failed.',
+    // Shared by every provider (Stripe and Dodo both throw this code), so the
+    // sentence must not name one of them: a Dodo operator reading "Stripe"
+    // during an incident is being told the wrong thing about their own endpoint.
+    invalid_webhook_signature: 'Webhook signature verification failed.',
   },
   tr: {
     validation_error: 'Geçersiz istek gövdesi.',
@@ -83,7 +86,7 @@ const translations: Record<string, TranslationDict> = {
     route_not_found: 'Rota bulunamadı.',
     internal_error: 'Backend isteği tamamlayamadı.',
     stripe_webhook_not_configured: 'Stripe webhook doğrulaması yapılandırılmamış.',
-    invalid_webhook_signature: 'Stripe webhook imza doğrulaması başarısız.',
+    invalid_webhook_signature: 'Webhook imza doğrulaması başarısız.',
   },
 };
 

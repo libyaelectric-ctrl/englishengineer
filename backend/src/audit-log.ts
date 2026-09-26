@@ -48,6 +48,19 @@ interface AuditState {
   required: boolean;
   lastError?: string;
   lastSuccessfulWrite?: string;
+  /**
+   * The most recent failure of any kind, kept after the store answers again.
+   *
+   * `lastError` is cleared by the next successful write, which is what keeps the
+   * recovery log to one line per outage. It also erases the only trace of a
+   * failure that only *some* writes hit. The identity columns were exactly that:
+   * a write carrying the Firebase uid failed while anonymous writes kept
+   * succeeding, so `/api/diagnostics` reported `status: ready` with no
+   * `lastError` for the whole outage. This field is therefore never cleared — it
+   * costs one small object, and it leaves the shape of the fault readable from
+   * diagnostics after the fact.
+   */
+  lastFailure?: { message: string; at: string };
 }
 
 interface AuditInitConfig {
@@ -72,10 +85,12 @@ export const isAuditLogReady = (): boolean =>
   auditState.status === 'ready' || (!auditState.required && auditState.status === 'disabled');
 
 const markAuditFailure = (error: unknown): void => {
+  const message = error instanceof Error ? error.message : String(error);
   auditState = {
     ...auditState,
     status: 'failed',
-    lastError: error instanceof Error ? error.message : String(error),
+    lastError: message,
+    lastFailure: { message, at: new Date().toISOString() },
   };
 };
 

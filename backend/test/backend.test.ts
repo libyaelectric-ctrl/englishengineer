@@ -81,6 +81,54 @@ test('health never exposes secret values', async () => {
   assert.equal(body.checks.supabase.configured, true);
 });
 
+test('reads the Dodo webhook secret under its documented name', () => {
+  const config = createBackendConfig({
+    NODE_ENV: 'test',
+    BILLING_PROVIDER: 'dodo',
+    DODO_PAYMENTS_WEBHOOK_KEY: 'whsec_documented',
+  });
+  assert.equal(config.dodo.webhookSecret, 'whsec_documented');
+  assert.equal(toPublicHealth(config).checks.billing.webhookConfigured, true);
+});
+
+test('still accepts the Dodo webhook secret under the Stripe-style alias', () => {
+  // The Stripe integration reads STRIPE_WEBHOOK_SECRET, so a service configured by analogy
+  // holds DODO_PAYMENTS_WEBHOOK_SECRET. Before this, that read as null and every webhook
+  // delivery was refused, which is a payment that never grants its plan.
+  const config = createBackendConfig({
+    NODE_ENV: 'test',
+    BILLING_PROVIDER: 'dodo',
+    DODO_PAYMENTS_WEBHOOK_SECRET: 'whsec_alias',
+  });
+  assert.equal(config.dodo.webhookSecret, 'whsec_alias');
+  assert.equal(toPublicHealth(config).checks.billing.webhookConfigured, true);
+});
+
+test('the documented Dodo webhook name wins over the alias', () => {
+  const config = createBackendConfig({
+    NODE_ENV: 'test',
+    BILLING_PROVIDER: 'dodo',
+    DODO_PAYMENTS_WEBHOOK_KEY: 'whsec_documented',
+    DODO_PAYMENTS_WEBHOOK_SECRET: 'whsec_alias',
+  });
+  assert.equal(config.dodo.webhookSecret, 'whsec_documented');
+});
+
+test('reports a configured checkout with an unconfigured webhook instead of calling it healthy', () => {
+  // The production state that took money without granting a plan: the API key and product
+  // ids are set, so `configured` is true, and the webhook secret is missing, so no delivery
+  // can ever be accepted.
+  const config = createBackendConfig({
+    NODE_ENV: 'test',
+    BILLING_PROVIDER: 'dodo',
+    DODO_PAYMENTS_API_KEY: 'dodo_test_key',
+    DODO_PRODUCT_JUNIOR_MONTHLY: 'pdt_junior',
+  });
+  const billing = toPublicHealth(config).checks.billing;
+  assert.equal(billing.configured, true);
+  assert.equal(billing.webhookConfigured, false);
+});
+
 test('AI route rejects an empty prompt', async () => {
   const url = await start();
   const response = await fetch(`${url}/api/v1/ai/coach`, {
