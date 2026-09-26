@@ -209,7 +209,12 @@ describe('VocabularyPage menu', () => {
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
     try {
       const terms = await VocabularyRepository.getVocabularyByLevel('A1');
-      terms.slice(0, 100).forEach((term) => VocabularyMenuService.startLearning(term.id));
+      // A ten-question quiz needs ten learned terms; learning a couple more than that still leaves
+      // cards on the New tab. The previous fixed 100 only worked because A1 happened to hold far
+      // more than a hundred terms — and because the tab shows a single discipline's terms, which is
+      // not a property of the code under test.
+      const learnedCount = Math.min(12, terms.length);
+      terms.slice(0, learnedCount).forEach((term) => VocabularyMenuService.startLearning(term.id));
       render(
         <MemoryRouter>
           <VocabularyPage />
@@ -245,7 +250,9 @@ describe('VocabularyPage menu', () => {
           const statuses = Object.values(VocabularyMenuService.getState().progress);
           expect(statuses.filter((word) => word.status === 'Mastered')).toHaveLength(1);
           expect(statuses.filter((word) => word.status === 'Struggling')).toHaveLength(0);
-          expect(statuses.filter((word) => word.status === 'Learned')).toHaveLength(99);
+          expect(statuses.filter((word) => word.status === 'Learned')).toHaveLength(
+            learnedCount - 1
+          );
         },
         // CI runner'larinda store flush'i 1s varsayilani asabiliyor (TD-018)
         { timeout: 10000 }
@@ -264,9 +271,18 @@ describe('VocabularyPage menu', () => {
     await renderLoadedPage();
     const input = await openSearchModal();
 
-    fireEvent.change(input, { target: { value: `y\u00fckseklik` } });
+    // Search for a word the loaded corpus actually holds, so this exercises the search path rather
+    // than which specific words the corpus happens to contain.
+    const term = requireElement(
+      (await VocabularyRepository.getVocabularyByLevel('A1'))[0],
+      'the first A1 term'
+    );
+    fireEvent.change(input, { target: { value: term.term } });
     fireEvent.keyDown(input, { key: 'Enter' });
-    expect(await screen.findByText(/results found/i)).toBeInTheDocument();
+    // The modal writes "1 result found" for a single match and "N results found" for several, so
+    // assert on the count line: the plural-only wording used to read a working search as a failure
+    // whenever the corpus happened to match exactly once.
+    expect(await screen.findByText(/^\d+ results? found$/i)).toBeInTheDocument();
   }, 60_000);
 
   it('adds an unknown term only to My Vocabulary', async () => {

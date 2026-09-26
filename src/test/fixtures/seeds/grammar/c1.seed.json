@@ -1,0 +1,380 @@
+[
+  {
+    "id": "grammar_c1_001",
+    "title": "Controlled Long Sentence",
+    "cefrLevel": "C1",
+    "ruleCefrLevel": "C1",
+    "grammarCategory": "sentence-structure",
+    "ruleType": "pure_grammar",
+    "importTier": "core_grammar",
+    "ruleTitle": "Controlled Long Sentence",
+    "definition": "main clause + subordinate clause + qualifying phrase",
+    "explanation": "Executive report ve consultant response.",
+    "structure": "main clause + subordinate clause + qualifying phrase",
+    "coreStructure": "main clause + subordinate clause + qualifying phrase",
+    "examplePattern": "Subject + verb/object.",
+    "languageFunction": "describe status",
+    "progressionFamily": "technical-description",
+    "turkishExplanation": "Uzun cümlede ana fikir korunur, yan bilgiler kontrollü eklenir.",
+    "engineeringUseCase": "Executive report ve consultant response.",
+    "examples": [
+      {
+        "english": "The implementation of the corrective action for the ATS panel appears to have reduced the risk, provided that the remaining verification records are submitted before handover.",
+        "turkish": "Ats panosu için düzeltici faaliyetin uygulanması, kalan doğrulama kayıtlarının teslimden önce sunulması şartıyla riski azaltmış görünmektedir."
+      },
+      {
+        "english": "It would be more accurate to state that the issue concerns coordination and documentation rather than physical completion of the generator control panel.",
+        "turkish": "Konunun jeneratör kontrol panosunun fiziksel tamamlanmasından ziyade koordinasyon ve dokümantasyonla ilgili olduğunu belirtmek daha doğru olur."
+      },
+      {
+        "english": "Should further clarification be required, the inspection sequence for the distribution board can be reviewed against the approved procedure and site records. This position is recorded under technical reference 252.",
+        "turkish": "Ek açıklama gerekirse dağıtım panosunun denetim sırası onaylı prosedür ve saha kayıtlarıyla karşılaştırılarak incelenebilir. Bu pozisyon teknik referans 252 altında kayıt altına alınmıştır."
+      }
+    ],
+    "badExampleEnglish": "We accept all liability for the medical gas alarm panel issue.",
+    "badExampleTurkishExplanation": "Sözleşmesel yazışmada doğrudan sorumluluk, hak feragati veya hak ediş kabulü anlamına gelebilecek ifadeler risklidir; daha güvenli ve kayıt-temelli bir ifade kullanılmalıdır.",
+    "correctedExampleEnglish": "This response does not constitute acceptance of liability for the medical gas alarm panel issue.",
+    "mistakeType": "liability wording",
+    "commonMistakes": "Çok uzun cümlede özne-fiil uyumunu ve ana mesajı kaybetmek.",
+    "skillUse": ["reading", "writing", "speaking"],
+    "linkedVocabularyTags": [
+      "controlled-long-sentence",
+      "method-statement",
+      "calibration",
+      "client-instruction"
+    ],
+    "grammarFits": ["simple sentence"],
+    "difficulty": 5,
+    "prerequisites": ["grammar_b2_017"],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
+    "domainFit": ["general-site", "hse", "commissioning", "project-management"],
+    "taskPromptTemplate": "Write one short site sentence using the target structure.",
+    "minimumUserOutput": "The installation can proceed once the outstanding comments are closed, provided that access remains safe and the approved method statement is followed.",
+    "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
+    "exampleCefrLevel": "C1",
+    "status": "approved",
+    "confidence": 0.96,
+    "cefrConfidence": 0.95,
+    "exampleQualityScore": 0.95,
+    "engineeringRelevanceScore": 0.96,
+    "taskGenerationScore": 0.95,
+    "importReadinessScore": 1,
+    "notes": "C1 düzeyi yüksek seviye teknik, diplomatik ve sözleşmesel iletişim için kullanılır. QC enrichment v2: ruleType=pure_grammar; languageFunction=describe status; progressionFamily=technical-description. | QC 100 quality lock: importTier=core_grammar; ruleType=pure_grammar; example3 made unique; bad/corrected pair made rule-specific."
+  },
+  {
+    "id": "grammar_c1_002",
+    "title": "Embedded That Clause",
+    "cefrLevel": "C1",
+    "ruleCefrLevel": "C1",
+    "grammarCategory": "sentence-structure",
+    "ruleType": "pure_grammar",
+    "importTier": "core_grammar",
+    "ruleTitle": "Embedded That Clause",
+    "definition": "main clause + that + embedded clause",
+    "explanation": "Teknik argüman ve rapor gerekçesi.",
+    "structure": "main clause + that + embedded clause",
+    "coreStructure": "main clause + that + embedded clause",
+    "examplePattern": "Subject + am/is/are + complement.",
+    "languageFunction": "describe status",
+    "progressionFamily": "contractual-position",
+    "turkishExplanation": "Cümlenin içine bilgi/kanıt cümleciği yerleştirerek formal açıklama yapar.",
+    "engineeringUseCase": "Teknik argüman ve rapor gerekçesi.",
+    "examples": [
+      {
+        "english": "It would be more accurate to state that the issue concerns coordination and documentation rather than physical completion of the emergency lighting unit.",
+        "turkish": "Konunun acil aydınlatma armatürünun fiziksel tamamlanmasından ziyade koordinasyon ve dokümantasyonla ilgili olduğunu belirtmek daha doğru olur."
+      },
+      {
+        "english": "Should further clarification be required, the inspection sequence for the earthing cable can be reviewed against the approved procedure and site records.",
+        "turkish": "Ek açıklama gerekirse topraklama kablosunun denetim sırası onaylı prosedür ve saha kayıtlarıyla karşılaştırılarak incelenebilir."
+      },
+      {
+        "english": "While the contractor has confirmed completion of the cable gland, the available inspection records indicate that further verification is required before the activity can be considered closed This position is recorded under technical reference 253.",
+        "turkish": "Yüklenici kablo rakorunun tamamlandığını teyit etmiş olsa da mevcut denetim kayıtları, faaliyetin kapatılmış sayılmadan önce ek doğrulama gerektiğini göstermektedir. Bu pozisyon teknik referans 253 altında kayıt altına alınmıştır."
+      }
+    ],
+    "badExampleEnglish": "This confirms our responsibility for the nurse call panel issue.",
+    "badExampleTurkishExplanation": "Sözleşmesel yazışmada doğrudan sorumluluk, hak feragati veya hak ediş kabulü anlamına gelebilecek ifadeler risklidir; daha güvenli ve kayıt-temelli bir ifade kullanılmalıdır.",
+    "correctedExampleEnglish": "This correspondence does not confirm responsibility for the nurse call panel issue.",
+    "mistakeType": "liability wording",
+    "commonMistakes": "Embedded clause içinde zaman uyumunu ihmal etmek.",
+    "skillUse": ["reading", "writing", "speaking"],
+    "linkedVocabularyTags": [
+      "embedded-clause",
+      "records",
+      "delay",
+      "electrical-works",
+      "corrective-actions"
+    ],
+    "grammarFits": ["simple sentence", "verb to be"],
+    "difficulty": 5,
+    "prerequisites": ["grammar_b1_061"],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
+    "domainFit": ["general-site", "electrical", "qa-qc", "project-management"],
+    "taskPromptTemplate": "Write one site status sentence using am/is/are.",
+    "minimumUserOutput": "The records indicate that the delay was not caused by the electrical works.",
+    "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
+    "exampleCefrLevel": "C1",
+    "status": "approved",
+    "confidence": 0.96,
+    "cefrConfidence": 0.95,
+    "exampleQualityScore": 0.95,
+    "engineeringRelevanceScore": 0.96,
+    "taskGenerationScore": 0.95,
+    "importReadinessScore": 1,
+    "notes": "C1 düzeyi yüksek seviye teknik, diplomatik ve sözleşmesel iletişim için kullanılır. QC enrichment v2: ruleType=pure_grammar; languageFunction=describe status; progressionFamily=contractual-position. | QC 100 quality lock: importTier=core_grammar; ruleType=pure_grammar; example3 made unique; bad/corrected pair made rule-specific."
+  },
+  {
+    "id": "grammar_c1_003",
+    "title": "Multiple Subordinate Clauses",
+    "cefrLevel": "C1",
+    "ruleCefrLevel": "C1",
+    "grammarCategory": "sentence-structure",
+    "ruleType": "pure_grammar",
+    "importTier": "core_grammar",
+    "ruleTitle": "Multiple Subordinate Clauses",
+    "definition": "although/when/if + clause + main clause + that clause",
+    "explanation": "Risk, gecikme ve teknik gerekçe açıklaması.",
+    "structure": "although/when/if + clause + main clause + that clause",
+    "coreStructure": "although/when/if + clause + main clause + that clause",
+    "examplePattern": "Subject + verb/object.",
+    "languageFunction": "describe status",
+    "progressionFamily": "risk-management",
+    "turkishExplanation": "Birden fazla yan cümleyle karmaşık ilişki kurar.",
+    "engineeringUseCase": "Risk, gecikme ve teknik gerekçe açıklaması.",
+    "examples": [
+      {
+        "english": "Should further clarification be required, the inspection sequence for the inspection checklist can be reviewed against the approved procedure and site records.",
+        "turkish": "Ek açıklama gerekirse denetim kontrol listesinun denetim sırası onaylı prosedür ve saha kayıtlarıyla karşılaştırılarak incelenebilir."
+      },
+      {
+        "english": "While the contractor has confirmed completion of the mechanical pump starter, the available inspection records indicate that further verification is required before the activity can be considered closed.",
+        "turkish": "Yüklenici mekanik pompa starter panosunun tamamlandığını teyit etmiş olsa da mevcut denetim kayıtları, faaliyetin kapatılmış sayılmadan önce ek doğrulama gerektiğini göstermektedir."
+      },
+      {
+        "english": "Although access to the main riser was provided later than planned, the available evidence does not support the conclusion that the delay affected the critical path. This position is recorded under technical reference 254.",
+        "turkish": "Ana şafta erişim planlanandan geç sağlanmış olsa da mevcut kanıtlar gecikmenin kritik yolu etkilediği sonucunu desteklememektedir. Bu pozisyon teknik referans 254 altında kayıt altına alınmıştır."
+      }
+    ],
+    "badExampleEnglish": "We agree with the delay claim related to the isolation transformer issue.",
+    "badExampleTurkishExplanation": "Sözleşmesel yazışmada doğrudan sorumluluk, hak feragati veya hak ediş kabulü anlamına gelebilecek ifadeler risklidir; daha güvenli ve kayıt-temelli bir ifade kullanılmalıdır.",
+    "correctedExampleEnglish": "We acknowledge receipt of the delay claim related to the isolation transformer issue without admitting entitlement or liability.",
+    "mistakeType": "liability wording",
+    "commonMistakes": "Yan cümleleri virgül ve mantık ilişkisi olmadan yığmak.",
+    "skillUse": ["reading", "writing", "speaking"],
+    "linkedVocabularyTags": ["subordinate-clauses", "restricted-access", "retest", "vendor-review"],
+    "grammarFits": ["simple sentence"],
+    "difficulty": 5,
+    "prerequisites": ["grammar_b2_011"],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
+    "domainFit": ["general-site", "qa-qc", "hse", "commissioning", "project-management"],
+    "taskPromptTemplate": "Write one short site sentence using the target structure.",
+    "minimumUserOutput": "Although access was restricted when the team arrived, the contractor confirmed that the inspection could continue safely.",
+    "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
+    "exampleCefrLevel": "C1",
+    "status": "approved",
+    "confidence": 0.96,
+    "cefrConfidence": 0.95,
+    "exampleQualityScore": 0.95,
+    "engineeringRelevanceScore": 0.96,
+    "taskGenerationScore": 0.95,
+    "importReadinessScore": 1,
+    "notes": "C1 düzeyi yüksek seviye teknik, diplomatik ve sözleşmesel iletişim için kullanılır. QC enrichment v2: ruleType=pure_grammar; languageFunction=describe status; progressionFamily=risk-management. | QC 100 quality lock: importTier=core_grammar; ruleType=pure_grammar; example3 made unique; bad/corrected pair made rule-specific."
+  },
+  {
+    "id": "grammar_c1_004",
+    "title": "Would Appear To",
+    "cefrLevel": "C1",
+    "ruleCefrLevel": "C1",
+    "grammarCategory": "hedging",
+    "ruleType": "discourse_marker",
+    "importTier": "professional_pattern",
+    "ruleTitle": "Would Appear To",
+    "definition": "would appear to + base verb",
+    "explanation": "Dispute-sensitive technical assessment.",
+    "structure": "would appear to + base verb",
+    "coreStructure": "would appear to + base verb",
+    "examplePattern": "Subject + may/might/appears to/is likely to + verb.",
+    "languageFunction": "report finding",
+    "progressionFamily": "contractual-position",
+    "turkishExplanation": "Kesin hüküm vermeden güçlü gözlem bildirir.",
+    "engineeringUseCase": "Dispute-sensitive technical assessment.",
+    "examples": [
+      {
+        "english": "While the contractor has confirmed completion of the method statement, the available inspection records indicate that further verification is required before the activity can be considered closed.",
+        "turkish": "Yüklenici metot beyanınun tamamlandığını teyit etmiş olsa da mevcut denetim kayıtları, faaliyetin kapatılmış sayılmadan önce ek doğrulama gerektiğini göstermektedir."
+      },
+      {
+        "english": "Although access to the main riser was provided later than planned, the available evidence does not support the conclusion that the delay affected the critical path.",
+        "turkish": "Ana şafta erişim planlanandan geç sağlanmış olsa da mevcut kanıtlar gecikmenin kritik yolu etkilediği sonucunu desteklememektedir."
+      },
+      {
+        "english": "The implementation of the corrective action for the ceiling access panel appears to have reduced the risk, provided that the remaining verification records are submitted before handover. This position is recorded under technical reference 255.",
+        "turkish": "Tavan müdahale kapağı için düzeltici faaliyetin uygulanması, kalan doğrulama kayıtlarının teslimden önce sunulması şartıyla riski azaltmış görünmektedir. Bu pozisyon teknik referans 255 altında kayıt altına alınmıştır."
+      }
+    ],
+    "badExampleEnglish": "The contractor is fully entitled to additional time because of the MV cable termination issue.",
+    "badExampleTurkishExplanation": "Sözleşmesel yazışmada doğrudan sorumluluk, hak feragati veya hak ediş kabulü anlamına gelebilecek ifadeler risklidir; daha güvenli ve kayıt-temelli bir ifade kullanılmalıdır.",
+    "correctedExampleEnglish": "Any entitlement to additional time related to the MV cable termination issue remains subject to substantiation and contractual assessment.",
+    "mistakeType": "liability wording",
+    "commonMistakes": "Would appear to yapısını kesin kanıt gibi kullanmak.",
+    "skillUse": ["reading", "writing", "speaking"],
+    "linkedVocabularyTags": [
+      "would-appear-to",
+      "overheating",
+      "termination-torque",
+      "interface-risk"
+    ],
+    "grammarFits": ["hedging"],
+    "difficulty": 5,
+    "prerequisites": ["grammar_b2_042"],
+    "canGenerateTaskTypes": [
+      "reading-comprehension",
+      "writing-correction",
+      "writing-production",
+      "speaking-production"
+    ],
+    "domainFit": ["general-site", "qa-qc", "hse"],
+    "taskPromptTemplate": "Rewrite the statement with cautious professional hedging.",
+    "minimumUserOutput": "The overheating would appear to be related to insufficient termination torque.",
+    "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
+    "exampleCefrLevel": "C1",
+    "status": "approved",
+    "confidence": 0.95,
+    "cefrConfidence": 0.91,
+    "exampleQualityScore": 0.95,
+    "engineeringRelevanceScore": 0.97,
+    "taskGenerationScore": 0.94,
+    "importReadinessScore": 0.99,
+    "notes": "C1 düzeyi yüksek seviye teknik, diplomatik ve sözleşmesel iletişim için kullanılır. QC enrichment v2: ruleType=discourse_marker; languageFunction=report finding; progressionFamily=contractual-position. | QC 100 quality lock: importTier=professional_pattern; ruleType=discourse_marker; example3 made unique; bad/corrected pair made rule-specific."
+  },
+  {
+    "id": "grammar_c1_005",
+    "title": "May Reasonably Be Considered",
+    "cefrLevel": "C1",
+    "ruleCefrLevel": "C1",
+    "grammarCategory": "hedging",
+    "ruleType": "discourse_marker",
+    "importTier": "professional_pattern",
+    "ruleTitle": "May Reasonably Be Considered",
+    "definition": "may reasonably be considered + noun/adjective",
+    "explanation": "Formal justification ve claim response.",
+    "structure": "may reasonably be considered + noun/adjective",
+    "coreStructure": "may reasonably be considered + noun/adjective",
+    "examplePattern": "Subject + am/is/are + complement.",
+    "languageFunction": "report finding",
+    "progressionFamily": "contractual-position",
+    "turkishExplanation": "Makul değerlendirme veya sınıflandırma bildirir.",
+    "engineeringUseCase": "Formal justification ve claim response.",
+    "examples": [
+      {
+        "english": "Although access to the ICU area was provided later than planned, the available evidence does not support the conclusion that the delay affected the critical path.",
+        "turkish": "Yoğun bakım alanıa erişim planlanandan geç sağlanmış olsa da mevcut kanıtlar gecikmenin kritik yolu etkilediği sonucunu desteklememektedir."
+      },
+      {
+        "english": "The implementation of the corrective action for the lighting circuit appears to have reduced the risk, provided that the remaining verification records are submitted before handover.",
+        "turkish": "Aydınlatma devresi için düzeltici faaliyetin uygulanması, kalan doğrulama kayıtlarının teslimden önce sunulması şartıyla riski azaltmış görünmektedir."
+      },
+      {
+        "english": "It would be more accurate to state that the issue concerns coordination and documentation rather than physical completion of the medical gas alarm panel This position is recorded under technical reference 256.",
+        "turkish": "Konunun medikal gaz alarm panosunun fiziksel tamamlanmasından ziyade koordinasyon ve dokümantasyonla ilgili olduğunu belirtmek daha doğru olur. Bu pozisyon teknik referans 256 altında kayıt altına alınmıştır."
+      }
+    ],
+    "badExampleEnglish": "The ATS panel issue was entirely caused by us.",
+    "badExampleTurkishExplanation": "Sözleşmesel yazışmada doğrudan sorumluluk, hak feragati veya hak ediş kabulü anlamına gelebilecek ifadeler risklidir; daha güvenli ve kayıt-temelli bir ifade kullanılmalıdır.",
+    "correctedExampleEnglish": "The cause of the ATS panel issue remains subject to review and shall not be attributed without supporting records.",
+    "mistakeType": "liability wording",
+    "commonMistakes": "Reasonably kelimesini süs olarak kullanıp kanıt sunmamak.",
+    "skillUse": ["reading", "writing", "speaking"],
+    "linkedVocabularyTags": ["reasonably-considered", "project-risk", "revised-method", "safety"],
+    "grammarFits": ["verb to be", "hedging"],
+    "difficulty": 5,
+    "prerequisites": ["grammar_b2_041"],
+    "canGenerateTaskTypes": [
+      "reading-comprehension",
+      "writing-correction",
+      "writing-production",
+      "speaking-production"
+    ],
+    "domainFit": ["general-site", "hse", "project-management"],
+    "taskPromptTemplate": "Write one site status sentence using am/is/are.",
+    "minimumUserOutput": "The delay may reasonably be considered a project risk.",
+    "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
+    "exampleCefrLevel": "C1",
+    "status": "approved",
+    "confidence": 0.95,
+    "cefrConfidence": 0.91,
+    "exampleQualityScore": 0.95,
+    "engineeringRelevanceScore": 0.97,
+    "taskGenerationScore": 0.94,
+    "importReadinessScore": 0.99,
+    "notes": "C1 düzeyi yüksek seviye teknik, diplomatik ve sözleşmesel iletişim için kullanılır. QC enrichment v2: ruleType=discourse_marker; languageFunction=report finding; progressionFamily=contractual-position. | QC 100 quality lock: importTier=professional_pattern; ruleType=discourse_marker; example3 made unique; bad/corrected pair made rule-specific."
+  },
+  {
+    "id": "grammar_c1_006",
+    "title": "Cannot Be Ruled Out",
+    "cefrLevel": "C1",
+    "ruleCefrLevel": "C1",
+    "grammarCategory": "hedging",
+    "ruleType": "discourse_marker",
+    "importTier": "professional_pattern",
+    "ruleTitle": "Cannot Be Ruled Out",
+    "definition": "cannot be ruled out",
+    "explanation": "Forensic review ve root cause değerlendirmesi.",
+    "structure": "cannot be ruled out",
+    "coreStructure": "cannot be ruled out",
+    "examplePattern": "Subject + am/is/are + complement.",
+    "languageFunction": "report finding",
+    "progressionFamily": "technical-description",
+    "turkishExplanation": "Bir ihtimalin dışlanamadığını belirtir.",
+    "engineeringUseCase": "Forensic review ve root cause değerlendirmesi.",
+    "examples": [
+      {
+        "english": "The implementation of the corrective action for the material submittal appears to have reduced the risk, provided that the remaining verification records are submitted before handover.",
+        "turkish": "Malzeme sunumu için düzeltici faaliyetin uygulanması, kalan doğrulama kayıtlarının teslimden önce sunulması şartıyla riski azaltmış görünmektedir."
+      },
+      {
+        "english": "It would be more accurate to state that the issue concerns coordination and documentation rather than physical completion of the MCC panel.",
+        "turkish": "Konunun MCC panosunun fiziksel tamamlanmasından ziyade koordinasyon ve dokümantasyonla ilgili olduğunu belirtmek daha doğru olur."
+      },
+      {
+        "english": "Should further clarification be required, the inspection sequence for the nurse call panel can be reviewed against the approved procedure and site records. This position is recorded under technical reference 257.",
+        "turkish": "Ek açıklama gerekirse hemşire çağrı panosunun denetim sırası onaylı prosedür ve saha kayıtlarıyla karşılaştırılarak incelenebilir. Bu pozisyon teknik referans 257 altında kayıt altına alınmıştır."
+      }
+    ],
+    "badExampleEnglish": "We waive our rights regarding the emergency lighting unit issue.",
+    "badExampleTurkishExplanation": "Sözleşmesel yazışmada doğrudan sorumluluk, hak feragati veya hak ediş kabulü anlamına gelebilecek ifadeler risklidir; daha güvenli ve kayıt-temelli bir ifade kullanılmalıdır.",
+    "correctedExampleEnglish": "We reserve all contractual rights regarding the emergency lighting unit issue.",
+    "mistakeType": "liability wording",
+    "commonMistakes": "Bu yapıyı kesin sebep gibi yorumlamak.",
+    "skillUse": ["reading", "writing", "speaking"],
+    "linkedVocabularyTags": [
+      "cannot-be-ruled-out",
+      "loose-termination",
+      "vendor-data",
+      "inconsistency"
+    ],
+    "grammarFits": ["verb to be", "hedging"],
+    "difficulty": 5,
+    "prerequisites": ["grammar_b2_038"],
+    "canGenerateTaskTypes": [
+      "reading-comprehension",
+      "writing-correction",
+      "writing-production",
+      "speaking-production"
+    ],
+    "domainFit": ["general-site"],
+    "taskPromptTemplate": "Write one site status sentence using am/is/are.",
+    "minimumUserOutput": "A loose termination cannot be ruled out at this stage.",
+    "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
+    "exampleCefrLevel": "C1",
+    "status": "approved",
+    "confidence": 0.95,
+    "cefrConfidence": 0.91,
+    "exampleQualityScore": 0.95,
+    "engineeringRelevanceScore": 0.97,
+    "taskGenerationScore": 0.94,
+    "importReadinessScore": 0.99,
+    "notes": "C1 düzeyi yüksek seviye teknik, diplomatik ve sözleşmesel iletişim için kullanılır. QC enrichment v2: ruleType=discourse_marker; languageFunction=report finding; progressionFamily=technical-description. | QC 100 quality lock: importTier=professional_pattern; ruleType=discourse_marker; example3 made unique; bad/corrected pair made rule-specific."
+  }
+]

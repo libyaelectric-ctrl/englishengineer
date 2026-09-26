@@ -1,16 +1,18 @@
 // Mock global fetch for local JSON seed files in Node/Vitest
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import * as zlib from 'node:zlib';
 import { afterEach, vi } from 'vitest';
 
 import React from 'react';
 
 import { logger } from '@/shared/logger';
 
-// Seed files moved to Supabase Storage; the test shim falls back to the
-// Storage origin when the local public/data copy is missing (CI checkouts
-// contain no public/data files).
+import { decodeSeedBody } from './seed-body';
+
+// Seed corpora are served from the committed fixtures in `src/test/fixtures/seeds` (see
+// `scripts/build-test-seed-fixtures.mjs`), so the suite reads the same bytes everywhere and never
+// reaches the Storage CDN. `ENGVOX_TEST_SEED_DIR` substitutes a real corpus copy for the
+// corpus-integrity suites; `ENGVOX_TEST_SEED_FALLBACK=cdn` opts back into the network.
 const DATA_CDN_BASE = (
   process.env.VITE_DATA_CDN_URL ??
   'https://wxabrwzitwsjtpmlvvqe.supabase.co/storage/v1/object/public/app-data'
@@ -164,55 +166,24 @@ vi.mock('react-virtuoso', () => ({
   },
 }));
 
-const parsesAsJson = (text: string): boolean => {
-  try {
-    JSON.parse(text);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
 /**
  * Reads a seed response as JSON text, decompressing it when the runtime has not already.
  *
- * The Storage CDN serves these corpora compressed, and which compression a client gets back — and
- * whether `content-encoding` even names it — is not stable: in CI the body arrived brotli-packed
- * with **no** encoding header, so trusting the header (or assuming the runtime had decoded it)
- * left the compressed bytes to reach `JSON.parse`, and every seed loader failed with
- * "<level> ... is not JSON" plus unprintable bytes. Sniffing the codec keeps the shim correct
- * whichever fetch the environment ends up using.
+ * Only the opt-in CDN fallback below needs this: the codec sniffing itself lives in `./seed-body`
+ * so it can be tested directly, without a network and without replaying this whole fetch shim; see
+ * `seed-body.test.ts`, which also drives the fallback end to end against a headerless,
+ * brotli-packed body — the exact shape CI once received from the Storage CDN.
  */
-const seedDecoders = (): Array<[(input: Buffer) => Buffer, string]> => {
-  const list: Array<[(input: Buffer) => Buffer, string]> = [
-    [(input) => zlib.brotliDecompressSync(input), 'br'],
-    [(input) => zlib.gunzipSync(input), 'gzip'],
-    [(input) => zlib.inflateSync(input), 'deflate'],
-  ];
-  const zstd = (zlib as unknown as Record<string, ((input: Buffer) => Buffer) | undefined>)
-    .zstdDecompressSync;
-  if (zstd) list.push([(input) => zstd(input), 'zstd']);
-  return list;
-};
-
 const readSeedBody = async (response: Response): Promise<string> => {
   const bytes = Buffer.from(await response.arrayBuffer());
-  const asText = bytes.toString('utf8');
-  if (parsesAsJson(asText)) return asText;
-
-  for (const [decode, name] of seedDecoders()) {
-    try {
-      const decoded = decode(bytes).toString('utf8');
-      if (parsesAsJson(decoded)) {
-        const header = response.headers.get('content-encoding') ?? '';
-        logger.w(`[TEST_SETUP] seed body arrived ${name}-compressed (header "${header}"); decoded`);
-        return decoded;
-      }
-    } catch {
-      // Not this codec; try the next one.
-    }
+  const header = response.headers.get('content-encoding');
+  const { text, codec } = decodeSeedBody(bytes, header);
+  if (codec) {
+    logger.w(
+      `[TEST_SETUP] seed body arrived ${codec}-compressed (header "${header ?? ''}"); decoded`
+    );
   }
-  return asText;
+  return text;
 };
 
 const originalFetch = globalThis.fetch;
@@ -221,10 +192,54 @@ const isSeedRequest = (urlStr: string): boolean =>
   urlStr.includes('/data/vocabulary/') ||
   urlStr.includes('/data/translations/');
 
-// The seed URL is relative (/data/...) when no CDN is configured, or absolute
-// (https://cdn.../data/...) when VITE_DATA_CDN_URL is set. In both cases the
-// local public/data copy (when present) is the hermetic source of truth, so
-// strip any origin and serve from disk before falling back to the CDN.
+/** The committed slice of each corpus that the suites run against. */
+const FIXTURE_SEED_DIR = path.resolve(process.cwd(), 'src/test/fixtures/seeds');
+
+const jsonResponse = (content: string): Response =>
+  ({
+    ok: true,
+    status: 200,
+    statusText: 'OK',
+    json: async () => JSON.parse(content),
+    text: async () => content,
+  }) as unknown as Response;
+
+const notFoundResponse = (): Response =>
+  ({
+    ok: false,
+    status: 404,
+    statusText: 'Not Found',
+    json: async () => {
+      throw new Error('Not Found');
+    },
+    text: async () => 'Not Found',
+  }) as unknown as Response;
+
+/**
+ * Where a seed file is looked up, in order: a real corpus copy when `ENGVOX_TEST_SEED_DIR` names
+ * one, then the committed fixtures. The fixtures stay in the list as a fallback so a partial corpus
+ * copy (for instance `public/data`, which holds vocabulary and translations but no grammar) is
+ * still usable.
+ */
+const seedSourceDirs = (): string[] => {
+  const corpusDir = process.env.ENGVOX_TEST_SEED_DIR;
+  return corpusDir ? [path.resolve(corpusDir), FIXTURE_SEED_DIR] : [FIXTURE_SEED_DIR];
+};
+
+const readSeedFile = (relativePath: string): string | undefined => {
+  if (!relativePath || relativePath.includes('..')) return undefined;
+  for (const dir of seedSourceDirs()) {
+    const file = path.join(dir, relativePath);
+    if (fs.existsSync(file)) return fs.readFileSync(file, 'utf-8');
+  }
+  return undefined;
+};
+
+// Seed URLs are relative (/data/...) when no CDN is configured, or absolute (https://cdn.../data/...)
+// when VITE_DATA_CDN_URL is set. Either way the origin is stripped and the path is served from
+// disk, so the same request yields the same bytes on every machine and in CI. Nothing here touches
+// the network unless `ENGVOX_TEST_SEED_FALLBACK=cdn` asks for it explicitly; a seed that no source
+// can serve answers 404, deterministically.
 globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
   const urlStr = typeof input === 'string' ? input : input.toString();
   if (isSeedRequest(urlStr)) {
@@ -232,48 +247,20 @@ globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise
     // (/data/...) or carry a CDN origin (https://cdn.../data/...).
     const dataIndex = urlStr.indexOf('/data/');
     const pathname = dataIndex >= 0 ? urlStr.slice(dataIndex) : urlStr;
-    const relativePath = pathname.replace(/^\//, '');
-    const absolutePath = path?.resolve(process.cwd(), 'public', relativePath);
-    try {
-      if (!absolutePath || !fs) throw new Error('Node file APIs are unavailable');
-      const content = fs.readFileSync(absolutePath, 'utf-8');
-      return {
-        ok: true,
-        status: 200,
-        statusText: 'OK',
-        json: async () => JSON.parse(content),
-        text: async () => content,
-      } as unknown as Response;
-    } catch (fsError) {
-      // The seed files may be absent from a CI checkout (they moved to
-      // Supabase Storage) - fall back to the Storage CDN origin. A loader that
-      // already asked the CDN passes an absolute URL, which must not be prefixed
-      // twice.
+    const content = readSeedFile(pathname.replace(/^\/data\//, ''));
+    if (content !== undefined) return jsonResponse(content);
+
+    if (process.env.ENGVOX_TEST_SEED_FALLBACK === 'cdn') {
       try {
         const cdnUrl = /^https?:\/\//.test(urlStr) ? urlStr : `${DATA_CDN_BASE}${urlStr}`;
         const cdnResponse = await originalFetch(cdnUrl);
-        if (!cdnResponse.ok) throw new Error(`CDN ${cdnResponse.status}`, { cause: fsError });
-        const content = await readSeedBody(cdnResponse);
-        return {
-          ok: true,
-          status: 200,
-          statusText: 'OK',
-          json: async () => JSON.parse(content),
-          text: async () => content,
-        } as unknown as Response;
+        if (!cdnResponse.ok) throw new Error(`CDN ${cdnResponse.status}`);
+        return jsonResponse(await readSeedBody(cdnResponse));
       } catch (cdnError) {
-        logger.w('[TEST_SETUP] Mock fetch failed (fs + CDN)', cdnError);
-        return {
-          ok: false,
-          status: 404,
-          statusText: 'Not Found',
-          json: async () => {
-            throw new Error('Not Found');
-          },
-          text: async () => 'Not Found',
-        } as unknown as Response;
+        logger.w('[TEST_SETUP] seed CDN fallback failed', cdnError);
       }
     }
+    return notFoundResponse();
   }
   if (originalFetch) {
     return originalFetch(input, init);

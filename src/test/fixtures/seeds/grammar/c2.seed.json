@@ -1,0 +1,418 @@
+[
+  {
+    "id": "grammar_c2_001",
+    "title": "Without Prejudice To Rights",
+    "cefrLevel": "C2",
+    "ruleCefrLevel": "C2",
+    "grammarCategory": "contractual-language",
+    "ruleType": "contractual_phrase",
+    "importTier": "contractual_language",
+    "ruleTitle": "Without Prejudice To Rights",
+    "definition": "without prejudice to + rights/position",
+    "explanation": "Dispute-sensitive contractual correspondence.",
+    "structure": "without prejudice to + rights/position",
+    "coreStructure": "without prejudice to + rights/position",
+    "examplePattern": "Legal marker + clause limiting interpretation/obligation.",
+    "languageFunction": "avoid liability",
+    "progressionFamily": "contractual-position",
+    "turkishExplanation": "Haklar saklı kalmak kaydıyla işlem veya iletişim yapılacağını belirtir.",
+    "engineeringUseCase": "Dispute-sensitive contractual correspondence.",
+    "examples": [
+      {
+        "english": "Any commercial impact alleged in relation to the inspection checklist remains subject to substantiation, causation review, and assessment under the agreed contractual procedure.",
+        "turkish": "Denetim kontrol listesi ile bağlantılı ileri sürülen herhangi bir ticari etki; kanıtlama, nedensellik incelemesi ve mutabık kalınan sözleşmesel prosedür kapsamında değerlendirmeye tabidir."
+      },
+      {
+        "english": "For the avoidance of doubt, this response regarding the mechanical pump starter shall not be construed as acceptance of liability, waiver of contractual rights, or agreement with the proposed interpretation of the delay event.",
+        "turkish": "Şüpheye mahal vermemek adına, mekanik pompa starter panosu ile ilgili bu cevap sorumluluğun kabulü, sözleşmesel haklardan feragat veya gecikme olayına ilişkin önerilen yorumla mutabakat olarak yorumlanmayacaktır."
+      },
+      {
+        "english": "Without prejudice to our contractual position, the contemporaneous records for the transformer room door do not substantiate a demonstrable impact on the critical path. This position is reserved under contractual reference 314.",
+        "turkish": "Sözleşmesel pozisyonumuza halel gelmeksizin, trafo odası kapısına ilişkin eş zamanlı kayıtlar kritik yol üzerinde kanıtlanabilir bir etkiyi desteklememektedir. Bu pozisyon sözleşmesel referans 314 altında saklı tutulmuştur."
+      }
+    ],
+    "badExampleEnglish": "We accept responsibility for all consequences of the isolation transformer issue.",
+    "badExampleTurkishExplanation": "Sözleşmesel yazışmada doğrudan sorumluluk, hak feragati veya hak ediş kabulü anlamına gelebilecek ifadeler risklidir; daha güvenli ve kayıt-temelli bir ifade kullanılmalıdır.",
+    "correctedExampleEnglish": "This response does not constitute acceptance of responsibility for any alleged consequences of the isolation transformer issue.",
+    "mistakeType": "liability wording",
+    "commonMistakes": "Bu kalıbı hukuki anlamını bilmeden rutin emailde kullanmak.",
+    "skillUse": ["reading", "writing", "speaking"],
+    "linkedVocabularyTags": [
+      "without-prejudice",
+      "contractual-rights",
+      "recovery-measures",
+      "party-position"
+    ],
+    "grammarFits": ["contractual wording"],
+    "difficulty": 6,
+    "prerequisites": ["grammar_c1_027"],
+    "canGenerateTaskTypes": [
+      "reading-comprehension",
+      "writing-correction",
+      "report-writing",
+      "writing-production",
+      "meeting-response",
+      "email-writing",
+      "speaking-production"
+    ],
+    "domainFit": ["general-site"],
+    "taskPromptTemplate": "Rewrite the risky statement in liability-safe contractual wording.",
+    "minimumUserOutput": "Without prejudice to our contractual rights, we will support the proposed recovery measures.",
+    "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
+    "exampleCefrLevel": "C2",
+    "status": "approved",
+    "confidence": 0.96,
+    "cefrConfidence": 0.92,
+    "exampleQualityScore": 0.96,
+    "engineeringRelevanceScore": 0.98,
+    "taskGenerationScore": 0.93,
+    "importReadinessScore": 0.99,
+    "notes": "C2 düzeyi executive, contractual, dispute-sensitive ve liability-aware mühendislik iletişimi için kullanılır. QC enrichment v2: ruleType=contractual_phrase; languageFunction=avoid liability; progressionFamily=contractual-position. | QC 100 quality lock: importTier=contractual_language; ruleType=contractual_phrase; example3 made unique; bad/corrected pair made rule-specific. Contractual/legal tone should be reviewed before client-facing deployment."
+  },
+  {
+    "id": "grammar_c2_002",
+    "title": "Notwithstanding Any Provision",
+    "cefrLevel": "C2",
+    "ruleCefrLevel": "C2",
+    "grammarCategory": "contractual-language",
+    "ruleType": "contractual_phrase",
+    "importTier": "contractual_language",
+    "ruleTitle": "Notwithstanding Any Provision",
+    "definition": "notwithstanding + clause/noun",
+    "explanation": "Contract interpretation ve formal notices.",
+    "structure": "notwithstanding + clause/noun",
+    "coreStructure": "notwithstanding + clause/noun",
+    "examplePattern": "Legal marker + clause limiting interpretation/obligation.",
+    "languageFunction": "clarify position",
+    "progressionFamily": "contractual-position",
+    "turkishExplanation": "Başka hüküm veya duruma rağmen geçerlilik belirtir.",
+    "engineeringUseCase": "Contract interpretation ve formal notices.",
+    "examples": [
+      {
+        "english": "For the avoidance of doubt, this response regarding the method statement shall not be construed as acceptance of liability, waiver of contractual rights, or agreement with the proposed interpretation of the delay event.",
+        "turkish": "Şüpheye mahal vermemek adına, metot beyanı ile ilgili bu cevap sorumluluğun kabulü, sözleşmesel haklardan feragat veya gecikme olayına ilişkin önerilen yorumla mutabakat olarak yorumlanmayacaktır."
+      },
+      {
+        "english": "Without prejudice to our contractual position, the contemporaneous records for the duct smoke detector do not substantiate a demonstrable impact on the critical path.",
+        "turkish": "Sözleşmesel pozisyonumuza halel gelmeksizin, kanal tipi duman dedektörüna ilişkin eş zamanlı kayıtlar kritik yol üzerinde kanıtlanabilir bir etkiyi desteklememektedir."
+      },
+      {
+        "english": "The assertion concerning the ceiling access panel is not supported by the available record and should not be interpreted as establishing entitlement to additional time or cost This position is reserved under contractual reference 315.",
+        "turkish": "Tavan müdahale kapağı ile ilgili iddia mevcut kayıtlarla desteklenmemektedir ve ek süre veya maliyet hakkı doğurduğu şeklinde yorumlanmamalıdır. Bu pozisyon sözleşmesel referans 315 altında saklı tutulmuştur."
+      }
+    ],
+    "badExampleEnglish": "The contractor is fully entitled to additional time because of the MV cable termination issue.",
+    "badExampleTurkishExplanation": "Sözleşmesel yazışmada doğrudan sorumluluk, hak feragati veya hak ediş kabulü anlamına gelebilecek ifadeler risklidir; daha güvenli ve kayıt-temelli bir ifade kullanılmalıdır.",
+    "correctedExampleEnglish": "Any entitlement to additional time related to the MV cable termination issue remains subject to substantiation and contractual assessment.",
+    "mistakeType": "liability wording",
+    "commonMistakes": "Notwithstanding'i despite ile aynı registerda kullanmak.",
+    "skillUse": ["reading", "writing", "speaking"],
+    "linkedVocabularyTags": [
+      "notwithstanding",
+      "written-approval",
+      "energization",
+      "specification-requirements"
+    ],
+    "grammarFits": ["contractual wording"],
+    "difficulty": 6,
+    "prerequisites": ["grammar_c1_010"],
+    "canGenerateTaskTypes": [
+      "reading-comprehension",
+      "writing-correction",
+      "report-writing",
+      "writing-production",
+      "meeting-response",
+      "email-writing",
+      "speaking-production"
+    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "commissioning", "project-management"],
+    "taskPromptTemplate": "Rewrite the risky statement in liability-safe contractual wording.",
+    "minimumUserOutput": "Notwithstanding any prior discussion, written approval remains required before energization.",
+    "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
+    "exampleCefrLevel": "C2",
+    "status": "approved",
+    "confidence": 0.96,
+    "cefrConfidence": 0.92,
+    "exampleQualityScore": 0.96,
+    "engineeringRelevanceScore": 0.98,
+    "taskGenerationScore": 0.93,
+    "importReadinessScore": 0.99,
+    "notes": "C2 düzeyi executive, contractual, dispute-sensitive ve liability-aware mühendislik iletişimi için kullanılır. QC enrichment v2: ruleType=contractual_phrase; languageFunction=clarify position; progressionFamily=contractual-position. | QC 100 quality lock: importTier=contractual_language; ruleType=contractual_phrase; example3 made unique; bad/corrected pair made rule-specific. Contractual/legal tone should be reviewed before client-facing deployment."
+  },
+  {
+    "id": "grammar_c2_003",
+    "title": "Save As Otherwise Agreed",
+    "cefrLevel": "C2",
+    "ruleCefrLevel": "C2",
+    "grammarCategory": "contractual-language",
+    "ruleType": "contractual_phrase",
+    "importTier": "contractual_language",
+    "ruleTitle": "Save As Otherwise Agreed",
+    "definition": "save as otherwise agreed",
+    "explanation": "Contractual schedule ve procedure.",
+    "structure": "save as otherwise agreed",
+    "coreStructure": "save as otherwise agreed",
+    "examplePattern": "Legal marker + clause limiting interpretation/obligation.",
+    "languageFunction": "clarify position",
+    "progressionFamily": "contractual-position",
+    "turkishExplanation": "Aksi kararlaştırılmadıkça anlamında yüksek formal sözleşme dili.",
+    "engineeringUseCase": "Contractual schedule ve procedure.",
+    "examples": [
+      {
+        "english": "Without prejudice to our contractual position, the contemporaneous records for the shop drawing do not substantiate a demonstrable impact on the critical path.",
+        "turkish": "Sözleşmesel pozisyonumuza halel gelmeksizin, uygulama çizimina ilişkin eş zamanlı kayıtlar kritik yol üzerinde kanıtlanabilir bir etkiyi desteklememektedir."
+      },
+      {
+        "english": "The assertion concerning the lighting circuit is not supported by the available record and should not be interpreted as establishing entitlement to additional time or cost.",
+        "turkish": "Aydınlatma devresi ile ilgili iddia mevcut kayıtlarla desteklenmemektedir ve ek süre veya maliyet hakkı doğurduğu şeklinde yorumlanmamalıdır."
+      },
+      {
+        "english": "In the interest of project progress, we will proceed with the technical review of the medical gas alarm panel, while maintaining our position on causation, entitlement, and reservation of rights This position is reserved under contractual reference 316.",
+        "turkish": "Proje ilerlemesinin menfaati gereği medikal gaz alarm panosunun teknik incelemesine devam edeceğiz; ancak nedensellik, hak ediş ve hakların saklı tutulması konusundaki pozisyonumuzu koruyoruz. Bu pozisyon sözleşmesel referans 316 altında saklı tutulmuştur."
+      }
+    ],
+    "badExampleEnglish": "This confirms our responsibility for the ATS panel issue.",
+    "badExampleTurkishExplanation": "Sözleşmesel yazışmada doğrudan sorumluluk, hak feragati veya hak ediş kabulü anlamına gelebilecek ifadeler risklidir; daha güvenli ve kayıt-temelli bir ifade kullanılmalıdır.",
+    "correctedExampleEnglish": "This correspondence does not confirm responsibility for the ATS panel issue.",
+    "mistakeType": "liability wording",
+    "commonMistakes": "Save as yapısını save fiilinin normal anlamıyla karıştırmak.",
+    "skillUse": ["reading", "writing", "speaking"],
+    "linkedVocabularyTags": ["save-as-otherwise-agreed", "testing-sequence", "document-control"],
+    "grammarFits": ["contractual wording"],
+    "difficulty": 6,
+    "prerequisites": ["grammar_c1_052"],
+    "canGenerateTaskTypes": [
+      "reading-comprehension",
+      "writing-correction",
+      "report-writing",
+      "writing-production",
+      "meeting-response",
+      "email-writing",
+      "speaking-production"
+    ],
+    "domainFit": ["general-site", "commissioning", "project-management"],
+    "taskPromptTemplate": "Rewrite the risky statement in liability-safe contractual wording.",
+    "minimumUserOutput": "Save as otherwise agreed, the contractor shall follow the approved testing sequence.",
+    "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
+    "exampleCefrLevel": "C2",
+    "status": "approved",
+    "confidence": 0.96,
+    "cefrConfidence": 0.92,
+    "exampleQualityScore": 0.96,
+    "engineeringRelevanceScore": 0.98,
+    "taskGenerationScore": 0.93,
+    "importReadinessScore": 0.99,
+    "notes": "C2 düzeyi executive, contractual, dispute-sensitive ve liability-aware mühendislik iletişimi için kullanılır. QC enrichment v2: ruleType=contractual_phrase; languageFunction=clarify position; progressionFamily=contractual-position. | QC 100 quality lock: importTier=contractual_language; ruleType=contractual_phrase; example3 made unique; bad/corrected pair made rule-specific. Contractual/legal tone should be reviewed before client-facing deployment."
+  },
+  {
+    "id": "grammar_c2_004",
+    "title": "For The Avoidance Of Doubt",
+    "cefrLevel": "C2",
+    "ruleCefrLevel": "C2",
+    "grammarCategory": "contractual-language",
+    "ruleType": "contractual_phrase",
+    "importTier": "contractual_language",
+    "ruleTitle": "For The Avoidance Of Doubt",
+    "definition": "for the avoidance of doubt, + clause",
+    "explanation": "Clarification, scope limit ve contractual notice.",
+    "structure": "for the avoidance of doubt, + clause",
+    "coreStructure": "for the avoidance of doubt, + clause",
+    "examplePattern": "Legal marker + clause limiting interpretation/obligation.",
+    "languageFunction": "clarify position",
+    "progressionFamily": "contractual-position",
+    "turkishExplanation": "Olası yanlış yorumu önlemek için açık hüküm veya açıklama yapar.",
+    "engineeringUseCase": "Clarification, scope limit ve contractual notice.",
+    "examples": [
+      {
+        "english": "The assertion concerning the material submittal is not supported by the available record and should not be interpreted as establishing entitlement to additional time or cost.",
+        "turkish": "Malzeme sunumu ile ilgili iddia mevcut kayıtlarla desteklenmemektedir ve ek süre veya maliyet hakkı doğurduğu şeklinde yorumlanmamalıdır."
+      },
+      {
+        "english": "In the interest of project progress, we will proceed with the technical review of the MCC panel, while maintaining our position on causation, entitlement, and reservation of rights.",
+        "turkish": "Proje ilerlemesinin menfaati gereği MCC panosunun teknik incelemesine devam edeceğiz; ancak nedensellik, hak ediş ve hakların saklı tutulması konusundaki pozisyonumuzu koruyoruz."
+      },
+      {
+        "english": "Any commercial impact alleged in relation to the nurse call panel remains subject to substantiation, causation review, and assessment under the agreed contractual procedure. This position is reserved under contractual reference 317.",
+        "turkish": "Hemşire çağrı panosu ile bağlantılı ileri sürülen herhangi bir ticari etki; kanıtlama, nedensellik incelemesi ve mutabık kalınan sözleşmesel prosedür kapsamında değerlendirmeye tabidir. Bu pozisyon sözleşmesel referans 317 altında saklı tutulmuştur."
+      }
+    ],
+    "badExampleEnglish": "We agree with the delay claim related to the emergency lighting unit issue.",
+    "badExampleTurkishExplanation": "Sözleşmesel yazışmada doğrudan sorumluluk, hak feragati veya hak ediş kabulü anlamına gelebilecek ifadeler risklidir; daha güvenli ve kayıt-temelli bir ifade kullanılmalıdır.",
+    "correctedExampleEnglish": "We acknowledge receipt of the delay claim related to the emergency lighting unit issue without admitting entitlement or liability.",
+    "mistakeType": "liability wording",
+    "commonMistakes": "Bu kalıbı kullanıp kapsamı net yazmamak.",
+    "skillUse": ["reading", "writing", "speaking"],
+    "linkedVocabularyTags": [
+      "avoidance-of-doubt",
+      "approval-scope",
+      "material-substitution",
+      "temporary-arrangement"
+    ],
+    "grammarFits": ["contractual wording"],
+    "difficulty": 6,
+    "prerequisites": ["grammar_c1_062"],
+    "canGenerateTaskTypes": [
+      "reading-comprehension",
+      "writing-correction",
+      "report-writing",
+      "writing-production",
+      "meeting-response",
+      "email-writing",
+      "speaking-production"
+    ],
+    "domainFit": ["general-site", "qa-qc", "procurement"],
+    "taskPromptTemplate": "Rewrite the risky statement in liability-safe contractual wording.",
+    "minimumUserOutput": "For the avoidance of doubt, this approval does not include material substitution.",
+    "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
+    "exampleCefrLevel": "C2",
+    "status": "approved",
+    "confidence": 0.96,
+    "cefrConfidence": 0.92,
+    "exampleQualityScore": 0.96,
+    "engineeringRelevanceScore": 0.98,
+    "taskGenerationScore": 0.93,
+    "importReadinessScore": 0.99,
+    "notes": "C2 düzeyi executive, contractual, dispute-sensitive ve liability-aware mühendislik iletişimi için kullanılır. QC enrichment v2: ruleType=contractual_phrase; languageFunction=clarify position; progressionFamily=contractual-position. | QC 100 quality lock: importTier=contractual_language; ruleType=contractual_phrase; example3 made unique; bad/corrected pair made rule-specific. Contractual/legal tone should be reviewed before client-facing deployment."
+  },
+  {
+    "id": "grammar_c2_005",
+    "title": "Subject To And Without Prejudice",
+    "cefrLevel": "C2",
+    "ruleCefrLevel": "C2",
+    "grammarCategory": "contractual-language",
+    "ruleType": "contractual_phrase",
+    "importTier": "contractual_language",
+    "ruleTitle": "Subject To And Without Prejudice",
+    "definition": "subject to + condition + without prejudice to + rights",
+    "explanation": "Conditional progress in dispute-sensitive situations.",
+    "structure": "subject to + condition + without prejudice to + rights",
+    "coreStructure": "subject to + condition + without prejudice to + rights",
+    "examplePattern": "Legal marker + clause limiting interpretation/obligation.",
+    "languageFunction": "avoid liability",
+    "progressionFamily": "contractual-position",
+    "turkishExplanation": "Şarta bağlı ilerlerken hakların saklı olduğunu belirtir.",
+    "engineeringUseCase": "Conditional progress in dispute-sensitive situations.",
+    "examples": [
+      {
+        "english": "In the interest of project progress, we will proceed with the technical review of the NCR response, while maintaining our position on causation, entitlement, and reservation of rights.",
+        "turkish": "Proje ilerlemesinin menfaati gereği NCR cevabınun teknik incelemesine devam edeceğiz; ancak nedensellik, hak ediş ve hakların saklı tutulması konusundaki pozisyonumuzu koruyoruz."
+      },
+      {
+        "english": "Any commercial impact alleged in relation to the UPS bypass panel remains subject to substantiation, causation review, and assessment under the agreed contractual procedure.",
+        "turkish": "Ups bypass panosu ile bağlantılı ileri sürülen herhangi bir ticari etki; kanıtlama, nedensellik incelemesi ve mutabık kalınan sözleşmesel prosedür kapsamında değerlendirmeye tabidir."
+      },
+      {
+        "english": "For the avoidance of doubt, this response regarding the isolation transformer shall not be construed as acceptance of liability, waiver of contractual rights, or agreement with the proposed interpretation of the delay event This position is reserved under contractual reference 318.",
+        "turkish": "Şüpheye mahal vermemek adına, izolasyon trafosu ile ilgili bu cevap sorumluluğun kabulü, sözleşmesel haklardan feragat veya gecikme olayına ilişkin önerilen yorumla mutabakat olarak yorumlanmayacaktır. Bu pozisyon sözleşmesel referans 318 altında saklı tutulmuştur."
+      }
+    ],
+    "badExampleEnglish": "The contractor is fully entitled to additional time because of the inspection checklist issue.",
+    "badExampleTurkishExplanation": "Sözleşmesel yazışmada doğrudan sorumluluk, hak feragati veya hak ediş kabulü anlamına gelebilecek ifadeler risklidir; daha güvenli ve kayıt-temelli bir ifade kullanılmalıdır.",
+    "correctedExampleEnglish": "Any entitlement to additional time related to the inspection checklist issue remains subject to substantiation and contractual assessment.",
+    "mistakeType": "liability wording",
+    "commonMistakes": "İki legal kalıbı gereksiz ve belirsiz birleştirmek.",
+    "skillUse": ["reading", "writing", "speaking"],
+    "linkedVocabularyTags": [
+      "subject-to",
+      "without-prejudice",
+      "safe-access",
+      "vendor-data",
+      "rights"
+    ],
+    "grammarFits": ["contractual wording"],
+    "difficulty": 6,
+    "prerequisites": ["grammar_c2_001"],
+    "canGenerateTaskTypes": [
+      "reading-comprehension",
+      "writing-correction",
+      "report-writing",
+      "writing-production",
+      "meeting-response",
+      "email-writing",
+      "speaking-production"
+    ],
+    "domainFit": ["general-site", "hse", "commissioning", "project-management"],
+    "taskPromptTemplate": "Rewrite the risky statement in liability-safe contractual wording.",
+    "minimumUserOutput": "Subject to safe access and without prejudice to our rights, we will proceed with testing.",
+    "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
+    "exampleCefrLevel": "C2",
+    "status": "approved",
+    "confidence": 0.96,
+    "cefrConfidence": 0.92,
+    "exampleQualityScore": 0.96,
+    "engineeringRelevanceScore": 0.98,
+    "taskGenerationScore": 0.93,
+    "importReadinessScore": 0.99,
+    "notes": "C2 düzeyi executive, contractual, dispute-sensitive ve liability-aware mühendislik iletişimi için kullanılır. QC enrichment v2: ruleType=contractual_phrase; languageFunction=avoid liability; progressionFamily=contractual-position. | QC 100 quality lock: importTier=contractual_language; ruleType=contractual_phrase; example3 made unique; bad/corrected pair made rule-specific. Contractual/legal tone should be reviewed before client-facing deployment."
+  },
+  {
+    "id": "grammar_c2_006",
+    "title": "Does Not Constitute Acceptance",
+    "cefrLevel": "C2",
+    "ruleCefrLevel": "C2",
+    "grammarCategory": "dispute-language",
+    "ruleType": "contractual_phrase",
+    "importTier": "contractual_language",
+    "ruleTitle": "Does Not Constitute Acceptance",
+    "definition": "does not constitute acceptance of + noun",
+    "explanation": "Liability-sensitive comment closure veya interim action.",
+    "structure": "does not constitute acceptance of + noun",
+    "coreStructure": "does not constitute acceptance of + noun",
+    "examplePattern": "Legal marker + clause limiting interpretation/obligation.",
+    "languageFunction": "clarify position",
+    "progressionFamily": "contractual-position",
+    "turkishExplanation": "Bir aksiyonun kabul anlamına gelmediğini açıkça belirtir.",
+    "engineeringUseCase": "Liability-sensitive comment closure veya interim action.",
+    "examples": [
+      {
+        "english": "Any commercial impact alleged in relation to the commissioning record remains subject to substantiation, causation review, and assessment under the agreed contractual procedure.",
+        "turkish": "Devreye alma kaydı ile bağlantılı ileri sürülen herhangi bir ticari etki; kanıtlama, nedensellik incelemesi ve mutabık kalınan sözleşmesel prosedür kapsamında değerlendirmeye tabidir."
+      },
+      {
+        "english": "For the avoidance of doubt, this response regarding the chilled water pump shall not be construed as acceptance of liability, waiver of contractual rights, or agreement with the proposed interpretation of the delay event.",
+        "turkish": "Şüpheye mahal vermemek adına, soğutma suyu pompası ile ilgili bu cevap sorumluluğun kabulü, sözleşmesel haklardan feragat veya gecikme olayına ilişkin önerilen yorumla mutabakat olarak yorumlanmayacaktır."
+      },
+      {
+        "english": "Without prejudice to our contractual position, the contemporaneous records for the MV cable termination do not substantiate a demonstrable impact on the critical path. This position is reserved under contractual reference 319.",
+        "turkish": "Sözleşmesel pozisyonumuza halel gelmeksizin, OG kablo başlığına ilişkin eş zamanlı kayıtlar kritik yol üzerinde kanıtlanabilir bir etkiyi desteklememektedir. Bu pozisyon sözleşmesel referans 319 altında saklı tutulmuştur."
+      }
+    ],
+    "badExampleEnglish": "The method statement issue was entirely caused by us.",
+    "badExampleTurkishExplanation": "Sözleşmesel yazışmada doğrudan sorumluluk, hak feragati veya hak ediş kabulü anlamına gelebilecek ifadeler risklidir; daha güvenli ve kayıt-temelli bir ifade kullanılmalıdır.",
+    "correctedExampleEnglish": "The cause of the method statement issue remains subject to review and shall not be attributed without supporting records.",
+    "mistakeType": "liability wording",
+    "commonMistakes": "Review, acknowledgement ve acceptance farkını belirsiz bırakmak.",
+    "skillUse": ["reading", "writing", "speaking"],
+    "linkedVocabularyTags": [
+      "does-not-constitute-acceptance",
+      "installation",
+      "submission",
+      "deviation"
+    ],
+    "grammarFits": ["dispute wording", "contractual wording"],
+    "difficulty": 6,
+    "prerequisites": ["grammar_c1_039"],
+    "canGenerateTaskTypes": [
+      "reading-comprehension",
+      "writing-correction",
+      "report-writing",
+      "writing-production",
+      "meeting-response",
+      "email-writing",
+      "speaking-production"
+    ],
+    "domainFit": ["general-site", "commissioning"],
+    "taskPromptTemplate": "Rewrite the risky statement in liability-safe contractual wording.",
+    "minimumUserOutput": "Our participation in the test does not constitute acceptance of the installation.",
+    "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
+    "exampleCefrLevel": "C2",
+    "status": "approved",
+    "confidence": 0.96,
+    "cefrConfidence": 0.92,
+    "exampleQualityScore": 0.96,
+    "engineeringRelevanceScore": 0.98,
+    "taskGenerationScore": 0.93,
+    "importReadinessScore": 0.99,
+    "notes": "C2 düzeyi executive, contractual, dispute-sensitive ve liability-aware mühendislik iletişimi için kullanılır. QC enrichment v2: ruleType=contractual_phrase; languageFunction=clarify position; progressionFamily=contractual-position. | QC 100 quality lock: importTier=contractual_language; ruleType=contractual_phrase; example3 made unique; bad/corrected pair made rule-specific. Contractual/legal tone should be reviewed before client-facing deployment."
+  }
+]

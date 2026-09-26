@@ -1,0 +1,42 @@
+{
+  "helmet": {
+    "meaning": "A helmet protects a worker’s head on site.",
+    "definition": "A helmet protects a worker’s head on site.",
+    "example": "Always wear your helmet before entering the work area."
+  },
+  "panel": {
+    "meaning": "A panel contains switches and electrical control equipment.",
+    "definition": "A panel contains switches and electrical control equipment.",
+    "example": "Did you check the panel door before starting the inspection?"
+  },
+  "switch": {
+    "meaning": "A switch turns electrical equipment on or off.",
+    "definition": "A switch turns electrical equipment on or off.",
+    "example": "Make sure the main switch is off before any maintenance work."
+  },
+  "drawing": {
+    "meaning": "A drawing shows the size and position of engineering work.",
+    "definition": "A drawing shows the size and position of engineering work.",
+    "example": "If the drawing had been reviewed earlier, the error could have been prevented."
+  },
+  "inspect": {
+    "meaning": "To inspect means to check work or equipment carefully.",
+    "definition": "To inspect means to check work or equipment carefully.",
+    "example": "Please inspect the electrical panel thoroughly this morning."
+  },
+  "cable tray": {
+    "meaning": "A cable tray is a metal or plastic support system used to route, support, and protect electrical cables along walls, ceilings, and floors.",
+    "definition": "A cable tray is a metal or plastic support system used to route, support, and protect electrical cables along walls, ceilings, and floors.",
+    "example": "Verify the cable tray installation before proceeding to the next phase."
+  },
+  "support": {
+    "meaning": "A support holds equipment or containment in the correct position.",
+    "definition": "A support holds equipment or containment in the correct position.",
+    "example": "Always check that the support spacing meets the specification requirements."
+  },
+  "complete": {
+    "meaning": "Complete means that all required work is finished.",
+    "definition": "Complete means that all required work is finished.",
+    "example": "Is the cable tray work complete and ready for inspection?"
+  }
+}
