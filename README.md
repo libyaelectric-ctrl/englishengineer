@@ -3,6 +3,8 @@
 > Discipline-specific English learning platform for 10 engineering verticals.
 > Free plan, no credit card required.
 
+[![Deployed Billing Smoke](https://github.com/libyaelectric-ctrl/englishengineer/actions/workflows/deployed-smoke.yml/badge.svg)](https://github.com/libyaelectric-ctrl/englishengineer/actions/workflows/deployed-smoke.yml)
+
 ## Quick Start
 
 ### Prerequisites

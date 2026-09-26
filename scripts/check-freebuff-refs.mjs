@@ -39,6 +39,14 @@
  *  - lines that inspect git history (`git show <rev>:<path>`), where a path may legitimately
  *    be absent from disk.
  *
+ * Traversal boundary: a nested checkout under `.freebuff/` is neither scanned nor used to resolve
+ * references — its files belong to that checkout, not to this repo's scratch. Sibling threads keep
+ * worktrees there (`.freebuff/<name>`), and scanning one reported ~1550 "dangling" references from
+ * its tracked files: a false red on the outer repo, and a check that cries wolf gets bypassed.
+ * Both a worktree and a clone carry a `.git` entry (a file for a worktree, a directory for a clone),
+ * which is the test. A nested *copy* with no `.git` is indistinguishable from scratch and is
+ * still scanned.
+ *
  * Usage: node scripts/check-freebuff-refs.mjs [--verbose]
  * Exit:  0 clean, or `.freebuff/` absent (CI, fresh clone); 1 dangling references.
  */
@@ -50,6 +58,9 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SCAN_ROOT = join(REPO_ROOT, '.freebuff');
 const PRUNE = new Set(['node_modules', '.git', 'dist', 'coverage', 'build', '.vite']);
 const VERBOSE = process.argv.includes('--verbose');
+// Nested checkouts are out of scope: see "Traversal boundary" in the header.
+const nestedCheckoutRoots = new Set();
+const isNestedCheckout = (dir) => existsSync(join(dir, '.git'));
 
 const SCAN_EXTENSIONS = new Set(['.mjs', '.cjs', '.js', '.ts', '.tsx', '.sh', '.bat', '.json']);
 // Longest alternatives first: `.json` must not be cut down to `.js`.
@@ -94,11 +105,23 @@ const QUOTE = new Set(["'", '"', '`']);
 const isFile = (candidate) => existsSync(candidate) && statSync(candidate).isFile();
 const HISTORY_LINE = /\bgit\s+(?:show|cat-file|log|diff|rev-list|checkout|restore)\b/;
 
+const show = (file) =>
+  file
+    .slice(REPO_ROOT.length + 1)
+    .split(sep)
+    .join('/');
+
 const walk = (dir) => {
   const found = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     if (entry.isDirectory()) {
-      if (!PRUNE.has(entry.name)) found.push(...walk(join(dir, entry.name)));
+      const child = join(dir, entry.name);
+      if (PRUNE.has(entry.name)) continue;
+      if (isNestedCheckout(child)) {
+        nestedCheckoutRoots.add(child);
+        continue;
+      }
+      found.push(...walk(child));
     } else if (entry.isFile()) {
       found.push(join(dir, entry.name));
     }
@@ -243,7 +266,10 @@ for (const file of scratchFiles.filter((f) => SCAN_EXTENSIONS.has(extname(f)))) 
   }
 }
 
-if (VERBOSE) console.log(verboseLines.join('\n'));
+if (VERBOSE) {
+  for (const root of nestedCheckoutRoots) console.log(`skip ${show(root)} (nested checkout)`);
+  console.log(verboseLines.join('\n'));
+}
 
 if (findings.length > 0) {
   console.error(`[freebuff-refs] FAIL: ${findings.length} dangling reference(s)`);
@@ -254,6 +280,12 @@ if (findings.length > 0) {
   process.exit(1);
 }
 
+const skipped =
+  nestedCheckoutRoots.size > 0
+    ? ` (skipped ${nestedCheckoutRoots.size} nested checkout(s): ${[...nestedCheckoutRoots]
+        .map(show)
+        .join(', ')})`
+    : '';
 console.log(
-  `[freebuff-refs] PASS: ${referenceCount} reference(s) in .freebuff scripts/configs all resolve`
+  `[freebuff-refs] PASS: ${referenceCount} reference(s) in .freebuff scripts/configs all resolve${skipped}`
 );
