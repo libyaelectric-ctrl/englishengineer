@@ -46,10 +46,13 @@
  *      string it can find looks pooled. It reaches the database with `psql` when that is
  *      installed, and with a throwaway `postgres:16-alpine` container when it is not.
  *
- * Either way it names the database it found — and how many rows each tracked table holds —
- * before it changes anything. That line exists because the wrong database is easy to reach and
- * hard to notice: a second Supabase project with the same schema (a Vercel integration creates
- * one) accepts every statement, reports success, changes nothing, and leaves checkout broken.
+ * Either way it identifies the database it found — by the project name the API reports, and by how
+ * many rows each tracked table holds — before it changes anything. The connection target itself
+ * (host, port, database name) is read from the environment and is deliberately never printed: this
+ * is a DDL tool, and its output is the kind that gets pasted into an issue. The fingerprint is what
+ * makes the wrong database hard to miss: a second Supabase project with the same schema (a Vercel
+ * integration creates one) accepts every statement, reports success, changes nothing, and leaves
+ * checkout broken.
  */
 import { spawnSync } from 'node:child_process';
 
@@ -193,7 +196,11 @@ const createApiChannel = async (token) => {
   }
 
   return {
-    label: `${ref}${name ? ` (${name})` : ''}, via the Management API`,
+    // The project ref comes from the environment, so the label names the project by the name the
+    // API itself reports instead of printing it.
+    label: name
+      ? `the "${name}" project, via the Management API`
+      : 'the project, via the Management API',
     run: async (sql, columns = []) => {
       try {
         const rows = await apiFetch(token, `/projects/${ref}/database/query`, {
@@ -227,25 +234,26 @@ const createPsqlChannel = () => {
   const env = { ...process.env, ...pgEnvFrom(url) };
   const looksPooled = env.PGPORT === '6543' || /pooler\.supabase\.com/i.test(env.PGHOST);
   if (looksPooled) {
+    // The host and port are not printed: they come from the environment, and this line is the kind
+    // that ends up pasted into an issue. "Pooled" is the whole message.
     console.warn(
-      `[warn] ${variable} looks like a pooled connection (${env.PGHOST}:${env.PGPORT}). DDL is safer on the direct connection string.`
+      `[warn] ${variable} looks like a pooled connection. DDL is safer on the direct connection string.`
     );
   }
 
-  const run = hasLocalPsql()
-    ? (sql) => runLocalPsql(sql, env)
-    : hasDocker()
-      ? (sql) => runContainerPsql(sql, env)
-      : null;
+  const transport = hasLocalPsql() ? 'psql' : hasDocker() ? 'Docker' : null;
 
-  if (!run) {
+  if (!transport) {
     console.error(
       'Neither psql nor Docker is available, and one of them is needed to reach the database. Install the Postgres client, or start Docker.'
     );
     process.exit(2);
   }
 
-  return { label: `${env.PGHOST}:${env.PGPORT}/${env.PGDATABASE} (via ${variable})`, run };
+  const run =
+    transport === 'psql' ? (sql) => runLocalPsql(sql, env) : (sql) => runContainerPsql(sql, env);
+
+  return { label: `the database named by ${variable}, via ${transport}`, run };
 };
 
 /** Which of the tracked columns exist, with their type and any foreign key on them. */
