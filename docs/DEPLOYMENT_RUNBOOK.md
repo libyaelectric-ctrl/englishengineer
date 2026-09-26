@@ -88,12 +88,38 @@ If Render's clone does not have the commit yet (a lost webhook is also a lost fe
 deploy it created names the commit it was asked for — a branch that has moved on fails the run
 instead of silently shipping a different commit.
 
+### The timer that notices on its own
+
+`Deploy to Render` closes the gap on the way in, but it cannot notice a push that never started
+it — the workflow disabled, the API key rotated, GitHub not delivering the `push` event to
+Actions either. The `Production Runs main` job in `.github/workflows/health-check.yml` asks the
+same question every fifteen minutes and goes red when `main` and production disagree:
+
+```bash
+export RENDER_API_KEY=rnd_…
+npm run render:check                    # assert the head of main is what is serving traffic
+npm run render:check -- --commit <sha>  # assert a specific commit instead
+```
+
+It deploys nothing, so it is safe on a timer. A red run is one of three findings:
+
+| Finding | What it means |
+| --- | --- |
+| `main points at <sha> but production is running <sha>` | nothing landed the commit: check the `Deploy to Render` workflow and its `RENDER_API_KEY` secret, then deploy by hand with `npm run render:deploy` |
+| `the live runtime reports no expectedProjectRef` | the Supabase pin was deleted from the service's environment (the blueprint still declares it, so nothing in the repository looks wrong) |
+| `resolves Supabase project A while it is pinned to B` | the runtime and the migrations are pointed at different projects |
+
+A commit pushed less than 600 seconds ago is allowed to still be building, which is why the job
+is not red for the minute between a merge and its deploy; an older commit fails on the first
+pass, so a real drift is reported immediately instead of after a full wait.
+
 ### "main moved but production did not"
 
 1. Ask what is live:
 
    ```bash
    export RENDER_API_KEY=rnd_…
+   npm run render:check                                        # read-only, exits 1 on drift
    npm run render:deploy -- --commit "$(git rev-parse origin/main)" --dry-run
    ```
 
@@ -276,6 +302,8 @@ provider keys can all be right.
 
 - [ ] The `Deploy to Render` workflow is green for `main` HEAD — it only goes green once that
       commit is the one serving traffic, so this replaces "did the webhook fire?"
+- [ ] `npm run render:check` passes (or the `Production Runs main` job is green), which also
+      proves the Supabase pin is still set on the service
 - [ ] Frontend loads (https://eng-vox.vercel.app)
 - [ ] Public backend liveness returns only `status: ok`
 - [ ] Authenticated diagnostics returns 200 and reports audit status `ready`

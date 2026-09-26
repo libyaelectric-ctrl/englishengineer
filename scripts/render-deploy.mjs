@@ -34,9 +34,17 @@
  *      arriving, and waits for a terminal status.
  *   5. It asks the live instance whether it is healthy, and whether its Supabase project
  *      matches the one it was pinned to.
+ *   6. With `--check` it deploys nothing and asserts only the property the watcher above keeps
+ *      breaking: the commit `main` points at is the commit serving traffic, on an instance
+ *      that is still pinned. Run every fifteen minutes
+ *      (`.github/workflows/health-check.yml`), that converts "a delivery was dropped and
+ *      nobody noticed" from an invisible fact about production into a red run — the five hours
+ *      between PR #240 landing and an operator deploying it by hand would have been fifteen
+ *      minutes of red instead.
  *
  * Usage:
  *   node scripts/render-deploy.mjs [--commit <sha>] [--wait <seconds>] [--force] [--dry-run]
+ *   node scripts/render-deploy.mjs --check [--wait <seconds>]
  *
  * Environment:
  *   RENDER_API_KEY       required — Render API key (`rnd_…`)
@@ -45,6 +53,8 @@
  *   RENDER_DEPLOY_BRANCH optional — default `main`
  *   RENDER_DEPLOY_REPO   optional — default `libyaelectric-ctrl/englishengineer`
  *   EXPECTED_COMMIT      optional — the commit to deploy; falls back to GITHUB_SHA, then HEAD
+ *   BACKEND_URL          optional — probe this instance instead of the service's own URL
+ *   GITHUB_TOKEN         optional — read the head of the branch authenticated in `--check`
  */
 import { execFileSync } from 'node:child_process';
 
@@ -79,6 +89,8 @@ const USAGE = `node scripts/render-deploy.mjs [options]
   --branch <name>   branch the service must be wired to (default: main)
   --force           trigger a new deploy even when this commit already has one
   --dry-run         report what would happen; never POST
+  --check           deploy nothing: assert that the commit this run is given is the live one
+  --grace <secs>    how long a push may still be converging in --check (default: --wait)
   --help            this text`;
 
 const parseArgs = (argv) => {
@@ -90,6 +102,8 @@ const parseArgs = (argv) => {
     branch: process.env.RENDER_DEPLOY_BRANCH || DEFAULT_BRANCH,
     force: false,
     dryRun: false,
+    check: false,
+    grace: undefined,
   };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -110,8 +124,13 @@ const parseArgs = (argv) => {
     else if (name === '--branch') options.branch = value();
     else if (name === '--force') options.force = true;
     else if (name === '--dry-run') options.dryRun = true;
+    else if (name === '--check') options.check = true;
+    else if (name === '--grace') options.grace = Number(value());
     else stop(`unknown argument: ${arg}\n\n${USAGE}`, 2);
   }
+  if (options.check && options.grace === undefined) options.grace = options.wait;
+  if (options.grace !== undefined && (!Number.isFinite(options.grace) || options.grace < 0))
+    stop('--grace must be a number', 2);
   if (!Number.isFinite(options.wait) || options.wait < 0) stop('--wait must be a number', 2);
   if (!Number.isFinite(options.interval) || options.interval < 1)
     stop('--interval must be >= 1', 2);
@@ -229,7 +248,37 @@ const resolveCommit = (options) => {
     stop(`could not resolve the commit to deploy (got ${JSON.stringify(resolved)})`, 2);
   }
   const source = explicit ? 'argument/environment' : 'git HEAD';
-  return { sha: resolved.trim().toLowerCase(), source };
+  return { sha: resolved.trim().toLowerCase(), source, pushedAt: null };
+};
+
+/**
+ * The head of the branch, read from GitHub instead of the local clone: a scheduled run has a
+ * checkout only as fresh as its own trigger, and the whole point of the check is to see what
+ * `main` says *now*. The commit's own timestamp comes back with it, which is what lets the
+ * check tell "the pipeline has not finished yet" apart from "nothing is coming".
+ */
+const fetchBranchHead = async (repo, branch) => {
+  const headers = { Accept: 'application/vnd.github+json', 'User-Agent': 'engvox-deploy-check' };
+  const token = process.env.GITHUB_TOKEN?.trim() || process.env.GH_TOKEN?.trim();
+  if (token) headers.Authorization = `Bearer ${token}`;
+  let response;
+  try {
+    response = await fetch(
+      `https://api.github.com/repos/${repo}/commits/${encodeURIComponent(branch)}`,
+      { headers, signal: AbortSignal.timeout(20_000) }
+    );
+  } catch (error) {
+    note(`could not reach GitHub for the head of ${branch}: ${error.message}`);
+    return null;
+  }
+  if (!response.ok) {
+    note(`GitHub answered ${response.status} for the head of ${branch}`);
+    return null;
+  }
+  const body = await response.json();
+  if (typeof body?.sha !== 'string') return null;
+  const pushedAt = Date.parse(body.commit?.committer?.date || body.commit?.author?.date || '');
+  return { sha: body.sha.toLowerCase(), pushedAt: Number.isFinite(pushedAt) ? pushedAt : null };
 };
 
 const resolveService = async (options) => {
@@ -322,9 +371,13 @@ const waitForDeploy = async (serviceId, deployId, options) => {
   }
 };
 
-/** Asks the running instance, not the dashboard, whether the new code is serving and sane. */
-const verifyRuntime = async (url, fallbackUrl) => {
-  const base = (url || fallbackUrl || '').replace(/\/+$/, '');
+/**
+ * Asks the running instance, not the dashboard, whether the new code is serving and sane.
+ * `BACKEND_URL` overrides which instance is asked, which is what lets the pin arm of this check
+ * be exercised against a stub instead of against production.
+ */
+const verifyRuntime = async (url, { requirePin = false } = {}) => {
+  const base = (process.env.BACKEND_URL || url || '').replace(/\/+$/, '');
   if (!base) {
     skip('no service URL to probe');
     return;
@@ -356,18 +409,139 @@ const verifyRuntime = async (url, fallbackUrl) => {
   }
   if (supabase?.expectedProjectRef) {
     pass(`the live runtime is pinned to and resolving ${supabase.projectRef}`);
+  } else if (requirePin) {
+    // The pin is an operator-set environment variable, so it can be deleted from the dashboard
+    // without touching a single file in this repository — the exact silent removal the
+    // scheduled check exists to catch, since `render.yaml` would still declare it.
+    fail(
+      'the live runtime reports no expectedProjectRef: the Supabase project pin is unset on the ' +
+        'service, so a misdirected migration would boot silently. Re-set EXPECTED_SUPABASE_PROJECT_REF ' +
+        '(runbook: "Pin the runtime to the Supabase project")'
+    );
+  } else {
+    skip('the live runtime has no Supabase pin to compare against');
   }
+};
+
+/**
+ * The read-only half of this script: assert that the commit `main` points at is the commit
+ * serving traffic, and that the instance is still pinned. Nothing in here writes to Render,
+ * which is what makes it safe on a timer — a check that "fixes" drift would be a deploy
+ * command wearing a monitor's name.
+ */
+/** One snapshot of the service's deploy history, phrased as the questions the check asks. */
+const readProduction = async (serviceId, sha) => {
+  const deploys = await listDeploys(serviceId);
+  const target = deploys.find((deploy) => sameCommit(deploy.commit?.id, sha)) || null;
+  const live = deploys.find((deploy) => deploy.status === LIVE) || null;
+  const liveCommit = String(live?.commit?.id || '').slice(0, 8) || '';
+  const converged = Boolean(target?.status === LIVE || (live && sameCommit(live.commit?.id, sha)));
+  // A deploy of the right commit that has not finished: the pipeline is working, so waiting is
+  // the correct answer rather than reporting the drift the wait exists to tolerate.
+  const inFlight = target && RUNNING.has(target.status) ? target : null;
+  const message = inFlight
+    ? `a deploy of ${sha} is ${inFlight.status} (${inFlight.id})`
+    : live
+      ? `the live backend is ${liveCommit || '(unknown commit)'} (${live.id}), which is not ${sha}`
+      : 'no deploy is live on this service';
+  return { converged, row: target?.status === LIVE ? target : live, inFlight, liveCommit, message };
+};
+
+const checkProduction = async (options, expected, service, url) => {
+  const startedAt = Date.now();
+  // A merge that landed seconds ago is converging, not drifted: the deploy workflow has to be
+  // picked up and a build has to finish before production can be right. The commit's own push
+  // time bounds that patience — otherwise a genuine drift, whose commit is minutes or days old,
+  // would be waited on for the full window before anyone was told.
+  const patienceEnds =
+    expected.pushedAt !== null
+      ? expected.pushedAt + options.grace * 1000
+      : startedAt + options.grace * 1000;
+  const hardDeadline = startedAt + options.wait * 1000;
+  let lastNote = null;
+
+  const report = async (snapshot) => {
+    pass(
+      `commit ${expected.sha} is the live backend (${snapshot.row.id}, live since ` +
+        `${snapshot.row.finishedAt || snapshot.row.createdAt})`
+    );
+    await verifyRuntime(url, { requirePin: true });
+  };
+
+  for (;;) {
+    const snapshot = await readProduction(service.id, expected.sha);
+    if (snapshot.converged) return report(snapshot);
+    if (snapshot.message !== lastNote) {
+      note(snapshot.message);
+      lastNote = snapshot.message;
+    }
+    // An unfinished deploy earns the full window; a commit that was pushed long ago and is not
+    // being built has already used up its grace, so it fails on the first pass.
+    if (Date.now() >= (snapshot.inFlight ? hardDeadline : patienceEnds)) break;
+    await new Promise((resolve) => setTimeout(resolve, options.interval * 1000));
+  }
+
+  const final = await readProduction(service.id, expected.sha);
+  if (final.converged) return report(final);
+
+  if (final.inFlight) {
+    fail(
+      `a deploy of ${expected.sha} has been ${final.inFlight.status} for over ${options.wait}s — ` +
+        `production is still ${final.liveCommit || 'unknown'}: ${deployUrl(service.id, final.inFlight.id)}`
+    );
+    return;
+  }
+  const liveCommit = final.liveCommit || '(nothing)';
+  fail(
+    `${options.branch} points at ${expected.sha} but production is running ${liveCommit} — the pushed ` +
+      "commit never reached the service. Render's push webhook is the delivery that goes missing " +
+      '(2026-09-18 → 09-23: eight merges, no deploy, no failed deploy, nothing in its events feed), ' +
+      'and the "Deploy to Render" workflow is what closes that hole. Check that workflow\u2019s last ' +
+      'run and its RENDER_API_KEY secret, then deploy by hand with: npm run render:deploy'
+  );
 };
 
 const main = async () => {
   const options = parseArgs(process.argv.slice(2));
-  const { sha, source } = resolveCommit(options);
+  let { sha, source, pushedAt } = resolveCommit(options);
+  // In check mode the local checkout is only a fallback: what matters is where the branch points
+  // right now, which is a fact GitHub holds and the checkout may not (a scheduled run checks out
+  // the commit it was triggered with). An explicit `--commit` still wins, so the drift arm of
+  // this check can be exercised deliberately.
+  if (options.check && !options.commit) {
+    const repo = normalizeRepo(process.env.RENDER_DEPLOY_REPO || DEFAULT_REPO);
+    const head = await fetchBranchHead(repo, options.branch);
+    if (head) {
+      if (!sameCommit(head.sha, sha)) {
+        note(
+          `${options.branch} is at ${head.sha.slice(0, 8)} on GitHub, not ${sha.slice(0, 8)} from ` +
+            'the checkout — checking the former'
+        );
+      }
+      sha = head.sha;
+      source = `the head of ${options.branch} on GitHub`;
+      pushedAt = head.pushedAt;
+    }
+  }
   console.log(`PROBE deploy target ${sha} (from ${source})`);
   if (options.dryRun) note('dry run: no deploy will be triggered');
 
   const { service, discoveredBy } = await resolveService(options);
   console.log(`PROBE service ${service.name} (${service.id}, found by ${discoveredBy})`);
   const { url } = auditService(service, options);
+
+  // A check must never fall through into the deploy path below: it would POST a deploy of a
+  // commit it just reported as missing, turning the monitor into the thing it monitors.
+  if (options.check) {
+    await checkProduction(options, { sha, pushedAt }, service, url);
+    if (failures.length > 0) {
+      console.error(`\nFAILED (${failures.length})`);
+      failures.forEach((message) => console.error(`- ${message}`));
+      process.exit(1);
+    }
+    console.log(`\nPASS production is running ${sha}, the commit ${options.branch} points at.`);
+    return;
+  }
 
   let deploy = options.force ? null : findDeployForCommit(await listDeploys(service.id), sha);
   // Only a run that actually watched this commit go live may say it is the live backend; a dry
@@ -460,7 +634,7 @@ const main = async () => {
   // Probing the runtime only means something once this commit is the one serving: otherwise the
   // answer describes whatever version happens to be live.
   if (targetIsLive && failures.length === 0) {
-    await verifyRuntime(url, process.env.BACKEND_URL);
+    await verifyRuntime(url);
   }
 
   if (failures.length > 0) {
