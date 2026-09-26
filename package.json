@@ -37,6 +37,10 @@
     "build-storybook": "storybook build",
     "verify:release": "node scripts/verify-release.mjs",
     "verify:rls": "node scripts/verify-supabase-rls.mjs",
+    "verify:schema-identity": "node scripts/check-schema-identity.mjs",
+    "verify:render-env": "node scripts/check-render-env.mjs",
+    "apply:schema-identity": "node scripts/apply-schema-identity.mjs",
+    "reconcile:dodo": "node scripts/reconcile-dodo-subscriptions.mjs",
     "render:deploy": "node scripts/render-deploy.mjs",
     "render:check": "node scripts/render-deploy.mjs --check",
     "verify:audit-collision": "node scripts/verify-audit-collision-attribution.mjs",
@@ -155,6 +159,9 @@
     "axios": "^1.7.9"
   },
   "allowScripts": {
-    "esbuild@0.25.12": true
+    "esbuild@0.28.2": true,
+    "canvas": false,
+    "protobufjs": false,
+    "@firebase/util": false
   }
 }

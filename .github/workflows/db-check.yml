@@ -8,6 +8,7 @@ on:
       - 'backend/src/**/*.ts'
       - 'backend/test/audit-*.test.ts'
       - 'scripts/verify-audit-collision-attribution.mjs'
+      - 'scripts/check-schema-identity.mjs'
       - 'scripts/fixtures/**'
 
 jobs:
@@ -25,6 +26,14 @@ jobs:
 
       - name: Check RLS policies
         run: node scripts/verify-supabase-rls.mjs
+
+      # A migration that declares a written identity column `uuid`, or points it at
+      # `auth.users`, does not fail at deploy time — it fails at the first write, and in
+      # the audit store that write is fail-closed, so the customer sees checkout refuse
+      # with a 503 instead of a schema error. That happened once; this makes it a build
+      # failure instead.
+      - name: Check identity columns against the runtime identity model
+        run: node scripts/check-schema-identity.mjs
 
       - name: Check migrations
         run: |
