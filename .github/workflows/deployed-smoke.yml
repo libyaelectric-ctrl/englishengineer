@@ -1,0 +1,125 @@
+# ──────────────────────────────────────────────────────
+# EngVox — Deployed Billing Smoke
+# Drives the LIVE site with a real browser and fails if the billing upgrade
+# flow regresses in production. Kept out of `ci.yml` on purpose: the required
+# `✅ CI Complete` gate must not depend on live production being up, so this
+# runs on its own schedule and reports by opening (and resolving) an issue.
+# ──────────────────────────────────────────────────────
+name: Deployed Billing Smoke
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # every 6 hours
+  workflow_dispatch:
+    inputs:
+      site:
+        description: 'Origin to smoke (defaults to production)'
+        type: string
+        required: false
+        default: 'https://engvox.com'
+
+permissions:
+  contents: read
+  issues: write
+
+# One in-flight run at a time: a second browser drive against the same origin
+# adds nothing and would race the issue bookkeeping.
+concurrency:
+  group: deployed-billing-smoke
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  smoke:
+    name: 🧪 Deployed Billing Smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      # Playwright's webServer still boots the local dev server even though this
+      # spec only navigates to the deployed origin, so the frontend install above
+      # is what it needs — no backend install and no Firebase secrets.
+      - name: Cache Playwright Browsers
+        id: playwright-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Install Playwright Dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - name: Run deployed billing smoke test
+        run: npm run e2e:smoke:deployed
+        env:
+          CI: true
+          ENGVOX_SMOKE_SITE: ${{ github.event.inputs.site || 'https://engvox.com' }}
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: failure()
+        with: { name: deployed-smoke-report, path: test-results/, retention-days: 14 }
+
+  report:
+    name: 📣 Report Result
+    runs-on: ubuntu-latest
+    needs: smoke
+    if: always()
+    steps:
+      - name: Open, update or close the tracking issue
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        env:
+          SMOKE_RESULT: ${{ needs.smoke.result }}
+          SMOKE_SITE: ${{ github.event.inputs.site || 'https://engvox.com' }}
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const title = 'Deployed billing smoke test failing against production';
+            const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            // Only a real failure files an issue: a cancelled or skipped run is our own
+            // doing, not production misbehaving.
+            const failed = process.env.SMOKE_RESULT === 'failure';
+
+            // Dedupe by title so a flapping schedule leaves one issue, not one per run.
+            const { data: open } = await github.rest.issues.listForRepo({
+              owner, repo, state: 'open', per_page: 100,
+            });
+            const existing = open.find((issue) => issue.title === title);
+
+            if (failed) {
+              const body = [
+                `The deployed billing smoke test failed (result: \`${process.env.SMOKE_RESULT}\`).`,
+                '',
+                `- Target: ${process.env.SMOKE_SITE}`,
+                `- Run: ${runUrl}`,
+                '- Artifact: `deployed-smoke-report` (screenshots, video, trace)',
+                '',
+                'The smoke test proves a customer on `/billing` is not sent into a checkout before',
+                'choosing a plan. Reproduce locally with `npm run e2e:smoke:deployed`.',
+              ].join('\n');
+
+              if (existing) {
+                await github.rest.issues.createComment({
+                  owner, repo, issue_number: existing.number,
+                  body: `Still failing — [run](${runUrl}) at \`${new Date().toISOString()}\`.`,
+                });
+              } else {
+                await github.rest.issues.create({ owner, repo, title, body });
+              }
+            } else if (process.env.SMOKE_RESULT === 'success' && existing) {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: existing.number,
+                body: `Recovered — [run](${runUrl}) passed at \`${new Date().toISOString()}\`.`,
+              });
+              await github.rest.issues.update({
+                owner, repo, issue_number: existing.number, state: 'closed',
+              });
+            }
