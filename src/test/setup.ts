@@ -1,6 +1,7 @@
 // Mock global fetch for local JSON seed files in Node/Vitest
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import * as zlib from 'node:zlib';
 import { afterEach, vi } from 'vitest';
 
 import React from 'react';
@@ -163,6 +164,57 @@ vi.mock('react-virtuoso', () => ({
   },
 }));
 
+const parsesAsJson = (text: string): boolean => {
+  try {
+    JSON.parse(text);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * Reads a seed response as JSON text, decompressing it when the runtime has not already.
+ *
+ * The Storage CDN serves these corpora compressed, and which compression a client gets back — and
+ * whether `content-encoding` even names it — is not stable: in CI the body arrived brotli-packed
+ * with **no** encoding header, so trusting the header (or assuming the runtime had decoded it)
+ * left the compressed bytes to reach `JSON.parse`, and every seed loader failed with
+ * "<level> ... is not JSON" plus unprintable bytes. Sniffing the codec keeps the shim correct
+ * whichever fetch the environment ends up using.
+ */
+const seedDecoders = (): Array<[(input: Buffer) => Buffer, string]> => {
+  const list: Array<[(input: Buffer) => Buffer, string]> = [
+    [(input) => zlib.brotliDecompressSync(input), 'br'],
+    [(input) => zlib.gunzipSync(input), 'gzip'],
+    [(input) => zlib.inflateSync(input), 'deflate'],
+  ];
+  const zstd = (zlib as unknown as Record<string, ((input: Buffer) => Buffer) | undefined>)
+    .zstdDecompressSync;
+  if (zstd) list.push([(input) => zstd(input), 'zstd']);
+  return list;
+};
+
+const readSeedBody = async (response: Response): Promise<string> => {
+  const bytes = Buffer.from(await response.arrayBuffer());
+  const asText = bytes.toString('utf8');
+  if (parsesAsJson(asText)) return asText;
+
+  for (const [decode, name] of seedDecoders()) {
+    try {
+      const decoded = decode(bytes).toString('utf8');
+      if (parsesAsJson(decoded)) {
+        const header = response.headers.get('content-encoding') ?? '';
+        logger.w(`[TEST_SETUP] seed body arrived ${name}-compressed (header "${header}"); decoded`);
+        return decoded;
+      }
+    } catch {
+      // Not this codec; try the next one.
+    }
+  }
+  return asText;
+};
+
 const originalFetch = globalThis.fetch;
 const isSeedRequest = (urlStr: string): boolean =>
   urlStr.includes('/data/grammar/') ||
@@ -201,7 +253,7 @@ globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise
         const cdnUrl = /^https?:\/\//.test(urlStr) ? urlStr : `${DATA_CDN_BASE}${urlStr}`;
         const cdnResponse = await originalFetch(cdnUrl);
         if (!cdnResponse.ok) throw new Error(`CDN ${cdnResponse.status}`, { cause: fsError });
-        const content = await cdnResponse.text();
+        const content = await readSeedBody(cdnResponse);
         return {
           ok: true,
           status: 200,
